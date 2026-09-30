@@ -31,6 +31,7 @@ import {
   Building2,
   Boxes,
   ChevronRight,
+  ChartGantt,
   Code2,
   Database,
   ExternalLink,
@@ -216,6 +217,13 @@ const menuGroups: MenuGroup[] = [
         ),
       },
       { key: "logs", page: "logs", label: "Logs", icon: <Activity {...ICON} /> },
+      {
+        key: "request-gantt",
+        page: "request-gantt",
+        label: "Request Gantt",
+        roles: [...all_admin_roles, ...internalUserRoles],
+        icon: <ChartGantt {...ICON} />,
+      },
       {
         key: "guardrails-monitor",
         page: "guardrails-monitor",

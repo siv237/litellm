@@ -10,6 +10,7 @@ import { getProviderLogoAndName } from "../provider_info_helpers";
 import { getBatchIdFromRequestId, getBatchRequestCounts, isBatchCallType } from "./batchLogUtils";
 import type { LogEntry } from "./columns";
 import { AGENT_CALL_TYPES, MCP_CALL_TYPES } from "./constants";
+import { getInternalUserDisplay } from "./internalUserNames";
 import { AgentBadge, AgentIcon, BatchBadge, LlmBadge, McpBadge, SparkleIcon, WrenchIcon } from "./TypeBadges";
 
 export interface RequestLogsTableColumnsDeps {
@@ -313,7 +314,7 @@ export const getRequestLogsTableColumns = ({
     header: "Internal User",
     size: 150,
     enableSorting: false,
-    cell: ({ row }) => <TruncatedText value={row.original.user} />,
+    cell: ({ row }) => <TruncatedText value={getInternalUserDisplay(row.original)} />,
   },
   {
     id: "end_user",

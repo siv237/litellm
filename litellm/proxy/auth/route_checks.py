@@ -257,6 +257,12 @@ class RouteChecks:
             route=route,
         )
 
+        # fork: read-only Gantt feed — GET passes the generic RBAC gate for any
+        # authenticated principal; the handler (gantt/gantt_endpoints.py) enforces the
+        # allowed human UI roles itself.
+        if route == "/gantt" and RouteChecks._get_request_method(request=request) == "GET":
+            return
+
         if RouteChecks.is_auth_enforced_pass_through_route(
             route=route,
             method=RouteChecks._get_request_method(request=request),

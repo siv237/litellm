@@ -1,0 +1,532 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { apiClient } from "@/components/networking";
+
+interface GanttRowT {
+  t0: number;
+  t1: number;
+  tf: number | null;
+  u: string;
+  email: string;
+  display: string;
+  model: string;
+  p: number;
+  c: number;
+  status: string;
+  cache_hit: string;
+  key_alias: string;
+  key_short: string;
+}
+
+interface GanttResponse {
+  window?: number;
+  from?: number;
+  to?: number;
+  max_rows: number;
+  total: number;
+  rows: GanttRowT[];
+}
+
+const WINDOWS: { sec: number; label: string }[] = [
+  { sec: 900, label: "15 мин" },
+  { sec: 3600, label: "1 час" },
+  { sec: 21600, label: "6 часов" },
+  { sec: 86400, label: "24 часа" },
+];
+
+const PALETTE = [
+  "#2563eb", "#dc2626", "#059669", "#d97706", "#7c3aed",
+  "#0891b2", "#db2777", "#65a30d", "#ea580c", "#475569",
+];
+const MAX_SHOWN = 150;
+const REFRESH_MS = 5000;
+
+function fnum(n: number): string {
+  return n.toLocaleString("ru-RU");
+}
+
+function fmtTime(ms: number): string {
+  return new Date(ms).toLocaleTimeString("ru-RU", { hour12: false });
+}
+
+function fmtAxis(ms: number, spanMs: number): string {
+  const opts: Intl.DateTimeFormatOptions = spanMs < 180000
+    ? { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit", fractionalSecondDigits: 1 }
+    : { hour12: false };
+  return new Date(ms).toLocaleTimeString("ru-RU", opts);
+}
+
+function toLocalInput(d: Date): string {
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+
+function spanLabel(a: number, b: number): string {
+  const p = (n: number) => String(n).padStart(2, "0");
+  const da = new Date(a);
+  const db = new Date(b);
+  const hm = (d: Date) => `${p(d.getHours())}:${p(d.getMinutes())}`;
+  if (da.toDateString() === db.toDateString()) return `${hm(da)}–${hm(db)}`;
+  return `${p(da.getDate())}.${p(da.getMonth() + 1)} ${hm(da)} – ${p(db.getDate())}.${p(db.getMonth() + 1)} ${hm(db)}`;
+}
+
+export default function RequestGantt({ accessToken }: { accessToken: string | null }) {
+  const [windowSec, setWindowSec] = useState(3600);
+  const [data, setData] = useState<GanttResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [grouped, setGrouped] = useState(true);
+  const [zoom, setZoom] = useState<[number, number] | null>(null);
+  const [custom, setCustom] = useState<[number, number] | null>(null);
+  const [cform, setCform] = useState(false);
+  const [cfrom, setCfrom] = useState("");
+  const [cto, setCto] = useState("");
+  const chartRef = useRef<HTMLDivElement | null>(null);
+  const geomRef = useRef<{ tmin: number; tmax: number; L: number; plotW: number; viewW: number } | null>(null);
+  const [tip, setTip] = useState<{ x: number; y: number; text: string } | null>(null);
+  const lastOk = useRef<number>(0);
+
+  const toggleUser = (name: string) =>
+    setSelected((prev) => (prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]));
+
+  const load = useCallback(async () => {
+    if (!accessToken) return;
+    try {
+      const res = await apiClient.get<GanttResponse>("/gantt", {
+        accessToken,
+        query: custom ? { from: custom[0], to: custom[1] } : { window: windowSec },
+      });
+      setData(res);
+      setError(null);
+      lastOk.current = Date.now();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    }
+  }, [accessToken, windowSec, custom]);
+
+  useEffect(() => {
+    load();
+    const t = setInterval(load, REFRESH_MS);
+    return () => clearInterval(t);
+  }, [load]);
+
+  const colorMap = useMemo(() => {
+    const counts: Record<string, number> = {};
+    data?.rows.forEach((r) => {
+      counts[r.display] = (counts[r.display] || 0) + 1;
+    });
+    const m: Record<string, string> = {};
+    Object.keys(counts)
+      .sort((a, b) => counts[b] - counts[a] || a.localeCompare(b))
+      .forEach((k, i) => {
+        m[k] = PALETTE[i % PALETTE.length];
+      });
+    return m;
+  }, [data]);
+  const colorOf = useCallback((n: string) => colorMap[n] ?? "#64748b", [colorMap]);
+
+  const chips = useMemo(() => {
+    if (!data) return [];
+    const acc: Record<string, { n: number; tok: number; color: string }> = {};
+    data.rows.forEach((r) => {
+      const k = r.display;
+      acc[k] = acc[k] || { n: 0, tok: 0, color: colorOf(k) };
+      acc[k].n += 1;
+      acc[k].tok += (r.p || 0) + (r.c || 0);
+    });
+    return Object.entries(acc).sort((a, b) => b[1].n - a[1].n);
+  }, [data, colorOf]);
+
+  const svg = useMemo(() => {
+    geomRef.current = null;
+    if (!data || !data.rows.length) return null;
+    const byUser = selected.length ? data.rows.filter((r) => selected.includes(r.display)) : data.rows;
+    const all = zoom ? byUser.filter((r) => r.t1 >= zoom[0] && r.t0 <= zoom[1]) : byUser;
+    type Line = { who: string; model: string; key: string; items: GanttRowT[] };
+    const keyOf = (r: GanttRowT) => r.key_alias || (r.key_short ? `key ${r.key_short}` : "");
+    let lines: Line[];
+    if (grouped) {
+      // строка = дорожка группы чело·модель·ключ; новая строка только при реальном
+      // пересечении по времени (упаковка интервалов, без порога разрыва).
+      // модель нормализуется: failed-запросы пишутся в SpendLogs без провайдер-префикса,
+      // без нормализации группа одного человека рвётся на две строки
+      const normModel = (m: string) => (m.includes("/") ? m.slice(m.indexOf("/") + 1) : m);
+      const groups: Record<string, GanttRowT[]> = {};
+      all.forEach((r) => {
+        const k = `${r.display}|${normModel(r.model)}|${keyOf(r)}`;
+        (groups[k] = groups[k] || []).push(r);
+      });
+      const rowsOut: { line: Line; lastEnd: number; tmax: number }[] = [];
+      Object.entries(groups).forEach(([k, arr]) => {
+        const parts = k.split("|");
+        const who = parts[0];
+        const model = parts[1];
+        const sorted = arr.slice().sort((a, b) => a.t0 - b.t0);
+        const lanes: { line: Line; lastEnd: number; tmax: number }[] = [];
+        sorted.forEach((r) => {
+          let best = -1;
+          let bestEnd = -Infinity;
+          lanes.forEach((row, ix) => {
+            if (row.lastEnd <= r.t0 && row.lastEnd > bestEnd) {
+              best = ix;
+              bestEnd = row.lastEnd;
+            }
+          });
+          if (best >= 0) {
+            const row = lanes[best];
+            row.line.items.push(r);
+            row.lastEnd = Math.max(row.lastEnd, r.t1);
+            row.tmax = Math.max(row.tmax, r.t1);
+          } else {
+            const row = { line: { who, model, key: keyOf(r), items: [r] }, lastEnd: r.t1, tmax: r.t1 };
+            lanes.push(row);
+            rowsOut.push(row);
+          }
+        });
+      });
+      rowsOut.sort((a, b) => b.tmax - a.tmax);
+      lines = rowsOut.slice(0, MAX_SHOWN).map((x) => x.line);
+    } else {
+      lines = all
+        .slice(0, MAX_SHOWN)
+        .map((r) => ({ who: r.display, model: r.model, key: keyOf(r), items: [r] }));
+    }
+    if (!lines.length) return null;
+    let tmin: number;
+    let tmax: number;
+    if (zoom) {
+      tmin = zoom[0];
+      tmax = zoom[1];
+    } else if (custom) {
+      tmin = custom[0];
+      tmax = custom[1];
+    } else {
+      tmin = Math.min(...lines.map((l) => Math.min(...l.items.map((r) => r.t0))));
+      tmax = Math.max(...lines.map((l) => Math.max(...l.items.map((r) => r.t1))), Date.now());
+    }
+    const pad = (tmax - tmin) * 0.04 + 1;
+    tmin -= pad;
+    tmax += pad;
+    const L = 240;
+    const R = 48;
+    const T = 26;
+    const BH = 16;
+    const GAP = 5;
+    const width = 1000;
+    const plotW = width - L - R;
+    const height = T + lines.length * (BH + GAP) + 14;
+    const X = (t: number) => L + ((t - tmin) / (tmax - tmin)) * plotW;
+    geomRef.current = { tmin, tmax, L, plotW, viewW: width };
+
+    const grid: string[] = [];
+    for (let g = 0; g <= 8; g += 1) {
+      const t = tmin + ((tmax - tmin) * g) / 8;
+      const x = X(t);
+      grid.push(`<line x1="${x}" y1="${T - 6}" x2="${x}" y2="${height - 8}" stroke="#e2e8f0"/>`);
+      grid.push(
+        `<text x="${x}" y="${T - 10}" text-anchor="middle" font-size="10" fill="#64748b">${fmtAxis(t, tmax - tmin)}</text>`,
+      );
+    }
+    const nowMs = Date.now();
+    if (nowMs >= tmin && nowMs <= tmax) {
+      grid.push(
+        `<line x1="${X(nowMs)}" y1="${T - 6}" x2="${X(nowMs)}" y2="${height - 8}" stroke="#ef4444" stroke-dasharray="3 3"/>`,
+      );
+    }
+
+    const bars = lines.map((l, i) => {
+      const y = T + i * (BH + GAP);
+      const modelShort = l.model.replace(/^openai\//, "");
+      const full = l.key ? `${l.who} · ${modelShort} · ${l.key}` : `${l.who} · ${modelShort}`;
+      const MAXL = 38;
+      const base = full.length > MAXL ? `${full.slice(0, MAXL - 1)}…` : full;
+      const label = l.items.length > 1 ? `${base} ×${l.items.length}` : base;
+      const col = colorOf(l.who);
+      const totTok = l.items.reduce((a, r) => a + (r.p || 0) + (r.c || 0), 0);
+      const spanEnd = Math.max(...l.items.map((r) => r.t1));
+      const rowTipRaw = `${l.who}\nмодель: ${l.model}\nключ: ${l.key || "— (без имени)"}\nзапросов: ${l.items.length}\nтокенов: ${fnum(totTok)}\n${fmtTime(l.items[0].t0)} — ${fmtTime(spanEnd)}`;
+      const rowTipAttr = rowTipRaw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g, "&#10;");
+      let el = `<g data-tip="${rowTipAttr}"><text x="6" y="${y + BH - 4}" text-anchor="start" font-size="10" fill="#334155">${label.replace(/</g, "&lt;")}</text></g>`;
+      l.items.forEach((r) => {
+        const dur = (r.t1 - r.t0) / 1000;
+        const ttft = r.tf ? (r.tf - r.t0) / 1000 : null;
+        const gen = r.c && r.tf ? r.c / Math.max((r.t1 - r.tf) / 1000, 0.001) : 0;
+        const tipTxt =
+          `${l.who} · ${r.model}\n` +
+          `старт ${fmtTime(r.t0)} · длит ${dur.toFixed(2)} с\n` +
+          (ttft != null ? `TTFT ${ttft.toFixed(2)} с\n` : "") +
+          `токены ${fnum(r.p)}/${fnum(r.c)}${gen ? ` (${gen.toFixed(0)} tok/s)` : ""}` +
+          (r.key_alias ? `\nключ: ${r.key_alias}` : r.key_short ? `\nключ (hash): ${r.key_short}…` : "") +
+          (l.items.length > 1 ? `\nзапрос ${l.items.indexOf(r) + 1}/${l.items.length} на дорожке` : "") +
+          (r.status && r.status !== "success" ? `\nстатус: ${r.status}` : "");
+        const tipTxtEsc = tipTxt.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+        const tipAttr = tipTxt.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g, "&#10;");
+        const x0 = X(r.t0);
+        const x1 = Math.max(X(r.t1), x0 + 1.5);
+        el += `<g data-tip="${tipAttr}"><title>${tipTxtEsc}</title>`;
+        if (r.tf && r.tf > r.t0 && r.tf < r.t1) {
+          const xf = X(r.tf);
+          el += `<rect x="${x0}" y="${y}" width="${Math.max(xf - x0, 1)}" height="${BH}" fill="#cbd5e1" rx="2"/>`;
+          el += `<rect x="${xf}" y="${y}" width="${Math.max(x1 - xf, 1)}" height="${BH}" fill="${col}" rx="2"/>`;
+        } else {
+          el += `<rect x="${x0}" y="${y}" width="${x1 - x0}" height="${BH}" fill="${r.c ? col : "#cbd5e1"}" rx="2"/>`;
+        }
+        el += "</g>";
+      });
+      return el;
+    });
+
+    return (
+      `<svg viewBox="0 0 ${width} ${height}" ` +
+      'style="width:100%;background:#fff;border:1px solid #e2e8f0;border-radius:8px">' +
+      `${grid.join("")}${bars.join("")}</svg>`
+    );
+  }, [data, colorOf, selected, grouped, windowSec, zoom, custom]);
+
+  useEffect(() => {
+    const el = chartRef.current;
+    if (!el) return undefined;
+    const show = (e: MouseEvent) => {
+      const t = (e.target as Element).closest("[data-tip]");
+      if (t) setTip({ x: e.clientX + 14, y: e.clientY + 16, text: t.getAttribute("data-tip") || "" });
+      else setTip(null);
+    };
+    el.addEventListener("mouseover", show);
+    el.addEventListener("mousemove", show);
+    el.addEventListener("mouseout", () => setTip(null));
+    let ovl: HTMLDivElement | null = null;
+    const clientToT = (cx: number): number | null => {
+      const g = geomRef.current;
+      const svgEl = el.querySelector("svg");
+      if (!g || !svgEl) return null;
+      const r = svgEl.getBoundingClientRect();
+      const xv = (cx - r.left) * (g.viewW / r.width);
+      return g.tmin + ((xv - g.L) / g.plotW) * (g.tmax - g.tmin);
+    };
+    let dragX0: { x: number; t: number | null } | null = null;
+    const onDown = (e: MouseEvent) => {
+      if (e.button !== 0 || !geomRef.current) return;
+      dragX0 = { x: e.clientX, t: clientToT(e.clientX) };
+      e.preventDefault();
+      const move = (ev: MouseEvent) => {
+        if (!dragX0) return;
+        const rect = el.getBoundingClientRect();
+        const x0 = Math.min(dragX0.x, ev.clientX);
+        const x1 = Math.max(dragX0.x, ev.clientX);
+        if (!ovl) {
+          ovl = document.createElement("div");
+          ovl.style.cssText =
+            "position:absolute;top:0;bottom:0;background:rgba(37,99,235,.18);border-left:1px solid #2563eb;border-right:1px solid #2563eb;pointer-events:none";
+          el.appendChild(ovl);
+        }
+        ovl.style.left = `${x0 - rect.left}px`;
+        ovl.style.width = `${x1 - x0}px`;
+      };
+      const up = (ev: MouseEvent) => {
+        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mouseup", up);
+        if (ovl) {
+          ovl.remove();
+          ovl = null;
+        }
+        if (!dragX0) return;
+        const t1 = dragX0.t;
+        const t2 = clientToT(ev.clientX);
+        dragX0 = null;
+        if (t1 != null && t2 != null && Math.abs(t2 - t1) >= 1000) {
+          let a = Math.min(t1, t2);
+          let b = Math.max(t1, t2);
+          if (custom) {
+            a = Math.max(a, custom[0]);
+            b = Math.min(b, custom[1]);
+            if (b - a < 1000) return;
+          }
+          setZoom([a, b]);
+        }
+      };
+      document.addEventListener("mousemove", move);
+      document.addEventListener("mouseup", up);
+    };
+    const onDbl = () => setZoom(null);
+    el.addEventListener("mousedown", onDown);
+    el.addEventListener("dblclick", onDbl);
+    return () => {
+      el.removeEventListener("mouseover", show);
+      el.removeEventListener("mousemove", show);
+      el.removeEventListener("mouseout", () => setTip(null));
+      el.removeEventListener("mousedown", onDown);
+      el.removeEventListener("dblclick", onDbl);
+    };
+  }, [svg, custom]);
+
+  return (
+    <div className="space-y-3 p-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-sm text-gray-600">Окно:</span>
+        {WINDOWS.map((w) => (
+          <button
+            key={w.sec}
+            type="button"
+            onClick={() => {
+              setWindowSec(w.sec);
+              setZoom(null);
+              setCustom(null);
+              setCform(false);
+            }}
+            className={`rounded border px-2.5 py-1 text-sm ${
+              !custom && windowSec === w.sec
+                ? "border-blue-600 bg-blue-600 text-white"
+                : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+            }`}
+          >
+            {w.label}
+          </button>
+        ))}
+        <button
+          type="button"
+          onClick={() => {
+            const from = custom ? new Date((zoom || custom)[0]) : new Date(Date.now() - 3600000);
+            const to = custom ? new Date((zoom || custom)[1]) : new Date();
+            setCfrom(toLocalInput(from));
+            setCto(toLocalInput(to));
+            setCform((v) => !v);
+          }}
+          title="задать произвольный период"
+          className={`rounded border px-2.5 py-1 text-sm ${
+            custom
+              ? "border-blue-600 bg-blue-50 text-blue-800"
+              : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+          }`}
+        >
+          {custom ? spanLabel((zoom || custom)[0], (zoom || custom)[1]) : "свой интервал…"}
+        </button>
+        {cform && (
+          <span className="flex items-center gap-1.5">
+            <input
+              type="datetime-local"
+              step={1}
+              value={cfrom}
+              onChange={(e) => setCfrom(e.target.value)}
+              className="rounded border border-gray-300 px-1.5 py-0.5 text-sm"
+            />
+            <span className="text-gray-400">—</span>
+            <input
+              type="datetime-local"
+              step={1}
+              value={cto}
+              onChange={(e) => setCto(e.target.value)}
+              className="rounded border border-gray-300 px-1.5 py-0.5 text-sm"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const f = Date.parse(cfrom);
+                const t = Date.parse(cto);
+                if (Number.isNaN(f) || Number.isNaN(t) || t <= f) return;
+                setCustom([f, t]);
+                setZoom(null);
+                setCform(false);
+              }}
+              className="rounded border border-blue-600 bg-blue-600 px-2 py-0.5 text-sm text-white"
+            >
+              ок
+            </button>
+            <button
+              type="button"
+              onClick={() => setCform(false)}
+              className="rounded border border-gray-300 px-2 py-0.5 text-sm text-gray-600 hover:bg-gray-50"
+            >
+              отмена
+            </button>
+          </span>
+        )}
+        {zoom && (
+          <button
+            type="button"
+            onClick={() => setZoom(null)}
+            title="двойной клик по графику — тоже сброс"
+            className="rounded border border-gray-300 bg-white px-2.5 py-1 text-sm text-gray-700 hover:bg-gray-50"
+          >
+            ⤺ сбросить масштаб
+          </button>
+        )}
+        <label className="ml-3 flex cursor-pointer items-center gap-1.5 text-sm text-gray-600">
+          <input type="checkbox" checked={grouped} onChange={(e) => setGrouped(e.target.checked)} />
+          группировать (строка=дорожка)
+        </label>
+        {data && (
+          <span className="ml-auto text-sm text-gray-500">
+            {selected.length ? "выбрано: " : "запросов: "}
+            {selected.length
+              ? `${data.rows.filter((r) => selected.includes(r.display)).length} из ${data.total}`
+              : data.total}
+            {(selected.length
+              ? data.rows.filter((r) => selected.includes(r.display)).length
+              : data.rows.length) > MAX_SHOWN
+              ? ` (показаны последние ${MAX_SHOWN})`
+              : ""}
+          </span>
+        )}
+      </div>
+      {chips.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+          <span className="text-xs text-gray-400">фильтр по людям:</span>
+          {chips.map(([name, v]) => {
+            const on = selected.includes(name);
+            return (
+              <button
+                key={name}
+                type="button"
+                onClick={() => toggleUser(name)}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 transition ${
+                  on
+                    ? "border-blue-600 bg-blue-50 text-blue-800"
+                    : selected.length
+                      ? "border-gray-200 bg-white text-gray-400 hover:bg-gray-50"
+                      : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: v.color }} />
+                {name}: {v.n} · {fnum(v.tok)} ток.
+                {on && <span className="ml-0.5 text-blue-600">✓</span>}
+              </button>
+            );
+          })}
+          {selected.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setSelected([])}
+              className="rounded border border-gray-300 px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-50"
+            >
+              сбросить
+            </button>
+          )}
+        </div>
+      )}
+      {error && <div className="text-sm text-red-600">ошибка загрузки: {error}</div>}
+      {typeof svg === "string" ? (
+        <div ref={chartRef} className="relative cursor-crosshair" dangerouslySetInnerHTML={{ __html: svg }} />
+      ) : (
+        !error && (
+          <div className="text-sm text-gray-500">
+            {zoom || custom
+              ? "нет запросов в выбранном интервале"
+              : selected.length
+                ? "нет запросов выбранных людей в этом окне"
+                : "нет запросов в выбранном окне"}
+          </div>
+        )
+      )}
+      {tip && (
+        <div
+          className="pointer-events-none fixed z-50 max-w-[480px] whitespace-pre-line rounded border border-gray-300 bg-white px-2 py-1 text-xs shadow-lg"
+          style={{ left: tip.x, top: tip.y }}
+        >
+          {tip.text}
+        </div>
+      )}
+    </div>
+  );
+}
