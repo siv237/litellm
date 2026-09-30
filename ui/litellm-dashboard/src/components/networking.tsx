@@ -1024,6 +1024,7 @@ export interface UserInfo {
   updated_at: string;
   sso_user_id: string | null;
   budget_duration: string | null;
+  budget_reset_at: string | null;
   metadata?: Record<string, unknown> | null;
 }
 

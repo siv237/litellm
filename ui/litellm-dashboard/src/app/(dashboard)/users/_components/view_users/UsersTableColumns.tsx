@@ -23,6 +23,23 @@ const SSO_ID_HINT =
 
 const SCIM_INACTIVE_HINT = "Deactivated via SCIM (external identity provider). The user's virtual keys are blocked.";
 
+const DURATION_LABELS: Record<string, string> = {
+  "30m": "Every 30 min",
+  "1h": "Hourly",
+  "24h": "Daily",
+  "1d": "Daily",
+  "7d": "Weekly",
+  "1w": "Weekly",
+  "14d": "Biweekly",
+  "28d": "Monthly",
+  "30d": "Monthly",
+  "1mo": "Monthly",
+  "3mo": "Quarterly",
+  "6mo": "Semi-annual",
+  "12mo": "Annual",
+  "1y": "Annual",
+};
+
 function isScimInactive(user: UserInfo): boolean {
   return (user.metadata as Record<string, unknown> | null | undefined)?.scim_active === false;
 }
@@ -173,6 +190,73 @@ export const getUsersTableColumns = ({
       size: 130,
       enableSorting: false,
       cell: ({ row }) => <MoneyCell value={row.original.max_budget} decimals={2} emptyText="Unlimited" showZero />,
+    },
+    {
+      id: "quota_mode",
+      meta: { title: "Quota" },
+      header: "Quota",
+      size: 130,
+      enableSorting: false,
+      cell: ({ row }) => {
+        const { max_budget: maxBudget, budget_duration: budgetDuration, budget_reset_at: budgetResetAt } =
+          row.original;
+        if (maxBudget == null) {
+          return <span className="text-sm text-muted-foreground">No quota</span>;
+        }
+        const resetLabel = budgetDuration ? DURATION_LABELS[budgetDuration.toLowerCase()] ?? `${budgetDuration} reset` : null;
+        const badge = (
+          <Badge
+            variant="outline"
+            className={cn(
+              "whitespace-nowrap font-normal",
+              resetLabel
+                ? "border-info/30 bg-info/10 text-info"
+                : "border-indigo-200 bg-indigo-50 text-indigo-600 dark:border-indigo-800 dark:bg-indigo-950 dark:text-indigo-300",
+            )}
+          >
+            {resetLabel ?? "Fixed"}
+          </Badge>
+        );
+        const hint = budgetDuration
+          ? budgetResetAt
+            ? `Budget resets every ${budgetDuration}; next reset: ${new Date(budgetResetAt).toLocaleString()}`
+            : `Budget resets every ${budgetDuration}`
+          : null;
+        return hint ? <CellTooltip content={hint} trigger={badge} /> : badge;
+      },
+    },
+    {
+      id: "quota_used",
+      meta: { title: "Used", numeric: true },
+      header: "Used",
+      size: 160,
+      enableSorting: false,
+      cell: ({ row }) => {
+        const { spend, max_budget: maxBudget } = row.original;
+        if (maxBudget == null || maxBudget <= 0) {
+          return <span className="text-sm text-muted-foreground">—</span>;
+        }
+        const pct = Math.max(0, (spend / maxBudget) * 100);
+        const shown = pct >= 10 ? `${Math.round(pct)}%` : `${Math.round(pct * 10) / 10}%`;
+        const barClass = pct >= 95 ? "bg-destructive" : pct >= 75 ? "bg-warning" : "bg-success";
+        const textClass = pct >= 95 ? "text-destructive" : pct >= 75 ? "text-warning" : "text-muted-foreground";
+        return (
+          <CellTooltip
+            content={`$${spend.toFixed(2)} of $${maxBudget.toFixed(2)}`}
+            trigger={
+              <span className="flex items-center gap-2">
+                <span className="inline-block h-1.5 w-24 overflow-hidden rounded-full bg-muted">
+                  <span
+                    className={cn("block h-full rounded-full", barClass)}
+                    style={{ width: `${Math.min(pct, 100)}%` }}
+                  />
+                </span>
+                <span className={cn("text-xs tabular-nums", textClass)}>{shown}</span>
+              </span>
+            }
+          />
+        );
+      },
     },
     {
       id: "sso_user_id",
