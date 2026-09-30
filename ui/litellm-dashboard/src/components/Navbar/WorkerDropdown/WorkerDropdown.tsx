@@ -45,13 +45,13 @@ const WorkerDropdown: React.FC<WorkerDropdownProps> = ({ onWorkerSwitch }) => {
         }
       }}
     >
-      <ComboboxInput className="min-w-[180px]" aria-label="Worker">
+      <ComboboxInput className="min-w-[180px]" aria-label="Воркер">
         <InputGroupAddon align="inline-start">
           <Server className="size-4" />
         </InputGroupAddon>
       </ComboboxInput>
       <ComboboxContent>
-        <ComboboxEmpty>No matching workers</ComboboxEmpty>
+        <ComboboxEmpty>Нет подходящих воркеров</ComboboxEmpty>
         <ComboboxList>
           {(option: WorkerOption) => (
             <ComboboxItem key={option.value} value={option} disabled={option.disabled}>

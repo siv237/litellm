@@ -10,7 +10,7 @@ const ChevronWidthSpacer: React.FC = () => (
 
 export const DocsLink: React.FC = () => (
   <a href={DOCS_URL} target="_blank" rel="noopener noreferrer" className={NAV_PRODUCT_LINK_CLASS}>
-    Docs
+    Документация
     <ChevronWidthSpacer />
   </a>
 );

@@ -84,16 +84,16 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, variant = "navbar
         {premiumUser ? (
           <Badge>
             <Crown className="size-3" />
-            Premium
+            Премиум
           </Badge>
         ) : (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger render={<Badge variant="outline" />}>
                 <Crown className="size-3" />
-                Standard
+                Стандарт
               </TooltipTrigger>
-              <TooltipContent side="left">Upgrade to Premium for advanced features</TooltipContent>
+              <TooltipContent side="left">Premium даёт расширенные возможности</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         )}
@@ -102,13 +102,13 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, variant = "navbar
       <div className="flex w-full items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <User className="size-4" />
-          <span className="text-muted-foreground">User ID</span>
+          <span className="text-muted-foreground">ID пользователя</span>
         </div>
         <div className="flex items-center gap-1">
           <span className="max-w-[150px] truncate" title={userId || "-"}>
             {userId || "-"}
           </span>
-          <CopyButton value={userId} label="Copy User ID" />
+          <CopyButton value={userId} label="Скопировать ID пользователя" />
         </div>
       </div>
       <div className="flex w-full items-center justify-between gap-2">
@@ -120,7 +120,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, variant = "navbar
       </div>
       <Separator className="my-2" />
       <div className="flex w-full items-center justify-between gap-2">
-        <span className="text-muted-foreground">Hide New Feature Indicators</span>
+        <span className="text-muted-foreground">Скрывать индикаторы новинок</span>
         <Switch
           size="sm"
           checked={disableShowNewBadge}
@@ -134,11 +134,11 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, variant = "navbar
               emitLocalStorageChange("disableShowNewBadge");
             }
           }}
-          aria-label="Toggle hide new feature indicators"
+          aria-label="Показ индикаторов новинок"
         />
       </div>
       <div className="flex w-full items-center justify-between gap-2">
-        <span className="text-muted-foreground">Hide All Prompts</span>
+        <span className="text-muted-foreground">Скрыть все промпты</span>
         <Switch
           size="sm"
           checked={disableShowPrompts}
@@ -151,11 +151,11 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, variant = "navbar
               emitLocalStorageChange("disableShowPrompts");
             }
           }}
-          aria-label="Toggle hide all prompts"
+          aria-label="Показ всех промптов"
         />
       </div>
       <div className="flex w-full items-center justify-between gap-2">
-        <span className="text-muted-foreground">Hide Blog Posts</span>
+        <span className="text-muted-foreground">Скрыть записи блога</span>
         <Switch
           size="sm"
           checked={disableBlogPosts}
@@ -168,11 +168,11 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, variant = "navbar
               emitLocalStorageChange("disableBlogPosts");
             }
           }}
-          aria-label="Toggle hide blog posts"
+          aria-label="Показ записей блога"
         />
       </div>
       <div className="flex w-full items-center justify-between gap-2">
-        <span className="text-muted-foreground">Hide Bouncing Icon</span>
+        <span className="text-muted-foreground">Скрыть прыгающую иконку</span>
         <Switch
           size="sm"
           checked={disableBouncingIcon}
@@ -185,7 +185,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, variant = "navbar
               emitLocalStorageChange("disableBouncingIcon");
             }
           }}
-          aria-label="Toggle hide bouncing icon"
+          aria-label="Показ прыгающей иконки"
         />
       </div>
     </div>
@@ -264,7 +264,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, variant = "navbar
           className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
         >
           <LogOut className="size-4" />
-          Logout
+          Выйти
         </button>
       </PopoverContent>
     </Popover>

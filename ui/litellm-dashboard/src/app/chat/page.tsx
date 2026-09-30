@@ -111,7 +111,7 @@ export default function ChatConversationPage() {
           localStorage.setItem(LOCALSTORAGE_MODEL_KEY, names[0]);
         }
       })
-      .catch(() => toast.error("Could not load models"))
+      .catch(() => toast.error("Не удалось загрузить модели"))
       .finally(() => setIsLoadingModels(false));
   }, [accessToken]);
 
@@ -432,7 +432,7 @@ export default function ChatConversationPage() {
                 <span className="overflow-hidden text-ellipsis whitespace-nowrap">{selectedModel}</span>
               </>
             ) : (
-              <span className="text-muted-foreground">Select model</span>
+              <span className="text-muted-foreground">Выберите модель</span>
             )}
             <ChevronDown className="h-3 w-3 text-muted-foreground shrink-0" />
           </Button>
@@ -501,7 +501,7 @@ export default function ChatConversationPage() {
               onClick={() => handleSend(inputText)}
               disabled={!inputText.trim() || isLoadingModels || !selectedModel}
             >
-              Send
+              Отправить
             </Button>
           )}
         </div>
@@ -513,7 +513,7 @@ export default function ChatConversationPage() {
     <>
       {storageUnavailable && !storageBannerDismissed && (
         <div className="bg-warning/10 border-b border-warning/20 px-5 py-1.5 text-[13px] text-warning flex justify-between items-center">
-          <span>Chat history won&apos;t be saved in this browser session</span>
+          <span>История чата не сохраняется в этой сессии браузера</span>
           <Button
             variant="ghost"
             size="icon-xs"
@@ -533,13 +533,13 @@ export default function ChatConversationPage() {
             </h1>
 
             <p className="-mt-4 mb-7 text-sm text-muted-foreground text-center max-w-[520px] leading-relaxed">
-              Chat with 100+ LLMs + MCP tools; authenticate once, use them here.{" "}
+              Общайтесь с 100+ LLM и инструментами MCP: авторизуйтесь один раз и используйте их здесь.{" "}
               <Button
                 variant="link"
                 onClick={() => router.push(getChatRoutes().integrations)}
                 className="h-auto p-0 text-sm font-medium"
               >
-                Open Integrations -&gt;
+                Открыть интеграции -&gt;
               </Button>
             </p>
 
@@ -586,7 +586,7 @@ export default function ChatConversationPage() {
                   }
                 }}
                 className="absolute bottom-[100px] left-1/2 -translate-x-1/2 z-chrome rounded-full border bg-background/75 text-muted-foreground shadow-sm backdrop-blur-md hover:bg-background/95"
-                aria-label="Scroll to bottom"
+                aria-label="Прокрутить вниз"
               >
                 <ChevronDown className="h-3 w-3" />
               </Button>

@@ -27,9 +27,9 @@ export const NotificationsBell: React.FC = () => {
 
   const content = (
     <div className="max-w-[280px]">
-      <PopoverTitle className="mt-0! mb-2!">LiteLLM Auto Router</PopoverTitle>
+      <PopoverTitle className="mt-0! mb-2!">Автомаршрутизатор LiteLLM</PopoverTitle>
       <PopoverDescription className="mb-3! text-sm leading-snug">
-        Route every request to the cheapest model that can handle it, no prompt changes needed.
+        Направляйте каждый запрос на самую дешёвую модель, которая с ним справится, — без изменений промпта.
       </PopoverDescription>
       <div className="flex flex-wrap items-center gap-2">
         <a
@@ -38,11 +38,11 @@ export const NotificationsBell: React.FC = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Read the docs
+          Читать документацию
         </a>
         {hasUnread ? (
           <Button variant="link" size="sm" className="px-1!" onClick={markDismissed}>
-            Mark as read
+            Отметить прочитанным
           </Button>
         ) : null}
       </div>
@@ -53,7 +53,7 @@ export const NotificationsBell: React.FC = () => {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         className="flex! h-9! w-9! items-center justify-center rounded-md! text-muted-foreground transition-colors hover:bg-accent! hover:text-foreground!"
-        aria-label="Notifications"
+        aria-label="Уведомления"
       >
         <span className="relative inline-flex">
           <Bell className="size-4" aria-hidden />

@@ -32,10 +32,10 @@ export default function ViewSwitcher() {
   const normalizedPathname = (pathname ?? "").replace(/\/+$/, "");
   const isChatRoute = chatEnabled && (normalizedPathname === chatHref || normalizedPathname.startsWith(`${chatHref}/`));
 
-  const activeLabel = isChatRoute ? "Chat" : plugins.find((p) => p.name === mode)?.display_name ?? "AI Gateway";
+  const activeLabel = isChatRoute ? "Чат" : plugins.find((p) => p.name === mode)?.display_name ?? "AI-шлюз";
 
   const modeEntries = [
-    { key: GATEWAY, label: "AI Gateway" },
+    { key: GATEWAY, label: "AI-шлюз" },
     ...plugins.map((p) => ({ key: p.name, label: p.display_name })),
   ];
 
@@ -53,7 +53,7 @@ export default function ViewSwitcher() {
         key: CHAT,
         label: (
           <div className="flex items-center justify-between gap-6 py-0.5">
-            <span className="font-medium">Chat</span>
+            <span className="font-medium">Чат</span>
             {isChatRoute && <Check className="size-4 text-info" />}
           </div>
         ),
@@ -64,9 +64,9 @@ export default function ViewSwitcher() {
         disabled: true,
         label: (
           <div className="flex max-w-[220px] flex-col py-0.5">
-            <span className="font-medium">Chat</span>
+            <span className="font-medium">Чат</span>
             <span className="whitespace-normal text-xs leading-snug text-muted-foreground">
-              Admins can enable in Settings
+              Включается администратором в настройках
             </span>
           </div>
         ),

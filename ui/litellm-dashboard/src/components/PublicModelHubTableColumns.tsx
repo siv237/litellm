@@ -169,8 +169,8 @@ export const getPublicModelHubColumns = ({ onModelClick }: PublicModelHubColumns
     {
       id: "model_group",
       accessorKey: "model_group",
-      meta: { title: "Model Name" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Model Name" />,
+      meta: { title: "Название модели" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Название модели" />,
       size: 200,
       sortingFn: "alphanumeric",
       cell: ({ row }) => (
@@ -185,8 +185,8 @@ export const getPublicModelHubColumns = ({ onModelClick }: PublicModelHubColumns
     {
       id: "providers",
       accessorKey: "providers",
-      meta: { title: "Providers", skeleton: "chips" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Providers" />,
+      meta: { title: "Провайдеры", skeleton: "chips" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Провайдеры" />,
       size: 150,
       sortingFn: (rowA, rowB) =>
         (rowA.original.providers ?? []).join(", ").localeCompare((rowB.original.providers ?? []).join(", ")),
@@ -195,8 +195,8 @@ export const getPublicModelHubColumns = ({ onModelClick }: PublicModelHubColumns
     {
       id: "mode",
       accessorKey: "mode",
-      meta: { title: "Mode" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Mode" />,
+      meta: { title: "Режим" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Режим" />,
       size: 110,
       sortingFn: "alphanumeric",
       cell: ({ row }) => (
@@ -209,24 +209,24 @@ export const getPublicModelHubColumns = ({ onModelClick }: PublicModelHubColumns
     {
       id: "max_input_tokens",
       accessorKey: "max_input_tokens",
-      meta: { title: "Max Input", numeric: true },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Max Input" />,
+      meta: { title: "Макс. вход, токенов", numeric: true },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Макс. вход, токенов" />,
       size: 100,
       cell: ({ row }) => <span className="text-sm">{formatTokens(row.original.max_input_tokens)}</span>,
     },
     {
       id: "max_output_tokens",
       accessorKey: "max_output_tokens",
-      meta: { title: "Max Output", numeric: true },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Max Output" />,
+      meta: { title: "Макс. выход, токенов", numeric: true },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Макс. выход, токенов" />,
       size: 100,
       cell: ({ row }) => <span className="text-sm">{formatTokens(row.original.max_output_tokens)}</span>,
     },
     {
       id: "input_cost_per_token",
       accessorKey: "input_cost_per_token",
-      meta: { title: "Input $/1M", numeric: true },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Input $/1M" />,
+      meta: { title: "Вход, ₽/1 млн", numeric: true },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Вход, ₽/1 млн" />,
       size: 110,
       cell: ({ row }) => (
         <span className="text-sm">
@@ -237,8 +237,8 @@ export const getPublicModelHubColumns = ({ onModelClick }: PublicModelHubColumns
     {
       id: "output_cost_per_token",
       accessorKey: "output_cost_per_token",
-      meta: { title: "Output $/1M", numeric: true },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Output $/1M" />,
+      meta: { title: "Выход, ₽/1 млн", numeric: true },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Выход, ₽/1 млн" />,
       size: 110,
       cell: ({ row }) => (
         <span className="text-sm">
@@ -248,8 +248,8 @@ export const getPublicModelHubColumns = ({ onModelClick }: PublicModelHubColumns
     },
     {
       id: "features",
-      meta: { title: "Features", skeleton: "chips" },
-      header: "Features",
+      meta: { title: "Возможности", skeleton: "chips" },
+      header: "Возможности",
       size: 140,
       cell: ({ row }) => {
         const features = Object.entries(row.original)
@@ -261,8 +261,8 @@ export const getPublicModelHubColumns = ({ onModelClick }: PublicModelHubColumns
     {
       id: "health_status",
       accessorKey: "health_status",
-      meta: { title: "Health Status", skeleton: "badge" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Health Status" />,
+      meta: { title: "Состояние", skeleton: "badge" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Состояние" />,
       size: 130,
       cell: ({ row }) => {
         const model = row.original;
@@ -295,8 +295,8 @@ export const getPublicModelHubColumns = ({ onModelClick }: PublicModelHubColumns
     {
       id: "rpm",
       accessorKey: "rpm",
-      meta: { title: "Limits" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Limits" />,
+      meta: { title: "Лимиты" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Лимиты" />,
       size: 150,
       cell: ({ row }) => (
         <span className="text-xs text-muted-foreground">{formatLimits(row.original.rpm, row.original.tpm)}</span>
@@ -317,8 +317,8 @@ export const getPublicAgentHubColumns = ({ onAgentClick }: PublicAgentHubColumns
   {
     id: "name",
     accessorKey: "name",
-    meta: { title: "Agent Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Agent Name" />,
+    meta: { title: "Имя агента" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Имя агента" />,
     size: 200,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -347,8 +347,8 @@ export const getPublicAgentHubColumns = ({ onAgentClick }: PublicAgentHubColumns
   {
     id: "version",
     accessorKey: "version",
-    meta: { title: "Version" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Version" />,
+    meta: { title: "Версия" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Версия" />,
     size: 90,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -369,16 +369,16 @@ export const getPublicAgentHubColumns = ({ onAgentClick }: PublicAgentHubColumns
   },
   {
     id: "skills",
-    meta: { title: "Skills", skeleton: "chips" },
-    header: "Skills",
+    meta: { title: "Навыки", skeleton: "chips" },
+    header: "Навыки",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => <OverflowChips items={(row.original.skills || []).map((skill) => skill.name)} />,
   },
   {
     id: "capabilities",
-    meta: { title: "Capabilities", skeleton: "chips" },
-    header: "Capabilities",
+    meta: { title: "Возможности", skeleton: "chips" },
+    header: "Возможности",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => {
@@ -409,8 +409,8 @@ export const getPublicMCPHubColumns = ({ onServerClick }: PublicMCPHubColumnsDep
   {
     id: "server_name",
     accessorKey: "server_name",
-    meta: { title: "Server Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Server Name" />,
+    meta: { title: "Имя сервера" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Имя сервера" />,
     size: 180,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -441,8 +441,8 @@ export const getPublicMCPHubColumns = ({ onServerClick }: PublicMCPHubColumnsDep
   {
     id: "transport",
     accessorKey: "transport",
-    meta: { title: "Transport", skeleton: "badge" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Transport" />,
+    meta: { title: "Транспорт", skeleton: "badge" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Транспорт" />,
     size: 110,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -455,8 +455,8 @@ export const getPublicMCPHubColumns = ({ onServerClick }: PublicMCPHubColumnsDep
   {
     id: "auth_type",
     accessorKey: "auth_type",
-    meta: { title: "Auth Type", skeleton: "badge" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Auth Type" />,
+    meta: { title: "Тип авторизации", skeleton: "badge" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Тип авторизации" />,
     size: 110,
     enableSorting: true,
     sortingFn: "alphanumeric",

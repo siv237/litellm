@@ -42,7 +42,7 @@ export const BlogDropdown: React.FC = () => {
     if (isError) {
       return (
         <div className="flex items-center gap-2 px-2 py-1.5 text-sm">
-          <span className="text-destructive">Failed to load posts</span>
+          <span className="text-destructive">Не удалось загрузить записи</span>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
             Повторить
           </Button>
@@ -51,7 +51,7 @@ export const BlogDropdown: React.FC = () => {
     }
 
     if (!data || data.posts.length === 0) {
-      return <div className="px-2 py-1.5 text-sm text-muted-foreground">No posts available</div>;
+      return <div className="px-2 py-1.5 text-sm text-muted-foreground">Нет доступных записей</div>;
     }
 
     return (
@@ -72,7 +72,7 @@ export const BlogDropdown: React.FC = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <a href="https://docs.litellm.ai/blog" target="_blank" rel="noopener noreferrer">
-            View all posts
+            Все записи
           </a>
         </DropdownMenuItem>
       </>
@@ -87,7 +87,7 @@ export const BlogDropdown: React.FC = () => {
         closeDelay={100}
         render={<Button variant="ghost" className={`${NAV_PRODUCT_LINK_CLASS} border-0!`} />}
       >
-        Blog
+        Блог
         <ChevronDown className="size-2.5 text-muted-foreground" aria-hidden />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" side="bottom" className="w-auto">
