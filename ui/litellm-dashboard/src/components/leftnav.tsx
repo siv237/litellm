@@ -117,9 +117,9 @@ interface MenuGroup {
 // icons changed to lucide as part of the sidebar redesign.
 const menuGroups: MenuGroup[] = [
   {
-    groupLabel: "AI GATEWAY",
+    groupLabel: "AI-шлюз",
     items: [
-      { key: "api-keys", page: "api-keys", label: "Virtual Keys", icon: <KeyRound {...ICON} /> },
+      { key: "api-keys", page: "api-keys", label: "Виртуальные ключи", icon: <KeyRound {...ICON} /> },
       {
         key: "llm-playground",
         page: "llm-playground",
@@ -132,61 +132,61 @@ const menuGroups: MenuGroup[] = [
         key: "models",
         page: "models",
         route: "models-and-endpoints",
-        label: "Models + Endpoints",
+        label: "Модели и эндпоинты",
         icon: <Network {...ICON} />,
         roles: rolesAllowedToViewWriteScopedPages,
       },
       {
         key: "agentic",
         page: "agentic",
-        label: "Agentic",
+        label: "Агентные",
         icon: <Bot {...ICON} />,
         children: [
           {
             key: "agents",
             page: "agents",
-            label: "Agents",
+            label: "Агенты",
             icon: <Bot {...ICON} />,
             roles: rolesAllowedToViewWriteScopedPages,
           },
           {
             key: "workflows",
             page: "workflows",
-            label: "Workflow Runs",
+            label: "Запуски workflow",
             icon: <Workflow {...ICON} />,
             roles: rolesWithCapability("viewWorkflowRuns"),
           },
           {
             key: "memory",
             page: "memory",
-            label: "Memory",
+            label: "Память",
             icon: <Database {...ICON} />,
             roles: rolesWithCapability("viewMemory"),
           },
         ],
       },
-      { key: "mcp-servers", page: "mcp-servers", label: "MCP Servers", icon: <Server {...ICON} /> },
-      { key: "skills", page: "skills", label: "Skills", icon: <Blocks {...ICON} />, roles: all_admin_roles },
-      { key: "guardrails", page: "guardrails", label: "Guardrails", icon: <Shield {...ICON} /> },
+      { key: "mcp-servers", page: "mcp-servers", label: "Серверы MCP", icon: <Server {...ICON} /> },
+      { key: "skills", page: "skills", label: "Навыки", icon: <Blocks {...ICON} />, roles: all_admin_roles },
+      { key: "guardrails", page: "guardrails", label: "Гардрейлы", icon: <Shield {...ICON} /> },
       {
         key: "policies",
         page: "policies",
-        label: "Policies",
+        label: "Политики",
         icon: <ScrollText {...ICON} />,
         roles: rolesWithCapability("viewPolicies"),
       },
       {
         key: "tools",
         page: "tools",
-        label: "Tools",
+        label: "Инструменты",
         icon: <Wrench {...ICON} />,
         children: [
-          { key: "search-tools", page: "search-tools", label: "Search Tools", icon: <Search {...ICON} /> },
-          { key: "vector-stores", page: "vector-stores", label: "Vector Stores", icon: <Database {...ICON} /> },
+          { key: "search-tools", page: "search-tools", label: "Инструменты поиска", icon: <Search {...ICON} /> },
+          { key: "vector-stores", page: "vector-stores", label: "Векторные хранилища", icon: <Database {...ICON} /> },
           {
             key: "tool-policies",
             page: "tool-policies",
-            label: "Tool Policies",
+            label: "Политики инструментов",
             icon: <ShieldCheck {...ICON} />,
             roles: rolesWithCapability("viewToolPolicies"),
           },
@@ -195,7 +195,7 @@ const menuGroups: MenuGroup[] = [
     ],
   },
   {
-    groupLabel: "OBSERVABILITY",
+    groupLabel: "Наблюдаемость",
     items: [
       {
         key: "new_usage",
@@ -203,7 +203,7 @@ const menuGroups: MenuGroup[] = [
         route: "usage",
         icon: <BarChart3 {...ICON} />,
         roles: [...all_admin_roles, ...internalUserRoles],
-        label: "Usage",
+        label: "Использование",
       },
       {
         key: "cost-optimization",
@@ -212,89 +212,89 @@ const menuGroups: MenuGroup[] = [
         roles: [...all_admin_roles, ...internalUserRoles],
         label: (
           <span className="flex items-center gap-2">
-            Cost Optimization <BetaBadge />
+            Оптимизация затрат <BetaBadge />
           </span>
         ),
       },
-      { key: "logs", page: "logs", label: "Logs", icon: <Activity {...ICON} /> },
+      { key: "logs", page: "logs", label: "Журналы", icon: <Activity {...ICON} /> },
       {
         key: "request-gantt",
         page: "request-gantt",
-        label: "Request Gantt",
+        label: "Gantt запросов",
         roles: [...all_admin_roles, ...internalUserRoles],
         icon: <ChartGantt {...ICON} />,
       },
       {
         key: "guardrails-monitor",
         page: "guardrails-monitor",
-        label: "Guardrails Monitor",
+        label: "Мониторинг гардрейлов",
         icon: <HeartPulse {...ICON} />,
         roles: rolesWithCapability("viewGuardrailUsage"),
       },
     ],
   },
   {
-    groupLabel: "ACCESS CONTROL",
+    groupLabel: "Контроль доступа",
     items: [
-      { key: "teams", page: "teams", label: "Teams", icon: <Users {...ICON} /> },
+      { key: "teams", page: "teams", label: "Команды", icon: <Users {...ICON} /> },
       {
         key: "projects",
         page: "projects",
         label: (
           <span className="flex items-center gap-2">
-            Projects <BetaBadge />
+            Проекты <BetaBadge />
           </span>
         ),
         icon: <Folder {...ICON} />,
         roles: all_admin_roles,
       },
-      { key: "users", page: "users", label: "Internal Users", icon: <User {...ICON} />, roles: all_admin_roles },
+      { key: "users", page: "users", label: "Внутренние пользователи", icon: <User {...ICON} />, roles: all_admin_roles },
       {
         key: "organizations",
         page: "organizations",
-        label: "Organizations",
+        label: "Организации",
         icon: <Building2 {...ICON} />,
         roles: all_admin_roles,
       },
       {
         key: "access-groups",
         page: "access-groups",
-        label: "Access Groups",
+        label: "Группы доступа",
         icon: <Boxes {...ICON} />,
         roles: all_admin_roles,
       },
-      { key: "budgets", page: "budgets", label: "Budgets", icon: <Wallet {...ICON} />, roles: all_admin_roles },
+      { key: "budgets", page: "budgets", label: "Бюджеты", icon: <Wallet {...ICON} />, roles: all_admin_roles },
     ],
   },
   {
-    groupLabel: "DEVELOPER TOOLS",
+    groupLabel: "Инструменты разработчика",
     items: [
-      { key: "api_ref", page: "api_ref", route: "api-reference", label: "API Reference", icon: <Code2 {...ICON} /> },
+      { key: "api_ref", page: "api_ref", route: "api-reference", label: "Справочник API", icon: <Code2 {...ICON} /> },
       { key: "model-hub-table", page: "model-hub-table", label: "AI Hub", icon: <LayoutGrid {...ICON} /> },
       {
         key: "learning-resources",
         page: "learning-resources",
-        label: "Learning Resources",
+        label: "Материалы",
         icon: <BookOpen {...ICON} />,
         external_url: "https://models.litellm.ai/cookbook",
       },
       {
         key: "caching",
         page: "caching",
-        label: "Response Cache",
+        label: "Кэш ответов",
         icon: <Database {...ICON} />,
         roles: all_admin_roles,
       },
       {
         key: "experimental",
         page: "experimental",
-        label: "Experimental",
+        label: "Экспериментальное",
         icon: <FlaskConical {...ICON} />,
         children: [
           {
             key: "prompts",
             page: "prompts",
-            label: "Prompts",
+            label: "Промпты",
             icon: <FileText {...ICON} />,
             roles: rolesWithCapability("viewPrompts"),
           },
@@ -308,7 +308,7 @@ const menuGroups: MenuGroup[] = [
           {
             key: "tag-management",
             page: "tag-management",
-            label: "Tag Management",
+            label: "Управление тегами",
             icon: <Tags {...ICON} />,
             roles: all_admin_roles,
           },
@@ -316,7 +316,7 @@ const menuGroups: MenuGroup[] = [
             key: "4",
             page: "usage",
             route: "old-usage",
-            label: "Old Usage",
+            label: "Старое использование",
             icon: <BarChart3 {...ICON} />,
             roles: rolesWithCapability("viewGlobalSpend"),
           },
@@ -325,45 +325,45 @@ const menuGroups: MenuGroup[] = [
     ],
   },
   {
-    groupLabel: "SETTINGS",
+    groupLabel: "Настройки",
     roles: all_admin_roles,
     items: [
       {
         key: "settings",
         page: "settings",
-        label: "Settings",
+        label: "Настройки",
         icon: <SettingsIcon {...ICON} />,
         roles: all_admin_roles,
         children: [
           {
             key: "router-settings",
             page: "router-settings",
-            label: "Router Settings",
+            label: "Настройки маршрутизации",
             icon: <Route {...ICON} />,
             roles: all_admin_roles,
           },
           {
             key: "logging-and-alerts",
             page: "logging-and-alerts",
-            label: "Logging & Alerts",
+            label: "Логирование и оповещения",
             icon: <Bell {...ICON} />,
             roles: all_admin_roles,
           },
           {
             key: "admin-panel",
             page: "admin-panel",
-            label: "Admin Settings",
+            label: "Администрирование",
             icon: <SettingsIcon {...ICON} />,
             roles: all_admin_roles,
           },
           {
             key: "cost-tracking",
             page: "cost-tracking",
-            label: "Cost Tracking",
+            label: "Учёт стоимости",
             icon: <BarChart3 {...ICON} />,
             roles: all_admin_roles,
           },
-          { key: "ui-theme", page: "ui-theme", label: "UI Theme", icon: <Palette {...ICON} />, roles: all_admin_roles },
+          { key: "ui-theme", page: "ui-theme", label: "Тема интерфейса", icon: <Palette {...ICON} />, roles: all_admin_roles },
         ],
       },
     ],
@@ -611,7 +611,7 @@ const Sidebar_: React.FC<SidebarProps> = ({
       <SidebarHeader className="h-14 border-b border-border group-data-[collapsed=true]/sidebar:h-auto">
         <div className="flex items-center justify-between gap-2 group-data-[collapsed=true]/sidebar:flex-col">
           <div className="flex min-w-0 items-center gap-2">
-            <Link href={uiHref("")} className="flex min-w-0 items-center" aria-label="LiteLLM home">
+            <Link href={uiHref("")} className="flex min-w-0 items-center" aria-label="На главную LiteLLM">
               <img src={logoSrc} alt="LiteLLM" className={cn(LOGO_CLASS_NAME, "dark:hidden")} />
               <img
                 src={darkLogoSrc}
@@ -636,7 +636,7 @@ const Sidebar_: React.FC<SidebarProps> = ({
               variant="ghost"
               size="icon-sm"
               onClick={onToggleCollapsed}
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              aria-label={collapsed ? "Развернуть панель" : "Свернуть панель"}
               className="flex-none text-muted-foreground"
             >
               {collapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
