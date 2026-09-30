@@ -246,7 +246,7 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
       try {
         metadata = metadataJson.trim() ? JSON.parse(metadataJson) : {};
       } catch (e) {
-        toast.fromError("Invalid JSON in metadata field");
+        toast.fromError("Некорректный JSON в поле метаданных");
         return;
       }
 
@@ -259,13 +259,13 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
         litellm_credential_name: formValues.litellm_credential_name,
         litellm_params: buildVectorStoreLitellmParams(formValues.custom_llm_provider, formValues),
       });
-      toast.success("Vector store created successfully");
+      toast.success("Векторное хранилище создано");
       form.reset(EMPTY_VALUES);
       setMetadataJson("{}");
       onSuccess();
     } catch (error) {
       console.error("Error creating vector store:", error);
-      toast.fromError("Error creating vector store: " + error);
+      toast.fromError("Не удалось создать векторное хранилище: " + error);
     }
   };
 
@@ -285,7 +285,7 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
     <Dialog open={isVisible} onOpenChange={(open) => !open && handleCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[1000px]">
         <DialogHeader>
-          <DialogTitle>Add New Vector Store</DialogTitle>
+          <DialogTitle>Добавить векторное хранилище</DialogTitle>
         </DialogHeader>
         <TooltipProvider>
           <form onSubmit={form.handleSubmit(handleCreate)}>
@@ -334,19 +334,19 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
               {selectedProvider === "pg_vector" && (
                 <Alert variant="info">
                   <Info />
-                  <AlertTitle>PG Vector Setup Required</AlertTitle>
+                  <AlertTitle>Требуется настройка PG Vector</AlertTitle>
                   <AlertDescription>
-                    <p>LiteLLM provides a server to connect to PG Vector. To use this provider:</p>
+                    <p>LiteLLM предоставляет сервер для подключения к PG Vector. Чтобы использовать этот провайдер:</p>
                     <ol style={{ marginLeft: "16px", marginTop: "8px", listStyleType: "decimal" }}>
                       <li>
-                        Deploy the litellm-pgvector server from:{" "}
+                        Разверните сервер litellm-pgvector из:{" "}
                         <a href="https://github.com/BerriAI/litellm-pgvector" target="_blank" rel="noopener noreferrer">
                           https://github.com/BerriAI/litellm-pgvector
                         </a>
                       </li>
-                      <li>Configure your PostgreSQL database with pgvector extension</li>
-                      <li>Start the server and note the API base URL and API key</li>
-                      <li>Enter those details in the fields below</li>
+                      <li>Настройте базу PostgreSQL с расширением pgvector</li>
+                      <li>Запустите сервер и запомните базовый URL API и API-ключ</li>
+                      <li>Введите эти данные в поля ниже</li>
                     </ol>
                   </AlertDescription>
                 </Alert>
@@ -355,33 +355,28 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
               {selectedProvider === "valkey" && (
                 <Alert variant="info">
                   <Info />
-                  <AlertTitle>Valkey Setup Required</AlertTitle>
+                  <AlertTitle>Требуется настройка Valkey</AlertTitle>
                   <AlertDescription>
                     <p>
-                      LiteLLM searches documents you have already stored in Valkey. It does not create the index or
-                      upload documents for you. Before creating this vector store, make sure:
+                      LiteLLM ищет по документам, которые вы уже сохранили в Valkey. Индекс он не создаёт и документы не загружает. Перед созданием хранилища убедитесь:
                     </p>
                     <ol style={{ marginLeft: "16px", marginTop: "8px", listStyleType: "decimal" }}>
                       <li>
-                        Your Valkey server has vector search enabled (the valkey-search module, included in the
-                        valkey-bundle image and in AWS ElastiCache / MemoryDB for Valkey)
+                        На сервере Valkey включён векторный поиск (модуль valkey-search, входит в образ valkey-bundle и в AWS ElastiCache / MemoryDB for Valkey)
                       </li>
                       <li>
-                        You have already created a search index and loaded your documents and their embeddings into it.
-                        Enter that index name as the Vector Store ID
+                        Поисковый индекс уже создан и документы с эмбеддингами в него загружены. Введите имя индекса как ID векторного хранилища
                       </li>
                       <li>
-                        You know which embedding model created those stored embeddings. That model must be added to this
-                        proxy under Models so you can pick it below. Using a different model returns wrong results
+                        Известно, какая модель эмбеддингов создавала сохранённые эмбеддинги. Эта модель должна быть добавлена на прокси в «Моделях», чтобы выбрать её ниже. Другая модель даст неверные результаты
                       </li>
                       <li>
-                        You know the field names your documents use for their text and their embedding. If they are not
-                        &quot;text&quot; and &quot;embedding&quot;, set them below
+                        Известны имена полей документов с текстом и эмбеддингом. Если это не
+                        &quot;text&quot; и &quot;embedding&quot;, задайте их ниже
                       </li>
                     </ol>
                     <p style={{ marginTop: "8px" }}>
-                      When a query comes in, LiteLLM converts it to an embedding with the model below and returns the
-                      closest matching documents from your index.
+                      При поступлении запроса LiteLLM преобразует его в эмбеддинг моделью ниже и возвращает ближайшие документы из вашего индекса.
                     </p>
                   </AlertDescription>
                 </Alert>
@@ -390,30 +385,30 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
               {selectedProvider === "vertex_rag_engine" && (
                 <Alert variant="info">
                   <Info />
-                  <AlertTitle>Vertex AI RAG Engine Setup</AlertTitle>
+                  <AlertTitle>Настройка Vertex AI RAG Engine</AlertTitle>
                   <AlertDescription>
-                    <p>To use Vertex AI RAG Engine:</p>
+                    <p>Чтобы использовать Vertex AI RAG Engine:</p>
                     <p style={{ marginTop: "4px", fontStyle: "italic" }}>
-                      Note: Google Cloud has renamed this to &quot;RAG Engine&quot; in its console — the steps below
-                      still apply.
+                      Замечание: в консоли Google Cloud это переименовано в &quot;RAG Engine&quot; — шаги ниже
+                      остаются в силе.
                     </p>
                     <ol style={{ marginLeft: "16px", marginTop: "8px", listStyleType: "decimal" }}>
                       <li>
-                        Set up your Vertex AI RAG Engine corpus following the guide:{" "}
+                        Настройте корпус Vertex AI RAG Engine по руководству:{" "}
                         <a
                           href="https://cloud.google.com/vertex-ai/generative-ai/docs/rag-engine/rag-overview"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Vertex AI RAG Engine Overview
+                          Обзор Vertex AI RAG Engine
                         </a>
                       </li>
-                      <li>Create a corpus in your Google Cloud project</li>
+                      <li>Создайте корпус в проекте Google Cloud</li>
                       <li>
-                        Note the corpus ID from the Vertex AI console (now labeled &quot;RAG Engine&quot; in Google
-                        Cloud)
+                        Запомните ID корпуса из консоли Vertex AI (в Google Cloud теперь называется
+                        &quot;RAG Engine&quot;)
                       </li>
-                      <li>Enter the corpus ID in the Vector Store ID field below</li>
+                      <li>Введите ID корпуса в поле ID векторного хранилища ниже</li>
                     </ol>
                   </AlertDescription>
                 </Alert>
@@ -422,36 +417,33 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
               {selectedProvider === "vertex_ai/search_api" && (
                 <Alert variant="info">
                   <Info />
-                  <AlertTitle>Vertex AI Search Setup</AlertTitle>
+                  <AlertTitle>Настройка Vertex AI Search</AlertTitle>
                   <AlertDescription>
-                    <p>To use Vertex AI Search (Discovery Engine):</p>
+                    <p>Чтобы использовать Vertex AI Search (Discovery Engine):</p>
                     <p style={{ marginTop: "4px", fontStyle: "italic" }}>
-                      Note: Google Cloud has renamed this to &quot;Agent Search&quot; in its console — the steps below
-                      still apply.
+                      Замечание: в консоли Google Cloud это переименовано в &quot;Agent Search&quot; — шаги ниже
+                      остаются в силе.
                     </p>
                     <ol style={{ marginLeft: "16px", marginTop: "8px", listStyleType: "decimal" }}>
                       <li>
-                        Enable the Discovery Engine API on your Google Cloud project and create a data store following
-                        the guide:{" "}
+                        Включите API Discovery Engine в проекте Google Cloud и создайте хранилище данных по руководству:{" "}
                         <a
                           href="https://cloud.google.com/generative-ai-app-builder/docs/create-data-store-es"
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{ textDecoration: "underline" }}
                         >
-                          Create a Vertex AI Search data store
+                          Создайте хранилище данных Vertex AI Search
                         </a>
                       </li>
-                      <li>Pick a supported location: global, us, or eu</li>
+                      <li>Выберите поддерживаемое расположение: global, us или eu</li>
                       <li>
-                        For most data store types (Cloud Storage, BigQuery, Media): copy the data store ID and enter it
-                        in the Vector Store ID field below.
+                        Для большинства типов хранилищ (Cloud Storage, BigQuery, Media): скопируйте ID хранилища данных и введите его в поле ID векторного хранилища ниже.
                       </li>
                       <li>
-                        For website, healthcare, and connector-based sources (Drive, Gmail, Slack, Jira, etc.): create a
-                        search app on top of the data store, then copy the <strong>Engine ID</strong> and enter it in
-                        the Engine ID field. The Vector Store ID is still required as the LiteLLM-side name for this
-                        record, but it isn&apos;t used in the GCP URL when Engine ID is set.
+                        Для источников website, healthcare и подключаемых (Drive, Gmail, Slack, Jira и т.п.): создайте приложение поиска поверх хранилища данных, затем скопируйте <strong>ID движка</strong> и введите его в поле
+                        «ID движка». ID векторного хранилища по-прежнему обязателен как имя записи на стороне
+                        LiteLLM, но в URL GCP при заданном ID движка не используется.
                       </li>
                     </ol>
                   </AlertDescription>
@@ -509,12 +501,12 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
                       id={id}
                       aria-invalid={ariaInvalid}
                       aria-describedby={ariaDescribedBy}
-                      placeholder="Select or search for existing credentials"
+                      placeholder="Выберите или найдите существующие учётные данные"
                       className="w-full"
                       showClear={value !== undefined}
                     />
                     <ComboboxContent>
-                      <ComboboxEmpty>No matching credentials</ComboboxEmpty>
+                      <ComboboxEmpty>Нет подходящих учётных данных</ComboboxEmpty>
                       <ComboboxList>
                         {(option: CredentialOption) => (
                           <ComboboxItem key={option.label} value={option}>
@@ -598,7 +590,7 @@ const ProviderField: React.FC<ProviderFieldProps> = ({ field, control, modelInfo
               className="w-full"
             />
             <ComboboxContent>
-              <ComboboxEmpty>No matching options</ComboboxEmpty>
+              <ComboboxEmpty>Нет подходящих вариантов</ComboboxEmpty>
               <ComboboxList>
                 {(option: { value: string; label: string }) => (
                   <ComboboxItem key={option.value} value={option}>
