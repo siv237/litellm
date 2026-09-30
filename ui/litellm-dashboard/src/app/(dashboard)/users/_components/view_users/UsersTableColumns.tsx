@@ -41,6 +41,8 @@ const SCIM_INACTIVE_HINT = "Deactivated via SCIM (external identity provider). T
 const DURATION_LABELS: Record<string, string> = {
   "30m": "Every 30 min",
   "1h": "Hourly",
+  "6h": "Every 6 hours",
+  "12h": "Every 12 hours",
   "24h": "Daily",
   "1d": "Daily",
   "7d": "Weekly",
@@ -125,8 +127,11 @@ async function patchUser(accessToken: string | null, body: Record<string, unknow
   }
 }
 
-const DURATION_MENU_OPTIONS: { value: "0" | "1d" | "7d" | "1mo"; label: string }[] = [
-  { value: "0", label: "No reset (Fixed)" },
+const DURATION_MENU_OPTIONS: { value: string | null; label: string }[] = [
+  { value: null, label: "No reset (Fixed)" },
+  { value: "1h", label: "Hourly" },
+  { value: "6h", label: "Every 6 hours" },
+  { value: "12h", label: "Every 12 hours" },
   { value: "1d", label: "Daily" },
   { value: "7d", label: "Weekly" },
   { value: "1mo", label: "Monthly" },
@@ -174,9 +179,10 @@ function QuotaModeCell({
     return hint ? <CellTooltip content={hint} trigger={<span>{badge}</span>} /> : badge;
   }
 
-  const current = budgetDuration
-    ? (["1d", "7d", "1mo"].find((d) => d === budgetDuration.toLowerCase()) as "1d" | "7d" | "1mo" | undefined) ?? "0"
-    : "0";
+  const currentVal = budgetDuration?.toLowerCase() ?? null;
+  const matchesMenu = DURATION_MENU_OPTIONS.some((option) => option.value === currentVal);
+  const customLabel =
+    currentVal && !matchesMenu ? (DURATION_LABELS[currentVal] ?? `${currentVal} reset`) : null;
 
   const menu = (
     <DropdownMenu>
@@ -189,21 +195,27 @@ function QuotaModeCell({
       <DropdownMenuContent align="start" className="w-44">
         {DURATION_MENU_OPTIONS.map((option) => (
           <DropdownMenuItem
-            key={option.value}
+            key={option.value ?? "fixed"}
             onClick={async () => {
-              if (option.value === current) return;
+              if (option.value === currentVal) return;
               const ok = await patchUser(
                 accessToken,
-                { user_id: user.user_id, budget_duration: option.value === "0" ? null : option.value },
+                { user_id: user.user_id, budget_duration: option.value },
                 `Quota window: ${option.label}`,
               );
               if (ok) onQuotaChanged();
             }}
           >
             <span className="flex-1">{option.label}</span>
-            {option.value === current && <span className="text-xs text-primary">current</span>}
+            {option.value === currentVal && <span className="text-xs text-primary">current</span>}
           </DropdownMenuItem>
         ))}
+        {customLabel && (
+          <DropdownMenuItem disabled>
+            <span className="flex-1">{customLabel}</span>
+            <span className="text-xs text-primary">current</span>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
