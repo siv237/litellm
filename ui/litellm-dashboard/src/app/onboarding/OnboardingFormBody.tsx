@@ -52,14 +52,14 @@ export function OnboardingFormBody({ variant, userEmail, isPending, claimError, 
               <AlertTitle>SSO</AlertTitle>
               <AlertDescription>
                 <div className="flex justify-between items-center">
-                  <span>SSO is under the Enterprise Tier.</span>
+                  <span>SSO доступен в тарифе Enterprise.</span>
                   <a
                     className={cn(buttonVariants({ size: "sm" }))}
                     href="https://forms.gle/W3U4PZpJGFHWtHyA9"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Get Free Trial
+                    Получить пробный период
                   </a>
                 </div>
               </AlertDescription>
@@ -69,14 +69,14 @@ export function OnboardingFormBody({ variant, userEmail, isPending, claimError, 
           <form className="mt-10 mb-5" onSubmit={form.handleSubmit(handleSubmit)}>
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor={emailFieldId}>Email Address</FieldLabel>
+                <FieldLabel htmlFor={emailFieldId}>Адрес электронной почты</FieldLabel>
                 <Input id={emailFieldId} type="email" value={userEmail} readOnly disabled />
               </Field>
 
               <FormField
                 control={form.control}
                 name="password"
-                label="Password"
+                label="Пароль"
                 description={isResetPassword ? "Enter your new password" : "Create a password for your account"}
               >
                 {({ ref, ...field }) => <PasswordInput {...field} ref={ref} />}
