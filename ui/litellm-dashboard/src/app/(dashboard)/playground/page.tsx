@@ -38,9 +38,9 @@ export default function PlaygroundPage() {
   if (isViewOnly) {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center gap-2 p-8 text-center">
-        <h1 className="text-2xl font-semibold">Access Denied</h1>
+        <h1 className="text-2xl font-semibold">Доступ запрещён</h1>
         <p className="text-muted-foreground">
-          Your role does not have access to the Playground. Ask your proxy admin for access to test models.
+          Ваша роль не имеет доступа к Playground. Обратитесь к администратору прокси, чтобы получить доступ к тестированию моделей.
         </p>
       </div>
     );
@@ -51,16 +51,16 @@ export default function PlaygroundPage() {
       <Tabs defaultValue="chat" className="flex min-h-0 min-w-0 flex-1 flex-col gap-0 overflow-hidden">
         <TabsList variant="line" className="w-full shrink-0 justify-start overflow-x-auto pb-1">
           <TabsTrigger value="chat" className="flex-none">
-            Chat
+            Чат
           </TabsTrigger>
           <TabsTrigger value="compare" className="flex-none">
-            Compare
+            Сравнение
           </TabsTrigger>
           <TabsTrigger value="compliance" className="flex-none">
-            Compliance
+            Соответствие
           </TabsTrigger>
           <TabsTrigger value="agent-builder" className="flex-none">
-            Agent Builder (Experimental)
+            Конструктор агентов (экспериментально)
           </TabsTrigger>
         </TabsList>
         <TabsContent

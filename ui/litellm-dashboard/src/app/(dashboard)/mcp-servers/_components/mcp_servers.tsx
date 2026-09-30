@@ -48,10 +48,10 @@ import { listMCPUserEnvVarStatus } from "@/components/networking";
 type SortKey = "created_desc" | "updated_desc" | "name_asc" | "health";
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: "created_desc", label: "Recently created" },
-  { value: "updated_desc", label: "Recently updated" },
-  { value: "name_asc", label: "Name (A→Z)" },
-  { value: "health", label: "Health (unhealthy first)" },
+  { value: "created_desc", label: "Недавно созданные" },
+  { value: "updated_desc", label: "Недавно обновлённые" },
+  { value: "name_asc", label: "Название (А→Я)" },
+  { value: "health", label: "Состояние (с проблемных)" },
 ];
 
 const HEALTH_RANK: Record<string, number> = {
@@ -254,8 +254,8 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
   // Get unique MCP access groups from all servers
   const teamSelectItems = React.useMemo(
     () => ({
-      all: isInternalUser ? "All Available Servers" : "All Servers",
-      personal: "Personal",
+      all: isInternalUser ? "All Available Servers" : "Все серверы",
+      personal: "Личные",
       ...Object.fromEntries(uniqueTeams.map((team) => [team.team_id, team.team_alias || team.team_id])),
     }),
     [isInternalUser, uniqueTeams],
@@ -274,7 +274,7 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
 
   const accessGroupSelectItems = React.useMemo(
     () => ({
-      all: "All Access Groups",
+      all: "Все группы доступа",
       ...Object.fromEntries(uniqueMcpAccessGroups.map((group) => [group, group])),
     }),
     [uniqueMcpAccessGroups],
@@ -352,7 +352,7 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
     try {
       setIsDeletingServer(true);
       await deleteMCPServer(accessToken, serverIdToDelete);
-      toast.success("Deleted MCP Server successfully");
+      toast.success("Сервер MCP удалён");
       // If the user is currently viewing the detail page of the server they
       // just deleted, return them to the All Servers list. Otherwise the
       // detail view would stay mounted, fall back to an empty stub server,
@@ -415,7 +415,7 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
   }, [refetch]);
 
   if (!accessToken || !userRole || !userID) {
-    return <div className="p-6 text-center text-muted-foreground">Missing required authentication parameters.</div>;
+    return <div className="p-6 text-center text-muted-foreground">Отсутствуют обязательные параметры авторизации.</div>;
   }
 
   return (
@@ -424,11 +424,11 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
         <AlertDialog open={isDeleteModalOpen} onOpenChange={(open) => !open && cancelDelete()}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete MCP Server?</AlertDialogTitle>
+              <AlertDialogTitle>Удалить сервер MCP?</AlertDialogTitle>
             </AlertDialogHeader>
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                This action is permanent and cannot be undone. All associated configurations will be removed.
+                Действие необратимо. Все связанные конфигурации будут удалены.
               </p>
 
               {serverToDelete && (
@@ -478,19 +478,19 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-xl font-semibold">MCP Servers</h1>
+              <h1 className="text-xl font-semibold">Серверы MCP</h1>
               {filteredServers.length > 0 && <Badge variant="secondary">{filteredServers.length}</Badge>}
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">Configure and manage your MCP servers</p>
+            <p className="mt-1 text-sm text-muted-foreground">Настройка и управление серверами MCP</p>
           </div>
           <div className="flex items-center gap-2">
             {isAdminRole(userRole) && (
               <>
                 <Button className="shrink-0" variant="secondary" onClick={() => setImportVisible(true)}>
-                  Import from JSON
+                  Импорт из JSON
                 </Button>
                 <Button className="shrink-0" onClick={() => setDiscoveryVisible(true)}>
-                  + Add New MCP Server
+                  + Добавить сервер MCP
                 </Button>
               </>
             )}
@@ -503,7 +503,7 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
                 }}
                 variant="secondary"
               >
-                + Submit MCP Server
+                + Предложить сервер
               </Button>
             )}
           </div>
@@ -532,32 +532,32 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
         <Tabs defaultValue="servers" className="mt-2 w-full">
           <TabsList variant="line" className="h-auto w-full justify-start rounded-none border-b p-0">
             <TabsTrigger value="servers" className="flex-none rounded-none px-4 py-2">
-              All Servers
+              Все серверы
             </TabsTrigger>
             <TabsTrigger value="toolsets" className="flex-none rounded-none px-4 py-2">
-              Toolsets
+              Наборы инструментов
             </TabsTrigger>
             <TabsTrigger value="connect" className="flex-none rounded-none px-4 py-2">
-              Connect
+              Подключение
             </TabsTrigger>
             {isAdminRole(userRole) && (
               <TabsTrigger value="semantic-filter" className="flex-none rounded-none px-4 py-2">
-                Semantic Filter
+                Семантический фильтр
               </TabsTrigger>
             )}
             {isAdminRole(userRole) && (
               <TabsTrigger value="tool-search" className="flex-none rounded-none px-4 py-2">
-                Tool Search
+                Поиск инструментов
               </TabsTrigger>
             )}
             {isAdminRole(userRole) && (
               <TabsTrigger value="network-settings" className="flex-none rounded-none px-4 py-2">
-                Network Settings
+                Сетевые настройки
               </TabsTrigger>
             )}
             {isAdminRole(userRole) && (
               <TabsTrigger value="submitted" className="flex-none rounded-none px-4 py-2">
-                Submitted MCPs
+                Предложенные
               </TabsTrigger>
             )}
           </TabsList>
@@ -592,9 +592,9 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="all">
-                              {isInternalUser ? "All Available Servers" : "All Servers"}
+                              {isInternalUser ? "All Available Servers" : "Все серверы"}
                             </SelectItem>
-                            <SelectItem value="personal">Personal</SelectItem>
+                            <SelectItem value="personal">Личные</SelectItem>
                             {uniqueTeams.map((team) => (
                               <SelectItem key={team.team_id} value={team.team_id}>
                                 {team.team_alias || team.team_id}
@@ -606,13 +606,13 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
                       <div className="h-6 w-px bg-border" />
                       <div className="flex items-center gap-2">
                         <p className="flex items-center text-sm font-medium whitespace-nowrap text-muted-foreground">
-                          Access Group
+                          Группа доступа
                           <Tooltip>
                             <TooltipTrigger
                               render={
                                 <CircleHelp
                                   className="ml-1 size-3.5 text-muted-foreground"
-                                  aria-label="About access groups"
+                                  aria-label="О группах доступа"
                                 />
                               }
                             />
@@ -631,7 +631,7 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="all">All Access Groups</SelectItem>
+                            <SelectItem value="all">Все группы доступа</SelectItem>
                             {uniqueMcpAccessGroups.map((group) => (
                               <SelectItem key={group} value={group}>
                                 {group}
@@ -649,13 +649,13 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
                       <Search className="size-4 text-muted-foreground" />
                     </InputGroupAddon>
                     <InputGroupInput
-                      placeholder="Search by name, alias, URL, or ID"
+                      placeholder="Поиск по имени, псевдониму, URL или ID"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   </InputGroup>
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium whitespace-nowrap text-muted-foreground">Sort</p>
+                    <p className="text-sm font-medium whitespace-nowrap text-muted-foreground">Сортировка</p>
                     <Select
                       items={SORT_OPTIONS}
                       value={sortKey}

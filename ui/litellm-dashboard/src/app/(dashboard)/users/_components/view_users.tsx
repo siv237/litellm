@@ -157,16 +157,16 @@ const ViewUserDashboard: React.FC<ViewUserDashboardProps> = ({
   const handleResetPassword = useCallback(
     async (userId: string) => {
       if (!accessToken) {
-        toast.fromError("Access token not found");
+        toast.fromError("Токен доступа не найден");
         return;
       }
       try {
-        toast.success("Generating password reset link...");
+        toast.success("Создание ссылки для сброса пароля…");
         const data = await invitationCreateCall(accessToken, userId);
         setInvitationLinkData(data);
         setIsInvitationLinkModalVisible(true);
       } catch (error) {
-        toast.fromError("Failed to generate password reset link");
+        toast.fromError("Не удалось создать ссылку для сброса пароля");
       }
     },
     [accessToken],
@@ -185,10 +185,10 @@ const ViewUserDashboard: React.FC<ViewUserDashboardProps> = ({
           return { ...previousData, users: updatedUsers };
         });
 
-        toast.success("User deleted successfully");
+        toast.success("Пользователь удалён");
       } catch (error) {
         console.error("Error deleting user:", error);
-        toast.fromError("Failed to delete user");
+        toast.fromError("Не удалось удалить пользователя");
       } finally {
         setIsDeleteModalOpen(false);
         setUserToDelete(null);
@@ -361,7 +361,7 @@ const ViewUserDashboard: React.FC<ViewUserDashboardProps> = ({
                   disabled={selectedUsers.length === 0}
                   data-testid="bulk-edit-users"
                 >
-                  Bulk Edit ({selectedUsers.length} selected)
+                  Пакетное редактирование (выбрано: {selectedUsers.length})
                 </Button>
               )}
             </>
@@ -376,7 +376,7 @@ const ViewUserDashboard: React.FC<ViewUserDashboardProps> = ({
               Пользователи
             </TabsTrigger>
             <TabsTrigger value="default-settings" className="flex-none data-active:text-primary after:bg-primary">
-              Default User Settings
+              Настройки пользователя по умолчанию
             </TabsTrigger>
           </TabsList>
 
@@ -389,7 +389,7 @@ const ViewUserDashboard: React.FC<ViewUserDashboardProps> = ({
               <div
                 className="flex h-64 items-center justify-center"
                 role="status"
-                aria-label="Loading default user settings"
+                aria-label="Загрузка настроек пользователя по умолчанию"
               >
                 <div className="w-full max-w-lg space-y-3">
                   <Skeleton className="h-5 w-1/3" />
@@ -410,18 +410,18 @@ const ViewUserDashboard: React.FC<ViewUserDashboardProps> = ({
       {/* Existing Modals */}
       <DeleteResourceModal
         isOpen={isDeleteModalOpen}
-        title="Delete User?"
+        title="Удалить пользователя?"
         message="Are you sure you want to delete this user? This action cannot be undone."
         resourceInformationTitle="User Information"
         resourceInformation={[
           { label: "Эл. почта", value: userToDelete?.user_email },
-          { label: "User ID", value: userToDelete?.user_id, code: true },
+          { label: "ID пользователя", value: userToDelete?.user_id, code: true },
           {
-            label: "Global Proxy Role",
+            label: "Глобальная роль прокси",
             value:
               (userToDelete && possibleUIRoles?.[userToDelete.user_role]?.ui_label) || userToDelete?.user_role || "-",
           },
-          { label: "Total Spend (USD)", value: userToDelete?.spend?.toFixed(2) },
+          { label: "Общий расход (USD)", value: userToDelete?.spend?.toFixed(2) },
         ]}
         onCancel={cancelDelete}
         onOk={confirmDelete}

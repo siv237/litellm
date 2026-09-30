@@ -22,10 +22,10 @@ interface LogsTab {
   label: string;
 }
 
-const REQUEST_LOGS_TAB: LogsTab = { id: "request logs", label: "Request Logs" };
-const AUDIT_LOGS_TAB: LogsTab = { id: "audit logs", label: "Audit Logs" };
-const DELETED_KEYS_TAB: LogsTab = { id: "deleted keys", label: "Deleted Keys" };
-const DELETED_TEAMS_TAB: LogsTab = { id: "deleted teams", label: "Deleted Teams" };
+const REQUEST_LOGS_TAB: LogsTab = { id: "request logs", label: "Журнал запросов" };
+const AUDIT_LOGS_TAB: LogsTab = { id: "audit logs", label: "Журнал аудита" };
+const DELETED_KEYS_TAB: LogsTab = { id: "deleted keys", label: "Удалённые ключи" };
+const DELETED_TEAMS_TAB: LogsTab = { id: "deleted teams", label: "Удалённые команды" };
 
 const tabContentClassName = (tabId: LogsTabId): string =>
   tabId === REQUEST_LOGS_TAB.id ? "flex min-h-0 flex-1 flex-col" : "min-h-0 flex-1 overflow-y-auto";

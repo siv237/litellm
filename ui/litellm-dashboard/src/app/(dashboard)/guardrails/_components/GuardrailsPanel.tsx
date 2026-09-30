@@ -113,7 +113,7 @@ const GuardrailsPanel: React.FC<GuardrailsPanelProps> = ({ accessToken, userRole
       await fetchGuardrails();
     } catch (error) {
       console.error("Error deleting guardrail:", error);
-      toast.fromError("Failed to delete guardrail");
+      toast.fromError("Не удалось удалить гардрейл");
     } finally {
       setIsDeleting(false);
       setIsDeleteModalOpen(false);
@@ -138,18 +138,18 @@ const GuardrailsPanel: React.FC<GuardrailsPanelProps> = ({ accessToken, userRole
           {isAdmin && (
             <>
               <TabsTrigger value="garden" className="flex-none">
-                Guardrail Garden
+                Сад гардрейлов
               </TabsTrigger>
               <TabsTrigger value="guardrails" className="flex-none">
-                Guardrails
+                Гардрейлы
               </TabsTrigger>
               <TabsTrigger value="playground" className="flex-none" disabled={!accessToken}>
-                Test Playground
+                Тестовый Playground
               </TabsTrigger>
             </>
           )}
           <TabsTrigger value="submitted" className="flex-none">
-            Submitted Guardrails
+            Отправленные
           </TabsTrigger>
         </TabsList>
 
@@ -164,17 +164,17 @@ const GuardrailsPanel: React.FC<GuardrailsPanelProps> = ({ accessToken, userRole
                 <DropdownMenu>
                   <DropdownMenuTrigger disabled={!accessToken} className={cn(buttonVariants({ variant: "default" }))}>
                     <Plus />
-                    Add New Guardrail
+                    Добавить гардрейл
                     <ChevronDown />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-56">
                     <DropdownMenuItem onClick={handleAddGuardrail}>
                       <Plus />
-                      Add Provider Guardrail
+                      Гардрейл провайдера
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleAddCustomCodeGuardrail}>
                       <Code />
-                      Create Custom Code Guardrail
+                      Гардрейл с кодом
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -212,16 +212,16 @@ const GuardrailsPanel: React.FC<GuardrailsPanelProps> = ({ accessToken, userRole
 
               <DeleteResourceModal
                 isOpen={isDeleteModalOpen}
-                title="Delete Guardrail"
+                title="Удалить гардрейл"
                 message={`Are you sure you want to delete guardrail: ${guardrailToDelete?.guardrail_name}? This action cannot be undone.`}
                 resourceInformationTitle="Guardrail Information"
                 resourceInformation={[
                   { label: "Название", value: guardrailToDelete?.guardrail_name },
                   { label: "ID", value: guardrailToDelete?.guardrail_id, code: true },
                   { label: "Провайдер", value: providerDisplayName },
-                  { label: "Mode", value: formatGuardrailMode(guardrailToDelete?.litellm_params.mode) },
+                  { label: "Режим", value: formatGuardrailMode(guardrailToDelete?.litellm_params.mode) },
                   {
-                    label: "Default On",
+                    label: "Включён по умолчанию",
                     value: guardrailToDelete?.litellm_params.default_on ? "Yes" : "No",
                   },
                 ]}

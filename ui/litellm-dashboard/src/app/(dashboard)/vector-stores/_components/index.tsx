@@ -52,7 +52,7 @@ const VectorStoreManagement: React.FC<VectorStoreProps> = ({ accessToken, userID
       setVectorStores(response.data || []);
     } catch (error) {
       console.error("Error fetching vector stores:", error);
-      toast.fromError("Error fetching vector stores: " + error);
+      toast.fromError("Не удалось загрузить векторные хранилища: " + error);
     } finally {
       setIsLoadingVectorStores(false);
     }
@@ -65,7 +65,7 @@ const VectorStoreManagement: React.FC<VectorStoreProps> = ({ accessToken, userID
       setCredentials(response.credentials || []);
     } catch (error) {
       console.error("Error fetching credentials:", error);
-      toast.fromError("Error fetching credentials: " + error);
+      toast.fromError("Не удалось загрузить учётные данные: " + error);
     }
   };
 
@@ -102,11 +102,11 @@ const VectorStoreManagement: React.FC<VectorStoreProps> = ({ accessToken, userID
     setIsDeleting(true);
     try {
       await vectorStoreDeleteCall(accessToken, vectorStoreToDelete);
-      toast.success("Vector store deleted successfully");
+      toast.success("Векторное хранилище удалено");
       fetchVectorStores();
     } catch (error) {
       console.error("Error deleting vector store:", error);
-      toast.fromError("Error deleting vector store: " + error);
+      toast.fromError("Не удалось удалить векторное хранилище: " + error);
     } finally {
       setIsDeleting(false);
       setIsDeleteModalOpen(false);
@@ -143,9 +143,9 @@ const VectorStoreManagement: React.FC<VectorStoreProps> = ({ accessToken, userID
     <div className="mx-4">
       <div className="gap-2 p-8 w-full mt-2">
         <div className="flex justify-between mt-2 w-full items-center mb-4">
-          <h1 className="text-xl font-semibold tracking-tight text-foreground">Vector Store Management</h1>
+          <h1 className="text-xl font-semibold tracking-tight text-foreground">Управление векторными хранилищами</h1>
           <div className="flex items-center space-x-2">
-            {lastRefreshed && <p className="text-sm text-muted-foreground">Last Refreshed: {lastRefreshed}</p>}
+            {lastRefreshed && <p className="text-sm text-muted-foreground">Последнее обновление: {lastRefreshed}</p>}
             <Button variant="outline" size="icon-sm" aria-label="Обновить" onClick={handleRefreshClick}>
               <RefreshCw className="size-4" />
             </Button>
@@ -153,25 +153,25 @@ const VectorStoreManagement: React.FC<VectorStoreProps> = ({ accessToken, userID
         </div>
 
         <p className="mb-4 text-sm text-muted-foreground">
-          You can use vector stores to store and retrieve LLM embeddings.
+          Векторные хранилища используются для хранения и поиска эмбеддингов LLM.
         </p>
 
         <Tabs defaultValue={defaultTab} onValueChange={onTabChange}>
           <TabsList variant="line" className="mb-6 h-auto w-full justify-start rounded-none p-0">
             {canCreateVectorStores && (
               <TabsTrigger value="create" className="flex-none rounded-none px-4 py-2">
-                Create Vector Store
+                Создать векторное хранилище
               </TabsTrigger>
             )}
             <TabsTrigger value="manage" className="flex-none rounded-none px-4 py-2">
-              Manage Vector Stores
+              Управление хранилищами
             </TabsTrigger>
             <TabsTrigger value="test" className="flex-none rounded-none px-4 py-2">
-              Test Vector Store
+              Проверка хранилища
             </TabsTrigger>
             {isProxyAdminRole(userRole || "") && (
               <TabsTrigger value="indexes" className="flex-none rounded-none px-4 py-2">
-                Indexes
+                Индексы
               </TabsTrigger>
             )}
           </TabsList>
@@ -185,7 +185,7 @@ const VectorStoreManagement: React.FC<VectorStoreProps> = ({ accessToken, userID
           <TabsContent keepMounted={hasVisited("manage")} value="manage">
             {canCreateVectorStores && (
               <Button className="mb-4" onClick={() => setIsCreateModalVisible(true)}>
-                + Add Vector Store
+                + Добавить векторное хранилище
               </Button>
             )}
 
@@ -223,10 +223,10 @@ const VectorStoreManagement: React.FC<VectorStoreProps> = ({ accessToken, userID
         {/* Delete Confirmation Modal */}
         <DeleteResourceModal
           isOpen={isDeleteModalOpen}
-          title="Delete Vector Store"
+          title="Удалить векторное хранилище"
           message="Are you sure you want to delete this vector store? This action cannot be undone."
           resourceInformationTitle="Vector Store Information"
-          resourceInformation={[{ label: "Vector Store ID", value: vectorStoreToDelete, code: true }]}
+          resourceInformation={[{ label: "ID векторного хранилища", value: vectorStoreToDelete, code: true }]}
           onCancel={() => setIsDeleteModalOpen(false)}
           onOk={confirmDelete}
           confirmLoading={isDeleting}

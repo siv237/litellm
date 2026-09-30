@@ -522,7 +522,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
       setIsLoading(false);
-      toast.info("Request cancelled");
+      toast.info("Запрос отменён");
     }
   };
 
@@ -654,8 +654,8 @@ const ChatUI: React.FC<ChatUIProps> = ({
     if (endpointType !== EndpointType.MCP) {
       options.push({
         value: "__all__",
-        label: "All MCP Servers",
-        description: "Use all available MCP servers",
+        label: "Все серверы MCP",
+        description: "Использовать все доступные серверы MCP",
       });
     }
     for (const toolset of mcpToolsets) {
@@ -713,7 +713,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
 
   const handleSendMessage = async () => {
     if (endpointType === null) {
-      toast.fromError("Please select an endpoint before sending a request");
+      toast.fromError("Выберите эндпоинт перед отправкой запроса");
       return;
     }
 
@@ -722,19 +722,19 @@ const ChatUI: React.FC<ChatUIProps> = ({
 
     // For image edits, require both image and prompt
     if (endpointType === EndpointType.IMAGE_EDITS && uploadedImages.length === 0) {
-      toast.fromError("Please upload at least one image for editing");
+      toast.fromError("Загрузите хотя бы одно изображение для редактирования");
       return;
     }
 
     // For audio transcriptions, require audio file
     if (endpointType === EndpointType.TRANSCRIPTION && !uploadedAudio) {
-      toast.fromError("Please upload an audio file for transcription");
+      toast.fromError("Загрузите аудиофайл для транскрипции");
       return;
     }
 
     // For A2A agents, require agent selection
     if (endpointType === EndpointType.A2A_AGENTS && !selectedAgent) {
-      toast.fromError("Please select an agent to send a message");
+      toast.fromError("Выберите агента для отправки сообщения");
       return;
     }
 
@@ -744,11 +744,11 @@ const ChatUI: React.FC<ChatUIProps> = ({
       const rawSelected =
         selectedMCPServers.length === 1 && selectedMCPServers[0] !== "__all__" ? selectedMCPServers[0] : null;
       if (!rawSelected) {
-        toast.fromError("Please select an MCP server to test");
+        toast.fromError("Выберите сервер MCP для проверки");
         return;
       }
       if (!selectedMCPDirectTool) {
-        toast.fromError("Please select an MCP tool to call");
+        toast.fromError("Выберите инструмент MCP для вызова");
         return;
       }
       // For toolsets, find the tool in the servers that back this toolset
@@ -766,7 +766,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
       }
       const mcpTool = searchPool.find((t: any) => t.name === selectedMCPDirectTool);
       if (!mcpTool) {
-        toast.fromError("Please wait for tool schema to load");
+        toast.fromError("Дождитесь загрузки схемы инструмента");
         return;
       }
       try {
@@ -791,7 +791,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
     ];
 
     if (modelRequiredEndpoints.includes(endpointType as EndpointType) && !selectedModel) {
-      toast.fromError("Please select a model before sending a request");
+      toast.fromError("Выберите модель перед отправкой запроса");
       return;
     }
 
@@ -802,7 +802,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
     const effectiveApiKey = simplified ? accessToken : apiKeySource === "session" ? accessToken : apiKey;
 
     if (!effectiveApiKey) {
-      toast.fromError("Please provide a Virtual Key or select Current UI Session");
+      toast.fromError("Укажите виртуальный ключ или выберите текущую сессию UI");
       return;
     }
 
@@ -818,7 +818,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
       try {
         newUserMessage = await createMultimodalMessage(inputMessage, responsesUploadedImage);
       } catch (error) {
-        toast.fromError("Failed to process image. Please try again.");
+        toast.fromError("Не удалось обработать изображение. Повторите попытку.");
         return;
       }
     }
@@ -827,7 +827,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
       try {
         newUserMessage = await createChatMultimodalMessage(inputMessage, chatUploadedImage);
       } catch (error) {
-        toast.fromError("Failed to process image. Please try again.");
+        toast.fromError("Не удалось обработать изображение. Повторите попытку.");
         return;
       }
     } else {
@@ -1156,7 +1156,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
     handleRemoveResponsesImage();
     handleRemoveChatImage();
     handleRemoveAudio();
-    toast.success("Chat history cleared.");
+    toast.success("История чата очищена.");
   };
 
   const onModelChange = (value: string | null) => {
@@ -1231,7 +1231,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
         <div className="flex h-full min-h-0 min-w-0 w-full flex-col lg:flex-row">
           {!simplified && (
             <div className="max-h-[42%] w-full shrink-0 overflow-y-auto border-b border-border bg-muted p-4 lg:max-h-none lg:w-72 lg:border-r lg:border-b-0 xl:w-80">
-              <h2 className="mb-6 mt-2 text-xl font-semibold">Configurations</h2>
+              <h2 className="mb-6 mt-2 text-xl font-semibold">Конфигурации</h2>
               <div className="space-y-4">
                 <div>
                   <label className="mb-2 flex items-center text-sm font-medium text-foreground">
@@ -1244,12 +1244,12 @@ const ChatUI: React.FC<ChatUIProps> = ({
                       setApiKeySource(value as "session" | "custom");
                     }}
                   >
-                    <SelectTrigger className="w-full" size="sm" aria-label="Virtual Key Source">
-                      <SelectValue>{apiKeySource === "custom" ? "Virtual Key" : "Current UI Session"}</SelectValue>
+                    <SelectTrigger className="w-full" size="sm" aria-label="Источник виртуального ключа">
+                      <SelectValue>{apiKeySource === "custom" ? "Виртуальный ключ" : "Текущая сессия интерфейса"}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="session">Current UI Session</SelectItem>
-                      <SelectItem value="custom">Virtual Key</SelectItem>
+                      <SelectItem value="session">Текущая сессия интерфейса</SelectItem>
+                      <SelectItem value="custom">Виртуальный ключ</SelectItem>
                     </SelectContent>
                   </ShadcnSelect>
                   {apiKeySource === "custom" && (
@@ -1257,7 +1257,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                       <Key className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         className="h-8 pl-8"
-                        placeholder="Enter custom Virtual Key"
+                        placeholder="Введите свой виртуальный ключ"
                         type="password"
                         onChange={(event) => setApiKey(event.target.value)}
                         value={apiKey}
@@ -1283,7 +1283,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                         }}
                       >
                         <Link2 className="size-3" />
-                        Fill
+                        Заполнить
                       </Button>
                     )}
                     {customProxyBaseUrl && (
@@ -1298,7 +1298,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                         }}
                       >
                         <Eraser className="size-3" />
-                        Clear
+                        Очистить
                       </Button>
                     )}
                   </div>
@@ -1306,7 +1306,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                     <Wrench className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       className="h-8 pl-8"
-                      placeholder="Optional: Enter custom proxy URL (e.g., http://localhost:5000)"
+                      placeholder="Необязательно: свой URL прокси (напр. http://localhost:5000)"
                       value={customProxyBaseUrl}
                       onChange={(event) => {
                         setCustomProxyBaseUrl(event.target.value);
@@ -1335,14 +1335,14 @@ const ChatUI: React.FC<ChatUIProps> = ({
                     <div className="mb-4">
                       <label className="mb-2 flex items-center text-sm font-medium text-foreground">
                         <Volume2 className="mr-2 size-4" aria-hidden="true" />
-                        Voice
+                        Голос
                       </label>
                       <ShadcnSelect
                         items={OPEN_AI_VOICE_SELECT_OPTIONS}
                         value={selectedVoice}
                         onValueChange={handleVoiceChange}
                       >
-                        <SelectTrigger className="w-full" size="sm" aria-label="Voice">
+                        <SelectTrigger className="w-full" size="sm" aria-label="Голос">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -1379,7 +1379,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                                 variant="ghost"
                                 size="icon-xs"
                                 className="text-muted-foreground hover:text-foreground"
-                                aria-label="Model Settings"
+                                aria-label="Настройки модели"
                                 data-testid="model-settings-button"
                               />
                             }
@@ -1387,7 +1387,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                             <Settings className="size-3.5" />
                           </PopoverTrigger>
                           <PopoverContent side="right" className="w-auto p-0">
-                            <div className="border-b border-border px-4 py-2 text-sm font-medium">Model Settings</div>
+                            <div className="border-b border-border px-4 py-2 text-sm font-medium">Настройки модели</div>
                             <AdditionalModelSettings
                               showAdvancedParams={isChatModel()}
                               temperature={temperature}
@@ -1413,14 +1413,14 @@ const ChatUI: React.FC<ChatUIProps> = ({
                                 size="icon-xs"
                                 className="cursor-not-allowed text-muted-foreground"
                                 disabled
-                                aria-label="Model Settings unavailable"
+                                aria-label="Настройки модели недоступны"
                               />
                             }
                           >
                             <Settings className="size-3.5" />
                           </TooltipTrigger>
                           <TooltipContent>
-                            Advanced parameters are only supported for chat models currently
+                            Расширенные параметры пока поддерживаются только для чат-моделей
                           </TooltipContent>
                         </Tooltip>
                       )}
@@ -1432,7 +1432,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                       disabled={isLoadingModels}
                       onValueChange={onModelChange}
                       options={[
-                        { value: "custom", label: "Enter custom model" },
+                        { value: "custom", label: "Своя модель" },
                         ...modelsForEndpoint.map((model) => ({
                           value: model.model_group,
                           label: model.model_group,
@@ -1443,7 +1443,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                     {showCustomModelInput && (
                       <Input
                         className="mt-2 h-8"
-                        placeholder="Enter custom model name"
+                        placeholder="Введите название своей модели"
                         onChange={(event) => debouncedSetSelectedModel(event.target.value)}
                       />
                     )}
@@ -1457,7 +1457,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                     </label>
                     <SearchSelect
                       value={selectedAgent}
-                      placeholder="Select an Agent"
+                      placeholder="Выберите агента"
                       onValueChange={(value) => setSelectedAgent(value)}
                       options={agentInfo.map((agent) => ({
                         value: agent.agent_name,
@@ -1467,7 +1467,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                     />
                     {agentInfo.length === 0 && (
                       <p className="mt-2 text-xs text-muted-foreground">
-                        No agents found. Create agents via /v1/agents endpoint.
+                        Агенты не найдены. Создавайте агентов через эндпоинт /v1/agents.
                       </p>
                     )}
                   </div>
@@ -1495,7 +1495,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                           <button
                             type="button"
                             className="inline-flex"
-                            aria-label="About MCP servers and toolsets"
+                            aria-label="О серверах и наборах инструментов MCP"
                             onClick={() => setIsToolsetsInfoModalVisible(true)}
                           />
                         }
@@ -1516,7 +1516,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                           ? selectedMCPServers[0]
                           : undefined
                       }
-                      placeholder="Select MCP server"
+                      placeholder="Выберите сервер MCP"
                       emptyText={isLoadingMCPServers ? "Loading..." : "No MCP servers"}
                       disabled={!MCP_SUPPORTED_ENDPOINTS.has(endpointType as EndpointType) || isLoadingMCPServers}
                       onValueChange={(value) => handleMcpServersChange(value ? [value] : [])}
@@ -1527,7 +1527,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                     <MultiSelect
                       value={selectedMCPServers}
                       onValueChange={handleMcpServersChange}
-                      placeholder="Select MCP servers"
+                      placeholder="Выберите серверы MCP"
                       emptyText={isLoadingMCPServers ? "Loading..." : "No MCP servers"}
                       disabled={!MCP_SUPPORTED_ENDPOINTS.has(endpointType as EndpointType)}
                       loading={isLoadingMCPServers}
@@ -1560,10 +1560,10 @@ const ChatUI: React.FC<ChatUIProps> = ({
                       }
                       return (
                         <div className="mt-3">
-                          <p className="mb-1 block text-xs text-muted-foreground">Select Tool</p>
+                          <p className="mb-1 block text-xs text-muted-foreground">Выберите инструмент</p>
                           <SearchSelect
                             value={selectedMCPDirectTool}
-                            placeholder="Select a tool to call"
+                            placeholder="Выберите инструмент для вызова"
                             onValueChange={(value) => setSelectedMCPDirectTool(value || undefined)}
                             options={toolOptions}
                             className="rounded-md"
@@ -1595,7 +1595,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                                     [serverId]: selectedTools,
                                   }));
                                 }}
-                                placeholder="All tools (default)"
+                                placeholder="Все инструменты (по умолчанию)"
                                 options={tools.map((tool: { name: string }) => ({
                                   value: tool.name,
                                   label: tool.name,
@@ -1634,7 +1634,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                                     className="text-xs text-muted-foreground underline hover:text-info"
                                     onClick={() => setByokModalServer(server)}
                                   >
-                                    Reconnect
+                                    Переподключить
                                   </button>
                                 </div>
                               ) : (
@@ -1644,7 +1644,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                                   className="rounded-lg bg-info px-3 py-1 text-xs font-medium text-info-foreground hover:bg-info/80"
                                   onClick={() => setByokModalServer(server)}
                                 >
-                                  Connect
+                                  Подключить
                                 </Button>
                               )}
                             </div>
@@ -1658,7 +1658,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                   <div className="mb-2 flex items-center gap-1 text-sm font-medium text-foreground">
                     <Database className="mr-1 size-4" aria-hidden="true" /> Vector Store
                     <Tooltip>
-                      <TooltipTrigger aria-label="About vector stores">
+                      <TooltipTrigger aria-label="О векторных хранилищах">
                         <Info className="size-3.5 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-xs">
@@ -1682,7 +1682,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                   <div className="mb-2 flex items-center gap-1 text-sm font-medium text-foreground">
                     <Shield className="mr-1 size-4" aria-hidden="true" /> Guardrails
                     <Tooltip>
-                      <TooltipTrigger aria-label="About guardrails">
+                      <TooltipTrigger aria-label="О гардрейлах">
                         <Info className="size-3.5 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-xs">
@@ -1707,7 +1707,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                     <div className="mb-2 flex items-center gap-1 text-sm font-medium text-foreground">
                       <Shield className="mr-1 size-4" aria-hidden="true" /> Policies
                       <Tooltip>
-                        <TooltipTrigger aria-label="About policies">
+                        <TooltipTrigger aria-label="О политиках">
                           <Info className="size-3.5 text-muted-foreground" />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-xs">

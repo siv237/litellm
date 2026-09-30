@@ -74,7 +74,7 @@ const AgentTypeLabel: React.FC<{ agentType: string; info: AgentCreateInfo | unde
     return (
       <span className="flex items-center gap-2">
         <LayoutGrid className="size-4 text-warning" />
-        <span>Custom / Other</span>
+        <span>Свой / другой</span>
       </span>
     );
   }
@@ -88,7 +88,7 @@ const AgentTypeLabel: React.FC<{ agentType: string; info: AgentCreateInfo | unde
 };
 
 const StepProgress: React.FC<{ current: number }> = ({ current }) => (
-  <ol aria-label="Agent creation steps" className="mb-8 flex items-center">
+  <ol aria-label="Шаги создания агента" className="mb-8 flex items-center">
     {STEP_TITLES.map((title, index) => (
       <li
         key={title}
@@ -334,12 +334,12 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
 
   const handleCreateAgent = async () => {
     if (!accessToken) {
-      toast.error("No access token available");
+      toast.error("Нет доступного токена");
       return;
     }
 
     if (keyAssignOption === "existing_key" && !selectedExistingKey) {
-      toast.error("Please select an existing key to assign");
+      toast.error("Выберите существующий ключ для назначения");
       return;
     }
 
@@ -353,7 +353,7 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
       const values = form.getValues();
       const agentData = buildAgentData(values);
       if (!agentData) {
-        toast.error("Failed to build agent data");
+        toast.error("Не удалось собрать данные агента");
         setIsSubmitting(false);
         return;
       }
@@ -453,8 +453,8 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
   const renderEntitlementsStep = () => (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        Configure which models, agents, and MCP tools this agent is allowed to use. Leave fields empty to allow all
-        (subject to key/team permissions).
+        Настройте, какие модели, агенты и MCP-инструменты разрешено использовать этому агенту. Оставьте поля
+        пустыми, чтобы разрешить всё (в пределах прав ключа/команды).
       </p>
 
       <FieldGroup>
@@ -511,7 +511,7 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
                 accessGroups: (value as McpServerSelection | undefined)?.accessGroups ?? [],
               }}
               accessToken={accessToken ?? ""}
-              placeholder="Select MCP servers or access groups (optional)"
+              placeholder="Выберите серверы MCP или группы доступа (необязательно)"
             />
           )}
         </AgentFormField>
@@ -549,15 +549,15 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
   const renderObservabilityStep = () => (
     <div className="space-y-6">
       <div>
-        <h4 className="mb-3 text-sm font-medium text-foreground">Tracing</h4>
+        <h4 className="mb-3 text-sm font-medium text-foreground">Трассировка</h4>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <span className="text-sm font-medium text-foreground">
-                Require x-litellm-trace-id on calls TO this agent
+                Требовать x-litellm-trace-id при вызовах этого агента
               </span>
               <p className="mt-1 text-xs text-muted-foreground">
-                Only accept this agent being invoked with a trace-id (e.g. when used as a sub-agent).
+                Принимать вызовы агента только с trace-id (например, как субагента).
               </p>
             </div>
             <Switch checked={requireTraceIdInbound} onCheckedChange={setRequireTraceIdInbound} />
@@ -566,10 +566,10 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
           <div className="flex items-center justify-between">
             <div>
               <span className="text-sm font-medium text-foreground">
-                Require x-litellm-trace-id on calls BY this agent
+                Требовать x-litellm-trace-id при вызовах этого агента
               </span>
               <p className="mt-1 text-xs text-muted-foreground">
-                Requires LLM/MCP calls made by this agent to include x-litellm-trace-id for session tracking.
+                Вызовы LLM/MCP от этого агента должны включать x-litellm-trace-id для учёта сессий.
               </p>
             </div>
             <Switch
@@ -589,19 +589,19 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
       <Separator />
 
       <div>
-        <h4 className="mb-3 text-sm font-medium text-foreground">Budgets &amp; Rate Limits</h4>
+        <h4 className="mb-3 text-sm font-medium text-foreground">Бюджеты и лимиты запросов</h4>
         <div className="space-y-4">
           {!requireTraceIdOutbound && (
             <div className="rounded-lg border border-warning/20 bg-warning/10 p-3 text-sm text-warning">
-              Enable &quot;Require x-litellm-trace-id on calls BY this agent&quot; in Tracing to configure budgets and
-              rate limits.
+              Включите «Require x-litellm-trace-id on calls BY this agent» в разделе Tracing, чтобы настроить
+              бюджеты и лимиты запросов.
             </div>
           )}
 
-          <div className="text-sm font-medium text-foreground">Session Budgets</div>
+          <div className="text-sm font-medium text-foreground">Бюджеты сессий</div>
           <div className="grid grid-cols-2 gap-4">
             <Field className="gap-1">
-              <FieldLabel htmlFor="agent-max-iterations">Max Iterations</FieldLabel>
+              <FieldLabel htmlFor="agent-max-iterations">Макс. итераций</FieldLabel>
               <Input
                 id="agent-max-iterations"
                 type="number"
@@ -614,10 +614,10 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
                 }
                 onBlur={() => setMaxIterations((current) => (current !== null && current < 1 ? 1 : current))}
               />
-              <p className="mt-1 text-xs text-muted-foreground">Hard cap on LLM calls per session</p>
+              <p className="mt-1 text-xs text-muted-foreground">Жёсткий лимит вызовов LLM на сессию</p>
             </Field>
             <Field className="gap-1">
-              <FieldLabel htmlFor="agent-max-budget-per-session">Max Budget Per Session ($)</FieldLabel>
+              <FieldLabel htmlFor="agent-max-budget-per-session">Макс. бюджет сессии ($)</FieldLabel>
               <Input
                 id="agent-max-budget-per-session"
                 type="number"
@@ -632,22 +632,22 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
                   setMaxBudgetPerSession((current) => (current !== null && current < 0.01 ? 0.01 : current))
                 }
               />
-              <p className="mt-1 text-xs text-muted-foreground">Max spend per trace before returning 429</p>
+              <p className="mt-1 text-xs text-muted-foreground">Максимальный расход на trace до возврата 429</p>
             </Field>
           </div>
 
           <Separator className="my-2" />
 
-          <div className="text-sm font-medium text-foreground">Agent Rate Limits</div>
-          <p className="text-xs text-muted-foreground">Global rate limits applied across all callers of this agent.</p>
+          <div className="text-sm font-medium text-foreground">Лимиты агента</div>
+          <p className="text-xs text-muted-foreground">Глобальные лимиты для всех вызывающих этого агента.</p>
           <div className="grid grid-cols-2 gap-4">
             {rateLimitField("tpm_limit", "TPM Limit", "e.g. 100000")}
             {rateLimitField("rpm_limit", "RPM Limit", "e.g. 100")}
           </div>
 
-          <div className="mt-4 text-sm font-medium text-foreground">Per-Session Rate Limits</div>
+          <div className="mt-4 text-sm font-medium text-foreground">Лимиты на сессию</div>
           <p className="text-xs text-muted-foreground">
-            Rate limits per session (x-litellm-trace-id). Each session gets its own counters.
+            Лимиты на сессию (x-litellm-trace-id). У каждой сессии свои счётчики.
           </p>
           <div className="grid grid-cols-2 gap-4">
             {rateLimitField("session_tpm_limit", "Session TPM Limit", "e.g. 10000")}
@@ -659,9 +659,9 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
       <Separator />
 
       <div>
-        <h4 className="mb-3 text-sm font-medium text-foreground">Guardrails</h4>
+        <h4 className="mb-3 text-sm font-medium text-foreground">Гардрейлы</h4>
         <p className="mb-3 text-xs text-muted-foreground">
-          Apply guardrails to this agent. Selected guardrails will run on all calls made by this agent.
+          Применить гардрейлы к агенту. Выбранные гардрейлы работают на всех вызовах агента.
         </p>
         <AgentFormField name="guardrails">
           {({ value, onChange }) => (
@@ -760,18 +760,18 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
             ))}
             <SelectSeparator />
             <div className="mb-1 px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              Not listed?
+              Нет в списке?
             </div>
             <SelectItem value={CUSTOM_AGENT_TYPE} className="focus:bg-warning/10">
               <span className="flex items-center gap-3">
                 <LayoutGrid className="size-4.5 shrink-0 text-warning" />
                 <span className="block">
                   <span className="flex items-center gap-2">
-                    <span className="font-medium text-warning">Custom / Other</span>
+                    <span className="font-medium text-warning">Свой / другой</span>
                     <StatusBadge tone="warning" label="GENERIC" className="h-4 px-1 text-[10px]" />
                   </span>
                   <span className="block text-xs whitespace-normal text-warning">
-                    For agents that don&apos;t follow a standard protocol, just needs a virtual key
+                    Для агентов, не следующих стандартному протоколу, — нужен только виртуальный ключ
                   </span>
                 </span>
               </span>
@@ -783,12 +783,12 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
       <div className="mt-4">
         {agentType === CUSTOM_AGENT_TYPE ? (
           <FieldGroup>
-            <AgentFormField name="agent_name" label="Agent Name" rules={{ required: "Please enter an agent name" }}>
+            <AgentFormField name="agent_name" label="Имя агента" rules={{ required: "Please enter an agent name" }}>
               {({ value, onChange, ref, ...control }) => (
                 <Input
                   {...control}
                   ref={ref}
-                  placeholder="e.g. my-custom-agent"
+                  placeholder="напр. my-custom-agent"
                   value={typeof value === "string" ? value : ""}
                   onChange={onChange}
                 />
@@ -800,7 +800,7 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
                   {...control}
                   ref={ref}
                   rows={3}
-                  placeholder="Describe what this agent does…"
+                  placeholder="Опишите, что делает агент…"
                   value={typeof value === "string" ? value : ""}
                   onChange={onChange}
                 />
@@ -815,7 +815,7 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
             {selectedAgentTypeInfo.credential_fields.length > 0 && (
               <div className="mt-4 rounded-lg border border-border p-4">
                 <h4 className="mb-3 text-sm font-medium text-foreground">
-                  {selectedAgentTypeInfo.agent_type_display_name} Settings
+                  {selectedAgentTypeInfo.agent_type_display_name}: настройки
                 </h4>
                 <FieldGroup>
                   {selectedAgentTypeInfo.credential_fields.map((field) => (
@@ -915,29 +915,29 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
           >
             <div className="flex items-start justify-between">
               <div className="flex flex-1 items-start gap-3">
-                <RadioGroupItem value="create_new" aria-label="Create a new key for this agent" />
+                <RadioGroupItem value="create_new" aria-label="Создать новый ключ для агента" />
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <Key className="size-4 text-info" />
-                    <span className="font-medium text-foreground">Create a new key for this agent</span>
+                    <span className="font-medium text-foreground">Создать новый ключ для агента</span>
                   </div>
-                  <p className="mt-1 text-sm text-muted-foreground">A dedicated key scoped to this agent.</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Выделенный ключ, ограниченный агентом.</p>
                   {keyAssignOption === "create_new" && (
                     <div className="mt-3 space-y-3" onClick={(e) => e.stopPropagation()}>
                       <Field className="gap-1">
-                        <FieldLabel htmlFor="agent-new-key-name">Key Name</FieldLabel>
+                        <FieldLabel htmlFor="agent-new-key-name">Имя ключа</FieldLabel>
                         <Input
                           id="agent-new-key-name"
                           value={newKeyName}
                           onChange={(e) => setNewKeyName(e.target.value)}
-                          placeholder="e.g. my-agent-key"
+                          placeholder="напр. my-agent-key"
                         />
                       </Field>
                     </div>
                   )}
                 </div>
               </div>
-              <StatusBadge tone="success" label="Recommended" />
+              <StatusBadge tone="success" label="Рекомендуется" />
             </div>
           </div>
 
@@ -951,13 +951,13 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
             onClick={() => setKeyAssignOption("existing_key")}
           >
             <div className="flex items-start gap-3">
-              <RadioGroupItem value="existing_key" aria-label="Assign an existing key" />
+              <RadioGroupItem value="existing_key" aria-label="Назначить существующий ключ" />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <Key className="size-4 text-muted-foreground" />
-                  <span className="font-medium text-foreground">Assign an existing key</span>
+                  <span className="font-medium text-foreground">Назначить существующий ключ</span>
                 </div>
-                <p className="mt-1 text-sm text-muted-foreground">Re-assign a key you already have to this agent.</p>
+                <p className="mt-1 text-sm text-muted-foreground">Переназначить агенту уже существующий ключ.</p>
                 {keyAssignOption === "existing_key" && (
                   <div className="mt-3" onClick={(e) => e.stopPropagation()}>
                     <SearchSelect
@@ -983,7 +983,7 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
             className="text-sm text-muted-foreground underline hover:text-foreground"
             onClick={() => setKeyAssignOption("skip")}
           >
-            Skip for now — I&apos;ll assign a key later
+            Пропустить — назначу ключ позже
           </button>
         </div>
       </div>
@@ -993,7 +993,7 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
   const renderReadyStep = () => (
     <div className="py-6 text-center">
       <CircleCheck className="mb-4 size-12 text-success" />
-      <h3 className="mb-2 text-xl font-semibold text-foreground">Agent Created!</h3>
+      <h3 className="mb-2 text-xl font-semibold text-foreground">Агент создан!</h3>
       <div className="mb-4 flex justify-center">
         <Badge className="h-auto gap-1.5 bg-purple-100 px-3 py-1 text-sm text-purple-700 dark:bg-purple-950 dark:text-purple-300">
           <Bot className="size-3.5" />
@@ -1007,12 +1007,12 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
       )}
       {assignedKeyAlias && (
         <p className="mt-2 text-sm text-muted-foreground">
-          Key <span className="font-medium">{assignedKeyAlias}</span> has been assigned to this agent.
+          Ключ <span className="font-medium">{assignedKeyAlias}</span> назначен этому агенту.
         </p>
       )}
       {!createdKeyValue && !assignedKeyAlias && keyAssignOption === "skip" && (
         <p className="mt-2 text-sm text-muted-foreground">
-          No key assigned. You can create one from the Virtual Keys page.
+          Ключ не назначен. Создайте его на странице «Виртуальные ключи».
         </p>
       )}
     </div>
@@ -1024,9 +1024,9 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
         <DialogHeader>
           <div className="flex items-center space-x-3 border-b border-border pb-4">
             {selectedLogo && currentStep < 1 && (
-              <Logo src={selectedLogo} label="Agent" className="h-6 w-6 object-contain" />
+              <Logo src={selectedLogo} label="Агент" className="h-6 w-6 object-contain" />
             )}
-            <DialogTitle className="text-xl font-semibold text-foreground">Add New Agent</DialogTitle>
+            <DialogTitle className="text-xl font-semibold text-foreground">Добавить агент</DialogTitle>
           </div>
         </DialogHeader>
         <TooltipProvider>
@@ -1047,7 +1047,7 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
               <div>
                 {currentStep > 0 && currentStep < 4 && (
                   <Button type="button" variant="outline" onClick={handleBack}>
-                    ← Back
+                    ← Назад
                   </Button>
                 )}
               </div>
@@ -1057,7 +1057,7 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
                     Отмена
                   </Button>
                 )}
-                {currentStep < 3 && <Button onClick={handleNext}>Next →</Button>}
+                {currentStep < 3 && <Button onClick={handleNext}>Далее →</Button>}
                 {currentStep === 3 && (
                   <Button disabled={isSubmitting} aria-busy={isSubmitting} onClick={handleCreateAgent}>
                     {isSubmitting && <UiLoadingSpinner className="size-4" />}

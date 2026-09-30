@@ -164,11 +164,11 @@ export default function ModelsAndEndpointsPage() {
       <div className="mt-2 flex w-full flex-col gap-2 p-8">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold">Model Management</h2>
+            <h2 className="text-lg font-semibold">Управление моделями</h2>
             {isAdmin ? (
-              <p className="text-sm text-muted-foreground">Add and manage models for the proxy</p>
+              <p className="text-sm text-muted-foreground">Добавляйте и управляйте моделями прокси</p>
             ) : (
-              <p className="text-sm text-muted-foreground">Add models for teams you are an admin for.</p>
+              <p className="text-sm text-muted-foreground">Добавляйте модели для команд, где вы администратор.</p>
             )}
           </div>
         </div>
@@ -203,9 +203,9 @@ export default function ModelsAndEndpointsPage() {
               </div>
               <div className="flex shrink-0 items-center gap-2 pb-1">
                 {lastRefreshed && (
-                  <span className="text-xs text-muted-foreground">Last Refreshed: {lastRefreshed}</span>
+                  <span className="text-xs text-muted-foreground">Последнее обновление: {lastRefreshed}</span>
                 )}
-                <Button variant="ghost" size="icon-sm" onClick={handleRefreshClick} aria-label="Refresh models">
+                <Button variant="ghost" size="icon-sm" onClick={handleRefreshClick} aria-label="Обновить модели">
                   <RefreshCw />
                 </Button>
               </div>

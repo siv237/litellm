@@ -72,7 +72,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
             <span className="text-muted-foreground">{description}</span>
           </div>
         </div>
-        {serverName && (title === "Implementation Example" || title === "Configuration") && (
+        {serverName && (title === "Пример реализации" || title === "Configuration") && (
           <div className="mb-4">
             <div className="flex items-center gap-2 mb-2">
               <Switch
@@ -88,14 +88,14 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
             {useServerHeader && (
               <Alert className="mt-2" variant="info">
                 <Info />
-                <AlertTitle>Two Options</AlertTitle>
+                <AlertTitle>Два варианта</AlertTitle>
                 <AlertDescription>
                   <div>
                     <p>
-                      <strong>Option 1:</strong> Get a specific server: <code>"{serverName.replace(/\s+/g, "_")}"</code>
+                      <strong>Вариант 1:</strong> Get a specific server: <code>"{serverName.replace(/\s+/g, "_")}"</code>
                     </p>
                     <p>
-                      <strong>Option 2:</strong> Get a group of MCPs: <code>"dev-group"</code>
+                      <strong>Вариант 2:</strong> Get a group of MCPs: <code>"dev-group"</code>
                     </p>
                     <p className="mt-2 text-sm text-muted-foreground">
                       You can also mix both: <code>"Server1,dev-group"</code>
@@ -201,39 +201,39 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
       <div className="bg-linear-to-r from-success/15 to-success/5 p-6 rounded-lg border border-success/15">
         <div className="flex items-center gap-3 mb-3">
           <Zap className="text-success" size={24} />
-          <h4 className="mb-0 text-xl font-semibold text-success">LiteLLM Proxy API Integration</h4>
+          <h4 className="mb-0 text-xl font-semibold text-success">Интеграция с API LiteLLM Proxy</h4>
         </div>
         <span className="text-success">
-          Connect to LiteLLM Proxy Responses API for seamless tool integration with multiple model providers
+          Подключитесь к Responses API LiteLLM Proxy для работы с инструментами у разных провайдеров моделей
         </span>
       </div>
 
       <div className="flex w-full flex-col gap-6">
         <FeatureCard
           icon={<KeyIcon className="text-success" size={16} />}
-          title="Virtual Key Setup"
-          description="Configure your LiteLLM Proxy Virtual Key for authentication"
+          title="Настройка виртуального ключа"
+          description="Настройте виртуальный ключ LiteLLM Proxy для авторизации"
         >
           <div className="flex w-full flex-col gap-4">
             <div>
-              <span>Get your Virtual Key from your LiteLLM Proxy dashboard or contact your administrator</span>
+              <span>Получите виртуальный ключ в панели LiteLLM Proxy или у администратора</span>
             </div>
-            <CodeBlock title="Environment Variable" code='export LITELLM_API_KEY="sk-..."' copyKey="litellm-env" />
+            <CodeBlock title="Переменная окружения" code='export LITELLM_API_KEY="sk-..."' copyKey="litellm-env" />
           </div>
         </FeatureCard>
 
         <FeatureCard
           icon={<ServerIcon className="text-success" size={16} />}
-          title="MCP Server Information"
-          description="Connection details for your LiteLLM MCP server"
+          title="Данные сервера MCP"
+          description="Параметры подключения к вашему серверу MCP LiteLLM"
         >
-          <CodeBlock title="Server URL" code={`${proxyBaseUrl}/mcp`} copyKey="litellm-server-url" />
+          <CodeBlock title="URL сервера" code={`${proxyBaseUrl}/mcp`} copyKey="litellm-server-url" />
         </FeatureCard>
 
         <FeatureCard
           icon={<Code className="text-success" size={16} />}
-          title="Implementation Example"
-          description="Complete cURL example for using the LiteLLM Proxy Responses API"
+          title="Пример реализации"
+          description="Полный пример cURL для Responses API LiteLLM Proxy"
           serverName={currentServer}
           accessGroups={["dev-group"]}
         >
@@ -271,18 +271,18 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
       <div className="bg-linear-to-r from-info/15 to-info/5 p-6 rounded-lg border border-info/15">
         <div className="flex items-center gap-3 mb-3">
           <Code className="text-info" size={24} />
-          <h4 className="mb-0 text-xl font-semibold text-info">OpenAI Responses API Integration</h4>
+          <h4 className="mb-0 text-xl font-semibold text-info">Интеграция с OpenAI Responses API</h4>
         </div>
         <span className="text-info">
-          Connect OpenAI Responses API to your LiteLLM MCP server for seamless tool integration
+          Подключите OpenAI Responses API к вашему серверу MCP LiteLLM для работы с инструментами
         </span>
       </div>
 
       <div className="flex w-full flex-col gap-6">
         <FeatureCard
           icon={<KeyIcon className="text-info" size={16} />}
-          title="API Key Setup"
-          description="Configure your OpenAI API key for authentication"
+          title="Настройка API-ключа"
+          description="Настройте ваш API-ключ OpenAI для авторизации"
         >
           <div className="flex w-full flex-col gap-4">
             <div>
@@ -298,22 +298,22 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
                 </a>
               </span>
             </div>
-            <CodeBlock title="Environment Variable" code='export OPENAI_API_KEY="sk-..."' copyKey="openai-env" />
+            <CodeBlock title="Переменная окружения" code='export OPENAI_API_KEY="sk-..."' copyKey="openai-env" />
           </div>
         </FeatureCard>
 
         <FeatureCard
           icon={<ServerIcon className="text-info" size={16} />}
-          title="MCP Server Information"
-          description="Connection details for your LiteLLM MCP server"
+          title="Данные сервера MCP"
+          description="Параметры подключения к вашему серверу MCP LiteLLM"
         >
-          <CodeBlock title="Server URL" code={`${proxyBaseUrl}/mcp`} copyKey="openai-server-url" />
+          <CodeBlock title="URL сервера" code={`${proxyBaseUrl}/mcp`} copyKey="openai-server-url" />
         </FeatureCard>
 
         <FeatureCard
           icon={<Code className="text-info" size={16} />}
-          title="Implementation Example"
-          description="Complete cURL example for using the Responses API"
+          title="Пример реализации"
+          description="Полный пример cURL для Responses API"
           serverName="Zapier Gmail"
           accessGroups={["dev-group"]}
         >
@@ -351,7 +351,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
       <div className="bg-linear-to-r from-purple-50 to-blue-50 p-6 rounded-lg border border-purple-100 dark:from-purple-950 dark:to-blue-950 dark:border-purple-900">
         <div className="flex items-center gap-3 mb-3">
           <Terminal className="text-purple-600 dark:text-purple-400" size={24} />
-          <h4 className="mb-0 text-xl font-semibold text-purple-900 dark:text-purple-100">Cursor IDE Integration</h4>
+          <h4 className="mb-0 text-xl font-semibold text-purple-900 dark:text-purple-100">Интеграция с Cursor IDE</h4>
         </div>
         <span className="text-purple-700 dark:text-purple-300">
           Use tools directly from Cursor IDE with LiteLLM MCP. Enable your AI assistant to perform real-world tasks
@@ -361,20 +361,20 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
 
       <Card>
         <CardContent>
-          <h5 className="mb-4 text-base font-semibold text-foreground">Setup Instructions</h5>
+          <h5 className="mb-4 text-base font-semibold text-foreground">Инструкции по настройке</h5>
           <div className="flex w-full flex-col gap-6">
-            <StepCard step={1} title="Open Cursor Settings">
+            <StepCard step={1} title="Откройте настройки Cursor">
               <span className="text-muted-foreground">
                 Use the keyboard shortcut <code className="bg-muted px-2 py-1 rounded-sm">⇧+⌘+J</code> (Mac) or{" "}
                 <code className="bg-muted px-2 py-1 rounded-sm">Ctrl+Shift+J</code> (Windows/Linux)
               </span>
             </StepCard>
 
-            <StepCard step={2} title="Navigate to MCP Tools">
-              <span className="text-muted-foreground">Go to the "MCP Tools" tab and click "New MCP Server"</span>
+            <StepCard step={2} title="Перейдите на вкладку MCP Tools">
+              <span className="text-muted-foreground">Откройте вкладку «MCP Tools» и нажмите «New MCP Server»</span>
             </StepCard>
 
-            <StepCard step={3} title="Add Configuration">
+            <StepCard step={3} title="Добавьте конфигурацию">
               <span className="mb-3 text-muted-foreground">
                 Copy the JSON configuration below and paste it into Cursor, then save with{" "}
                 <code className="bg-muted px-2 py-1 rounded-sm">Cmd+S</code> or{" "}
@@ -415,17 +415,17 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
       <div className="bg-linear-to-r from-success/15 to-success/5 p-6 rounded-lg border border-success/15">
         <div className="flex items-center gap-3 mb-3">
           <Globe className="text-success" size={24} />
-          <h4 className="mb-0 text-xl font-semibold text-success">Streamable HTTP Transport</h4>
+          <h4 className="mb-0 text-xl font-semibold text-success">Потоковый транспорт HTTP</h4>
         </div>
         <span className="text-success">
-          Connect to LiteLLM MCP using HTTP transport. Compatible with any MCP client that supports HTTP streaming.
+          Подключение к LiteLLM MCP по HTTP. Совместимо с любым MCP-клиентом с потоковым HTTP.
         </span>
       </div>
 
       <FeatureCard
         icon={<Globe className="text-success" size={16} />}
-        title="Universal MCP Connection"
-        description="Use this URL with any MCP client that supports HTTP transport"
+        title="Универсальное MCP-подключение"
+        description="Используйте этот URL с любым MCP-клиентом, поддерживающим HTTP-транспорт"
       >
         <div className="flex w-full flex-col gap-4">
           <div>
@@ -434,9 +434,9 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
               appropriate transport method.
             </span>
           </div>
-          <CodeBlock title="Server URL" code={`${proxyBaseUrl}/mcp`} copyKey="http-server-url" />
+          <CodeBlock title="URL сервера" code={`${proxyBaseUrl}/mcp`} copyKey="http-server-url" />
           <CodeBlock
-            title="Headers Configuration"
+            title="Конфигурация заголовков"
             code={JSON.stringify(
               {
                 "x-litellm-api-key": "Bearer YOUR_LITELLM_API_KEY",
@@ -460,7 +460,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
               }
             >
               <ExternalLinkIcon size={14} />
-              Learn more about MCP transports
+              Подробнее о транспортах MCP
             </Button>
           </div>
         </div>
@@ -472,7 +472,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
     <div>
       <div className="flex w-full flex-col gap-6">
         <div>
-          <h2 className="text-3xl font-bold text-foreground mb-3">Connect to your MCP client</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-3">Подключение к вашему MCP-клиенту</h2>
           <p className="text-lg text-muted-foreground">
             Use tools directly from any MCP client with LiteLLM MCP. Enable your AI assistant to perform real-world
             tasks through a simple, secure connection.
@@ -503,7 +503,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
               <TabsTrigger value="http" className="flex-none px-6 py-3">
                 <span className="flex items-center gap-2 font-medium">
                   <Globe size={18} />
-                  Streamable HTTP
+                  Потоковый HTTP
                 </span>
               </TabsTrigger>
             </div>
