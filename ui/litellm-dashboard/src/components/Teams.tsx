@@ -608,8 +608,8 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
             message="Are you sure you want to delete this team, all its keys, and any models created for it? This action cannot be undone."
             resourceInformationTitle="Team Information"
             resourceInformation={[
-              { label: "Team ID", value: teamToDelete?.team_id, code: true },
-              { label: "Team Name", value: teamToDelete?.team_alias },
+              { label: "ID команды", value: teamToDelete?.team_id, code: true },
+              { label: "Название команды", value: teamToDelete?.team_alias },
               {
                 label: "Keys",
                 value: teamToDelete?.keys_count ?? teamToDelete?.keys?.length ?? 0,
@@ -711,7 +711,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
             <TooltipProvider>
               <form onSubmit={form.handleSubmit(onCreateSubmit)}>
                 <FieldGroup>
-                  <FormField control={form.control} name="team_alias" label="Team Name">
+                  <FormField control={form.control} name="team_alias" label="Название команды">
                     {({ ref, value, ...field }) => (
                       <UIInput {...field} ref={ref} value={value ?? ""} data-testid="team-name-input" />
                     )}
@@ -795,12 +795,12 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                     )}
                   </FormField>
 
-                  <FormField control={form.control} name="max_budget" label="Max Budget (USD)">
+                  <FormField control={form.control} name="max_budget" label="Макс. бюджет (USD)">
                     {({ ref, value, ...field }) => (
                       <NumericalInput {...field} ref={ref} value={value ?? ""} step={0.01} precision={2} width={200} />
                     )}
                   </FormField>
-                  <FormField control={form.control} name="budget_duration" className="mt-8" label="Reset Budget">
+                  <FormField control={form.control} name="budget_duration" className="mt-8" label="Сброс бюджета">
                     {({ id, value, onChange }) => (
                       <BudgetDurationDropdown
                         id={id}
@@ -811,18 +811,18 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                       />
                     )}
                   </FormField>
-                  <FormField control={form.control} name="tpm_limit" label="Tokens per minute Limit (TPM)">
+                  <FormField control={form.control} name="tpm_limit" label="Лимит токенов в минуту (TPM)">
                     {({ ref, value, ...field }) => (
                       <NumericalInput {...field} ref={ref} value={value ?? ""} step={1} width={400} />
                     )}
                   </FormField>
-                  <FormField control={form.control} name="rpm_limit" label="Requests per minute Limit (RPM)">
+                  <FormField control={form.control} name="rpm_limit" label="Лимит запросов в минуту (RPM)">
                     {({ ref, value, ...field }) => (
                       <NumericalInput {...field} ref={ref} value={value ?? ""} step={1} width={400} />
                     )}
                   </FormField>
                   <Field>
-                    <FieldLabel>Metadata</FieldLabel>
+                    <FieldLabel>Метаданные</FieldLabel>
                     <MetadataKeyValueFields
                       control={form.control}
                       getValues={form.getValues}
@@ -849,7 +849,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                         <FormField
                           control={form.control}
                           name="team_id"
-                          label="Team ID"
+                          label="ID команды"
                           description="ID of the team you want to create. If not provided, it will be generated automatically."
                         >
                           {({ ref, value, ...field }) => <UIInput {...field} ref={ref} value={value ?? ""} />}
@@ -915,7 +915,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                         <FormField
                           control={form.control}
                           name="secret_manager_settings"
-                          label="Secret Manager Settings"
+                          label="Настройки Secret Manager"
                           description={
                             premiumUser
                               ? "Enter secret manager configuration as a JSON object."
@@ -995,7 +995,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                                 value={value ?? []}
                                 onValueChange={onChange}
                                 options={policiesList.map((name) => ({ value: name, label: name }))}
-                                placeholder="Select or enter policies"
+                                placeholder="Выберите или введите политики"
                               />
                             )}
                           </FormField>
@@ -1014,7 +1014,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                             <AccessGroupSelector
                               value={value}
                               onChange={onChange}
-                              placeholder="Select access groups (optional)"
+                              placeholder="Выберите группы доступа (необязательно)"
                             />
                           )}
                         </FormField>
@@ -1094,7 +1094,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                             onChange={onChange}
                             value={value}
                             accessToken={accessToken || ""}
-                            placeholder="Select MCP servers or access groups (optional)"
+                            placeholder="Выберите MCP-серверы или группы доступа (необязательно)"
                             allowAllProxyMcpServers={isProxyAdminRole(userRole || "")}
                           />
                         )}
@@ -1138,7 +1138,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                             onChange={onChange}
                             value={value}
                             accessToken={accessToken || ""}
-                            placeholder="Select agents or access groups (optional)"
+                            placeholder="Выберите агентов или группы доступа (необязательно)"
                           />
                         )}
                       </FormField>
@@ -1151,7 +1151,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                     className="mt-8 mb-8 overflow-hidden rounded-lg border"
                   >
                     <CollapsibleTrigger className="group/section flex w-full items-center justify-between px-4 py-3 text-left">
-                      <b>Search Tool Settings</b>
+                      <b>Настройки инструментов поиска</b>
                       <ChevronDown className="size-5 shrink-0 text-muted-foreground transition-transform group-data-[panel-open]/section:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="px-4 pb-3">
@@ -1170,7 +1170,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                             onChange={onChange}
                             value={value}
                             accessToken={accessToken || ""}
-                            placeholder="Select search tools (optional, empty = all allowed)"
+                            placeholder="Выберите инструменты поиска (пусто = разрешены все)"
                           />
                         )}
                       </FormField>
@@ -1202,7 +1202,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                             onChange={onChange}
                             value={value}
                             accessToken={accessToken || ""}
-                            placeholder="Select skills (optional)"
+                            placeholder="Выберите навыки (необязательно)"
                           />
                         )}
                       </FormField>
@@ -1211,7 +1211,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
 
                   <Collapsible className="mt-8 mb-8 overflow-hidden rounded-lg border">
                     <CollapsibleTrigger className="group/section flex w-full items-center justify-between px-4 py-3 text-left">
-                      <b>Logging Settings</b>
+                      <b>Настройки логирования</b>
                       <ChevronDown className="size-5 shrink-0 text-muted-foreground transition-transform group-data-[panel-open]/section:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="px-4 pb-3">
@@ -1230,7 +1230,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
                     className="mt-8 mb-8 overflow-hidden rounded-lg border"
                   >
                     <CollapsibleTrigger className="group/section flex w-full items-center justify-between px-4 py-3 text-left">
-                      <b>Router Settings</b>
+                      <b>Настройки маршрутизации</b>
                       <ChevronDown className="size-5 shrink-0 text-muted-foreground transition-transform group-data-[panel-open]/section:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="px-4 pb-3">
@@ -1252,7 +1252,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
 
                   <Collapsible className="mt-8 mb-8 overflow-hidden rounded-lg border">
                     <CollapsibleTrigger className="group/section flex w-full items-center justify-between px-4 py-3 text-left">
-                      <b>Model Aliases</b>
+                      <b>Псевдонимы моделей</b>
                       <ChevronDown className="size-5 shrink-0 text-muted-foreground transition-transform group-data-[panel-open]/section:rotate-180" />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="px-4 pb-3">

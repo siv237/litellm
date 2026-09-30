@@ -237,7 +237,7 @@ function BudgetCell({
   const [value, setValue] = useState("");
 
   if (!canEdit) {
-    return <MoneyCell value={user.max_budget} decimals={2} emptyText="Unlimited" showZero />;
+    return <MoneyCell value={user.max_budget} decimals={2} emptyText="Без ограничений" showZero />;
   }
 
   const save = async (next: number | null) => {
@@ -255,7 +255,7 @@ function BudgetCell({
         className="rounded px-1 -mx-1 cursor-pointer hover:bg-muted"
         title="Click to edit budget"
       >
-        <MoneyCell value={user.max_budget} decimals={2} emptyText="Unlimited" showZero />
+        <MoneyCell value={user.max_budget} decimals={2} emptyText="Без ограничений" showZero />
       </PopoverTrigger>
       <PopoverContent align="start" className="w-56 p-3">
         <form
@@ -285,7 +285,7 @@ function BudgetCell({
           />
           <div className="mt-2 flex items-center justify-between gap-2">
             <button type="button" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))} onClick={() => void save(null)}>
-              Unlimited
+              Без ограничений
             </button>
             <button type="submit" className={cn(buttonVariants({ size: "sm" }))}>
               Сохранить
@@ -385,8 +385,8 @@ export const getUsersTableColumns = ({
     {
       id: "user_id",
       accessorKey: "user_id",
-      meta: { title: "User ID" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="User ID" variant="header-cycle" />,
+      meta: { title: "ID пользователя" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="ID пользователя" variant="header-cycle" />,
       size: 220,
       enableSorting: true,
       cell: ({ row }) => (
@@ -442,8 +442,8 @@ export const getUsersTableColumns = ({
     {
       id: "user_alias",
       accessorKey: "user_alias",
-      meta: { title: "User Alias" },
-      header: "User Alias",
+      meta: { title: "Псевдоним пользователя" },
+      header: "Псевдоним пользователя",
       size: 150,
       enableSorting: false,
       cell: ({ row }) => (
@@ -464,8 +464,8 @@ export const getUsersTableColumns = ({
     {
       id: "max_budget",
       accessorKey: "max_budget",
-      meta: { title: "Budget (USD)", numeric: true },
-      header: "Budget (USD)",
+      meta: { title: "Бюджет (USD)", numeric: true },
+      header: "Бюджет (USD)",
       size: 150,
       enableSorting: false,
       cell: ({ row }) => (
@@ -516,8 +516,8 @@ export const getUsersTableColumns = ({
     {
       id: "key_count",
       accessorKey: "key_count",
-      meta: { title: "Virtual Keys", skeleton: "badge" },
-      header: "Virtual Keys",
+      meta: { title: "Виртуальные ключи", skeleton: "badge" },
+      header: "Виртуальные ключи",
       size: 120,
       enableSorting: false,
       cell: ({ row }) => {
@@ -545,8 +545,8 @@ export const getUsersTableColumns = ({
     {
       id: "created_at",
       accessorKey: "created_at",
-      meta: { title: "Created At" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Created At" variant="header-cycle" />,
+      meta: { title: "Создан" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Создан" variant="header-cycle" />,
       size: 130,
       enableSorting: true,
       cell: ({ row }) => <DateCell value={row.original.created_at} precision="date" />,
@@ -554,8 +554,8 @@ export const getUsersTableColumns = ({
     {
       id: "updated_at",
       accessorKey: "updated_at",
-      meta: { title: "Updated At" },
-      header: "Updated At",
+      meta: { title: "Обновлён" },
+      header: "Обновлён",
       size: 130,
       enableSorting: false,
       cell: ({ row }) => <DateCell value={row.original.updated_at} precision="date" />,

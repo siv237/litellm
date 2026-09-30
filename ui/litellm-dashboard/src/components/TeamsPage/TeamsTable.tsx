@@ -195,18 +195,18 @@ export function TeamsTable({ userRole, userID, onSelectTeam, onEditTeam, onDelet
             table={table}
             open={filtersOpen}
             onOpenChange={setFiltersOpen}
-            title="Filters"
+            title="Фильтры"
             description="Narrow down your teams"
           >
             {({ get, set }) => (
               <>
-                <DataTableFilterField label="Organization">
+                <DataTableFilterField label="Организация">
                   <SearchSelect
                     options={orgOptions}
                     value={(get("org_id") as string) || undefined}
                     onValueChange={(value) => set("org_id", value ?? undefined)}
-                    placeholder="Select an organization…"
-                    emptyText="No organizations found"
+                    placeholder="Выберите организацию…"
+                    emptyText="Организации не найдены"
                   />
                 </DataTableFilterField>
                 <DataTableFilterField label="Team alias">
@@ -216,7 +216,7 @@ export function TeamsTable({ userRole, userID, onSelectTeam, onEditTeam, onDelet
                     placeholder="Enter team alias…"
                   />
                 </DataTableFilterField>
-                <DataTableFilterField label="Team ID">
+                <DataTableFilterField label="ID команды">
                   <Input
                     value={(get("team_id") as string) ?? ""}
                     onChange={(event) => set("team_id", event.target.value)}

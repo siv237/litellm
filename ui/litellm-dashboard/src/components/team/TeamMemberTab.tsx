@@ -158,15 +158,15 @@ export default function TeamMemberTab({
       render: (record: Member) => <MoneyCell value={getUserTotalSpend(record.user_id)} decimals={2} />,
     },
     {
-      title: "Team Member Budget (USD)",
+      title: "Бюджет участника команды (USD)",
       key: "budget",
       sortValue: (record: Member) => getUserBudget(record.user_id),
       render: (record: Member) => (
-        <MoneyCell value={getUserBudget(record.user_id)} decimals={2} emptyText="Unlimited" showZero />
+        <MoneyCell value={getUserBudget(record.user_id)} decimals={2} emptyText="Без ограничений" showZero />
       ),
     },
     {
-      title: "Budget Reset",
+      title: "Сброс бюджета",
       key: "budget_reset",
       sortValue: (record: Member) => getUserBudgetReset(record.user_id),
       render: (record: Member) => <DateCell value={getUserBudgetReset(record.user_id)} precision="date" />,

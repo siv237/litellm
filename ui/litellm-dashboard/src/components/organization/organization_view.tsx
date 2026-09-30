@@ -132,7 +132,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
       render: (record: Member) => <MoneyCell value={orgMemberFor(record)?.spend} decimals={4} />,
     },
     {
-      title: "Created At",
+      title: "Создан",
       key: "created_at",
       sortValue: (record: Member) => orgMemberFor(record)?.created_at ?? null,
       render: (record: Member) => {
@@ -186,7 +186,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
 
             <Card>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Budget Status</p>
+                <p className="text-sm text-muted-foreground">Статус бюджета</p>
                 <div className="mt-2 text-sm text-foreground">
                   <p className="text-xl font-semibold">${formatNumberWithCommas(orgData.spend, 4)}</p>
                   <p>
@@ -196,7 +196,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
                       : `$${formatNumberWithCommas(orgData.litellm_budget_table.max_budget, 4)}`}
                   </p>
                   {orgData.litellm_budget_table.budget_duration && (
-                    <p className="text-muted-foreground">Reset: {orgData.litellm_budget_table.budget_duration}</p>
+                    <p className="text-muted-foreground">Сброс: {orgData.litellm_budget_table.budget_duration}</p>
                   )}
                 </div>
               </CardContent>
@@ -204,12 +204,12 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
 
             <Card>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Rate Limits</p>
+                <p className="text-sm text-muted-foreground">Лимиты запросов</p>
                 <div className="mt-2 text-sm text-foreground">
                   <p>TPM: {orgData.litellm_budget_table.tpm_limit ?? "Unlimited"}</p>
                   <p>RPM: {orgData.litellm_budget_table.rpm_limit ?? "Unlimited"}</p>
                   {orgData.litellm_budget_table.max_parallel_requests && (
-                    <p>Max Parallel Requests: {orgData.litellm_budget_table.max_parallel_requests}</p>
+                    <p>Макс. параллельных запросов: {orgData.litellm_budget_table.max_parallel_requests}</p>
                   )}
                 </div>
               </CardContent>
@@ -278,7 +278,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
             <CardContent>
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-foreground">Organization Settings</h2>
-                {canEditOrg && !isEditing && <Button onClick={() => setIsEditing(true)}>Edit Settings</Button>}
+                {canEditOrg && !isEditing && <Button onClick={() => setIsEditing(true)}>Изменить настройки</Button>}
               </div>
 
               {isEditing ? (
@@ -296,11 +296,11 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
                     <div>{orgData.organization_alias}</div>
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">Organization ID</p>
+                    <p className="font-medium text-foreground">ID организации</p>
                     <div className="font-mono">{orgData.organization_id}</div>
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">Created At</p>
+                    <p className="font-medium text-foreground">Создан</p>
                     <div>{new Date(orgData.created_at).toLocaleString()}</div>
                   </div>
                   <div>
@@ -312,7 +312,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
                     </div>
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">Rate Limits</p>
+                    <p className="font-medium text-foreground">Лимиты запросов</p>
                     <div>TPM: {orgData.litellm_budget_table.tpm_limit ?? "Unlimited"}</div>
                     <div>RPM: {orgData.litellm_budget_table.rpm_limit ?? "Unlimited"}</div>
                   </div>
@@ -324,7 +324,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
                         ? `$${formatNumberWithCommas(orgData.litellm_budget_table.max_budget, 4)}`
                         : "No Limit"}
                     </div>
-                    <div>Reset: {orgData.litellm_budget_table.budget_duration || "Never"}</div>
+                    <div>Сброс: {orgData.litellm_budget_table.budget_duration || "Never"}</div>
                   </div>
 
                   <ObjectPermissionsView
@@ -372,7 +372,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
         initialData={selectedEditMember}
         mode="edit"
         config={{
-          title: "Edit Member",
+          title: "Изменить участника",
           showEmail: true,
           showUserId: true,
           roleOptions: [

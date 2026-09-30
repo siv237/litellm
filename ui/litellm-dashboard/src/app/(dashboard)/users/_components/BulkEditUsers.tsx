@@ -247,7 +247,7 @@ const BulkEditUserModal: React.FC<BulkEditUserModalProps> = ({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[30%]">User ID</TableHead>
+                    <TableHead className="w-[30%]">ID пользователя</TableHead>
                     <TableHead className="w-[25%]">Эл. почта</TableHead>
                     <TableHead className="w-[25%]">Current Role</TableHead>
                     <TableHead className="w-[20%]">Бюджет</TableHead>
@@ -264,7 +264,7 @@ const BulkEditUserModal: React.FC<BulkEditUserModalProps> = ({
                         {possibleUIRoles?.[user.user_role]?.ui_label || user.user_role}
                       </TableCell>
                       <TableCell>
-                        <MoneyCell value={user.max_budget} decimals={2} emptyText="Unlimited" showZero />
+                        <MoneyCell value={user.max_budget} decimals={2} emptyText="Без ограничений" showZero />
                       </TableCell>
                     </TableRow>
                   ))}

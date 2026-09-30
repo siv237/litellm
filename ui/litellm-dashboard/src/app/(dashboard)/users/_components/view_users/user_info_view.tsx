@@ -452,7 +452,7 @@ export default function UserInfoView({
         resourceInformationTitle="User Information"
         resourceInformation={[
           { label: "Эл. почта", value: userData.user_email },
-          { label: "User ID", value: userData.user_id, code: true },
+          { label: "ID пользователя", value: userData.user_id, code: true },
           {
             label: "Global Proxy Role",
             value: (userData.user_role && possibleUIRoles?.[userData.user_role]?.ui_label) || userData.user_role || "-",
@@ -506,7 +506,7 @@ export default function UserInfoView({
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Team Name</TableHead>
+                          <TableHead>Название команды</TableHead>
                           {isProxyAdmin && <TableHead className="text-right">Действия</TableHead>}
                         </TableRow>
                       </TableHeader>
@@ -571,7 +571,7 @@ export default function UserInfoView({
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium">User Settings</h3>
               {!isEditing && userRole && rolesWithWriteAccess.includes(userRole) && (
-                <Button onClick={() => setIsEditing(true)}>Edit Settings</Button>
+                <Button onClick={() => setIsEditing(true)}>Изменить настройки</Button>
               )}
             </div>
 
@@ -592,7 +592,7 @@ export default function UserInfoView({
             ) : (
               <div className="space-y-4">
                 <div>
-                  <p className="font-medium">User ID</p>
+                  <p className="font-medium">ID пользователя</p>
                   <div className="flex items-center cursor-pointer">
                     <span className="font-mono">{userData.user_id}</span>
                     <Button
@@ -616,7 +616,7 @@ export default function UserInfoView({
                 </div>
 
                 <div>
-                  <p className="font-medium">User Alias</p>
+                  <p className="font-medium">Псевдоним пользователя</p>
                   <p>{userData.user_alias || "Not Set"}</p>
                 </div>
 
@@ -660,12 +660,12 @@ export default function UserInfoView({
                 </div>
 
                 <div>
-                  <p className="font-medium">Budget Reset</p>
+                  <p className="font-medium">Сброс бюджета</p>
                   <p>{getBudgetDurationLabel(userData.budget_duration ?? null)}</p>
                 </div>
 
                 <div>
-                  <p className="font-medium">Metadata</p>
+                  <p className="font-medium">Метаданные</p>
                   <pre className="bg-muted p-2 rounded-sm text-xs overflow-auto mt-1">
                     {JSON.stringify(userData.metadata || {}, null, 2)}
                   </pre>
@@ -703,7 +703,7 @@ export default function UserInfoView({
         resourceInformationTitle="Team Membership"
         resourceInformation={[
           { label: "Команда", value: teamToRemove?.team_alias || teamToRemove?.team_id },
-          { label: "User ID", value: userData?.user_id, code: true },
+          { label: "ID пользователя", value: userData?.user_id, code: true },
           { label: "Эл. почта", value: userData?.user_email },
         ]}
         onCancel={handleRemoveTeamCancel}
@@ -739,7 +739,7 @@ export default function UserInfoView({
                 >
                   <ComboboxInput id={ADD_TEAM_FIELD_ID} placeholder="Select a team" className="w-full" />
                   <ComboboxContent>
-                    <ComboboxEmpty>No teams found</ComboboxEmpty>
+                    <ComboboxEmpty>Команды не найдены</ComboboxEmpty>
                     <ComboboxList>
                       {(team: TeamOption) => (
                         <ComboboxItem key={team.team_id} value={team} title={team.team_alias}>

@@ -182,7 +182,7 @@ export function UserEditView({
   };
 
   const modelOptions = [
-    { label: "All Proxy Models", value: "all-proxy-models" },
+    { label: "Все модели прокси", value: "all-proxy-models" },
     { label: "No Default Models", value: "no-default-models" },
     ...userModels.map((model) => ({ label: getModelDisplayName(model), value: model })),
   ];
@@ -198,7 +198,7 @@ export function UserEditView({
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <FieldGroup>
           {!isBulkEdit && (
-            <FormField control={form.control} name="user_id" label="User ID">
+            <FormField control={form.control} name="user_id" label="ID пользователя">
               {({ ref, value, ...control }) => <Input {...control} ref={ref} value={value ?? ""} disabled />}
             </FormField>
           )}
@@ -209,7 +209,7 @@ export function UserEditView({
             </FormField>
           )}
 
-          <FormField control={form.control} name="user_alias" label="User Alias">
+          <FormField control={form.control} name="user_alias" label="Псевдоним пользователя">
             {({ ref, value, ...control }) => <Input {...control} ref={ref} value={value ?? ""} />}
           </FormField>
 
@@ -266,7 +266,7 @@ export function UserEditView({
             name="max_budget"
             label={
               <>
-                Max Budget (USD)
+                Макс. бюджет (USD)
                 <label className="ml-3 inline-flex items-center gap-2 font-normal">
                   <Checkbox checked={unlimitedBudget} onCheckedChange={handleUnlimitedBudgetChange} />
                   Unlimited Budget
@@ -289,7 +289,7 @@ export function UserEditView({
             )}
           </FormField>
 
-          <FormField control={form.control} name="budget_duration" label="Reset Budget">
+          <FormField control={form.control} name="budget_duration" label="Сброс бюджета">
             {({ id, value, onChange }) => <BudgetDurationDropdown id={id} value={value} onChange={onChange} />}
           </FormField>
 
@@ -307,7 +307,7 @@ export function UserEditView({
             />
           )}
 
-          <FormField control={form.control} name="metadata" label="Metadata">
+          <FormField control={form.control} name="metadata" label="Метаданные">
             {({ ref, value, ...control }) => (
               <Textarea {...control} ref={ref} value={value ?? ""} rows={4} placeholder="Enter metadata as JSON" />
             )}
@@ -328,7 +328,7 @@ export function UserEditView({
                     onChange={onChange}
                     value={value}
                     accessToken={accessToken || ""}
-                    placeholder="Select MCP servers or access groups (optional)"
+                    placeholder="Выберите MCP-серверы или группы доступа (необязательно)"
                   />
                 )}
               </FormField>
