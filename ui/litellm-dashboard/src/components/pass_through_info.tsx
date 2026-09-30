@@ -178,7 +178,7 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
 
       const headers = parseHeaders(values.headers);
       if (headers === null) {
-        toast.fromError("Invalid JSON format for headers");
+        toast.fromError("Некорректный JSON заголовков");
         return;
       }
 
@@ -207,7 +207,7 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
       }
     } catch (error) {
       console.error("Error updating endpoint:", error);
-      toast.fromError("Failed to update pass through endpoint");
+      toast.fromError("Не удалось обновить сквозной эндпоинт");
     }
   };
 
@@ -216,14 +216,14 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
       if (!accessToken || !endpointData?.id) return;
 
       await deletePassThroughEndpointsCall(accessToken, endpointData.id);
-      toast.success("Pass through endpoint deleted successfully");
+      toast.success("Сквозной эндпоинт удалён");
       onClose();
       if (onEndpointUpdated) {
         onEndpointUpdated();
       }
     } catch (error) {
       console.error("Error deleting endpoint:", error);
-      toast.fromError("Failed to delete pass through endpoint");
+      toast.fromError("Не удалось удалить сквозной эндпоинт");
     }
   };
 
@@ -232,7 +232,7 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
   }
 
   if (!endpointData) {
-    return <div className="p-4">Pass through endpoint not found</div>;
+    return <div className="p-4">Сквозной эндпоинт не найден</div>;
   }
 
   return (
@@ -240,9 +240,9 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
       <div className="flex justify-between items-center mb-6">
         <div>
           <Button onClick={onClose} className="mb-4">
-            ← Back
+            ← Назад
           </Button>
-          <h2 className="text-xl font-semibold">Pass Through Endpoint: {endpointData.path}</h2>
+          <h2 className="text-xl font-semibold">Сквозной эндпоинт: {endpointData.path}</h2>
           <p className="text-sm text-muted-foreground font-mono">{endpointData.id}</p>
         </div>
       </div>
@@ -250,11 +250,11 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
       <Tabs defaultValue="overview">
         <TabsList variant="line" className="mb-4 h-auto w-full justify-start rounded-none border-b p-0">
           <TabsTrigger value="overview" className="flex-none rounded-none px-4 py-2">
-            Overview
+            Обзор
           </TabsTrigger>
           {isAdmin && (
             <TabsTrigger value="settings" className="flex-none rounded-none px-4 py-2">
-              Settings
+              Настройки
             </TabsTrigger>
           )}
         </TabsList>
@@ -264,21 +264,21 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
           <TabsContent value="overview" keepMounted>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <Card className="block p-6">
-                <p className="text-sm">Path</p>
+                <p className="text-sm">Путь</p>
                 <div className="mt-2">
                   <h3 className="text-lg font-medium font-mono">{endpointData.path}</h3>
                 </div>
               </Card>
 
               <Card className="block p-6">
-                <p className="text-sm">Target</p>
+                <p className="text-sm">Цель</p>
                 <div className="mt-2">
                   <h3 className="text-lg font-medium">{endpointData.target}</h3>
                 </div>
               </Card>
 
               <Card className="block p-6">
-                <p className="text-sm">Configuration</p>
+                <p className="text-sm">Конфигурация</p>
                 <div className="mt-2 space-y-2">
                   <div>
                     <Badge variant={endpointData.include_subpath ? "secondary" : "outline"}>
@@ -292,7 +292,7 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
                   </div>
                   {endpointData.methods && endpointData.methods.length > 0 && (
                     <div>
-                      <p className="text-xs text-muted-foreground">HTTP Methods:</p>
+                      <p className="text-xs text-muted-foreground">Методы HTTP:</p>
                       <div className="flex flex-wrap gap-1 mt-1">
                         {endpointData.methods.map((method) => (
                           <Badge key={method} variant="secondary">
@@ -304,12 +304,12 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
                   )}
                   {(!endpointData.methods || endpointData.methods.length === 0) && (
                     <div>
-                      <p className="text-xs text-muted-foreground">All HTTP methods supported</p>
+                      <p className="text-xs text-muted-foreground">Поддерживаются все методы HTTP</p>
                     </div>
                   )}
                   {endpointData.cost_per_request !== undefined && (
                     <div>
-                      <p className="text-sm">Cost per request: ${endpointData.cost_per_request}</p>
+                      <p className="text-sm">Стоимость запроса: ${endpointData.cost_per_request}</p>
                     </div>
                   )}
                 </div>
@@ -328,7 +328,7 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
             {endpointData.headers && Object.keys(endpointData.headers).length > 0 && (
               <Card className="block mt-6 p-6">
                 <div className="flex justify-between items-center">
-                  <p className="text-sm font-medium">Headers</p>
+                  <p className="text-sm font-medium">Заголовки</p>
                   <Badge variant="secondary">{Object.keys(endpointData.headers).length} headers configured</Badge>
                 </div>
                 <div className="mt-4">
@@ -340,7 +340,7 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
             {endpointData.guardrails && Object.keys(endpointData.guardrails).length > 0 && (
               <Card className="block mt-6 p-6">
                 <div className="flex justify-between items-center">
-                  <p className="text-sm font-medium">Guardrails</p>
+                  <p className="text-sm font-medium">Гардрейлы</p>
                   <Badge variant="secondary">{Object.keys(endpointData.guardrails).length} guardrails configured</Badge>
                 </div>
                 <div className="mt-4 space-y-2">
@@ -349,13 +349,13 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
                       <div className="font-medium text-sm">{name}</div>
                       {settings && (settings.request_fields || settings.response_fields) && (
                         <div className="mt-2 text-xs text-muted-foreground space-y-1">
-                          {settings.request_fields && <div>Request fields: {settings.request_fields.join(", ")}</div>}
+                          {settings.request_fields && <div>Поля запроса: {settings.request_fields.join(", ")}</div>}
                           {settings.response_fields && (
-                            <div>Response fields: {settings.response_fields.join(", ")}</div>
+                            <div>Поля ответа: {settings.response_fields.join(", ")}</div>
                           )}
                         </div>
                       )}
-                      {!settings && <div className="text-xs text-muted-foreground mt-1">Uses entire payload</div>}
+                      {!settings && <div className="text-xs text-muted-foreground mt-1">Используется вся полезная нагрузка</div>}
                     </div>
                   ))}
                 </div>
@@ -368,13 +368,13 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
             <TabsContent value="settings" keepMounted>
               <Card className="block p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-medium">Pass Through Endpoint Settings</h3>
+                  <h3 className="text-lg font-medium">Настройки сквозного эндпоинта</h3>
                   <div className="space-x-2">
                     {!isEditing && (
                       <>
-                        <Button onClick={() => setIsEditing(true)}>Edit Settings</Button>
+                        <Button onClick={() => setIsEditing(true)}>Изменить настройки</Button>
                         <Button onClick={handleDeleteEndpoint} variant="destructive">
-                          Delete Endpoint
+                          Удалить эндпоинт
                         </Button>
                       </>
                     )}
@@ -383,13 +383,13 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
 
                 {isEditing ? (
                   <form onSubmit={form.handleSubmit(handleEndpointUpdate)}>
-                    <FormField control={form.control} name="target" label="Target URL">
+                    <FormField control={form.control} name="target" label="Целевой URL">
                       {({ value, ...field }) => (
                         <Input {...field} placeholder="https://api.example.com" value={value ?? ""} />
                       )}
                     </FormField>
 
-                    <FormField control={form.control} name="headers" label="Headers (JSON)">
+                    <FormField control={form.control} name="headers" label="Заголовки (JSON)">
                       {({ value, ...field }) => (
                         <Textarea
                           {...field}
@@ -403,7 +403,7 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
                     <FormField
                       control={form.control}
                       name="methods"
-                      label="HTTP Methods (Optional)"
+                      label="Методы HTTP (необязательно)"
                       description={
                         selectedMethods.length === 0
                           ? "All HTTP methods supported (default)"
@@ -413,7 +413,7 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
                       {({ value, onChange, ref: _ref, ...field }) => (
                         <Select multiple items={HTTP_METHOD_OPTIONS} value={value} onValueChange={onChange}>
                           <SelectTrigger {...field} className="w-full">
-                            <SelectValue placeholder="Select methods (leave empty for all)">
+                            <SelectValue placeholder="Выберите методы (пусто — все)">
                               {(selected: string[]) =>
                                 selected.length === 0 ? "Select methods (leave empty for all)" : selected.join(", ")
                               }
@@ -430,13 +430,13 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
                       )}
                     </FormField>
 
-                    <FormField control={form.control} name="include_subpath" label="Include Subpath">
+                    <FormField control={form.control} name="include_subpath" label="Включать подобласть">
                       {({ value, onChange, ref: _ref, ...field }) => (
                         <Switch {...field} checked={value} onCheckedChange={onChange} />
                       )}
                     </FormField>
 
-                    <FormField control={form.control} name="cost_per_request" label="Cost per Request">
+                    <FormField control={form.control} name="cost_per_request" label="Стоимость запроса">
                       {({ value, onChange, ref: _ref, ...field }) => (
                         <PrecisionNumberInput
                           {...field}
@@ -454,8 +454,8 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
                     <FormField
                       control={form.control}
                       name="timeout"
-                      label="Request Timeout (seconds)"
-                      description="Max time to wait for upstream response. Leave empty to use the global pass_through_request_timeout (default 600s)."
+                      label="Таймаут запроса (секунды)"
+                      description="Максимальное ожидание ответа вышестоящего сервиса. Пусто — глобальный pass_through_request_timeout (по умолчанию 600 с)."
                     >
                       {({ value, onChange, ref: _ref, ...field }) => (
                         <PrecisionNumberInput
@@ -498,45 +498,45 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
                 ) : (
                   <div className="space-y-4">
                     <div>
-                      <p className="text-sm font-medium">Path</p>
+                      <p className="text-sm font-medium">Путь</p>
                       <div className="font-mono">{endpointData.path}</div>
                     </div>
                     <div>
-                      <p className="text-sm font-medium">Target URL</p>
+                      <p className="text-sm font-medium">Целевой URL</p>
                       <div>{endpointData.target}</div>
                     </div>
                     <div>
-                      <p className="text-sm font-medium">Include Subpath</p>
+                      <p className="text-sm font-medium">Включать подобласть</p>
                       <Badge variant={endpointData.include_subpath ? "secondary" : "outline"}>
                         {endpointData.include_subpath ? "Yes" : "No"}
                       </Badge>
                     </div>
                     {endpointData.cost_per_request !== undefined && (
                       <div>
-                        <p className="text-sm font-medium">Cost per Request</p>
+                        <p className="text-sm font-medium">Стоимость запроса</p>
                         <div>${endpointData.cost_per_request}</div>
                       </div>
                     )}
                     {endpointData.timeout !== undefined && endpointData.timeout !== null && (
                       <div>
-                        <p className="text-sm font-medium">Request Timeout</p>
+                        <p className="text-sm font-medium">Таймаут запроса</p>
                         <div>{endpointData.timeout}s</div>
                       </div>
                     )}
                     <div>
-                      <p className="text-sm font-medium">Authentication Required</p>
+                      <p className="text-sm font-medium">Требуется авторизация</p>
                       <Badge variant={endpointData.auth ? "secondary" : "outline"}>
                         {endpointData.auth ? "Yes" : "No"}
                       </Badge>
                     </div>
                     <div>
-                      <p className="text-sm font-medium">Headers</p>
+                      <p className="text-sm font-medium">Заголовки</p>
                       {endpointData.headers && Object.keys(endpointData.headers).length > 0 ? (
                         <div className="mt-2">
                           <PasswordField value={endpointData.headers} />
                         </div>
                       ) : (
-                        <div className="text-muted-foreground">No headers configured</div>
+                        <div className="text-muted-foreground">Заголовки не настроены</div>
                       )}
                     </div>
                   </div>

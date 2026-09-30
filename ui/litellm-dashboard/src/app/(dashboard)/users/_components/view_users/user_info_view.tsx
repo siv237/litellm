@@ -150,7 +150,7 @@ export default function UserInfoView({
         setUserModels(availableModels);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        toast.fromError("Failed to fetch user data");
+        toast.fromError("Не удалось загрузить данные пользователя");
       } finally {
         setIsLoading(false);
       }
@@ -195,7 +195,7 @@ export default function UserInfoView({
         user_id: userId,
       };
       await teamMemberAddCall(accessToken, selectedTeamId, member);
-      toast.success("User added to team successfully");
+      toast.success("Пользователь добавлен в команду");
       setIsAddTeamModalOpen(false);
       // Re-fetch user data to refresh teams
       const data = await userGetInfoV2(accessToken, userId);
@@ -235,7 +235,7 @@ export default function UserInfoView({
         user_id: userId,
       };
       await teamMemberDeleteCall(accessToken, teamToRemove.team_id, member);
-      toast.success("User removed from team successfully");
+      toast.success("Пользователь удалён из команды");
       setIsRemoveTeamModalOpen(false);
       setTeamToRemove(null);
       // Re-fetch user data to refresh teams
@@ -273,7 +273,7 @@ export default function UserInfoView({
 
   const handleResetPassword = async () => {
     if (!accessToken) {
-      toast.fromError("Access token not found");
+      toast.fromError("Токен доступа не найден");
       return;
     }
     try {
@@ -282,7 +282,7 @@ export default function UserInfoView({
       setInvitationLinkData(data);
       setIsInvitationLinkModalVisible(true);
     } catch (error) {
-      toast.fromError("Failed to generate password reset link");
+      toast.fromError("Не удалось создать ссылку сброса пароля");
     }
   };
 
@@ -291,14 +291,14 @@ export default function UserInfoView({
       if (!accessToken) return;
       setIsDeletingUser(true);
       await userDeleteCall(accessToken, [userId]);
-      toast.success("User deleted successfully");
+      toast.success("Пользователь удалён");
       if (onDelete) {
         onDelete();
       }
       onClose();
     } catch (error) {
       console.error("Error deleting user:", error);
-      toast.fromError("Failed to delete user");
+      toast.fromError("Не удалось удалить пользователя");
     } finally {
       setIsDeleteModalOpen(false);
       setIsDeletingUser(false);
@@ -342,11 +342,11 @@ export default function UserInfoView({
           : userData.object_permission,
       });
 
-      toast.success("User updated successfully");
+      toast.success("Пользователь обновлён");
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating user:", error);
-      toast.fromError("Failed to update user");
+      toast.fromError("Не удалось обновить пользователя");
     }
   };
 
@@ -355,7 +355,7 @@ export default function UserInfoView({
       <div className="p-4">
         <Button variant="ghost" onClick={onClose} className="mb-4">
           <ArrowLeft />
-          Back to Users
+          К пользователям
         </Button>
         <p className="text-sm">Loading user data...</p>
       </div>
@@ -367,9 +367,9 @@ export default function UserInfoView({
       <div className="p-4">
         <Button variant="ghost" onClick={onClose} className="mb-4">
           <ArrowLeft />
-          Back to Users
+          К пользователям
         </Button>
-        <p className="text-sm">User not found</p>
+        <p className="text-sm">Пользователь не найден</p>
       </div>
     );
   }
@@ -408,7 +408,7 @@ export default function UserInfoView({
         <div>
           <Button variant="ghost" onClick={onClose} className="mb-4">
             <ArrowLeft />
-            Back to Users
+            К пользователям
           </Button>
           <h2 className="text-xl font-semibold">{userData.user_email || "User"}</h2>
           <div className="flex items-center cursor-pointer">
@@ -431,7 +431,7 @@ export default function UserInfoView({
           <div className="flex items-center space-x-2">
             <Button variant="secondary" onClick={handleResetPassword} className="flex items-center">
               <RefreshCw />
-              Reset Password
+              Сбросить пароль
             </Button>
             <Button
               variant="secondary"
@@ -439,7 +439,7 @@ export default function UserInfoView({
               className="flex items-center text-destructive border-destructive hover:bg-destructive/10"
             >
               <Trash2 />
-              Delete User
+              Удалить пользователя
             </Button>
           </div>
         )}
@@ -447,18 +447,18 @@ export default function UserInfoView({
 
       <DeleteResourceModal
         isOpen={isDeleteModalOpen}
-        title="Delete User?"
+        title="Удалить пользователя?"
         message="Are you sure you want to delete this user? This action cannot be undone."
         resourceInformationTitle="User Information"
         resourceInformation={[
           { label: "Эл. почта", value: userData.user_email },
           { label: "ID пользователя", value: userData.user_id, code: true },
           {
-            label: "Global Proxy Role",
+            label: "Глобальная роль прокси",
             value: (userData.user_role && possibleUIRoles?.[userData.user_role]?.ui_label) || userData.user_role || "-",
           },
           {
-            label: "Total Spend (USD)",
+            label: "Всего расходов (USD)",
             value: userData.spend !== null && userData.spend !== undefined ? userData.spend.toFixed(2) : undefined,
           },
         ]}
@@ -470,7 +470,7 @@ export default function UserInfoView({
       <Tabs value={activeTab} onValueChange={(v: unknown) => setActiveTab(String(v))} className="gap-0">
         <TabsList variant="line" className="mb-4">
           <TabsTrigger value="overview" className="flex-none data-active:text-primary after:bg-primary">
-            Overview
+            Обзор
           </TabsTrigger>
           <TabsTrigger value="details" className="flex-none data-active:text-primary after:bg-primary">
             Подробнее
@@ -492,11 +492,11 @@ export default function UserInfoView({
 
             <Card className="block p-6">
               <div className="flex justify-between items-center mb-2">
-                <p>Teams</p>
+                <p>Команды</p>
                 {isProxyAdmin && (
                   <Button variant="ghost" size="sm" onClick={handleOpenAddTeamModal}>
                     <Plus />
-                    Add Team
+                    Добавить команду
                   </Button>
                 )}
               </div>
@@ -537,28 +537,28 @@ export default function UserInfoView({
                     </Table>
                   </div>
                 ) : (
-                  <p>No teams</p>
+                  <p>Нет команд</p>
                 )}
                 {!isTeamsExpanded && teamDetails.length > 20 && (
                   <Button variant="ghost" size="sm" className="mt-2" onClick={() => setIsTeamsExpanded(true)}>
-                    +{teamDetails.length - 20} more
+                    и ещё {teamDetails.length - 20}
                   </Button>
                 )}
                 {isTeamsExpanded && teamDetails.length > 20 && (
                   <Button variant="ghost" size="sm" className="mt-2" onClick={() => setIsTeamsExpanded(false)}>
-                    Show Less
+                    Свернуть
                   </Button>
                 )}
               </div>
             </Card>
 
             <Card className="block p-6">
-              <p>Personal Models</p>
+              <p>Личные модели</p>
               <div className="mt-2">
                 {userData.models?.length && userData.models?.length > 0 ? (
                   userData.models?.map((model, index) => <p key={index}>{model}</p>)
                 ) : (
-                  <p>All proxy models</p>
+                  <p>Все модели прокси</p>
                 )}
               </div>
             </Card>
@@ -569,7 +569,7 @@ export default function UserInfoView({
         <TabsContent value="details" keepMounted>
           <Card className="block p-6">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">User Settings</h3>
+              <h3 className="text-lg font-medium">Настройки пользователя</h3>
               {!isEditing && userRole && rolesWithWriteAccess.includes(userRole) && (
                 <Button onClick={() => setIsEditing(true)}>Изменить настройки</Button>
               )}
@@ -621,22 +621,22 @@ export default function UserInfoView({
                 </div>
 
                 <div>
-                  <p className="font-medium">Global Proxy Role</p>
+                  <p className="font-medium">Глобальная роль прокси</p>
                   <p>{userData.user_role || "Not Set"}</p>
                 </div>
 
                 <div>
-                  <p className="font-medium">Created</p>
+                  <p className="font-medium">Создан</p>
                   <p>{userData.created_at ? new Date(userData.created_at).toLocaleString() : "Unknown"}</p>
                 </div>
 
                 <div>
-                  <p className="font-medium">Last Updated</p>
+                  <p className="font-medium">Последнее обновление</p>
                   <p>{userData.updated_at ? new Date(userData.updated_at).toLocaleString() : "Unknown"}</p>
                 </div>
 
                 <div>
-                  <p className="font-medium">Personal Models</p>
+                  <p className="font-medium">Личные модели</p>
                   <div className="flex flex-wrap gap-2 mt-1">
                     {userData.models?.length && userData.models?.length > 0 ? (
                       userData.models?.map((model, index) => (
@@ -645,13 +645,13 @@ export default function UserInfoView({
                         </span>
                       ))
                     ) : (
-                      <p>All proxy models</p>
+                      <p>Все модели прокси</p>
                     )}
                   </div>
                 </div>
 
                 <div>
-                  <p className="font-medium">Max Budget</p>
+                  <p className="font-medium">Макс. бюджет</p>
                   <p>
                     {userData.max_budget !== null && userData.max_budget !== undefined
                       ? `$${formatNumberWithCommas(userData.max_budget, 4)}`
@@ -672,7 +672,7 @@ export default function UserInfoView({
                 </div>
 
                 <div>
-                  <p className="font-medium mb-2">MCP Permissions</p>
+                  <p className="font-medium mb-2">Права MCP</p>
                   <MCPServerPermissions
                     mcpServers={userData.object_permission?.mcp_servers || []}
                     mcpAccessGroups={userData.object_permission?.mcp_access_groups || []}
@@ -697,7 +697,7 @@ export default function UserInfoView({
       {/* Delete Team Member Modal */}
       <DeleteResourceModal
         isOpen={isRemoveTeamModalOpen}
-        title="Remove from Team"
+        title="Удалить из команды"
         alertMessage="Removing this user from the team will also delete any keys the user created for this team."
         message="Are you sure you want to remove this user from the team? This action cannot be undone."
         resourceInformationTitle="Team Membership"
@@ -719,7 +719,7 @@ export default function UserInfoView({
       >
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Add User to Team</DialogTitle>
+            <DialogTitle>Добавить пользователя в команду</DialogTitle>
           </DialogHeader>
           <form
             onSubmit={(event) => {
@@ -737,7 +737,7 @@ export default function UserInfoView({
                   itemToStringLabel={(team: TeamOption) => team.team_alias}
                   isItemEqualToValue={(team: TeamOption, value: TeamOption) => team.team_id === value.team_id}
                 >
-                  <ComboboxInput id={ADD_TEAM_FIELD_ID} placeholder="Select a team" className="w-full" />
+                  <ComboboxInput id={ADD_TEAM_FIELD_ID} placeholder="Выберите команду" className="w-full" />
                   <ComboboxContent>
                     <ComboboxEmpty>Команды не найдены</ComboboxEmpty>
                     <ComboboxList>
@@ -752,7 +752,7 @@ export default function UserInfoView({
               </Field>
 
               <Field>
-                <FieldLabel htmlFor={ADD_TEAM_ROLE_FIELD_ID}>Member Role</FieldLabel>
+                <FieldLabel htmlFor={ADD_TEAM_ROLE_FIELD_ID}>Роль участника</FieldLabel>
                 <Select value={selectedRole} onValueChange={(value) => value !== null && setSelectedRole(value)}>
                   <SelectTrigger id={ADD_TEAM_ROLE_FIELD_ID} className="w-full">
                     <SelectValue />

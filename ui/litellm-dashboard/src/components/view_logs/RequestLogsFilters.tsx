@@ -27,15 +27,15 @@ import { LOG_FILTER_IDS, type LogsWindow } from "./log_filter_logic";
 const ALL_VALUE = "all";
 
 const STATUS_FILTER_ITEMS = [
-  { value: ALL_VALUE, label: "All Statuses" },
-  { value: "success", label: "Success" },
-  { value: "failure", label: "Failure" },
+  { value: ALL_VALUE, label: "Все статусы" },
+  { value: "success", label: "Успех" },
+  { value: "failure", label: "Сбой" },
 ] as const;
 
 const CACHE_FILTER_ITEMS = [
-  { value: ALL_VALUE, label: "All Requests" },
-  { value: "hit", label: "Cache Hit" },
-  { value: "miss", label: "Cache Miss" },
+  { value: ALL_VALUE, label: "Все запросы" },
+  { value: "hit", label: "Попадание в кэш" },
+  { value: "miss", label: "Промах кэша" },
 ] as const;
 const PAGE_SIZE = 50;
 
@@ -64,13 +64,13 @@ function TeamFilterField({
   );
 
   return (
-    <DataTableFilterField label="Team ID">
+    <DataTableFilterField label="ID команды">
       <SearchSelect
         options={options}
         value={value}
         onValueChange={(next) => onChange(next ?? undefined)}
-        placeholder="Search or select a team"
-        emptyText="No teams found"
+        placeholder="Найдите или выберите команду"
+        emptyText="Команды не найдены"
       />
     </DataTableFilterField>
   );
@@ -104,7 +104,7 @@ function KeyAliasFilterField({
   }, [data]);
 
   return (
-    <DataTableFilterField label="Key Alias">
+    <DataTableFilterField label="Псевдоним ключа">
       <PaginatedSearchSelect
         options={options}
         value={value}
@@ -114,8 +114,8 @@ function KeyAliasFilterField({
         hasNextPage={hasNextPage}
         isLoading={isLoading}
         isFetchingNextPage={isFetchingNextPage}
-        placeholder="Search a key alias"
-        emptyText="No key aliases found"
+        placeholder="Поиск по псевдониму ключа"
+        emptyText="Псевдонимы ключей не найдены"
       />
     </DataTableFilterField>
   );
@@ -152,8 +152,8 @@ function ModelFilterField({ value, onChange }: { value: string; onChange: (value
         hasNextPage={hasNextPage}
         isLoading={isLoading}
         isFetchingNextPage={isFetchingNextPage}
-        placeholder="Search a model"
-        emptyText="No models found"
+        placeholder="Поиск модели"
+        emptyText="Модели не найдены"
       />
     </DataTableFilterField>
   );
@@ -187,7 +187,7 @@ function UserIdFilterField({
   }, [data]);
 
   return (
-    <DataTableFilterField label="User ID">
+    <DataTableFilterField label="ID пользователя">
       <PaginatedSearchSelect
         options={options}
         value={value}
@@ -197,8 +197,8 @@ function UserIdFilterField({
         hasNextPage={hasNextPage}
         isLoading={isLoading}
         isFetchingNextPage={isFetchingNextPage}
-        placeholder="Search an internal user"
-        emptyText="No users found"
+        placeholder="Поиск внутреннего пользователя"
+        emptyText="Пользователи не найдены"
       />
     </DataTableFilterField>
   );
@@ -232,7 +232,7 @@ function EndUserFilterField({
   }, [data]);
 
   return (
-    <DataTableFilterField label="End User">
+    <DataTableFilterField label="Конечный пользователь">
       <PaginatedSearchSelect
         options={options}
         value={value}
@@ -242,8 +242,8 @@ function EndUserFilterField({
         hasNextPage={hasNextPage}
         isLoading={isLoading}
         isFetchingNextPage={isFetchingNextPage}
-        placeholder="Search an end user"
-        emptyText="No end users in this time range"
+        placeholder="Поиск конечного пользователя"
+        emptyText="Нет конечных пользователей в этом периоде"
       />
     </DataTableFilterField>
   );
@@ -275,7 +275,7 @@ function ErrorCodeFilterField({ value, onChange }: { value: string; onChange: (v
   }, [options, selected]);
 
   return (
-    <DataTableFilterField label="Error Code">
+    <DataTableFilterField label="Код ошибки">
       <Combobox
         items={items}
         value={selected}
@@ -290,12 +290,12 @@ function ErrorCodeFilterField({ value, onChange }: { value: string; onChange: (v
       >
         <ComboboxInput
           onFocus={(event) => event.currentTarget.select()}
-          placeholder="Select or type an error code"
+          placeholder="Выберите или введите код ошибки"
           showClear={value !== ""}
           className="w-full"
         />
         <ComboboxContent>
-          <ComboboxEmpty>No error codes found</ComboboxEmpty>
+          <ComboboxEmpty>Коды ошибок не найдены</ComboboxEmpty>
           <ComboboxList data-testid="error-code-filter-list">
             {(item: SearchSelectOption) => (
               <ComboboxItem key={item.value} value={item}>
@@ -335,7 +335,7 @@ export function RequestLogsFilters({ get, set, teams, logsWindow }: RequestLogsF
           onValueChange={(next) => set(LOG_FILTER_IDS.STATUS, next === null || next === ALL_VALUE ? undefined : next)}
         >
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="All Statuses" />
+            <SelectValue placeholder="Все статусы" />
           </SelectTrigger>
           <SelectContent>
             {STATUS_FILTER_ITEMS.map((item) => (
@@ -347,7 +347,7 @@ export function RequestLogsFilters({ get, set, teams, logsWindow }: RequestLogsF
         </Select>
       </DataTableFilterField>
 
-      <DataTableFilterField label="Cache">
+      <DataTableFilterField label="Кэш">
         <Select
           items={CACHE_FILTER_ITEMS}
           value={valueOf(LOG_FILTER_IDS.CACHE_STATUS) === "" ? ALL_VALUE : valueOf(LOG_FILTER_IDS.CACHE_STATUS)}
@@ -356,7 +356,7 @@ export function RequestLogsFilters({ get, set, teams, logsWindow }: RequestLogsF
           }
         >
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="All Requests" />
+            <SelectValue placeholder="Все запросы" />
           </SelectTrigger>
           <SelectContent>
             {CACHE_FILTER_ITEMS.map((item) => (
@@ -388,37 +388,37 @@ export function RequestLogsFilters({ get, set, teams, logsWindow }: RequestLogsF
 
       <ErrorCodeFilterField value={valueOf(LOG_FILTER_IDS.ERROR_CODE)} onChange={setter(LOG_FILTER_IDS.ERROR_CODE)} />
 
-      <DataTableFilterField label="Error Message">
+      <DataTableFilterField label="Текст ошибки">
         <Input
           value={valueOf(LOG_FILTER_IDS.ERROR_MESSAGE)}
           onChange={(event) => set(LOG_FILTER_IDS.ERROR_MESSAGE, emptyToUndefined(event.target.value))}
-          placeholder="Enter error message…"
+          placeholder="Введите текст ошибки…"
         />
       </DataTableFilterField>
 
-      <DataTableFilterField label="Key Hash">
+      <DataTableFilterField label="Хеш ключа">
         <Input
           value={valueOf(LOG_FILTER_IDS.KEY_HASH)}
           onChange={(event) => set(LOG_FILTER_IDS.KEY_HASH, emptyToUndefined(event.target.value))}
-          placeholder="Enter key hash…"
+          placeholder="Введите хеш ключа…"
         />
       </DataTableFilterField>
 
-      <DataTableFilterField label="Session ID">
+      <DataTableFilterField label="ID сессии">
         <Input
           value={valueOf(LOG_FILTER_IDS.SESSION_ID)}
           onChange={(event) => set(LOG_FILTER_IDS.SESSION_ID, emptyToUndefined(event.target.value))}
-          placeholder="Enter session ID…"
+          placeholder="Введите ID сессии…"
         />
       </DataTableFilterField>
 
       <ModelFilterField value={valueOf(LOG_FILTER_IDS.MODEL_ID)} onChange={setter(LOG_FILTER_IDS.MODEL_ID)} />
 
-      <DataTableFilterField label="Public model / search tool">
+      <DataTableFilterField label="Публичная модель / инструмент поиска">
         <Input
           value={valueOf(LOG_FILTER_IDS.PUBLIC_MODEL_OR_SEARCH_TOOL)}
           onChange={(event) => set(LOG_FILTER_IDS.PUBLIC_MODEL_OR_SEARCH_TOOL, emptyToUndefined(event.target.value))}
-          placeholder="Enter public model or search tool…"
+          placeholder="Введите публичную модель или инструмент поиска…"
         />
       </DataTableFilterField>
     </>

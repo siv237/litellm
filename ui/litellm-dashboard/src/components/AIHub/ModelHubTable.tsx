@@ -400,22 +400,22 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
               <h2 className="text-center text-xl font-semibold">AI Hub</h2>
               {isAdminRole(userRole || "") ? (
                 <p className="text-sm text-muted-foreground">
-                  Make models, agents, and MCP servers public for developers to know what&apos;s available.
+                  Делайте модели, агентов и серверы MCP публичными, чтобы разработчики видели, что доступно.
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  A list of all public model names personally available to you.
+                  Список всех публичных названий моделей, доступных лично вам.
                 </p>
               )}
             </div>
             <div className="flex items-center space-x-4">
-              <p>Model Hub URL:</p>
+              <p>URL хаба моделей:</p>
               <div className="flex items-center bg-border px-2 py-1 rounded-sm">
                 <p className="mr-2">{`${getProxyBaseUrl()}/ui/model_hub_table`}</p>
                 <button
                   onClick={() => void copyToClipboard(`${getProxyBaseUrl()}/ui/model_hub_table`)}
                   className="p-1 hover:bg-accent rounded-sm transition-colors"
-                  title="Copy URL"
+                  title="Скопировать URL"
                 >
                   <Copy size={16} className="text-muted-foreground" />
                 </button>
@@ -434,16 +434,16 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
           <Tabs defaultValue="models">
             <TabsList variant="line" className="mb-4 h-auto w-full justify-start rounded-none border-b p-0">
               <TabsTrigger value="models" className="flex-none rounded-none px-4 py-2">
-                Model Hub
+                Хаб моделей
               </TabsTrigger>
               <TabsTrigger value="agents" className="flex-none rounded-none px-4 py-2">
-                Agent Hub
+                Хаб агентов
               </TabsTrigger>
               <TabsTrigger value="mcp" className="flex-none rounded-none px-4 py-2">
                 MCP Hub
               </TabsTrigger>
               <TabsTrigger value="skills" className="flex-none rounded-none px-4 py-2">
-                Skill Hub
+                Хаб навыков
               </TabsTrigger>
             </TabsList>
 
@@ -455,7 +455,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
                   {/* Header with Make Public Button */}
                   {publicPage == false && canModify && (
                     <div className="flex justify-end mb-4">
-                      <Button onClick={() => handleMakePublicPage()}>Select Models to Make Public</Button>
+                      <Button onClick={() => handleMakePublicPage()}>Выберите модели для публикации</Button>
                     </div>
                   )}
 
@@ -489,7 +489,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
 
                 <div className="mt-4 text-center space-y-2">
                   <p className="text-sm text-muted-foreground">
-                    Showing {filteredData.length} of {modelHubData?.length || 0} models
+                    Показано {filteredData.length} из {modelHubData?.length || 0} моделей
                   </p>
                 </div>
               </TabsContent>
@@ -500,12 +500,12 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
                   {/* Header with Make Public Button */}
                   {publicPage == false && canModify && (
                     <div className="flex justify-end mb-4">
-                      <Button onClick={() => handleMakeAgentPublicPage()}>Select Agents to Make Public</Button>
+                      <Button onClick={() => handleMakeAgentPublicPage()}>Выберите агентов для публикации</Button>
                     </div>
                   )}
 
                   <div className="mb-4">
-                    <p className="text-sm font-medium mb-2">Search Agents:</p>
+                    <p className="text-sm font-medium mb-2">Поиск агентов:</p>
                     <InputGroup className="max-w-sm">
                       <InputGroupAddon>
                         <SearchIcon className="size-4 text-muted-foreground" />
@@ -519,7 +519,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
                         <InputGroupAddon align="inline-end">
                           <InputGroupButton
                             size="icon-xs"
-                            aria-label="Clear search"
+                            aria-label="Очистить поиск"
                             onClick={() => setAgentSearchTerm("")}
                           >
                             <X />
@@ -556,7 +556,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
 
                 <div className="mt-4 text-center space-y-2">
                   <p className="text-sm text-muted-foreground">
-                    Showing {filteredAgentData.length} of {agentHubData?.length || 0} agents
+                    Показано {filteredAgentData.length} из {agentHubData?.length || 0} агентов
                   </p>
                 </div>
               </TabsContent>
@@ -567,7 +567,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
                   {/* Header with Make Public Button */}
                   {publicPage == false && canModify && (
                     <div className="flex justify-end mb-4">
-                      <Button onClick={() => handleMakeMcpPublicPage()}>Select MCP Servers to Make Public</Button>
+                      <Button onClick={() => handleMakeMcpPublicPage()}>Выберите серверы MCP для публикации</Button>
                     </div>
                   )}
 
@@ -584,7 +584,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
                     loadingMessage="Loading MCP servers…"
                     noDataMessage={
                       <HubEmptyState
-                        title="No MCP servers yet"
+                        title="Серверов MCP пока нет"
                         body="MCP servers added to this proxy will appear here."
                       />
                     }
@@ -594,7 +594,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
 
                 <div className="mt-4 text-center space-y-2">
                   <p className="text-sm text-muted-foreground">
-                    Showing {mcpHubData?.length || 0} MCP server{mcpHubData?.length !== 1 ? "s" : ""}
+                    Показано серверов MCP: {mcpHubData?.length || 0}
                   </p>
                 </div>
               </TabsContent>
@@ -603,7 +603,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
               <TabsContent value="skills" keepMounted>
                 {publicPage == false && canModify && (
                   <div className="flex justify-end mb-4">
-                    <Button onClick={() => setIsMakeSkillPublicModalVisible(true)}>Select Skills to Make Public</Button>
+                    <Button onClick={() => setIsMakeSkillPublicModalVisible(true)}>Выберите навыки для публикации</Button>
                   </div>
                 )}
                 <SkillHubDashboard
@@ -623,9 +623,9 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
         </div>
       ) : (
         <Card className="mx-auto max-w-xl mt-10 px-6">
-          <p className="text-xl text-center mb-2 text-foreground">Public Model Hub not enabled.</p>
+          <p className="text-xl text-center mb-2 text-foreground">Публичный хаб моделей не включён.</p>
           <p className="text-base text-center text-foreground">
-            Ask your proxy admin to enable this on their Admin UI.
+            Попросите администратора прокси включить это в админ-интерфейсе.
           </p>
         </Card>
       )}
@@ -640,18 +640,18 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
             <div className="space-y-6">
               {/* Model Overview */}
               <div>
-                <p className="text-lg font-semibold mb-4">Model Overview</p>
+                <p className="text-lg font-semibold mb-4">Обзор модели</p>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <p className="font-medium">Model Group:</p>
+                    <p className="font-medium">Группа моделей:</p>
                     <p>{selectedModel.model_group}</p>
                   </div>
                   <div>
-                    <p className="font-medium">Mode:</p>
+                    <p className="font-medium">Режим:</p>
                     <p>{selectedModel.mode || "Not specified"}</p>
                   </div>
                   <div>
-                    <p className="font-medium">Providers:</p>
+                    <p className="font-medium">Провайдеры:</p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {selectedModel.providers.map((provider) => (
                         <Badge key={provider} variant="secondary">
@@ -665,18 +665,18 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
 
               {/* Token and Cost Information */}
               <div>
-                <p className="text-lg font-semibold mb-4">Token & Cost Information</p>
+                <p className="text-lg font-semibold mb-4">Токены и стоимость</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="font-medium">Max Input Tokens:</p>
+                    <p className="font-medium">Макс. входных токенов:</p>
                     <p>{selectedModel.max_input_tokens?.toLocaleString() || "Not specified"}</p>
                   </div>
                   <div>
-                    <p className="font-medium">Max Output Tokens:</p>
+                    <p className="font-medium">Макс. выходных токенов:</p>
                     <p>{selectedModel.max_output_tokens?.toLocaleString() || "Not specified"}</p>
                   </div>
                   <div>
-                    <p className="font-medium">Input Cost per 1M Tokens:</p>
+                    <p className="font-medium">Стоимость 1 млн входных токенов:</p>
                     <p>
                       {selectedModel.input_cost_per_token
                         ? formatCost(selectedModel.input_cost_per_token)
@@ -684,7 +684,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
                     </p>
                   </div>
                   <div>
-                    <p className="font-medium">Output Cost per 1M Tokens:</p>
+                    <p className="font-medium">Стоимость 1 млн выходных токенов:</p>
                     <p>
                       {selectedModel.output_cost_per_token
                         ? formatCost(selectedModel.output_cost_per_token)
@@ -696,14 +696,14 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
 
               {/* Capabilities */}
               <div>
-                <p className="text-lg font-semibold mb-4">Capabilities</p>
+                <p className="text-lg font-semibold mb-4">Возможности</p>
                 <div className="flex flex-wrap gap-2">
                   {(() => {
                     const capabilities = getModelCapabilities(selectedModel);
                     const colors = ["green", "blue", "purple", "orange", "red", "yellow"];
 
                     if (capabilities.length === 0) {
-                      return <p className="text-muted-foreground">No special capabilities listed</p>;
+                      return <p className="text-muted-foreground">Особых возможностей не указано</p>;
                     }
 
                     return capabilities.map((capability, index) => (
@@ -718,17 +718,17 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
               {/* Rate Limits */}
               {(selectedModel.tpm || selectedModel.rpm) && (
                 <div>
-                  <p className="text-lg font-semibold mb-4">Rate Limits</p>
+                  <p className="text-lg font-semibold mb-4">Лимиты запросов</p>
                   <div className="grid grid-cols-2 gap-4">
                     {selectedModel.tpm && (
                       <div>
-                        <p className="font-medium">Tokens per Minute:</p>
+                        <p className="font-medium">Токенов в минуту:</p>
                         <p>{selectedModel.tpm.toLocaleString()}</p>
                       </div>
                     )}
                     {selectedModel.rpm && (
                       <div>
-                        <p className="font-medium">Requests per Minute:</p>
+                        <p className="font-medium">Запросов в минуту:</p>
                         <p>{selectedModel.rpm.toLocaleString()}</p>
                       </div>
                     )}
@@ -739,7 +739,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
               {/* Supported OpenAI Parameters */}
               {selectedModel.supported_openai_params && (
                 <div>
-                  <p className="text-lg font-semibold mb-4">Supported OpenAI Parameters</p>
+                  <p className="text-lg font-semibold mb-4">Поддерживаемые параметры OpenAI</p>
                   <div className="flex flex-wrap gap-2">
                     {selectedModel.supported_openai_params.map((param) => (
                       <Badge key={param} variant="default">
@@ -752,7 +752,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
 
               {/* Usage Example */}
               <div>
-                <p className="text-lg font-semibold mb-4">Usage Example</p>
+                <p className="text-lg font-semibold mb-4">Пример использования</p>
                 <SyntaxHighlighter language="python" className="text-sm" style={syntaxTheme}>
                   {`import openai
 
@@ -789,18 +789,18 @@ print(response.choices[0].message.content)`}
             <div className="space-y-6">
               {/* Agent Overview */}
               <div>
-                <p className="text-lg font-semibold mb-4">Agent Overview</p>
+                <p className="text-lg font-semibold mb-4">Обзор агента</p>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <p className="font-medium">Name:</p>
+                    <p className="font-medium">Имя:</p>
                     <p>{selectedAgent.name}</p>
                   </div>
                   <div>
-                    <p className="font-medium">Version:</p>
+                    <p className="font-medium">Версия:</p>
                     <Badge variant="secondary">v{selectedAgent.version}</Badge>
                   </div>
                   <div>
-                    <p className="font-medium">Protocol Version:</p>
+                    <p className="font-medium">Версия протокола:</p>
                     <p>{selectedAgent.protocolVersion}</p>
                   </div>
                   <div>
@@ -815,7 +815,7 @@ print(response.choices[0].message.content)`}
                   </div>
                 </div>
                 <div>
-                  <p className="font-medium">Description:</p>
+                  <p className="font-medium">Описание:</p>
                   <p className="mt-1">{selectedAgent.description}</p>
                 </div>
               </div>
@@ -823,7 +823,7 @@ print(response.choices[0].message.content)`}
               {/* Capabilities */}
               {selectedAgent.capabilities && Object.keys(selectedAgent.capabilities).length > 0 && (
                 <div>
-                  <p className="text-lg font-semibold mb-4">Capabilities</p>
+                  <p className="text-lg font-semibold mb-4">Возможности</p>
                   <div className="flex flex-wrap gap-2">
                     {Object.entries(selectedAgent.capabilities)
                       .filter(([_, value]) => value === true)
@@ -838,26 +838,26 @@ print(response.choices[0].message.content)`}
 
               {/* Input/Output Modes */}
               <div>
-                <p className="text-lg font-semibold mb-4">Input/Output Modes</p>
+                <p className="text-lg font-semibold mb-4">Режимы ввода/вывода</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="font-medium">Input Modes:</p>
+                    <p className="font-medium">Режимы ввода:</p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {selectedAgent.defaultInputModes?.map((mode) => (
                         <Badge key={mode} variant="secondary">
                           {mode}
                         </Badge>
-                      )) || <p>Not specified</p>}
+                      )) || <p>Не указан</p>}
                     </div>
                   </div>
                   <div>
-                    <p className="font-medium">Output Modes:</p>
+                    <p className="font-medium">Режимы вывода:</p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {selectedAgent.defaultOutputModes?.map((mode) => (
                         <Badge key={mode} variant="outline">
                           {mode}
                         </Badge>
-                      )) || <p>Not specified</p>}
+                      )) || <p>Не указан</p>}
                     </div>
                   </div>
                 </div>
@@ -866,7 +866,7 @@ print(response.choices[0].message.content)`}
               {/* Skills */}
               {selectedAgent.skills && selectedAgent.skills.length > 0 && (
                 <div>
-                  <p className="text-lg font-semibold mb-4">Skills</p>
+                  <p className="text-lg font-semibold mb-4">Навыки</p>
                   <div className="space-y-4">
                     {selectedAgent.skills.map((skill) => (
                       <div key={skill.id} className="border border-border rounded-sm p-4">
@@ -888,7 +888,7 @@ print(response.choices[0].message.content)`}
                         <p className="text-sm mb-2">{skill.description}</p>
                         {skill.examples && skill.examples.length > 0 && (
                           <div>
-                            <p className="text-xs font-medium text-foreground">Examples:</p>
+                            <p className="text-xs font-medium text-foreground">Примеры:</p>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {skill.examples.map((example, idx) => (
                                 <Badge key={idx} variant="outline">
@@ -907,8 +907,8 @@ print(response.choices[0].message.content)`}
               {/* Additional Properties */}
               {selectedAgent.supportsAuthenticatedExtendedCard && (
                 <div>
-                  <p className="text-lg font-semibold mb-4">Additional Features</p>
-                  <Badge variant="default">Supports Authenticated Extended Card</Badge>
+                  <p className="text-lg font-semibold mb-4">Дополнительные возможности</p>
+                  <Badge variant="default">Поддерживает расширенную карточку с авторизацией</Badge>
                 </div>
               )}
             </div>
@@ -926,14 +926,14 @@ print(response.choices[0].message.content)`}
             <div className="space-y-6">
               {/* Server Overview */}
               <div>
-                <p className="text-lg font-semibold mb-4">Server Overview</p>
+                <p className="text-lg font-semibold mb-4">Обзор сервера</p>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <p className="font-medium">Server Name:</p>
+                    <p className="font-medium">Имя сервера:</p>
                     <p>{selectedMcpServer.server_name}</p>
                   </div>
                   <div>
-                    <p className="font-medium">Server ID:</p>
+                    <p className="font-medium">ID сервера:</p>
                     <div className="flex items-center space-x-2">
                       <p className="text-xs truncate min-w-0">{selectedMcpServer.server_id}</p>
                       <Copy
@@ -944,22 +944,22 @@ print(response.choices[0].message.content)`}
                   </div>
                   {selectedMcpServer.alias && (
                     <div>
-                      <p className="font-medium">Alias:</p>
+                      <p className="font-medium">Псевдоним:</p>
                       <p>{selectedMcpServer.alias}</p>
                     </div>
                   )}
                   <div>
-                    <p className="font-medium">Transport:</p>
+                    <p className="font-medium">Транспорт:</p>
                     <Badge variant="secondary">{selectedMcpServer.transport}</Badge>
                   </div>
                   <div>
-                    <p className="font-medium">Auth Type:</p>
+                    <p className="font-medium">Тип авторизации:</p>
                     <Badge variant={selectedMcpServer.auth_type === "none" ? "outline" : "default"}>
                       {selectedMcpServer.auth_type}
                     </Badge>
                   </div>
                   <div>
-                    <p className="font-medium">Status:</p>
+                    <p className="font-medium">Статус:</p>
                     <Badge
                       variant={
                         selectedMcpServer.status === "active" || selectedMcpServer.status === "healthy"
@@ -975,7 +975,7 @@ print(response.choices[0].message.content)`}
                 </div>
                 {selectedMcpServer.description && (
                   <div className="mt-2">
-                    <p className="font-medium">Description:</p>
+                    <p className="font-medium">Описание:</p>
                     <p className="mt-1">{selectedMcpServer.description}</p>
                   </div>
                 )}
@@ -983,11 +983,11 @@ print(response.choices[0].message.content)`}
 
               {/* Connection Details */}
               <div>
-                <p className="text-lg font-semibold mb-4">Connection Details</p>
+                <p className="text-lg font-semibold mb-4">Детали подключения</p>
                 <div className="space-y-2">
                   {selectedMcpServer.command && (
                     <div>
-                      <p className="font-medium">Command:</p>
+                      <p className="font-medium">Команда:</p>
                       <p className="text-sm bg-muted p-2 rounded-sm mt-1 font-mono">{selectedMcpServer.command}</p>
                     </div>
                   )}
@@ -997,7 +997,7 @@ print(response.choices[0].message.content)`}
               {/* Tools */}
               {selectedMcpServer.allowed_tools && selectedMcpServer.allowed_tools.length > 0 && (
                 <div>
-                  <p className="text-lg font-semibold mb-4">Allowed Tools</p>
+                  <p className="text-lg font-semibold mb-4">Разрешённые инструменты</p>
                   <div className="flex flex-wrap gap-2">
                     {selectedMcpServer.allowed_tools.map((tool, idx) => (
                       <Badge key={idx} variant="outline">
@@ -1011,7 +1011,7 @@ print(response.choices[0].message.content)`}
               {/* Teams */}
               {selectedMcpServer.teams && selectedMcpServer.teams.length > 0 && (
                 <div>
-                  <p className="text-lg font-semibold mb-4">Teams</p>
+                  <p className="text-lg font-semibold mb-4">Команды</p>
                   <div className="flex flex-wrap gap-2">
                     {selectedMcpServer.teams.map((team, idx) => (
                       <Badge key={idx} variant="secondary">
@@ -1025,7 +1025,7 @@ print(response.choices[0].message.content)`}
               {/* Access Groups */}
               {selectedMcpServer.mcp_access_groups && selectedMcpServer.mcp_access_groups.length > 0 && (
                 <div>
-                  <p className="text-lg font-semibold mb-4">Access Groups</p>
+                  <p className="text-lg font-semibold mb-4">Группы доступа</p>
                   <div className="flex flex-wrap gap-2">
                     {selectedMcpServer.mcp_access_groups.map((group, idx) => (
                       <Badge key={idx} variant="default">
@@ -1038,34 +1038,34 @@ print(response.choices[0].message.content)`}
 
               {/* Metadata */}
               <div>
-                <p className="text-lg font-semibold mb-4">Metadata</p>
+                <p className="text-lg font-semibold mb-4">Метаданные</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="font-medium">Created By:</p>
+                    <p className="font-medium">Автор:</p>
                     <p>{selectedMcpServer.created_by}</p>
                   </div>
                   <div>
-                    <p className="font-medium">Updated By:</p>
+                    <p className="font-medium">Обновил:</p>
                     <p>{selectedMcpServer.updated_by}</p>
                   </div>
                   <div>
-                    <p className="font-medium">Created At:</p>
+                    <p className="font-medium">Создан:</p>
                     <p className="text-sm">{new Date(selectedMcpServer.created_at).toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="font-medium">Updated At:</p>
+                    <p className="font-medium">Обновлён:</p>
                     <p className="text-sm">{new Date(selectedMcpServer.updated_at).toLocaleString()}</p>
                   </div>
                   {selectedMcpServer.last_health_check && (
                     <div>
-                      <p className="font-medium">Last Health Check:</p>
+                      <p className="font-medium">Последняя проверка:</p>
                       <p className="text-sm">{new Date(selectedMcpServer.last_health_check).toLocaleString()}</p>
                     </div>
                   )}
                 </div>
                 {selectedMcpServer.health_check_error && (
                   <div className="mt-2 p-2 bg-destructive/10 rounded-sm">
-                    <p className="font-medium text-destructive">Health Check Error:</p>
+                    <p className="font-medium text-destructive">Ошибка проверки:</p>
                     <p className="text-sm text-destructive mt-1">{selectedMcpServer.health_check_error}</p>
                   </div>
                 )}
@@ -1073,7 +1073,7 @@ print(response.choices[0].message.content)`}
 
               {/* Usage Example */}
               <div>
-                <p className="text-lg font-semibold mb-4">Usage Example</p>
+                <p className="text-lg font-semibold mb-4">Пример использования</p>
                 <SyntaxHighlighter language="python" className="text-sm" style={syntaxTheme}>
                   {`from fastmcp import Client
 import asyncio

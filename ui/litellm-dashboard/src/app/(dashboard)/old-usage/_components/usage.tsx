@@ -129,7 +129,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
     .map((key: any) => ({ token: String(key["token"]), alias: String(key["key_alias"]) }));
 
   const tagOptions: TagOption[] = [
-    { value: ALL_TAGS, label: "All Tags", disabled: false },
+    { value: ALL_TAGS, label: "Все теги", disabled: false },
     ...allTagNames
       .filter((tag) => tag !== ALL_TAGS)
       .map((tag) => ({
@@ -509,11 +509,11 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
       <div className="w-full p-8">
         <Card>
           <CardHeader>
-            <CardTitle>Usage</CardTitle>
+            <CardTitle>Использование</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Proxy-wide usage is only available to admin users. Your own usage is on the Usage page.
+              Статистика по всему прокси доступна только администраторам. Ваше личное использование — на странице «Использование».
             </p>
           </CardContent>
         </Card>
@@ -526,18 +526,18 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
       <div className="w-full p-8">
         <Card>
           <CardHeader>
-            <CardTitle>Database Query Limit Reached</CardTitle>
+            <CardTitle>Достигнут лимит запросов к БД</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col items-start gap-4">
             <p className="text-sm text-muted-foreground">
-              SpendLogs in DB has {proxySettings.NUM_SPEND_LOGS_ROWS} rows.
+              В таблице SpendLogs базы данных {proxySettings.NUM_SPEND_LOGS_ROWS} строк.
               <br></br>
-              Please follow our guide to view usage when SpendLogs has more than 1M rows.
+              Когда строк больше 1 млн, смотрите использование по нашему руководству.
             </p>
             <Button
               render={
                 <a href="https://docs.litellm.ai/docs/proxy/cost_tracking" target="_blank" rel="noreferrer">
-                  View Usage Guide
+                  Руководство по использованию
                 </a>
               }
             />
@@ -551,13 +551,13 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
     <div className="w-full p-8">
       <Tabs defaultValue="all-up">
         <TabsList variant="line" className="mt-2">
-          <TabsTrigger value="all-up">All Up</TabsTrigger>
+          <TabsTrigger value="all-up">Все повышения</TabsTrigger>
 
           {isAdminOrAdminViewer(userRole) && (
             <>
-              <TabsTrigger value="team-based-usage">Team Based Usage</TabsTrigger>
-              <TabsTrigger value="customer-usage">Customer Usage</TabsTrigger>
-              <TabsTrigger value="tag-based-usage">Tag Based Usage</TabsTrigger>
+              <TabsTrigger value="team-based-usage">Использование по командам</TabsTrigger>
+              <TabsTrigger value="customer-usage">Использование клиентами</TabsTrigger>
+              <TabsTrigger value="tag-based-usage">Использование по тегам</TabsTrigger>
             </>
           )}
         </TabsList>
@@ -565,15 +565,15 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
         <TabsContent value="all-up" keepMounted>
           <Tabs defaultValue="cost">
             <TabsList className="mt-1">
-              <TabsTrigger value="cost">Cost</TabsTrigger>
-              <TabsTrigger value="activity">Activity</TabsTrigger>
+              <TabsTrigger value="cost">Расход</TabsTrigger>
+              <TabsTrigger value="activity">Активность</TabsTrigger>
             </TabsList>
 
             <TabsContent value="cost" keepMounted>
               <div className="grid h-screen w-full grid-cols-2 gap-2">
                 <div className="col-span-2">
                   <p className="mt-2 mb-2 text-lg text-muted-foreground">
-                    Project Spend {new Date().toLocaleString("default", { month: "long" })} 1 -{" "}
+                    Расход проекта {new Date().toLocaleString("default", { month: "long" })} 1 -{" "}
                     {new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate()}
                   </p>
                   <ViewUserSpend userSpend={totalMonthlySpend} selectedTeam={null} userMaxBudget={null} />
@@ -581,7 +581,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                 <div className="col-span-2">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Monthly Spend</CardTitle>
+                      <CardTitle>Расход за месяц</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <BarChart
@@ -599,7 +599,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                 <div className="col-span-1">
                   <Card className="h-full">
                     <CardHeader>
-                      <CardTitle>Top Virtual Keys</CardTitle>
+                      <CardTitle>Топ виртуальных ключей</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <TopKeyView topKeys={topKeys} teams={null} topKeysLimit={5} setTopKeysLimit={() => {}} />
@@ -609,7 +609,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                 <div className="col-span-1">
                   <Card className="h-full">
                     <CardHeader>
-                      <CardTitle>Top Models</CardTitle>
+                      <CardTitle>Топ моделей</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <BarChart
@@ -631,7 +631,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                 <div className="col-span-2">
                   <Card className="mb-2">
                     <CardHeader>
-                      <CardTitle>Spend by Provider</CardTitle>
+                      <CardTitle>Расход по провайдерам</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="grid grid-cols-2">
@@ -677,13 +677,13 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
               <div className="grid h-[75vh] w-full grid-cols-1 gap-2">
                 <Card>
                   <CardHeader>
-                    <CardTitle>All Up</CardTitle>
+                    <CardTitle>Все повышения</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-2">
                       <div>
                         <p className="text-[15px] font-normal text-muted-foreground">
-                          API Requests {valueFormatterNumbers(globalActivity.sum_api_requests)}
+                          Запросы к API {valueFormatterNumbers(globalActivity.sum_api_requests)}
                         </p>
                         <AreaChart
                           className="h-40"
@@ -696,7 +696,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                       </div>
                       <div>
                         <p className="text-[15px] font-normal text-muted-foreground">
-                          Tokens {valueFormatterNumbers(globalActivity.sum_total_tokens)}
+                          Токены {valueFormatterNumbers(globalActivity.sum_total_tokens)}
                         </p>
                         <BarChart
                           className="h-40"
@@ -720,7 +720,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                       <div className="grid grid-cols-2">
                         <div>
                           <p className="text-[15px] font-normal text-muted-foreground">
-                            API Requests {valueFormatterNumbers(globalActivity.sum_api_requests)}
+                            Запросы к API {valueFormatterNumbers(globalActivity.sum_api_requests)}
                           </p>
                           <AreaChart
                             className="h-40"
@@ -733,7 +733,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                         </div>
                         <div>
                           <p className="text-[15px] font-normal text-muted-foreground">
-                            Tokens {valueFormatterNumbers(globalActivity.sum_total_tokens)}
+                            Токены {valueFormatterNumbers(globalActivity.sum_total_tokens)}
                           </p>
                           <BarChart
                             className="h-40"
@@ -758,7 +758,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
             <div className="col-span-2">
               <Card className="mb-2">
                 <CardHeader>
-                  <CardTitle>Total Spend Per Team</CardTitle>
+                  <CardTitle>Всего расходов на команду</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <TeamSpendBarList data={totalSpendPerTeam} />
@@ -766,7 +766,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle>Daily Spend Per Team</CardTitle>
+                  <CardTitle>Расход на команду за день</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <BarChart
@@ -786,7 +786,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
 
         <TabsContent value="customer-usage" keepMounted>
           <p className="mb-2 text-[12px] text-muted-foreground italic">
-            Customers of your LLM API calls. Tracked when a `user` param is passed in your LLM calls{" "}
+            Клиенты ваших вызовов LLM API. Отслеживаются, когда в вызов LLM передаётся параметр `user`. {" "}
             <a
               className="text-primary"
               href="https://docs.litellm.ai/docs/proxy/users"
@@ -808,7 +808,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
               />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Select Key</p>
+              <p className="text-sm text-muted-foreground">Выберите ключ</p>
               <Select
                 value={selectedKeyToken}
                 onValueChange={(value: string | null) => {
@@ -817,12 +817,12 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                 }}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="All Keys">
+                  <SelectValue placeholder="Все ключи">
                     {(token: string | null) => selectableKeys.find((key) => key.token === token)?.alias ?? "All Keys"}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={null}>All Keys</SelectItem>
+                  <SelectItem value={null}>Все ключи</SelectItem>
                   {selectableKeys.map((key) => (
                     <SelectItem key={key.token} value={key.token}>
                       {key.alias}
@@ -839,9 +839,9 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Customer</TableHead>
+                      <TableHead>Клиент</TableHead>
                       <TableHead>Расход</TableHead>
-                      <TableHead>Total Events</TableHead>
+                      <TableHead>Всего событий</TableHead>
                     </TableRow>
                   </TableHeader>
 
@@ -895,10 +895,10 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                       ))
                     }
                   </ComboboxValue>
-                  <ComboboxChipsInput placeholder="Select tags" />
+                  <ComboboxChipsInput placeholder="Выберите теги" />
                 </ComboboxChips>
                 <ComboboxContent anchor={anchor}>
-                  <ComboboxEmpty>No tags found</ComboboxEmpty>
+                  <ComboboxEmpty>Теги не найдены</ComboboxEmpty>
                   <ComboboxList>
                     {(option: TagOption) => (
                       <ComboboxItem key={option.value} value={option} disabled={option.disabled}>
@@ -914,11 +914,11 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
             <div className="col-span-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Spend Per Tag</CardTitle>
+                  <CardTitle>Расход по тегу</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
                   <p className="text-sm text-muted-foreground">
-                    Get Started by Tracking cost per tag{" "}
+                    Начните отслеживать стоимость по тегам{" "}
                     <a
                       className="text-primary"
                       href="https://docs.litellm.ai/docs/proxy/cost_tracking"

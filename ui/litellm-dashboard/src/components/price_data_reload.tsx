@@ -106,7 +106,7 @@ const CostMapProvenanceRows: React.FC<{ sourceInfo: CostMapSourceInfo }> = ({ so
   <>
     {sourceInfo.source_revision && (
       <div className="flex items-center justify-between gap-2 text-xs">
-        <span className="text-muted-foreground">Source revision:</span>
+        <span className="text-muted-foreground">Ревизия источника:</span>
         <Tooltip>
           <TooltipTrigger render={<code className="font-mono" />}>
             {shortRevision(sourceInfo.source_revision)}
@@ -128,7 +128,7 @@ const CostMapProvenanceRows: React.FC<{ sourceInfo: CostMapSourceInfo }> = ({ so
 
     {sourceInfo.loaded_at && (
       <div className="flex items-center justify-between text-xs">
-        <span className="text-muted-foreground">Loaded at:</span>
+        <span className="text-muted-foreground">Загружено в:</span>
         <span className="font-medium">{formatDateTime(sourceInfo.loaded_at)}</span>
       </div>
     )}
@@ -137,8 +137,8 @@ const CostMapProvenanceRows: React.FC<{ sourceInfo: CostMapSourceInfo }> = ({ so
       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <Info className="size-3.5 shrink-0" />
         <span>
-          Reported by the worker that answered this request. Other workers pick up a reload on their next poll, and the
-          Last run time is the latest reload any worker recorded
+          Сообщает воркер, ответивший на этот запрос. Остальные воркеры перезагрузят данные при следующем опросе;
+          «Последний запуск» — время последней перезагрузки, записанной любым воркером
         </span>
       </div>
     )}
@@ -204,7 +204,7 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
 
   const handleHardRefresh = async () => {
     if (!accessToken) {
-      toast.fromError("No access token available");
+      toast.fromError("Нет доступного токена");
       return;
     }
 
@@ -218,11 +218,11 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
         await fetchReloadStatus();
         await fetchSourceInfo();
       } else {
-        toast.fromError("Failed to reload price data");
+        toast.fromError("Не удалось перезагрузить данные цен");
       }
     } catch (error) {
       console.error("Error reloading price data:", error);
-      toast.fromError("Failed to reload price data. Please try again.");
+      toast.fromError("Не удалось перезагрузить данные цен. Повторите попытку.");
     } finally {
       setIsLoading(false);
     }
@@ -230,13 +230,13 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
 
   const handleScheduleReload = async () => {
     if (!accessToken) {
-      toast.fromError("No access token available");
+      toast.fromError("Нет доступного токена");
       return;
     }
 
     const intervalHours = Number(hours);
     if (!isValidReloadInterval(intervalHours)) {
-      toast.fromError("Hours must be a whole number between 1 and 168");
+      toast.fromError("Часы — целое число от 1 до 168");
       return;
     }
 
@@ -249,11 +249,11 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
         setShowScheduleModal(false);
         await fetchReloadStatus();
       } else {
-        toast.fromError("Failed to schedule periodic reload");
+        toast.fromError("Не удалось назначить периодическую перезагрузку");
       }
     } catch (error) {
       console.error("Error scheduling reload:", error);
-      toast.fromError("Failed to schedule periodic reload. Please try again.");
+      toast.fromError("Не удалось назначить периодическую перезагрузку. Повторите попытку.");
     } finally {
       setIsScheduling(false);
     }
@@ -261,7 +261,7 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
 
   const handleCancelReload = async () => {
     if (!accessToken) {
-      toast.fromError("No access token available");
+      toast.fromError("Нет доступного токена");
       return;
     }
 
@@ -270,14 +270,14 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
       const response = await cancelModelCostMapReload(accessToken);
 
       if (response.status === "success") {
-        toast.success("Periodic reload cancelled successfully");
+        toast.success("Периодическая перезагрузка отменена");
         await fetchReloadStatus();
       } else {
-        toast.fromError("Failed to cancel periodic reload");
+        toast.fromError("Не удалось отменить периодическую перезагрузку");
       }
     } catch (error) {
       console.error("Error cancelling reload:", error);
-      toast.fromError("Failed to cancel periodic reload. Please try again.");
+      toast.fromError("Не удалось отменить периодическую перезагрузку. Повторите попытку.");
     } finally {
       setIsCancelling(false);
     }
@@ -314,9 +314,9 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Hard Refresh Price Data</AlertDialogTitle>
+                <AlertDialogTitle>Полная перезагрузка данных цен</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will immediately fetch the latest pricing information from the remote source. Continue?
+                  Немедленно загрузит актуальные цены из удалённого источника. Продолжить?
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -329,7 +329,7 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
           {!reloadStatus?.scheduled ? (
             <Button type="button" variant="outline" size={buttonSizes[size]} onClick={() => setShowScheduleModal(true)}>
               <Clock3 data-icon="inline-start" />
-              Set Up Periodic Reload
+              Настроить периодическую перезагрузку
             </Button>
           ) : (
             <Button
@@ -354,7 +354,7 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
             <CardContent className="space-y-2">
               <div className="flex items-center gap-2">
                 {sourceInfo.source === "remote" ? <Cloud className="size-4" /> : <Database className="size-4" />}
-                <span className="text-sm font-medium">Pricing Data Source</span>
+                <span className="text-sm font-medium">Источник данных цен</span>
                 <Badge variant="secondary" className="ml-auto uppercase">
                   {sourceInfo.source === "remote" ? "Remote" : "Local"}
                 </Badge>
@@ -363,7 +363,7 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
               <Separator />
 
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Models loaded:</span>
+                <span className="text-muted-foreground">Моделей загружено:</span>
                 <span className="font-medium">{sourceInfo.model_count.toLocaleString()}</span>
               </div>
 
@@ -387,7 +387,7 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Info className="size-3.5 shrink-0" />
                   <span>
-                    Local mode forced via <code>LITELLM_LOCAL_MODEL_COST_MAP=True</code>
+                    Локальный режим задан переменной <code>LITELLM_LOCAL_MODEL_COST_MAP=True</code>
                   </span>
                 </div>
               )}
@@ -395,7 +395,7 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
               {sourceInfo.fallback_reason && (
                 <div className="flex items-start gap-1.5 rounded-md border border-destructive/30 bg-destructive/10 px-2 py-1.5 text-xs">
                   <TriangleAlert className="mt-0.5 size-3.5 shrink-0 text-destructive" />
-                  <span>Fell back to local: {sourceInfo.fallback_reason}</span>
+                  <span>Откат к локальным данным: {sourceInfo.fallback_reason}</span>
                 </div>
               )}
             </CardContent>
@@ -408,14 +408,14 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
               {reloadStatus.scheduled ? (
                 <Badge variant="secondary">
                   <Clock3 />
-                  Scheduled every {reloadStatus.interval_hours} hours
+                  Каждые {reloadStatus.interval_hours} ч
                 </Badge>
               ) : (
-                <p className="text-sm text-muted-foreground">No periodic reload scheduled</p>
+                <p className="text-sm text-muted-foreground">Периодическая перезагрузка не назначена</p>
               )}
 
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Last run:</span>
+                <span className="text-muted-foreground">Последний запуск:</span>
                 <span>{formatDateTime(reloadStatus.last_run)}</span>
               </div>
 
@@ -423,12 +423,12 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
                 <>
                   {reloadStatus.next_run && (
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">Next run:</span>
+                      <span className="text-muted-foreground">Следующий запуск:</span>
                       <span>{formatDateTime(reloadStatus.next_run)}</span>
                     </div>
                   )}
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Status:</span>
+                    <span className="text-muted-foreground">Статус:</span>
                     <Badge variant="outline">{getStatusText()}</Badge>
                   </div>
                 </>
@@ -440,17 +440,17 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
         <Dialog open={showScheduleModal} onOpenChange={setShowScheduleModal}>
           <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Set Up Periodic Reload</DialogTitle>
+              <DialogTitle>Настроить периодическую перезагрузку</DialogTitle>
               <DialogDescription>
-                Set how often LiteLLM should fetch the latest pricing data from the remote source.
+                Укажите, как часто LiteLLM должен загружать актуальные данные цен из удалённого источника.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
-              <p className="text-sm">Set up automatic reload of price data every:</p>
+              <p className="text-sm">Автоматическая перезагрузка данных цен каждые:</p>
               <InputGroup>
                 <InputGroupInput
                   type="number"
-                  aria-label="Reload interval in hours"
+                  aria-label="Интервал перезагрузки в часах"
                   min={1}
                   max={168}
                   value={hours}
@@ -459,7 +459,7 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
                 <InputGroupAddon align="inline-end">hours</InputGroupAddon>
               </InputGroup>
               <p className="text-sm text-muted-foreground">
-                This will automatically fetch the latest pricing data from the remote source every {hours} hours.
+                Будет автоматически загружать актуальные данные цен из удалённого источника каждые {hours} ч.
               </p>
             </div>
             <DialogFooter>

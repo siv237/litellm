@@ -120,7 +120,7 @@ export function LogDetailContent({ logEntry, isLoadingDetails = false, accessTok
         >
           <CircleAlert className="size-4 shrink-0 text-destructive" />
           <div>
-            <div className="font-medium text-destructive">Request Failed</div>
+            <div className="font-medium text-destructive">Запрос выполнен с ошибкой</div>
             <ErrorDescription errorInfo={errorInfo} />
           </div>
         </div>
@@ -135,24 +135,24 @@ export function LogDetailContent({ logEntry, isLoadingDetails = false, accessTok
       <div className="bg-card rounded-lg shadow-sm w-full max-w-full overflow-hidden mb-6">
         <Card size="sm" style={{ marginBottom: 0 }}>
           <CardHeader>
-            <CardTitle>Request Details</CardTitle>
+            <CardTitle>Детали запроса</CardTitle>
           </CardHeader>
           <CardContent>
             <DescriptionList>
               <DescriptionItem label="Модель">{logEntry.model}</DescriptionItem>
               <DescriptionItem label="Провайдер">{logEntry.custom_llm_provider || "-"}</DescriptionItem>
-              <DescriptionItem label="Call Type">{logEntry.call_type}</DescriptionItem>
-              <DescriptionItem label="Model ID">
+              <DescriptionItem label="Тип вызова">{logEntry.call_type}</DescriptionItem>
+              <DescriptionItem label="ID модели">
                 <TruncatedValue value={logEntry.model_id} />
               </DescriptionItem>
-              <DescriptionItem label="API Base">
+              <DescriptionItem label="Базовый URL API">
                 <TruncatedValue value={logEntry.api_base} maxWidth={API_BASE_MAX_WIDTH} />
               </DescriptionItem>
               {logEntry.requester_ip_address && (
-                <DescriptionItem label="IP Address">{logEntry.requester_ip_address}</DescriptionItem>
+                <DescriptionItem label="IP-адрес">{logEntry.requester_ip_address}</DescriptionItem>
               )}
               {hasGuardrailData && (
-                <DescriptionItem label="Guardrail">
+                <DescriptionItem label="Гардрейл">
                   <GuardrailLabel label={primaryGuardrailLabel} maskedCount={totalMaskedEntities} />
                 </DescriptionItem>
               )}
@@ -304,12 +304,12 @@ function ErrorDescription({ errorInfo }: { errorInfo: any }) {
     <div>
       {errorInfo.error_code && (
         <div>
-          <span className="font-semibold">Error Code:</span> {errorInfo.error_code}
+          <span className="font-semibold">Код ошибки:</span> {errorInfo.error_code}
         </div>
       )}
       {errorInfo.error_message && (
         <div>
-          <span className="font-semibold">Message:</span> {errorInfo.error_message}
+          <span className="font-semibold">Сообщение:</span> {errorInfo.error_message}
         </div>
       )}
     </div>
@@ -320,7 +320,7 @@ function TagsSection({ tags }: { tags: Record<string, any> }) {
   return (
     <div className="bg-card rounded-lg shadow-sm w-full max-w-full overflow-hidden p-4 mb-6">
       <span className="font-semibold" style={{ display: "block", marginBottom: 8, fontSize: 16 }}>
-        Tags
+        Теги
       </span>
       <div className="flex flex-wrap items-center gap-2">
         {Object.entries(tags).map(([key, value]) => (
@@ -383,7 +383,7 @@ function MetricLabel({ label, tooltip, docsUrl }: { label: string; tooltip: stri
           <TooltipContent>
             {tooltip}{" "}
             <a href={docsUrl} target="_blank" rel="noreferrer" className="underline">
-              Docs
+              Документация
             </a>
           </TooltipContent>
         </Tooltip>
@@ -406,21 +406,21 @@ function BatchResultsSection({ logEntry, metadata }: { logEntry: LogEntry; metad
     <div className="bg-card rounded-lg shadow-sm w-full max-w-full overflow-hidden mb-6">
       <Card size="sm" style={{ marginBottom: 0 }}>
         <CardHeader>
-          <CardTitle>Batch Results</CardTitle>
+          <CardTitle>Результаты пакета</CardTitle>
         </CardHeader>
         <CardContent>
           <DescriptionList>
             {batchId && (
-              <DescriptionItem label="Batch ID">
+              <DescriptionItem label="ID пакета">
                 <TruncatedValue value={batchId} />
               </DescriptionItem>
             )}
             {counts && (
               <>
-                <DescriptionItem label="Successful Requests">
+                <DescriptionItem label="Успешные запросы">
                   {formatNumberWithCommas(counts.successful)}
                 </DescriptionItem>
-                <DescriptionItem label="Failed Requests">
+                <DescriptionItem label="Сбойные запросы">
                   {counts.failed > 0 ? (
                     <Badge variant="secondary" className="bg-destructive/15 text-destructive">
                       {formatNumberWithCommas(counts.failed)}
@@ -462,14 +462,14 @@ function MetricsSection({ logEntry, metadata }: { logEntry: LogEntry; metadata: 
     <div className="bg-card rounded-lg shadow-sm w-full max-w-full overflow-hidden mb-6">
       <Card size="sm" style={{ marginBottom: 0 }}>
         <CardHeader>
-          <CardTitle>Metrics</CardTitle>
+          <CardTitle>Метрики</CardTitle>
         </CardHeader>
         <CardContent>
           <DescriptionList>
             {showAnthropicMessagesInputOutput ? (
               <>
-                <DescriptionItem label="Input Tokens">{formatNumberWithCommas(uncachedInputTokens)}</DescriptionItem>
-                <DescriptionItem label="Output Tokens">
+                <DescriptionItem label="Входные токены">{formatNumberWithCommas(uncachedInputTokens)}</DescriptionItem>
+                <DescriptionItem label="Выходные токены">
                   {formatNumberWithCommas(logEntry.completion_tokens)}
                 </DescriptionItem>
               </>
@@ -483,21 +483,21 @@ function MetricsSection({ logEntry, metadata }: { logEntry: LogEntry; metadata: 
               </DescriptionItem>
             )}
             {reasoningTokens !== undefined && reasoningTokens > 0 && (
-              <DescriptionItem label="Reasoning Tokens">{formatNumberWithCommas(reasoningTokens)}</DescriptionItem>
+              <DescriptionItem label="Токены рассуждений">{formatNumberWithCommas(reasoningTokens)}</DescriptionItem>
             )}
-            <DescriptionItem label="Cost">${formatNumberWithCommas(logEntry.spend || 0, 8)}</DescriptionItem>
-            <DescriptionItem label="Duration">
+            <DescriptionItem label="Расход">${formatNumberWithCommas(logEntry.spend || 0, 8)}</DescriptionItem>
+            <DescriptionItem label="Длительность">
               {logEntry.request_duration_ms != null ? (logEntry.request_duration_ms / 1000).toFixed(3) : "-"} s
             </DescriptionItem>
             {ttftMs != null && ttftMs > 0 && (
-              <DescriptionItem label="Time to First Token">{(ttftMs / 1000).toFixed(3)} s</DescriptionItem>
+              <DescriptionItem label="До первого токена">{(ttftMs / 1000).toFixed(3)} s</DescriptionItem>
             )}
 
             {showResponseCache && (
               <DescriptionItem
                 label={
                   <MetricLabel
-                    label="Response Cache"
+                    label="Кэш ответов"
                     tooltip={RESPONSE_CACHE_TOOLTIP}
                     docsUrl={RESPONSE_CACHE_DOCS_URL}
                   />
@@ -510,7 +510,7 @@ function MetricsSection({ logEntry, metadata }: { logEntry: LogEntry; metadata: 
             )}
             {responseCacheKey && (
               <DescriptionItem
-                label={<MetricLabel label="Cache Key" tooltip={CACHE_KEY_TOOLTIP} docsUrl={RESPONSE_CACHE_DOCS_URL} />}
+                label={<MetricLabel label="Ключ кэша" tooltip={CACHE_KEY_TOOLTIP} docsUrl={RESPONSE_CACHE_DOCS_URL} />}
               >
                 <TruncatedValue value={responseCacheKey} />
               </DescriptionItem>
@@ -519,7 +519,7 @@ function MetricsSection({ logEntry, metadata }: { logEntry: LogEntry; metadata: 
               <DescriptionItem
                 label={
                   <MetricLabel
-                    label="Prompt Cache Read Tokens"
+                    label="Токены чтения кэша промпта"
                     tooltip={PROMPT_CACHE_READ_TOOLTIP}
                     docsUrl={PROMPT_CACHE_DOCS_URL}
                   />
@@ -532,7 +532,7 @@ function MetricsSection({ logEntry, metadata }: { logEntry: LogEntry; metadata: 
               <DescriptionItem
                 label={
                   <MetricLabel
-                    label="Prompt Cache Creation Tokens"
+                    label="Токены создания кэша промпта"
                     tooltip={PROMPT_CACHE_CREATION_TOOLTIP}
                     docsUrl={PROMPT_CACHE_DOCS_URL}
                   />
@@ -543,12 +543,12 @@ function MetricsSection({ logEntry, metadata }: { logEntry: LogEntry; metadata: 
             )}
 
             {metadata?.litellm_overhead_time_ms !== undefined && metadata.litellm_overhead_time_ms !== null && (
-              <DescriptionItem label="LiteLLM Overhead">
+              <DescriptionItem label="Накладные расходы LiteLLM">
                 {metadata.litellm_overhead_time_ms.toFixed(2)} ms
               </DescriptionItem>
             )}
 
-            <DescriptionItem label="Retries">
+            <DescriptionItem label="Повторы">
               {metadata?.attempted_retries != null && metadata.attempted_retries > 0 && (
                 <>
                   {metadata.attempted_retries}
@@ -565,10 +565,10 @@ function MetricsSection({ logEntry, metadata }: { logEntry: LogEntry; metadata: 
               {metadata?.attempted_retries == null && "-"}
             </DescriptionItem>
 
-            <DescriptionItem label="Start Time">
+            <DescriptionItem label="Время начала">
               {moment(logEntry.startTime).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]")}
             </DescriptionItem>
-            <DescriptionItem label="End Time">
+            <DescriptionItem label="Время окончания">
               {moment(logEntry.endTime).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]")}
             </DescriptionItem>
           </DescriptionList>
@@ -625,11 +625,11 @@ function RequestResponseSection({
                 <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
               )}
               <h3 className="text-lg font-medium text-foreground" style={{ margin: 0 }}>
-                Request & Response
+                Запрос и ответ
               </h3>
             </CollapsibleTrigger>
             <TabsList className="mr-4">
-              <TabsTrigger value="pretty">Pretty</TabsTrigger>
+              <TabsTrigger value="pretty">Красиво</TabsTrigger>
               <TabsTrigger value="json">JSON</TabsTrigger>
             </TabsList>
           </div>
@@ -654,12 +654,12 @@ function RequestResponseSection({
                 >
                   <div className="flex items-center justify-between">
                     <TabsList>
-                      <TabsTrigger value={TAB_REQUEST}>Request</TabsTrigger>
-                      <TabsTrigger value={TAB_RESPONSE}>Response</TabsTrigger>
+                      <TabsTrigger value={TAB_REQUEST}>Запрос</TabsTrigger>
+                      <TabsTrigger value={TAB_RESPONSE}>Ответ</TabsTrigger>
                     </TabsList>
                     <CopyButton
                       getText={getCopyText}
-                      label="Copy JSON"
+                      label="Скопировать JSON"
                       disabled={activeTab === TAB_RESPONSE && !hasResponse && !hasError}
                     />
                   </div>
@@ -681,7 +681,7 @@ function RequestResponseSection({
                             fontStyle: "italic",
                           }}
                         >
-                          Response data not available
+                          Данные ответа недоступны
                         </div>
                       )}
                     </div>
@@ -756,12 +756,12 @@ function MetadataSection({ metadata }: { metadata: Record<string, any> }) {
           ) : (
             <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
           )}
-          <h3 className="text-lg font-medium text-foreground">Metadata</h3>
+          <h3 className="text-lg font-medium text-foreground">Метаданные</h3>
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div>
             <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
-              <CopyButton getText={() => JSON.stringify(metadata, null, 2)} label="Copy Metadata" />
+              <CopyButton getText={() => JSON.stringify(metadata, null, 2)} label="Скопировать метаданные" />
             </div>
             <pre
               style={{

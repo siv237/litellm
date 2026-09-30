@@ -230,7 +230,7 @@ export const getPublicModelHubColumns = ({ onModelClick }: PublicModelHubColumns
       size: 110,
       cell: ({ row }) => (
         <span className="text-sm">
-          {row.original.input_cost_per_token ? formatCost(row.original.input_cost_per_token) : "Free"}
+          {row.original.input_cost_per_token ? formatCost(row.original.input_cost_per_token) : "Бесплатно"}
         </span>
       ),
     },
@@ -242,7 +242,7 @@ export const getPublicModelHubColumns = ({ onModelClick }: PublicModelHubColumns
       size: 110,
       cell: ({ row }) => (
         <span className="text-sm">
-          {row.original.output_cost_per_token ? formatCost(row.original.output_cost_per_token) : "Free"}
+          {row.original.output_cost_per_token ? formatCost(row.original.output_cost_per_token) : "Бесплатно"}
         </span>
       ),
     },
