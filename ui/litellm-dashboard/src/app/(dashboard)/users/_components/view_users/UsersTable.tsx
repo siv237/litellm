@@ -47,6 +47,9 @@ interface UsersTableProps {
   onUserClick: (userId: string, openInEditMode?: boolean) => void;
   onDeleteUser: (user: UserInfo) => void;
   onResetPassword: (userId: string) => void;
+  accessToken: string | null;
+  canEdit: boolean;
+  onQuotaChanged: () => void;
 }
 
 const FILTER_LABELS: Record<string, string> = {
@@ -88,6 +91,9 @@ export function UsersTable({
   onUserClick,
   onDeleteUser,
   onResetPassword,
+  accessToken,
+  canEdit,
+  onQuotaChanged,
 }: UsersTableProps) {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -95,12 +101,15 @@ export function UsersTable({
     const columnDeps = {
       possibleUIRoles,
       includeSelection: selectionEnabled,
+      accessToken,
+      canEdit,
+      onQuotaChanged,
       onUserClick,
       onDeleteUser,
       onResetPassword,
     };
     return getUsersTableColumns(columnDeps);
-  }, [possibleUIRoles, selectionEnabled, onUserClick, onDeleteUser, onResetPassword]);
+  }, [possibleUIRoles, selectionEnabled, accessToken, canEdit, onQuotaChanged, onUserClick, onDeleteUser, onResetPassword]);
 
   const roleOptions = useMemo(
     () =>

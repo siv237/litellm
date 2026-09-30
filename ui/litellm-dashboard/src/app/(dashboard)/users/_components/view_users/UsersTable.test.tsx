@@ -91,6 +91,9 @@ function Harness({
         onUserClick={onUserClick}
         onDeleteUser={onDeleteUser}
         onResetPassword={onResetPassword}
+        accessToken={null}
+        canEdit={false}
+        onQuotaChanged={vi.fn()}
       />
     </>
   );

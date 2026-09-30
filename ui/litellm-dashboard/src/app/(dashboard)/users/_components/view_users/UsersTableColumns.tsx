@@ -1,13 +1,26 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Copy, Info, KeyRound, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Copy, Info, KeyRound, MoreHorizontal, Pencil, RotateCcw, Trash2 } from "lucide-react";
+import { useState } from "react";
 
-import { UserInfo } from "@/components/networking";
+import { UserInfo, userUpdateUserCall } from "@/components/networking";
 import { createSelectionColumn, DataTableSortHeader } from "@/components/shared/DataTable";
 import { CellTooltip, DateCell, IdentityCell, MoneyCell, StatusBadge } from "@/components/shared/table_cells";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +28,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { toast } from "@/lib/toast";
 import { cn } from "@/lib/cva.config";
 import { copyToClipboard } from "@/utils/dataUtils";
 
@@ -90,14 +105,266 @@ function UserRowActions({ user, onUserClick, onDeleteUser, onResetPassword }: Us
 export interface UsersTableColumnsDeps {
   possibleUIRoles: Record<string, Record<string, string>> | null;
   includeSelection: boolean;
+  accessToken: string | null;
+  canEdit: boolean;
+  onQuotaChanged: () => void;
   onUserClick: (userId: string, openInEditMode?: boolean) => void;
   onDeleteUser: (user: UserInfo) => void;
   onResetPassword: (userId: string) => void;
 }
 
+async function patchUser(accessToken: string | null, body: Record<string, unknown>, okMessage: string): Promise<boolean> {
+  if (!accessToken) return false;
+  try {
+    await userUpdateUserCall(accessToken, body, null);
+    toast.success(okMessage);
+    return true;
+  } catch (error) {
+    toast.fromError(error instanceof Error ? error.message : "Update failed");
+    return false;
+  }
+}
+
+const DURATION_MENU_OPTIONS: { value: "0" | "1d" | "7d" | "1mo"; label: string }[] = [
+  { value: "0", label: "No reset (Fixed)" },
+  { value: "1d", label: "Daily" },
+  { value: "7d", label: "Weekly" },
+  { value: "1mo", label: "Monthly" },
+];
+
+function QuotaModeCell({
+  user,
+  accessToken,
+  canEdit,
+  onQuotaChanged,
+}: {
+  user: UserInfo;
+  accessToken: string | null;
+  canEdit: boolean;
+  onQuotaChanged: () => void;
+}) {
+  const { max_budget: maxBudget, budget_duration: budgetDuration, budget_reset_at: budgetResetAt } = user;
+  const resetLabel = budgetDuration
+    ? DURATION_LABELS[budgetDuration.toLowerCase()] ?? `${budgetDuration} reset`
+    : null;
+  const badge = (
+    <Badge
+      variant="outline"
+      className={cn(
+        "whitespace-nowrap font-normal",
+        resetLabel
+          ? "border-info/30 bg-info/10 text-info"
+          : "border-indigo-200 bg-indigo-50 text-indigo-600 dark:border-indigo-800 dark:bg-indigo-950 dark:text-indigo-300",
+        canEdit && "cursor-pointer hover:border-primary/50",
+      )}
+    >
+      {maxBudget == null ? "No budget" : (resetLabel ?? "Fixed")}
+    </Badge>
+  );
+  const hint =
+    maxBudget == null
+      ? "No budget is set, so a reset window has no effect. Click Budget to set one."
+      : budgetDuration
+        ? budgetResetAt
+          ? `Budget resets every ${budgetDuration}; next reset: ${new Date(budgetResetAt).toLocaleString()}`
+          : `Budget resets every ${budgetDuration}`
+        : null;
+
+  if (!canEdit) {
+    return hint ? <CellTooltip content={hint} trigger={<span>{badge}</span>} /> : badge;
+  }
+
+  const current = budgetDuration
+    ? (["1d", "7d", "1mo"].find((d) => d === budgetDuration.toLowerCase()) as "1d" | "7d" | "1mo" | undefined) ?? "0"
+    : "0";
+
+  const menu = (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        aria-label={`Edit quota window for ${user.user_email || user.user_id}`}
+        className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "h-auto w-auto p-0 hover:bg-transparent")}
+      >
+        {badge}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-44">
+        {DURATION_MENU_OPTIONS.map((option) => (
+          <DropdownMenuItem
+            key={option.value}
+            onClick={async () => {
+              if (option.value === current) return;
+              const ok = await patchUser(
+                accessToken,
+                { user_id: user.user_id, budget_duration: option.value === "0" ? null : option.value },
+                `Quota window: ${option.label}`,
+              );
+              if (ok) onQuotaChanged();
+            }}
+          >
+            <span className="flex-1">{option.label}</span>
+            {option.value === current && <span className="text-xs text-primary">current</span>}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+  return hint ? <CellTooltip content={hint} trigger={<span>{menu}</span>} /> : menu;
+}
+
+function BudgetCell({
+  user,
+  accessToken,
+  canEdit,
+  onQuotaChanged,
+}: {
+  user: UserInfo;
+  accessToken: string | null;
+  canEdit: boolean;
+  onQuotaChanged: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+
+  if (!canEdit) {
+    return <MoneyCell value={user.max_budget} decimals={2} emptyText="Unlimited" showZero />;
+  }
+
+  const save = async (next: number | null) => {
+    const ok = await patchUser(accessToken, { user_id: user.user_id, max_budget: next }, "Budget updated");
+    if (ok) {
+      setOpen(false);
+      onQuotaChanged();
+    }
+  };
+
+  return (
+    <Popover open={open} onOpenChange={(next) => { setOpen(next); if (next) setValue(user.max_budget == null ? "" : String(user.max_budget)); }}>
+      <PopoverTrigger
+        aria-label={`Edit budget for ${user.user_email || user.user_id}`}
+        className="rounded px-1 -mx-1 cursor-pointer hover:bg-muted"
+        title="Click to edit budget"
+      >
+        <MoneyCell value={user.max_budget} decimals={2} emptyText="Unlimited" showZero />
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-56 p-3">
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            const trimmed = value.trim();
+            if (trimmed === "") {
+              void save(null);
+              return;
+            }
+            const parsed = Number.parseFloat(trimmed.replace(",", "."));
+            if (!Number.isFinite(parsed) || parsed < 0) {
+              toast.fromError("Enter a valid amount");
+              return;
+            }
+            void save(parsed === 0 ? null : parsed);
+          }}
+        >
+          <Input
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="Amount ($)"
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
+            autoFocus
+          />
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <button type="button" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))} onClick={() => void save(null)}>
+              Unlimited
+            </button>
+            <button type="submit" className={cn(buttonVariants({ size: "sm" }))}>
+              Save
+            </button>
+          </div>
+        </form>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function UsageCell({
+  user,
+  accessToken,
+  canEdit,
+  onQuotaChanged,
+}: {
+  user: UserInfo;
+  accessToken: string | null;
+  canEdit: boolean;
+  onQuotaChanged: () => void;
+}) {
+  const [resetting, setResetting] = useState(false);
+  const { spend, max_budget: maxBudget } = user;
+
+  if (maxBudget == null || maxBudget <= 0) {
+    return <span className="text-sm text-muted-foreground">—</span>;
+  }
+
+  const pct = Math.max(0, (spend / maxBudget) * 100);
+  const shown = pct >= 10 ? `${Math.round(pct)}%` : `${Math.round(pct * 10) / 10}%`;
+  const barClass = pct >= 95 ? "bg-destructive" : pct >= 75 ? "bg-warning" : "bg-success";
+  const textClass = pct >= 95 ? "text-destructive" : pct >= 75 ? "text-warning" : "text-muted-foreground";
+
+  const bar = (
+    <span className="flex items-center gap-2">
+      <span className="inline-block h-1.5 w-24 overflow-hidden rounded-full bg-muted">
+        <span className={cn("block h-full rounded-full", barClass)} style={{ width: `${Math.min(pct, 100)}%` }} />
+      </span>
+      <span className={cn("text-xs tabular-nums", textClass)}>{shown}</span>
+    </span>
+  );
+
+  if (!canEdit || spend <= 0) {
+    return <CellTooltip content={`$${spend.toFixed(2)} of $${maxBudget.toFixed(2)}`} trigger={bar} />;
+  }
+
+  return (
+    <span className="flex w-full items-center justify-between gap-2">
+      <CellTooltip content={`$${spend.toFixed(2)} of $${maxBudget.toFixed(2)}`} trigger={bar} />
+      <AlertDialog>
+        <AlertDialogTrigger
+          aria-label={`Reset usage for ${user.user_email || user.user_id}`}
+          title="Emergency reset: set spend to 0 now"
+          className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground hover:text-destructive")}
+        >
+          <RotateCcw className="size-3.5" />
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset usage to zero?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {`Spend for ${user.user_email || user.user_id} will be set from $${spend.toFixed(2)} back to $0 immediately. The quota window schedule stays unchanged; request history is not deleted.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={resetting}
+              onClick={async () => {
+                setResetting(true);
+                const ok = await patchUser(accessToken, { user_id: user.user_id, spend: 0 }, "Usage reset to $0");
+                setResetting(false);
+                if (ok) onQuotaChanged();
+              }}
+            >
+              {resetting ? "Resetting…" : "Reset now"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </span>
+  );
+}
+
 export const getUsersTableColumns = ({
   possibleUIRoles,
   includeSelection,
+  accessToken,
+  canEdit,
+  onQuotaChanged,
   onUserClick,
   onDeleteUser,
   onResetPassword,
@@ -187,76 +454,31 @@ export const getUsersTableColumns = ({
       accessorKey: "max_budget",
       meta: { title: "Budget (USD)", numeric: true },
       header: "Budget (USD)",
-      size: 130,
+      size: 150,
       enableSorting: false,
-      cell: ({ row }) => <MoneyCell value={row.original.max_budget} decimals={2} emptyText="Unlimited" showZero />,
+      cell: ({ row }) => (
+        <BudgetCell user={row.original} accessToken={accessToken} canEdit={canEdit} onQuotaChanged={onQuotaChanged} />
+      ),
     },
     {
       id: "quota_mode",
       meta: { title: "Quota" },
       header: "Quota",
-      size: 130,
+      size: 140,
       enableSorting: false,
-      cell: ({ row }) => {
-        const { max_budget: maxBudget, budget_duration: budgetDuration, budget_reset_at: budgetResetAt } =
-          row.original;
-        if (maxBudget == null) {
-          return <span className="text-sm text-muted-foreground">No quota</span>;
-        }
-        const resetLabel = budgetDuration ? DURATION_LABELS[budgetDuration.toLowerCase()] ?? `${budgetDuration} reset` : null;
-        const badge = (
-          <Badge
-            variant="outline"
-            className={cn(
-              "whitespace-nowrap font-normal",
-              resetLabel
-                ? "border-info/30 bg-info/10 text-info"
-                : "border-indigo-200 bg-indigo-50 text-indigo-600 dark:border-indigo-800 dark:bg-indigo-950 dark:text-indigo-300",
-            )}
-          >
-            {resetLabel ?? "Fixed"}
-          </Badge>
-        );
-        const hint = budgetDuration
-          ? budgetResetAt
-            ? `Budget resets every ${budgetDuration}; next reset: ${new Date(budgetResetAt).toLocaleString()}`
-            : `Budget resets every ${budgetDuration}`
-          : null;
-        return hint ? <CellTooltip content={hint} trigger={badge} /> : badge;
-      },
+      cell: ({ row }) => (
+        <QuotaModeCell user={row.original} accessToken={accessToken} canEdit={canEdit} onQuotaChanged={onQuotaChanged} />
+      ),
     },
     {
       id: "quota_used",
       meta: { title: "Used", numeric: true },
       header: "Used",
-      size: 160,
+      size: 190,
       enableSorting: false,
-      cell: ({ row }) => {
-        const { spend, max_budget: maxBudget } = row.original;
-        if (maxBudget == null || maxBudget <= 0) {
-          return <span className="text-sm text-muted-foreground">—</span>;
-        }
-        const pct = Math.max(0, (spend / maxBudget) * 100);
-        const shown = pct >= 10 ? `${Math.round(pct)}%` : `${Math.round(pct * 10) / 10}%`;
-        const barClass = pct >= 95 ? "bg-destructive" : pct >= 75 ? "bg-warning" : "bg-success";
-        const textClass = pct >= 95 ? "text-destructive" : pct >= 75 ? "text-warning" : "text-muted-foreground";
-        return (
-          <CellTooltip
-            content={`$${spend.toFixed(2)} of $${maxBudget.toFixed(2)}`}
-            trigger={
-              <span className="flex items-center gap-2">
-                <span className="inline-block h-1.5 w-24 overflow-hidden rounded-full bg-muted">
-                  <span
-                    className={cn("block h-full rounded-full", barClass)}
-                    style={{ width: `${Math.min(pct, 100)}%` }}
-                  />
-                </span>
-                <span className={cn("text-xs tabular-nums", textClass)}>{shown}</span>
-              </span>
-            }
-          />
-        );
-      },
+      cell: ({ row }) => (
+        <UsageCell user={row.original} accessToken={accessToken} canEdit={canEdit} onQuotaChanged={onQuotaChanged} />
+      ),
     },
     {
       id: "sso_user_id",

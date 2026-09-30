@@ -214,6 +214,10 @@ const ViewUserDashboard: React.FC<ViewUserDashboardProps> = ({
     setSelectionMode(false);
   };
 
+  const refreshUserList = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ["userList"] });
+  }, [queryClient]);
+
   const activeSort = sorting[0];
   const sortBy = activeSort?.id ?? DEFAULT_SORT_BY;
   const sortOrder: "asc" | "desc" = activeSort?.desc ?? true ? "desc" : "asc";
@@ -312,6 +316,9 @@ const ViewUserDashboard: React.FC<ViewUserDashboardProps> = ({
       onUserClick={handleUserClick}
       onDeleteUser={handleDelete}
       onResetPassword={handleResetPassword}
+      accessToken={accessToken}
+      canEdit={isProxyAdmin}
+      onQuotaChanged={refreshUserList}
     />
   );
 
