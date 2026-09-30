@@ -101,29 +101,29 @@ const SidebarAccountMenu: React.FC<SidebarAccountMenuProps> = ({ onLogout, colla
   const toggles = [
     {
       key: "disableShowNewBadge",
-      label: "Hide New Feature Indicators",
-      ariaLabel: "Toggle hide new feature indicators",
+      label: "Скрывать индикаторы новинок",
+      ariaLabel: "Показ индикаторов новинок",
       checked: disableShowNewBadge,
       onCheckedChange: (checked: boolean) => setFlag("disableShowNewBadge", checked),
     },
     {
       key: "disableShowPrompts",
-      label: "Hide All Prompts",
-      ariaLabel: "Toggle hide all prompts",
+      label: "Скрыть все промпты",
+      ariaLabel: "Показ всех промптов",
       checked: disableShowPrompts,
       onCheckedChange: (checked: boolean) => setFlag("disableShowPrompts", checked),
     },
     {
       key: "disableBlogPosts",
-      label: "Hide Blog Posts",
-      ariaLabel: "Toggle hide blog posts",
+      label: "Скрыть записи блога",
+      ariaLabel: "Показ записей блога",
       checked: disableBlogPosts,
       onCheckedChange: (checked: boolean) => setFlag("disableBlogPosts", checked),
     },
     {
       key: "disableBouncingIcon",
-      label: "Hide Bouncing Icon",
-      ariaLabel: "Toggle hide bouncing icon",
+      label: "Скрыть прыгающую иконку",
+      ariaLabel: "Показ прыгающей иконки",
       checked: disableBouncingIcon,
       onCheckedChange: (checked: boolean) => setFlag("disableBouncingIcon", checked),
     },
@@ -133,7 +133,7 @@ const SidebarAccountMenu: React.FC<SidebarAccountMenuProps> = ({ onLogout, colla
   const initials = initialsFromIdentity(userEmail, userId);
   const hue = hueFromString(seed);
   const displayName = navAccountDisplayName(userEmail, userId);
-  const triggerLabel = `Account menu — ${userRole ?? "Unknown role"} — signed in as ${userEmail || userId || "unknown"}`;
+  const triggerLabel = `Меню аккаунта — ${userRole ?? "Роль неизвестна"} — вход: ${userEmail || userId || "нет данных"}`;
 
   return (
     <Popover>
@@ -174,7 +174,7 @@ const SidebarAccountMenu: React.FC<SidebarAccountMenuProps> = ({ onLogout, colla
             <span
               className="animate-bounce text-lg leading-none"
               style={{ animationDuration: "2s" }}
-              title="Thanks for using LiteLLM!"
+              title="Спасибо, что пользуетесь LiteLLM!"
               aria-hidden
             >
               🌴
@@ -193,16 +193,16 @@ const SidebarAccountMenu: React.FC<SidebarAccountMenuProps> = ({ onLogout, colla
         </div>
 
         <div className="flex flex-col px-3 py-2">
-          <InfoRow icon={<Crown className="size-[17px]" />} label="Tier">
+          <InfoRow icon={<Crown className="size-[17px]" />} label="Тариф">
             {premiumUser ? (
               <Badge variant="outline" className="gap-1 border-warning/30 bg-warning/10 text-warning">
                 <Crown />
-                Premium
+                Премиум
               </Badge>
             ) : (
-              <Badge variant="secondary" className="gap-1" title="Upgrade to Premium for advanced features">
+              <Badge variant="secondary" className="gap-1" title="Premium даёт расширенные возможности">
                 <Crown />
-                Standard
+                Стандарт
               </Badge>
             )}
           </InfoRow>
@@ -210,10 +210,10 @@ const SidebarAccountMenu: React.FC<SidebarAccountMenuProps> = ({ onLogout, colla
             <Badge variant="secondary">{userRole}</Badge>
           </InfoRow>
           <InfoRow icon={<Mail className="size-[17px]" />} label="Эл. почта">
-            <MonoValue value={userEmail} copyLabel="Copy email" />
+            <MonoValue value={userEmail} copyLabel="Скопировать e-mail" />
           </InfoRow>
-          <InfoRow icon={<IdCard className="size-[17px]" />} label="User ID">
-            <MonoValue value={userId} copyLabel="Copy user ID" />
+          <InfoRow icon={<IdCard className="size-[17px]" />} label="ID пользователя">
+            <MonoValue value={userId} copyLabel="Скопировать ID пользователя" />
           </InfoRow>
         </div>
 
@@ -241,7 +241,7 @@ const SidebarAccountMenu: React.FC<SidebarAccountMenuProps> = ({ onLogout, colla
           className="h-[42px] w-full justify-start gap-2.5 rounded-none px-3 text-sm font-medium text-foreground"
         >
           <LogOut className="size-[19px] text-muted-foreground" />
-          Logout
+          Выйти
         </Button>
       </PopoverContent>
     </Popover>
