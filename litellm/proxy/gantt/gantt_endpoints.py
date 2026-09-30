@@ -131,3 +131,39 @@ async def _load_rows(
     if isinstance(data, str):
         data = json.loads(data)
     return [dict(row) for row in (data or [])]
+
+
+_SQL_USERS: Final = """
+SELECT COALESCE(json_agg(r ORDER BY r.display), '[]') AS data FROM (
+  SELECT user_id, COALESCE(split_part(user_email, '@', 1), user_id) AS display
+  FROM "LiteLLM_UserTable"
+  WHERE user_id IS NOT NULL AND user_id <> ''
+) r;
+"""
+
+
+@router.get(
+    "/gantt/users",
+    tags=["gantt"],
+    include_in_schema=False,
+)
+async def get_gantt_user_map(
+    response: Response,
+    user_api_key_dict: UserAPIKeyAuth = Depends(user_api_key_auth),
+):
+    """Read-only map user_id -> display name (email local-part) for humanized logs."""
+    from litellm.proxy.proxy_server import prisma_client
+
+    if user_api_key_dict.user_role not in _ALLOWED_ROLES:
+        raise HTTPException(
+            status_code=403,
+            detail={"error": "Gantt доступен только UI-пользователям прокси"},
+        )
+    if prisma_client is None:
+        raise HTTPException(status_code=503, detail={"error": "БД не подключена"})
+
+    result = await prisma_client.db.query_raw(_SQL_USERS)
+    data = result[0].get("data") if result and isinstance(result[0], dict) else []
+    if isinstance(data, str):
+        data = json.loads(data)
+    return {"users": {row["user_id"]: row["display"] for row in (data or [])}}
