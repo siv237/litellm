@@ -45,13 +45,13 @@ import {
 } from "./ComplexityRouterConfig";
 
 const DEFAULT_SCORING_EXPLANATION =
-  "The router scores each request across 7 built-in dimensions: token count, code presence, reasoning markers, technical " +
-  "terms, simple indicators, multi-step patterns, and question complexity, plus any custom dimensions you add. " +
-  "The weighted score determines the tier:";
+  "Маршрутизатор оценивает каждый запрос по 7 встроенным измерениям: число токенов, наличие кода, маркеры " +
+  "рассуждения, технические термины, простые индикаторы, многошаговые паттерны и сложность вопроса, плюс " +
+  "добавленные вами измерения. Взвешенный балл определяет уровень:";
 
 const HEURISTIC_V2_EXPLANATION =
-  "The router estimates success probability for all four tiers with the bundled calibrated model, then selects " +
-  "the first tier that meets its trained threshold. It runs locally with no classifier API call.";
+  "Маршрутизатор оценивает вероятность успеха для всех четырёх уровней встроенной калиброванной моделью и выбирает " +
+  "первый уровень, достигший обученного порога. Работает локально, без вызова API классификатора.";
 
 const CLASSIFIER_TIMEOUT_ID = "classifier-timeout-ms";
 const CLASSIFIER_CONTEXT_WINDOW_SIZE_ID = "classifier-context-window-size";
@@ -123,31 +123,31 @@ const HowClassificationWorks: React.FC<{ value: ComplexityRouterConfigValue }> =
   return (
     <Card className="bg-muted mt-4">
       <CardContent>
-        <strong className="block mb-2 font-semibold">How Classification Works</strong>
+        <strong className="block mb-2 font-semibold">Как работает классификация</strong>
         <span className="text-[13px] text-muted-foreground">{scoringExplanation(value)}</span>
         {scorerRuns && ranges && (
           <ul className="mt-2 pl-5 text-[13px] text-muted-foreground">
             <li>
-              <strong>{effectiveTierLabel("SIMPLE", value.tier_labels)}</strong>: Score &lt; {ranges.simpleMedium}
+              <strong>{effectiveTierLabel("SIMPLE", value.tier_labels)}</strong>: балл &lt; {ranges.simpleMedium}
             </li>
             <li>
-              <strong>{effectiveTierLabel("MEDIUM", value.tier_labels)}</strong>: Score {ranges.simpleMedium} -{" "}
+              <strong>{effectiveTierLabel("MEDIUM", value.tier_labels)}</strong>: балл {ranges.simpleMedium} –{" "}
               {ranges.mediumComplex}
             </li>
             <li>
-              <strong>{effectiveTierLabel("COMPLEX", value.tier_labels)}</strong>: Score {ranges.mediumComplex} -{" "}
+              <strong>{effectiveTierLabel("COMPLEX", value.tier_labels)}</strong>: балл {ranges.mediumComplex} –{" "}
               {ranges.complexReasoning}
             </li>
             <li>
-              <strong>{effectiveTierLabel("REASONING", value.tier_labels)}</strong>: Score &gt;{" "}
-              {ranges.complexReasoning} (or 2+ reasoning markers with a score of at least{" "}
+              <strong>{effectiveTierLabel("REASONING", value.tier_labels)}</strong>: балл &gt;{" "}
+              {ranges.complexReasoning} (или 2+ маркеров рассуждения с баллом не менее{" "}
               {ranges.reasoningOverrideFloor})
             </li>
           </ul>
         )}
         {!ranges && isError && (
           <span className="text-[13px] block mt-2 text-muted-foreground">
-            The tier score ranges could not be loaded from the proxy.
+            Не удалось загрузить диапазоны баллов уровней с прокси.
           </span>
         )}
       </CardContent>
@@ -185,9 +185,9 @@ const ClassifierTypeRadios: React.FC<{
           <Label className="items-start font-normal leading-normal has-data-disabled:cursor-not-allowed has-data-disabled:opacity-50">
             <RadioGroupItem value="heuristic" className="mt-0.5" disabled={scorerLocked} />
             <span>
-              <strong className="font-semibold">Heuristic</strong>{" "}
+              <strong className="font-semibold">Эвристика</strong>{" "}
               <span className="text-muted-foreground">
-                (default), rule-based scoring with no API calls and &lt;1ms latency
+                (по умолчанию), оценка по правилам без вызовов API и задержкой &lt;1 мс
               </span>
             </span>
           </Label>
@@ -196,9 +196,9 @@ const ClassifierTypeRadios: React.FC<{
           <Label className="items-start font-normal leading-normal has-data-disabled:cursor-not-allowed has-data-disabled:opacity-50">
             <RadioGroupItem value="heuristic_v2" className="mt-0.5" disabled={scorerLocked} />
             <span>
-              <strong className="font-semibold">Heuristic v2</strong>{" "}
+              <strong className="font-semibold">Эвристика v2</strong>{" "}
               <span className="text-muted-foreground">
-                uses bundled calibrated four-tier probabilities with no API call
+                использует встроенные калиброванные вероятности четырёх уровней без вызова API
               </span>
             </span>
           </Label>
@@ -206,22 +206,22 @@ const ClassifierTypeRadios: React.FC<{
         <Label className="items-start font-normal leading-normal">
           <RadioGroupItem value="llm" className="mt-0.5" />
           <span>
-            <strong className="font-semibold">LLM Classifier</strong>{" "}
-            <span className="text-muted-foreground">calls a model to decide the tier (e.g. a small/fast model)</span>
+            <strong className="font-semibold">LLM-классификатор</strong>{" "}
+            <span className="text-muted-foreground">определяет уровень вызовом модели (напр. маленькой/быстрой)</span>
           </span>
         </Label>
         <Label className="items-start font-normal leading-normal">
           <RadioGroupItem value="jev" className="mt-0.5" />
           <span>
-            <strong className="font-semibold">JEV Classifier</strong>{" "}
-            <span className="text-muted-foreground">uses TypeSafe System One Choice to decide the tier</span>
+            <strong className="font-semibold">JEV-классификатор</strong>{" "}
+            <span className="text-muted-foreground">использует TypeSafe System One Choice для выбора уровня</span>
           </span>
         </Label>
         <SimpleTooltip content={scorerLockedReason}>
           <Label className="items-start font-normal leading-normal has-data-disabled:cursor-not-allowed has-data-disabled:opacity-50">
             <RadioGroupItem value="heuristic_first" className="mt-0.5" disabled={scorerLocked} />
             <span>
-              <strong className="font-semibold">Heuristic first</strong>{" "}
+              <strong className="font-semibold">Сначала эвристика</strong>{" "}
               <span className="text-muted-foreground">
                 scores locally, and only pays for the classifier when the score does not confidently land a cheap tier
               </span>
@@ -232,7 +232,7 @@ const ClassifierTypeRadios: React.FC<{
           <Label className="items-start font-normal leading-normal has-data-disabled:cursor-not-allowed has-data-disabled:opacity-50">
             <RadioGroupItem value="hybrid" className="mt-0.5" disabled={scorerLocked} />
             <span>
-              <strong className="font-semibold">Hybrid</strong>{" "}
+              <strong className="font-semibold">Гибрид</strong>{" "}
               <span className="text-muted-foreground">
                 keeps the local score at any tier, and only pays for the classifier when that score lands near a tier
                 boundary
@@ -418,7 +418,7 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
 
       {classifierType === "heuristic_first" && (
         <div className="mt-4 space-y-2">
-          <strong className="block font-semibold">Decide locally up to</strong>
+          <strong className="block font-semibold">Решать локально до</strong>
           <Select
             value={value.heuristic_first_max_tier}
             onValueChange={(tier: unknown) => handleHeuristicFirstMaxTierChange(tier as string)}
@@ -435,15 +435,14 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
             </SelectContent>
           </Select>
           <p className="text-sm text-muted-foreground">
-            A request the scorer places at or below this tier routes there without a classifier call. Anything the
-            scorer places higher, and anything it found no signal for at all, goes to the classifier instead
+            Запрос, который скорер помещает на этот уровень или ниже, направляется туда без вызова классификатора. Всё, что скорер поместил выше, и всё, где сигнала не найдено вообще, уходит классификатору
           </p>
         </div>
       )}
 
       {classifierType === "hybrid" && (
         <div className="mt-4 space-y-2">
-          <strong className="block font-semibold">Boundary margin</strong>
+          <strong className="block font-semibold">Запас у границы</strong>
           <Input
             id={HYBRID_BOUNDARY_MARGIN_ID}
             type="text"
@@ -458,15 +457,15 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
             className="w-full"
           />
           <p className="text-sm text-muted-foreground">
-            A score further than this from every tier boundary routes on the scorer&apos;s own tier, however expensive
-            that tier is. A score closer than this, and anything the scorer found no signal for at all, goes to the
-            classifier to break the tie
+            Балл, отстоящий дальше этого значения от любой границы уровней, направляется на уровень самого скорера,
+            каким бы дорогим он ни был. Балл ближе этого значения — и всё, где сигнала нет вообще, — уходит
+            классификатору, чтобы разрешить ничью
           </p>
         </div>
       )}
 
       <div className="mt-4 space-y-2">
-        <strong className="block font-semibold">How often to classify</strong>
+        <strong className="block font-semibold">Как часто классифицировать</strong>
         <RadioGroup
           value={classificationFrequency(value)}
           onValueChange={(frequency: unknown) =>
@@ -477,23 +476,23 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
             <Label className="items-start font-normal leading-normal">
               <RadioGroupItem value="every_request" className="mt-0.5" />
               <span>
-                <span>Every request</span>{" "}
-                <span className="text-muted-foreground">: score every turn, tool-result continuations included</span>
+                <span>Каждый запрос</span>{" "}
+                <span className="text-muted-foreground">: оценивать каждый ход, включая продолжения после результатов инструментов</span>
               </span>
             </Label>
             <Label className="items-start font-normal leading-normal">
               <RadioGroupItem value="user_turn" className="mt-0.5" />
               <span>
-                <span>Every new user message</span>{" "}
+                <span>Каждое новое сообщение пользователя</span>{" "}
                 <span className="text-muted-foreground">
-                  : score each new human ask, then hold that tier for the tool calls that follow it
+                  : оценивать каждый новый вопрос человека и удерживать уровень для последующих вызовов инструментов
                 </span>
               </span>
             </Label>
             <Label className="items-start font-normal leading-normal">
               <RadioGroupItem value="session" className="mt-0.5" disabled={Boolean(sessionFrequencyRestriction)} />
               <span>
-                <span>Once per session</span>{" "}
+                <span>Один раз за сессию</span>{" "}
                 <span className="text-muted-foreground">
                   {sessionFrequencyRestriction?.reason ??
                     ": score the first turn only, then hold that tier and its deployment for the whole session"}
@@ -503,8 +502,7 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
           </div>
         </RadioGroup>
         <p className="text-sm text-muted-foreground">
-          Holding the tier keeps an agent on one model for a whole tool loop and cuts scoring cost. A turn the router
-          cannot match to a held decision, such as one with no session id or an expired one, is scored again
+          Удержание уровня оставляет агента на одной модели во всём цикле инструментов и снижает стоимость оценки. Ход, который маршрутизатор не может сопоставить с удержанным решением (например, без ID сессии или с просроченным), оценивается заново
         </p>
       </div>
 
@@ -512,18 +510,18 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
       {usesLlmClassifier(classifierType) && (
         <div className="mt-4 space-y-3">
           <div>
-            <strong className="block mb-1 font-semibold">Classifier Model</strong>
+            <strong className="block mb-1 font-semibold">Модель-классификатор</strong>
             <SearchSelect
               options={modelOptions}
               value={value.classifier_llm_config?.model ?? ""}
               onValueChange={handleClassifierModelChange}
-              placeholder="Select the model that will classify request complexity"
-              emptyText="No models found"
+              placeholder="Выберите модель для классификации сложности запросов"
+              emptyText="Модели не найдены"
               allowClear={false}
               className={classifierModelMissing ? "border-destructive" : undefined}
-              aria-label="Classifier Model"
+              aria-label="Модель-классификатор"
             />
-            {classifierModelMissing && <span className="text-xs text-destructive">A classifier model is required</span>}
+            {classifierModelMissing && <span className="text-xs text-destructive">Требуется модель-классификатор</span>}
           </div>
           <ClassifierReasoningEffortSelect
             model={classifierModel}
@@ -533,7 +531,7 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
           />
           <div>
             <Label htmlFor={CLASSIFIER_TIMEOUT_ID} className="block mb-1 font-semibold">
-              Timeout (ms)
+              Таймаут (мс)
             </Label>
             <Input
               id={CLASSIFIER_TIMEOUT_ID}
@@ -556,7 +554,7 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
               className="w-full"
             />
             <span className="text-xs text-muted-foreground">
-              How long the classifier call has before it fails and the fallback below takes over.
+              Сколько времени есть у вызова классификатора до сбоя и перехода на резервный вариант ниже.
             </span>
           </div>
           <ClassifierCircuitBreakerConfig
@@ -569,7 +567,7 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
           />
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <strong className="font-semibold">Classifier Prompt</strong>
+              <strong className="font-semibold">Промпт классификатора</strong>
               <SimpleTooltip content="Every rubric uses the same four tiers. They differ in the worked examples that show the classifier where the boundary between tiers sits, and the Business rubric also rewrites the tier definitions for business traffic. Pick the rubric, and write your own opening instructions and calibration examples, inside the prompt editor.">
                 <Info className="size-4 text-muted-foreground" />
               </SimpleTooltip>
@@ -605,7 +603,7 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
       )}
       {usesClassifierContext(classifierType) && (
         <div className="mt-4 space-y-3">
-          <RestrictedSection heading="If the classifier fails" by={restrictedBy(value, "classifierFallback")}>
+          <RestrictedSection heading="Если классификатор не справился" by={restrictedBy(value, "classifierFallback")}>
             <RadioGroup
               value={value.classifier_fallback ?? DEFAULT_CLASSIFIER_FALLBACK}
               onValueChange={(fallback: unknown) => handleClassifierFallbackChange(fallback as ClassifierFallback)}
@@ -614,8 +612,8 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
                 <Label className="items-start font-normal leading-normal">
                   <RadioGroupItem value="heuristic" className="mt-0.5" />
                   <span>
-                    <span>Score with the heuristic</span>{" "}
-                    <span className="text-muted-foreground">— right when the classifier grades complexity too</span>
+                    <span>Оценивать эвристикой</span>{" "}
+                    <span className="text-muted-foreground">— когда классификатор корректно оценивает сложность</span>
                   </span>
                 </Label>
                 <Label className="items-start font-normal leading-normal has-data-disabled:cursor-not-allowed has-data-disabled:opacity-50">
@@ -628,9 +626,9 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
                     }
                   >
                     <span>
-                      <span>Route to the default model{defaultModel ? ` (${defaultModel})` : ""}</span>{" "}
+                      <span>Направлять на модель по умолчанию{defaultModel ? ` (${defaultModel})` : ""}</span>{" "}
                       <span className="text-muted-foreground">
-                        — right when your prompt grades something other than complexity
+                        — когда ваш промпт оценивает что-то кроме сложности
                       </span>
                     </span>
                   </SimpleTooltip>
@@ -638,12 +636,12 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
               </div>
             </RadioGroup>
             <span className="block text-xs text-muted-foreground">
-              Applies when the classifier call errors, times out, or returns an unparseable response.
+              Применяется при ошибке вызова классификатора, таймауте или неразбираемом ответе.
             </span>
           </RestrictedSection>
           <div>
             <Label htmlFor={CLASSIFIER_CONTEXT_WINDOW_SIZE_ID} className="block mb-1 font-semibold">
-              Context Window Size
+              Размер контекстного окна
             </Label>
             <Input
               id={CLASSIFIER_CONTEXT_WINDOW_SIZE_ID}
@@ -673,7 +671,7 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
           </div>
           <div>
             <Label htmlFor={CLASSIFIER_CONTEXT_BUDGET_CHARS_ID} className="block mb-1 font-semibold">
-              Context Character Budget
+              Бюджет символов контекста
             </Label>
             <Input
               id={CLASSIFIER_CONTEXT_BUDGET_CHARS_ID}
@@ -696,14 +694,13 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
               className="w-full"
             />
             <span className="text-xs text-muted-foreground">
-              Total characters of prior conversation sent to the classifier. Turns are taken newest first and quoted
-              whole while they fit, so a short conversation is never cut.
+              Суммарное число символов предыдущего диалога, передаваемых классификатору. Ходы берутся от новых к старым целиком, пока помещаются, поэтому короткий диалог не обрезается.
             </span>
             {contextBudgetQuotesNothing && (
               <span className="block text-xs text-destructive">
-                Under {MIN_QUOTED_CONTEXT_TURN_CHARS} characters there is no room to quote a turn that does not already
-                fit, so a long conversation reaches the classifier with no context at all. Set Context Window Size to 0
-                to turn context off deliberately.
+                Ниже {MIN_QUOTED_CONTEXT_TURN_CHARS} символов не остаётся места даже на один ход целиком, поэтому
+                длинный диалог доходит до классификатора совсем без контекста. Установите размер контекстного окна в 0,
+                чтобы намеренно выключить контекст.
               </span>
             )}
           </div>
@@ -713,18 +710,18 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
                 checked={value.classifier_context_include_assistant_turns ?? false}
                 onCheckedChange={handleClassifierContextIncludeAssistantTurnsChange}
                 size="sm"
-                aria-label="Include Assistant Turns"
+                aria-label="Включать ходы ассистента"
               />
-              <strong className="font-semibold">Include Assistant Turns</strong>
-              <SimpleTooltip content="Off by default. Enabling it changes tier decisions, and therefore spend, for an existing router, and sends assistant text to the classifier model, which may be a different provider than the routed model.">
+              <strong className="font-semibold">Включать ходы ассистента</strong>
+              <SimpleTooltip content="По умолчанию выключено. Включение меняет решения об уровне (а значит, и расход) у существующего маршрутизатора и отправляет текст ассистента модели-классификатору, которая может быть от другого провайдера.">
                 <Info className="size-4 text-muted-foreground" />
               </SimpleTooltip>
             </div>
             <span className="text-xs text-muted-foreground">
-              Let the classifier read the assistant&apos;s replies, so difficulty the model stated rather than the user
-              stays visible: a plan the assistant calls complex, approved with &quot;yes&quot;, is classified on the
-              work being approved. Context Window Size then counts the last N turns across both roles rather than the
-              last N user turns.
+              Пусть классификатор видит и ответы ассистента — тогда заметна сложность, названная моделью, а не
+              пользователем: план, который ассистент назвал сложным и одобрили словом &quot;да&quot;, классифицируется
+              по одобряемой работе. При этом размер контекстного окна считает последние N ходов по обеим ролям, а не
+              последние N ходов пользователя.
             </span>
           </div>
         </div>
@@ -733,14 +730,13 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
       {heuristicScoringRole(value) !== "never" && (
         <div className="mt-4">
           <div className="flex items-center gap-2 mb-1">
-            <strong className="font-semibold">Custom Technical Keywords</strong>
-            <SimpleTooltip content="Domain-specific terms appended to the built-in technical keyword list. Prompts containing these terms score higher on the technical dimension and route to more capable models.">
+            <strong className="font-semibold">Пользовательские технические ключевые слова</strong>
+            <SimpleTooltip content="Термины предметной области, добавляемые к встроенному списку технических ключевых слов. Промпты с такими терминами получают более высокий балл по техническому измерению и направляются на более мощные модели.">
               <Info className="size-4 text-muted-foreground" />
             </SimpleTooltip>
           </div>
           <span className="block mb-2 text-xs text-muted-foreground">
-            Optional: Add terms to the built-in list to improve classification accuracy on the technical dimension.
-            (e.g., udp, kafka, terraform).
+            Необязательно: добавьте термины к встроенному списку, чтобы точнее классифицировать по техническому измерению (напр. udp, kafka, terraform).
           </span>
           <MultiSelect
             options={(customTechnicalKeywords ?? []).map((keyword) => ({ label: keyword, value: keyword }))}
@@ -752,8 +748,8 @@ const ClassificationMethodConfig: React.FC<ClassificationMethodConfigProps> = ({
                 ),
               )
             }
-            placeholder="Type a keyword and press Enter"
-            emptyText="Type to add a keyword"
+            placeholder="Введите ключевое слово и нажмите Enter"
+            emptyText="Введите текст, чтобы добавить ключевое слово"
             allowCustomValues
             className="w-full"
           />

@@ -62,16 +62,16 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
   pg_vector: [
     {
       name: "api_base",
-      label: "API Base",
-      tooltip: "Enter the base URL of your deployed litellm-pgvector server (e.g., http://your-server:8000)",
+      label: "Базовый URL API",
+      tooltip: "Введите базовый URL развёрнутого сервера litellm-pgvector (напр. http://your-server:8000)",
       placeholder: "http://your-deployed-server:8000",
       required: true,
       type: "text",
     },
     {
       name: "api_key",
-      label: "API Key",
-      tooltip: "Enter the API key from your deployed litellm-pgvector server",
+      label: "API-ключ",
+      tooltip: "Введите API-ключ развёрнутого сервера litellm-pgvector",
       placeholder: "your-deployed-api-key",
       required: true,
       type: "password",
@@ -81,16 +81,16 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
   "vertex_ai/search_api": [
     {
       name: "vertex_project",
-      label: "Vertex Project",
-      tooltip: "Google Cloud project ID that hosts the Vertex AI Search data store.",
+      label: "Проект Vertex",
+      tooltip: "ID проекта Google Cloud, в котором размещено хранилище данных Vertex AI Search.",
       placeholder: "my-gcp-project-id",
       required: true,
       type: "text",
     },
     {
       name: "vertex_location",
-      label: "Vertex Location",
-      tooltip: "Vertex AI Search data store location. Must be one of global, us, or eu.",
+      label: "Регион Vertex",
+      tooltip: "Расположение хранилища данных Vertex AI Search. Допустимы global, us или eu.",
       required: true,
       type: "select",
       options: [
@@ -102,18 +102,18 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
     },
     {
       name: "vertex_collection_id",
-      label: "Collection ID (optional)",
-      tooltip: "Discovery Engine collection ID. Leave blank to use the default collection.",
-      placeholder: "e.g. my-custom-collection",
+      label: "ID коллекции (необязательно)",
+      tooltip: "ID коллекции Discovery Engine. Оставьте пустым, чтобы использовать коллекцию по умолчанию.",
+      placeholder: "напр. my-custom-collection",
       required: false,
       type: "text",
     },
     {
       name: "vertex_engine_id",
-      label: "Engine ID (optional)",
+      label: "ID движка (необязательно)",
       tooltip:
-        "Search app (engine) ID. Required for website, healthcare, and connector-based data stores (Workspace, Slack, Jira, etc.) because these sources route search through an engine. Leave blank to query the data store directly.",
-      placeholder: "e.g. my-search-app_1234567890",
+        "ID приложения поиска (движка). Обязателен для хранилищ website, healthcare и подключаемых (Workspace, Slack, Jira и т.п.), поскольку их поиск идёт через движок. Оставьте пустым для прямого запроса к хранилищу данных.",
+      placeholder: "напр. my-search-app_1234567890",
       required: false,
       type: "text",
     },
@@ -121,8 +121,8 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
   openai: [
     {
       name: "api_key",
-      label: "API Key",
-      tooltip: "Enter your OpenAI API key",
+      label: "API-ключ",
+      tooltip: "Введите API-ключ OpenAI",
       placeholder: "sk-...",
       required: true,
       type: "password",
@@ -131,16 +131,16 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
   azure: [
     {
       name: "api_key",
-      label: "API Key",
-      tooltip: "Enter your Azure OpenAI API key",
+      label: "API-ключ",
+      tooltip: "Введите API-ключ Azure OpenAI",
       placeholder: "your-azure-api-key",
       required: true,
       type: "password",
     },
     {
       name: "api_base",
-      label: "API Base",
-      tooltip: "Enter your Azure OpenAI endpoint (e.g., https://your-resource.openai.azure.com/)",
+      label: "Базовый URL API",
+      tooltip: "Введите эндпоинт Azure OpenAI (напр. https://your-resource.openai.azure.com/)",
       placeholder: "https://your-resource.openai.azure.com/",
       required: true,
       type: "text",
@@ -149,25 +149,25 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
   milvus: [
     {
       name: "api_key",
-      label: "API Key",
+      label: "API-ключ",
       tooltip:
-        "To obtain a token, you should use a colon (:) to concatenate the username and password that you use to access your Milvus instance (e.g., username:password)",
-      placeholder: "username:password or api key",
+        "Чтобы получить токен, соедините двоеточием (:) имя пользователя и пароль для доступа к вашему экземпляру Milvus (напр. username:password)",
+      placeholder: "username:password или API-ключ",
       required: true,
       type: "password",
     },
     {
       name: "api_base",
-      label: "API Base",
-      tooltip: "Enter your Milvus endpoint (e.g., https://your-milvus-endpoint.com/)",
+      label: "Базовый URL API",
+      tooltip: "Введите эндпоинт Milvus (напр. https://your-milvus-endpoint.com/)",
       placeholder: "https://your-milvus-endpoint.com/",
       required: true,
       type: "text",
     },
     {
       name: "embedding_model",
-      label: "Embedding Model",
-      tooltip: "Select the embedding model to use",
+      label: "Модель эмбеддингов",
+      tooltip: "Выберите модель эмбеддингов",
       placeholder: "text-embedding-3-small",
       required: true,
       type: "select",
@@ -176,39 +176,39 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
   mongodb: [
     {
       name: "api_base",
-      label: "Sidecar URL",
-      tooltip: "Use HTTPS for a remote sidecar, or HTTP with a loopback IP for a sidecar on the same host or Pod",
+      label: "URL sidecar-сервиса",
+      tooltip: "Используйте HTTPS для удалённого sidecar или HTTP с loopback-адресом для sidecar на том же хосте или Pod",
       placeholder: "http://127.0.0.1:8080",
       required: true,
       type: "text",
     },
     {
       name: "api_key",
-      label: "Sidecar API Key",
-      tooltip: "The MONGODB_SIDECAR_API_KEY configured in your MongoDB sidecar",
-      placeholder: "Enter sidecar API key",
+      label: "API-ключ sidecar",
+      tooltip: "Значение MONGODB_SIDECAR_API_KEY, настроенное в вашем MongoDB sidecar",
+      placeholder: "Введите API-ключ sidecar",
       required: true,
       type: "password",
     },
     {
       name: "mongodb_database",
-      label: "Database",
-      tooltip: "The MongoDB database holding the collection you want to search",
+      label: "База данных",
+      tooltip: "База данных MongoDB с коллекцией, которую нужно искать",
       placeholder: "sample_mflix",
       required: true,
       type: "text",
     },
     {
       name: "mongodb_collection",
-      label: "Collection",
-      tooltip: "The collection your MongoDB Vector Search index was built on",
+      label: "Коллекция",
+      tooltip: "Коллекция, на которой построен индекс MongoDB Vector Search",
       placeholder: "embedded_movies",
       required: true,
       type: "text",
     },
     {
       name: "embedding_model",
-      label: "Embedding Model",
+      label: "Модель эмбеддингов",
       tooltip:
         "The embedding model on this proxy that created the vectors already stored in your collection. LiteLLM embeds every search query with it, so it must be the same model. A different model of the same size will not error, it will just return wrong results. Add it under Models first if it is not listed",
       placeholder: "text-embedding-3-small",
@@ -217,9 +217,9 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
     },
     {
       name: "mongodb_embedding_field",
-      label: "Vector Field Name",
+      label: "Имя векторного поля",
       tooltip:
-        "The field in each document that holds its embedding. It must match the path your MongoDB Vector Search index was created on (default: embedding)",
+        "Поле в каждом документе, содержащее его эмбеддинг. Должно совпадать с путём, на котором создан индекс MongoDB Vector Search (по умолчанию: embedding)",
       placeholder: "embedding",
       required: false,
       type: "text",
@@ -227,9 +227,9 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
     },
     {
       name: "mongodb_text_field",
-      label: "Text Field",
+      label: "Текстовое поле",
       tooltip:
-        "The field in each document that holds its readable text. LiteLLM returns this text in search results, and it accepts a dotted path such as metadata.body (default: text)",
+        "Поле в каждом документе с читаемым текстом. LiteLLM возвращает его в результатах поиска; допускается путь через точку, напр. metadata.body (по умолчанию: text)",
       placeholder: "text",
       required: false,
       type: "text",
@@ -237,7 +237,7 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
     },
     {
       name: "mongodb_num_candidates",
-      label: "Candidates Considered",
+      label: "Число кандидатов",
       tooltip:
         "How many nearest neighbours MongoDB examines before returning the top results. Higher is more accurate and slower. Leave blank to let LiteLLM scale it with the requested result count",
       placeholder: "100",
@@ -248,16 +248,16 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
   valkey: [
     {
       name: "valkey_host",
-      label: "Valkey Host",
-      tooltip: "Hostname or IP of your Valkey server, without redis:// or a port (e.g. my-valkey.example.com)",
+      label: "Хост Valkey",
+      tooltip: "Имя хоста или IP сервера Valkey без redis:// и порта (напр. my-valkey.example.com)",
       placeholder: "my-valkey.example.com",
       required: true,
       type: "text",
     },
     {
       name: "valkey_port",
-      label: "Valkey Port",
-      tooltip: "Port your Valkey server listens on. Leave as 6379 unless you changed it",
+      label: "Порт Valkey",
+      tooltip: "Порт, который слушает сервер Valkey. Оставьте 6379, если меняли",
       placeholder: "6379",
       required: false,
       type: "text",
@@ -265,16 +265,16 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
     },
     {
       name: "valkey_password",
-      label: "Valkey Password",
-      tooltip: "Password used to log in to your Valkey server. Leave blank if it has no password",
+      label: "Пароль Valkey",
+      tooltip: "Пароль для входа на сервер Valkey. Оставьте пустым, если пароля нет",
       required: false,
       type: "password",
     },
     {
       name: "valkey_ssl",
-      label: "Use TLS",
+      label: "Использовать TLS",
       tooltip:
-        "Set to true if your Valkey server requires an encrypted (TLS) connection, for example AWS ElastiCache with in-transit encryption turned on",
+        "Установите true, если сервер Valkey требует шифрованное соединение (TLS), например AWS ElastiCache с включённым шифрованием в транзите",
       required: false,
       type: "select",
       options: [
@@ -285,18 +285,18 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
     },
     {
       name: "embedding_model",
-      label: "Embedding Model",
+      label: "Модель эмбеддингов",
       tooltip:
-        "The embedding model on this proxy that was used to create the embeddings already stored in your Valkey index. LiteLLM uses it to embed each search query, so it must be the same model or results will be wrong. Add it under Models first if it is not listed",
+        "Модель эмбеддингов на этом прокси, которой созданы эмбеддинги, уже сохранённые в индексе Valkey. LiteLLM ею же эмбеддит и поисковые запросы, поэтому модель должна быть та же — иначе результаты будут неверны. Если её нет в списке, сначала добавьте её в «Модели»",
       placeholder: "text-embedding-3-small",
       required: true,
       type: "select",
     },
     {
       name: "valkey_text_field",
-      label: "Text Field",
+      label: "Текстовое поле",
       tooltip:
-        "The field in each stored document that holds its readable text. LiteLLM returns this text in search results. Must match how your documents were stored (default: text)",
+        "Поле с читаемым текстом в каждом сохранённом документе. LiteLLM возвращает его в результатах поиска. Должно совпадать со способом сохранения документов (по умолчанию: text)",
       placeholder: "text",
       required: false,
       type: "text",
@@ -304,9 +304,9 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
     },
     {
       name: "valkey_embedding_field",
-      label: "Vector Field Name",
+      label: "Имя векторного поля",
       tooltip:
-        "The field in each stored document that holds its embedding. LiteLLM searches against this field, so it must match the field your index was created on (default: embedding)",
+        "Поле с эмбеддингом в каждом сохранённом документе. LiteLLM ищет по нему, поэтому оно должно совпадать с полем, на котором создан индекс (по умолчанию: embedding)",
       placeholder: "embedding",
       required: false,
       type: "text",
@@ -316,32 +316,32 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
   s3_vectors: [
     {
       name: "vector_bucket_name",
-      label: "Vector Bucket Name",
-      tooltip: "S3 bucket name for vector storage (will be auto-created if it doesn't exist)",
+      label: "Имя бакета векторов",
+      tooltip: "Имя бакета S3 для векторного хранилища (будет создан автоматически, если отсутствует)",
       placeholder: "my-vector-bucket",
       required: true,
       type: "text",
     },
     {
       name: "index_name",
-      label: "Index Name",
-      tooltip: "Name for the vector index (optional, will be auto-generated if not provided)",
+      label: "Имя индекса",
+      tooltip: "Имя векторного индекса (необязательно, при отсутствии генерируется автоматически)",
       placeholder: "my-vector-index",
       required: false,
       type: "text",
     },
     {
       name: "aws_region_name",
-      label: "AWS Region",
-      tooltip: "AWS region where the S3 bucket is located (e.g., us-west-2)",
+      label: "Регион AWS",
+      tooltip: "Регион AWS, где расположен бакет S3 (напр. us-west-2)",
       placeholder: "us-west-2",
       required: true,
       type: "text",
     },
     {
       name: "embedding_model",
-      label: "Embedding Model",
-      tooltip: "Select the embedding model to use for vector generation",
+      label: "Модель эмбеддингов",
+      tooltip: "Выберите модель эмбеддингов для генерации векторов",
       placeholder: "text-embedding-3-small",
       required: true,
       type: "select",

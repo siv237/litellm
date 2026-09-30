@@ -106,31 +106,31 @@ export const NEW_CLASSIFIER_CLASSIFICATION_RUBRIC: ClassificationRubric = "agent
 export const CLASSIFICATION_RUBRIC_DESCRIPTIONS: Record<ClassificationRubric, { label: string; description: string }> =
   {
     legacy: {
-      label: "Legacy (uncalibrated)",
+      label: "Legacy (без калибровки)",
       description:
-        "The rubric as it shipped before calibration examples, with no worked examples at all. Routers created " +
-        "before this setting existed use it, so their tier decisions and spend are unchanged. It over-routes " +
-        "ordinary engineering to the most expensive tier.",
+        "Критерии в том виде, как они вышли до появления примеров калибровки, — совсем без разобранных примеров. " +
+        "Маршрутизаторы, созданные до этой настройки, используют их, поэтому их решения по уровням и расход не " +
+        "меняются. При этом обычная инженерия сверхмаршрутизируется на самый дорогой уровень.",
     },
     agentic: {
-      label: "Agentic",
+      label: "Агентный",
       description:
-        "Anchors routine installs, builds, multi-file edits, and standard debugging at " +
-        "Medium, so ordinary engineering does not route to your most expensive tier. Suits agent, terminal, and " +
-        "coding-assistant traffic, and mixed traffic.",
+        "Закрепляет рутинные установки, сборки, правки в нескольких файлах и стандартную отладку на " +
+        "Medium, чтобы обычная инженерия не уходила на самый дорогой уровень. Подходит для агентного, терминального " +
+        "и кодинг-ассистентного трафика, а также смешанного.",
     },
     chat: {
-      label: "Chat",
+      label: "Чат",
       description:
-        "Drops the engineering examples, for a router serving only conversational traffic that never sees those " +
-        "requests.",
+        "Убирает инженерные примеры — для маршрутизатора, который обслуживает только диалоговый трафик и никогда " +
+        "не видит такие запросы.",
     },
     business: {
-      label: "Business",
+      label: "Бизнес",
       description:
-        "Business and sales examples plus business-oriented tier definitions: routine drafting and summarizing " +
-        "stay at Medium, data-determined analysis is Complex, and only decisions under conflicting tradeoffs " +
-        "reach Reasoning. Suits sales, support, and go-to-market traffic.",
+        "Бизнес- и сейлз-примеры плюс определения уровней для бизнеса: рутинные черновики и краткие сводки остаются " +
+        "на Medium, анализ по данным — Complex, и только решения при противоречащих компромиссах доходят до " +
+        "Reasoning. Подходит для продаж, поддержки и go-to-market трафика.",
     },
   };
 
@@ -214,7 +214,7 @@ const TierSetToolbar: React.FC<{
         <>
           <Button variant="outline" onClick={onAdd} disabled={rowCount >= MAX_TIER_COUNT}>
             <Plus />
-            Add tier
+            Добавить уровень
           </Button>
           <SimpleTooltip content={rowsError || undefined}>
             <Button variant="outline" disabled={Boolean(rowsError)} onClick={() => onEditingChange?.(false)}>
@@ -223,22 +223,21 @@ const TierSetToolbar: React.FC<{
           </SimpleTooltip>
           {isCustomSet && (
             <Button variant="outline" size="sm" onClick={onRestore}>
-              Restore defaults
+              Восстановить по умолчанию
             </Button>
           )}
         </>
       ) : (
         onEditingChange && (
           <Button variant="outline" onClick={() => onEditingChange(true)}>
-            Edit tiers
+            Изменить уровни
           </Button>
         )
       )}
     </div>
     {editing && (
       <span className="block mt-1 text-xs text-muted-foreground">
-        Add or remove tiers to define your own set. Every custom tier needs a definition the classifier routes on, and
-        an edited set requires the LLM or JEV classification method
+        Добавляйте и удаляйте уровни, чтобы задать свой набор. Каждому настраиваемому уровню нужно определение, по которому классификатор его выбирает, а отредактированный набор требует метод классификации LLM или JEV
       </span>
     )}
     {editing && keywordRulesError && (
@@ -256,17 +255,17 @@ const FallbackTierField: React.FC<{
 }> = ({ rows, fallbackTierId, onValueChange }) => (
   <div className="mt-4">
     <div className="flex items-center gap-2 mb-2">
-      <strong className="text-base font-semibold">Fallback Tier</strong>
-      <SimpleTooltip content="Where requests route when the classifier errors, times out, or returns an unparseable reply. Required for an edited tier set: the heuristic scorer cannot produce your tiers">
+      <strong className="text-base font-semibold">Резервный уровень</strong>
+      <SimpleTooltip content="Куда направлять запросы при ошибке классификатора, таймауте или неразбираемом ответе. Обязательно для отредактированного набора уровней: эвристический скорер не умеет выдавать ваши уровни">
         <Info className="size-4 text-muted-foreground" />
       </SimpleTooltip>
     </div>
     <TierRowSelect
-      label="Fallback tier"
+      label="Резервный уровень"
       options={rows.filter((row) => activeTierName(row)).map((row) => ({ value: row.id, label: activeTierName(row) }))}
       value={fallbackTierId || null}
       onValueChange={onValueChange}
-      placeholder="Pick the tier classifier failures route to"
+      placeholder="Выберите уровень для случаев сбоя классификатора"
     />
   </div>
 );
@@ -282,7 +281,7 @@ const TierRowHeader: React.FC<{
   onRemove: () => void;
 }> = ({ row, index, rowCount, label, description, editing, isCustomSet, onRemove }) => (
   <div className="flex items-center gap-2 mb-2">
-    <strong className="text-base font-semibold">{label} Tier</strong>
+    <strong className="text-base font-semibold">Уровень {label}</strong>
     <SimpleTooltip
       content={
         row.definition.trim() ||
@@ -293,7 +292,7 @@ const TierRowHeader: React.FC<{
       <Info className="size-4 text-muted-foreground" />
     </SimpleTooltip>
     <span className="text-xs text-muted-foreground">
-      Tier {index + 1} of {rowCount} &middot; {rowOrigin(row, isCustomSet)}
+      Уровень {index + 1} of {rowCount} &middot; {rowOrigin(row, isCustomSet)}
     </span>
     {editing && (
       <Button
@@ -321,7 +320,7 @@ const TierRowEditFields: React.FC<{
     <Input
       value={row.name}
       onChange={(event) => onPatch({ name: event.target.value })}
-      placeholder="Tier name, e.g. SECURITY_REVIEW"
+      placeholder="Имя уровня, напр. SECURITY_REVIEW"
       aria-label={`Name for tier ${index + 1}`}
       maxLength={MAX_TIER_NAME_CHARS}
       className="mb-2"
@@ -341,7 +340,7 @@ const TierRowEditFields: React.FC<{
     />
     {definitionMissing && (
       <span className="mb-2 block text-xs text-destructive">
-        A definition is required: it is the rubric the classifier routes on for this tier
+        Требуется определение: это критерий, по которому классификатор выбирает этот уровень
       </span>
     )}
   </>
@@ -478,28 +477,28 @@ export const TIER_DESCRIPTIONS: Record<
   { label: string; description: string; examples: string }
 > = {
   NON_REASONING: {
-    label: "Non-reasoning",
-    description: "Operational relay work: passing information along with no judgment about it",
+    label: "Без рассуждений",
+    description: "Операционная передача информации без оценки содержания",
     examples: '"Reformat this tool output", "Acknowledge the write succeeded"',
   },
   SIMPLE: {
-    label: "Simple",
-    description: "Basic questions, greetings, simple factual queries",
+    label: "Простой",
+    description: "Простые вопросы, приветствия, короткие фактические запросы",
     examples: '"Hello!", "What is Python?", "Thanks!"',
   },
   MEDIUM: {
-    label: "Medium",
-    description: "Standard queries requiring some reasoning or explanation",
+    label: "Средний",
+    description: "Обычные запросы, требующие немного рассуждений или пояснений",
     examples: '"Explain how REST APIs work", "Debug this error"',
   },
   COMPLEX: {
-    label: "Complex",
-    description: "Technical, multi-part requests requiring deep knowledge",
+    label: "Сложный",
+    description: "Технические многокомпонентные запросы, требующие глубоких знаний",
     examples: '"Design a microservices architecture", "Implement a rate limiter"',
   },
   REASONING: {
-    label: "Reasoning",
-    description: "Chain-of-thought, analysis, explicit reasoning requests",
+    label: "Рассуждение",
+    description: "Цепочки рассуждений, анализ, запросы с явным рассуждением",
     examples: '"Think step by step...", "Analyze the pros and cons..."',
   },
 };
@@ -536,19 +535,18 @@ const PlanModeOverrideControls: React.FC<{
             plan_mode_min_tier: enabled ? planModeTierOptions.at(-1)?.value : undefined,
           })
         }
-        aria-label="Route plan-mode requests to a minimum tier"
+        aria-label="Направлять запросы plan-mode на минимальный уровень"
       />
-      <strong className="font-semibold">Route plan-mode requests to a minimum tier</strong>
+      <strong className="font-semibold">Направлять запросы plan-mode на минимальный уровень</strong>
     </div>
     <span className="block text-xs mb-3 text-muted-foreground">
-      Requests from coding agents in plan mode (Claude Code, GitHub Copilot) route to at least this tier. The classifier
-      still wins when it picks higher, and the override only lasts while plan mode is active.
+      Запросы от кодинг-агентов в режиме планирования (Claude Code, GitHub Copilot) направляются как минимум на этот уровень. Если классификатор выберет выше — побеждает он; переопределение действует, пока режим планирования активен.
       {planModeTierOptions.length === 0 && " Add models to a tier to enable this."}
     </span>
     {value.plan_mode_min_tier !== undefined && (
       <div style={{ maxWidth: 320 }}>
         <TierRowSelect
-          label="Plan-mode minimum tier"
+          label="Минимальный уровень plan-mode"
           options={planModeTierOptions}
           value={value.plan_mode_min_tier ?? null}
           onValueChange={(tier) => onChange({ ...value, plan_mode_min_tier: tier })}
@@ -640,8 +638,8 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
   return (
     <div className="w-full max-w-none">
       <div className="inline-flex items-center gap-2 mb-4">
-        <h4 className="m-0 text-xl font-semibold text-foreground">Complexity Tier Configuration</h4>
-        <SimpleTooltip content="Map each complexity tier to one or more models. Simple queries use cheaper/faster models, complex queries use more capable models.">
+        <h4 className="m-0 text-xl font-semibold text-foreground">Настройка уровней сложности</h4>
+        <SimpleTooltip content="Сопоставьте каждому уровню сложности одну или несколько моделей. Простые запросы — более дешёвые/быстрые модели, сложные — более мощные.">
           <Info className="size-4 text-muted-foreground" />
         </SimpleTooltip>
       </div>
@@ -680,7 +678,7 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
                     onRemove={() => removeTierRow(row.id)}
                   />
                   {tierInfo && !customTierSet && (
-                    <span className="block mb-2 text-xs text-muted-foreground">Examples: {tierInfo.examples}</span>
+                    <span className="block mb-2 text-xs text-muted-foreground">Примеры: {tierInfo.examples}</span>
                   )}
                   {editingTiers && (
                     <TierRowEditFields
@@ -695,7 +693,7 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
                       <InputGroupInput
                         value={value.tier_labels?.[row.id as keyof ComplexityTiers] ?? ""}
                         onChange={(event) => handleTierLabelChange(row.id as keyof ComplexityTiers, event.target.value)}
-                        placeholder={`Display name (default: ${tierInfo.label})`}
+                        placeholder={`Отображаемое имя (по умолчанию: ${tierInfo.label})`}
                         aria-label={`Display name for the ${tierInfo.label} tier`}
                       />
                       {value.tier_labels?.[row.id as keyof ComplexityTiers] && (
@@ -716,7 +714,7 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
                     value={row.models}
                     onValueChange={(models: string[]) => setRowModels(row, models)}
                     placeholder={`Select model(s) for ${label.toLowerCase()} queries`}
-                    emptyText="No models found"
+                    emptyText="Модели не найдены"
                     className={tierMissing ? "w-full border-destructive" : "w-full"}
                   />
                   <TierModelEffortRows
@@ -728,11 +726,10 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
                   />
                   {row.models.length > 1 && (
                     <span className="text-xs text-muted-foreground">
-                      Multiple models selected: the router randomly picks among them per request (or Thompson-samples
-                      within the pool when adaptive routing is on).
+                      Выбрано несколько моделей: маршрутизатор выбирает среди них случайно для каждого запроса (или использует сэмплирование Томпсона внутри пула при включённой адаптивной маршрутизации).
                     </span>
                   )}
-                  {tierMissing && <span className="text-xs text-destructive">The {label} tier is required</span>}
+                  {tierMissing && <span className="text-xs text-destructive">Требуется уровень {label}</span>}
                 </div>
               </div>
             );
@@ -761,8 +758,8 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
 
           <div className="mb-2">
             <div className="flex items-center gap-2 mb-2">
-              <strong className="text-base font-semibold">Default Model</strong>
-              <SimpleTooltip content="Leave empty to follow the tiers. A model chosen here is pinned: it stays the default however the tiers change.">
+              <strong className="text-base font-semibold">Модель по умолчанию</strong>
+              <SimpleTooltip content="Оставьте пустым, чтобы следовать уровням. Выбранная здесь модель закрепляется: она остаётся ссылкой независимо от изменений уровней.">
                 <Info className="size-4 text-muted-foreground" />
               </SimpleTooltip>
             </div>
@@ -771,12 +768,12 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
               value={value.default_model ?? ""}
               onValueChange={handleDefaultModelChange}
               placeholder={defaultModelPlaceholder}
-              emptyText="No models found"
-              aria-label="Default model"
+              emptyText="Модели не найдены"
+              aria-label="Модель по умолчанию"
             />
             <span className="block mt-1 text-xs text-muted-foreground">
-              Used when the tier the request lands in has no model, and when the classifier fails with &quot;Route to
-              the default model&quot; selected.
+              Используется, когда у уровня запроса нет модели и когда классификатор не справился при выбранном
+              режиме &quot;Направлять на модель по умолчанию&quot;.
             </span>
           </div>
         </CardContent>
@@ -788,7 +785,7 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
         {[
           {
             key: "classifier",
-            label: <strong className="text-foreground font-semibold">Advanced: Classification Method</strong>,
+            label: <strong className="text-foreground font-semibold">Дополнительно: метод классификации</strong>,
             children: (
               <ClassificationMethodConfig
                 value={value}
@@ -804,7 +801,7 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
           },
           {
             key: "adaptive",
-            label: <strong className="text-foreground font-semibold">Advanced: Adaptive Routing</strong>,
+            label: <strong className="text-foreground font-semibold">Дополнительно: адаптивная маршрутизация</strong>,
             children: (
               <Restricted by={restrictedBy(value, "adaptive")}>
                 <AdaptiveRoutingConfig value={value} onChange={onChange} />
@@ -813,29 +810,29 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
           },
           {
             key: "affinity",
-            label: <strong className="text-foreground font-semibold">Advanced: Affinity</strong>,
+            label: <strong className="text-foreground font-semibold">Дополнительно: привязка (affinity)</strong>,
             children: <AffinityControls value={value} onChange={onChange} />,
           },
           {
             key: "modality",
-            label: <strong className="text-foreground font-semibold">Advanced: Modality Routing</strong>,
+            label: <strong className="text-foreground font-semibold">Дополнительно: маршрутизация по модальностям</strong>,
             children: <ModalityRoutingControls value={value} onChange={onChange} />,
           },
           {
             key: "plan-mode",
-            label: <strong className="text-foreground font-semibold">Advanced: Plan-Mode Override</strong>,
+            label: <strong className="text-foreground font-semibold">Дополнительно: переопределение plan-mode</strong>,
             children: (
               <PlanModeOverrideControls value={value} onChange={onChange} planModeTierOptions={planModeTierOptions} />
             ),
           },
           {
             key: "context-window",
-            label: <strong className="text-foreground font-semibold">Advanced: Context Window Escalation</strong>,
+            label: <strong className="text-foreground font-semibold">Дополнительно: эскалация по контекстному окну</strong>,
             children: <ContextWindowEscalationConfig value={value} onChange={onChange} />,
           },
           {
             key: "stall-escalation",
-            label: <strong className="text-foreground font-semibold">Advanced: Stalled Task Escalation</strong>,
+            label: <strong className="text-foreground font-semibold">Дополнительно: эскалация по зависшей задаче</strong>,
             children: (
               <Restricted by={restrictedBy(value, "stallEscalation")}>
                 <StallEscalationConfig value={value} onChange={onChange} />
@@ -844,14 +841,14 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
           },
           {
             key: "response",
-            label: <strong className="text-foreground font-semibold">Advanced: Response Format</strong>,
+            label: <strong className="text-foreground font-semibold">Дополнительно: формат ответа</strong>,
             children: <ResponseFormatControls value={value} onChange={onChange} />,
           },
           ...(onEscalationKeywordsChange
             ? [
                 {
                   key: "escalation",
-                  label: <strong className="text-foreground font-semibold">Advanced: Escalation Keywords</strong>,
+                  label: <strong className="text-foreground font-semibold">Дополнительно: ключевые слова эскалации</strong>,
                   children: (
                     <Restricted by={restrictedBy(value, "escalation")}>
                       <EscalationKeywords keywords={escalationKeywords} onChange={onEscalationKeywordsChange} />
@@ -864,7 +861,7 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
             ? [
                 {
                   key: "compression",
-                  label: <strong className="text-foreground font-semibold">Advanced: Compression</strong>,
+                  label: <strong className="text-foreground font-semibold">Дополнительно: сжатие</strong>,
                   children: (
                     <CompressionControls value={autoRouterCompression} onChange={onAutoRouterCompressionChange} />
                   ),
@@ -875,7 +872,7 @@ const ComplexityRouterConfig: React.FC<ComplexityRouterConfigProps> = ({
             ? [
                 {
                   key: "keyword-semantic",
-                  label: <strong className="text-foreground font-semibold">Advanced: Keyword/Semantic Matching</strong>,
+                  label: <strong className="text-foreground font-semibold">Дополнительно: keyword/semantic matching</strong>,
                   children: (
                     <>
                       {onKeywordTierRulesChange && (
