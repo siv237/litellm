@@ -150,13 +150,13 @@ const PRIMITIVES = {
 };
 
 const MODE_OPTIONS = [
-  { value: "pre_call", label: "pre_call (Request)" },
-  { value: "post_call", label: "post_call (Response)" },
-  { value: "during_call", label: "during_call (Parallel)" },
+  { value: "pre_call", label: "pre_call (Запрос)" },
+  { value: "post_call", label: "post_call (Ответ)" },
+  { value: "during_call", label: "during_call (Параллельно)" },
   { value: "logging_only", label: "logging_only" },
-  { value: "pre_mcp_call", label: "pre_mcp_call (Before MCP Tool Call)" },
-  { value: "post_mcp_call", label: "post_mcp_call (After MCP Tool Call)" },
-  { value: "during_mcp_call", label: "during_mcp_call (During MCP Tool Call)" },
+  { value: "pre_mcp_call", label: "pre_mcp_call (До вызова инструмента MCP)" },
+  { value: "post_mcp_call", label: "post_mcp_call (После вызова инструмента MCP)" },
+  { value: "during_mcp_call", label: "during_mcp_call (Во время вызова инструмента MCP)" },
 ];
 
 const TEMPLATE_ITEMS = Object.entries(CODE_TEMPLATES).map(([key, template]) => ({
@@ -215,11 +215,11 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
             type: "function",
             function: {
               name: "get_weather",
-              description: "Get the current weather in a location",
+              description: "Получить текущую погоду в населённом пункте",
               parameters: {
                 type: "object",
                 properties: {
-                  location: { type: "string", description: "City name" },
+                  location: { type: "string", description: "Название города" },
                 },
                 required: ["location"],
               },
@@ -264,11 +264,11 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
             type: "function",
             function: {
               name: "read_wiki_structure",
-              description: "Read the structure of a GitHub repository (MCP tool passed as OpenAI tool)",
+              description: "Прочитать структуру репозитория GitHub (инструмент MCP, переданный как инструмент OpenAI)",
               parameters: {
                 type: "object",
                 properties: {
-                  repoName: { type: "string", description: "Repository name, e.g. BerriAI/litellm" },
+                  repoName: { type: "string", description: "Имя репозитория, напр. BerriAI/litellm" },
                 },
                 required: ["repoName"],
               },
@@ -365,15 +365,15 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
   // Save guardrail (create or update)
   const handleSave = async () => {
     if (!guardrailName.trim()) {
-      toast.fromError("Please enter a guardrail name");
+      toast.fromError("Укажите название гардрейла");
       return;
     }
     if (!code.trim()) {
-      toast.fromError("Please enter custom code");
+      toast.fromError("Введите пользовательский код");
       return;
     }
     if (!accessToken) {
-      toast.fromError("No access token available");
+      toast.fromError("Нет доступного токена");
       return;
     }
 
@@ -401,7 +401,7 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
         }
 
         await updateGuardrailCall(accessToken, editData.guardrail_id, updateData);
-        toast.success("Custom code guardrail updated successfully");
+        toast.success("Гардрейл с пользовательским кодом обновлён");
       } else {
         // Create new guardrail
         const guardrailData = {
@@ -416,7 +416,7 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
         };
 
         await createGuardrailCall(accessToken, guardrailData);
-        toast.success("Custom code guardrail created successfully");
+        toast.success("Гардрейл с пользовательским кодом создан");
       }
       onSuccess();
       onClose();
@@ -434,7 +434,7 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
   // Test guardrail using backend endpoint
   const handleTest = async () => {
     if (!accessToken) {
-      setTestResult({ error: "No access token available" });
+      setTestResult({ error: "Нет доступного токена" });
       return;
     }
 
@@ -506,21 +506,21 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
           <DialogTitle className="text-xl font-semibold">
             {isEditMode ? "Edit Custom Guardrail" : "Create Custom Guardrail"}
           </DialogTitle>
-          <DialogDescription>Define custom logic using Python-like syntax</DialogDescription>
+          <DialogDescription>Опишите логику на синтаксисе, похожем на Python</DialogDescription>
         </DialogHeader>
 
         {/* Top Controls */}
         <div className="flex items-center gap-4 border-b border-border py-4">
           <div className="max-w-[200px] flex-1">
-            <label className="mb-1 block text-xs font-medium text-muted-foreground">Guardrail Name</label>
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">Название гардрейла</label>
             <Input
               value={guardrailName}
               onChange={(e) => setGuardrailName(e.target.value)}
-              placeholder="e.g., block-pii-custom"
+              placeholder="напр., block-pii-custom"
             />
           </div>
           <div className="w-[280px]">
-            <label className="mb-1 block text-xs font-medium text-muted-foreground">Mode (can select multiple)</label>
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">Режим (можно несколько)</label>
             <Combobox
               items={MODE_OPTIONS}
               value={selectedModeOptions}
@@ -536,7 +536,7 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
                 <ComboboxChipsInput placeholder={mode.length === 0 ? "Select modes" : undefined} />
               </ComboboxChips>
               <ComboboxContent anchor={anchor}>
-                <ComboboxEmpty>No matching modes</ComboboxEmpty>
+                <ComboboxEmpty>Нет подходящих режимов</ComboboxEmpty>
                 <ComboboxList>
                   {(option: ModeOption) => (
                     <ComboboxItem key={option.value} value={option}>
@@ -548,13 +548,13 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
             </Combobox>
           </div>
           <div className="w-[180px]">
-            <label className="mb-1 block text-xs font-medium text-muted-foreground">Template</label>
+            <label className="mb-1 block text-xs font-medium text-muted-foreground">Шаблон</label>
             <Select
               items={TEMPLATE_ITEMS}
               value={selectedTemplate}
               onValueChange={(value: string | null) => value && handleTemplateChange(value)}
             >
-              <SelectTrigger className="w-full" aria-label="Template">
+              <SelectTrigger className="w-full" aria-label="Шаблон">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -573,15 +573,15 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
                   className="flex w-full items-center gap-1 rounded-sm px-2 py-1.5 text-xs text-primary hover:bg-accent"
                 >
                   <Users className="size-3.5" />
-                  <span>Browse Community templates</span>
+                  <span>Смотреть шаблоны сообщества</span>
                   <ExternalLink className="size-2.5" />
                 </button>
               </SelectContent>
             </Select>
           </div>
           <div className="flex items-center gap-2 pt-5">
-            <span className="text-sm text-muted-foreground">Default On</span>
-            <Switch checked={defaultOn} onCheckedChange={setDefaultOn} aria-label="Default On" />
+            <span className="text-sm text-muted-foreground">Включён по умолчанию</span>
+            <Switch checked={defaultOn} onCheckedChange={setDefaultOn} aria-label="Включён по умолчанию" />
           </div>
         </div>
 
@@ -590,8 +590,8 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
           {/* Code Editor */}
           <div className="flex min-w-0 flex-1 flex-col">
             <div className="mb-2 flex shrink-0 items-center justify-between">
-              <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">Python Logic</span>
-              <span className="text-xs text-muted-foreground">Restricted environment (no imports)</span>
+              <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">Логика на Python</span>
+              <span className="text-xs text-muted-foreground">Ограниченная среда (без импортов)</span>
             </div>
             <div
               className="relative rounded-lg overflow-hidden border border-gray-700 bg-[#1e1e1e] shrink-0"
@@ -638,59 +638,59 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
               <CollapsibleTrigger className="flex w-full items-center gap-2 p-3 text-sm font-medium">
                 <ChevronRight className={`size-4 transition-transform ${testExpanded ? "rotate-90" : ""}`} />
                 <PlayCircle className="size-4 text-muted-foreground" />
-                Test Your Guardrail
+                Проверьте гардрейл
               </CollapsibleTrigger>
               <CollapsibleContent className="p-3 pt-0">
                 <div className="space-y-3">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <label className="block text-xs font-medium text-muted-foreground">Test Input (JSON)</label>
+                      <label className="block text-xs font-medium text-muted-foreground">Тестовый вход (JSON)</label>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted-foreground">Load example:</span>
+                        <span className="text-xs text-muted-foreground">Пример:</span>
                         <button
                           type="button"
                           onClick={() => setTestInput(JSON.stringify(TEST_INPUT_EXAMPLES.pre_call.data, null, 2))}
                           className="px-2 py-1 text-xs rounded-sm border border-warning/20 bg-warning/10 text-warning hover:bg-warning/15 transition-colors"
                         >
-                          Pre-call
+                          До запроса
                         </button>
                         <button
                           type="button"
                           onClick={() => setTestInput(JSON.stringify(TEST_INPUT_EXAMPLES.pre_mcp_call.data, null, 2))}
                           className="px-2 py-1 text-xs rounded-sm border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 transition-colors dark:border-purple-800 dark:bg-purple-950 dark:text-purple-300 dark:hover:bg-purple-900"
                         >
-                          Pre MCP
+                          До MCP
                         </button>
                         <button
                           type="button"
                           onClick={() => setTestInput(JSON.stringify(TEST_INPUT_EXAMPLES.post_call.data, null, 2))}
                           className="px-2 py-1 text-xs rounded-sm border border-success/20 bg-success/10 text-success hover:bg-success/15 transition-colors"
                         >
-                          Post-call
+                          После запроса
                         </button>
                       </div>
                     </div>
                     <div className="mb-2 rounded-sm border border-border bg-muted/40 p-2 text-xs text-muted-foreground">
                       <div className="grid grid-cols-2 gap-x-4 gap-y-1">
                         <div>
-                          <strong>texts</strong>: Message content (always)
+                          <strong>texts</strong>: содержимое сообщения (всегда)
                         </div>
                         <div>
-                          <strong>images</strong>: Base64 images (vision)
+                          <strong>images</strong>: изображения base64 (зрение)
                         </div>
                         <div>
-                          <strong>tools</strong>: Tool definitions <span className="text-warning">(pre_call)</span>, MCP
+                          <strong>tools</strong>: определения инструментов <span className="text-warning">(pre_call)</span>, MCP
                           as OpenAI tool <span className="text-purple-600">(pre_mcp_call)</span>
                         </div>
                         <div>
-                          <strong>tool_calls</strong>: LLM tool calls <span className="text-success">(post_call)</span>
+                          <strong>tool_calls</strong>: вызовы инструментов LLM <span className="text-success">(post_call)</span>
                         </div>
                         <div>
-                          <strong>structured_messages</strong>: Full messages{" "}
+                          <strong>structured_messages</strong>: полные сообщения{" "}
                           <span className="text-warning">(pre_call)</span>
                         </div>
                         <div>
-                          <strong>model</strong>: Model name (always)
+                          <strong>model</strong>: имя модели (всегда)
                         </div>
                       </div>
                     </div>
@@ -729,11 +729,11 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
                           </>
                         ) : testResult.action === "allow" ? (
                           <>
-                            <CheckCircle2 className="size-4" /> Allowed
+                            <CheckCircle2 className="size-4" /> Разрешено
                           </>
                         ) : testResult.action === "block" ? (
                           <>
-                            <XCircle className="size-4" /> Blocked: {testResult.reason}
+                            <XCircle className="size-4" /> Заблокировано: {testResult.reason}
                           </>
                         ) : testResult.action === "modify" ? (
                           <>
@@ -763,15 +763,15 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
                   <Users className="size-5 text-info" />
                 </div>
                 <div>
-                  <div className="text-sm font-medium">Built a useful guardrail?</div>
+                  <div className="text-sm font-medium">Сделали полезный гардрейл?</div>
                   <div className="text-xs text-muted-foreground">
-                    Share it with the community and help others build faster
+                    Поделитесь с сообществом, и другие соберут быстрее
                   </div>
                 </div>
               </div>
               <Button size="sm" onClick={() => window.open("https://github.com/BerriAI/litellm-guardrails", "_blank")}>
                 <ExternalLink />
-                Contribute Template
+                Предложить шаблон
               </Button>
             </div>
           </div>
@@ -780,9 +780,9 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
           <div className="w-[300px] shrink-0 overflow-auto border-l border-border pl-6">
             <div className="mb-3 flex items-center gap-2">
               <Code className="size-4 text-muted-foreground" />
-              <span className="font-semibold">Available Primitives</span>
+              <span className="font-semibold">Доступные примитивы</span>
             </div>
-            <p className="mb-3 text-xs text-muted-foreground">Click to copy functions to clipboard</p>
+            <p className="mb-3 text-xs text-muted-foreground">Нажмите, чтобы скопировать функции в буфер</p>
 
             <div className="space-y-2">
               {Object.entries(PRIMITIVES).map(([category, primitives]) => (
@@ -827,7 +827,7 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
 
         {/* Footer */}
         <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
-          <span className="text-xs text-muted-foreground">Changes are auto-saved to local draft</span>
+          <span className="text-xs text-muted-foreground">Изменения автосохраняются в локальный черновик</span>
           <div className="flex items-center gap-3">
             <Button variant="secondary" onClick={onClose}>
               Отмена

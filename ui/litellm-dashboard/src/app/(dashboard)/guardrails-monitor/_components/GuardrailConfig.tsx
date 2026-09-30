@@ -16,7 +16,7 @@ interface GuardrailConfigProps {
 const versions = [
   {
     id: "v3",
-    label: "v3 (current)",
+    label: "v3 (текущая)",
     date: "2026-02-18",
     author: "admin@company.com",
     changes: "Adjusted sensitivity for medical terms",
@@ -26,25 +26,25 @@ const versions = [
 ];
 
 const ACTION_ITEMS = [
-  { value: "block", label: "Block Request" },
-  { value: "flag", label: "Flag for Review" },
-  { value: "log", label: "Log Only" },
-  { value: "fallback", label: "Use Fallback Response" },
+  { value: "block", label: "Блокировать запрос" },
+  { value: "flag", label: "Пометить для проверки" },
+  { value: "log", label: "Только журнал" },
+  { value: "fallback", label: "Использовать резервный ответ" },
 ];
 
 const PROVIDER_ITEMS = [
   { value: "bedrock", label: "AWS Bedrock Guardrails" },
   { value: "google", label: "Google Cloud AI Safety" },
-  { value: "litellm", label: "LiteLLM Built-in" },
-  { value: "custom", label: "Custom Code" },
+  { value: "litellm", label: "Встроенный LiteLLM" },
+  { value: "custom", label: "Пользовательский код" },
 ];
 
 const GUARDRAIL_TYPE_ITEMS = [
-  { value: "Content Safety", label: "Content Safety" },
-  { value: "PII", label: "PII Detection" },
-  { value: "Topic", label: "Topic Restriction" },
-  { value: "prompt_injection", label: "Prompt Injection" },
-  { value: "custom", label: "Custom" },
+  { value: "Безопасность контента", label: "Безопасность контента" },
+  { value: "PII", label: "Обнаружение PII" },
+  { value: "Topic", label: "Ограничение тем" },
+  { value: "prompt_injection", label: "Инъекция промпта" },
+  { value: "custom", label: "Пользовательский" },
 ];
 
 export function GuardrailConfig({ guardrailName, guardrailType, provider }: GuardrailConfigProps) {
@@ -71,7 +71,7 @@ export function GuardrailConfig({ guardrailName, guardrailType, provider }: Guar
       <div className="bg-card border border-border rounded-lg p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-foreground">Version:</span>
+            <span className="text-sm font-medium text-foreground">Версия:</span>
             <Select
               items={versions.map((v) => ({ value: v.id, label: v.label }))}
               value={version}
@@ -95,11 +95,11 @@ export function GuardrailConfig({ guardrailName, guardrailType, provider }: Guar
           <div className="flex items-center gap-2">
             <Button variant="outline">
               <Undo2 />
-              Revert
+              Откатить
             </Button>
             <Button>
               <Save />
-              Save as v{parseInt(version.replace("v", ""), 10) + 1}
+              Сохранить как v{parseInt(version.replace("v", ""), 10) + 1}
             </Button>
           </div>
         </div>
@@ -133,12 +133,12 @@ export function GuardrailConfig({ guardrailName, guardrailType, provider }: Guar
 
       {/* Parameters */}
       <div className="bg-card border border-border rounded-lg p-6">
-        <h3 className="text-base font-semibold text-foreground mb-1">Parameters</h3>
-        <p className="text-xs text-muted-foreground mb-5">Configure {guardrailName} behavior</p>
+        <h3 className="text-base font-semibold text-foreground mb-1">Параметры</h3>
+        <p className="text-xs text-muted-foreground mb-5">Настройка поведения {guardrailName}</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Action on Failure</label>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Действие при сбое</label>
             <Select
               items={ACTION_ITEMS}
               value={action}
@@ -174,7 +174,7 @@ export function GuardrailConfig({ guardrailName, guardrailType, provider }: Guar
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Guardrail Type</label>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Тип гардрейла</label>
             <Select items={GUARDRAIL_TYPE_ITEMS} defaultValue={guardrailType}>
               <SelectTrigger className="w-full">
                 <SelectValue />
@@ -190,14 +190,14 @@ export function GuardrailConfig({ guardrailName, guardrailType, provider }: Guar
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-foreground mb-1.5">Categories (comma-separated)</label>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Категории (через запятую)</label>
             <Input defaultValue="violence, hate_speech, sexual_content, self_harm, illegal_activity" />
           </div>
 
           <div className="md:col-span-2 flex items-center gap-3">
             <Switch id={enabledToggleId} checked={enabled} onCheckedChange={setEnabled} />
             <Label htmlFor={enabledToggleId} className="font-normal text-foreground">
-              Guardrail enabled in production
+              Гардрейл включён в проде
             </Label>
           </div>
         </div>
@@ -209,13 +209,13 @@ export function GuardrailConfig({ guardrailName, guardrailType, provider }: Guar
           <div>
             <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
               <Code className="size-4 text-muted-foreground" />
-              Custom Code Override
+              Переопределение пользовательским кодом
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Replace the built-in guardrail with custom evaluation code
+              Заменить встроенный гардрейл собственным кодом оценки
             </p>
           </div>
-          <Switch aria-label="Custom Code Override" checked={useCustomCode} onCheckedChange={setUseCustomCode} />
+          <Switch aria-label="Переопределение пользовательским кодом" checked={useCustomCode} onCheckedChange={setUseCustomCode} />
         </div>
 
         {useCustomCode && (
@@ -236,9 +236,9 @@ export function GuardrailConfig({ guardrailName, guardrailType, provider }: Guar
 
       {/* Re-run on Failing Logs */}
       <div className="bg-card border border-border rounded-lg p-6">
-        <h3 className="text-base font-semibold text-foreground mb-1">Test Configuration</h3>
+        <h3 className="text-base font-semibold text-foreground mb-1">Проверить конфигурацию</h3>
         <p className="text-xs text-muted-foreground mb-4">
-          Re-run this guardrail on recent failing logs to validate your changes
+          Перезапустите этот гардрейл на недавних сбойных записях, чтобы проверить изменения
         </p>
 
         <div className="flex items-center gap-3">
@@ -253,7 +253,7 @@ export function GuardrailConfig({ guardrailName, guardrailType, provider }: Guar
             </span>
           )}
 
-          {rerunStatus === "error" && <span className="text-sm text-destructive">Error running tests</span>}
+          {rerunStatus === "error" && <span className="text-sm text-destructive">Ошибка запуска тестов</span>}
         </div>
       </div>
     </div>

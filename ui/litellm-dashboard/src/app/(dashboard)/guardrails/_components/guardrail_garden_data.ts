@@ -25,7 +25,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
     id: "cf_denied_financial",
     name: "Denied Financial Advice",
     description:
-      "Detects requests for personalized financial advice, investment recommendations, or financial planning.",
+      "Определяет запросы персональных финансовых консультаций, инвестиционных рекомендаций или финансового планирования.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -41,7 +41,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_denied_insults",
     name: "Insults & Personal Attacks",
-    description: "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people.",
+    description: "Определяет оскорбления, ругань и личные выпады в адрес чат-бота, сотрудников или других людей.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -57,7 +57,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_denied_legal",
     name: "Denied Legal Advice",
-    description: "Detects requests for unauthorized legal advice, case analysis, or legal recommendations.",
+    description: "Определяет запросы несанкционированной юридической консультации, разбора дела или правовых рекомендаций.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -66,7 +66,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_denied_medical",
     name: "Denied Medical Advice",
-    description: "Detects requests for medical diagnosis, treatment recommendations, or health advice.",
+    description: "Определяет запросы медицинского диагноза, рекомендаций по лечению или советов о здоровье.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -75,7 +75,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_harmful_violence",
     name: "Harmful Violence",
-    description: "Detects content related to violence, criminal planning, attacks, and violent threats.",
+    description: "Определяет контент, связанный с насилием, преступным планированием, нападениями и угрозами.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -84,7 +84,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_harmful_self_harm",
     name: "Harmful Self-Harm",
-    description: "Detects content related to self-harm, suicide, and dangerous self-destructive behavior.",
+    description: "Определяет контент, связанный с самоповреждением, суицидом и опасным саморазрушительным поведением.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -93,7 +93,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_harmful_child_safety",
     name: "Harmful Child Safety",
-    description: "Detects content that could endanger child safety or exploit minors.",
+    description: "Определяет контент, способный угрожать безопасности детей или эксплуатации несовершеннолетних.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -102,7 +102,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_harmful_illegal_weapons",
     name: "Harmful Illegal Weapons",
-    description: "Detects content related to illegal weapons manufacturing, distribution, or acquisition.",
+    description: "Определяет контент, связанный с незаконным изготовлением, распространением или приобретением оружия.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -111,7 +111,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_bias_gender",
     name: "Bias: Gender",
-    description: "Detects gender-based discrimination, stereotypes, and biased language.",
+    description: "Определяет гендерную дискриминацию, стереотипы и предвзятые формулировки.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -120,7 +120,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_bias_racial",
     name: "Bias: Racial",
-    description: "Detects racial discrimination, stereotypes, and racially biased content.",
+    description: "Определяет расовую дискриминацию, стереотипы и расово предвзятый контент.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -129,7 +129,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_bias_religious",
     name: "Bias: Religious",
-    description: "Detects religious discrimination, intolerance, and religiously biased content.",
+    description: "Определяет религиозную дискриминацию, нетерпимость и религиозно предвзятый контент.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -138,7 +138,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_bias_sexual_orientation",
     name: "Bias: Sexual Orientation",
-    description: "Detects discrimination based on sexual orientation and related biased content.",
+    description: "Определяет дискриминацию по признаку ориентации и связанный предвзятый контент.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -147,7 +147,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_prompt_injection_jailbreak",
     name: "Prompt Injection: Jailbreak",
-    description: "Detects jailbreak attempts designed to bypass AI safety guidelines and restrictions.",
+    description: "Определяет попытки джейлбрейка в обход правил безопасности ИИ и ограничений.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -156,7 +156,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_prompt_injection_data_exfil",
     name: "Prompt Injection: Data Exfiltration",
-    description: "Detects attempts to extract sensitive data through prompt manipulation.",
+    description: "Определяет попытки извлечь чувствительные данные манипуляцией промптом.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -165,7 +165,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_prompt_injection_sql",
     name: "Prompt Injection: SQL",
-    description: "Detects SQL injection attempts embedded in prompts.",
+    description: "Определяет SQL-инъекции, встроенные в промпты.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -174,7 +174,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_prompt_injection_malicious_code",
     name: "Prompt Injection: Malicious Code",
-    description: "Detects attempts to inject malicious code through prompts.",
+    description: "Определяет попытки внедрить вредоносный код через промпты.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -183,7 +183,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_prompt_injection_system_prompt",
     name: "Prompt Injection: System Prompt",
-    description: "Detects attempts to extract or override system prompts.",
+    description: "Определяет попытки извлечь или перезаписать системные промпты.",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -192,7 +192,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   {
     id: "cf_toxic_abuse",
     name: "Toxic & Abusive Language",
-    description: "Detects toxic, abusive, and hateful language across multiple languages (EN, AU, DE, ES, FR).",
+    description: "Определяет токсичный, оскорбительный и ненавистнический язык на нескольких языках (EN, AU, DE, ES, FR).",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -202,7 +202,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
     id: "cf_patterns",
     name: "Pattern Matching",
     description:
-      "Detect and block sensitive data patterns like SSNs, credit card numbers, API keys, and custom regex patterns.",
+      "Обнаруживает и блокирует образцы чувствительных данных: СНИЛС/SSN, номера карт, API-ключи и пользовательские regex.",
     category: "litellm",
     subcategory: "Patterns",
     logo: litellmContentFilterLogo,
@@ -212,7 +212,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
     id: "cf_keywords",
     name: "Keyword Blocking",
     description:
-      "Block or mask content containing specific keywords or phrases. Upload custom word lists or add individual terms.",
+      "Блокирует или маскирует контент с заданными словами или фразами. Загрузите свой список слов или добавьте отдельные термины.",
     category: "litellm",
     subcategory: "Keywords",
     logo: litellmContentFilterLogo,
@@ -222,7 +222,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
     id: "block_code_execution",
     name: "Block Code Execution",
     description:
-      "Detects markdown fenced code blocks in requests and responses. Block or mask executable code (e.g. Python, JavaScript, Bash) by language with configurable confidence.",
+      "Определяет fenced-блоки кода markdown в запросах и ответах. Блокирует или маскирует исполняемый код (Python, JavaScript, Bash) по языку с настраиваемой уверенностью.",
     category: "litellm",
     subcategory: "Code Safety",
     logo: litellmContentFilterLogo,
@@ -232,7 +232,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
     id: "cf_competitor_intent",
     name: "Competitor Name Blocking",
     description:
-      "Block or reframe competitor comparison and ranking intent. Detect when users ask to compare or recommend competitors (airline or generic competitor lists).",
+      "Блокирует или переформулирует намерение сравнить конкурентов. Определяет запросы сравнения или рекомендаций конкурентов (авиакомпании или общие списки).",
     category: "litellm",
     subcategory: "Content Category",
     logo: litellmContentFilterLogo,
@@ -245,7 +245,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
     id: "presidio",
     name: "Presidio PII",
     description:
-      "Microsoft Presidio for PII detection and anonymization. Supports 30+ entity types with configurable actions.",
+      "Microsoft Presidio для обнаружения и анонимизации PII. Более 30 типов сущностей с настраиваемыми действиями.",
     category: "partner",
     logo: guardrailLogoMap["Presidio PII"],
     tags: ["PII", "Microsoft"],
@@ -254,7 +254,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "bedrock",
     name: "Bedrock Guardrail",
-    description: "AWS Bedrock Guardrails for content filtering, topic avoidance, and sensitive information detection.",
+    description: "AWS Bedrock Guardrails: фильтрация контента, обход тем и обнаружение чувствительной информации.",
     category: "partner",
     logo: guardrailLogoMap["Bedrock Guardrail"],
     tags: ["AWS", "Content Safety"],
@@ -263,7 +263,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "lakera",
     name: "Lakera",
-    description: "AI security platform protecting against prompt injections, data leakage, and harmful content.",
+    description: "Платформа безопасности ИИ: защита от инъекций промпта, утечек данных и вредного контента.",
     category: "partner",
     logo: guardrailLogoMap["Lakera"],
     tags: ["Security", "Prompt Injection"],
@@ -272,7 +272,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "openai_moderation",
     name: "OpenAI Moderation",
-    description: "OpenAI's content moderation API for detecting harmful content across multiple categories.",
+    description: "API модерации контента OpenAI для обнаружения вредного контента по многим категориям.",
     category: "partner",
     logo: guardrailLogoMap["OpenAI Moderation"],
     tags: ["Content Moderation", "OpenAI"],
@@ -280,7 +280,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "google_model_armor",
     name: "Google Cloud Model Armor",
-    description: "Google Cloud's model protection service for safe and responsible AI deployments.",
+    description: "Сервис защиты моделей Google Cloud для безопасного и ответственного внедрения ИИ.",
     category: "partner",
     logo: guardrailLogoMap["Google Cloud Model Armor"],
     tags: ["Google Cloud", "Safety"],
@@ -288,7 +288,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "guardrails_ai",
     name: "Guardrails AI",
-    description: "Open-source framework for adding structural, type, and quality guarantees to LLM outputs.",
+    description: "Открытый фреймворк структурных, типовых и качественных гарантий для ответов LLM.",
     category: "partner",
     logo: guardrailLogoMap["Guardrails AI"],
     tags: ["Open Source", "Validation"],
@@ -296,7 +296,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "zscaler",
     name: "Zscaler AI Guard",
-    description: "Enterprise AI security from Zscaler for monitoring and protecting AI/ML workloads.",
+    description: "Корпоративная безопасность ИИ от Zscaler: мониторинг и защита AI/ML-нагрузок.",
     category: "partner",
     logo: guardrailLogoMap["Zscaler AI Guard"],
     tags: ["Enterprise", "Security"],
@@ -304,7 +304,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "panw",
     name: "PANW Prisma AIRS",
-    description: "Palo Alto Networks Prisma AI Runtime Security for securing AI applications in production.",
+    description: "Palo Alto Networks Prisma AI Runtime Security — защита ИИ-приложений в проде.",
     category: "partner",
     logo: guardrailLogoMap["PANW Prisma AIRS"],
     tags: ["Enterprise", "Security"],
@@ -313,7 +313,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
     id: "cisco_ai_defense",
     name: "Cisco AI Defense",
     description:
-      "Cisco AI Defense Inspection API for runtime protection: prompt injection, PII/PCI/PHI, harassment, hate speech, profanity, violence, and code detection.",
+      "API инспекции Cisco AI Defense для защиты во время работы: инъекции промпта, PII/PCI/PHI, домогательства, ненависть, нецензурщина, насилие, код.",
     category: "partner",
     logo: guardrailLogoMap["Cisco AI Defense"],
     tags: ["Enterprise", "Security", "Prompt Injection", "PII"],
@@ -322,7 +322,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "noma",
     name: "Noma Security",
-    description: "AI security platform for detecting and preventing AI-specific threats and vulnerabilities.",
+    description: "Платформа безопасности ИИ для обнаружения и предотвращения ИИ-специфичных угроз и уязвимостей.",
     category: "partner",
     logo: guardrailLogoMap["Noma Security"],
     tags: ["Security", "Threat Detection"],
@@ -330,7 +330,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "aporia",
     name: "Aporia AI",
-    description: "Real-time AI guardrails for hallucination detection, topic control, and policy enforcement.",
+    description: "Гардрейлы ИИ в реальном времени: обнаружение галлюцинаций, контроль тем, соблюдение политик.",
     category: "partner",
     logo: guardrailLogoMap["Aporia AI"],
     tags: ["Hallucination", "Policy"],
@@ -338,7 +338,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "aim",
     name: "AIM Guardrail",
-    description: "AIM Security guardrails for comprehensive AI threat detection and mitigation.",
+    description: "Гардрейлы AIM Security: комплексное обнаружение и снижение ИИ-угроз.",
     category: "partner",
     logo: guardrailLogoMap["AIM Guardrail"],
     tags: ["Security", "Threat Detection"],
@@ -346,7 +346,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "cato_networks",
     name: "Cato Networks Guardrail",
-    description: "Cato Networks guardrails for comprehensive AI threat detection and mitigation.",
+    description: "Гардрейлы Cato Networks: комплексное обнаружение и снижение ИИ-угроз.",
     category: "partner",
     logo: guardrailLogoMap["Cato Networks Guardrail"],
     tags: ["Security", "Threat Detection"],
@@ -354,7 +354,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "prompt_security",
     name: "Prompt Security",
-    description: "Protect against prompt injection attacks, data leakage, and other LLM security threats.",
+    description: "Защита от инъекций промпта, утечек данных и прочих угроз безопасности LLM.",
     category: "partner",
     logo: guardrailLogoMap["Prompt Security"],
     tags: ["Prompt Injection", "Security"],
@@ -362,7 +362,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "lasso",
     name: "Lasso Guardrail",
-    description: "Content moderation and safety guardrails for responsible AI deployments.",
+    description: "Модерация контента и гардрейлы безопасности для ответственного внедрения ИИ.",
     category: "partner",
     logo: guardrailLogoMap["Lasso Guardrail"],
     tags: ["Content Moderation"],
@@ -370,7 +370,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "pangea",
     name: "Pangea Guardrail",
-    description: "Pangea's AI guardrails for secure, compliant, and trustworthy AI applications.",
+    description: "Гардрейлы Pangea для безопасных, соответствующих требованиям и надёжных ИИ-приложений.",
     category: "partner",
     logo: guardrailLogoMap["Pangea Guardrail"],
     tags: ["Compliance", "Security"],
@@ -378,7 +378,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "enkryptai",
     name: "EnkryptAI",
-    description: "AI security and governance platform for enterprise AI safety and compliance.",
+    description: "Платформа безопасности и управления ИИ для корпоративной безопасности и соответствия.",
     category: "partner",
     logo: guardrailLogoMap["EnkryptAI"],
     tags: ["Enterprise", "Governance"],
@@ -386,7 +386,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "javelin",
     name: "Javelin Guardrails",
-    description: "AI gateway with built-in guardrails for secure and compliant AI operations.",
+    description: "ИИ-шлюз со встроенными гардрейлами для безопасной и соответствующей работы ИИ.",
     category: "partner",
     logo: guardrailLogoMap["Javelin Guardrails"],
     tags: ["Gateway", "Security"],
@@ -394,7 +394,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "pillar",
     name: "Pillar Guardrail",
-    description: "AI safety platform for monitoring, testing, and securing AI systems.",
+    description: "Платформа безопасности ИИ для мониторинга, тестирования и защиты ИИ-систем.",
     category: "partner",
     logo: guardrailLogoMap["Pillar Guardrail"],
     tags: ["Monitoring", "Safety"],
@@ -402,7 +402,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
   {
     id: "akto",
     name: "Akto Guardrail",
-    description: "AI security platform from Akto.io with automatic monitoring and guardrails for AI/ML applications.",
+    description: "Платформа безопасности ИИ от Akto.io: автоматический мониторинг и гардрейлы для AI/ML-приложений.",
     category: "partner",
     logo: guardrailLogoMap["Akto"],
     tags: ["Security", "Safety", "Monitoring"],
@@ -411,7 +411,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
     id: "promptguard",
     name: "PromptGuard",
     description:
-      "AI security gateway with prompt injection detection, PII redaction, topic filtering, entity blocklists, and hallucination detection. Self-hostable with drop-in proxy integration.",
+      "ИИ-шлюз безопасности: инъекции промпта, редактирование PII, фильтр тем, блэклисты сущностей, обнаружение галлюцинаций. Самостоятельный хостинг, интеграция в прокси без изменений.",
     category: "partner",
     logo: guardrailLogoMap["PromptGuard"],
     tags: ["Security", "Prompt Injection", "PII"],
@@ -428,7 +428,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
     id: "xecguard",
     name: "XecGuard",
     description:
-      "CyCraft XecGuard AI security gateway. Multi-policy scanning (prompt injection, harmful content, PII, system-prompt enforcement) plus RAG context grounding.",
+      "ИИ-шлюз безопасности CyCraft XecGuard. Мультиполитичное сканирование (инъекции, вредный контент, PII, системный промпт) плюс привязка к контексту RAG.",
     category: "partner",
     logo: guardrailLogoMap["XecGuard"],
     tags: ["Security", "Policy", "Grounding", "RAG"],
@@ -438,7 +438,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
     id: "deepkeep",
     name: "DeepKeep AI Firewall",
     description:
-      "DeepKeep AI Firewall for comprehensive LLM security — prompt injection detection, PII protection, content moderation, and policy enforcement with configurable guardrail pipelines.",
+      "DeepKeep AI Firewall для комплексной безопасности LLM: инъекции промпта, защита PII, модерация контента, соблюдение политик с настраиваемыми конвейерами гардрейлов.",
     category: "partner",
     logo: guardrailLogoMap["DeepKeep AI Firewall"],
     tags: ["Security", "Prompt Injection", "PII", "Firewall"],
@@ -448,7 +448,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
     id: "repelloai",
     name: "RepelloAI Argus",
     description:
-      "RepelloAI Argus scans prompts and responses against policies configured per asset in the Repello dashboard.",
+      "RepelloAI Argus проверяет промпты и ответы по политикам, настроенным для каждого актива в панели Repello.",
     category: "partner",
     logo: guardrailLogoMap["RepelloAI Argus"],
     tags: ["Security", "Policy", "Prompt Injection"],
@@ -458,7 +458,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
     id: "straiker",
     name: "Straiker",
     description:
-      "Defend AI Agentic Guardrails: Indirect/Direct Prompt Injection, Tool Misuse, Malicious MCP and Skills",
+      "Agentic-гардрейлы Defend AI: непрямые/прямые инъекции промпта, злоупотребление инструментами, вредоносные MCP и навыки.",
     category: "partner",
     logo: guardrailLogoMap["Straiker"],
     tags: ["Agentic", "Prompt Injection", "Tool Misuse", "MCP", "Skills"],
@@ -468,7 +468,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
     id: "alice",
     name: "Alice",
     description:
-      "Policy-based guardrails for prompts and model responses, evaluated per application so one proxy can enforce a different policy set per team or product.",
+      "Гардрейлы на политиках для промптов и ответов модели, оцениваемые по приложениям: один прокси может применять свой набор политик для каждой команды или продукта.",
     category: "partner",
     logo: guardrailLogoMap["Alice"],
     tags: ["Content Moderation", "Prompt Injection", "PII", "Policy"],
@@ -478,7 +478,7 @@ export const PARTNER_GUARDRAIL_CARDS: GuardrailCardInfo[] = [
     id: "conduct",
     name: "Conduct Guard",
     description:
-      "Conduct Guard evaluates prompts against workspace rules before the model call: prompt injection, PII, and custom policies, with block, warning, and approval verdicts.",
+      "Conduct Guard проверяет промпты по правилам рабочего пространства до вызова модели: инъекции, PII и пользовательские политики, с вердиктами блокировки, предупреждения и одобрения.",
     category: "partner",
     logo: guardrailLogoMap["Conduct Guard"],
     tags: ["Security", "Prompt Injection", "PII", "Policy"],
