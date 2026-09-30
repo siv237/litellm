@@ -97,7 +97,7 @@ const ReuseCredentialsModal: React.FC<ReuseCredentialsModalProps> = ({
 
                 <div className="flex gap-2.5">
                   <Button type="button" variant="outline" onClick={handleCancel}>
-                    Cancel
+                    Отмена
                   </Button>
                   <Button type="submit">Reuse Credentials</Button>
                 </div>

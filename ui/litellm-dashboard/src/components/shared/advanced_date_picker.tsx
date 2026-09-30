@@ -426,10 +426,10 @@ const AdvancedDatePicker: React.FC<AdvancedDatePickerProps> = ({
                 <div className="absolute bottom-4 right-4">
                   <div className="flex gap-2">
                     <Button variant="secondary" onClick={handleCancel}>
-                      Cancel
+                      Отмена
                     </Button>
                     <Button onClick={handleApply} disabled={!tempValue.from || !tempValue.to || !validation.isValid}>
-                      Apply
+                      Применить
                     </Button>
                   </div>
                 </div>

@@ -155,7 +155,7 @@ export const AccessGroupCreateDialog = ({
               </TabsTrigger>
               <TabsTrigger value="models">
                 <LayersIcon />
-                Models
+                Модели
               </TabsTrigger>
               <TabsTrigger value="mcp-servers">
                 <ServerIcon />
@@ -172,7 +172,7 @@ export const AccessGroupCreateDialog = ({
                 <FormField control={form.control} name="name" label="Group Name">
                   {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="e.g. Engineering Team" />}
                 </FormField>
-                <FormField control={form.control} name="description" label="Description">
+                <FormField control={form.control} name="description" label="Описание">
                   {({ ref, ...field }) => (
                     <Textarea
                       {...field}
@@ -231,7 +231,7 @@ export const AccessGroupCreateDialog = ({
               onClick={() => handleOpenChange(false)}
               disabled={mutation.isPending}
             >
-              Cancel
+              Отмена
             </Button>
             <Button type="submit" disabled={mutation.isPending}>
               {mutation.isPending ? "Creating..." : "Create Group"}

@@ -346,7 +346,7 @@ const CreateSearchTool: React.FC<CreateSearchToolProps> = ({
                   setIsTestingConnection(false);
                 }}
               >
-                Close
+                Закрыть
               </Button>
             </DialogFooter>
           </DialogContent>

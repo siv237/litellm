@@ -74,7 +74,7 @@ function PluginRowActions({ plugin, isAdmin, onDeleteClick }: PluginRowActionsPr
               onClick={() => onDeleteClick(plugin.name, plugin.name)}
             >
               <Trash2 />
-              Delete
+              Удалить
             </DropdownMenuItem>
           </>
         )}
@@ -122,8 +122,8 @@ export const getPluginTableColumns = ({
   {
     id: "description",
     accessorKey: "description",
-    meta: { title: "Description" },
-    header: "Description",
+    meta: { title: "Описание" },
+    header: "Описание",
     size: 300,
     enableSorting: false,
     cell: ({ row }) => {
@@ -168,7 +168,7 @@ export const getPluginTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

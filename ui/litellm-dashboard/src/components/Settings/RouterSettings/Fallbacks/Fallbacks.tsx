@@ -272,7 +272,7 @@ const Fallbacks: React.FC<FallbacksProps> = ({ accessToken, userRole, userID }) 
             <TableRow>
               <TableHead>Model Name</TableHead>
               <TableHead>Fallbacks</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Действия</TableHead>
             </TableRow>
           </TableHeader>
 

@@ -820,7 +820,7 @@ const MCPServerEdit: React.FC<MCPServerEditProps> = ({
                   )}
                 </MountedFormField>
                 <MountedFormField
-                  label="Alias"
+                  label="Псевдоним"
                   name="alias"
                   rules={{ validate: validatorRules({ validator: (_, value) => validateMCPServerName(value) }) }}
                 >
@@ -835,7 +835,7 @@ const MCPServerEdit: React.FC<MCPServerEditProps> = ({
                     />
                   )}
                 </MountedFormField>
-                <MountedFormField label="Description" name="description">
+                <MountedFormField label="Описание" name="description">
                   {(control) => (
                     <Input
                       {...textControl(control)}
@@ -1294,9 +1294,9 @@ const MCPServerEdit: React.FC<MCPServerEditProps> = ({
 
                 <div className="flex justify-end gap-2">
                   <Button variant="outline" onClick={onCancel}>
-                    Cancel
+                    Отмена
                   </Button>
-                  <Button type="submit">Save Changes</Button>
+                  <Button type="submit">Сохранить изменения</Button>
                 </div>
               </form>
             </MountedFormProvider>
@@ -1309,9 +1309,9 @@ const MCPServerEdit: React.FC<MCPServerEditProps> = ({
 
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={onCancel}>
-                Cancel
+                Отмена
               </Button>
-              <Button onClick={() => void submitForm()}>Save Changes</Button>
+              <Button onClick={() => void submitForm()}>Сохранить изменения</Button>
             </div>
           </div>
         </TabsContent>

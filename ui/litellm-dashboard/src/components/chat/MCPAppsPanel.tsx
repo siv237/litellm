@@ -417,7 +417,7 @@ const MCPAppsPanel: React.FC<Props> = ({ accessToken, selectedServers, onChange,
           className="-ml-3 mb-5 gap-1.5 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-3 w-3" />
-          Back
+          Назад
         </Button>
 
         <div className="flex items-start gap-5 mb-7">

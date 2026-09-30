@@ -155,7 +155,7 @@ export function AutoRouterConnectionTestDialog({
         {open && <AutoRouterConnectionTest key={testId} {...props} />}
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
-            Close
+            Закрыть
           </Button>
         </DialogFooter>
       </DialogContent>

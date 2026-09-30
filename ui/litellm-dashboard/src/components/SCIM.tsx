@@ -107,7 +107,7 @@ const SCIMConfig: React.FC<SCIMConfigProps> = ({ accessToken, userID, proxySetti
                 <CopyToClipboard text={scimBaseUrl} onCopy={() => toast.success("URL copied to clipboard")}>
                   <Button type="button" className="ml-2 flex items-center">
                     <Copy />
-                    Copy
+                    Скопировать
                   </Button>
                 </CopyToClipboard>
               </div>
@@ -167,7 +167,7 @@ const SCIMConfig: React.FC<SCIMConfigProps> = ({ accessToken, userID, proxySetti
                     <CopyToClipboard text={tokenData.key} onCopy={() => toast.success("Token copied to clipboard")}>
                       <Button type="button" className="flex items-center">
                         <Copy />
-                        Copy
+                        Скопировать
                       </Button>
                     </CopyToClipboard>
                   </div>

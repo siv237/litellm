@@ -37,7 +37,7 @@ const PublishModal: React.FC<PublishModalProps> = ({
         </DialogHeader>
         <div className="py-4">
           <label htmlFor="publish-prompt-name" className="mb-2 block">
-            Name
+            Название
           </label>
           <Input
             id="publish-prompt-name"
@@ -53,7 +53,7 @@ const PublishModal: React.FC<PublishModalProps> = ({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onCancel}>
-            Cancel
+            Отмена
           </Button>
           <Button onClick={onPublish} disabled={isSaving}>
             {isSaving && <LoaderCircleIcon className="animate-spin" />}

@@ -214,7 +214,7 @@ const AddPromptForm: React.FC<AddPromptFormProps> = ({ visible, onClose, accessT
         </form>
         <DialogFooter>
           <Button type="button" variant="outline" onClick={handleCancel}>
-            Cancel
+            Отмена
           </Button>
           <Button type="button" disabled={loading} onClick={() => void form.handleSubmit(handleSubmit)()}>
             {loading && <UiLoadingSpinner className="size-4" />}

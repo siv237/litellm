@@ -206,7 +206,7 @@ function SessionCard({ session, turnCount }: { session: RealtimeSession; turnCou
               fontSize: 13,
             }}
           >
-            <ConfigRow label="Model" value={session.model} />
+            <ConfigRow label="Модель" value={session.model} />
             <ConfigRow label="Voice" value={session.voice} />
             <ConfigRow label="Temperature" value={session.temperature} />
             <ConfigRow label="Max Output Tokens" value={session.max_response_output_tokens} />

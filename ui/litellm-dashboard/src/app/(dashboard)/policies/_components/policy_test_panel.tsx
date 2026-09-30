@@ -193,7 +193,7 @@ const PolicyTestPanel: React.FC<PolicyTestPanelProps> = ({ accessToken }) => {
                 />
               )}
             </FormField>
-            <FormField control={form.control} name="model" label="Model">
+            <FormField control={form.control} name="model" label="Модель">
               {({ id, value, onChange }) => (
                 <ContextCombobox
                   id={id}
@@ -224,7 +224,7 @@ const PolicyTestPanel: React.FC<PolicyTestPanelProps> = ({ accessToken }) => {
               Simulate
             </Button>
             <Button type="button" variant="secondary" onClick={handleReset}>
-              Reset
+              Сброс
             </Button>
           </div>
         </form>
@@ -275,7 +275,7 @@ const PolicyTestPanel: React.FC<PolicyTestPanelProps> = ({ accessToken }) => {
                       </Badge>
                     ))
                   ) : (
-                    <span className="text-muted-foreground text-sm">None</span>
+                    <span className="text-muted-foreground text-sm">Нет</span>
                   )}
                 </div>
               </div>
@@ -307,7 +307,7 @@ const PolicyTestPanel: React.FC<PolicyTestPanelProps> = ({ accessToken }) => {
                               ))}
                             </div>
                           ) : (
-                            <span className="text-muted-foreground">None</span>
+                            <span className="text-muted-foreground">Нет</span>
                           )}
                         </td>
                       </tr>
@@ -323,7 +323,7 @@ const PolicyTestPanel: React.FC<PolicyTestPanelProps> = ({ accessToken }) => {
       {hasSearched && !result && !isLoading && (
         <Alert variant="error">
           <CircleAlert />
-          <AlertTitle>Error</AlertTitle>
+          <AlertTitle>Ошибка</AlertTitle>
           <AlertDescription>Failed to resolve policies. Check the proxy logs.</AlertDescription>
         </Alert>
       )}

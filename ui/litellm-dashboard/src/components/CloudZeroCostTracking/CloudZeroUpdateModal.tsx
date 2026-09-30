@@ -97,7 +97,7 @@ export default function CloudZeroUpdateModal({ open, onOk, onCancel, settings }:
         </TooltipProvider>
         <DialogFooter>
           <Button variant="outline" onClick={handleCancel} disabled={updateMutation.isPending}>
-            Cancel
+            Отмена
           </Button>
           <Button
             onClick={() => void form.handleSubmit(handleSubmit)()}

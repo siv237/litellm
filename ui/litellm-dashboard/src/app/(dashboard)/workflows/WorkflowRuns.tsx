@@ -472,8 +472,8 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
       },
       {
         accessorKey: "workflow_type",
-        header: "Type",
-        meta: { title: "Type" },
+        header: "Тип",
+        meta: { title: "Тип" },
         filterFn: "includesString",
         cell: ({ row }) => (
           <span className="font-mono text-xs text-muted-foreground">{row.original.workflow_type}</span>
@@ -482,8 +482,8 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
       {
         id: "status",
         accessorKey: "status",
-        header: "Status",
-        meta: { title: "Status" },
+        header: "Статус",
+        meta: { title: "Статус" },
         filterFn: "equalsString",
         cell: ({ row }) => {
           const run = row.original;
@@ -551,7 +551,7 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
             >
               {({ get, set }) => (
                 <>
-                  <DataTableFilterField label="Status">
+                  <DataTableFilterField label="Статус">
                     <Select
                       items={STATUS_LABELS}
                       value={(get("status") as string) || null}
@@ -570,7 +570,7 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
                       </SelectContent>
                     </Select>
                   </DataTableFilterField>
-                  <DataTableFilterField label="Type">
+                  <DataTableFilterField label="Тип">
                     <Input
                       value={(get("workflow_type") as string) ?? ""}
                       onChange={(event) => set("workflow_type", event.target.value)}
@@ -613,7 +613,7 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => fetchRunDetail(selectedRun)}>
                   <RefreshCw />
-                  Refresh
+                  Обновить
                 </Button>
               </div>
 

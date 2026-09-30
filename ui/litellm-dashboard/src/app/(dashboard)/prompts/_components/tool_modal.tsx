@@ -75,9 +75,9 @@ const ToolModal: React.FC<ToolModalProps> = ({ visible, initialJson, onSave, onC
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={handleClose}>
-            Cancel
+            Отмена
           </Button>
-          <Button onClick={handleSave}>Add</Button>
+          <Button onClick={handleSave}>Добавить</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

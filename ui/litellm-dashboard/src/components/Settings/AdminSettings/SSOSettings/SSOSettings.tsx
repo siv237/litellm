@@ -202,7 +202,7 @@ export default function SSOSettings() {
 
     return (
       <dl className="divide-y divide-border overflow-hidden rounded-md border border-border">
-        <DetailRow label="Provider">
+        <DetailRow label="Провайдер">
           <div className="flex items-center gap-2">
             {ssoProviderLogoMap[selectedProvider] && (
               <Logo

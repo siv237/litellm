@@ -125,7 +125,7 @@ export function ProjectBaseForm({ form, advancedOpen, onAdvancedOpenChange }: Pr
             )}
           </FormField>
 
-          <FormField control={form.control} name="team_id" label="Team">
+          <FormField control={form.control} name="team_id" label="Команда">
             {({ id, value, onChange, ref: _ref, ...field }) => (
               <SearchSelect
                 {...field}
@@ -143,7 +143,7 @@ export function ProjectBaseForm({ form, advancedOpen, onAdvancedOpenChange }: Pr
           </FormField>
         </div>
 
-        <FormField control={form.control} name="description" label="Description">
+        <FormField control={form.control} name="description" label="Описание">
           {({ ref, ...field }) => (
             <Textarea
               {...field}
@@ -284,7 +284,7 @@ export function ProjectBaseForm({ form, advancedOpen, onAdvancedOpenChange }: Pr
               key={field.id}
               className="mb-2 grid grid-cols-1 items-start gap-2 sm:grid-cols-2 xl:grid-cols-[minmax(0,2fr)_repeat(4,minmax(0,1fr))_auto]"
             >
-              <FormField control={form.control} name={`modelLimits.${index}.model`} label="Model">
+              <FormField control={form.control} name={`modelLimits.${index}.model`} label="Модель">
                 {({ ref, ...control }) => (
                   <Input {...control} value={control.value ?? ""} ref={ref} placeholder="Model name (e.g. gpt-4)" />
                 )}

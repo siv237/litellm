@@ -288,7 +288,7 @@ function BudgetCell({
               Unlimited
             </button>
             <button type="submit" className={cn(buttonVariants({ size: "sm" }))}>
-              Save
+              Сохранить
             </button>
           </div>
         </form>
@@ -352,7 +352,7 @@ function UsageCell({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
             <AlertDialogAction
               disabled={resetting}
               onClick={async () => {
@@ -400,8 +400,8 @@ export const getUsersTableColumns = ({
     {
       id: "user_email",
       accessorKey: "user_email",
-      meta: { title: "Email" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Email" variant="header-cycle" />,
+      meta: { title: "Эл. почта" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Эл. почта" variant="header-cycle" />,
       size: 220,
       enableSorting: true,
       cell: ({ row }) => (
@@ -412,8 +412,8 @@ export const getUsersTableColumns = ({
     },
     {
       id: "status",
-      meta: { title: "Status", skeleton: "badge" },
-      header: "Status",
+      meta: { title: "Статус", skeleton: "badge" },
+      header: "Статус",
       size: 110,
       enableSorting: false,
       cell: ({ row }) => {
@@ -421,13 +421,13 @@ export const getUsersTableColumns = ({
           return (
             <StatusBadge
               tone="error"
-              label="Inactive"
+              label="Неактивный"
               tooltip={SCIM_INACTIVE_HINT}
               dataTestId={`user-status-${row.original.user_id}`}
             />
           );
         }
-        return <StatusBadge tone="success" label="Active" dataTestId={`user-status-${row.original.user_id}`} />;
+        return <StatusBadge tone="success" label="Активный" dataTestId={`user-status-${row.original.user_id}`} />;
       },
     },
     {
@@ -455,8 +455,8 @@ export const getUsersTableColumns = ({
     {
       id: "spend",
       accessorKey: "spend",
-      meta: { title: "Spend (USD)", numeric: true },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Spend (USD)" variant="header-cycle" />,
+      meta: { title: "Расход (USD)", numeric: true },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Расход (USD)" variant="header-cycle" />,
       size: 130,
       enableSorting: true,
       cell: ({ row }) => <MoneyCell value={row.original.spend} decimals={2} />,
@@ -562,8 +562,8 @@ export const getUsersTableColumns = ({
     },
     {
       id: "actions",
-      meta: { title: "Actions", className: "text-right", headerClassName: "text-right" },
-      header: () => <span className="sr-only">Actions</span>,
+      meta: { title: "Действия", className: "text-right", headerClassName: "text-right" },
+      header: () => <span className="sr-only">Действия</span>,
       size: 60,
       enableSorting: false,
       enableHiding: false,

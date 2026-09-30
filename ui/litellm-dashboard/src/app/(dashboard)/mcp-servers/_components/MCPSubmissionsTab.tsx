@@ -26,7 +26,7 @@ type MCPStatus = "active" | "pending_review" | "rejected";
 
 const STATUS_CONFIG: Record<MCPStatus, { label: string; bg: string; text: string; dot: string }> = {
   active: {
-    label: "Active",
+    label: "Активный",
     bg: "bg-success/10",
     text: "text-success",
     dot: "bg-success",
@@ -117,7 +117,7 @@ function ConfirmDialog({ action, serverName, isCurrentlyActive, onConfirm, onCan
             onClick={onCancel}
             className="flex-1 border border-border text-foreground hover:bg-accent text-sm font-medium py-2 rounded-md transition-colors"
           >
-            Cancel
+            Отмена
           </button>
           <button
             type="button"
@@ -246,7 +246,7 @@ function SubmissionRulesPanel({ requiredFields, onChange, onSave, isSaving }: Su
               onClick={() => setExpanded(false)}
               className="px-4 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground border border-border rounded-md hover:bg-accent transition-colors"
             >
-              Cancel
+              Отмена
             </button>
           </div>
         </div>
@@ -567,7 +567,7 @@ export function MCPSubmissionsTab({ accessToken }: MCPSubmissionsTabProps) {
       <div className="grid grid-cols-4 gap-4 mb-6">
         <StatCard label="Total Submitted" value={summary.total} color="text-foreground" />
         <StatCard label="Pending Review" value={summary.pending_review} color="text-warning" />
-        <StatCard label="Active" value={summary.active} color="text-success" />
+        <StatCard label="Активный" value={summary.active} color="text-success" />
         <StatCard label="Rejected" value={summary.rejected} color="text-destructive" />
       </div>
 
@@ -589,7 +589,7 @@ export function MCPSubmissionsTab({ accessToken }: MCPSubmissionsTabProps) {
         >
           <option value="all">All Status</option>
           <option value="pending_review">Pending Review</option>
-          <option value="active">Active</option>
+          <option value="active">Активный</option>
           <option value="rejected">Rejected</option>
         </select>
       </div>

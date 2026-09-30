@@ -177,7 +177,7 @@ const ConversationRow: React.FC<ConversationRowProps> = ({ conv, isActive, onSel
                     }
                   />
                   <TooltipContent side="bottom">
-                    <p>Delete</p>
+                    <p>Удалить</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -187,12 +187,12 @@ const ConversationRow: React.FC<ConversationRowProps> = ({ conv, isActive, onSel
                   <AlertDialogDescription>This action cannot be undone</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel>Отмена</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => onDelete(conv.id)}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
-                    Delete
+                    Удалить
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

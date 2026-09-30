@@ -278,7 +278,7 @@ const SSOModals: React.FC<SSOModalsProps> = ({
                     Clear
                   </Button>
                 )}
-                <Button type="submit">Save</Button>
+                <Button type="submit">Сохранить</Button>
               </div>
             </form>
           </FormProvider>
@@ -295,7 +295,7 @@ const SSOModals: React.FC<SSOModalsProps> = ({
           <p>Users will no longer be able to login using SSO after this change.</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsClearConfirmModalVisible(false)}>
-              Cancel
+              Отмена
             </Button>
             <Button onClick={handleClearSSO} variant="destructive">
               Yes, Clear
@@ -316,7 +316,7 @@ const SSOModals: React.FC<SSOModalsProps> = ({
           <p className="text-sm mt-2">4. If Step 3 is successful, you can close this tab</p>
           <div style={{ textAlign: "right", marginTop: "10px" }}>
             <Button type="button" onClick={handleInstructionsOk}>
-              Done
+              Готово
             </Button>
           </div>
         </DialogContent>

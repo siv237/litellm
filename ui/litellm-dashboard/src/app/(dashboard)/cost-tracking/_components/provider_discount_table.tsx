@@ -67,7 +67,7 @@ const ProviderDiscountTable: React.FC<ProviderDiscountTableProps> = ({
       data={data}
       columns={[
         {
-          header: "Provider",
+          header: "Провайдер",
           cell: (row) => {
             const { displayName } = getProviderLogoAndName(row.provider);
             return (
@@ -134,7 +134,7 @@ const ProviderDiscountTable: React.FC<ProviderDiscountTableProps> = ({
           width: "250px",
         },
         {
-          header: "Actions",
+          header: "Действия",
           cell: (row) => {
             const { displayName } = getProviderLogoAndName(row.provider);
             return (

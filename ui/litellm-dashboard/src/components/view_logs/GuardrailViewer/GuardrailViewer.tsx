@@ -283,7 +283,7 @@ const MatchDetailsTable = ({ matchDetails }: { matchDetails: MatchDetail[] }) =>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b text-left text-muted-foreground">
-              <th className="pb-2 pr-4 font-medium">Type</th>
+              <th className="pb-2 pr-4 font-medium">Тип</th>
               <th className="pb-2 pr-4 font-medium">Method</th>
               <th className="pb-2 pr-4 font-medium">Action</th>
               <th className="pb-2 font-medium">Detail</th>

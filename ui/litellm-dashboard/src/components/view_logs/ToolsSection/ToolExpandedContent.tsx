@@ -27,7 +27,7 @@ export function ToolExpandedContent({ tool }: ToolExpandedContentProps) {
           marginBottom: 12,
         }}
       >
-        <span className="text-xs text-muted-foreground">Description</span>
+        <span className="text-xs text-muted-foreground">Описание</span>
         <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as ViewMode)}>
           <TabsList>
             <TabsTrigger value="formatted">Formatted</TabsTrigger>

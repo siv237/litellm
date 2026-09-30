@@ -174,7 +174,7 @@ const HeuristicScoringConfig: React.FC<HeuristicScoringConfigProps> = ({ value, 
                     still works, and an untouched knob keeps following the defaults.
                   </p>
                   <Button type="button" variant="link" size="xs" onClick={() => void refetch()}>
-                    Retry
+                    Повторить
                   </Button>
                 </div>
               )}

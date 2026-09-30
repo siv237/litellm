@@ -114,7 +114,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
   };
 
   if (loading) {
-    return <div className="p-4">Loading...</div>;
+    return <div className="p-4">Загрузка…</div>;
   }
 
   if (!orgData) {
@@ -126,7 +126,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
 
   const orgExtraColumns: MemberTableColumn[] = [
     {
-      title: "Spend (USD)",
+      title: "Расход (USD)",
       key: "spend",
       sortValue: (record: Member) => orgMemberFor(record)?.spend ?? null,
       render: (record: Member) => <MoneyCell value={orgMemberFor(record)?.spend} decimals={4} />,
@@ -217,7 +217,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
 
             <Card>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Models</p>
+                <p className="text-sm text-muted-foreground">Модели</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {orgData.models.length === 0 ? (
                     <BadgeLink>All proxy models</BadgeLink>
@@ -304,7 +304,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
                     <div>{new Date(orgData.created_at).toLocaleString()}</div>
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">Models</p>
+                    <p className="font-medium text-foreground">Модели</p>
                     <div className="mt-1 flex flex-wrap gap-2">
                       {orgData.models.map((model, index) => (
                         <BadgeLink key={index}>{model}</BadgeLink>
@@ -317,7 +317,7 @@ const OrganizationInfoView: React.FC<OrganizationInfoProps> = ({
                     <div>RPM: {orgData.litellm_budget_table.rpm_limit ?? "Unlimited"}</div>
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">Budget</p>
+                    <p className="font-medium text-foreground">Бюджет</p>
                     <div>
                       Max:{" "}
                       {orgData.litellm_budget_table.max_budget !== null

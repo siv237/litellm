@@ -67,7 +67,7 @@ const TagEditForm: React.FC<TagEditFormProps> = ({ tag, seedBudgetFields, userMo
           {({ ref, ...field }) => <Input {...field} ref={ref} />}
         </FormField>
 
-        <FormField control={form.control} name="description" label="Description">
+        <FormField control={form.control} name="description" label="Описание">
           {({ ref, value, ...field }) => <Textarea {...field} ref={ref} value={value ?? ""} rows={4} />}
         </FormField>
 
@@ -134,9 +134,9 @@ const TagEditForm: React.FC<TagEditFormProps> = ({ tag, seedBudgetFields, userMo
 
       <div className="flex justify-end space-x-2">
         <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
+          Отмена
         </Button>
-        <Button type="submit">Save Changes</Button>
+        <Button type="submit">Сохранить изменения</Button>
       </div>
     </form>
   );
@@ -214,7 +214,7 @@ const TagInfoView: React.FC<TagInfoViewProps> = ({ tagId, onClose, accessToken, 
   };
 
   if (!tagDetails) {
-    return <div>Loading...</div>;
+    return <div>Загрузка…</div>;
   }
 
   return (
@@ -266,11 +266,11 @@ const TagInfoView: React.FC<TagInfoViewProps> = ({ tagId, onClose, accessToken, 
               <CardTitle>Tag Details</CardTitle>
               <div className="space-y-4 mt-4">
                 <div>
-                  <p className="font-medium">Name</p>
+                  <p className="font-medium">Название</p>
                   <p>{tagDetails.name}</p>
                 </div>
                 <div>
-                  <p className="font-medium">Description</p>
+                  <p className="font-medium">Описание</p>
                   <p>{tagDetails.description || "-"}</p>
                 </div>
                 <div>

@@ -353,7 +353,7 @@ export function KeyEditView({
           <FormField
             control={form.control}
             name="models"
-            label="Models"
+            label="Модели"
             description={isModelsDisabled ? "Models field is disabled for this key type" : undefined}
           >
             {({ value, onChange, id }) => (
@@ -869,7 +869,7 @@ export function KeyEditView({
         <div className="sticky z-chrome bg-background p-4 border-t border-border -bottom-6 -inset-x-6">
           <div className="flex justify-end items-center gap-2">
             <Button type="button" variant="secondary" onClick={onCancel} disabled={isKeySaving}>
-              Cancel
+              Отмена
             </Button>
             <Button type="submit" disabled={isKeySaving} aria-busy={isKeySaving}>
               {isKeySaving && <UiLoadingSpinner className="size-4" />}

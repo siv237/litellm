@@ -486,7 +486,7 @@ const BulkCreateUsersButton: React.FC<BulkCreateUsersProps> = ({
               <div className="flex items-center">
                 <span className="text-xs text-muted-foreground truncate max-w-[150px]">{record.invitation_link}</span>
                 <CopyToClipboard text={record.invitation_link} onCopy={() => toast.success("Invitation link copied!")}>
-                  <button className="ml-1 text-info text-xs hover:text-info/80">Copy</button>
+                  <button className="ml-1 text-info text-xs hover:text-info/80">Скопировать</button>
                 </CopyToClipboard>
               </div>
             </div>
@@ -635,7 +635,7 @@ const BulkCreateUsersButton: React.FC<BulkCreateUsersProps> = ({
                         </div>
                         <Button variant="outline" size="sm" onClick={removeSelectedFile} className="flex items-center">
                           <Trash2 className="size-4" />
-                          Remove
+                          Убрать
                         </Button>
                       </div>
 
@@ -760,7 +760,7 @@ const BulkCreateUsersButton: React.FC<BulkCreateUsersProps> = ({
                     {!parsedData.some((user) => user.status === "success" || user.status === "failed") && (
                       <div className="flex space-x-3">
                         <Button variant="outline" onClick={resetParsedData}>
-                          Back
+                          Назад
                         </Button>
                         <Button
                           onClick={handleBulkCreate}
@@ -795,11 +795,11 @@ const BulkCreateUsersButton: React.FC<BulkCreateUsersProps> = ({
                       <TableHeader>
                         <TableRow>
                           <TableHead className="w-20">Row</TableHead>
-                          <TableHead>Email</TableHead>
-                          <TableHead>Role</TableHead>
+                          <TableHead>Эл. почта</TableHead>
+                          <TableHead>Роль</TableHead>
                           <TableHead>Teams</TableHead>
-                          <TableHead>Budget</TableHead>
-                          <TableHead>Status</TableHead>
+                          <TableHead>Бюджет</TableHead>
+                          <TableHead>Статус</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -836,7 +836,7 @@ const BulkCreateUsersButton: React.FC<BulkCreateUsersProps> = ({
                         onClick={() => setPageIndex(currentPage + 1)}
                         disabled={currentPage >= pageCount - 1}
                       >
-                        Next
+                        Далее
                       </Button>
                     </div>
                   )}
@@ -844,7 +844,7 @@ const BulkCreateUsersButton: React.FC<BulkCreateUsersProps> = ({
                   {!parsedData.some((user) => user.status === "success" || user.status === "failed") && (
                     <div className="flex justify-end mt-4">
                       <Button variant="outline" onClick={resetParsedData} className="mr-3">
-                        Back
+                        Назад
                       </Button>
                       <Button
                         onClick={handleBulkCreate}

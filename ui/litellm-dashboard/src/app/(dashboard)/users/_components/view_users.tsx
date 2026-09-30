@@ -373,7 +373,7 @@ const ViewUserDashboard: React.FC<ViewUserDashboardProps> = ({
         <Tabs defaultValue="users" className="gap-0">
           <TabsList variant="line" className="mb-4">
             <TabsTrigger value="users" className="flex-none data-active:text-primary after:bg-primary">
-              Users
+              Пользователи
             </TabsTrigger>
             <TabsTrigger value="default-settings" className="flex-none data-active:text-primary after:bg-primary">
               Default User Settings
@@ -414,7 +414,7 @@ const ViewUserDashboard: React.FC<ViewUserDashboardProps> = ({
         message="Are you sure you want to delete this user? This action cannot be undone."
         resourceInformationTitle="User Information"
         resourceInformation={[
-          { label: "Email", value: userToDelete?.user_email },
+          { label: "Эл. почта", value: userToDelete?.user_email },
           { label: "User ID", value: userToDelete?.user_id, code: true },
           {
             label: "Global Proxy Role",

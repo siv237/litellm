@@ -170,7 +170,7 @@ const DictField: React.FC<DictFieldProps> = ({ field, fullFieldKey, control, val
             className="text-destructive hover:text-destructive/80"
             onClick={() => removeEntry(entry.id, entry.key)}
           >
-            Remove
+            Убрать
           </Button>
         </div>
       ))}

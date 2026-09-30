@@ -435,7 +435,7 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
                 <dl className="mt-3 space-y-1 rounded-lg border border-border bg-muted p-4">
                   {serverToDelete.server_name && (
                     <div className="flex gap-2">
-                      <dt className="text-sm text-muted-foreground">Name</dt>
+                      <dt className="text-sm text-muted-foreground">Название</dt>
                       <dd className="text-sm font-semibold">{serverToDelete.server_name}</dd>
                     </div>
                   )}
@@ -453,7 +453,7 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
               )}
             </div>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={isDeletingServer}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={isDeletingServer}>Отмена</AlertDialogCancel>
               <Button variant="destructive" disabled={isDeletingServer} onClick={confirmDelete}>
                 {isDeletingServer ? "Deleting..." : "Delete"}
               </Button>
@@ -581,7 +581,7 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
                   <div className="flex flex-col space-y-4">
                     <div className="flex items-center gap-6 rounded-lg border border-border bg-card px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium whitespace-nowrap text-muted-foreground">Team</p>
+                        <p className="text-sm font-medium whitespace-nowrap text-muted-foreground">Команда</p>
                         <Select
                           items={teamSelectItems}
                           value={selectedTeam}

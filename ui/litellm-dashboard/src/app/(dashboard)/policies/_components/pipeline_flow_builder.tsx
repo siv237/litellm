@@ -1674,7 +1674,7 @@ export const FlowBuilderPage: React.FC<FlowBuilderPageProps> = ({
         </div>
         <div className="flex items-center gap-2">
           <Button variant="secondary" onClick={onBack}>
-            Cancel
+            Отмена
           </Button>
           <Button variant="secondary" onClick={() => setShowTestPanel(!showTestPanel)}>
             {showTestPanel ? "Hide Test" : "Test Pipeline"}

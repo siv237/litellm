@@ -53,7 +53,7 @@ const generateModelSection = (result: CostEstimateResponse): string => {
           ${result.monthly_cost !== null ? `<td class="cost-value">${formatCostForExport(result.monthly_margin_cost)}</td>` : ""}
         </tr>
         <tr class="total-row">
-          <td>Total</td>
+          <td>Всего</td>
           <td class="cost-value">${formatCostForExport(result.cost_per_request)}</td>
           ${result.daily_cost !== null ? `<td class="cost-value">${formatCostForExport(result.daily_cost)}</td>` : ""}
           ${result.monthly_cost !== null ? `<td class="cost-value">${formatCostForExport(result.monthly_cost)}</td>` : ""}

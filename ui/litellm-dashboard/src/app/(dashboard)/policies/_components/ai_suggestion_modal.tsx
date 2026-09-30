@@ -785,7 +785,7 @@ const AiSuggestionModal: React.FC<AiSuggestionModalProps> = ({
                             {isBlocked && result.details && (
                               <div className="bg-card border border-destructive/20 rounded-sm p-2">
                                 <label className="text-[10px] font-medium text-muted-foreground mb-1 block">
-                                  Details
+                                  Подробнее
                                 </label>
                                 <p className="text-xs text-destructive">{result.details}</p>
                               </div>
@@ -831,7 +831,7 @@ const AiSuggestionModal: React.FC<AiSuggestionModalProps> = ({
             {/* Model selector */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-1.5">
-                Model
+                Модель
                 <span className="text-destructive ml-0.5">*</span>
               </label>
               <SearchSelect
@@ -944,7 +944,7 @@ const AiSuggestionModal: React.FC<AiSuggestionModalProps> = ({
             {/* Footer */}
             <div className="flex justify-end gap-3 pt-2">
               <Button variant="secondary" onClick={handleCancel} disabled={isLoading}>
-                Cancel
+                Отмена
               </Button>
               <Button onClick={handleSuggest} disabled={!hasInput || !selectedModel || isLoading}>
                 {isLoading ? "Analyzing..." : "Suggest Policies"}
@@ -970,7 +970,7 @@ const AiSuggestionModal: React.FC<AiSuggestionModalProps> = ({
             {/* Footer */}
             <div className="flex justify-end gap-3 pt-6 border-t border-border mt-4">
               <Button variant="secondary" onClick={handleBack}>
-                Back
+                Назад
               </Button>
               {suggestions && suggestions.length > 0 && selectedIds.size > 0 && !showTestPanel && (
                 <Button variant="secondary" onClick={() => setShowTestPanel(true)}>

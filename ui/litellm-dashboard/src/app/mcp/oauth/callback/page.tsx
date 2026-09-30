@@ -93,7 +93,7 @@ const McpOAuthCallbackContent = () => {
 
 const McpOAuthCallbackPage = () => {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Загрузка…</div>}>
       <McpOAuthCallbackContent />
     </Suspense>
   );

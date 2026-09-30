@@ -214,7 +214,7 @@ export const ModelSelect = (props: ModelSelectProps) => {
         ]
       : []),
     {
-      label: "Models",
+      label: "Модели",
       items: regular.map((model) => ({
         label: model,
         value: model,

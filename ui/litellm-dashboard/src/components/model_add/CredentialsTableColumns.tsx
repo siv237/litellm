@@ -59,7 +59,7 @@ function CredentialRowActions({ credential, onEdit, onDelete }: CredentialRowAct
       <DropdownMenuContent align="end" className="w-52">
         <DropdownMenuItem data-testid="credential-action-edit" onClick={() => onEdit(credential)}>
           <Pencil />
-          Edit
+          Изменить
         </DropdownMenuItem>
         <DropdownMenuItem
           data-testid="credential-action-copy"
@@ -75,7 +75,7 @@ function CredentialRowActions({ credential, onEdit, onDelete }: CredentialRowAct
           onClick={() => onDelete(credential)}
         >
           <Trash2 />
-          Delete
+          Удалить
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -108,8 +108,8 @@ export const getCredentialsTableColumns = ({
     {
       id: "provider",
       accessorKey: "credential_info.custom_llm_provider",
-      meta: { title: "Provider" },
-      header: "Provider",
+      meta: { title: "Провайдер" },
+      header: "Провайдер",
       size: 200,
       enableSorting: false,
       cell: ({ row }) => <CredentialProviderCell provider={row.original.credential_info?.custom_llm_provider} />,
@@ -125,7 +125,7 @@ export const getCredentialsTableColumns = ({
     {
       id: "actions",
       meta: { className: "text-right", headerClassName: "text-right" },
-      header: () => <span className="sr-only">Actions</span>,
+      header: () => <span className="sr-only">Действия</span>,
       size: 64,
       enableSorting: false,
       enableHiding: false,

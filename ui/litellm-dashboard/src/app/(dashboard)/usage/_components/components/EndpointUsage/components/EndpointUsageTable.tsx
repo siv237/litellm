@@ -106,7 +106,7 @@ const EndpointUsageTable: React.FC<EndpointUsageTableProps> = ({ endpointData })
       cell: ({ row }) => row.original.total_tokens.toLocaleString(),
     },
     {
-      header: "Spend",
+      header: "Расход",
       accessorKey: "spend",
       meta: { numeric: true },
       cell: ({ row }) => <MoneyCell value={row.original.spend} decimals={2} />,

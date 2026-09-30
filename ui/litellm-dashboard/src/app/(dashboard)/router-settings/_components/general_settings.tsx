@@ -280,7 +280,7 @@ const GeneralSettings: React.FC<GeneralSettingsPageProps> = ({ accessToken, user
                   <TableRow>
                     <TableHead>Setting</TableHead>
                     <TableHead>Value</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>Статус</TableHead>
                     <TableHead>Action</TableHead>
                   </TableRow>
                 </TableHeader>

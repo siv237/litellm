@@ -76,7 +76,7 @@ export default function MyUserTab({ teamId }: MyUserTabProps) {
         <CardContent>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
             <div>
-              <span className="text-muted-foreground">User</span>
+              <span className="text-muted-foreground">Пользователь</span>
               <div className="mt-1 font-semibold">{data.user_email || data.user_id}</div>
               <span className="font-mono text-xs text-muted-foreground">{data.user_id}</span>
             </div>

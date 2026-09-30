@@ -187,7 +187,7 @@ export function AuditLogDrawer({ open, onClose, log }: AuditLogDrawerProps) {
 
         <div className="px-6 py-5">
           <div className="mb-5 rounded-lg border border-border bg-muted p-4">
-            <p className="mb-2 text-xs font-semibold tracking-wide text-foreground uppercase">Details</p>
+            <p className="mb-2 text-xs font-semibold tracking-wide text-foreground uppercase">Подробнее</p>
             <MetadataRow label="Table" value={tableDisplay} />
             <MetadataRow
               label="Object ID"

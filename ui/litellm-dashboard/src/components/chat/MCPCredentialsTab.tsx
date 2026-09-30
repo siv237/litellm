@@ -52,7 +52,7 @@ function expiryLabel(isoString: string | null | undefined): {
   try {
     const exp = new Date(isoString);
     const diffMs = exp.getTime() - Date.now();
-    if (diffMs <= 0) return { text: "Expired", variant: "destructive" };
+    if (diffMs <= 0) return { text: "Просрочен", variant: "destructive" };
     const diffSec = Math.floor(diffMs / 1000);
     const diffMin = Math.floor(diffSec / 60);
     const diffHr = Math.floor(diffMin / 60);
@@ -114,10 +114,10 @@ const MCPCredentialsTab: React.FC<Props> = ({ accessToken }) => {
                   Connected
                 </TableHead>
                 <TableHead className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                  Status
+                  Статус
                 </TableHead>
                 <TableHead className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground text-right">
-                  Actions
+                  Действия
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -162,10 +162,10 @@ const MCPCredentialsTab: React.FC<Props> = ({ accessToken }) => {
                   Connected
                 </TableHead>
                 <TableHead className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                  Status
+                  Статус
                 </TableHead>
                 <TableHead className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground text-right">
-                  Actions
+                  Действия
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -210,7 +210,7 @@ const MCPCredentialsTab: React.FC<Props> = ({ accessToken }) => {
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogCancel>Отмена</AlertDialogCancel>
                             <AlertDialogAction variant="destructive" onClick={() => handleRevoke(cred.server_id)}>
                               Revoke
                             </AlertDialogAction>

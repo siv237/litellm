@@ -149,7 +149,7 @@ const ModelRetrySettingsTab = ({
                   />
                   {!isGlobalScope && hasOverride && (
                     <Button variant="ghost" size="xs" onClick={() => setModelOverride(retryPolicyKey, null)}>
-                      Reset
+                      Сброс
                     </Button>
                   )}
                 </td>

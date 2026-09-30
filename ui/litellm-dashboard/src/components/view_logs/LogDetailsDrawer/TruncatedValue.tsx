@@ -23,7 +23,7 @@ export function TruncatedValue({ value, maxWidth = DEFAULT_MAX_WIDTH }: Truncate
               <span className="truncate text-xs" style={{ maxWidth, fontFamily: FONT_FAMILY_MONO }}>
                 {value}
               </span>
-              <CopyButton value={value} label="Copy" className="size-4 shrink-0" iconClassName="size-3" />
+              <CopyButton value={value} label="Скопировать" className="size-4 shrink-0" iconClassName="size-3" />
             </span>
           }
         />

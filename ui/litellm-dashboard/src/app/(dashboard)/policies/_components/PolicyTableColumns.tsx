@@ -101,8 +101,8 @@ export const getPolicyTableColumns = ({
   {
     id: "policy_name",
     accessorKey: "policy_name",
-    meta: { title: "Name", skeleton: "twoLine" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Name" />,
+    meta: { title: "Название", skeleton: "twoLine" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Название" />,
     size: 220,
     enableSorting: true,
     cell: ({ row }) => {
@@ -126,8 +126,8 @@ export const getPolicyTableColumns = ({
   {
     id: "description",
     accessorFn: (row) => row.primaryPolicy.description ?? "",
-    meta: { title: "Description" },
-    header: "Description",
+    meta: { title: "Описание" },
+    header: "Описание",
     size: 220,
     enableSorting: false,
     cell: ({ row }) => {
@@ -205,7 +205,7 @@ export const getPolicyTableColumns = ({
         {
           id: "actions",
           meta: { className: "text-right", headerClassName: "text-right" },
-          header: () => <span className="sr-only">Actions</span>,
+          header: () => <span className="sr-only">Действия</span>,
           size: 64,
           enableSorting: false,
           enableHiding: false,

@@ -223,7 +223,7 @@ const ToolPermissionRulesEditor: React.FC<ToolPermissionRulesEditorProps> = ({ v
                     <p className="font-semibold">Rule {index + 1}</p>
                     <Button variant="ghost" disabled={disabled} onClick={() => removeRule(index)}>
                       <Trash2 />
-                      Remove
+                      Убрать
                     </Button>
                   </div>
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

@@ -117,7 +117,7 @@ const PromptCompressionTab: React.FC<PromptCompressionTabProps> = ({ accessToken
               Headroom setup docs
             </a>
           </p>
-          {isLoading && <p className="text-sm text-muted-foreground">Loading...</p>}
+          {isLoading && <p className="text-sm text-muted-foreground">Загрузка…</p>}
           {!isLoading && guardrails.length === 0 && (
             <p className="text-sm text-muted-foreground">
               No prompt compression guardrails configured yet. Add one below to start saving on input tokens
@@ -155,7 +155,7 @@ const PromptCompressionTab: React.FC<PromptCompressionTabProps> = ({ accessToken
           <TooltipProvider>
             <form onSubmit={form.handleSubmit(handleAdd)} noValidate>
               <FieldGroup>
-                <FormField control={form.control} name="name" label="Name">
+                <FormField control={form.control} name="name" label="Название">
                   {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="headroom-compression" />}
                 </FormField>
                 <FormField

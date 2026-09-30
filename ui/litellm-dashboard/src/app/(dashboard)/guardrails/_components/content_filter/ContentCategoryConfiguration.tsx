@@ -241,7 +241,7 @@ const ContentCategoryConfiguration: React.FC<ContentCategoryConfigurationProps> 
       cell: ({ row }) => (
         <Button variant="outline" size="sm" onClick={() => onCategoryRemove(row.original.id)}>
           <Trash2 />
-          Remove
+          Убрать
         </Button>
       ),
     },
@@ -287,7 +287,7 @@ const ContentCategoryConfiguration: React.FC<ContentCategoryConfigurationProps> 
           </Combobox>
           <Button onClick={handleAddCategory} disabled={!selectedCategoryName}>
             <Plus />
-            Add
+            Добавить
           </Button>
         </div>
 

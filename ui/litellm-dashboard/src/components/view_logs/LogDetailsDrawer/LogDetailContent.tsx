@@ -139,8 +139,8 @@ export function LogDetailContent({ logEntry, isLoadingDetails = false, accessTok
           </CardHeader>
           <CardContent>
             <DescriptionList>
-              <DescriptionItem label="Model">{logEntry.model}</DescriptionItem>
-              <DescriptionItem label="Provider">{logEntry.custom_llm_provider || "-"}</DescriptionItem>
+              <DescriptionItem label="Модель">{logEntry.model}</DescriptionItem>
+              <DescriptionItem label="Провайдер">{logEntry.custom_llm_provider || "-"}</DescriptionItem>
               <DescriptionItem label="Call Type">{logEntry.call_type}</DescriptionItem>
               <DescriptionItem label="Model ID">
                 <TruncatedValue value={logEntry.model_id} />
@@ -431,7 +431,7 @@ function BatchResultsSection({ logEntry, metadata }: { logEntry: LogEntry; metad
                 </DescriptionItem>
               </>
             )}
-            {batchModels && <DescriptionItem label="Models">{batchModels.join(", ")}</DescriptionItem>}
+            {batchModels && <DescriptionItem label="Модели">{batchModels.join(", ")}</DescriptionItem>}
           </DescriptionList>
         </CardContent>
       </Card>
@@ -474,7 +474,7 @@ function MetricsSection({ logEntry, metadata }: { logEntry: LogEntry; metadata: 
                 </DescriptionItem>
               </>
             ) : (
-              <DescriptionItem label="Tokens">
+              <DescriptionItem label="Токены">
                 <TokenFlow
                   prompt={logEntry.prompt_tokens}
                   completion={logEntry.completion_tokens}
@@ -559,7 +559,7 @@ function MetricsSection({ logEntry, metadata }: { logEntry: LogEntry; metadata: 
               )}
               {metadata?.attempted_retries != null && metadata.attempted_retries <= 0 && (
                 <Badge variant="secondary" className="bg-success/15 text-success">
-                  None
+                  Нет
                 </Badge>
               )}
               {metadata?.attempted_retries == null && "-"}

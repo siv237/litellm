@@ -85,7 +85,7 @@ const EntityUsageExportModal: React.FC<EntityUsageExportModalProps> = ({
             ) : (
               <>
                 <Button variant="outline" onClick={onClose} disabled={isExporting}>
-                  Cancel
+                  Отмена
                 </Button>
                 <Button onClick={() => handleExport()} disabled={isExporting}>
                   {isExporting && <Loader2 className="animate-spin" />}

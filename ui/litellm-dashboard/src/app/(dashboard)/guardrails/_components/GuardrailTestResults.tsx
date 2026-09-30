@@ -109,7 +109,7 @@ export function GuardrailTestResults({ results, errors }: GuardrailTestResultsPr
                         }}
                       >
                         <Copy />
-                        Copy
+                        Скопировать
                       </Button>
                     )}
                   </div>

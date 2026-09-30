@@ -92,7 +92,7 @@ export function SectionHeader({
         >
           <Copy />
         </TooltipTrigger>
-        <TooltipContent>Copy</TooltipContent>
+        <TooltipContent>Скопировать</TooltipContent>
       </Tooltip>
     </div>
   );

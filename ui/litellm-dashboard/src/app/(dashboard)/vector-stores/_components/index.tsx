@@ -146,7 +146,7 @@ const VectorStoreManagement: React.FC<VectorStoreProps> = ({ accessToken, userID
           <h1 className="text-xl font-semibold tracking-tight text-foreground">Vector Store Management</h1>
           <div className="flex items-center space-x-2">
             {lastRefreshed && <p className="text-sm text-muted-foreground">Last Refreshed: {lastRefreshed}</p>}
-            <Button variant="outline" size="icon-sm" aria-label="Refresh" onClick={handleRefreshClick}>
+            <Button variant="outline" size="icon-sm" aria-label="Обновить" onClick={handleRefreshClick}>
               <RefreshCw className="size-4" />
             </Button>
           </div>

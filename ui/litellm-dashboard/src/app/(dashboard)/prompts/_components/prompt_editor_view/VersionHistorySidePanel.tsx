@@ -90,7 +90,7 @@ const VersionHistorySidePanel: React.FC<VersionHistorySidePanelProps> = ({
     >
       <Button type="button" variant="ghost" size="icon-sm" className="absolute top-4 right-4" onClick={onClose}>
         <XIcon />
-        <span className="sr-only">Close</span>
+        <span className="sr-only">Закрыть</span>
       </Button>
       <header className="flex flex-col gap-1.5 p-4">
         <h2 id="version-history-title" className="font-medium text-foreground">
@@ -140,7 +140,7 @@ const VersionHistorySidePanel: React.FC<VersionHistorySidePanelProps> = ({
                       <Badge variant="secondary">{getVersionNumber(item)}</Badge>
                       {index === 0 && <Badge>Latest</Badge>}
                     </div>
-                    {isSelected && <Badge variant="secondary">Active</Badge>}
+                    {isSelected && <Badge variant="secondary">Активный</Badge>}
                   </div>
 
                   <div className="flex flex-col gap-1">

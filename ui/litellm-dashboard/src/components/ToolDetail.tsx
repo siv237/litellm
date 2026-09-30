@@ -330,7 +330,7 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
                     {!ov.team_id && !ov.key_hash ? "—" : ""}
                   </span>
                   <Button variant="link" size="sm" disabled={overrideSaving} onClick={() => handleRemoveOverride(ov)}>
-                    Remove
+                    Убрать
                   </Button>
                 </li>
               ))}
@@ -351,7 +351,7 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
                     onChange={() => setBlockScope("team")}
                     className="align-middle"
                   />
-                  Team
+                  Команда
                 </label>
                 <label className="flex cursor-pointer items-center gap-2 text-sm">
                   <input

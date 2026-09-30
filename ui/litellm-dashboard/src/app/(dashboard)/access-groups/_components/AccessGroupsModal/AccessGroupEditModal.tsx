@@ -75,10 +75,10 @@ function AccessGroupEditForm({ accessGroup, onCancel, onSuccess }: Omit<AccessGr
 
       <div className="mt-6 flex justify-end gap-2">
         <Button type="button" variant="outline" onClick={onCancel} disabled={editMutation.isPending}>
-          Cancel
+          Отмена
         </Button>
         <Button type="button" onClick={() => void handleOk()} disabled={editMutation.isPending}>
-          Save Changes
+          Сохранить изменения
         </Button>
       </div>
     </form>

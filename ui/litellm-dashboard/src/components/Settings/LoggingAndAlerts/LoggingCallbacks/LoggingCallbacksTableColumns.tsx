@@ -76,12 +76,12 @@ function CallbackRowActions({ callback, onTest, onEdit, onDelete }: CallbackRowA
         </DropdownMenuItem>
         <DropdownMenuItem data-testid="callback-action-edit" onClick={() => onEdit(callback)}>
           <Pencil />
-          Edit
+          Изменить
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" data-testid="callback-action-delete" onClick={() => onDelete(callback)}>
           <Trash2 />
-          Delete
+          Удалить
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -131,7 +131,7 @@ export const getLoggingCallbacksTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

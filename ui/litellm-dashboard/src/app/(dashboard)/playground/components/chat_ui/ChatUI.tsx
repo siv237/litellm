@@ -1811,7 +1811,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
 
                   {isLoading && (
                     <div className="my-4 flex items-center justify-center">
-                      <Loader2 className="size-6 animate-spin text-muted-foreground" aria-label="Loading" />
+                      <Loader2 className="size-6 animate-spin text-muted-foreground" aria-label="Загрузка" />
                     </div>
                   )}
                   <div ref={chatEndRef} style={{ height: "1px" }} />
@@ -1937,7 +1937,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                             onClick={handleRemoveAudio}
                           >
                             <Trash2 className="size-3" />
-                            Remove
+                            Убрать
                           </Button>
                         </div>
                       )}
@@ -2197,7 +2197,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setIsToolsetsInfoModalVisible(false)}>
-              Close
+              Закрыть
             </Button>
           </DialogFooter>
         </DialogContent>

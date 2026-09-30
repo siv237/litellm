@@ -241,7 +241,7 @@ const MakeSkillPublicForm: React.FC<MakeSkillPublicFormProps> = ({
             <div className="flex space-x-2">
               {currentStep === 0 && (
                 <Button onClick={handleNext} disabled={selectedSkills.size === 0}>
-                  Next
+                  Далее
                 </Button>
               )}
               {currentStep === 1 && (

@@ -807,7 +807,7 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
                         >
                           {copiedPrimitive === p.name ? (
                             <span className="flex items-center gap-1 font-mono text-xs">
-                              <CheckCircle2 className="size-3.5" /> Copied!
+                              <CheckCircle2 className="size-3.5" /> Скопировано
                             </span>
                           ) : (
                             <>
@@ -830,7 +830,7 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
           <span className="text-xs text-muted-foreground">Changes are auto-saved to local draft</span>
           <div className="flex items-center gap-3">
             <Button variant="secondary" onClick={onClose}>
-              Cancel
+              Отмена
             </Button>
             <Button onClick={handleSave} disabled={isSaving || !guardrailName.trim()} aria-busy={isSaving}>
               {isSaving ? <UiLoadingSpinner className="size-4" /> : <Save />}

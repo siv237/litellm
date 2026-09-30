@@ -92,12 +92,12 @@ const PricingCalculator: React.FC<PricingCalculatorProps> = ({ accessToken, mode
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[35%]">Model</TableHead>
+            <TableHead className="w-[35%]">Модель</TableHead>
             <TableHead className="w-[18%]">Input Tokens</TableHead>
             <TableHead className="w-[18%]">Output Tokens</TableHead>
             <TableHead className="w-[20%]">Requests/{timePeriod === "day" ? "Day" : "Month"}</TableHead>
             <TableHead className="w-[50px]">
-              <span className="sr-only">Actions</span>
+              <span className="sr-only">Действия</span>
             </TableHead>
           </TableRow>
         </TableHeader>

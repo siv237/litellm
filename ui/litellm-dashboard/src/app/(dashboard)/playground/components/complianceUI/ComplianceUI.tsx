@@ -799,7 +799,7 @@ export default function ComplianceUI({
                           type="button"
                           onClick={() => toggleGuardrail(id)}
                           className="hover:text-indigo-900 dark:hover:text-indigo-100"
-                          aria-label="Remove"
+                          aria-label="Убрать"
                         >
                           <X className="w-2.5 h-2.5" />
                         </button>
@@ -844,7 +844,7 @@ export default function ComplianceUI({
                 }}
                 className="flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:bg-accent transition-colors"
               >
-                <RotateCcw className="w-3 h-3" /> Reset
+                <RotateCcw className="w-3 h-3" /> Сброс
               </button>
             </div>
           </div>
@@ -901,7 +901,7 @@ export default function ComplianceUI({
                       }}
                       className={`flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-sm transition-colors ${showAddPrompt ? "bg-info/10 text-info" : "text-muted-foreground hover:bg-accent"}`}
                     >
-                      <Plus className="w-3 h-3" /> Add
+                      <Plus className="w-3 h-3" /> Добавить
                     </button>
                     <button
                       type="button"
@@ -952,7 +952,7 @@ export default function ComplianceUI({
                         }}
                         className="text-[11px] text-muted-foreground px-2 py-1"
                       >
-                        Cancel
+                        Отмена
                       </button>
                       <button
                         type="button"
@@ -960,7 +960,7 @@ export default function ComplianceUI({
                         disabled={!newPromptText.trim()}
                         className={`text-[11px] font-medium px-2.5 py-1 rounded-sm ${newPromptText.trim() ? "bg-info text-info-foreground" : "bg-muted text-muted-foreground"}`}
                       >
-                        Add
+                        Добавить
                       </button>
                     </div>
                   </div>
@@ -1027,7 +1027,7 @@ export default function ComplianceUI({
                       }}
                       className="text-[11px] text-muted-foreground px-2 py-1"
                     >
-                      Cancel
+                      Отмена
                     </button>
                   </div>
                 </div>
@@ -1157,7 +1157,7 @@ export default function ComplianceUI({
                                               deleteCustomPrompt(prompt.id);
                                             }}
                                             className="opacity-0 group-hover:opacity-100 p-0.5 text-muted-foreground hover:text-destructive transition-all shrink-0"
-                                            aria-label="Delete"
+                                            aria-label="Удалить"
                                           >
                                             <Trash2 className="w-3 h-3" />
                                           </button>

@@ -176,7 +176,7 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
             <TableHeader>
               <TableRow className="bg-muted/50">
                 <TableHead className="text-xs font-semibold uppercase tracking-wide">Key</TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wide">Spend</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wide">Расход</TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wide">Expires</TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wide">Created</TableHead>
                 {premiumUser && (
@@ -220,7 +220,7 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
             <TableHeader>
               <TableRow className="bg-muted/50">
                 <TableHead className="text-xs font-semibold uppercase tracking-wide">Key</TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wide">Spend</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wide">Расход</TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wide">Expires</TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wide">Created</TableHead>
                 {premiumUser && (
@@ -352,7 +352,7 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
             {regeneratedKey ? (
               <>
                 <Button variant="outline" onClick={closeModal}>
-                  Close
+                  Закрыть
                 </Button>
                 <CopyToClipboard text={regeneratedKey} onCopy={() => setCopied(true)}>
                   <Button>
@@ -364,7 +364,7 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
             ) : (
               <>
                 <Button variant="outline" onClick={closeModal}>
-                  Cancel
+                  Отмена
                 </Button>
                 <Button onClick={handleRegenerate} disabled={isRegenerating}>
                   {isRegenerating ? (

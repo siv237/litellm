@@ -85,7 +85,7 @@ export const OrgCreateDialog = ({
               {({ ref, ...field }) => <Input {...field} ref={ref} />}
             </FormField>
 
-            <FormField control={form.control} name="models" label="Models">
+            <FormField control={form.control} name="models" label="Модели">
               {(field) => (
                 <ModelSelect
                   value={field.value}
@@ -173,7 +173,7 @@ export const OrgCreateDialog = ({
               onClick={() => handleOpenChange(false)}
               disabled={mutation.isPending}
             >
-              Cancel
+              Отмена
             </Button>
             <Button type="submit" disabled={mutation.isPending}>
               {mutation.isPending ? "Creating..." : "Create Organization"}

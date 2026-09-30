@@ -152,9 +152,9 @@ const PassThroughSettings: React.FC<PassThroughSettingsProps> = ({ accessToken, 
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
             <Button variant="destructive" onClick={confirmDelete}>
-              Delete
+              Удалить
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -106,8 +106,8 @@ export const getModelHubTableColumns = ({ onModelClick }: ModelHubTableColumnsDe
   {
     id: "providers",
     accessorKey: "providers",
-    meta: { title: "Provider", skeleton: "chips", className: "hidden md:table-cell" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Provider" />,
+    meta: { title: "Провайдер", skeleton: "chips", className: "hidden md:table-cell" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Провайдер" />,
     size: 150,
     enableSorting: true,
     sortingFn: (rowA, rowB) => rowA.original.providers.join(", ").localeCompare(rowB.original.providers.join(", ")),
@@ -143,8 +143,8 @@ export const getModelHubTableColumns = ({ onModelClick }: ModelHubTableColumnsDe
   {
     id: "max_input_tokens",
     accessorKey: "max_input_tokens",
-    meta: { title: "Tokens", className: "hidden lg:table-cell" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Tokens" />,
+    meta: { title: "Токены", className: "hidden lg:table-cell" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Токены" />,
     size: 110,
     enableSorting: true,
     sortingFn: (rowA, rowB) => {
@@ -222,15 +222,15 @@ export const getModelHubTableColumns = ({ onModelClick }: ModelHubTableColumnsDe
     },
     cell: ({ row }) =>
       row.original.is_public_model_group === true ? (
-        <StatusBadge tone="success" label="Yes" />
+        <StatusBadge tone="success" label="Да" />
       ) : (
-        <StatusBadge tone="neutral" label="No" />
+        <StatusBadge tone="neutral" label="Нет" />
       ),
   },
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

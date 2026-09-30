@@ -30,8 +30,8 @@ interface KeyStatus {
 }
 
 const SPEND_BUDGET_SORT_FIELDS: DataTableSortField[] = [
-  { id: "spend", label: "Spend" },
-  { id: "max_budget", label: "Budget" },
+  { id: "spend", label: "Расход" },
+  { id: "max_budget", label: "Бюджет" },
 ];
 
 export const KEY_TABLE_SORT_FIELDS: readonly string[] = [
@@ -55,11 +55,11 @@ const getKeyStatus = (key: KeyResponse): KeyStatus => {
   }
   const expiresAt = key.expires ? Date.parse(key.expires) : Number.NaN;
   if (!Number.isNaN(expiresAt) && expiresAt < Date.now()) {
-    return { tone: "warning", label: "Expired", tooltip: "This key has passed its expiry date." };
+    return { tone: "warning", label: "Просрочен", tooltip: "This key has passed its expiry date." };
   }
   return {
     tone: "success",
-    label: "Active",
+    label: "Активный",
     tooltip: "This key is not blocked and has not expired.",
   };
 };
@@ -134,8 +134,8 @@ export const getKeyTableColumns = ({
   {
     id: "team_alias",
     accessorKey: "team_id",
-    meta: { title: "Team" },
-    header: "Team",
+    meta: { title: "Команда" },
+    header: "Команда",
     size: 120,
     enableSorting: false,
     cell: (info) => {
@@ -174,9 +174,9 @@ export const getKeyTableColumns = ({
   {
     id: "user",
     accessorKey: "user",
-    meta: { title: "User" },
+    meta: { title: "Пользователь" },
     header: () => (
-      <InfoHeader label="User" tooltip="Displays the first available value: User Alias, User Email, or User ID." />
+      <InfoHeader label="Пользователь" tooltip="Displays the first available value: User Alias, User Email, or User ID." />
     ),
     size: 160,
     enableSorting: false,
@@ -286,8 +286,8 @@ export const getKeyTableColumns = ({
   {
     id: "models",
     accessorKey: "models",
-    meta: { title: "Models", skeleton: "chips" },
-    header: "Models",
+    meta: { title: "Модели", skeleton: "chips" },
+    header: "Модели",
     size: 220,
     enableSorting: false,
     cell: (info) => (

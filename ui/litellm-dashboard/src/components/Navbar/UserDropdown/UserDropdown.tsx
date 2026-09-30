@@ -114,7 +114,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ onLogout, variant = "navbar
       <div className="flex w-full items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <ShieldCheck className="size-4" />
-          <span className="text-muted-foreground">Role</span>
+          <span className="text-muted-foreground">Роль</span>
         </div>
         <span>{userRole}</span>
       </div>

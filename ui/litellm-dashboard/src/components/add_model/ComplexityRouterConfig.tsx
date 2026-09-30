@@ -218,7 +218,7 @@ const TierSetToolbar: React.FC<{
           </Button>
           <SimpleTooltip content={rowsError || undefined}>
             <Button variant="outline" disabled={Boolean(rowsError)} onClick={() => onEditingChange?.(false)}>
-              Done
+              Готово
             </Button>
           </SimpleTooltip>
           {isCustomSet && (
@@ -305,7 +305,7 @@ const TierRowHeader: React.FC<{
         onClick={onRemove}
       >
         <Trash2 />
-        Remove
+        Убрать
       </Button>
     )}
   </div>

@@ -52,7 +52,7 @@ function CreateProjectForm({ onClose }: { onClose: () => void }) {
 
       <div className="mt-6 flex justify-end gap-2 border-t border-border pt-4">
         <Button type="button" variant="outline" onClick={handleCancel}>
-          Cancel
+          Отмена
         </Button>
         <Button type="button" onClick={() => void handleSubmit()} disabled={createMutation.isPending}>
           {createMutation.isPending ? <UiLoadingSpinner /> : <FolderPlus />}

@@ -257,7 +257,7 @@ export function RegenerateKeyModal({ selectedToken, visible, onClose, onKeyUpdat
           {regeneratedKey ? (
             <>
               <Button variant="outline" onClick={handleClose}>
-                Close
+                Закрыть
               </Button>
               <CopyToClipboard text={regeneratedKey} onCopy={handleCopyKey}>
                 <Button>
@@ -269,7 +269,7 @@ export function RegenerateKeyModal({ selectedToken, visible, onClose, onKeyUpdat
           ) : (
             <>
               <Button variant="outline" onClick={handleClose}>
-                Cancel
+                Отмена
               </Button>
               <Button onClick={handleRegenerateKey} disabled={isRegenerating} aria-busy={isRegenerating}>
                 <RefreshCw />

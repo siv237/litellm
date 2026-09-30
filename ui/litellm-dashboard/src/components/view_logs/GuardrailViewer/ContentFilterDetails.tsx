@@ -80,7 +80,7 @@ const ContentFilterDetails: React.FC<ContentFilterDetailsProps> = ({ response })
       return (
         <div className="bg-card rounded-lg border border-destructive/20 p-4">
           <div className="text-destructive">
-            <h5 className="font-medium mb-2">Error</h5>
+            <h5 className="font-medium mb-2">Ошибка</h5>
             <p className="text-sm">{response}</p>
           </div>
         </div>

@@ -119,7 +119,7 @@ const ImportMCPServers: React.FC<ImportMCPServersProps> = ({ accessToken, open, 
           )}
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={handleClose} disabled={isImporting}>
-              Close
+              Закрыть
             </Button>
             <Button onClick={handleImport} disabled={isImporting}>
               {isImporting ? "Importing..." : "Import"}

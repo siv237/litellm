@@ -15,7 +15,7 @@ interface JsonViewerProps {
 export function JsonViewer({ data }: JsonViewerProps) {
   const { resolvedTheme } = useTheme();
 
-  if (!data) return <span className="text-muted-foreground">No data</span>;
+  if (!data) return <span className="text-muted-foreground">Нет данных</span>;
 
   return (
     <div

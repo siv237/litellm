@@ -63,8 +63,8 @@ export const getAvailableTeamsTableColumns = ({
   {
     id: "description",
     accessorKey: "description",
-    meta: { title: "Description" },
-    header: "Description",
+    meta: { title: "Описание" },
+    header: "Описание",
     size: 280,
     enableSorting: false,
     cell: ({ row }) => {
@@ -89,8 +89,8 @@ export const getAvailableTeamsTableColumns = ({
   },
   {
     id: "models",
-    meta: { title: "Models" },
-    header: "Models",
+    meta: { title: "Модели" },
+    header: "Модели",
     size: 260,
     enableSorting: false,
     cell: ({ row }) => <ModelsCell models={row.original.models} />,
@@ -98,7 +98,7 @@ export const getAvailableTeamsTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

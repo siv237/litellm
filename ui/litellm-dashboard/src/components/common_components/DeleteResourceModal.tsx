@@ -78,7 +78,7 @@ export default function DeleteResourceModal({
           {requiredConfirmation && (
             <div className="mb-6 mt-4 pt-4 border-t border-border">
               <p className="block text-base font-medium text-foreground mb-2">
-                Type <span className="font-semibold text-destructive">{requiredConfirmation}</span> to confirm deletion:
+                Тип <span className="font-semibold text-destructive">{requiredConfirmation}</span> to confirm deletion:
               </p>
               <InputGroup className="rounded-md">
                 <InputGroupAddon>
@@ -96,7 +96,7 @@ export default function DeleteResourceModal({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onCancel} disabled={confirmLoading}>
-            Cancel
+            Отмена
           </Button>
           <Button
             variant="destructive"

@@ -215,7 +215,7 @@ function CreateToolsetModal({ open, onClose, onSave, accessToken, initialToolset
             <FormField control={form.control} name="toolset_name" label="Toolset Name" className="flex-1">
               {(field) => <Input {...field} placeholder="e.g. github-linear-tools" />}
             </FormField>
-            <FormField control={form.control} name="description" label="Description" className="flex-1">
+            <FormField control={form.control} name="description" label="Описание" className="flex-1">
               {(field) => <Input {...field} placeholder="Optional description" />}
             </FormField>
           </FieldGroup>
@@ -301,7 +301,7 @@ function CreateToolsetModal({ open, onClose, onSave, accessToken, initialToolset
 
         <div className="flex justify-end gap-2 mt-4 pt-4 border-t border-border">
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            Отмена
           </Button>
           <Button onClick={() => void form.handleSubmit(handleSubmit)()} disabled={saving} aria-busy={saving}>
             {saving && <UiLoadingSpinner className="size-4" />}
@@ -490,10 +490,10 @@ export function MCPToolsetsTab({ accessToken, userRole }: MCPToolsetsTabProps) {
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteId(null)}>
-              Cancel
+              Отмена
             </Button>
             <Button onClick={handleDelete} variant="destructive" disabled={deleting} aria-busy={deleting}>
-              Delete
+              Удалить
             </Button>
           </DialogFooter>
         </DialogContent>

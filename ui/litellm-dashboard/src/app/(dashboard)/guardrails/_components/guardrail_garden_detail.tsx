@@ -125,7 +125,7 @@ const GuardrailDetailView: React.FC<GuardrailDetailViewProps> = ({ card, onBack,
 
             {/* Type */}
             <div className="mb-7">
-              <div className="mb-1 text-xs text-muted-foreground">Type</div>
+              <div className="mb-1 text-xs text-muted-foreground">Тип</div>
               <div className="text-[13px] text-foreground">
                 {card.category === "litellm" ? "Content Filter" : "Partner"}
               </div>

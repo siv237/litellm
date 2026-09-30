@@ -254,7 +254,7 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
     <FormField
       control={form.control}
       name="team_id"
-      label="Team"
+      label="Команда"
       description="If selected, user will be added as a 'user' role to the team."
     >
       {({ id, value, onChange }) => <TeamDropdown id={id} value={value} onChange={onChange} />}

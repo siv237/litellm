@@ -48,7 +48,7 @@ function SsoEnabledNotice() {
         environment configuration.
       </AlertTitle>
       <AlertAction>
-        <Button variant="ghost" size="icon-sm" aria-label="Close" onClick={() => setDismissed(true)}>
+        <Button variant="ghost" size="icon-sm" aria-label="Закрыть" onClick={() => setDismissed(true)}>
           <X className="size-4" />
         </Button>
       </AlertAction>

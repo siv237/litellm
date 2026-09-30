@@ -82,7 +82,7 @@ export const OrgSettingsForm = ({
           {({ ref, ...field }) => <Input {...field} ref={ref} />}
         </FormField>
 
-        <FormField control={form.control} name="models" label="Models">
+        <FormField control={form.control} name="models" label="Модели">
           {(field) => (
             <ModelSelect
               value={field.value}
@@ -156,7 +156,7 @@ export const OrgSettingsForm = ({
       <div className="sticky z-chrome bg-card p-4 border-t border-border -bottom-6 -inset-x-6 mt-6">
         <div className="flex justify-end items-center gap-2">
           <Button type="button" variant="outline" onClick={onCancel} disabled={mutation.isPending}>
-            Cancel
+            Отмена
           </Button>
           <Button type="submit" disabled={!isDirty || mutation.isPending}>
             {mutation.isPending ? "Saving..." : "Save Changes"}

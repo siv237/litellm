@@ -130,7 +130,7 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
 
   const credentialOptions: SearchSelectOption[] = useMemo(
     () => [
-      { label: "None", value: "" },
+      { label: "Нет", value: "" },
       ...credentials.map((credential) => ({
         label: credential.credential_name,
         value: credential.credential_name,
@@ -271,7 +271,7 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                         <div className="col-span-5" />
                         <div className="col-span-5">
                           <p className="text-sm mb-5 mt-1">
-                            <strong>Optional</strong> - LiteLLM endpoint to use when health checking this model{" "}
+                            <strong>Необязательно</strong> - LiteLLM endpoint to use when health checking this model{" "}
                             <a
                               href="https://docs.litellm.ai/docs/proxy/health#health"
                               target="_blank"
@@ -485,7 +485,7 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                 setIsTestingConnection(false);
               }}
             >
-              Close
+              Закрыть
             </Button>
           </DialogFooter>
         </DialogContent>

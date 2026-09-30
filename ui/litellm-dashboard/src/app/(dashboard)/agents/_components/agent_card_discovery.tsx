@@ -348,7 +348,7 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
               <Input value={editedName} onChange={(e) => setEditedName(e.target.value)} placeholder="Agent name" />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium text-muted-foreground">Description</label>
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">Описание</label>
               <Textarea
                 className="field-sizing-fixed min-h-0"
                 value={editedDescription}

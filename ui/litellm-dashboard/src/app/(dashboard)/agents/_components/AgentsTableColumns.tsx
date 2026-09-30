@@ -38,7 +38,7 @@ function AgentRowActions({ agent, onDeleteClick }: AgentRowActionsProps) {
           onClick={() => onDeleteClick(agent.agent_id, agent.agent_name)}
         >
           <Trash2 />
-          Delete
+          Удалить
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -90,16 +90,16 @@ export const getAgentsTableColumns = ({
   {
     id: "spend",
     accessorKey: "spend",
-    meta: { title: "Spend (USD)" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Spend (USD)" />,
+    meta: { title: "Расход (USD)" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Расход (USD)" />,
     size: 130,
     enableSorting: true,
     cell: ({ row }) => <MoneyCell value={row.original.spend} decimals={4} />,
   },
   {
     id: "model",
-    meta: { title: "Model" },
-    header: "Model",
+    meta: { title: "Модель" },
+    header: "Модель",
     size: 170,
     enableSorting: false,
     cell: ({ row }) => {
@@ -130,14 +130,14 @@ export const getAgentsTableColumns = ({
   },
   {
     id: "status",
-    meta: { title: "Status" },
-    header: "Status",
+    meta: { title: "Статус" },
+    header: "Статус",
     size: 130,
     enableSorting: false,
     cell: ({ row }) => {
       const hasKeys = (row.original.keys?.length ?? 0) > 0;
       return hasKeys ? (
-        <StatusBadge tone="success" label="Active" />
+        <StatusBadge tone="success" label="Активный" />
       ) : (
         <StatusBadge tone="warning" label="Needs Setup" />
       );
@@ -148,7 +148,7 @@ export const getAgentsTableColumns = ({
         {
           id: "actions",
           meta: { className: "text-right", headerClassName: "text-right" },
-          header: () => <span className="sr-only">Actions</span>,
+          header: () => <span className="sr-only">Действия</span>,
           size: 64,
           enableSorting: false,
           enableHiding: false,

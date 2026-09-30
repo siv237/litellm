@@ -204,7 +204,7 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
           )}
         </FormField>
 
-        <FormField control={form.control} name="description" label="Description">
+        <FormField control={form.control} name="description" label="Описание">
           {({ ref, value, ...field }) => (
             <Textarea {...field} ref={ref} value={value ?? ""} rows={3} placeholder="Description of this search tool" />
           )}
@@ -261,13 +261,13 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
         resourceInformation={
           toolToDelete
             ? [
-                { label: "Name", value: toolToDelete.search_tool_name },
+                { label: "Название", value: toolToDelete.search_tool_name },
                 { label: "ID", value: toolToDelete.search_tool_id, code: true },
                 {
-                  label: "Provider",
+                  label: "Провайдер",
                   value: providerInfo?.ui_friendly_name || toolToDelete.litellm_params.search_provider,
                 },
-                { label: "Description", value: toolToDelete.search_tool_info?.description || "-" },
+                { label: "Описание", value: toolToDelete.search_tool_info?.description || "-" },
               ]
             : []
         }
@@ -308,7 +308,7 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
                 setSelectedToolId(null);
               }}
             >
-              Cancel
+              Отмена
             </Button>
             <Button onClick={handleEditSubmit}>OK</Button>
           </DialogFooter>

@@ -70,8 +70,8 @@ export const getDeletedKeysTableColumns = (): ColumnDef<DeletedKeyResponse>[] =>
   {
     id: "spend",
     accessorKey: "spend",
-    meta: { title: "Spend (USD)", numeric: true },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Spend (USD)" />,
+    meta: { title: "Расход (USD)", numeric: true },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Расход (USD)" />,
     size: 100,
     enableSorting: true,
     cell: ({ row }) => <MoneyCell value={row.original.spend} decimals={4} />,

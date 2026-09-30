@@ -90,7 +90,7 @@ export default function OnboardingModal({
           <p className="text-sm">{getInvitationUrl()}</p>
         </div>
         <div className="flex justify-end mt-5">
-          <CopyToClipboard text={getInvitationUrl()} onCopy={() => toast.success("Copied!")}>
+          <CopyToClipboard text={getInvitationUrl()} onCopy={() => toast.success("Скопировано")}>
             <Button>{modalType === "invitation" ? "Copy invitation link" : "Copy password reset link"}</Button>
           </CopyToClipboard>
         </div>

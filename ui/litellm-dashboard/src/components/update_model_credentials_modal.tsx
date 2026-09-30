@@ -96,7 +96,7 @@ export default function UpdateModelCredentialsModal({
           </FieldGroup>
           <div className="flex justify-end items-center mt-4 gap-2.5">
             <Button type="button" variant="outline" onClick={close}>
-              Cancel
+              Отмена
             </Button>
             <Button type="submit" disabled={isSaving}>
               {isSaving && <UiLoadingSpinner className="size-4" />}

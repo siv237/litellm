@@ -671,7 +671,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                   <MountedFormField
                     label={
                       <span className="text-sm font-medium text-foreground flex items-center">
-                        Alias
+                        Псевдоним
                         <SimpleTooltip content="A short, unique identifier for this server. Defaults to the server name if not provided. Cannot contain spaces or hyphens; use underscores instead.">
                           <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                         </SimpleTooltip>
@@ -694,7 +694,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                   </MountedFormField>
 
                   <MountedFormField
-                    label={<span className="text-sm font-medium text-foreground">Description</span>}
+                    label={<span className="text-sm font-medium text-foreground">Описание</span>}
                     name="description"
                   >
                     {(control) => (
@@ -970,7 +970,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
 
                 <div className="flex items-center justify-end space-x-3 pt-6 border-t border-border">
                   <Button variant="secondary" onClick={handleCancel}>
-                    Cancel
+                    Отмена
                   </Button>
                   <Button type="submit" disabled={isLoading} aria-busy={isLoading}>
                     {isLoading && <UiLoadingSpinner className="size-4" />}

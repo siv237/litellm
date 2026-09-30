@@ -322,7 +322,7 @@ const CloudZeroExportModal: React.FC<CloudZeroExportModalProps> = ({ isOpen, onC
           {/* Action Buttons */}
           <div className="flex justify-end space-x-2 pt-4">
             <Button type="button" variant="secondary" onClick={handleModalClose}>
-              Cancel
+              Отмена
             </Button>
             <Button
               type="button"

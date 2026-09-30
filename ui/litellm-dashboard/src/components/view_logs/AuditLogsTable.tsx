@@ -42,9 +42,9 @@ const ACTION_OPTIONS = [
 const TABLE_OPTIONS = [
   { label: "Keys", value: "LiteLLM_VerificationToken" },
   { label: "Teams", value: "LiteLLM_TeamTable" },
-  { label: "Users", value: "LiteLLM_UserTable" },
+  { label: "Пользователи", value: "LiteLLM_UserTable" },
   { label: "Organizations", value: "LiteLLM_OrganizationTable" },
-  { label: "Models", value: "LiteLLM_ProxyModelTable" },
+  { label: "Модели", value: "LiteLLM_ProxyModelTable" },
 ] as const;
 
 const ACTION_FILTER_ITEMS = [

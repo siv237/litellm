@@ -451,7 +451,7 @@ export default function UserInfoView({
         message="Are you sure you want to delete this user? This action cannot be undone."
         resourceInformationTitle="User Information"
         resourceInformation={[
-          { label: "Email", value: userData.user_email },
+          { label: "Эл. почта", value: userData.user_email },
           { label: "User ID", value: userData.user_id, code: true },
           {
             label: "Global Proxy Role",
@@ -473,7 +473,7 @@ export default function UserInfoView({
             Overview
           </TabsTrigger>
           <TabsTrigger value="details" className="flex-none data-active:text-primary after:bg-primary">
-            Details
+            Подробнее
           </TabsTrigger>
         </TabsList>
 
@@ -481,7 +481,7 @@ export default function UserInfoView({
         <TabsContent value="overview" keepMounted>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="block p-6">
-              <p>Spend</p>
+              <p>Расход</p>
               <div className="mt-2">
                 <h3 className="text-lg font-medium">${formatNumberWithCommas(userData.spend || 0, 2)}</h3>
                 <p>
@@ -507,7 +507,7 @@ export default function UserInfoView({
                       <TableHeader>
                         <TableRow>
                           <TableHead>Team Name</TableHead>
-                          {isProxyAdmin && <TableHead className="text-right">Actions</TableHead>}
+                          {isProxyAdmin && <TableHead className="text-right">Действия</TableHead>}
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -611,7 +611,7 @@ export default function UserInfoView({
                 </div>
 
                 <div>
-                  <p className="font-medium">Email</p>
+                  <p className="font-medium">Эл. почта</p>
                   <p>{userData.user_email || "Not Set"}</p>
                 </div>
 
@@ -702,9 +702,9 @@ export default function UserInfoView({
         message="Are you sure you want to remove this user from the team? This action cannot be undone."
         resourceInformationTitle="Team Membership"
         resourceInformation={[
-          { label: "Team", value: teamToRemove?.team_alias || teamToRemove?.team_id },
+          { label: "Команда", value: teamToRemove?.team_alias || teamToRemove?.team_id },
           { label: "User ID", value: userData?.user_id, code: true },
-          { label: "Email", value: userData?.user_email },
+          { label: "Эл. почта", value: userData?.user_email },
         ]}
         onCancel={handleRemoveTeamCancel}
         onOk={handleRemoveTeamConfirm}
@@ -729,7 +729,7 @@ export default function UserInfoView({
           >
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor={ADD_TEAM_FIELD_ID}>Team</FieldLabel>
+                <FieldLabel htmlFor={ADD_TEAM_FIELD_ID}>Команда</FieldLabel>
                 <Combobox
                   items={availableTeamsForAdd}
                   value={selectedTeamOption}

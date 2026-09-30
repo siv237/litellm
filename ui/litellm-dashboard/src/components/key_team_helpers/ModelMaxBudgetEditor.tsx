@@ -150,7 +150,7 @@ export function ModelMaxBudgetEditor({
             </button>
 
             <div className="mb-3">
-              <label className="block text-xs font-medium text-muted-foreground mb-1">Model</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Модель</label>
               <SearchSelect
                 options={modelOptions.map((model) => ({ label: model, value: model }))}
                 value={entry.model}

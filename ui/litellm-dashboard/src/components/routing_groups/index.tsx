@@ -130,7 +130,7 @@ const RoutingGroups: React.FC = () => {
                 aria-busy={isFetching && !isLoading}
               >
                 <RefreshCw />
-                Refresh
+                Обновить
               </Button>
               <Button onClick={openCreate}>
                 <Plus />
@@ -176,7 +176,7 @@ const RoutingGroups: React.FC = () => {
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeletingGroup(null)}>
-              Cancel
+              Отмена
             </Button>
             <Button
               onClick={confirmDelete}
@@ -184,7 +184,7 @@ const RoutingGroups: React.FC = () => {
               disabled={saveMutation.isPending}
               aria-busy={saveMutation.isPending}
             >
-              Delete
+              Удалить
             </Button>
           </DialogFooter>
         </DialogContent>

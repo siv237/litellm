@@ -110,7 +110,7 @@ export function AccessGroupBaseForm({
         </TabsTrigger>
         <TabsTrigger value={MODELS_TAB}>
           <LayersIcon size={16} />
-          Models
+          Модели
         </TabsTrigger>
         <TabsTrigger value={MCP_SERVERS_TAB}>
           <ServerIcon size={16} />
@@ -129,7 +129,7 @@ export function AccessGroupBaseForm({
               <Input {...field} ref={ref} placeholder="e.g. Engineering Team" disabled={isNameDisabled} />
             )}
           </FormField>
-          <FormField control={form.control} name="description" label="Description">
+          <FormField control={form.control} name="description" label="Описание">
             {({ ref, ...field }) => (
               <Textarea {...field} ref={ref} rows={4} placeholder="Describe the purpose of this access group..." />
             )}

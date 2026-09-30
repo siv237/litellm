@@ -158,7 +158,7 @@ const EditBudgetModal: React.FC<EditBudgetModalProps> = ({ isModalVisible, setIs
           </FieldGroup>
 
           <div style={{ textAlign: "right", marginTop: "10px" }}>
-            <Button type="submit">Save</Button>
+            <Button type="submit">Сохранить</Button>
           </div>
         </form>
       </DialogContent>

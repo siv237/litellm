@@ -216,9 +216,9 @@ const GuardrailsPanel: React.FC<GuardrailsPanelProps> = ({ accessToken, userRole
                 message={`Are you sure you want to delete guardrail: ${guardrailToDelete?.guardrail_name}? This action cannot be undone.`}
                 resourceInformationTitle="Guardrail Information"
                 resourceInformation={[
-                  { label: "Name", value: guardrailToDelete?.guardrail_name },
+                  { label: "Название", value: guardrailToDelete?.guardrail_name },
                   { label: "ID", value: guardrailToDelete?.guardrail_id, code: true },
-                  { label: "Provider", value: providerDisplayName },
+                  { label: "Провайдер", value: providerDisplayName },
                   { label: "Mode", value: formatGuardrailMode(guardrailToDelete?.litellm_params.mode) },
                   {
                     label: "Default On",

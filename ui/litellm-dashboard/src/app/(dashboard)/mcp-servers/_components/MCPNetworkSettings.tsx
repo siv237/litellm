@@ -181,7 +181,7 @@ const MCPNetworkSettings: React.FC<MCPNetworkSettingsProps> = ({ accessToken }) 
       <div className="flex justify-end">
         <Button onClick={handleSave} disabled={saving}>
           <Save />
-          Save
+          Сохранить
         </Button>
       </div>
     </div>

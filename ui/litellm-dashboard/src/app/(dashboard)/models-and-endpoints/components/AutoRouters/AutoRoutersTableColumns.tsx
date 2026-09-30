@@ -108,8 +108,8 @@ export const getAutoRoutersTableColumns = ({
   {
     id: "name",
     accessorKey: "name",
-    meta: { title: "Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Name" />,
+    meta: { title: "Название" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Название" />,
     size: 260,
     enableSorting: true,
     cell: ({ row }) => <IdentityCell title={row.original.name || "-"} onClick={() => onRouterClick(row.original)} />,
@@ -117,8 +117,8 @@ export const getAutoRoutersTableColumns = ({
   {
     id: "kind",
     accessorKey: "kind",
-    meta: { title: "Type" },
-    header: "Type",
+    meta: { title: "Тип" },
+    header: "Тип",
     size: 180,
     enableSorting: false,
     cell: ({ row }) => <TypeCell row={row.original} />,

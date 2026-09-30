@@ -84,7 +84,7 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
   if (!accessGroup) {
     return (
       <div className="p-6 px-12">
-        <Button variant="ghost" size="icon" aria-label="Back" onClick={onBack} className="mb-4">
+        <Button variant="ghost" size="icon" aria-label="Назад" onClick={onBack} className="mb-4">
           <ArrowLeftIcon className="size-4" />
         </Button>
         <p className="py-8 text-center text-sm text-muted-foreground">Access group not found</p>
@@ -105,7 +105,7 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
     <div className="p-6 px-12">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" aria-label="Back" onClick={onBack}>
+          <Button variant="ghost" size="icon" aria-label="Назад" onClick={onBack}>
             <ArrowLeftIcon className="size-4" />
           </Button>
           <div>
@@ -128,7 +128,7 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
         </CardHeader>
         <CardContent>
           <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 text-sm">
-            <dt className="text-muted-foreground">Description</dt>
+            <dt className="text-muted-foreground">Описание</dt>
             <dd className="text-foreground">{accessGroup.description || "—"}</dd>
             <dt className="text-muted-foreground">Created</dt>
             <dd className="flex items-center gap-1 text-foreground">
@@ -218,7 +218,7 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
             <TabsList variant="line" className="h-auto w-full justify-start rounded-none border-b p-0">
               <TabsTrigger value="models" className="flex-none gap-2 rounded-none px-4 py-2">
                 <LayersIcon className="size-4" />
-                Models
+                Модели
                 <Badge variant="secondary">{models.length}</Badge>
               </TabsTrigger>
               <TabsTrigger value="mcp" className="flex-none gap-2 rounded-none px-4 py-2">

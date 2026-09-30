@@ -1106,7 +1106,7 @@ const TeamInfoView: React.FC<TeamInfoProps> = ({
   };
 
   if (loading) {
-    return <div className="p-4">Loading...</div>;
+    return <div className="p-4">Загрузка…</div>;
   }
 
   if (!teamData?.team_info) {
@@ -1196,7 +1196,7 @@ const TeamInfoView: React.FC<TeamInfoProps> = ({
           </Card>
 
           <Card className="block p-6">
-            <p>Models</p>
+            <p>Модели</p>
             <div className="mt-2 flex flex-wrap gap-2">
               {computeTeamModelBadges(info.models, info.access_group_models || [], info.access_group_details).map(
                 (badge, index) => (
@@ -1330,7 +1330,7 @@ const TeamInfoView: React.FC<TeamInfoProps> = ({
           </div>
 
           {isEditing && isGuardrailsLoading ? (
-            <div className="p-4">Loading...</div>
+            <div className="p-4">Загрузка…</div>
           ) : isEditing ? (
             <TooltipProvider>
               <form onSubmit={(event) => void form.handleSubmit(onTeamUpdateSubmit)(event)}>
@@ -1342,7 +1342,7 @@ const TeamInfoView: React.FC<TeamInfoProps> = ({
                   <FormField
                     control={form.control}
                     name="models"
-                    label="Models"
+                    label="Модели"
                     description="Leave empty to grant no models directly. The team keeps any models granted through its access groups"
                   >
                     {({ id, value, onChange }) => (
@@ -1927,7 +1927,7 @@ const TeamInfoView: React.FC<TeamInfoProps> = ({
                 <div className="sticky z-chrome -inset-x-6 -bottom-6 border-t border-border bg-card p-4 pr-0">
                   <div className="flex items-center justify-end gap-2">
                     <Button type="button" variant="outline" onClick={() => setIsEditing(false)} disabled={isTeamSaving}>
-                      Cancel
+                      Отмена
                     </Button>
                     <Button type="submit" disabled={isTeamSaving}>
                       {isTeamSaving ? <UiLoadingSpinner className="size-4" /> : <Save className="size-4" />}
@@ -1952,7 +1952,7 @@ const TeamInfoView: React.FC<TeamInfoProps> = ({
                 <div>{new Date(info.created_at).toLocaleString()}</div>
               </div>
               <div>
-                <p className="font-medium">Models</p>
+                <p className="font-medium">Модели</p>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {info.models.map((model, index) => (
                     <BadgeLink key={index} href={modelGroupHref(model)}>
@@ -2093,7 +2093,7 @@ const TeamInfoView: React.FC<TeamInfoProps> = ({
                 <div>{info.organization_id}</div>
               </div>
               <div>
-                <p className="font-medium">Status</p>
+                <p className="font-medium">Статус</p>
                 <Badge variant={info.blocked ? "destructive" : "secondary"}>
                   {info.blocked ? "Blocked" : "Active"}
                 </Badge>
@@ -2197,7 +2197,7 @@ const TeamInfoView: React.FC<TeamInfoProps> = ({
           showUserId: true,
           roleOptions: [
             { label: "Admin", value: "admin" },
-            { label: "User", value: "user" },
+            { label: "Пользователь", value: "user" },
           ],
           additionalFields: [
             {
@@ -2292,8 +2292,8 @@ const TeamInfoView: React.FC<TeamInfoProps> = ({
         resourceInformationTitle="Team Member Information"
         resourceInformation={[
           { label: "User ID", value: memberToDelete?.user_id, code: true },
-          { label: "Email", value: memberToDelete?.user_email },
-          { label: "Role", value: memberToDelete?.role },
+          { label: "Эл. почта", value: memberToDelete?.user_email },
+          { label: "Роль", value: memberToDelete?.role },
         ]}
         onCancel={handleDeleteCancel}
         onOk={handleDeleteConfirm}

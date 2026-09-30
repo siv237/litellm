@@ -248,9 +248,9 @@ const BulkEditUserModal: React.FC<BulkEditUserModalProps> = ({
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[30%]">User ID</TableHead>
-                    <TableHead className="w-[25%]">Email</TableHead>
+                    <TableHead className="w-[25%]">Эл. почта</TableHead>
                     <TableHead className="w-[25%]">Current Role</TableHead>
-                    <TableHead className="w-[20%]">Budget</TableHead>
+                    <TableHead className="w-[20%]">Бюджет</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

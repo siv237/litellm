@@ -577,7 +577,7 @@ export default function KeyInfoView({
             code: true,
           },
           {
-            label: "Spend",
+            label: "Расход",
             value: currentKeyData?.spend ? `$${formatNumberWithCommas(currentKeyData.spend, 4)}` : "$0.0000",
           },
         ]}
@@ -605,10 +605,10 @@ export default function KeyInfoView({
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsResetSpendModalOpen(false)}>
-              Cancel
+              Отмена
             </Button>
             <Button variant="destructive" onClick={handleResetSpend} disabled={resetSpendLoading}>
-              Reset
+              Сброс
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -630,7 +630,7 @@ export default function KeyInfoView({
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsBlockModalOpen(false)}>
-              Cancel
+              Отмена
             </Button>
             <Button
               variant={isBlocked ? "default" : "destructive"}
@@ -666,7 +666,7 @@ export default function KeyInfoView({
           <TabsContent value="overview" keepMounted>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <Card className="block p-6">
-                <p className="text-sm">Spend</p>
+                <p className="text-sm">Расход</p>
                 <div className="mt-2">
                   <h3 className="text-lg font-medium">${formatNumberWithCommas(currentKeyData.spend, 4)}</h3>
                   <p className="text-sm">
@@ -695,7 +695,7 @@ export default function KeyInfoView({
               </Card>
 
               <Card className="block p-6">
-                <p className="text-sm">Models</p>
+                <p className="text-sm">Модели</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {currentKeyData.models && currentKeyData.models.length > 0 ? (
                     currentKeyData.models.map((model, index) => (
@@ -929,12 +929,12 @@ export default function KeyInfoView({
                   />
 
                   <div>
-                    <p className="text-sm font-medium">Spend</p>
+                    <p className="text-sm font-medium">Расход</p>
                     <p className="text-sm">${formatNumberWithCommas(currentKeyData.spend, 4)} USD</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Budget</p>
+                    <p className="text-sm font-medium">Бюджет</p>
                     <p className="text-sm">
                       {currentKeyData.max_budget !== null
                         ? `$${formatNumberWithCommas(currentKeyData.max_budget, 2)}`
@@ -1042,7 +1042,7 @@ export default function KeyInfoView({
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Models</p>
+                    <p className="text-sm font-medium">Модели</p>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {currentKeyData.models && currentKeyData.models.length > 0 ? (
                         currentKeyData.models.map((model, index) => (

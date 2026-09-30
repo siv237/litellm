@@ -178,7 +178,7 @@ export function ToolTestPanel({
           onClick={onClose}
           variant="ghost"
           size="icon-sm"
-          aria-label="Close"
+          aria-label="Закрыть"
           className="text-muted-foreground hover:text-foreground"
         >
           <X className="size-4" />

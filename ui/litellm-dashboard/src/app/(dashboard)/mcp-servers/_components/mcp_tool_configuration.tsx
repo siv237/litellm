@@ -131,7 +131,7 @@ const ToolRow: React.FC<ToolRowProps> = ({
             )}
           </div>
           <div>
-            <p className="mb-1 block text-xs font-medium">Description</p>
+            <p className="mb-1 block text-xs font-medium">Описание</p>
             <Textarea
               className="field-sizing-fixed"
               placeholder={tool.description || "No description"}

@@ -320,8 +320,8 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>No</AlertDialogCancel>
-                <AlertDialogAction onClick={handleHardRefresh}>Yes</AlertDialogAction>
+                <AlertDialogCancel>Нет</AlertDialogCancel>
+                <AlertDialogAction onClick={handleHardRefresh}>Да</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -464,7 +464,7 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setShowScheduleModal(false)}>
-                Cancel
+                Отмена
               </Button>
               <Button type="button" disabled={isScheduling} onClick={handleScheduleReload}>
                 {isScheduling && <LoaderCircle className="animate-spin" data-icon="inline-start" />}

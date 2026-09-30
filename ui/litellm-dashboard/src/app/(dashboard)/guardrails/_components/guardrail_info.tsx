@@ -47,8 +47,8 @@ import PiiConfiguration from "./pii_configuration";
 import ToolPermissionRulesEditor, { ToolPermissionConfig } from "./tool_permission/ToolPermissionRulesEditor";
 
 const DEFAULT_ON_ITEMS = [
-  { label: "Yes", value: true },
-  { label: "No", value: false },
+  { label: "Да", value: true },
+  { label: "Нет", value: false },
 ];
 
 const SectionHeading: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -478,7 +478,7 @@ const GuardrailInfoView: React.FC<GuardrailInfoProps> = ({ guardrailId, onClose,
   const submitLatest = useCallback((values: GuardrailFormValues) => submitRef.current(values), []);
 
   if (loading) {
-    return <div className="p-4">Loading...</div>;
+    return <div className="p-4">Загрузка…</div>;
   }
 
   const backButton = (
@@ -549,7 +549,7 @@ const GuardrailInfoView: React.FC<GuardrailInfoProps> = ({ guardrailId, onClose,
           <TabsContent value="overview" keepMounted>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <Card className="block p-6">
-                <p>Provider</p>
+                <p>Провайдер</p>
                 <div className="mt-2 flex items-center space-x-2">
                   <Logo src={logo} label={displayName} className="w-6 h-6" />
                   <h3 className="text-lg font-medium">{displayName}</h3>
@@ -717,8 +717,8 @@ const GuardrailInfoView: React.FC<GuardrailInfoProps> = ({ guardrailId, onClose,
                                 <SelectValue placeholder="Select an option" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value={true}>Yes</SelectItem>
-                                <SelectItem value={false}>No</SelectItem>
+                                <SelectItem value={true}>Да</SelectItem>
+                                <SelectItem value={false}>Нет</SelectItem>
                               </SelectContent>
                             </Select>
                           )}
@@ -835,9 +835,9 @@ const GuardrailInfoView: React.FC<GuardrailInfoProps> = ({ guardrailId, onClose,
                               resetToolPermissionEditor();
                             }}
                           >
-                            Cancel
+                            Отмена
                           </Button>
-                          <Button type="submit">Save Changes</Button>
+                          <Button type="submit">Сохранить изменения</Button>
                         </div>
                       </FieldGroup>
                     </form>
@@ -853,7 +853,7 @@ const GuardrailInfoView: React.FC<GuardrailInfoProps> = ({ guardrailId, onClose,
                       <div>{guardrailData.guardrail_name || "Unnamed Guardrail"}</div>
                     </div>
                     <div>
-                      <p className="font-medium">Provider</p>
+                      <p className="font-medium">Провайдер</p>
                       <div>{displayName}</div>
                     </div>
                     <div>

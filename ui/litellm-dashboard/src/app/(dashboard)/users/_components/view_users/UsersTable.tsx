@@ -197,7 +197,7 @@ export function UsersTable({
                     data-testid="users-filter-sso-id"
                   />
                 </DataTableFilterField>
-                <DataTableFilterField label="Role">
+                <DataTableFilterField label="Роль">
                   <SearchSelect
                     options={roleOptions}
                     value={(get("user_role") as string) || undefined}
@@ -206,7 +206,7 @@ export function UsersTable({
                     emptyText="No roles found"
                   />
                 </DataTableFilterField>
-                <DataTableFilterField label="Team">
+                <DataTableFilterField label="Команда">
                   <SearchSelect
                     options={teamOptions}
                     value={(get("team") as string) || undefined}

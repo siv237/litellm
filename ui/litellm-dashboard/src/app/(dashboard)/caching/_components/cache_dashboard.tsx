@@ -172,7 +172,7 @@ const CacheDashboard: React.FC<CachePageProps> = ({ accessToken, token, userRole
 
         <div className="flex items-center space-x-2">
           {lastRefreshed && <p className="text-sm text-muted-foreground">Last Refreshed: {lastRefreshed}</p>}
-          <Button variant="outline" size="icon-sm" onClick={handleRefreshClick} aria-label="Refresh">
+          <Button variant="outline" size="icon-sm" onClick={handleRefreshClick} aria-label="Обновить">
             <RefreshCw />
           </Button>
         </div>

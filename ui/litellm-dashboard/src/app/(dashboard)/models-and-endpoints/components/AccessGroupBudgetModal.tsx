@@ -113,7 +113,7 @@ const AccessGroupBudgetModal: React.FC<AccessGroupBudgetModalProps> = ({
 
             <div className="mt-6 flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
+                Отмена
               </Button>
               <Button type="submit" disabled={isSaving}>
                 {isSaving ? "Saving..." : "Save Budget"}

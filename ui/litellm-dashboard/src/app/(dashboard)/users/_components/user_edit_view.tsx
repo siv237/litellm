@@ -204,7 +204,7 @@ export function UserEditView({
           )}
 
           {!isBulkEdit && (
-            <FormField control={form.control} name="user_email" label="Email">
+            <FormField control={form.control} name="user_email" label="Эл. почта">
               {({ ref, value, ...control }) => <Input {...control} ref={ref} value={value ?? ""} />}
             </FormField>
           )}
@@ -347,9 +347,9 @@ export function UserEditView({
 
         <div className="mt-6 flex justify-end gap-2">
           <Button variant="secondary" type="button" onClick={onCancel}>
-            Cancel
+            Отмена
           </Button>
-          <Button type="submit">Save Changes</Button>
+          <Button type="submit">Сохранить изменения</Button>
         </div>
       </form>
     </TooltipProvider>

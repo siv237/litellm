@@ -138,9 +138,9 @@ const ClaudeCodePluginsPanel: React.FC<ClaudeCodePluginsPanelProps> = ({ accessT
               <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>Отмена</AlertDialogCancel>
               <Button variant="destructive" onClick={handleDeleteConfirm} disabled={isDeleting}>
-                Delete
+                Удалить
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

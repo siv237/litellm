@@ -53,7 +53,7 @@ const PromptEditorHeader: React.FC<PromptEditorHeaderProps> = ({
       <div className="flex items-center space-x-3">
         <Button variant="ghost" onClick={onBack} size="sm">
           <ArrowLeftIcon />
-          Back
+          Назад
         </Button>
         <Input
           aria-label="Prompt name"

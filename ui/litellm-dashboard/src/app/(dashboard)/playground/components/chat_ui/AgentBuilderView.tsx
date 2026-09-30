@@ -663,7 +663,7 @@ export default function AgentBuilderView({
                                 </Button>
                                 <Button variant="destructive" onClick={handleDeleteAgent} disabled={deleting}>
                                   <Trash2 />
-                                  Delete
+                                  Удалить
                                 </Button>
                               </>
                             )}
@@ -751,9 +751,9 @@ export default function AgentBuilderView({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction variant="outline">Cancel</AlertDialogAction>
+            <AlertDialogAction variant="outline">Отмена</AlertDialogAction>
             <Button variant="destructive" onClick={handleConfirmDelete} disabled={deleting}>
-              Delete
+              Удалить
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

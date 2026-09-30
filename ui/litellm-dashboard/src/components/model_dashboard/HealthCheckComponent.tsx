@@ -579,7 +579,7 @@ const HealthCheckComponent: React.FC<HealthCheckComponentProps> = ({
           )}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={closeErrorModal}>
-              Close
+              Закрыть
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -621,7 +621,7 @@ const HealthCheckComponent: React.FC<HealthCheckComponentProps> = ({
           )}
           <DialogFooter>
             <Button type="button" variant="outline" onClick={closeSuccessModal}>
-              Close
+              Закрыть
             </Button>
           </DialogFooter>
         </DialogContent>

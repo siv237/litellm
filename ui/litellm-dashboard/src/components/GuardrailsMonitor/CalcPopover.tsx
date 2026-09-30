@@ -57,7 +57,7 @@ export function MathTable({ rows, total }: { rows: readonly MathRow[]; total: st
       <tfoot>
         <tr className="border-t border-border font-medium">
           <td className="pt-1.5 pr-3" colSpan={width - 1}>
-            Total
+            Всего
           </td>
           <td className="pt-1.5 pl-3 text-right whitespace-nowrap tabular-nums">{total}</td>
         </tr>

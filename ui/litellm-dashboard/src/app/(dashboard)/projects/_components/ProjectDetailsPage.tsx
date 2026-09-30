@@ -57,7 +57,7 @@ export function ProjectDetail({ projectId, onBack }: ProjectDetailProps) {
         <div
           role="status"
           aria-busy="true"
-          aria-label="Loading"
+          aria-label="Загрузка"
           className="flex min-h-[300px] items-center justify-center"
         >
           <UiLoadingSpinner className="size-8 text-primary" />
@@ -69,7 +69,7 @@ export function ProjectDetail({ projectId, onBack }: ProjectDetailProps) {
   if (!project) {
     return (
       <div className="p-6 px-12">
-        <Button variant="ghost" size="icon" aria-label="Back" onClick={onBack} className="mb-4">
+        <Button variant="ghost" size="icon" aria-label="Назад" onClick={onBack} className="mb-4">
           <ArrowLeftIcon className="size-4" />
         </Button>
         <p className="py-8 text-center text-sm text-muted-foreground">Project not found</p>
@@ -81,7 +81,7 @@ export function ProjectDetail({ projectId, onBack }: ProjectDetailProps) {
     <div className="p-6 px-12">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" aria-label="Back" onClick={onBack}>
+          <Button variant="ghost" size="icon" aria-label="Назад" onClick={onBack}>
             <ArrowLeftIcon className="size-4" />
           </Button>
           <div>
@@ -112,7 +112,7 @@ export function ProjectDetail({ projectId, onBack }: ProjectDetailProps) {
         </CardHeader>
         <CardContent>
           <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 text-sm">
-            <dt className="text-muted-foreground">Description</dt>
+            <dt className="text-muted-foreground">Описание</dt>
             <dd className="text-foreground">{project.description || "—"}</dd>
             <dt className="text-muted-foreground">Created</dt>
             <dd className="flex items-center gap-1 text-foreground">
@@ -143,7 +143,7 @@ export function ProjectDetail({ projectId, onBack }: ProjectDetailProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <DollarSignIcon className="size-4" />
-              Budget
+              Бюджет
             </CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
@@ -199,7 +199,7 @@ export function ProjectDetail({ projectId, onBack }: ProjectDetailProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UsersIcon className="size-4" />
-              Team
+              Команда
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -221,7 +221,7 @@ export function ProjectDetail({ projectId, onBack }: ProjectDetailProps) {
                     </div>
 
                     <div>
-                      <p className="mb-1 text-xs text-muted-foreground">Models</p>
+                      <p className="mb-1 text-xs text-muted-foreground">Модели</p>
                       {(teamInfo.models?.length ?? 0) > 0 ? (
                         <div className="flex max-h-[60px] flex-wrap gap-1 overflow-hidden">
                           {teamInfo.models?.map((m: string) => (
@@ -237,7 +237,7 @@ export function ProjectDetail({ projectId, onBack }: ProjectDetailProps) {
 
                     <div>
                       <div className="mb-0.5 flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">Spend</span>
+                        <span className="text-xs text-muted-foreground">Расход</span>
                         <span className="text-xs text-foreground">
                           ${teamSpend.toFixed(2)}
                           <span className="text-muted-foreground">

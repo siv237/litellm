@@ -147,7 +147,7 @@ export const getTeamTableColumns = ({
       id: "team_alias",
       accessorKey: "team_alias",
       meta: {
-        title: "Team",
+        title: "Команда",
         renderSkeleton: () => (
           <div className="flex flex-col gap-2 py-1">
             <Skeleton className="h-4 w-32" />
@@ -155,7 +155,7 @@ export const getTeamTableColumns = ({
           </div>
         ),
       },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Team" variant="header-cycle" />,
+      header: ({ column }) => <DataTableSortHeader column={column} title="Команда" variant="header-cycle" />,
       size: 260,
       enableSorting: true,
       cell: ({ row }) => {
@@ -242,8 +242,8 @@ export const getTeamTableColumns = ({
     },
     {
       id: "models",
-      meta: { title: "Models" },
-      header: "Models",
+      meta: { title: "Модели" },
+      header: "Модели",
       size: 100,
       enableSorting: false,
       cell: ({ row }) => <span className="text-sm tabular-nums">{teamModelCount(row.original)}</span>,
@@ -273,7 +273,7 @@ export const getTeamTableColumns = ({
     {
       id: "actions",
       meta: { className: "text-right", headerClassName: "text-right" },
-      header: () => <span className="sr-only">Actions</span>,
+      header: () => <span className="sr-only">Действия</span>,
       size: 60,
       enableSorting: false,
       enableHiding: false,

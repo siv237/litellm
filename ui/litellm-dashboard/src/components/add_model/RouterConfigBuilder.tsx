@@ -262,7 +262,7 @@ const RouterConfigBuilder: React.FC<RouterConfigBuilderProps> = ({ modelInfo, va
                     <Separator />
                     <div className="space-y-4 p-4">
                       <div className="space-y-2">
-                        <Label>Model</Label>
+                        <Label>Модель</Label>
                         <SearchSelect
                           value={route.model}
                           onValueChange={(model) => updateRoute(route.id, "model", model)}
@@ -272,7 +272,7 @@ const RouterConfigBuilder: React.FC<RouterConfigBuilderProps> = ({ modelInfo, va
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor={`${route.id}-description`}>Description</Label>
+                        <Label htmlFor={`${route.id}-description`}>Описание</Label>
                         <Textarea
                           id={`${route.id}-description`}
                           value={route.description}

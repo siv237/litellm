@@ -133,7 +133,7 @@ export function LoggingSettingsView({
                       <span className="block text-xs text-destructive">Disabled for this key</span>
                     </div>
                   </div>
-                  <Badge variant="destructive">Disabled</Badge>
+                  <Badge variant="destructive">Выключено</Badge>
                 </div>
               );
             })}

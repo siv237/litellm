@@ -114,7 +114,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
       cell: ({ row }) => (
         <Button variant="ghost" size="sm" onClick={() => onRemove?.(row.original.id)}>
           <Trash2 />
-          Delete
+          Удалить
         </Button>
       ),
     });

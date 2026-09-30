@@ -650,8 +650,8 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                           <Table>
                             <TableHeader>
                               <TableRow>
-                                <TableHead>Provider</TableHead>
-                                <TableHead>Spend</TableHead>
+                                <TableHead>Провайдер</TableHead>
+                                <TableHead>Расход</TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -840,7 +840,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ accessToken, token, userRole, use
                   <TableHeader>
                     <TableRow>
                       <TableHead>Customer</TableHead>
-                      <TableHead>Spend</TableHead>
+                      <TableHead>Расход</TableHead>
                       <TableHead>Total Events</TableHead>
                     </TableRow>
                   </TableHeader>

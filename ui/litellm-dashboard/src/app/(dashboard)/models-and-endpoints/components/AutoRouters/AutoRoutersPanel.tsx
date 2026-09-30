@@ -125,8 +125,8 @@ export function AutoRoutersPanel({
           message={`Are you sure you want to delete "${deletingRouter.name}"? Any client still calling this model name will start failing.`}
           resourceInformationTitle="Auto router"
           resourceInformation={[
-            { label: "Name", value: deletingRouter.name },
-            { label: "Type", value: deletingRouter.typeLabel },
+            { label: "Название", value: deletingRouter.name },
+            { label: "Тип", value: deletingRouter.typeLabel },
             { label: "ID", value: deletingRouter.id },
           ]}
           onCancel={() => setDeletingRouter(null)}

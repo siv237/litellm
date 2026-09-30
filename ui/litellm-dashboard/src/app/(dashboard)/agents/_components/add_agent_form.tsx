@@ -794,7 +794,7 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
                 />
               )}
             </AgentFormField>
-            <AgentFormField name="description" label="Description">
+            <AgentFormField name="description" label="Описание">
               {({ value, onChange, ref, ...control }) => (
                 <Textarea
                   {...control}
@@ -1054,7 +1054,7 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
               <div className="flex gap-3">
                 {currentStep < 4 && (
                   <Button variant="secondary" onClick={handleClose}>
-                    Cancel
+                    Отмена
                   </Button>
                 )}
                 {currentStep < 3 && <Button onClick={handleNext}>Next →</Button>}
@@ -1064,7 +1064,7 @@ const AddAgentForm: React.FC<AddAgentFormProps> = ({ visible, onClose, accessTok
                     {isSubmitting ? "Creating..." : "Create Agent →"}
                   </Button>
                 )}
-                {currentStep === 4 && <Button onClick={handleClose}>Done</Button>}
+                {currentStep === 4 && <Button onClick={handleClose}>Готово</Button>}
               </div>
             </div>
           </div>

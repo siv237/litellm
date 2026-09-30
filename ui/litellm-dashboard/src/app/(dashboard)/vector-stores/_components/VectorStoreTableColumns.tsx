@@ -76,7 +76,7 @@ function VectorStoreRowActions({ vectorStore, onEdit, onDelete }: VectorStoreRow
       <DropdownMenuContent align="end" className="w-52">
         <DropdownMenuItem data-testid="vector-store-action-edit" onClick={() => onEdit(vectorStore.vector_store_id)}>
           <Pencil />
-          Edit
+          Изменить
         </DropdownMenuItem>
         <DropdownMenuItem
           data-testid="vector-store-action-copy"
@@ -92,7 +92,7 @@ function VectorStoreRowActions({ vectorStore, onEdit, onDelete }: VectorStoreRow
           onClick={() => onDelete(vectorStore.vector_store_id)}
         >
           <Trash2 />
-          Delete
+          Удалить
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -129,8 +129,8 @@ export const getVectorStoreTableColumns = ({
   {
     id: "vector_store_name",
     accessorKey: "vector_store_name",
-    meta: { title: "Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Name" />,
+    meta: { title: "Название" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Название" />,
     size: 200,
     enableSorting: true,
     cell: ({ row }) => {
@@ -145,8 +145,8 @@ export const getVectorStoreTableColumns = ({
   {
     id: "vector_store_description",
     accessorKey: "vector_store_description",
-    meta: { title: "Description" },
-    header: "Description",
+    meta: { title: "Описание" },
+    header: "Описание",
     size: 280,
     enableSorting: false,
     cell: ({ row }) => {
@@ -169,8 +169,8 @@ export const getVectorStoreTableColumns = ({
   {
     id: "provider",
     accessorKey: "custom_llm_provider",
-    meta: { title: "Provider" },
-    header: "Provider",
+    meta: { title: "Провайдер" },
+    header: "Провайдер",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => <VectorStoreProviderCell provider={row.original.custom_llm_provider} />,
@@ -198,7 +198,7 @@ export const getVectorStoreTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

@@ -138,7 +138,7 @@ const ClassifierPromptEditor: React.FC<ClassifierPromptEditorProps> = ({
 
           <DialogFooter className="mt-4">
             <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-              Cancel
+              Отмена
             </Button>
             <Button type="button" onClick={handleSave} disabled={isLoading || !draft.trim()}>
               Save prompt

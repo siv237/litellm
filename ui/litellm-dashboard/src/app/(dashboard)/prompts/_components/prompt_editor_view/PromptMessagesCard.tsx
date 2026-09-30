@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Select as ShadcnSelect, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const ROLE_ITEMS = [
-  { value: "user", label: "User" },
+  { value: "user", label: "Пользователь" },
   { value: "assistant", label: "Assistant" },
   { value: "system", label: "System" },
 ] as const;

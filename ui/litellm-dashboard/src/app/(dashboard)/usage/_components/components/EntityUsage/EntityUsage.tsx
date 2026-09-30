@@ -293,7 +293,7 @@ const EntityUsage: React.FC<EntityUsageProps> = ({
         cell: ({ row }) => row.original.metadata.alias,
       },
       {
-        header: "Spend",
+        header: "Расход",
         accessorKey: "metrics.spend",
         meta: { numeric: true },
         cell: ({ row }) => <MoneyCell value={row.original.metrics.spend} decimals={4} />,
@@ -311,7 +311,7 @@ const EntityUsage: React.FC<EntityUsageProps> = ({
         cell: ({ row }) => row.original.metrics.failed_requests.toLocaleString(),
       },
       {
-        header: "Tokens",
+        header: "Токены",
         accessorKey: "metrics.total_tokens",
         meta: { numeric: true },
         cell: ({ row }) => row.original.metrics.total_tokens.toLocaleString(),
@@ -322,7 +322,7 @@ const EntityUsage: React.FC<EntityUsageProps> = ({
   const providerSpendColumns = useMemo<ColumnDef<ProviderSpendRow>[]>(
     () => [
       {
-        header: "Provider",
+        header: "Провайдер",
         accessorKey: "provider",
         cell: ({ row }) => (
           <div className="flex items-center space-x-2">
@@ -332,7 +332,7 @@ const EntityUsage: React.FC<EntityUsageProps> = ({
         ),
       },
       {
-        header: "Spend",
+        header: "Расход",
         accessorKey: "spend",
         meta: { numeric: true },
         cell: ({ row }) => <MoneyCell value={row.original.spend} decimals={2} />,
@@ -350,7 +350,7 @@ const EntityUsage: React.FC<EntityUsageProps> = ({
         cell: ({ row }) => row.original.failed_requests.toLocaleString(),
       },
       {
-        header: "Tokens",
+        header: "Токены",
         accessorKey: "tokens",
         meta: { numeric: true },
         cell: ({ row }) => row.original.tokens.toLocaleString(),

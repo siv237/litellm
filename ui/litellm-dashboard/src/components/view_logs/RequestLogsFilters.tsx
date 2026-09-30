@@ -142,7 +142,7 @@ function ModelFilterField({ value, onChange }: { value: string; onChange: (value
   }, [data]);
 
   return (
-    <DataTableFilterField label="Model">
+    <DataTableFilterField label="Модель">
       <PaginatedSearchSelect
         options={options}
         value={value}
@@ -328,7 +328,7 @@ export function RequestLogsFilters({ get, set, teams, logsWindow }: RequestLogsF
         teams={teams}
       />
 
-      <DataTableFilterField label="Status">
+      <DataTableFilterField label="Статус">
         <Select
           items={STATUS_FILTER_ITEMS}
           value={valueOf(LOG_FILTER_IDS.STATUS) === "" ? ALL_VALUE : valueOf(LOG_FILTER_IDS.STATUS)}

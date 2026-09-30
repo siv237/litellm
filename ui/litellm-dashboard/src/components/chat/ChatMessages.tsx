@@ -129,7 +129,7 @@ function UserBubble({ message, onEdit, isStreaming }: UserBubbleProps) {
                 setEditing(false);
               }}
             >
-              Cancel
+              Отмена
             </Button>
             <Button size="sm" onClick={handleSave} disabled={!editValue.trim()}>
               Save & Send

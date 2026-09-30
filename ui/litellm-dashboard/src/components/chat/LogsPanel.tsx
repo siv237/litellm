@@ -137,7 +137,7 @@ function LogsError({ onRetry }: { onRetry: () => void }) {
       <AlertCircle className="h-6 w-6 text-destructive/70" />
       Failed to load your logs
       <Button variant="outline" size="sm" onClick={onRetry}>
-        Retry
+        Повторить
       </Button>
     </div>
   );
@@ -150,9 +150,9 @@ function LogsTable({ rows, onRowClick }: { rows: LogRow[]; onRowClick: (row: Log
         <TableHeader>
           <TableRow className="bg-muted/50">
             <TableHead className="text-[11px] font-medium uppercase tracking-wide">Time</TableHead>
-            <TableHead className="text-[11px] font-medium uppercase tracking-wide">Model</TableHead>
-            <TableHead className="text-[11px] font-medium uppercase tracking-wide">Status</TableHead>
-            <TableHead className="text-right text-[11px] font-medium uppercase tracking-wide">Tokens</TableHead>
+            <TableHead className="text-[11px] font-medium uppercase tracking-wide">Модель</TableHead>
+            <TableHead className="text-[11px] font-medium uppercase tracking-wide">Статус</TableHead>
+            <TableHead className="text-right text-[11px] font-medium uppercase tracking-wide">Токены</TableHead>
             <TableHead className="text-right text-[11px] font-medium uppercase tracking-wide">Duration</TableHead>
             <TableHead className="text-right text-[11px] font-medium uppercase tracking-wide">Cost</TableHead>
           </TableRow>
@@ -202,7 +202,7 @@ function LogDetailDialog({
           <div className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-md border bg-card p-3">
-                <div className="mb-0.5 text-xs text-muted-foreground">Model</div>
+                <div className="mb-0.5 text-xs text-muted-foreground">Модель</div>
                 <div className="text-sm text-foreground">{log.model || "-"}</div>
               </div>
               <div className="rounded-md border bg-card p-3">
@@ -210,7 +210,7 @@ function LogDetailDialog({
                 <div className="text-sm text-foreground">{formatCost(log.spend)}</div>
               </div>
               <div className="rounded-md border bg-card p-3">
-                <div className="mb-0.5 text-xs text-muted-foreground">Tokens</div>
+                <div className="mb-0.5 text-xs text-muted-foreground">Токены</div>
                 <div className="text-sm text-foreground">
                   {formatTokens(log.total_tokens)} ({formatTokens(log.prompt_tokens)} in /{" "}
                   {formatTokens(log.completion_tokens)} out)
@@ -296,7 +296,7 @@ const LogsPanel: React.FC<Props> = ({ accessToken, userId }) => {
                 Previous
               </Button>
               <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>
-                Next
+                Далее
               </Button>
             </div>
           )}

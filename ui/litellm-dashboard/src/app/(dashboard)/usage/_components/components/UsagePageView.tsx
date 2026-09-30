@@ -968,7 +968,7 @@ const UsagePage: React.FC<UsagePageProps> = ({ teams, organizations }) => {
                     <Button
                       variant="ghost"
                       size="icon-xs"
-                      aria-label="Close"
+                      aria-label="Закрыть"
                       onClick={() => setShowCredentialBanner(false)}
                     >
                       <X />

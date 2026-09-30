@@ -70,7 +70,7 @@ function ToolsetRowActions({ toolset, isAdmin, onEditClick, onDeleteClick }: Too
             <DropdownMenuSeparator />
             <DropdownMenuItem data-testid="toolset-action-edit" onClick={() => onEditClick(toolset)}>
               <Pencil />
-              Edit
+              Изменить
             </DropdownMenuItem>
             <DropdownMenuItem
               variant="destructive"
@@ -78,7 +78,7 @@ function ToolsetRowActions({ toolset, isAdmin, onEditClick, onDeleteClick }: Too
               onClick={() => onDeleteClick(toolset.toolset_id)}
             >
               <Trash2 />
-              Delete
+              Удалить
             </DropdownMenuItem>
           </>
         )}
@@ -112,8 +112,8 @@ export const getMCPToolsetTableColumns = ({
   {
     id: "toolset_name",
     accessorKey: "toolset_name",
-    meta: { title: "Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Name" />,
+    meta: { title: "Название" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Название" />,
     size: 260,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -129,8 +129,8 @@ export const getMCPToolsetTableColumns = ({
   {
     id: "description",
     accessorKey: "description",
-    meta: { title: "Description" },
-    header: "Description",
+    meta: { title: "Описание" },
+    header: "Описание",
     size: 200,
     enableSorting: false,
     cell: ({ row }) => (
@@ -176,7 +176,7 @@ export const getMCPToolsetTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

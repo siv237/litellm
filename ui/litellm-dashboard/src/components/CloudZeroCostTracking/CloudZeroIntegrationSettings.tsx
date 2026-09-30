@@ -137,11 +137,11 @@ export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: Cl
             <CardAction className="flex gap-2">
               <Button variant="outline" onClick={handleEdit}>
                 <Pencil />
-                Edit
+                Изменить
               </Button>
               <Button variant="destructive" onClick={handleDeleteClick}>
                 <Trash2 />
-                Delete
+                Удалить
               </Button>
             </CardAction>
           </CardHeader>
@@ -160,7 +160,7 @@ export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: Cl
             </dl>
 
             <div className="mt-6 flex items-center gap-3">
-              <span className="text-sm text-muted-foreground">Actions</span>
+              <span className="text-sm text-muted-foreground">Действия</span>
               <Separator className="flex-1" />
             </div>
 
@@ -201,9 +201,9 @@ export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: Cl
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={exportMutation.isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={exportMutation.isPending}>Отмена</AlertDialogCancel>
             <Button onClick={handleExport} disabled={exportMutation.isPending}>
-              Export
+              Экспорт
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

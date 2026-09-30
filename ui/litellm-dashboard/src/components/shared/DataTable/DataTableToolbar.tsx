@@ -103,8 +103,8 @@ export function DataTableToolbar<TData>({
             size="icon-sm"
             onClick={onRefresh}
             disabled={isRefreshing}
-            aria-label="Refresh"
-            title="Refresh"
+            aria-label="Обновить"
+            title="Обновить"
             data-testid="datatable-refresh"
           >
             <RefreshCw className={isRefreshing ? "animate-spin" : ""} />

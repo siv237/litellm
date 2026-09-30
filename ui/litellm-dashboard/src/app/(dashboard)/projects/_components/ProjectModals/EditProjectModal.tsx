@@ -111,7 +111,7 @@ function EditProjectForm({ project, onClose, onSuccess }: Omit<EditProjectModalP
 
       <div className="mt-6 flex justify-end gap-2 border-t border-border pt-4">
         <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
+          Отмена
         </Button>
         <Button type="button" onClick={() => void handleSubmit()} disabled={updateMutation.isPending}>
           {updateMutation.isPending ? <UiLoadingSpinner /> : <Save />}

@@ -154,7 +154,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ accessToken, premiumUser,
             ))}
 
           <div className="mt-6 flex gap-2">
-            <Button onClick={() => handleSaveEmailSettings()}>Save Changes</Button>
+            <Button onClick={() => handleSaveEmailSettings()}>Сохранить изменения</Button>
             <Button
               variant="secondary"
               onClick={async () => {

@@ -93,7 +93,7 @@ function EndpointRowActions({ endpoint, onEndpointClick, onDeleteClick }: Endpoi
           onClick={() => !isFromConfig && endpointId && onEndpointClick(endpointId)}
         >
           <Pencil />
-          Edit
+          Изменить
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -103,7 +103,7 @@ function EndpointRowActions({ endpoint, onEndpointClick, onDeleteClick }: Endpoi
           onClick={() => !isFromConfig && endpointId && onDeleteClick(endpointId)}
         >
           <Trash2 />
-          Delete
+          Удалить
         </DropdownMenuItem>
         {isFromConfig && (
           <div data-testid="endpoint-config-hint" className="px-2 py-1.5 text-xs text-muted-foreground">
@@ -212,7 +212,7 @@ export const getPassThroughEndpointsTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

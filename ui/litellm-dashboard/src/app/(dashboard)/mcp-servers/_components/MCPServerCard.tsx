@@ -185,7 +185,7 @@ const MCPServerCard: FC<MCPServerCardProps> = ({
                     }}
                   >
                     <Trash2 />
-                    Delete
+                    Удалить
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
@@ -354,7 +354,7 @@ const HealthChip: FC<HealthChipProps> = ({
         {lastCheck && <div className="mb-1 text-xs">Last check: {new Date(lastCheck).toLocaleString()}</div>}
         {error && (
           <div className="text-xs">
-            <div className="mb-1 font-medium">Error</div>
+            <div className="mb-1 font-medium">Ошибка</div>
             <div className="wrap-break-word">{error}</div>
           </div>
         )}

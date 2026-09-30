@@ -348,7 +348,7 @@ const AddPolicyForm: React.FC<AddPolicyFormProps> = ({
 
           <div className="mt-6 flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={handleClose}>
-              Cancel
+              Отмена
             </Button>
             <Button type="button" onClick={handleModeConfirm}>
               {selectedMode === "flow_builder" ? "Continue to Builder" : "Create Policy"}
@@ -380,7 +380,7 @@ const AddPolicyForm: React.FC<AddPolicyFormProps> = ({
                 )}
               </FormField>
 
-              <FormField control={form.control} name="description" label="Description">
+              <FormField control={form.control} name="description" label="Описание">
                 {({ ref, ...control }) => (
                   <Textarea {...control} ref={ref} rows={2} placeholder="Describe what this policy does..." />
                 )}
@@ -540,7 +540,7 @@ const AddPolicyForm: React.FC<AddPolicyFormProps> = ({
 
             <div className="mt-6 flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={handleClose}>
-                Cancel
+                Отмена
               </Button>
               <Button
                 type="button"

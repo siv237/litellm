@@ -74,7 +74,7 @@ const UserEnvVarsForm: React.FC<UserEnvVarsFormProps> = ({ required, isSaving, o
       </FieldGroup>
       <div className="mt-6 flex items-center justify-end gap-2 border-t border-border pt-2">
         <Button type="button" variant="outline" onClick={onCancel} disabled={isSaving}>
-          Cancel
+          Отмена
         </Button>
         <Button type="submit" disabled={isSaving}>
           {isSaving && <UiLoadingSpinner className="mr-2 size-4" />}

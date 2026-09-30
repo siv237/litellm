@@ -282,7 +282,7 @@ const LoggingSettings: React.FC<LoggingSettingsProps> = ({
                   type="button"
                 >
                   <Trash2 />
-                  Remove
+                  Убрать
                 </Button>
               </div>
               <div className="space-y-4">

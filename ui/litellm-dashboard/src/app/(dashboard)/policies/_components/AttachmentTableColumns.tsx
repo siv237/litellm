@@ -153,8 +153,8 @@ export const getAttachmentTableColumns = ({
   },
   {
     id: "models",
-    meta: { title: "Models", skeleton: "chips" },
-    header: "Models",
+    meta: { title: "Модели", skeleton: "chips" },
+    header: "Модели",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => <ChipList values={row.original.models ?? []} />,
@@ -179,7 +179,7 @@ export const getAttachmentTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 88,
     enableSorting: false,
     enableHiding: false,

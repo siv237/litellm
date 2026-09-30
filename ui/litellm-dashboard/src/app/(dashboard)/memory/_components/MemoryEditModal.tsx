@@ -133,7 +133,7 @@ export const MemoryEditModal: React.FC<MemoryEditModalProps> = ({ open, mode, in
               onClose();
             }}
           >
-            Cancel
+            Отмена
           </Button>
           <Button onClick={handleOk} disabled={submitting} aria-busy={submitting}>
             {mode === "create" ? "Create" : "Save"}

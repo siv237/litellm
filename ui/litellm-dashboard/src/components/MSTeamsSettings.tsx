@@ -137,7 +137,7 @@ const MSTeamsSettings: React.FC<MSTeamsSettingsProps> = ({ accessToken, userID, 
           ))}
 
         <div className="mt-6 flex gap-2">
-          <Button onClick={() => handleSaveMSTeamsSettings()}>Save Changes</Button>
+          <Button onClick={() => handleSaveMSTeamsSettings()}>Сохранить изменения</Button>
           <Button
             variant="secondary"
             onClick={async () => {

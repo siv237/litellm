@@ -185,7 +185,7 @@ const CompetitorIntentConfiguration: React.FC<CompetitorIntentConfigurationProps
         </p>
         <FieldGroup>
           <Field>
-            <FieldLabel htmlFor={`${fieldId}-type`}>Type</FieldLabel>
+            <FieldLabel htmlFor={`${fieldId}-type`}>Тип</FieldLabel>
             <Select
               items={INTENT_TYPES}
               value={effectiveConfig.competitor_intent_type}

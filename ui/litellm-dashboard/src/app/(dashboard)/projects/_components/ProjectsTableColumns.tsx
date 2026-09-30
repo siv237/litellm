@@ -79,8 +79,8 @@ export const getProjectsTableColumns = ({
   {
     id: "project_alias",
     accessorFn: (row) => row.project_alias ?? "",
-    meta: { title: "Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Name" />,
+    meta: { title: "Название" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Название" />,
     size: 200,
     enableSorting: true,
     cell: ({ row }) => (
@@ -92,8 +92,8 @@ export const getProjectsTableColumns = ({
   {
     id: "team",
     accessorFn: (row) => teamAliasMap.get(row.team_id ?? "") ?? "",
-    meta: { title: "Team" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Team" />,
+    meta: { title: "Команда" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Команда" />,
     size: 180,
     enableSorting: true,
     cell: ({ row }) => (
@@ -102,8 +102,8 @@ export const getProjectsTableColumns = ({
   },
   {
     id: "models",
-    meta: { title: "Models", skeleton: "badge" },
-    header: "Models",
+    meta: { title: "Модели", skeleton: "badge" },
+    header: "Модели",
     size: 110,
     enableSorting: false,
     cell: ({ row }) => <ProjectModelsCell project={row.original} />,
@@ -111,8 +111,8 @@ export const getProjectsTableColumns = ({
   {
     id: "status",
     accessorKey: "blocked",
-    meta: { title: "Status", skeleton: "badge" },
-    header: "Status",
+    meta: { title: "Статус", skeleton: "badge" },
+    header: "Статус",
     size: 110,
     enableSorting: false,
     cell: ({ row }) => (

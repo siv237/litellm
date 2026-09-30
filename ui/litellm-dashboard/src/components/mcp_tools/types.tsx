@@ -47,10 +47,10 @@ export const AUTH_TYPE = {
 };
 
 export const AUTH_TYPE_ITEMS = [
-  { value: AUTH_TYPE.NONE, label: "None" },
+  { value: AUTH_TYPE.NONE, label: "Нет" },
   { value: AUTH_TYPE.API_KEY, label: "API Key" },
   { value: AUTH_TYPE.BEARER_TOKEN, label: "Bearer Token" },
-  { value: AUTH_TYPE.TOKEN, label: "Token" },
+  { value: AUTH_TYPE.TOKEN, label: "Токен" },
   { value: AUTH_TYPE.BASIC, label: "Basic Auth" },
   { value: AUTH_TYPE.OAUTH2, label: "OAuth" },
   { value: AUTH_TYPE.OAUTH2_TOKEN_EXCHANGE, label: "OAuth Token Exchange (OBO)" },

@@ -410,7 +410,7 @@ const AddPluginForm: React.FC<AddPluginFormProps> = ({ visible, onClose, accessT
 
             <div className="mt-6 flex justify-end gap-2">
               <Button type="button" variant="outline" onClick={handleCancel} disabled={isSubmitting}>
-                Cancel
+                Отмена
               </Button>
               <Button type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
                 {isSubmitting && <UiLoadingSpinner className="size-4" />}

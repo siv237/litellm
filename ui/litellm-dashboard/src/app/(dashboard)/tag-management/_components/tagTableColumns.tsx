@@ -88,7 +88,7 @@ function TagRowActions({ tag, onEdit, onDelete }: TagRowActionsProps) {
           onClick={() => onEdit(tag)}
         >
           <Pencil />
-          Edit
+          Изменить
         </DropdownMenuItem>
         <DropdownMenuItem
           variant="destructive"
@@ -98,7 +98,7 @@ function TagRowActions({ tag, onEdit, onDelete }: TagRowActionsProps) {
           onClick={() => onDelete(tag.name)}
         >
           <Trash2 />
-          Delete
+          Удалить
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -124,8 +124,8 @@ export const getTagTableColumns = ({ onSelectTag, onEdit, onDelete }: TagTableCo
   {
     id: "description",
     accessorKey: "description",
-    meta: { title: "Description" },
-    header: "Description",
+    meta: { title: "Описание" },
+    header: "Описание",
     size: 300,
     enableSorting: false,
     cell: ({ row }) => {
@@ -158,7 +158,7 @@ export const getTagTableColumns = ({ onSelectTag, onEdit, onDelete }: TagTableCo
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

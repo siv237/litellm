@@ -84,8 +84,8 @@ export const getSkillHubTableColumns = ({ onSkillClick }: SkillHubTableColumnsDe
   {
     id: "description",
     accessorKey: "description",
-    meta: { title: "Description" },
-    header: "Description",
+    meta: { title: "Описание" },
+    header: "Описание",
     size: 260,
     enableSorting: false,
     cell: ({ row }) => (
@@ -145,8 +145,8 @@ export const getSkillHubTableColumns = ({ onSkillClick }: SkillHubTableColumnsDe
   {
     id: "enabled",
     accessorKey: "enabled",
-    meta: { title: "Status", skeleton: "badge" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Status" />,
+    meta: { title: "Статус", skeleton: "badge" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Статус" />,
     size: 100,
     enableSorting: true,
     cell: ({ row }) => (
@@ -159,7 +159,7 @@ export const getSkillHubTableColumns = ({ onSkillClick }: SkillHubTableColumnsDe
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

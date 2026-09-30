@@ -165,8 +165,8 @@ const INITIAL_VALUES: GuardrailFormValues = {
 };
 
 const ALWAYS_ON_ITEMS = [
-  { label: "Yes", value: true },
-  { label: "No", value: false },
+  { label: "Да", value: true },
+  { label: "Нет", value: false },
 ];
 
 const DEFAULT_MODES = ["pre_call", "during_call", "post_call", "logging_only"];
@@ -767,8 +767,8 @@ const AddGuardrailForm: React.FC<AddGuardrailFormProps> = ({ visible, onClose, a
                 <SelectValue placeholder="Select an option" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={true}>Yes</SelectItem>
-                <SelectItem value={false}>No</SelectItem>
+                <SelectItem value={true}>Да</SelectItem>
+                <SelectItem value={false}>Нет</SelectItem>
               </SelectContent>
             </Select>
           )}
@@ -1142,7 +1142,7 @@ const AddGuardrailForm: React.FC<AddGuardrailFormProps> = ({ visible, onClose, a
                           {step.optional && !isCurrent && (
                             <span className="text-[11px] text-muted-foreground">optional</span>
                           )}
-                          {isDone && <span className="text-[11px] text-info hover:underline">Edit</span>}
+                          {isDone && <span className="text-[11px] text-info hover:underline">Изменить</span>}
                         </div>
 
                         {/* Expanded form content for current step */}
@@ -1157,7 +1157,7 @@ const AddGuardrailForm: React.FC<AddGuardrailFormProps> = ({ visible, onClose, a
             {/* Bottom bar */}
             <div className="flex items-center justify-end space-x-3 border-t border-border px-6 py-3">
               <Button type="button" variant="outline" onClick={handleClose}>
-                Cancel
+                Отмена
               </Button>
               {currentStep > 0 && (
                 <Button type="button" variant="outline" onClick={prevStep}>
@@ -1166,7 +1166,7 @@ const AddGuardrailForm: React.FC<AddGuardrailFormProps> = ({ visible, onClose, a
               )}
               {currentStep < stepConfigs.length - 1 ? (
                 <Button type="button" onClick={nextStep}>
-                  Next
+                  Далее
                 </Button>
               ) : (
                 <Button type="button" onClick={handleSubmit} disabled={loading}>

@@ -399,8 +399,8 @@ export const getHealthChecksTableColumns = ({
   },
   {
     id: "actions",
-    meta: { title: "Actions", className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    meta: { title: "Действия", className: "text-right", headerClassName: "text-right" },
+    header: () => <span className="sr-only">Действия</span>,
     size: 80,
     enableSorting: false,
     enableHiding: false,

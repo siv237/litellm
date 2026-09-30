@@ -117,7 +117,7 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
           {/* Right sidebar */}
           <div className="w-60 shrink-0">
             <div className="mb-6">
-              <div className="mb-1 text-xs text-muted-foreground">Status</div>
+              <div className="mb-1 text-xs text-muted-foreground">Статус</div>
               <span
                 className={cn(
                   "rounded-xl px-2.5 py-[3px] text-xs font-medium",

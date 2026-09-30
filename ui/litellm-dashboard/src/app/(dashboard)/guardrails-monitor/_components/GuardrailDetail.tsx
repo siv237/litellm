@@ -92,7 +92,7 @@ export function GuardrailDetail({ guardrailId, onBack, accessToken = null, start
 
   if (detailLoading && !detailData) {
     return (
-      <div role="status" aria-busy="true" aria-label="Loading" className="flex items-center justify-center py-12">
+      <div role="status" aria-busy="true" aria-label="Загрузка" className="flex items-center justify-center py-12">
         <UiLoadingSpinner className="size-8 text-primary" />
       </div>
     );

@@ -109,11 +109,11 @@ const buildColumns = ({
   {
     id: "user_alias",
     accessorFn: (member) => member.user_alias || undefined,
-    header: ({ column }) => <DataTableSortHeader column={column} title="Name" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="Название" />,
     sortingFn: "text",
     sortUndefined: "last",
     enableGlobalFilter: true,
-    meta: { title: "Name" },
+    meta: { title: "Название" },
     cell: ({ row }) => row.original.user_alias || <span className="text-muted-foreground">-</span>,
   },
   {
@@ -159,7 +159,7 @@ const buildColumns = ({
   ...extraColumns.map(extraColumnDef),
   {
     id: "actions",
-    header: "Actions",
+    header: "Действия",
     size: ACTIONS_COLUMN_WIDTH,
     enableSorting: false,
     enableGlobalFilter: false,

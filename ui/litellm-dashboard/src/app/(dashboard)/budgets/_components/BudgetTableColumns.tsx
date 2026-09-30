@@ -130,10 +130,10 @@ export const getBudgetTableColumns = ({
     id: "budget_duration",
     accessorKey: "budget_duration",
     filterFn: serverFilter,
-    meta: { title: "Reset" },
+    meta: { title: "Сброс" },
     // "7d"/"30d" sort lexicographically, not chronologically, so the route does not offer it.
     enableSorting: false,
-    header: ({ column }) => <DataTableSortHeader column={column} title="Reset" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="Сброс" />,
     size: 110,
     cell: ({ row }) => <BudgetDurationCell value={row.original.budget_duration} />,
   },
@@ -151,7 +151,7 @@ export const getBudgetTableColumns = ({
         {
           id: "actions",
           meta: { className: "text-right", headerClassName: "text-right" },
-          header: () => <span className="sr-only">Actions</span>,
+          header: () => <span className="sr-only">Действия</span>,
           size: 64,
           enableSorting: false,
           enableHiding: false,

@@ -47,7 +47,7 @@ export const AGENT_FORM_CONFIG: {
       },
       {
         name: "description",
-        label: "Description",
+        label: "Описание",
         type: "textarea",
         required: true,
         placeholder: "Describe what this agent does...",
@@ -211,7 +211,7 @@ export const SKILL_FIELD_CONFIG = {
   },
   description: {
     name: "description",
-    label: "Description",
+    label: "Описание",
     required: true,
     placeholder: "What this skill does",
     rows: 2,

@@ -159,7 +159,7 @@ export default function CredentialsPanel() {
         resourceInformationTitle="Credential Information"
         resourceInformation={[
           { label: "Credential Name", value: credentialToDelete?.credential_name },
-          { label: "Provider", value: credentialToDelete?.credential_info?.custom_llm_provider || "-" },
+          { label: "Провайдер", value: credentialToDelete?.credential_info?.custom_llm_provider || "-" },
         ]}
         confirmLoading={isCredentialDeleting}
         requiredConfirmation={credentialToDelete?.credential_name}

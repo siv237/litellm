@@ -296,7 +296,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ proxySettings }) => {
                         <TableCell className="text-right">
                           {ip !== all_ip_address_allowed && (
                             <Button onClick={() => handleDeleteIP(ip)} variant="destructive" size="sm">
-                              Delete
+                              Удалить
                             </Button>
                           )}
                         </TableCell>
@@ -308,7 +308,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ proxySettings }) => {
                   <Button className="mx-1" onClick={() => setIsAddIPModalVisible(true)}>
                     Add IP Address
                   </Button>
-                  <Button onClick={() => setIsAllowedIPModalVisible(false)}>Close</Button>
+                  <Button onClick={() => setIsAllowedIPModalVisible(false)}>Закрыть</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -332,9 +332,9 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ proxySettings }) => {
                 </span>
                 <DialogFooter>
                   <Button className="mx-1" onClick={() => confirmDeleteIP()}>
-                    Yes
+                    Да
                   </Button>
-                  <Button onClick={() => setIsDeleteIPModalVisible(false)}>Close</Button>
+                  <Button onClick={() => setIsDeleteIPModalVisible(false)}>Закрыть</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>

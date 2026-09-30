@@ -176,7 +176,7 @@ const MemberModal = <T extends BaseMember>({
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <FieldGroup>
             {config.showEmail && (
-              <FormField control={form.control} name="user_email" label="Email">
+              <FormField control={form.control} name="user_email" label="Эл. почта">
                 {({ ref, value, onChange, ...rest }) => (
                   <Input
                     {...rest}
@@ -212,7 +212,7 @@ const MemberModal = <T extends BaseMember>({
               name="role"
               label={
                 <span className="flex items-center gap-2">
-                  <span>Role</span>
+                  <span>Роль</span>
                   {mode === "edit" && initialData && (
                     <span className="text-sm text-muted-foreground">(Current: {getRoleLabel(initialData.role)})</span>
                   )}
@@ -244,7 +244,7 @@ const MemberModal = <T extends BaseMember>({
 
           <div className="mt-6 text-right">
             <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting} className="mr-2">
-              Cancel
+              Отмена
             </Button>
             <Button type="submit" variant="outline" disabled={isSubmitting}>
               {isSubmitting && <UiLoadingSpinner className="size-4" />}

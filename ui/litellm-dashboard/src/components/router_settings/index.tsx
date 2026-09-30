@@ -191,9 +191,9 @@ const RouterSettings: React.FC<RouterSettingsProps> = ({ accessToken, userRole, 
       {/* Actions - Sticky at bottom */}
       <div className="border-t border-border pt-6 flex justify-end gap-3">
         <Button variant="outline" onClick={() => window.location.reload()}>
-          Reset
+          Сброс
         </Button>
-        <Button onClick={handleSaveChanges}>Save Changes</Button>
+        <Button onClick={handleSaveChanges}>Сохранить изменения</Button>
       </div>
     </div>
   );

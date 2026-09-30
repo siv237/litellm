@@ -253,7 +253,7 @@ const MakeAgentPublicForm: React.FC<MakeAgentPublicFormProps> = ({
         <div className="flex space-x-2">
           {currentStep === 0 && (
             <Button onClick={handleNext} disabled={selectedAgents.size === 0}>
-              Next
+              Далее
             </Button>
           )}
 

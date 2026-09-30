@@ -147,7 +147,7 @@ function BudgetFilterFields({ get, set }: FilterDraft) {
 
   return (
     <>
-      <DataTableFilterField label="Reset">
+      <DataTableFilterField label="Сброс">
         <DurationFilter
           selected={(get("budget_duration") as string[] | undefined) ?? []}
           onChange={(selected) => set("budget_duration", selected)}

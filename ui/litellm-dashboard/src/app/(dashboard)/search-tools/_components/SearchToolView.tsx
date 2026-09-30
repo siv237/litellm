@@ -76,7 +76,7 @@ export const SearchToolView: React.FC<SearchToolViewProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Provider</p>
+            <p className="text-sm text-muted-foreground">Провайдер</p>
             <p className="mt-2 text-lg font-semibold text-foreground">
               {getProviderDisplayName(searchTool.litellm_params.search_provider)}
             </p>
@@ -103,7 +103,7 @@ export const SearchToolView: React.FC<SearchToolViewProps> = ({
       {searchTool.search_tool_info?.description && (
         <Card className="mt-6">
           <CardContent>
-            <p className="text-sm text-muted-foreground">Description</p>
+            <p className="text-sm text-muted-foreground">Описание</p>
             <p className="mt-2 text-foreground">{searchTool.search_tool_info.description}</p>
           </CardContent>
         </Card>

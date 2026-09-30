@@ -56,7 +56,7 @@ function OrganizationRowActions({ organization, onEditClick, onDeleteClick }: Or
           onClick={() => onEditClick(organization.organization_id)}
         >
           <Pencil />
-          Edit
+          Изменить
         </DropdownMenuItem>
         <DropdownMenuItem
           variant="destructive"
@@ -64,7 +64,7 @@ function OrganizationRowActions({ organization, onEditClick, onDeleteClick }: Or
           onClick={() => onDeleteClick(organization.organization_id)}
         >
           <Trash2 />
-          Delete
+          Удалить
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -129,8 +129,8 @@ export const getOrganizationsTableColumns = ({
   {
     id: "spend",
     accessorKey: "spend",
-    meta: { title: "Spend (USD)" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Spend (USD)" />,
+    meta: { title: "Расход (USD)" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Расход (USD)" />,
     size: 120,
     enableSorting: true,
     cell: ({ row }) => <MoneyCell value={row.original.spend} decimals={4} />,
@@ -147,8 +147,8 @@ export const getOrganizationsTableColumns = ({
   },
   {
     id: "models",
-    meta: { title: "Models", skeleton: "chips" },
-    header: "Models",
+    meta: { title: "Модели", skeleton: "chips" },
+    header: "Модели",
     size: 260,
     enableSorting: false,
     cell: ({ row }) => <ModelsCell models={row.original.models} />,
@@ -172,7 +172,7 @@ export const getOrganizationsTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

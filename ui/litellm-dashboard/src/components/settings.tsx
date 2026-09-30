@@ -620,7 +620,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
                 </TableBody>
               </Table>
               <Button size="xs" className="mt-2" onClick={handleSaveAlerts}>
-                Save Changes
+                Сохранить изменения
               </Button>
 
               <Button
@@ -683,7 +683,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
 
               <div className="flex justify-end space-x-3 pt-6 mt-6 border-t border-border">
                 <Button type="button" variant="outline" onClick={cancelAddCallback} disabled={isAddingCallback}>
-                  Cancel
+                  Отмена
                 </Button>
                 <Button type="submit" disabled={isAddingCallback}>
                   {isAddingCallback ? "Adding..." : "Add Callback"}
@@ -724,7 +724,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
 
               <div className="flex justify-end space-x-3 pt-6 mt-6 border-t border-border">
                 <Button type="button" variant="outline" onClick={closeEditCallbackModal} disabled={isUpdatingCallback}>
-                  Cancel
+                  Отмена
                 </Button>
                 <Button type="submit" disabled={isUpdatingCallback}>
                   {isUpdatingCallback ? "Saving..." : "Save Changes"}

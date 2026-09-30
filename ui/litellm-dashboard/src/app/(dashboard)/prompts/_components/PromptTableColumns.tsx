@@ -101,7 +101,7 @@ function PromptRowActions({ prompt, isAdmin, onDeleteClick }: PromptRowActionsPr
               }
             >
               <Trash2 />
-              Delete
+              Удалить
             </DropdownMenuItem>
           </>
         )}
@@ -145,8 +145,8 @@ export const getPromptTableColumns = ({
   },
   {
     id: "model",
-    meta: { title: "Model" },
-    header: "Model",
+    meta: { title: "Модель" },
+    header: "Модель",
     size: 200,
     enableSorting: false,
     cell: ({ row }) => <PromptModelCell prompt={row.original} modelHubData={modelHubData} />,
@@ -209,8 +209,8 @@ export const getPromptTableColumns = ({
   {
     id: "prompt_type",
     accessorKey: "prompt_info.prompt_type",
-    meta: { title: "Type" },
-    header: "Type",
+    meta: { title: "Тип" },
+    header: "Тип",
     size: 140,
     enableSorting: false,
     cell: ({ row }) => {
@@ -225,7 +225,7 @@ export const getPromptTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

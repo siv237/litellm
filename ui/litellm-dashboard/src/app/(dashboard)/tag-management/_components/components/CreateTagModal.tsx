@@ -89,7 +89,7 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ visible, onCancel, onSu
                 {({ ref, ...field }) => <Input {...field} ref={ref} />}
               </FormField>
 
-              <FormField control={form.control} name="description" label="Description">
+              <FormField control={form.control} name="description" label="Описание">
                 {({ ref, value, ...field }) => <Textarea {...field} ref={ref} value={value ?? ""} rows={4} />}
               </FormField>
 

@@ -25,7 +25,7 @@ const MultiExportDropdown: React.FC<MultiExportDropdownProps> = ({ multiResult }
     <DropdownMenu>
       <DropdownMenuTrigger className={buttonVariants({ variant: "secondary", size: "xs" })}>
         <Download />
-        Export
+        Экспорт
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuItem onClick={() => exportMultiToPDF(multiResult)}>

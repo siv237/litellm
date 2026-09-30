@@ -102,7 +102,7 @@ export default function PluginSettings() {
       return (
         <TableRow>
           <TableCell colSpan={5} className="py-6 text-center text-sm text-muted-foreground">
-            No data
+            Нет данных
           </TableCell>
         </TableRow>
       );
@@ -167,11 +167,11 @@ export default function PluginSettings() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Название</TableHead>
               <TableHead>Display Name</TableHead>
               <TableHead>URL</TableHead>
               <TableHead>Plugin Key</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Действия</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>{renderRows()}</TableBody>
@@ -230,10 +230,10 @@ export default function PluginSettings() {
           </form>
           <DialogFooter>
             <Button variant="outline" onClick={() => setModalOpen(false)}>
-              Cancel
+              Отмена
             </Button>
             <Button onClick={form.handleSubmit(handleOk)} disabled={saving} aria-busy={saving}>
-              Save
+              Сохранить
             </Button>
           </DialogFooter>
         </DialogContent>

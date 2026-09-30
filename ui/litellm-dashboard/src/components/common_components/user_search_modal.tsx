@@ -197,7 +197,7 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({
             </Alert>
 
             <FieldGroup>
-              <FormField control={form.control} name="user_email" label="Email">
+              <FormField control={form.control} name="user_email" label="Эл. почта">
                 {({ id, value, onChange }) =>
                   renderUserSearch("user_email", "Search by email", { id, value, onChange }, "member-email-search")
                 }

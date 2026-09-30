@@ -130,7 +130,7 @@ const MCPConnectionStatus: React.FC<MCPConnectionStatusProps> = ({
                 <div className="mt-3">
                   <Button variant="outline" size="sm" onClick={fetchTools}>
                     <RefreshCw />
-                    Retry
+                    Повторить
                   </Button>
                 </div>
               </Alert>

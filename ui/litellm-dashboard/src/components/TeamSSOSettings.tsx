@@ -205,7 +205,7 @@ const TeamSSOSettings: React.FC<TeamSSOSettingsProps> = ({ accessToken }) => {
           {isEditing ? (
             <div className="flex gap-3">
               <Button type="button" variant="outline" onClick={handleCancel} disabled={saving}>
-                Cancel
+                Отмена
               </Button>
               <Button type="button" onClick={handleSave} disabled={saving}>
                 {saving ? (
@@ -346,7 +346,7 @@ const TeamSSOSettings: React.FC<TeamSSOSettingsProps> = ({ accessToken }) => {
             />
 
             <SettingRow
-              label="Models"
+              label="Модели"
               description="Default list of models that new teams can access."
               isEditing={isEditing}
               viewContent={renderTags(values.models, getModelDisplayName)}

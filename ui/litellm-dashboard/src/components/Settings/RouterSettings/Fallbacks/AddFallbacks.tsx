@@ -133,7 +133,7 @@ export default function AddFallbacks({ accessToken, value = [], onChange }: AddF
         {groups.length > 0 && (
           <div className="flex items-center justify-end space-x-3 pt-6 mt-6 border-t border-border">
             <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
-              Cancel
+              Отмена
             </Button>
             <Button variant="outline" onClick={handleSaveAll} disabled={groups.length === 0 || isSaving}>
               {isSaving && <UiLoadingSpinner className="size-4" />}

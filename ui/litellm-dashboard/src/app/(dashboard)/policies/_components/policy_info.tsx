@@ -125,9 +125,9 @@ const PolicyInfoView: React.FC<PolicyInfoViewProps> = ({
             <DetailRow label="Policy ID">
               <code className="rounded-sm bg-muted px-2 py-1 text-xs">{policy.policy_id}</code>
             </DetailRow>
-            <DetailRow label="Description">{policy.description || <Muted>No description</Muted>}</DetailRow>
+            <DetailRow label="Описание">{policy.description || <Muted>No description</Muted>}</DetailRow>
             <DetailRow label="Inherits From">
-              {policy.inherit ? <Badge variant="secondary">{policy.inherit}</Badge> : <Muted>None</Muted>}
+              {policy.inherit ? <Badge variant="secondary">{policy.inherit}</Badge> : <Muted>Нет</Muted>}
             </DetailRow>
             <DetailRow label="Created At">
               {policy.created_at ? new Date(policy.created_at).toLocaleString() : "-"}
@@ -180,7 +180,7 @@ const PolicyInfoView: React.FC<PolicyInfoViewProps> = ({
                     </Badge>
                   ))
                 ) : (
-                  <Muted>None</Muted>
+                  <Muted>Нет</Muted>
                 )}
               </div>
             </DetailRow>
@@ -193,7 +193,7 @@ const PolicyInfoView: React.FC<PolicyInfoViewProps> = ({
                     </Badge>
                   ))
                 ) : (
-                  <Muted>None</Muted>
+                  <Muted>Нет</Muted>
                 )}
               </div>
             </DetailRow>

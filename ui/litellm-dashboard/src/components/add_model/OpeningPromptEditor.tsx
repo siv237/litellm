@@ -283,7 +283,7 @@ const OpeningPromptEditor: React.FC<OpeningPromptEditorProps> = ({
 
           <DialogFooter className="mt-4">
             <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-              Cancel
+              Отмена
             </Button>
             <Button type="button" onClick={handleSave}>
               Save prompt

@@ -473,7 +473,7 @@ export default function ModelInfoView({
           <ArrowLeft className="size-4" />
           Back to Models
         </Button>
-        <p className="text-sm">Loading...</p>
+        <p className="text-sm">Загрузка…</p>
       </div>
     );
   }
@@ -681,7 +681,7 @@ export default function ModelInfoView({
             {/* Overview Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
               <Card className="block p-6">
-                <p className="text-sm">Provider</p>
+                <p className="text-sm">Провайдер</p>
                 <div className="mt-2 flex items-center space-x-2">
                   {modelData.provider && <Logo provider={modelData.provider} className="w-4 h-4" />}
                   <h3 className="text-lg font-medium">{modelData.provider || "Not Set"}</h3>
@@ -782,7 +782,7 @@ export default function ModelInfoView({
                   healthCheckModelOptions={healthCheckModelOptions}
                 />
               ) : (
-                <p className="text-sm">Loading...</p>
+                <p className="text-sm">Загрузка…</p>
               )}
             </Card>
           </TabsContent>
@@ -811,7 +811,7 @@ export default function ModelInfoView({
             value: modelData?.litellm_model_name || "Not Set",
           },
           {
-            label: "Provider",
+            label: "Провайдер",
             value: modelData?.provider || "Not Set",
           },
           {
@@ -841,7 +841,7 @@ export default function ModelInfoView({
             <p className="text-sm">{modelData.litellm_params.litellm_credential_name}</p>
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsCredentialModalOpen(false)}>
-                Cancel
+                Отмена
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -889,7 +889,7 @@ export default function ModelInfoView({
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAutoRouterTestModalOpen(false)}>
-              Close
+              Закрыть
             </Button>
           </DialogFooter>
         </DialogContent>

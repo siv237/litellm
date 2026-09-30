@@ -322,7 +322,7 @@ const AgentInfoView: React.FC<AgentInfoViewProps> = ({ agentId, onClose, accessT
               <DetailItem label="Agent ID">{agent.agent_id}</DetailItem>
               <DetailItem label="Agent Name">{agent.agent_name}</DetailItem>
               <DetailItem label="Display Name">{agent.agent_card_params?.name || "-"}</DetailItem>
-              <DetailItem label="Description">{agent.agent_card_params?.description || "-"}</DetailItem>
+              <DetailItem label="Описание">{agent.agent_card_params?.description || "-"}</DetailItem>
               <DetailItem label="URL">{agent.agent_card_params?.url || "-"}</DetailItem>
               <DetailItem label="Version">{agent.agent_card_params?.version || "-"}</DetailItem>
               <DetailItem label="Protocol Version">{agent.agent_card_params?.protocolVersion || "-"}</DetailItem>
@@ -330,13 +330,13 @@ const AgentInfoView: React.FC<AgentInfoViewProps> = ({ agentId, onClose, accessT
                 {agent.agent_card_params?.capabilities?.streaming ? "Yes" : "No"}
               </DetailItem>
               {agent.agent_card_params?.capabilities?.pushNotifications && (
-                <DetailItem label="Push Notifications">Yes</DetailItem>
+                <DetailItem label="Push Notifications">Да</DetailItem>
               )}
               {agent.agent_card_params?.capabilities?.stateTransitionHistory && (
-                <DetailItem label="State Transition History">Yes</DetailItem>
+                <DetailItem label="State Transition History">Да</DetailItem>
               )}
               <DetailItem label="Skills">{agent.agent_card_params?.skills?.length || 0} configured</DetailItem>
-              {agent.litellm_params?.model && <DetailItem label="Model">{agent.litellm_params.model}</DetailItem>}
+              {agent.litellm_params?.model && <DetailItem label="Модель">{agent.litellm_params.model}</DetailItem>}
               {agent.litellm_params?.make_public !== undefined && (
                 <DetailItem label="Make Public">{agent.litellm_params.make_public ? "Yes" : "No"}</DetailItem>
               )}
@@ -534,7 +534,7 @@ const AgentInfoView: React.FC<AgentInfoViewProps> = ({ agentId, onClose, accessT
                               fetchAgentInfo();
                             }}
                           >
-                            Cancel
+                            Отмена
                           </Button>
                           <Button type="submit" disabled={isSaving} aria-busy={isSaving}>
                             {isSaving && <UiLoadingSpinner className="size-4" />}

@@ -78,7 +78,7 @@ export const ByokCredentialModal: React.FC<ByokCredentialModalProps> = ({ server
                 onClick={() => setStep(1)}
                 className="flex items-center gap-1 text-muted-foreground hover:text-foreground text-sm"
               >
-                <ArrowLeft className="size-3.5" /> Back
+                <ArrowLeft className="size-3.5" /> Назад
               </button>
             ) : (
               <div />
@@ -160,7 +160,7 @@ export const ByokCredentialModal: React.FC<ByokCredentialModalProps> = ({ server
                 onClick={handleClose}
                 className="mt-3 w-full text-muted-foreground hover:text-foreground text-sm py-2"
               >
-                Cancel
+                Отмена
               </button>
             </div>
           ) : (

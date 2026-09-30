@@ -121,7 +121,7 @@ const VariableTextArea: React.FC<VariableTextAreaProps> = ({ value, onChange, pl
                   />
                   <div className="flex gap-2 mt-2">
                     <Button size="sm" onClick={handleVariableEdit}>
-                      Save
+                      Сохранить
                     </Button>
                     <Button
                       variant="outline"
@@ -131,7 +131,7 @@ const VariableTextArea: React.FC<VariableTextAreaProps> = ({ value, onChange, pl
                         setNewVariableName("");
                       }}
                     >
-                      Cancel
+                      Отмена
                     </Button>
                   </div>
                 </div>

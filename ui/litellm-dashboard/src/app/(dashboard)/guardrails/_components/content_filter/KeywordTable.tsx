@@ -49,7 +49,7 @@ const KeywordTable: React.FC<KeywordTableProps> = ({ keywords, onActionChange, o
       ),
     },
     {
-      header: "Description",
+      header: "Описание",
       accessorKey: "description",
       cell: ({ row }) => row.original.description || "-",
     },
@@ -60,7 +60,7 @@ const KeywordTable: React.FC<KeywordTableProps> = ({ keywords, onActionChange, o
       cell: ({ row }) => (
         <Button variant="ghost" size="sm" onClick={() => onRemove(row.original.id)}>
           <Trash2 />
-          Delete
+          Удалить
         </Button>
       ),
     },

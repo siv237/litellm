@@ -154,7 +154,7 @@ const TopKeyView: React.FC<TopKeyViewProps> = ({ topKeys, teams, showTags = fals
   };
 
   const spendColumn = {
-    header: "Spend (USD)",
+    header: "Расход (USD)",
     accessorKey: "spend",
     meta: { numeric: true },
     cell: (info: any) => <MoneyCell value={info.getValue()} decimals={2} />,
@@ -255,7 +255,7 @@ const TopKeyView: React.FC<TopKeyViewProps> = ({ topKeys, teams, showTags = fals
             <button
               onClick={handleClose}
               className="absolute top-4 right-4 text-muted-foreground hover:text-foreground focus:outline-hidden"
-              aria-label="Close"
+              aria-label="Закрыть"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />

@@ -283,7 +283,7 @@ const MakeModelPublicForm: React.FC<MakeModelPublicFormProps> = ({
         <div className="flex space-x-2">
           {currentStep === 0 && (
             <Button onClick={handleNext} disabled={selectedModels.size === 0}>
-              Next
+              Далее
             </Button>
           )}
 

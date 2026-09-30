@@ -33,7 +33,7 @@ const RESOURCE_TONES: Record<"models" | "mcpServers" | "agents", ResourceTone> =
 
 function ResourcesCell({ group }: { group: AccessGroup }) {
   const items = [
-    { key: "models" as const, label: "Models", count: group.modelIds.length },
+    { key: "models" as const, label: "Модели", count: group.modelIds.length },
     { key: "mcpServers" as const, label: "MCP Servers", count: group.mcpServerIds.length },
     { key: "agents" as const, label: "Agents", count: group.agentIds.length },
   ];
@@ -121,8 +121,8 @@ export const getAccessGroupsTableColumns = ({
     {
       id: "name",
       accessorKey: "name",
-      meta: { title: "Name" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Name" />,
+      meta: { title: "Название" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Название" />,
       size: 220,
       enableSorting: true,
       cell: ({ row }) => {
@@ -172,7 +172,7 @@ export const getAccessGroupsTableColumns = ({
     {
       id: "actions",
       meta: { className: "text-right", headerClassName: "text-right" },
-      header: () => <span className="sr-only">Actions</span>,
+      header: () => <span className="sr-only">Действия</span>,
       size: 64,
       enableSorting: false,
       enableHiding: false,

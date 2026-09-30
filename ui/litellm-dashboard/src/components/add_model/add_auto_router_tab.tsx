@@ -625,7 +625,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
                     <div className="text-xs mt-1 text-destructive">
                       Could not load available models.{" "}
                       <button type="button" className="underline" onClick={() => refetchModels()}>
-                        Retry
+                        Повторить
                       </button>
                     </div>
                   )}
@@ -634,7 +634,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
                     <div className="text-xs mt-1 text-destructive">
                       Could not load templates, so only Custom Configuration is shown.{" "}
                       <button type="button" className="underline" onClick={() => void refetchPresets()}>
-                        Retry
+                        Повторить
                       </button>
                     </div>
                   )}
@@ -800,7 +800,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
           <DialogFooter>
             {" "}
             <Button variant="outline" onClick={() => setIsRoutingTestVisible(false)}>
-              Close
+              Закрыть
             </Button>
           </DialogFooter>
         </DialogContent>

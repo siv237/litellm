@@ -391,7 +391,7 @@ const TemplateParameterModal: React.FC<TemplateParameterModalProps> = ({
 
         <DialogFooter>
           <Button variant="secondary" onClick={onCancel} disabled={isLoading}>
-            Cancel
+            Отмена
           </Button>
           <Button onClick={handleConfirm} disabled={!canContinue || isLoading}>
             {isLoading ? "Creating guardrails..." : "Continue"}

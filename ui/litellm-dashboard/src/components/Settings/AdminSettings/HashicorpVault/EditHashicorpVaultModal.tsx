@@ -160,7 +160,7 @@ const EditHashicorpVaultModal: React.FC<EditHashicorpVaultModalProps> = ({ isVis
         <DialogFooter>
           <div className="flex items-center justify-end gap-2">
             <Button type="button" variant="outline" onClick={handleCancel} disabled={isPending}>
-              Cancel
+              Отмена
             </Button>
             <Button type="button" disabled={isPending} onClick={() => void form.handleSubmit(handleSubmit)()}>
               {isPending && <UiLoadingSpinner className="size-4 mr-1" />}

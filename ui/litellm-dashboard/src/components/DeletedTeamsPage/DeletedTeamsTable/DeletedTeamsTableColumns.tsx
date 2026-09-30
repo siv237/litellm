@@ -59,8 +59,8 @@ export const getDeletedTeamsTableColumns = (): ColumnDef<DeletedTeam>[] => [
   {
     id: "spend",
     accessorKey: "spend",
-    meta: { title: "Spend (USD)", numeric: true },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Spend (USD)" />,
+    meta: { title: "Расход (USD)", numeric: true },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Расход (USD)" />,
     size: 100,
     enableSorting: true,
     cell: ({ row }) => <MoneyCell value={row.original.spend} decimals={4} />,
@@ -77,8 +77,8 @@ export const getDeletedTeamsTableColumns = (): ColumnDef<DeletedTeam>[] => [
   {
     id: "models",
     accessorKey: "models",
-    meta: { title: "Models", skeleton: "chips" },
-    header: "Models",
+    meta: { title: "Модели", skeleton: "chips" },
+    header: "Модели",
     size: 200,
     enableSorting: false,
     cell: ({ row }) => <ModelsCell models={row.original.models} />,

@@ -285,8 +285,8 @@ export function TeamVirtualKeysTable({ teamId, teamAlias, organization }: TeamVi
       {
         id: "spend",
         accessorKey: "spend",
-        meta: { title: "Spend (USD)" },
-        header: ({ column }) => <DataTableSortHeader column={column} title="Spend (USD)" variant="header-cycle" />,
+        meta: { title: "Расход (USD)" },
+        header: ({ column }) => <DataTableSortHeader column={column} title="Расход (USD)" variant="header-cycle" />,
         size: 100,
         enableSorting: true,
         cell: (info) => <MoneyCell value={info.getValue() as number | null} decimals={4} />,
@@ -313,7 +313,7 @@ export function TeamVirtualKeysTable({ teamId, teamAlias, organization }: TeamVi
       {
         id: "models",
         accessorKey: "models",
-        header: "Models",
+        header: "Модели",
         size: 200,
         enableSorting: false,
         cell: (info) => {

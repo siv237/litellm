@@ -174,7 +174,7 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
   };
 
   const credentialOptions: CredentialOption[] = [
-    { value: null, label: "None" },
+    { value: null, label: "Нет" },
     ...credentials.map((credential) => ({
       value: credential.credential_name,
       label: credential.credential_name,
@@ -197,7 +197,7 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
   }
 
   if (!vectorStoreDetails) {
-    return <div>Loading...</div>;
+    return <div>Загрузка…</div>;
   }
 
   return (
@@ -219,7 +219,7 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
       <Tabs defaultValue="details">
         <TabsList variant="line" className="mb-6 h-auto w-full justify-start rounded-none p-0">
           <TabsTrigger value="details" className="flex-none rounded-none px-4 py-2">
-            Details
+            Подробнее
           </TabsTrigger>
           <TabsTrigger value="test" className="flex-none rounded-none px-4 py-2">
             Test Vector Store
@@ -245,7 +245,7 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
                           {({ ref, value, ...field }) => <Input {...field} ref={ref} value={value ?? ""} />}
                         </FormField>
 
-                        <FormField control={form.control} name="vector_store_description" label="Description">
+                        <FormField control={form.control} name="vector_store_description" label="Описание">
                           {({ ref, value, ...field }) => <Textarea {...field} ref={ref} value={value ?? ""} rows={4} />}
                         </FormField>
 
@@ -360,9 +360,9 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
 
                       <div className="mt-6 flex justify-end space-x-2">
                         <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
-                          Cancel
+                          Отмена
                         </Button>
-                        <Button type="submit">Save Changes</Button>
+                        <Button type="submit">Сохранить изменения</Button>
                       </div>
                     </form>
                   </TooltipProvider>
@@ -383,15 +383,15 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
                       <p>{vectorStoreDetails.vector_store_id}</p>
                     </div>
                     <div>
-                      <p className="font-medium">Name</p>
+                      <p className="font-medium">Название</p>
                       <p>{vectorStoreDetails.vector_store_name || "-"}</p>
                     </div>
                     <div>
-                      <p className="font-medium">Description</p>
+                      <p className="font-medium">Описание</p>
                       <p>{vectorStoreDetails.vector_store_description || "-"}</p>
                     </div>
                     <div>
-                      <p className="font-medium">Provider</p>
+                      <p className="font-medium">Провайдер</p>
                       <div className="flex items-center space-x-2 mt-1">
                         {(() => {
                           const provider = vectorStoreDetails.custom_llm_provider || "bedrock";

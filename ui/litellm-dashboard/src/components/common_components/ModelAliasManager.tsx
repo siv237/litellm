@@ -202,7 +202,7 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
               <TableRow>
                 <TableHead className="py-1 h-8">Alias Name</TableHead>
                 <TableHead className="py-1 h-8">Target Model</TableHead>
-                <TableHead className="py-1 h-8">Actions</TableHead>
+                <TableHead className="py-1 h-8">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -241,10 +241,10 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
                       <TableCell className="py-0.5 whitespace-nowrap">
                         <div className="flex space-x-2">
                           <Button variant="secondary" size="xs" onClick={handleUpdateAlias}>
-                            Save
+                            Сохранить
                           </Button>
                           <Button variant="outline" size="xs" onClick={handleCancelEdit}>
-                            Cancel
+                            Отмена
                           </Button>
                         </div>
                       </TableCell>

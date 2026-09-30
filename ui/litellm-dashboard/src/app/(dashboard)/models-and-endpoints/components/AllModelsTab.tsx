@@ -330,7 +330,7 @@ const AllModelsTab = ({
                   value: modelToDelete.litellm_model_name || "Not Set",
                 },
                 {
-                  label: "Provider",
+                  label: "Провайдер",
                   value: modelToDelete.provider || "Not Set",
                 },
                 {

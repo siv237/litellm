@@ -277,7 +277,7 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
         <div className="flex space-x-2">
           {currentStep === 0 && (
             <Button onClick={handleNext} disabled={selectedServers.size === 0}>
-              Next
+              Далее
             </Button>
           )}
 

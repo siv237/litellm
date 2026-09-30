@@ -28,10 +28,10 @@ interface TeamUserSpendCardProps {
 }
 
 const columns: ColumnDef<TeamUserSpendRow>[] = [
-  { header: "Team", accessorFn: teamLabel, id: "team", cell: ({ row }) => teamLabel(row.original) },
-  { header: "User", accessorFn: userLabel, id: "user", cell: ({ row }) => userLabel(row.original) },
+  { header: "Команда", accessorFn: teamLabel, id: "team", cell: ({ row }) => teamLabel(row.original) },
+  { header: "Пользователь", accessorFn: userLabel, id: "user", cell: ({ row }) => userLabel(row.original) },
   {
-    header: "Spend",
+    header: "Расход",
     accessorKey: "spend",
     meta: { numeric: true },
     cell: ({ row }) => <MoneyCell value={row.original.spend} decimals={4} />,
@@ -55,7 +55,7 @@ const columns: ColumnDef<TeamUserSpendRow>[] = [
     cell: ({ row }) => row.original.failed_requests.toLocaleString(),
   },
   {
-    header: "Tokens",
+    header: "Токены",
     accessorKey: "total_tokens",
     meta: { numeric: true },
     cell: ({ row }) => row.original.total_tokens.toLocaleString(),

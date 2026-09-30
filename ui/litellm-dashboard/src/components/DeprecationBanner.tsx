@@ -41,7 +41,7 @@ export const DeprecationBanner: React.FC<DeprecationBannerProps> = ({ featureNam
       </div>
       <button
         type="button"
-        aria-label="Close"
+        aria-label="Закрыть"
         onClick={() => setIsClosed(true)}
         className="shrink-0 rounded-md p-0.5 text-muted-foreground transition-colors hover:text-foreground"
       >

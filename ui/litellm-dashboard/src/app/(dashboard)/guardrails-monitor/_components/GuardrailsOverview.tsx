@@ -158,7 +158,7 @@ export function GuardrailsOverview({
 
   const columns: ColumnDef<GuardrailUsageOverviewRow>[] = [
     {
-      header: "Status",
+      header: "Статус",
       accessorKey: "status",
       enableSorting: false,
       cell: ({ row }) => (
@@ -191,7 +191,7 @@ export function GuardrailsOverview({
       ),
     },
     {
-      header: "Provider",
+      header: "Провайдер",
       accessorKey: "provider",
       enableSorting: false,
       cell: ({ row }) => (
@@ -337,7 +337,7 @@ export function GuardrailsOverview({
         {(isLoading || error) && (
           <div className="mb-2 flex items-center gap-2">
             {isLoading && (
-              <span role="status" aria-busy="true" aria-label="Loading" className="inline-flex">
+              <span role="status" aria-busy="true" aria-label="Загрузка" className="inline-flex">
                 <UiLoadingSpinner className="size-4 text-primary" />
               </span>
             )}

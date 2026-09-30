@@ -28,7 +28,7 @@ interface SpendByProviderProps {
 
 const columns: ColumnDef<ProviderSpendData>[] = [
   {
-    header: "Provider",
+    header: "Провайдер",
     accessorKey: "provider",
     cell: ({ row }) => (
       <div className="flex items-center space-x-2">
@@ -38,7 +38,7 @@ const columns: ColumnDef<ProviderSpendData>[] = [
     ),
   },
   {
-    header: "Spend",
+    header: "Расход",
     accessorKey: "spend",
     meta: { numeric: true },
     cell: ({ row }) => <MoneyCell value={row.original.spend} decimals={2} />,
@@ -56,7 +56,7 @@ const columns: ColumnDef<ProviderSpendData>[] = [
     cell: ({ row }) => row.original.failed_requests.toLocaleString(),
   },
   {
-    header: "Tokens",
+    header: "Токены",
     accessorKey: "tokens",
     meta: { numeric: true },
     cell: ({ row }) => row.original.tokens.toLocaleString(),

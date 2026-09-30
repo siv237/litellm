@@ -100,7 +100,7 @@ const ConnectFlowBanner: React.FC<Props> = ({ flowHandle, flow, accessToken, onC
                 value="deny"
                 className="ml-2 h-[38px] rounded-md border px-4 text-sm font-semibold text-foreground hover:bg-accent/40"
               >
-                Cancel
+                Отмена
               </button>
             )}
             {loopbackClient && (

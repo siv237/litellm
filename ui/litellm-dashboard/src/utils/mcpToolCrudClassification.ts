@@ -64,7 +64,7 @@ export const CRUD_GROUP_META: Record<
     risk: "low",
   },
   create: {
-    label: "Create",
+    label: "Создать",
     description: "Add new resources — insert, upload, register.",
     risk: "medium",
   },
@@ -74,7 +74,7 @@ export const CRUD_GROUP_META: Record<
     risk: "medium",
   },
   delete: {
-    label: "Delete",
+    label: "Удалить",
     description: "Destructive operations — remove, purge, destroy.",
     risk: "high",
   },

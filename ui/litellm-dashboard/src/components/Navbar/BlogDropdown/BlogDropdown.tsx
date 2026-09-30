@@ -44,7 +44,7 @@ export const BlogDropdown: React.FC = () => {
         <div className="flex items-center gap-2 px-2 py-1.5 text-sm">
           <span className="text-destructive">Failed to load posts</span>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
-            Retry
+            Повторить
           </Button>
         </div>
       );

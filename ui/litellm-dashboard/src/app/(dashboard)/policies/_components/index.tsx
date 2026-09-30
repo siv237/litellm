@@ -523,9 +523,9 @@ const PoliciesPanel: React.FC<PoliciesPanelProps> = ({ accessToken, userRole }) 
             message={`Are you sure you want to delete policy: ${policyToDelete?.policy_name}? This action cannot be undone.`}
             resourceInformationTitle="Policy Information"
             resourceInformation={[
-              { label: "Name", value: policyToDelete?.policy_name },
+              { label: "Название", value: policyToDelete?.policy_name },
               { label: "ID", value: policyToDelete?.policy_id, code: true },
-              { label: "Description", value: policyToDelete?.description || "-" },
+              { label: "Описание", value: policyToDelete?.description || "-" },
               { label: "Inherits From", value: policyToDelete?.inherit || "-" },
             ]}
             onCancel={handleDeleteCancel}
@@ -552,7 +552,7 @@ const PoliciesPanel: React.FC<PoliciesPanelProps> = ({ accessToken, userRole }) 
                 <strong>Keys</strong> - Applies only to specific API keys (supports wildcards like dev-*)
               </li>
               <li>
-                <strong>Models</strong> - Applies only when specific models are used
+                <strong>Модели</strong> - Applies only when specific models are used
               </li>
               <li>
                 <strong>Tags</strong> - Matches tags from key/team <code>metadata.tags</code> or tags passed dynamically

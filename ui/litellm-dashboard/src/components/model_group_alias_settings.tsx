@@ -223,7 +223,7 @@ const ModelGroupAliasSettings: React.FC<ModelGroupAliasSettingsProps> = ({
                   <TableRow>
                     <TableHead className="py-1 h-8">Alias Name</TableHead>
                     <TableHead className="py-1 h-8">Target Model Group</TableHead>
-                    <TableHead className="py-1 h-8">Actions</TableHead>
+                    <TableHead className="py-1 h-8">Действия</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -263,13 +263,13 @@ const ModelGroupAliasSettings: React.FC<ModelGroupAliasSettingsProps> = ({
                                 onClick={handleUpdateAlias}
                                 className="text-xs bg-info/10 text-info px-2 py-1 rounded-sm hover:bg-info/15"
                               >
-                                Save
+                                Сохранить
                               </button>
                               <button
                                 onClick={handleCancelEdit}
                                 className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-sm hover:bg-accent"
                               >
-                                Cancel
+                                Отмена
                               </button>
                             </div>
                           </TableCell>

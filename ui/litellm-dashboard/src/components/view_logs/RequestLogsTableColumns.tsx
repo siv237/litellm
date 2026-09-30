@@ -52,7 +52,7 @@ export const getRequestLogsTableColumns = ({
   },
   {
     id: "type",
-    header: "Type",
+    header: "Тип",
     size: 90,
     enableSorting: false,
     meta: { skeleton: "badge" },
@@ -104,7 +104,7 @@ export const getRequestLogsTableColumns = ({
   },
   {
     id: "status",
-    header: "Status",
+    header: "Статус",
     size: 100,
     enableSorting: false,
     meta: { skeleton: "badge" },
@@ -248,7 +248,7 @@ export const getRequestLogsTableColumns = ({
   {
     id: "model",
     accessorKey: "model",
-    header: ({ column }) => <DataTableSortHeader column={column} title="Model" variant="dropdown-tristate" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="Модель" variant="dropdown-tristate" />,
     size: 200,
     enableSorting: true,
     cell: ({ row }) => {
@@ -285,7 +285,7 @@ export const getRequestLogsTableColumns = ({
   {
     id: "total_tokens",
     accessorKey: "total_tokens",
-    header: ({ column }) => <DataTableSortHeader column={column} title="Tokens" variant="dropdown-tristate" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="Токены" variant="dropdown-tristate" />,
     size: 140,
     enableSorting: true,
     meta: { numeric: true },

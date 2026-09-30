@@ -228,7 +228,7 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
   };
 
   if (loading) {
-    return <div className="p-4">Loading...</div>;
+    return <div className="p-4">Загрузка…</div>;
   }
 
   if (!endpointData) {
@@ -490,9 +490,9 @@ const PassThroughInfoView: React.FC<PassThroughInfoProps> = ({
 
                     <div className="mt-6 flex justify-end gap-2">
                       <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
-                        Cancel
+                        Отмена
                       </Button>
-                      <Button type="submit">Save Changes</Button>
+                      <Button type="submit">Сохранить изменения</Button>
                     </div>
                   </form>
                 ) : (

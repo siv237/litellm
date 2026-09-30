@@ -219,7 +219,7 @@ export function AllModelsTable({
                     selectedTeamValue === PERSONAL_TEAM_VALUE ? "bg-info" : "bg-success",
                   )}
                 />
-                <span className="text-muted-foreground">Team</span>
+                <span className="text-muted-foreground">Команда</span>
                 <span className="truncate font-semibold">{selectedTeamLabel}</span>
               </SelectTrigger>
               <SelectContent>

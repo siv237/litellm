@@ -320,7 +320,7 @@ const UsefulLinksManagement: React.FC<UsefulLinksManagementProps> = ({ accessTok
                     onClick={handleCancelRearranging}
                     className="text-xs bg-muted text-muted-foreground px-3 py-1.5 rounded-sm hover:bg-accent"
                   >
-                    Cancel
+                    Отмена
                   </button>
                 </div>
               )}
@@ -333,7 +333,7 @@ const UsefulLinksManagement: React.FC<UsefulLinksManagementProps> = ({ accessTok
                   <TableRow>
                     <TableHead className="py-1 h-8">Display Name</TableHead>
                     <TableHead className="py-1 h-8">URL</TableHead>
-                    <TableHead className="py-1 h-8">Actions</TableHead>
+                    <TableHead className="py-1 h-8">Действия</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -373,13 +373,13 @@ const UsefulLinksManagement: React.FC<UsefulLinksManagementProps> = ({ accessTok
                                 onClick={handleUpdateLink}
                                 className="text-xs bg-info/10 text-info px-2 py-1 rounded-sm hover:bg-info/15"
                               >
-                                Save
+                                Сохранить
                               </button>
                               <button
                                 onClick={handleCancelEdit}
                                 className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-sm hover:bg-accent"
                               >
-                                Cancel
+                                Отмена
                               </button>
                             </div>
                           </TableCell>

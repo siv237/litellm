@@ -38,7 +38,7 @@ const BUDGET_DURATION_OPTIONS = [
 ] as const;
 
 const TEAM_ROLE_OPTIONS = [
-  { value: "user", label: "User" },
+  { value: "user", label: "Пользователь" },
   { value: "admin", label: "Admin" },
 ] as const;
 
@@ -90,7 +90,7 @@ const TeamPickerField = ({ control, index }: { control: SettingsControl; index: 
   );
 
   return (
-    <FormField control={control} name={`teams.${index}.team_id`} label="Team">
+    <FormField control={control} name={`teams.${index}.team_id`} label="Команда">
       {({ id, value, onChange, "aria-invalid": ariaInvalid, "aria-describedby": ariaDescribedBy }) => (
         <PaginatedSearchSelect
           options={options}
@@ -129,7 +129,7 @@ const TeamsField = ({ control }: { control: SettingsControl }) => {
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm font-medium">Team {index + 1}</p>
             <Button type="button" variant="destructive" size="sm" onClick={() => remove(index)}>
-              Remove
+              Убрать
             </Button>
           </div>
 
@@ -138,7 +138,7 @@ const TeamsField = ({ control }: { control: SettingsControl }) => {
 
             <FormField control={control} name={`teams.${index}.max_budget_in_team`} label="Max Budget in Team (USD)">
               {({ ref, ...budgetField }) => (
-                <Input {...budgetField} ref={ref} type="number" step="any" min={0} placeholder="Optional" />
+                <Input {...budgetField} ref={ref} type="number" step="any" min={0} placeholder="Необязательно" />
               )}
             </FormField>
 
@@ -209,7 +209,7 @@ const SettingsView = ({ values, roleOptions }: SettingsViewProps) => {
       <div>
         <p className="text-sm font-medium">Default Teams</p>
         {values.teams.length === 0 ? (
-          <p className="text-sm text-muted-foreground">None</p>
+          <p className="text-sm text-muted-foreground">Нет</p>
         ) : (
           values.teams.map((team) => (
             <p key={team.team_id} className="text-sm text-muted-foreground">
@@ -347,7 +347,7 @@ const SettingsForm = ({ initialValues, roleOptions, updateSettings, onCancel, on
           }}
           disabled={mutation.isPending}
         >
-          Cancel
+          Отмена
         </Button>
         <Button type="submit" disabled={!isDirty || mutation.isPending}>
           {mutation.isPending ? "Saving..." : "Save Changes"}

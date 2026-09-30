@@ -49,7 +49,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
 
       {isLoading && (
         <Button type="button" variant="destructive" onClick={onCancel}>
-          Cancel
+          Отмена
         </Button>
       )}
     </div>

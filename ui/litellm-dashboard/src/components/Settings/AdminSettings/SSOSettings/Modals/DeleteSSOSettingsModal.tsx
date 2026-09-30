@@ -60,7 +60,7 @@ const DeleteSSOSettingsModal: React.FC<DeleteSSOSettingsModalProps> = ({ isVisib
       message="Are you sure you want to clear all SSO settings? Users will no longer be able to login using SSO after this change."
       resourceInformationTitle="SSO Settings"
       resourceInformation={[
-        { label: "Provider", value: (ssoSettings?.values && detectSSOProvider(ssoSettings?.values)) || "Generic" },
+        { label: "Провайдер", value: (ssoSettings?.values && detectSSOProvider(ssoSettings?.values)) || "Generic" },
       ]}
       onCancel={onCancel}
       onOk={handleClearSSO}

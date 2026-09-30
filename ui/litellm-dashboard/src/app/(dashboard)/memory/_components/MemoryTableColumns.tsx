@@ -40,12 +40,12 @@ function MemoryRowActions({ row, onViewClick, onEditClick, onDeleteClick }: Memo
         </DropdownMenuItem>
         <DropdownMenuItem data-testid="memory-action-edit" onClick={() => onEditClick(row)}>
           <Pencil />
-          Edit
+          Изменить
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" data-testid="memory-action-delete" onClick={() => onDeleteClick(row)}>
           <Trash2 />
-          Delete
+          Удалить
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -81,8 +81,8 @@ export const getMemoryTableColumns = ({
   {
     id: "key",
     accessorKey: "key",
-    meta: { title: "Name" },
-    header: "Name",
+    meta: { title: "Название" },
+    header: "Название",
     size: 200,
     enableSorting: false,
     cell: ({ row }) => (
@@ -139,7 +139,7 @@ export const getMemoryTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

@@ -112,8 +112,8 @@ export function AccessGroupsPage() {
         resourceInformationTitle="Access Group Information"
         resourceInformation={[
           { label: "ID", value: groupToDelete?.id, code: true },
-          { label: "Name", value: groupToDelete?.name },
-          { label: "Description", value: groupToDelete?.description || "—" },
+          { label: "Название", value: groupToDelete?.name },
+          { label: "Описание", value: groupToDelete?.description || "—" },
         ]}
         onCancel={() => setGroupToDelete(null)}
         onOk={() => {

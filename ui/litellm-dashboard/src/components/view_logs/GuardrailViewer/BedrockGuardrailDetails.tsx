@@ -312,7 +312,7 @@ export const BedrockGuardrailDetails: React.FC<{ response: BedrockGuardrailRespo
                       <table className="min-w-full text-sm">
                         <thead>
                           <tr className="text-left text-muted-foreground">
-                            <th className="py-1 pr-4">Type</th>
+                            <th className="py-1 pr-4">Тип</th>
                             <th className="py-1 pr-4">Action</th>
                             <th className="py-1 pr-4">Detected</th>
                             <th className="py-1 pr-4">Strength</th>
@@ -343,7 +343,7 @@ export const BedrockGuardrailDetails: React.FC<{ response: BedrockGuardrailRespo
                       <table className="min-w-full text-sm">
                         <thead>
                           <tr className="text-left text-muted-foreground">
-                            <th className="py-1 pr-4">Type</th>
+                            <th className="py-1 pr-4">Тип</th>
                             <th className="py-1 pr-4">Action</th>
                             <th className="py-1 pr-4">Detected</th>
                             <th className="py-1 pr-4">Score</th>

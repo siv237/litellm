@@ -252,7 +252,7 @@ const MultiCostResults: React.FC<MultiCostResultsProps> = ({ multiResult, timePe
         <Table className="border border-border rounded-lg">
           <TableHeader>
             <TableRow>
-              <TableHead>Model</TableHead>
+              <TableHead>Модель</TableHead>
               <TableHead className="text-right">Per Request</TableHead>
               <TableHead className="text-right">Margin Fee</TableHead>
               <TableHead className="text-right">{periodLabel}</TableHead>

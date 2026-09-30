@@ -137,7 +137,7 @@ export function EvaluationSettingsModal({
           </div>
 
           <div>
-            <p className="mb-1.5 text-sm font-medium text-foreground">Model</p>
+            <p className="mb-1.5 text-sm font-medium text-foreground">Модель</p>
             <SearchSelect
               options={modelSelectOptions}
               value={model ?? undefined}
@@ -150,7 +150,7 @@ export function EvaluationSettingsModal({
 
         <DialogFooter className="border-t border-border pt-4">
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            Отмена
           </Button>
           <Button onClick={handleRun} disabled={!model}>
             <Play className="size-4" />

@@ -206,10 +206,10 @@ const SidebarAccountMenu: React.FC<SidebarAccountMenuProps> = ({ onLogout, colla
               </Badge>
             )}
           </InfoRow>
-          <InfoRow icon={<ShieldCheck className="size-[17px]" />} label="Role">
+          <InfoRow icon={<ShieldCheck className="size-[17px]" />} label="Роль">
             <Badge variant="secondary">{userRole}</Badge>
           </InfoRow>
-          <InfoRow icon={<Mail className="size-[17px]" />} label="Email">
+          <InfoRow icon={<Mail className="size-[17px]" />} label="Эл. почта">
             <MonoValue value={userEmail} copyLabel="Copy email" />
           </InfoRow>
           <InfoRow icon={<IdCard className="size-[17px]" />} label="User ID">

@@ -363,7 +363,7 @@ const CostTrackingSettings: React.FC<CostTrackingSettingsProps> = ({ userID, use
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={isRemoving}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={isRemoving}>Отмена</AlertDialogCancel>
               <Button variant="destructive" onClick={handleConfirmRemoval} disabled={isRemoving}>
                 {isRemoving ? "Removing…" : "Remove"}
               </Button>

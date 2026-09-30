@@ -122,7 +122,7 @@ const ModelSettingsModal: React.FC<ModelSettingsModalProps> = ({ isVisible, onCa
         </TooltipProvider>
         <DialogFooter>
           <Button variant="outline" onClick={handleCancel} disabled={isPending || isLoadingConfig}>
-            Cancel
+            Отмена
           </Button>
           <Button
             disabled={isPending || isLoadingConfig}

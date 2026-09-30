@@ -308,7 +308,7 @@ export function VirtualKeysTable({ headerActions }: VirtualKeysTableProps) {
             >
               {({ get, set }) => (
                 <>
-                  <DataTableFilterField label="Team">
+                  <DataTableFilterField label="Команда">
                     <SearchSelect
                       options={teamOptions}
                       value={(get("team_id") as string) || undefined}

@@ -38,8 +38,8 @@ export function FormattedToolView({ tool }: FormattedToolViewProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Parameter</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Description</TableHead>
+                <TableHead>Тип</TableHead>
+                <TableHead>Описание</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

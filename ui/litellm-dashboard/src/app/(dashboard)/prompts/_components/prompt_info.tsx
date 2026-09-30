@@ -118,7 +118,7 @@ const PromptInfoView: React.FC<PromptInfoProps> = ({
   }, [selectedEnv]);
 
   if (loading && !promptData) {
-    return <div className="p-4">Loading...</div>;
+    return <div className="p-4">Загрузка…</div>;
   }
 
   if (!promptData) {
@@ -354,7 +354,7 @@ const PromptInfoView: React.FC<PromptInfoProps> = ({
                       <TableHead>Version</TableHead>
                       <TableHead>Created By</TableHead>
                       <TableHead>Date</TableHead>
-                      <TableHead>Actions</TableHead>
+                      <TableHead>Действия</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -403,7 +403,7 @@ const PromptInfoView: React.FC<PromptInfoProps> = ({
                               }}
                             >
                               <Pencil />
-                              Edit
+                              Изменить
                             </Button>
                           </TableCell>
                         </TableRow>
@@ -508,10 +508,10 @@ const PromptInfoView: React.FC<PromptInfoProps> = ({
           <p>This action cannot be undone.</p>
           <DialogFooter>
             <Button variant="outline" onClick={handleDeleteCancel}>
-              Cancel
+              Отмена
             </Button>
             <Button onClick={handleDeleteConfirm} variant="destructive" disabled={isDeleting} aria-busy={isDeleting}>
-              Delete
+              Удалить
             </Button>
           </DialogFooter>
         </DialogContent>

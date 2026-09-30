@@ -227,9 +227,9 @@ const PromptsPanel: React.FC<PromptsProps> = ({ accessToken, userRole }) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={isDeleting}>Отмена</AlertDialogCancel>
               <Button variant="destructive" onClick={handleDeleteConfirm} disabled={isDeleting}>
-                Delete
+                Удалить
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

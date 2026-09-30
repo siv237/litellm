@@ -226,7 +226,7 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
   }, [accessToken]);
 
   const credentialOptions: CredentialOption[] = [
-    { value: null, label: "None" },
+    { value: null, label: "Нет" },
     ...credentials.map((credential) => ({
       value: credential.credential_name,
       label: credential.credential_name,
@@ -483,7 +483,7 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
                 {({ ref, value, ...field }) => <Input {...field} ref={ref} value={value ?? ""} />}
               </FormField>
 
-              <FormField control={form.control} name="vector_store_description" label="Description">
+              <FormField control={form.control} name="vector_store_description" label="Описание">
                 {({ ref, value, ...field }) => <Textarea {...field} ref={ref} value={value ?? ""} rows={4} />}
               </FormField>
 
@@ -542,9 +542,9 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
 
             <div className="mt-6 flex justify-end space-x-3">
               <Button type="button" variant="outline" onClick={handleCancel}>
-                Cancel
+                Отмена
               </Button>
-              <Button type="submit">Create</Button>
+              <Button type="submit">Создать</Button>
             </div>
           </form>
         </TooltipProvider>

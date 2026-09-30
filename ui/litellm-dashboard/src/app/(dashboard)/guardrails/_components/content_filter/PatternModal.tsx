@@ -127,9 +127,9 @@ const PatternModal: React.FC<PatternModalProps> = ({
 
         <DialogFooter>
           <Button variant="outline" onClick={onCancel}>
-            Cancel
+            Отмена
           </Button>
-          <Button onClick={onAdd}>Add</Button>
+          <Button onClick={onAdd}>Добавить</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

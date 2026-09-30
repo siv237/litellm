@@ -73,7 +73,7 @@ function UserField({ userAlias, userEmail, userId }: { userAlias?: string | null
       <span className="text-muted-foreground">
         <User className="size-3.5" />
       </span>
-      <span className="text-xs uppercase tracking-[0.05em] text-muted-foreground">User</span>
+      <span className="text-xs uppercase tracking-[0.05em] text-muted-foreground">Пользователь</span>
     </div>
   );
 
@@ -296,7 +296,7 @@ export function KeyInfoHeader({
 
         <div className="flex min-w-0 flex-col gap-4">
           <LabeledField
-            label="Team"
+            label="Команда"
             value={data.teamAlias || data.teamId}
             icon={<Users className="size-3.5" />}
             href={data.teamId ? teamDetailHref(data.teamId) : undefined}

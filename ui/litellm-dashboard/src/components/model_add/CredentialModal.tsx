@@ -151,7 +151,7 @@ export default function CredentialModal({
 
                 <div>
                   <Button variant="outline" className="mr-2.5" onClick={closeAndReset}>
-                    Cancel
+                    Отмена
                   </Button>
                   <Button type="submit">{isEdit ? "Update Credential" : "Add Credential"}</Button>
                 </div>

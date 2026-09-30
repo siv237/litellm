@@ -101,8 +101,8 @@ export const getSearchToolTableColumns = ({
   {
     id: "search_tool_name",
     accessorKey: "search_tool_name",
-    meta: { title: "Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Name" />,
+    meta: { title: "Название" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Название" />,
     size: 200,
     enableSorting: true,
     cell: ({ row }) => (
@@ -113,8 +113,8 @@ export const getSearchToolTableColumns = ({
   },
   {
     id: "provider",
-    meta: { title: "Provider" },
-    header: "Provider",
+    meta: { title: "Провайдер" },
+    header: "Провайдер",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => {
@@ -155,7 +155,7 @@ export const getSearchToolTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

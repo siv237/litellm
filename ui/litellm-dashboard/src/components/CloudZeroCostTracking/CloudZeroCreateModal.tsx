@@ -85,7 +85,7 @@ export default function CloudZeroCreationModal({ open, onOk, onCancel }: CloudZe
         </TooltipProvider>
         <DialogFooter>
           <Button variant="outline" onClick={handleCancel} disabled={createMutation.isPending}>
-            Cancel
+            Отмена
           </Button>
           <Button
             onClick={() => void form.handleSubmit(handleSubmit)()}

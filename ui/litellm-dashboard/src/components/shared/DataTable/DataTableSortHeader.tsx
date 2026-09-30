@@ -72,7 +72,7 @@ export function DataTableSortHeader<TData, TValue>({
                   <ChevronDown className="size-3.5" /> Descending
                 </Menu.Item>
                 <Menu.Item className={MENU_ITEM_CLASS} onClick={() => column.clearSorting()}>
-                  <X className="size-3.5" /> Reset
+                  <X className="size-3.5" /> Сброс
                 </Menu.Item>
               </Menu.Popup>
             </Menu.Positioner>
@@ -183,7 +183,7 @@ export function DataTableMultiSortHeader<TData>({ table, fields, className }: Da
                 );
               })}
               <Menu.Item className={MENU_ITEM_CLASS} onClick={() => table.setSorting([])}>
-                <X className="size-3.5" /> Reset
+                <X className="size-3.5" /> Сброс
               </Menu.Item>
             </Menu.Popup>
           </Menu.Positioner>

@@ -104,8 +104,8 @@ export const getMCPHubTableColumns = ({ onServerClick }: MCPHubTableColumnsDeps)
   {
     id: "description",
     accessorKey: "description",
-    meta: { title: "Description", className: "hidden md:table-cell" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Description" />,
+    meta: { title: "Описание", className: "hidden md:table-cell" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Описание" />,
     size: 240,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -144,8 +144,8 @@ export const getMCPHubTableColumns = ({ onServerClick }: MCPHubTableColumnsDeps)
   {
     id: "status",
     accessorKey: "status",
-    meta: { title: "Status", skeleton: "badge" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Status" />,
+    meta: { title: "Статус", skeleton: "badge" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Статус" />,
     size: 110,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -214,7 +214,7 @@ export const getMCPHubTableColumns = ({ onServerClick }: MCPHubTableColumnsDeps)
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

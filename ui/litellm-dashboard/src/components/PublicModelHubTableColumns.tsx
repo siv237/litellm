@@ -334,8 +334,8 @@ export const getPublicAgentHubColumns = ({ onAgentClick }: PublicAgentHubColumns
   {
     id: "description",
     accessorKey: "description",
-    meta: { title: "Description" },
-    header: "Description",
+    meta: { title: "Описание" },
+    header: "Описание",
     size: 260,
     enableSorting: false,
     cell: ({ row }) => (
@@ -356,8 +356,8 @@ export const getPublicAgentHubColumns = ({ onAgentClick }: PublicAgentHubColumns
   },
   {
     id: "provider",
-    meta: { title: "Provider" },
-    header: "Provider",
+    meta: { title: "Провайдер" },
+    header: "Провайдер",
     size: 130,
     enableSorting: false,
     cell: ({ row }) =>
@@ -425,8 +425,8 @@ export const getPublicMCPHubColumns = ({ onServerClick }: PublicMCPHubColumnsDep
   },
   {
     id: "description",
-    meta: { title: "Description" },
-    header: "Description",
+    meta: { title: "Описание" },
+    header: "Описание",
     size: 260,
     enableSorting: false,
     cell: ({ row }) => {

@@ -384,7 +384,7 @@ const AddPassThroughEndpoint: React.FC<AddFallbacksProps> = ({
 
                 <div className="flex items-center justify-end space-x-3 border-t border-border pt-6">
                   <Button type="button" variant="outline" onClick={handleCancel}>
-                    Cancel
+                    Отмена
                   </Button>
                   <Button type="submit" disabled={isLoading} aria-busy={isLoading}>
                     {isLoading && <UiLoadingSpinner className="size-4" />}

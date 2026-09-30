@@ -88,7 +88,7 @@ export const LicenseExpiryBannerView: React.FC<LicenseExpiryBannerViewProps> = (
       <AlertDescription>{description}</AlertDescription>
       {isDismissible && (
         <AlertAction>
-          <Button variant="ghost" size="icon-sm" aria-label="Close" onClick={handleClose}>
+          <Button variant="ghost" size="icon-sm" aria-label="Закрыть" onClick={handleClose}>
             <X className="size-4" />
           </Button>
         </AlertAction>

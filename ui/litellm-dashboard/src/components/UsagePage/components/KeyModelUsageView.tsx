@@ -17,12 +17,12 @@ const COMPACT_TABLE_ROW_HEIGHT = 32;
 
 const columns: ColumnDef<TopModelData>[] = [
   {
-    header: "Model",
+    header: "Модель",
     accessorKey: "model",
     cell: ({ row }) => row.original.model || "-",
   },
   {
-    header: "Spend (USD)",
+    header: "Расход (USD)",
     accessorKey: "spend",
     meta: { numeric: true },
     cell: ({ row }) => <MoneyCell value={row.original.spend} decimals={2} />,
@@ -40,7 +40,7 @@ const columns: ColumnDef<TopModelData>[] = [
     cell: ({ row }) => <span className="text-destructive">{row.original.failed_requests?.toLocaleString() || 0}</span>,
   },
   {
-    header: "Tokens",
+    header: "Токены",
     accessorKey: "tokens",
     meta: { numeric: true },
     cell: ({ row }) => row.original.tokens?.toLocaleString() || 0,

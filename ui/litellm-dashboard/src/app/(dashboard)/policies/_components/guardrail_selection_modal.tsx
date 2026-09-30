@@ -238,7 +238,7 @@ const GuardrailSelectionModal: React.FC<GuardrailSelectionModalProps> = ({
 
         <DialogFooter>
           <Button variant="outline" onClick={onCancel} disabled={isLoading}>
-            Cancel
+            Отмена
           </Button>
           <Button onClick={handleConfirm} disabled={isLoading || (selectedCount === 0 && existingCount === 0)}>
             {selectedCount > 0

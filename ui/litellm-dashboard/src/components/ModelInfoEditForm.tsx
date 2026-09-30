@@ -627,7 +627,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                 <FormField control={form.control} name="litellm_credential_name">
                   {({ id, value, onChange, onBlur }) => {
                     const items = [
-                      { value: "", label: "None" },
+                      { value: "", label: "Нет" },
                       ...credentialsList.map((credential) => ({
                         value: credential.credential_name,
                         label: credential.credential_name,
@@ -673,7 +673,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                           <SelectValue placeholder="Select existing health check model" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value={null}>None</SelectItem>
+                          <SelectItem value={null}>Нет</SelectItem>
                           {healthCheckModelOptions.map((option) => (
                             <SelectItem key={option.value} value={option.value}>
                               {option.label}
@@ -731,7 +731,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                 <Display>
                   {localModelData.litellm_params?.cache_control_injection_points ? (
                     <div>
-                      <p>Enabled</p>
+                      <p>Включено</p>
                       <div className="mt-2">
                         {localModelData.litellm_params.cache_control_injection_points.map((point: any, i: number) => (
                           <div key={i} className="mb-1 text-sm text-muted-foreground">
@@ -807,7 +807,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
           {isEditing && (
             <div className="mt-6 flex justify-end gap-2">
               <Button type="submit" variant="secondary" onClick={cancel} disabled={isSaving}>
-                Cancel
+                Отмена
               </Button>
               <Button type="submit" disabled={isSaving} aria-busy={isSaving}>
                 {isSaving && <UiLoadingSpinner className="size-4" />}

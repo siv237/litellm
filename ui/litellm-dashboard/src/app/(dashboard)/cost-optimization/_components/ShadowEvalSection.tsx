@@ -265,7 +265,7 @@ const TargetTable: React.FC<{ job: ShadowEvalJob }> = ({ job }) => {
       <TableHeader>
         <TableRow>
           <TableHead>Target</TableHead>
-          <TableHead>Status</TableHead>
+          <TableHead>Статус</TableHead>
           {["Budget used", "Router wins", `${otherArmLabel(job.direction)} wins`].map((label) => (
             <TableHead key={label} className="text-right">
               {label}

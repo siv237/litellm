@@ -25,7 +25,7 @@ interface PatternTableProps {
 const PatternTable: React.FC<PatternTableProps> = ({ patterns, onActionChange, onRemove }) => {
   const columns: ColumnDef<Pattern>[] = [
     {
-      header: "Type",
+      header: "Тип",
       accessorKey: "type",
       size: 100,
       cell: ({ row }) => <Badge variant="secondary">{row.original.type === "prebuilt" ? "Prebuilt" : "Custom"}</Badge>,
@@ -75,7 +75,7 @@ const PatternTable: React.FC<PatternTableProps> = ({ patterns, onActionChange, o
       cell: ({ row }) => (
         <Button variant="ghost" size="sm" onClick={() => onRemove(row.original.id)}>
           <Trash2 />
-          Delete
+          Удалить
         </Button>
       ),
     },

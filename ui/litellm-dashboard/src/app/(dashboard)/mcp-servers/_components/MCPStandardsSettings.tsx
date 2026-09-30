@@ -20,13 +20,13 @@ export const FIELD_GROUPS: FieldGroup[] = [
     fields: [
       {
         key: "description",
-        label: "Description",
+        label: "Описание",
         description: "Must have a non-empty description",
         check: (s) => !!s.description?.trim(),
       },
       {
         key: "alias",
-        label: "Alias",
+        label: "Псевдоним",
         description: "Must have a display alias",
         check: (s) => !!s.alias?.trim(),
       },

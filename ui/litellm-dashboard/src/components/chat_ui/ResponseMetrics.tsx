@@ -152,7 +152,7 @@ const ResponseMetrics: React.FC<ResponseMetricsProps> = ({ timeToFirstToken, tot
 
       {usage?.totalTokens !== undefined && (
         <MetricItem
-          label="Total"
+          label="Всего"
           tooltip="Total tokens"
           icon={<Hash className="size-3" aria-hidden="true" />}
           value={String(usage.totalTokens)}

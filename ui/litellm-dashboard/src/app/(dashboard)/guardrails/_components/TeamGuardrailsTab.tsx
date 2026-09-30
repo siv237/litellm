@@ -182,7 +182,7 @@ function submissionToTeamGuardrail(item: GuardrailSubmissionItem): TeamGuardrail
 
 const STATUS_CONFIG: Record<GuardrailStatus, { label: string; bg: string; text: string; dot: string }> = {
   active: {
-    label: "Active",
+    label: "Активный",
     bg: "bg-success/10",
     text: "text-success",
     dot: "bg-success",
@@ -605,7 +605,7 @@ function DetailPanel({
                   }}
                   className="text-xs font-medium text-info border border-info/20 bg-info/10 hover:bg-info/15 px-2 py-1.5 rounded-sm transition-colors shrink-0"
                 >
-                  Add
+                  Добавить
                 </button>
               </div>
             )}
@@ -676,7 +676,7 @@ function DetailPanel({
                   }}
                   className="text-xs font-medium text-info border border-info/20 bg-info/10 hover:bg-info/15 px-2 py-1.5 rounded-sm transition-colors"
                 >
-                  Add
+                  Добавить
                 </button>
               </div>
             )}
@@ -790,7 +790,7 @@ function ConfirmDialog({ action, guardrailName, onConfirm, onCancel }: ConfirmDi
             onClick={onCancel}
             className="flex-1 border border-border text-foreground hover:bg-muted text-sm font-medium py-2 rounded-md transition-colors"
           >
-            Cancel
+            Отмена
           </button>
           <button
             type="button"
@@ -992,7 +992,7 @@ export function TeamGuardrailsTab({ accessToken }: TeamGuardrailsTabProps) {
         <div className="grid grid-cols-4 gap-4 mb-6">
           <StatCard label="Total Submitted" value={totalCount} color="text-foreground" />
           <StatCard label="Pending Review" value={pendingCount} color="text-warning" />
-          <StatCard label="Active" value={activeCount} color="text-success" />
+          <StatCard label="Активный" value={activeCount} color="text-success" />
           <StatCard label="Rejected" value={rejectedCount} color="text-destructive" />
         </div>
         <div className="flex items-center gap-3 mb-5">
@@ -1014,7 +1014,7 @@ export function TeamGuardrailsTab({ accessToken }: TeamGuardrailsTabProps) {
           >
             <option value="all">All Status</option>
             <option value="pending">Pending Review</option>
-            <option value="active">Active</option>
+            <option value="active">Активный</option>
             <option value="rejected">Rejected</option>
           </select>
           <button
@@ -1092,7 +1092,7 @@ export function TeamGuardrailsTab({ accessToken }: TeamGuardrailsTabProps) {
           <TooltipProvider>
             <form onSubmit={handleSubmitGuardrail}>
               <FieldGroup>
-                <FormField control={submitForm.control} name="team_id" label="Team">
+                <FormField control={submitForm.control} name="team_id" label="Команда">
                   {({ id, value, onChange }) => <TeamDropdown id={id} value={value} onChange={onChange} />}
                 </FormField>
                 <FormField control={submitForm.control} name="guardrail_name" label="Guardrail Name">
@@ -1169,7 +1169,7 @@ export function TeamGuardrailsTab({ accessToken }: TeamGuardrailsTabProps) {
                 submitForm.reset();
               }}
             >
-              Cancel
+              Отмена
             </Button>
             <Button onClick={handleSubmitGuardrail}>Submit for Review</Button>
           </DialogFooter>

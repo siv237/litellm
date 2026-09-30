@@ -158,7 +158,7 @@ export function GuardrailConfig({ guardrailName, guardrailType, provider }: Guar
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1.5">Provider</label>
+            <label className="block text-sm font-medium text-foreground mb-1.5">Провайдер</label>
             <Select items={PROVIDER_ITEMS} defaultValue={provider}>
               <SelectTrigger className="w-full">
                 <SelectValue />

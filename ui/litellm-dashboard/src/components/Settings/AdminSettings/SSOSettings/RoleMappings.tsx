@@ -23,7 +23,7 @@ export default function RoleMappings({ roleMappings }: { roleMappings: RoleMappi
     {
       id: "role",
       accessorKey: "role",
-      header: "Role",
+      header: "Роль",
       cell: ({ row }) => <strong className="font-semibold">{defaultRoleDisplayNames[row.original.role]}</strong>,
     },
     {

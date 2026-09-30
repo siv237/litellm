@@ -104,8 +104,8 @@ export const getAccessGroupBudgetColumns = ({
   },
   {
     id: "models",
-    meta: { title: "Models", skeleton: "chips" },
-    header: "Models",
+    meta: { title: "Модели", skeleton: "chips" },
+    header: "Модели",
     size: 280,
     enableSorting: false,
     cell: ({ row }) => <ModelsCell models={row.original.model_names} />,
@@ -149,7 +149,7 @@ export const getAccessGroupBudgetColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

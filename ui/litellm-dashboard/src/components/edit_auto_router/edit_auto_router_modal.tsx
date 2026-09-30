@@ -865,7 +865,7 @@ const EditAutoRouterModal: React.FC<EditAutoRouterModalProps> = ({
 
           <DialogFooter>
             <Button variant="outline" onClick={onCancel}>
-              Cancel
+              Отмена
             </Button>
             {submitBlockedReason === null ? (
               <Button disabled={loading} onClick={handleSubmit}>
@@ -877,7 +877,7 @@ const EditAutoRouterModal: React.FC<EditAutoRouterModalProps> = ({
                 <TooltipTrigger
                   render={
                     <Button disabled onClick={handleSubmit}>
-                      Save Changes
+                      Сохранить изменения
                     </Button>
                   }
                 />

@@ -36,7 +36,7 @@ function RoutingGroupRowActions({ group, onEdit, onDelete }: RoutingGroupRowActi
       <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuItem data-testid="routing-group-action-edit" onClick={() => onEdit(group)}>
           <Pencil />
-          Edit
+          Изменить
         </DropdownMenuItem>
         <DropdownMenuItem
           variant="destructive"
@@ -44,7 +44,7 @@ function RoutingGroupRowActions({ group, onEdit, onDelete }: RoutingGroupRowActi
           onClick={() => onDelete(group)}
         >
           <Trash2 />
-          Delete
+          Удалить
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -75,8 +75,8 @@ export const getRoutingGroupsTableColumns = ({
   },
   {
     id: "models",
-    meta: { title: "Models", skeleton: "chips" },
-    header: "Models",
+    meta: { title: "Модели", skeleton: "chips" },
+    header: "Модели",
     size: 320,
     enableSorting: false,
     cell: ({ row }) => <ModelsCell models={row.original.models} />,
@@ -98,7 +98,7 @@ export const getRoutingGroupsTableColumns = ({
   {
     id: "actions",
     meta: { className: "text-right", headerClassName: "text-right" },
-    header: () => <span className="sr-only">Actions</span>,
+    header: () => <span className="sr-only">Действия</span>,
     size: 64,
     enableSorting: false,
     enableHiding: false,

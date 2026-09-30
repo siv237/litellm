@@ -189,7 +189,7 @@ function EvalEntryCard({ entry }: { entry: EvalInformation }) {
                 <TableRow>
                   <TableCell>
                     <span className="font-semibold" style={{ fontSize: 12 }}>
-                      Total
+                      Всего
                     </span>
                   </TableCell>
                   <TableCell />

@@ -237,13 +237,13 @@ export const MCPServerView: React.FC<MCPServerViewProps> = ({
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-4 py-3">
-                  <p className="text-sm font-medium text-muted-foreground">Alias</p>
+                  <p className="text-sm font-medium text-muted-foreground">Псевдоним</p>
                   <div className="col-span-2 font-mono text-sm">
                     {mcpServer.alias || <span className="text-muted-foreground">—</span>}
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-4 py-3">
-                  <p className="text-sm font-medium text-muted-foreground">Description</p>
+                  <p className="text-sm font-medium text-muted-foreground">Описание</p>
                   <div className="col-span-2 text-sm">
                     {mcpServer.description || <span className="text-muted-foreground">—</span>}
                   </div>
@@ -290,10 +290,10 @@ export const MCPServerView: React.FC<MCPServerViewProps> = ({
                     {mcpServer.allow_all_keys ? (
                       <Badge variant="outline">
                         <span className="h-1.5 w-1.5 rounded-full bg-success" />
-                        Enabled
+                        Включено
                       </Badge>
                     ) : (
-                      <Badge variant="outline">Disabled</Badge>
+                      <Badge variant="outline">Выключено</Badge>
                     )}
                   </div>
                 </div>
@@ -323,7 +323,7 @@ export const MCPServerView: React.FC<MCPServerViewProps> = ({
                           Enabled (PKCE passthrough)
                         </Badge>
                       ) : (
-                        <Badge variant="outline">Disabled</Badge>
+                        <Badge variant="outline">Выключено</Badge>
                       )}
                     </div>
                   </div>
@@ -337,10 +337,10 @@ export const MCPServerView: React.FC<MCPServerViewProps> = ({
                         {mcpServer.oauth_passthrough ? (
                           <Badge variant="outline">
                             <span className="h-1.5 w-1.5 rounded-full bg-success" />
-                            Enabled
+                            Включено
                           </Badge>
                         ) : (
-                          <Badge variant="outline">Disabled</Badge>
+                          <Badge variant="outline">Выключено</Badge>
                         )}
                       </div>
                     </div>
