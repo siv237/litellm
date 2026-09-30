@@ -82,7 +82,8 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
                 onCheckedChange={setUseServerHeader}
               />
               <Label htmlFor={serverHeaderToggleId} className="font-normal leading-normal">
-                Limit tools to specific MCP servers or MCP groups by passing the <code>x-mcp-servers</code> header
+                Ограничьте инструменты определёнными MCP-серверами или группами MCP, передав заголовок{' '}
+                <code>x-mcp-servers</code>
               </Label>
             </div>
             {useServerHeader && (
@@ -92,13 +93,13 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
                 <AlertDescription>
                   <div>
                     <p>
-                      <strong>Вариант 1:</strong> Get a specific server: <code>"{serverName.replace(/\s+/g, "_")}"</code>
+                      <strong>Вариант 1:</strong> Получить конкретный сервер: <code>"{serverName.replace(/\s+/g, "_")}"</code>
                     </p>
                     <p>
-                      <strong>Вариант 2:</strong> Get a group of MCPs: <code>"dev-group"</code>
+                      <strong>Вариант 2:</strong> Получить группу MCP: <code>"dev-group"</code>
                     </p>
                     <p className="mt-2 text-sm text-muted-foreground">
-                      You can also mix both: <code>"Server1,dev-group"</code>
+                      Можно совместить оба варианта: <code>"Server1,dev-group"</code>
                     </p>
                   </div>
                 </AlertDescription>
@@ -287,14 +288,14 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
           <div className="flex w-full flex-col gap-4">
             <div>
               <span>
-                Get your API key from the{" "}
+                Получите API-ключ на{" "}
                 <a
                   href="https://platform.openai.com/api-keys"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-info hover:text-info/80 inline-flex items-center gap-1"
                 >
-                  OpenAI platform <ExternalLinkIcon size={12} />
+                  платформе OpenAI <ExternalLinkIcon size={12} />
                 </a>
               </span>
             </div>
@@ -354,8 +355,8 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
           <h4 className="mb-0 text-xl font-semibold text-purple-900 dark:text-purple-100">Интеграция с Cursor IDE</h4>
         </div>
         <span className="text-purple-700 dark:text-purple-300">
-          Use tools directly from Cursor IDE with LiteLLM MCP. Enable your AI assistant to perform real-world tasks
-          without leaving your coding environment.
+          Используйте инструменты прямо из Cursor IDE с LiteLLM MCP. Ваш ИИ-помощник сможет решать реальные задачи,
+          не покидая среду разработки.
         </span>
       </div>
 
@@ -365,7 +366,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
           <div className="flex w-full flex-col gap-6">
             <StepCard step={1} title="Откройте настройки Cursor">
               <span className="text-muted-foreground">
-                Use the keyboard shortcut <code className="bg-muted px-2 py-1 rounded-sm">⇧+⌘+J</code> (Mac) or{" "}
+                Используйте сочетание клавиш <code className="bg-muted px-2 py-1 rounded-sm">⇧+⌘+J</code> (Mac) или{" "}
                 <code className="bg-muted px-2 py-1 rounded-sm">Ctrl+Shift+J</code> (Windows/Linux)
               </span>
             </StepCard>
@@ -376,14 +377,14 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
 
             <StepCard step={3} title="Добавьте конфигурацию">
               <span className="mb-3 text-muted-foreground">
-                Copy the JSON configuration below and paste it into Cursor, then save with{" "}
-                <code className="bg-muted px-2 py-1 rounded-sm">Cmd+S</code> or{" "}
+                Скопируйте JSON-конфигурацию ниже и вставьте её в Cursor, затем сохраните:{" "}
+                <code className="bg-muted px-2 py-1 rounded-sm">Cmd+S</code> или{" "}
                 <code className="bg-muted px-2 py-1 rounded-sm">Ctrl+S</code>
               </span>
               <FeatureCard
                 icon={<Code className="text-purple-600 dark:text-purple-400" size={16} />}
-                title="Configuration"
-                description="Cursor MCP configuration"
+                title="Конфигурация"
+                description="Конфигурация MCP для Cursor"
                 serverName="Zapier Gmail"
                 accessGroups={["dev-group"]}
               >
@@ -430,8 +431,8 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
         <div className="flex w-full flex-col gap-4">
           <div>
             <span>
-              Each MCP client supports different transports. Refer to your client documentation to determine the
-              appropriate transport method.
+              Каждый MCP-клиент поддерживает разные транспорты. Обратитесь к документации вашего клиента, чтобы
+              выбрать подходящий способ транспорта.
             </span>
           </div>
           <CodeBlock title="URL сервера" code={`${proxyBaseUrl}/mcp`} copyKey="http-server-url" />
@@ -474,8 +475,8 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
         <div>
           <h2 className="text-3xl font-bold text-foreground mb-3">Подключение к вашему MCP-клиенту</h2>
           <p className="text-lg text-muted-foreground">
-            Use tools directly from any MCP client with LiteLLM MCP. Enable your AI assistant to perform real-world
-            tasks through a simple, secure connection.
+            Используйте инструменты прямо из любого MCP-клиента с LiteLLM MCP. Ваш ИИ-помощник сможет решать реальные
+            задачи через простое и безопасное подключение.
           </p>
         </div>
 

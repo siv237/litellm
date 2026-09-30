@@ -1235,7 +1235,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
               <div className="space-y-4">
                 <div>
                   <label className="mb-2 flex items-center text-sm font-medium text-foreground">
-                    <Key className="mr-2 size-4" aria-hidden="true" /> Virtual Key Source
+                    <Key className="mr-2 size-4" aria-hidden="true" /> Источник виртуального ключа
                   </label>
                   <ShadcnSelect
                     disabled={disabledPersonalKeyCreation}
@@ -1269,7 +1269,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                 <div>
                   <div className="mb-2 flex items-center justify-between">
                     <label className="flex items-center text-sm font-medium text-foreground">
-                      <Settings className="mr-2 size-4" aria-hidden="true" /> Custom Proxy Base URL
+                      <Settings className="mr-2 size-4" aria-hidden="true" /> Свой URL прокси
                     </label>
                     {proxySettings?.LITELLM_UI_API_DOC_BASE_URL && !customProxyBaseUrl && (
                       <Button
@@ -1316,14 +1316,14 @@ const ChatUI: React.FC<ChatUIProps> = ({
                   </div>
                   {customProxyBaseUrl && (
                     <p className="mt-1 text-xs text-muted-foreground">
-                      API calls will be sent to: {customProxyBaseUrl}
+                      Запросы будут отправлены на: {customProxyBaseUrl}
                     </p>
                   )}
                 </div>
 
                 <div>
                   <label className="mb-2 flex items-center text-sm font-medium text-foreground">
-                    <Wrench className="mr-2 size-4" aria-hidden="true" /> Endpoint Type
+                    <Wrench className="mr-2 size-4" aria-hidden="true" /> Тип эндпоинта
                   </label>
                   <EndpointSelector
                     endpointType={endpointType}
@@ -1368,7 +1368,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                   <div>
                     <div className="mb-2 flex items-center justify-between text-sm font-medium text-foreground">
                       <span className="flex items-center">
-                        <Bot className="mr-2 size-4" aria-hidden="true" /> Select Model
+                        <Bot className="mr-2 size-4" aria-hidden="true" /> Выберите модель
                       </span>
                       {isChatModel() || supportsStreamingToggle ? (
                         <Popover>
@@ -1453,7 +1453,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                 {endpointType === EndpointType.A2A_AGENTS && (
                   <div>
                     <label className="mb-2 flex items-center text-sm font-medium text-foreground">
-                      <Bot className="mr-2 size-4" aria-hidden="true" /> Select Agent
+                      <Bot className="mr-2 size-4" aria-hidden="true" /> Выберите агента
                     </label>
                     <SearchSelect
                       value={selectedAgent}
@@ -1475,7 +1475,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
 
                 <div>
                   <label className="mb-2 flex items-center text-sm font-medium text-foreground">
-                    <Tags className="mr-2 size-4" aria-hidden="true" /> Tags
+                    <Tags className="mr-2 size-4" aria-hidden="true" /> Теги
                   </label>
                   <TagSelector
                     value={selectedTags}
@@ -1585,7 +1585,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                           return (
                             <div key={serverId} className="rounded-sm border p-2">
                               <p className="mb-1 text-xs text-muted-foreground">
-                                Limit tools for {server?.alias || server?.server_name || serverId}:
+                                Ограничить инструменты для {server?.alias || server?.server_name || serverId}:
                               </p>
                               <MultiSelect
                                 value={mcpServerToolRestrictions[serverId] || []}
@@ -1623,11 +1623,11 @@ const ChatUI: React.FC<ChatUIProps> = ({
                               key={serverId}
                               className="flex items-center justify-between rounded-sm border border-info/15 bg-info/10 p-2"
                             >
-                              <p className="text-xs text-info">{serverName} requires your API key</p>
+                              <p className="text-xs text-info">{serverName} требует ваш API-ключ</p>
                               {server.has_user_credential ? (
                                 <div className="flex items-center gap-2">
                                   <span className="flex items-center gap-1 text-xs font-medium text-success">
-                                    <Key className="size-3" /> Connected
+                                    <Key className="size-3" /> Подключено
                                   </span>
                                   <button
                                     type="button"
@@ -1656,15 +1656,15 @@ const ChatUI: React.FC<ChatUIProps> = ({
 
                 <div>
                   <div className="mb-2 flex items-center gap-1 text-sm font-medium text-foreground">
-                    <Database className="mr-1 size-4" aria-hidden="true" /> Vector Store
+                    <Database className="mr-1 size-4" aria-hidden="true" /> Векторное хранилище
                     <Tooltip>
                       <TooltipTrigger aria-label="О векторных хранилищах">
                         <Info className="size-3.5 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-xs">
-                        Select vector store(s) to use for this LLM API call. You can set up your vector store{" "}
+                        Выберите векторные хранилища для этого запроса к LLM. Настроить векторное хранилище можно{" "}
                         <a href={uiHref("vector-stores")} className="text-info underline">
-                          here
+                          здесь
                         </a>
                         .
                       </TooltipContent>
@@ -1680,15 +1680,15 @@ const ChatUI: React.FC<ChatUIProps> = ({
 
                 <div>
                   <div className="mb-2 flex items-center gap-1 text-sm font-medium text-foreground">
-                    <Shield className="mr-1 size-4" aria-hidden="true" /> Guardrails
+                    <Shield className="mr-1 size-4" aria-hidden="true" /> Гардрейлы
                     <Tooltip>
                       <TooltipTrigger aria-label="О гардрейлах">
                         <Info className="size-3.5 text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent className="max-w-xs">
-                        Select guardrail(s) to use for this LLM API call. You can set up your guardrails{" "}
+                        Выберите гардрейлы для этого запроса к LLM. Настроить гардрейлы можно{" "}
                         <a href={uiHref("guardrails")} className="text-info underline">
-                          here
+                          здесь
                         </a>
                         .
                       </TooltipContent>
@@ -1705,16 +1705,16 @@ const ChatUI: React.FC<ChatUIProps> = ({
                 {canViewPolicies && (
                   <div>
                     <div className="mb-2 flex items-center gap-1 text-sm font-medium text-foreground">
-                      <Shield className="mr-1 size-4" aria-hidden="true" /> Policies
+                      <Shield className="mr-1 size-4" aria-hidden="true" /> Политики
                       <Tooltip>
                         <TooltipTrigger aria-label="О политиках">
                           <Info className="size-3.5 text-muted-foreground" />
                         </TooltipTrigger>
                         <TooltipContent className="max-w-xs">
-                          Select policy/policies to apply to this LLM API call. Policies define which guardrails are
-                          applied based on conditions. You can set up your policies{" "}
+                          Выберите политики для этого запроса к LLM. Политики определяют, какие гардрейлы
+                          применяются по условиям. Настроить политики можно{" "}
                           <a href={uiHref("policies")} className="text-info underline">
-                            here
+                            здесь
                           </a>
                           .
                         </TooltipContent>
@@ -1760,12 +1760,12 @@ const ChatUI: React.FC<ChatUIProps> = ({
                   <div className="flex flex-wrap justify-end gap-2">
                     <Button type="button" variant="outline" size="sm" onClick={clearChatHistory}>
                       <Eraser className="size-3.5" />
-                      Clear Chat
+                      Очистить чат
                     </Button>
                     {!simplified && (
                       <Button type="button" variant="outline" size="sm" onClick={() => setIsGetCodeModalVisible(true)}>
                         <Code2 className="size-3.5" />
-                        Get Code
+                        Получить код
                       </Button>
                     )}
                   </div>
@@ -1774,7 +1774,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                   {chatHistory.length === 0 && (
                     <div className="flex h-full flex-col items-center justify-center text-muted-foreground">
                       <Bot className="mb-4 size-12" aria-hidden="true" />
-                      <p className="text-sm">Start a conversation, generate an image, or handle audio</p>
+                      <p className="text-sm">Начните разговор, сгенерируйте изображение или обработайте аудио</p>
                     </div>
                   )}
 
@@ -1802,7 +1802,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                             <div className="mr-1 flex h-6 w-6 items-center justify-center rounded-full bg-muted">
                               <Bot className="size-3 text-muted-foreground" aria-hidden="true" />
                             </div>
-                            <strong className="text-sm capitalize">Assistant</strong>
+                            <strong className="text-sm">Ассистент</strong>
                           </div>
                           <MCPEventsDisplay events={mcpEvents} />
                         </div>
@@ -1830,9 +1830,9 @@ const ChatUI: React.FC<ChatUIProps> = ({
                           }}
                         >
                           <ImageIcon className="mb-2 size-6 text-muted-foreground" aria-hidden="true" />
-                          <p className="text-sm">Click or drag images to upload</p>
+                          <p className="text-sm">Нажмите или перетащите изображения для загрузки</p>
                           <p className="text-xs text-muted-foreground">
-                            Support for PNG, JPG, JPEG, GIF, WebP. Multiple images supported.
+                            Поддерживаются PNG, JPG, JPEG, GIF, WebP. Можно несколько изображений.
                           </p>
                           <input
                             type="file"
@@ -1877,7 +1877,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                           ))}
                           <label className="flex h-32 w-32 cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-border hover:border-ring">
                             <ImageIcon className="size-6 text-muted-foreground" aria-hidden="true" />
-                            <p className="mt-1 text-xs text-muted-foreground">Add more</p>
+                            <p className="mt-1 text-xs text-muted-foreground">Добавить ещё</p>
                             <input
                               type="file"
                               accept={IMAGE_EDIT_ACCEPT}
@@ -1909,9 +1909,9 @@ const ChatUI: React.FC<ChatUIProps> = ({
                           }}
                         >
                           <Volume2 className="mb-2 size-6 text-muted-foreground" aria-hidden="true" />
-                          <p className="text-sm">Click or drag audio file to upload</p>
+                          <p className="text-sm">Нажмите или перетащите аудиофайл для загрузки</p>
                           <p className="text-xs text-muted-foreground">
-                            Support for MP3, MP4, MPEG, MPGA, M4A, WAV, WEBM formats. Max file size: 25 MB.
+                            Поддерживаются форматы MP3, MP4, MPEG, MPGA, M4A, WAV, WEBM. Макс. размер файла: 25 МБ.
                           </p>
                           <input
                             type="file"
@@ -1926,7 +1926,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                             <Volume2 className="size-5 text-muted-foreground" aria-hidden="true" />
                             <span className="text-sm font-medium">{uploadedAudio.name}</span>
                             <span className="text-xs text-muted-foreground">
-                              ({(uploadedAudio.size / 1024 / 1024).toFixed(2)} MB)
+                              ({(uploadedAudio.size / 1024 / 1024).toFixed(2)} МБ)
                             </span>
                           </div>
                           <Button
@@ -1972,7 +1972,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                           ) : (
                             <>
                               <Code2 className="size-4 text-info" aria-hidden="true" />
-                              <span className="text-sm font-medium text-info">Code Interpreter Active</span>
+                              <span className="text-sm font-medium text-info">Интерпретатор кода активен</span>
                             </>
                           )}
                         </div>
@@ -1981,7 +1981,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                           className="text-xs text-info hover:text-info/80"
                           onClick={() => codeInterpreter.setEnabled(false)}
                         >
-                          Disable
+                          Отключить
                         </button>
                       </div>
                       {!isLoading && (
@@ -2045,7 +2045,7 @@ const ChatUI: React.FC<ChatUIProps> = ({
                             onToggle={() => {
                               codeInterpreter.toggle();
                               if (!codeInterpreter.enabled) {
-                                toast.success("Code Interpreter enabled!");
+                                toast.success("Интерпретатор кода включён");
                               }
                             }}
                           />
@@ -2094,17 +2094,17 @@ const ChatUI: React.FC<ChatUIProps> = ({
       <Dialog open={isGetCodeModalVisible} onOpenChange={setIsGetCodeModalVisible}>
         <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Generated Code</DialogTitle>
+            <DialogTitle>Сгенерированный код</DialogTitle>
           </DialogHeader>
           <div className="my-2 flex items-end justify-between gap-3">
             <div>
-              <p className="mb-1 text-sm font-medium text-foreground">SDK Type</p>
+              <p className="mb-1 text-sm font-medium text-foreground">Тип SDK</p>
               <ShadcnSelect
                 items={SDK_ITEMS}
                 value={selectedSdk}
                 onValueChange={(value) => setSelectedSdk(value as "openai" | "azure")}
               >
-                <SelectTrigger className="w-[150px]" size="sm" aria-label="SDK Type">
+                <SelectTrigger className="w-[150px]" size="sm" aria-label="Тип SDK">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -2122,12 +2122,12 @@ const ChatUI: React.FC<ChatUIProps> = ({
               size="sm"
               onClick={() => {
                 void navigator.clipboard.writeText(generatedCode).then(
-                  () => toast.success("Copied to clipboard!"),
-                  () => toast.error("Unable to copy to clipboard"),
+                  () => toast.success("Скопировано в буфер обмена"),
+                  () => toast.error("Не удалось копировать в буфер обмена"),
                 );
               }}
             >
-              Copy to Clipboard
+              Копировать в буфер обмена
             </Button>
           </div>
           <SyntaxHighlighter
@@ -2161,37 +2161,38 @@ const ChatUI: React.FC<ChatUIProps> = ({
       <Dialog open={isToolsetsInfoModalVisible} onOpenChange={setIsToolsetsInfoModalVisible}>
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
-            <DialogTitle>How Toolsets Work</DialogTitle>
+            <DialogTitle>Как работают наборы инструментов</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <p className="text-foreground">
-              <strong>Toolsets</strong> are named collections of specific tools from one or more MCP servers. Instead of
-              exposing all tools from a server, a toolset gives an agent exactly the tools it needs.
+              <strong>Наборы инструментов (toolsets)</strong> — это именованные наборы конкретных инструментов одного
+              или нескольких MCP-серверов. Вместо всех инструментов сервера набор даёт агенту ровно то, что нужно.
             </p>
             <div>
-              <h4 className="mb-2 font-semibold text-foreground">How to use a toolset:</h4>
+              <h4 className="mb-2 font-semibold text-foreground">Как использовать набор инструментов:</h4>
               <ol className="list-inside list-decimal space-y-2 text-foreground">
                 <li>
-                  Select a <span className="font-semibold text-violet-600">Toolset</span> (purple badge) from the MCP
-                  Servers dropdown.
+                  Выберите <span className="font-semibold text-violet-600">набор инструментов</span> (фиолетовая
+                  плашка) в раскрывающемся списке MCP-серверов.
                 </li>
-                <li>The tool picker will show only the tools included in that toolset.</li>
-                <li>Select a tool and fill in its parameters, then send.</li>
-                <li>The tool call is routed to the correct underlying MCP server automatically.</li>
+                <li>В списке инструментов отобразятся только инструменты из этого набора.</li>
+                <li>Выберите инструмент, заполните параметры и отправьте запрос.</li>
+                <li>Вызов инструмента автоматически направится на нужный MCP-сервер.</li>
               </ol>
             </div>
             <div className="rounded-sm border border-purple-200 bg-purple-50 p-3 dark:border-purple-800 dark:bg-purple-950">
               <p className="text-sm text-purple-800 dark:text-purple-300">
-                <strong>Example:</strong> A &quot;GitHub Read-only&quot; toolset might include only{" "}
-                <code>list_repos</code> and <code>get_file</code> from a GitHub MCP server, preventing agents from
-                making writes.
+                <strong>Пример:</strong> набор «GitHub Read-only» может включать только{" "}
+                <code>list_repos</code> и <code>get_file</code> из GitHub MCP-сервера — так агенты не смогут
+                выполнять записи.
               </p>
             </div>
             <div>
-              <h4 className="mb-1 font-semibold text-foreground">Creating toolsets:</h4>
+              <h4 className="mb-1 font-semibold text-foreground">Создание наборов инструментов:</h4>
               <p className="text-sm text-muted-foreground">
-                Admins can create and manage toolsets from the <strong>MCP</strong> page → <strong>Toolsets</strong>{" "}
-                tab. Toolsets can then be assigned to keys and teams to scope their tool access.
+                Создавать и управлять наборами могут администраторы на странице <strong>MCP</strong> → вкладка{" "}
+                <strong>«Наборы инструментов»</strong>. Затем наборы можно назначать ключам и командам для
+                ограничения доступа к инструментам.
               </p>
             </div>
           </div>
