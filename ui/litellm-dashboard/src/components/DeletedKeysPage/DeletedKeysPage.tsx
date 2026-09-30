@@ -18,9 +18,9 @@ export default function DeletedKeysPage() {
       {!premiumUser && (
         <Alert>
           <Info />
-          <AlertTitle>Coming soon to Enterprise</AlertTitle>
+          <AlertTitle>Скоро в Enterprise</AlertTitle>
           <AlertDescription>
-            Deleted key auditing is graduating from beta into our Enterprise audit &amp; compliance suite.
+            Аудит удалённых ключей выходит из беты в составе нашего Enterprise-пакета аудита и соответствия требованиям.
           </AlertDescription>
         </Alert>
       )}

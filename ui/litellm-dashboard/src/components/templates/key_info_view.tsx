@@ -175,7 +175,7 @@ export default function KeyInfoView({
           <ArrowLeft className="size-4" />
           {backButtonText}
         </Button>
-        <p className="text-sm">Key not found</p>
+        <p className="text-sm">Ключ не найден</p>
       </div>
     );
   }
@@ -226,7 +226,7 @@ export default function KeyInfoView({
       const nextSoftBudget =
         formValues.soft_budget === "" || formValues.soft_budget == null ? null : Number(formValues.soft_budget);
       if (nextSoftBudget !== null && !Number.isFinite(nextSoftBudget)) {
-        toast.error("Soft Budget must be a finite number");
+        toast.error("Мягкий бюджет должен быть числом");
         return;
       }
       if (nextSoftBudget === previousSoftBudget) {
@@ -255,7 +255,7 @@ export default function KeyInfoView({
             (toolsetId) => !(allMcpToolsets ?? []).some((toolset) => toolset.toolset_id === toolsetId),
           );
         if (unresolvableSelection && Object.keys(mcpEntitlement.mcp_tool_permissions).length > 0) {
-          toast.error("MCP server or toolset list is unavailable, so MCP permissions cannot be saved yet. Retry.");
+          toast.error("Список MCP-серверов и наборов инструментов недоступен — разрешения MCP сохранить нельзя. Повторите.");
           return;
         }
         formValues.object_permission = {
@@ -313,7 +313,7 @@ export default function KeyInfoView({
           };
         } catch (error) {
           console.error("Error parsing metadata JSON:", error);
-          toast.error("Invalid metadata JSON");
+          toast.error("Некорректный JSON метаданных");
           return;
         }
       } else {
@@ -359,7 +359,7 @@ export default function KeyInfoView({
       if (onKeyDataUpdate) {
         onKeyDataUpdate(newKeyValues);
       }
-      toast.success("Key updated successfully");
+      toast.success("Ключ обновлён");
       setIsEditing(false);
       // Refresh key data here if needed
     } catch (error) {
@@ -373,7 +373,7 @@ export default function KeyInfoView({
       setDeleteLoading(true);
       if (!accessToken) return;
       await keyDeleteCall(accessToken as string, currentKeyData.token || currentKeyData.token_id);
-      toast.success("Key deleted successfully");
+      toast.success("Ключ удалён");
       await queryClient.invalidateQueries({ queryKey: keyKeys.lists() });
       if (onDelete) {
         onDelete();
@@ -465,7 +465,7 @@ export default function KeyInfoView({
         if (onKeyDataUpdate) {
           onKeyDataUpdate({ spend: 0 });
         }
-        toast.success("Key spend reset to $0");
+        toast.success("Расход ключа сброшен в $0");
         setIsResetSpendModalOpen(false);
       },
       onError: (error) => {
@@ -557,22 +557,22 @@ export default function KeyInfoView({
       {/* Delete Confirmation Modal */}
       <DeleteResourceModal
         isOpen={isDeleteModalOpen}
-        title="Delete Key"
+        title="Удалить ключ"
         alertMessage="This action is irreversible and will immediately revoke access for any applications using this key."
         message="Are you sure you want to delete this Virtual Key?"
         resourceInformationTitle="Key Information"
         resourceInformation={[
           {
-            label: "Key Alias",
+            label: "Псевдоним ключа",
             value: currentKeyData?.key_alias || "-",
           },
           {
-            label: "Key ID",
+            label: "ID ключа",
             value: currentKeyData?.token_id || currentKeyData?.token || "-",
             code: true,
           },
           {
-            label: "Team ID",
+            label: "ID команды",
             value: currentKeyData?.team_id || "-",
             code: true,
           },
@@ -593,14 +593,14 @@ export default function KeyInfoView({
       <Dialog open={isResetSpendModalOpen} onOpenChange={(open) => setIsResetSpendModalOpen(open)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Reset Key Spend</DialogTitle>
+            <DialogTitle>Сбросить расход ключа</DialogTitle>
           </DialogHeader>
           <p>
-            Reset spend for <strong>{currentKeyData?.key_alias || currentKeyData?.token_id || "this key"}</strong> to{" "}
+            Сбросить расход для <strong>{currentKeyData?.key_alias || currentKeyData?.token_id || "this key"}</strong> to{" "}
             <strong>$0</strong>?
           </p>
           <p style={{ color: "#666", fontSize: "0.875rem", marginTop: 8 }}>
-            Current spend: <strong>${formatNumberWithCommas(currentKeyData.spend, 4)}</strong>. Spend history is
+            Текущий расход: <strong>${formatNumberWithCommas(currentKeyData.spend, 4)}</strong>. Spend history is
             preserved in logs. This resets the current period spend counter, the same as an automatic budget reset.
           </p>
           <DialogFooter>
@@ -646,18 +646,18 @@ export default function KeyInfoView({
       <Tabs defaultValue="overview">
         <TabsList variant="line" className="mb-4 h-auto w-full justify-start rounded-none border-b p-0">
           <TabsTrigger value="overview" className="flex-none rounded-none px-4 py-2">
-            Overview
+            Обзор
           </TabsTrigger>
           <TabsTrigger value="savings" className="flex-none rounded-none px-4 py-2">
-            Savings
+            Экономия
           </TabsTrigger>
           {hasProxyWideSpendView(userRole) && (
             <TabsTrigger value="auto-router-usage" className="flex-none rounded-none px-4 py-2">
-              Auto-router usage
+              Авто-маршрутизатор
             </TabsTrigger>
           )}
           <TabsTrigger value="settings" className="flex-none rounded-none px-4 py-2">
-            Settings
+            Настройки
           </TabsTrigger>
         </TabsList>
 
@@ -674,13 +674,13 @@ export default function KeyInfoView({
                     <InheritedBudgetHint gates={inheritedGates} />
                   </p>
                   {currentKeyData.budget_reset_at && (
-                    <p className="text-sm">Resets {formatTimestamp(currentKeyData.budget_reset_at)}</p>
+                    <p className="text-sm">Сбрасывается {formatTimestamp(currentKeyData.budget_reset_at)}</p>
                   )}
                 </div>
               </Card>
 
               <Card className="block p-6">
-                <p className="text-sm">Rate Limits</p>
+                <p className="text-sm">Лимиты запросов</p>
                 <div className="mt-2">
                   <p className="text-sm">
                     TPM: {currentKeyData.tpm_limit !== null ? currentKeyData.tpm_limit : "Unlimited"}
@@ -689,7 +689,7 @@ export default function KeyInfoView({
                     RPM: {currentKeyData.rpm_limit !== null ? currentKeyData.rpm_limit : "Unlimited"}
                   </p>
                   {Boolean(currentKeyData.metadata?.throttle_on_budget_exceeded) && (
-                    <p className="text-sm">Throttle on budget exceeded: Yes</p>
+                    <p className="text-sm">Троттлинг при исчерпании бюджета: да</p>
                   )}
                 </div>
               </Card>
@@ -704,7 +704,7 @@ export default function KeyInfoView({
                       </BadgeLink>
                     ))
                   ) : (
-                    <p className="text-sm">No models specified</p>
+                    <p className="text-sm">Модели не указаны</p>
                   )}
                 </div>
               </Card>
@@ -718,7 +718,7 @@ export default function KeyInfoView({
               </Card>
 
               <Card className="block p-6">
-                <p className="text-sm font-medium mb-3">Guardrails</p>
+                <p className="text-sm font-medium mb-3">Гардрейлы</p>
                 {Array.isArray(currentKeyData.metadata?.guardrails) && currentKeyData.metadata.guardrails.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {currentKeyData.metadata.guardrails.map((guardrail: string, index: number) => (
@@ -728,18 +728,18 @@ export default function KeyInfoView({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground">No guardrails configured</p>
+                  <p className="text-sm text-muted-foreground">Гардрейлы не настроены</p>
                 )}
                 {typeof currentKeyData.metadata?.disable_global_guardrails === "boolean" &&
                   currentKeyData.metadata.disable_global_guardrails === true && (
                     <div className="mt-3 pt-3 border-t border-border">
-                      <Badge variant="destructive">Global Guardrails Disabled</Badge>
+                      <Badge variant="destructive">Глобальные гардрейлы отключены</Badge>
                     </div>
                   )}
               </Card>
 
               <Card className="block p-6">
-                <p className="text-sm font-medium mb-3">Policies</p>
+                <p className="text-sm font-medium mb-3">Политики</p>
                 {Array.isArray(currentKeyData.metadata?.policies) && currentKeyData.metadata.policies.length > 0 ? (
                   <div className="space-y-4">
                     {currentKeyData.metadata.policies.map((policy: string, index: number) => (
@@ -752,7 +752,7 @@ export default function KeyInfoView({
                         </div>
                         {!loadingPolicies && policyGuardrails[policy] && policyGuardrails[policy].length > 0 && (
                           <div className="ml-4 pl-3 border-l-2 border-border">
-                            <p className="text-xs text-muted-foreground mb-1">Resolved Guardrails:</p>
+                            <p className="text-xs text-muted-foreground mb-1">Итоговые гардрейлы:</p>
                             <div className="flex flex-wrap gap-1">
                               {policyGuardrails[policy].map((guardrail: string, gIndex: number) => (
                                 <Badge key={gIndex} variant="secondary" className="min-w-0 break-words">
@@ -766,7 +766,7 @@ export default function KeyInfoView({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground">No policies configured</p>
+                  <p className="text-sm text-muted-foreground">Политики не настроены</p>
                 )}
               </Card>
 
@@ -817,10 +817,10 @@ export default function KeyInfoView({
           <TabsContent value="settings" keepMounted>
             <Card className="block p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">Key Settings</h3>
+                <h3 className="text-lg font-medium">Настройки ключа</h3>
                 {!isEditing && canModifyKey && (
                   <Button variant="outline" onClick={() => setIsEditing(true)}>
-                    Edit Settings
+                    Изменить настройки
                   </Button>
                 )}
               </div>
@@ -839,22 +839,22 @@ export default function KeyInfoView({
               ) : (
                 <div className="space-y-4">
                   <div>
-                    <p className="text-sm font-medium">Key ID</p>
+                    <p className="text-sm font-medium">ID ключа</p>
                     <p className="text-sm font-mono">{currentKeyData.token_id || currentKeyData.token}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Key Alias</p>
+                    <p className="text-sm font-medium">Псевдоним ключа</p>
                     <p className="text-sm">{currentKeyData.key_alias || "Not Set"}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Secret Key</p>
+                    <p className="text-sm font-medium">Секретный ключ</p>
                     <p className="text-sm font-mono">{currentKeyData.key_name}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Team ID</p>
+                    <p className="text-sm font-medium">ID команды</p>
                     <p className="text-sm">
                       {currentKeyData.team_id ? (
                         <EntityLink href={teamDetailHref(currentKeyData.team_id)} className="font-normal">
@@ -868,7 +868,7 @@ export default function KeyInfoView({
 
                   {enableProjectsUI && (
                     <div>
-                      <p className="text-sm font-medium">Project</p>
+                      <p className="text-sm font-medium">Проект</p>
                       <p className="text-sm">
                         {currentKeyData.project_id
                           ? (() => {
@@ -883,27 +883,27 @@ export default function KeyInfoView({
                   )}
 
                   <div>
-                    <p className="text-sm font-medium">Organization</p>
+                    <p className="text-sm font-medium">Организация</p>
                     <p className="text-sm">{(currentKeyData.organization_id ?? currentKeyData.org_id) || "Not Set"}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Created</p>
+                    <p className="text-sm font-medium">Создан</p>
                     <p className="text-sm">{formatTimestamp(currentKeyData.created_at)}</p>
                   </div>
 
                   {lastRegeneratedAt && (
                     <div>
-                      <p className="text-sm font-medium">Last Regenerated</p>
+                      <p className="text-sm font-medium">Последняя перегенерация</p>
                       <div className="flex items-center gap-2">
                         <p className="text-sm">{formatTimestamp(lastRegeneratedAt)}</p>
-                        <Badge variant="secondary">Recent</Badge>
+                        <Badge variant="secondary">недавно</Badge>
                       </div>
                     </div>
                   )}
 
                   <div>
-                    <p className="text-sm font-medium">Expires</p>
+                    <p className="text-sm font-medium">Истекает</p>
                     <p className="text-sm">
                       {currentKeyData.expires ? formatTimestamp(currentKeyData.expires) : "Never"}
                     </p>
@@ -911,9 +911,9 @@ export default function KeyInfoView({
 
                   {Boolean(currentKeyData.metadata?.enable_prompt_caching) && (
                     <div>
-                      <p className="text-sm font-medium">Prompt Caching</p>
+                      <p className="text-sm font-medium">Кэш промптов</p>
                       <p className="text-sm">
-                        Enabled (auto-injects cache_control markers on Anthropic and Bedrock Claude requests)
+                        Включён (автоматически добавляет метки кэширования в запросах Anthropic и Bedrock Claude)
                       </p>
                     </div>
                   )}
@@ -943,7 +943,7 @@ export default function KeyInfoView({
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Budget Reset</p>
+                    <p className="text-sm font-medium">Сброс бюджета</p>
                     <p data-testid="budget-reset-value" className="text-sm">
                       {currentKeyData.budget_reset_at
                         ? `${currentKeyData.budget_duration ? `Every ${currentKeyData.budget_duration}, next ` : ""}${formatTimestamp(currentKeyData.budget_reset_at)}`
@@ -953,7 +953,7 @@ export default function KeyInfoView({
 
                   {currentKeyData.budget_fallbacks && Object.keys(currentKeyData.budget_fallbacks).length > 0 && (
                     <div>
-                      <p className="text-sm font-medium">Budget Fallbacks</p>
+                      <p className="text-sm font-medium">Резервные бюджеты</p>
                       <div className="mt-1 space-y-1">
                         {Object.entries(currentKeyData.budget_fallbacks).map(([model, fallbacks]) => (
                           <div key={model} className="text-xs text-muted-foreground">
@@ -968,7 +968,7 @@ export default function KeyInfoView({
 
                   {hasRouterSettings(currentKeyData.router_settings) && (
                     <div>
-                      <p className="text-sm font-medium">Router Settings</p>
+                      <p className="text-sm font-medium">Настройки маршрутизации</p>
                       <div className="mt-1">
                         <RouterSettingsSummary routerSettings={currentKeyData.router_settings} />
                       </div>
@@ -976,7 +976,7 @@ export default function KeyInfoView({
                   )}
 
                   <div>
-                    <p className="text-sm font-medium">Tags</p>
+                    <p className="text-sm font-medium">Теги</p>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {Array.isArray(currentKeyData.metadata?.tags) && currentKeyData.metadata.tags.length > 0
                         ? currentKeyData.metadata.tags.map((tag, index) => (
@@ -989,7 +989,7 @@ export default function KeyInfoView({
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Prompts</p>
+                    <p className="text-sm font-medium">Промпты</p>
                     <p className="text-sm">
                       {Array.isArray(currentKeyData.metadata?.prompts) && currentKeyData.metadata.prompts.length > 0
                         ? currentKeyData.metadata.prompts.map((prompt, index) => (
@@ -1002,7 +1002,7 @@ export default function KeyInfoView({
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Allowed Routes</p>
+                    <p className="text-sm font-medium">Разрешённые маршруты</p>
                     <div className="flex flex-wrap gap-2 mt-1">
                       {Array.isArray(currentKeyData.allowed_routes) && currentKeyData.allowed_routes.length > 0 ? (
                         currentKeyData.allowed_routes.map((route, index) => (
@@ -1011,13 +1011,13 @@ export default function KeyInfoView({
                           </span>
                         ))
                       ) : (
-                        <Badge variant="secondary">All routes allowed</Badge>
+                        <Badge variant="secondary">Все маршруты разрешены</Badge>
                       )}
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Allowed Pass Through Routes</p>
+                    <p className="text-sm font-medium">Разрешённые сквозные маршруты</p>
                     <p className="text-sm">
                       {Array.isArray(currentKeyData.metadata?.allowed_passthrough_routes) &&
                       currentKeyData.metadata.allowed_passthrough_routes.length > 0
@@ -1031,12 +1031,12 @@ export default function KeyInfoView({
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Disable Global Guardrails</p>
+                    <p className="text-sm font-medium">Отключить глобальные гардрейлы</p>
                     <p className="text-sm">
                       {currentKeyData.metadata?.disable_global_guardrails === true ? (
-                        <Badge variant="destructive">Enabled - Global guardrails bypassed</Badge>
+                        <Badge variant="destructive">Включено — глобальные гардрейлы обходятся</Badge>
                       ) : (
-                        <Badge variant="secondary">Disabled - Global guardrails active</Badge>
+                        <Badge variant="secondary">Выключено — глобальные гардрейлы работают</Badge>
                       )}
                     </p>
                   </div>
@@ -1051,13 +1051,13 @@ export default function KeyInfoView({
                           </BadgeLink>
                         ))
                       ) : (
-                        <p className="text-sm">No models specified</p>
+                        <p className="text-sm">Модели не указаны</p>
                       )}
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Rate Limits</p>
+                    <p className="text-sm font-medium">Лимиты запросов</p>
                     <p className="text-sm">
                       TPM: {currentKeyData.tpm_limit !== null ? currentKeyData.tpm_limit : "Unlimited"}
                     </p>
@@ -1065,19 +1065,19 @@ export default function KeyInfoView({
                       RPM: {currentKeyData.rpm_limit !== null ? currentKeyData.rpm_limit : "Unlimited"}
                     </p>
                     <p className="text-sm">
-                      Max Parallel Requests:{" "}
+                      Макс. параллельных запросов:{" "}
                       {currentKeyData.max_parallel_requests !== null
                         ? currentKeyData.max_parallel_requests
                         : "Unlimited"}
                     </p>
                     <p className="text-sm">
-                      Model TPM Limits:{" "}
+                      Лимиты TPM по моделям:{" "}
                       {currentKeyData.metadata?.model_tpm_limit
                         ? JSON.stringify(currentKeyData.metadata.model_tpm_limit)
                         : "Unlimited"}
                     </p>
                     <p className="text-sm">
-                      Model RPM Limits:{" "}
+                      Лимиты RPM по моделям:{" "}
                       {currentKeyData.metadata?.model_rpm_limit
                         ? JSON.stringify(currentKeyData.metadata.model_rpm_limit)
                         : "Unlimited"}
@@ -1090,13 +1090,13 @@ export default function KeyInfoView({
                         : "Unlimited"}
                     </p>
                     <p className="text-sm">
-                      Estimated Output Tokens:{" "}
+                      Оценка исходящих токенов:{" "}
                       {currentKeyData.metadata?.default_estimated_output_tokens != null
                         ? String(currentKeyData.metadata.default_estimated_output_tokens)
                         : "Default"}
                     </p>
                     <p className="text-sm">
-                      Estimated Output Tokens Per Model:{" "}
+                      Оценка исходящих токенов по моделям:{" "}
                       {currentKeyData.metadata?.default_estimated_output_tokens_per_model
                         ? JSON.stringify(currentKeyData.metadata.default_estimated_output_tokens_per_model)
                         : "Default"}
@@ -1104,7 +1104,7 @@ export default function KeyInfoView({
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium">Metadata</p>
+                    <p className="text-sm font-medium">Метаданные</p>
                     <pre className="bg-muted p-2 rounded-sm text-xs overflow-auto mt-1">
                       {formatMetadataForDisplay(stripTagsFromMetadata(currentKeyData.metadata))}
                     </pre>

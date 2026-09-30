@@ -47,7 +47,7 @@ const getKeyStatus = (key: KeyResponse): KeyStatus => {
     const isScimBlocked = (key.metadata as Record<string, unknown> | null | undefined)?.scim_blocked === true;
     return {
       tone: "error",
-      label: "Blocked",
+      label: "Заблокирован",
       tooltip: isScimBlocked
         ? "Blocked by SCIM (external identity provider deactivated or deleted the owning user)."
         : "Blocked. Requests using this key will be rejected with 401.",
@@ -55,12 +55,12 @@ const getKeyStatus = (key: KeyResponse): KeyStatus => {
   }
   const expiresAt = key.expires ? Date.parse(key.expires) : Number.NaN;
   if (!Number.isNaN(expiresAt) && expiresAt < Date.now()) {
-    return { tone: "warning", label: "Просрочен", tooltip: "This key has passed its expiry date." };
+    return { tone: "warning", label: "Просрочен", tooltip: "Срок действия ключа истёк." };
   }
   return {
     tone: "success",
     label: "Активный",
-    tooltip: "This key is not blocked and has not expired.",
+    tooltip: "Ключ не заблокирован и не просрочен.",
   };
 };
 
@@ -89,7 +89,7 @@ export const getKeyTableColumns = ({
     id: "key_alias",
     accessorKey: "key_alias",
     meta: {
-      title: "Key",
+      title: "Ключ",
       renderSkeleton: () => (
         <div className="flex flex-col gap-1 py-1">
           <Skeleton className="h-4 w-32" />
@@ -100,7 +100,7 @@ export const getKeyTableColumns = ({
         </div>
       ),
     },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Key" variant="header-cycle" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="Ключ" variant="header-cycle" />,
     size: 260,
     enableSorting: true,
     cell: ({ row }) => {
@@ -125,8 +125,8 @@ export const getKeyTableColumns = ({
   {
     id: "token",
     accessorKey: "token",
-    meta: { title: "Key ID" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Key ID" variant="header-cycle" />,
+    meta: { title: "ID ключа" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="ID ключа" variant="header-cycle" />,
     size: 120,
     enableSorting: true,
     cell: (info) => <IdCell value={info.getValue() as string | null} onClick={() => onSelectKey(info.row.original)} />,
@@ -154,8 +154,8 @@ export const getKeyTableColumns = ({
   {
     id: "organization_alias",
     accessorKey: "org_id",
-    meta: { title: "Organization" },
-    header: "Organization",
+    meta: { title: "Организация" },
+    header: "Организация",
     size: 140,
     enableSorting: false,
     cell: (info) => {
@@ -176,7 +176,7 @@ export const getKeyTableColumns = ({
     accessorKey: "user",
     meta: { title: "Пользователь" },
     header: () => (
-      <InfoHeader label="Пользователь" tooltip="Displays the first available value: User Alias, User Email, or User ID." />
+      <InfoHeader label="Пользователь" tooltip="Показывает первое доступное значение: псевдоним пользователя, e-mail или ID." />
     ),
     size: 160,
     enableSorting: false,
@@ -195,8 +195,8 @@ export const getKeyTableColumns = ({
   {
     id: "created_at",
     accessorKey: "created_at",
-    meta: { title: "Created At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created At" variant="header-cycle" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" variant="header-cycle" />,
     size: 120,
     enableSorting: true,
     cell: (info) => <DateCell value={info.getValue() as string | null} precision="date" />,
@@ -204,8 +204,8 @@ export const getKeyTableColumns = ({
   {
     id: "created_by",
     accessorKey: "created_by",
-    meta: { title: "Created By" },
-    header: "Created By",
+    meta: { title: "Автор" },
+    header: "Автор",
     size: 160,
     enableSorting: false,
     cell: (info) => {
@@ -225,8 +225,8 @@ export const getKeyTableColumns = ({
   {
     id: "updated_at",
     accessorKey: "updated_at",
-    meta: { title: "Updated At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Updated At" variant="header-cycle" />,
+    meta: { title: "Обновлён" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Обновлён" variant="header-cycle" />,
     size: 120,
     enableSorting: true,
     cell: (info) => <DateCell value={info.getValue() as string | null} precision="date" fallback="Never" />,
@@ -234,11 +234,11 @@ export const getKeyTableColumns = ({
   {
     id: "last_active",
     accessorKey: "last_active",
-    meta: { title: "Last Active" },
+    meta: { title: "Последняя активность" },
     header: () => (
       <InfoHeader
-        label="Last Active"
-        tooltip="This is a new field and is not backfilled. Only new key usage will update this value."
+        label="Последняя активность"
+        tooltip="Новое поле: история не заполняется задним числом, значение обновляется только при новом использовании ключа."
       />
     ),
     size: 130,
@@ -248,8 +248,8 @@ export const getKeyTableColumns = ({
   {
     id: "expires",
     accessorKey: "expires",
-    meta: { title: "Expires" },
-    header: "Expires",
+    meta: { title: "Истекает" },
+    header: "Истекает",
     size: 120,
     enableSorting: false,
     cell: (info) => <DateCell value={info.getValue() as string | null} precision="date" fallback="Never" />,
@@ -257,7 +257,7 @@ export const getKeyTableColumns = ({
   {
     id: "spend",
     accessorKey: "spend",
-    meta: { title: "Spend / Budget", skeleton: "meter" },
+    meta: { title: "Расход / Бюджет", skeleton: "meter" },
     header: ({ table }) => <DataTableMultiSortHeader table={table} fields={SPEND_BUDGET_SORT_FIELDS} />,
     size: 180,
     enableSorting: true,
@@ -277,8 +277,8 @@ export const getKeyTableColumns = ({
   {
     id: "budget_reset_at",
     accessorKey: "budget_reset_at",
-    meta: { title: "Budget Reset" },
-    header: "Budget Reset",
+    meta: { title: "Сброс бюджета" },
+    header: "Сброс бюджета",
     size: 130,
     enableSorting: false,
     cell: (info) => <DateCell value={info.getValue() as string | null} fallback="Never" />,
@@ -300,8 +300,8 @@ export const getKeyTableColumns = ({
   },
   {
     id: "rate_limits",
-    meta: { title: "Rate Limits" },
-    header: "Rate Limits",
+    meta: { title: "Лимиты запросов" },
+    header: "Лимиты запросов",
     size: 140,
     enableSorting: false,
     cell: ({ row }) => {

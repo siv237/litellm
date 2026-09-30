@@ -260,7 +260,7 @@ export function VirtualKeysTable({ headerActions }: VirtualKeysTableProps) {
     <div className="flex min-h-0 flex-1 flex-col gap-6">
       <PageHeader
         icon={<KeyRound />}
-        title="Virtual Keys"
+        title="Виртуальные ключи"
         subtitle="Every key that authenticates requests to the gateway."
         primaryAction={headerActions}
       />
@@ -303,8 +303,8 @@ export function VirtualKeysTable({ headerActions }: VirtualKeysTableProps) {
               table={table}
               open={filtersOpen}
               onOpenChange={setFiltersOpen}
-              title="Filters"
-              description="Narrow down virtual keys"
+              title="Фильтры"
+              description="Отфильтруйте виртуальные ключи"
             >
               {({ get, set }) => (
                 <>
@@ -313,31 +313,31 @@ export function VirtualKeysTable({ headerActions }: VirtualKeysTableProps) {
                       options={teamOptions}
                       value={(get("team_id") as string) || undefined}
                       onValueChange={(value) => set("team_id", value ?? undefined)}
-                      placeholder="Select a team…"
-                      emptyText="No teams found"
+                      placeholder="Выберите команду…"
+                      emptyText="Команды не найдены"
                     />
                   </DataTableFilterField>
-                  <DataTableFilterField label="Organization">
+                  <DataTableFilterField label="Организация">
                     <SearchSelect
                       options={orgOptions}
                       value={(get("org_id") as string) || undefined}
                       onValueChange={(value) => set("org_id", value ?? undefined)}
-                      placeholder="Select an organization…"
-                      emptyText="No organizations found"
+                      placeholder="Выберите организацию…"
+                      emptyText="Организации не найдены"
                     />
                   </DataTableFilterField>
-                  <DataTableFilterField label="User ID">
+                  <DataTableFilterField label="ID пользователя">
                     <Input
                       value={(get("user_id") as string) ?? ""}
                       onChange={(event) => set("user_id", event.target.value)}
-                      placeholder="Enter User ID…"
+                      placeholder="Введите ID пользователя…"
                     />
                   </DataTableFilterField>
-                  <DataTableFilterField label="Key ID">
+                  <DataTableFilterField label="ID ключа">
                     <Input
                       value={(get("key_hash") as string) ?? ""}
                       onChange={(event) => set("key_hash", event.target.value)}
-                      placeholder="Enter Key ID…"
+                      placeholder="Введите ID ключа…"
                     />
                   </DataTableFilterField>
                 </>

@@ -25,8 +25,8 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Inbox className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No deleted keys found</div>
-      <div className="text-sm text-muted-foreground">Keys deleted from this proxy will show up here.</div>
+      <div className="text-sm font-medium text-foreground">Удалённых ключей нет</div>
+      <div className="text-sm text-muted-foreground">Здесь появятся ключи, удалённые с этого прокси.</div>
     </div>
   );
 }
