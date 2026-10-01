@@ -28,13 +28,13 @@ import { fetchAvailableModels, ModelGroup } from "@/components/llm_calls/fetch_m
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const DOCS_LINKS = [
-  { label: "Custom pricing for models", href: "https://docs.litellm.ai/docs/proxy/custom_pricing" },
-  { label: "Spend tracking", href: "https://docs.litellm.ai/docs/proxy/cost_tracking" },
+  { label: "Пользовательские цены моделей", href: "https://docs.litellm.ai/docs/proxy/custom_pricing" },
+  { label: "Учёт расхода", href: "https://docs.litellm.ai/docs/proxy/cost_tracking" },
 ];
 
 const REMOVAL_COPY = {
-  discount: { title: "Remove Provider Discount", noun: "discount" },
-  margin: { title: "Remove Provider Margin", noun: "margin" },
+  discount: { title: "Удалить скидку провайдера", noun: "скидку" },
+  margin: { title: "Удалить наценку провайдера", noun: "наценку" },
 } as const;
 
 interface PendingRemoval {
@@ -186,11 +186,11 @@ const CostTrackingSettings: React.FC<CostTrackingSettingsProps> = ({ userID, use
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
         <div>
           <div className="flex items-center gap-2">
-            <p className="text-xl font-medium text-foreground">Cost Tracking Settings</p>
+            <p className="text-xl font-medium text-foreground">Настройки учёта стоимости</p>
             <DocsMenu items={DOCS_LINKS} />
           </div>
           <p className="text-muted-foreground mt-1">
-            Configure cost discounts and margins for different LLM providers. Changes are saved automatically.
+            Настройте скидки и наценки по провайдерам LLM. Изменения сохраняются автоматически.
           </p>
         </div>
       </div>
@@ -201,23 +201,23 @@ const CostTrackingSettings: React.FC<CostTrackingSettingsProps> = ({ userID, use
         {isProxyAdmin && (
           <Collapsible className="rounded-lg border">
             <SectionHeader
-              title="Provider Discounts"
-              description="Apply percentage-based discounts to reduce costs for specific providers"
+              title="Скидки провайдеров"
+              description="Процентные скидки для снижения затрат по отдельным провайдерам"
             />
             <CollapsibleContent className="px-0">
               <Tabs defaultValue="discounts">
                 <TabsList variant="line" className="mx-6 mt-4 h-auto justify-start rounded-none border-b p-0">
                   <TabsTrigger value="discounts" className="flex-none rounded-none px-4 py-2">
-                    Discounts
+                    Скидки
                   </TabsTrigger>
                   <TabsTrigger value="test-it" className="flex-none rounded-none px-4 py-2">
-                    Test It
+                    Проверить
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="discounts" keepMounted>
                   <div className="p-6">
                     <div className="flex justify-end mb-4">
-                      <Button onClick={() => setIsModalVisible(true)}>+ Add Provider Discount</Button>
+                      <Button onClick={() => setIsModalVisible(true)}>+ Добавить скидку провайдера</Button>
                     </div>
                     {isFetching ? (
                       <div className="py-12 text-center">
@@ -244,9 +244,9 @@ const CostTrackingSettings: React.FC<CostTrackingSettingsProps> = ({ userID, use
                             d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        <p className="text-foreground font-medium mb-2">No provider discounts configured</p>
+                        <p className="text-foreground font-medium mb-2">Скидки провайдеров не настроены</p>
                         <p className="text-muted-foreground text-sm">
-                          Click &quot;Add Provider Discount&quot; to get started
+                          Нажмите «Добавить скидку провайдера», чтобы начать
                         </p>
                       </div>
                     )}
@@ -266,13 +266,13 @@ const CostTrackingSettings: React.FC<CostTrackingSettingsProps> = ({ userID, use
         {isProxyAdmin && (
           <Collapsible className="rounded-lg border">
             <SectionHeader
-              title="Fee/Price Margin"
-              description="Add fees or margins to LLM costs for internal billing and cost recovery"
+              title="Наценка к стоимости"
+              description="Добавляет комиссии и наценки к стоимости LLM для внутреннего биллинга и возмещения затрат"
             />
             <CollapsibleContent className="px-0">
               <div className="p-6">
                 <div className="flex justify-end mb-4">
-                  <Button onClick={() => setIsMarginModalVisible(true)}>+ Add Provider Margin</Button>
+                  <Button onClick={() => setIsMarginModalVisible(true)}>+ Добавить наценку провайдера</Button>
                 </div>
                 {isFetching ? (
                   <div className="py-12 text-center">
@@ -299,9 +299,9 @@ const CostTrackingSettings: React.FC<CostTrackingSettingsProps> = ({ userID, use
                         d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <p className="text-foreground font-medium mb-2">No provider margins configured</p>
+                    <p className="text-foreground font-medium mb-2">Наценки провайдеров не настроены</p>
                     <p className="text-muted-foreground text-sm">
-                      Click &quot;Add Provider Margin&quot; to get started
+                      Нажмите «Добавить наценку провайдера», чтобы начать
                     </p>
                   </div>
                 )}
@@ -314,17 +314,17 @@ const CostTrackingSettings: React.FC<CostTrackingSettingsProps> = ({ userID, use
         {isProxyAdmin && (
           <Collapsible className="rounded-lg border">
             <SectionHeader
-              title="Block Unpriced Models"
-              description="Reject requests for models that have no pricing in the cost map instead of logging them as $0 spend"
+              title="Блокировать модели без цены"
+              description="Отклонять запросы к моделям без цены в карте затрат вместо записи расхода $0"
             />
             <CollapsibleContent className="px-0">
               <div className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="pr-6">
-                    <p className="text-foreground font-medium">Block requests for models without pricing</p>
+                    <p className="text-foreground font-medium">Блокировать запросы к моделям без цены</p>
                     <p className="text-sm text-muted-foreground mt-1">
-                      When enabled, a request whose resolved model has no cost mapping is rejected with a 403 so an
-                      admin can add pricing for it. Off by default
+                      Когда включено, запрос с моделью без карты затрат отклоняется с 403, чтобы администратор
+                      добавил для неё цену. По умолчанию выключено
                     </p>
                   </div>
                   <Switch
@@ -341,8 +341,8 @@ const CostTrackingSettings: React.FC<CostTrackingSettingsProps> = ({ userID, use
         {/* Accordion 4: Pricing Calculator - Available to all roles */}
         <Collapsible defaultOpen={true} className="rounded-lg border">
           <SectionHeader
-            title="Pricing Calculator"
-            description="Estimate LLM costs based on expected token usage and request volume"
+            title="Калькулятор стоимости"
+            description="Оценка стоимости LLM по ожидаемому использованию токенов и числу запросов"
           />
           <CollapsibleContent className="px-0">
             <div className="p-6">
@@ -358,14 +358,14 @@ const CostTrackingSettings: React.FC<CostTrackingSettingsProps> = ({ userID, use
             <AlertDialogHeader>
               <AlertDialogTitle>{REMOVAL_COPY[pendingRemoval.kind].title}</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to remove the {REMOVAL_COPY[pendingRemoval.kind].noun} for{" "}
+                Вы уверены, что хотите удалить {REMOVAL_COPY[pendingRemoval.kind].noun} для{" "}
                 {pendingRemoval.displayName}?
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel disabled={isRemoving}>Отмена</AlertDialogCancel>
               <Button variant="destructive" onClick={handleConfirmRemoval} disabled={isRemoving}>
-                {isRemoving ? "Removing…" : "Remove"}
+                {isRemoving ? "Удаление…" : "Удалить"}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -376,13 +376,12 @@ const CostTrackingSettings: React.FC<CostTrackingSettingsProps> = ({ userID, use
         <DialogContent className="top-8 max-h-[calc(100dvh-4rem)] translate-y-0 overflow-y-auto sm:max-w-[1000px]">
           <DialogHeader>
             <div className="flex items-center space-x-3 pb-4 border-b border-border">
-              <DialogTitle className="text-xl font-semibold text-foreground">Add Provider Discount</DialogTitle>
+              <DialogTitle className="text-xl font-semibold text-foreground">Добавить скидку провайдера</DialogTitle>
             </div>
           </DialogHeader>
           <div className="mt-6">
             <p className="text-sm text-muted-foreground mb-6">
-              Select a provider and set its discount percentage. Enter a value between 0% and 100% (e.g., 5 for a 5%
-              discount).
+              Выберите провайдера и задайте процент скидки — от 0% до 100% (например, 5 для скидки 5%).
             </p>
             <form onSubmit={(event) => event.preventDefault()} className="space-y-6">
               <AddProviderForm
@@ -402,13 +401,12 @@ const CostTrackingSettings: React.FC<CostTrackingSettingsProps> = ({ userID, use
         <DialogContent className="top-8 max-h-[calc(100dvh-4rem)] translate-y-0 overflow-y-auto sm:max-w-[1000px]">
           <DialogHeader>
             <div className="flex items-center space-x-3 pb-4 border-b border-border">
-              <DialogTitle className="text-xl font-semibold text-foreground">Add Provider Margin</DialogTitle>
+              <DialogTitle className="text-xl font-semibold text-foreground">Добавить наценку провайдера</DialogTitle>
             </div>
           </DialogHeader>
           <div className="mt-6">
             <p className="text-sm text-muted-foreground mb-6">
-              Select a provider (or &quot;Global&quot; for all providers) and configure the margin. You can use
-              percentage-based or fixed amount.
+              Выберите провайдера (или «Global» для всех) и настройте наценку: процентную или фиксированную.
             </p>
             <form onSubmit={(event) => event.preventDefault()} className="space-y-6">
               <AddMarginForm

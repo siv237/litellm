@@ -197,7 +197,7 @@ export function KeyEditView({
         const response = await tagListCall(accessToken);
         setTagsList(response);
       } catch (error) {
-        toast.fromError("Error fetching tags: " + error);
+        toast.fromError("Не удалось загрузить теги: " + error);
       }
     };
     fetchTags();
@@ -346,7 +346,7 @@ export function KeyEditView({
         )}
       >
         <FieldGroup>
-          <FormField control={form.control} name="key_alias" label="Key Alias">
+          <FormField control={form.control} name="key_alias" label="Псевдоним ключа">
             {(field) => <Input {...field} value={(field.value as string | undefined) ?? ""} />}
           </FormField>
 
@@ -354,7 +354,7 @@ export function KeyEditView({
             control={form.control}
             name="models"
             label="Модели"
-            description={isModelsDisabled ? "Models field is disabled for this key type" : undefined}
+            description={isModelsDisabled ? "Поле «Модели» недоступно для этого типа ключа" : undefined}
           >
             {({ value, onChange, id }) => (
               <MultiSelect
@@ -371,13 +371,13 @@ export function KeyEditView({
                   }
                 }}
                 disabled={isModelsDisabled}
-                placeholder="Select models"
+                placeholder="Выберите модели"
               />
             )}
           </FormField>
 
           <Field>
-            <FieldLabel htmlFor={keyTypeFieldId}>Key Type</FieldLabel>
+            <FieldLabel htmlFor={keyTypeFieldId}>Тип ключа</FieldLabel>
             <KeyTypeSelect
               id={keyTypeFieldId}
               value={keyTypeFromRoutes(allowedRoutes)}
@@ -410,7 +410,7 @@ export function KeyEditView({
               <Input
                 {...field}
                 value={(field.value as string | undefined) ?? ""}
-                placeholder="Enter allowed routes (comma-separated). Special values: llm_api_routes, management_routes. Examples: llm_api_routes, /chat/completions, /keys/*. Leave empty to allow all routes"
+                placeholder="Разрешённые маршруты через запятую. Спецзначения: llm_api_routes, management_routes. Примеры: llm_api_routes, /chat/completions, /keys/*. Оставьте пустым, чтобы разрешить все маршруты"
               />
             )}
           </FormField>
@@ -418,24 +418,24 @@ export function KeyEditView({
           <KeyBudgetNumberField
             control={form.control}
             name="max_budget"
-            label="Max Budget (USD)"
-            placeholder="Enter a numerical value"
+            label="Макс. бюджет (USD)"
+            placeholder="Введите число"
           />
 
           <KeyBudgetNumberField
             control={form.control}
             name="soft_budget"
-            label="Soft Budget (USD)"
-            placeholder="Get alerts when spend crosses this value, without blocking requests"
+            label="Мягкий бюджет (USD)"
+            placeholder="Уведомления при превышении этого значения, без блокировки запросов"
           />
 
-          <FormField control={form.control} name="budget_duration" label="Reset Budget">
+          <FormField control={form.control} name="budget_duration" label="Сброс бюджета">
             {({ value, onChange, id }) => (
               <BudgetDurationDropdown
                 id={id}
                 value={value as string | null}
                 onChange={(next) => onChange(next ?? null)}
-                placeholder="Never resets"
+                placeholder="Никогда не сбрасывать"
               />
             )}
           </FormField>
@@ -457,7 +457,7 @@ export function KeyEditView({
             onChange={modelBudget.setValue}
             availableModels={availableModels}
             usage={keyData.model_max_budget_usage}
-            hint="Cap spend on individual models, each with its own reset window. Enforced across every request this key makes."
+            hint="Ограничение расхода по отдельным моделям, у каждой — своё окно сброса. Действует для всех запросов этого ключа."
           />
 
           <Field>
@@ -474,7 +474,7 @@ export function KeyEditView({
             />
           </Field>
 
-          <FormField control={form.control} name="tpm_limit" label="TPM Limit">
+          <FormField control={form.control} name="tpm_limit" label="Лимит TPM">
             {({ ref: _ref, ...field }) => <NumericalInput {...field} value={field.value ?? ""} min={0} />}
           </FormField>
 
@@ -491,7 +491,7 @@ export function KeyEditView({
             )}
           </FormField>
 
-          <FormField control={form.control} name="rpm_limit" label="RPM Limit">
+          <FormField control={form.control} name="rpm_limit" label="Лимит RPM">
             {({ ref: _ref, ...field }) => <NumericalInput {...field} value={field.value ?? ""} min={0} />}
           </FormField>
 
@@ -534,11 +534,11 @@ export function KeyEditView({
             )}
           </FormField>
 
-          <FormField control={form.control} name="max_parallel_requests" label="Max Parallel Requests">
+          <FormField control={form.control} name="max_parallel_requests" label="Макс. параллельных запросов">
             {({ ref: _ref, ...field }) => <NumericalInput {...field} value={field.value ?? ""} min={0} />}
           </FormField>
 
-          <FormField control={form.control} name="model_tpm_limit" label="Model TPM Limit">
+          <FormField control={form.control} name="model_tpm_limit" label="Лимит TPM модели">
             {(field) => (
               <Textarea
                 {...field}
@@ -549,7 +549,7 @@ export function KeyEditView({
             )}
           </FormField>
 
-          <FormField control={form.control} name="model_rpm_limit" label="Model RPM Limit">
+          <FormField control={form.control} name="model_rpm_limit" label="Лимит RPM модели">
             {(field) => (
               <Textarea
                 {...field}
@@ -596,7 +596,7 @@ export function KeyEditView({
             <TagRateLimitEditor value={tagRateLimits} onChange={setTagRateLimits} />
           </Field>
 
-          <FormField control={form.control} name="guardrails" label="Guardrails">
+          <FormField control={form.control} name="guardrails" label="Гардрейлы">
             {({ value, onChange }) =>
               accessToken ? (
                 <GuardrailSelector
@@ -645,14 +645,14 @@ export function KeyEditView({
             </FormField>
           )}
 
-          <FormField control={form.control} name="tags" label="Tags">
+          <FormField control={form.control} name="tags" label="Теги">
             {({ value, onChange, id }) => (
               <TagsInput
                 id={id}
                 value={(value as string[] | undefined) ?? []}
                 onValueChange={onChange}
                 options={Object.values(tagsList).map((tag) => ({ value: tag.name, label: tag.name }))}
-                placeholder="Select or enter tags"
+                placeholder="Выберите или введите теги"
               />
             )}
           </FormField>
@@ -693,7 +693,7 @@ export function KeyEditView({
               <AccessGroupSelector
                 value={value as string[] | undefined}
                 onChange={onChange}
-                placeholder="Select access groups (optional)"
+                placeholder="Выберите группы доступа (необязательно)"
               />
             )}
           </FormField>
@@ -726,24 +726,24 @@ export function KeyEditView({
             )}
           </FormField>
 
-          <FormField control={form.control} name="vector_stores" label="Vector Stores">
+          <FormField control={form.control} name="vector_stores" label="Векторные хранилища">
             {({ value, onChange }) => (
               <VectorStoreSelector
                 onChange={onChange}
                 value={value as string[] | undefined}
                 accessToken={accessToken || ""}
-                placeholder="Select vector stores"
+                placeholder="Выберите векторные хранилища"
               />
             )}
           </FormField>
 
-          <FormField control={form.control} name="mcp_servers_and_groups" label="MCP Servers / Access Groups">
+          <FormField control={form.control} name="mcp_servers_and_groups" label="MCP-серверы / группы доступа">
             {({ value, onChange }) => (
               <MCPServerSelector
                 onChange={onChange}
                 value={value as McpServersAndGroups | undefined}
                 accessToken={accessToken || ""}
-                placeholder="Select MCP servers or access groups (optional)"
+                placeholder="Выберите MCP-серверы или группы доступа (необязательно)"
                 allowNoMcpServers
               />
             )}
@@ -786,7 +786,7 @@ export function KeyEditView({
           <FormField
             control={form.control}
             name="team_id"
-            label="Team ID"
+            label="ID команды"
             description={hasProject ? "Team is locked because this key belongs to a project" : undefined}
           >
             {({ value, onChange, id }) => (
@@ -799,7 +799,7 @@ export function KeyEditView({
                 )}
               >
                 <SelectTrigger id={id} className="w-full">
-                  <SelectValue placeholder="Select team" />
+                  <SelectValue placeholder="Выберите команду" />
                 </SelectTrigger>
                 <SelectContent>
                   {visibleTeams?.map((t) => (
@@ -823,7 +823,7 @@ export function KeyEditView({
           )}
 
           <Field>
-            <FieldLabel>Router Settings</FieldLabel>
+            <FieldLabel>Настройки маршрутизации</FieldLabel>
             <RouterSettingsAccordion
               ref={routerSettingsRef}
               accessToken={accessToken || ""}
@@ -832,7 +832,7 @@ export function KeyEditView({
             />
           </Field>
 
-          <FormField control={form.control} name="logging_settings" label="Logging Settings">
+          <FormField control={form.control} name="logging_settings" label="Настройки журналирования">
             {({ value, onChange }) => (
               <EditLoggingSettings
                 value={(value as unknown[] | undefined) ?? []}
@@ -843,7 +843,7 @@ export function KeyEditView({
             )}
           </FormField>
 
-          <FormField control={form.control} name="metadata" label="Metadata">
+          <FormField control={form.control} name="metadata" label="Метаданные">
             {(field) => <Textarea {...field} value={(field.value as string | undefined) ?? ""} rows={10} />}
           </FormField>
 

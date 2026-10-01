@@ -151,7 +151,7 @@ describe("TeamSSOSettings", () => {
     const { container } = renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     expect(container.querySelector('[aria-busy="true"]')).toBeInTheDocument();
-    expect(screen.queryByText("Default Team Settings")).not.toBeInTheDocument();
+    expect(screen.queryByText("Настройки команд по умолчанию")).not.toBeInTheDocument();
   });
 
   it("should display error message when fetch fails", async () => {
@@ -161,10 +161,10 @@ describe("TeamSSOSettings", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("No team settings available or you do not have permission to view them."),
+        screen.getByText("Настройки команд по умолчанию недоступны или нет прав на их просмотр."),
       ).toBeInTheDocument();
     });
-    expect(mockToast.fromError).toHaveBeenCalledWith("Failed to fetch team settings");
+    expect(mockToast.fromError).toHaveBeenCalledWith("Не удалось загрузить настройки команд");
   });
 
   it("should not fetch settings when access token is null", async () => {
@@ -183,9 +183,9 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Default Team Settings")).toBeInTheDocument();
+      expect(screen.getByText("Настройки команд по умолчанию")).toBeInTheDocument();
       expect(
-        screen.getByText("These settings will be applied by default when creating new teams."),
+        screen.getByText("Эти значения применяются по умолчанию при создании новых команд."),
       ).toBeInTheDocument();
     });
   });
@@ -196,8 +196,8 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Budget & Rate Limits")).toBeInTheDocument();
-      expect(screen.getByText("Access & Permissions")).toBeInTheDocument();
+      expect(screen.getByText("Бюджет и лимиты запросов")).toBeInTheDocument();
+      expect(screen.getByText("Доступ и разрешения")).toBeInTheDocument();
     });
   });
 
@@ -207,17 +207,17 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Max Budget")).toBeInTheDocument();
-      expect(screen.getByText("Budget Duration")).toBeInTheDocument();
-      expect(screen.getByText("TPM Limit")).toBeInTheDocument();
-      expect(screen.getByText("RPM Limit")).toBeInTheDocument();
-      expect(screen.getByText("Models")).toBeInTheDocument();
-      expect(screen.getByText("Team Member Permissions")).toBeInTheDocument();
+      expect(screen.getByText("Макс. бюджет")).toBeInTheDocument();
+      expect(screen.getByText("Период бюджета")).toBeInTheDocument();
+      expect(screen.getByText("Лимит TPM")).toBeInTheDocument();
+      expect(screen.getByText("Лимит RPM")).toBeInTheDocument();
+      expect(screen.getByText("Модели")).toBeInTheDocument();
+      expect(screen.getByText("Разрешения участников команды")).toBeInTheDocument();
     });
 
     // Descriptions
-    expect(screen.getByText("Maximum budget (in USD) for new automatically created teams.")).toBeInTheDocument();
-    expect(screen.getByText("How frequently the team's budget resets.")).toBeInTheDocument();
+    expect(screen.getByText("Максимальный бюджет (USD) для новых команд, создаваемых автоматически.")).toBeInTheDocument();
+    expect(screen.getByText("Как часто сбрасывается бюджет команды.")).toBeInTheDocument();
   });
 
   it("should display formatted values in view mode", async () => {
@@ -258,7 +258,7 @@ describe("TeamSSOSettings", () => {
     });
   });
 
-  it("should display 'Not set' for null values", async () => {
+  it("should display 'Не задано' for null values", async () => {
     mockGetDefaultTeamSettings.mockResolvedValue({
       values: {
         max_budget: null,
@@ -273,7 +273,7 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      const notSetElements = screen.getAllByText("Not set");
+      const notSetElements = screen.getAllByText("Не задано");
       // max_budget, budget_duration, tpm_limit, rpm_limit, models (empty), permissions (empty)
       expect(notSetElements.length).toBeGreaterThanOrEqual(4);
     });
@@ -287,14 +287,14 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
 
-    expect(screen.getByRole("button", { name: /Cancel/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Отмена" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Save Changes/i })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Edit Settings/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Изменить настройки/i })).not.toBeInTheDocument();
   });
 
   it("should cancel edit mode and reset values", async () => {
@@ -303,14 +303,14 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
-    await userEvent.click(screen.getByRole("button", { name: /Cancel/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
+    await userEvent.click(screen.getByRole("button", { name: "Отмена" }));
 
-    expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Cancel/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Отмена" })).not.toBeInTheDocument();
   });
 
   // --- Edit Mode Fields ---
@@ -321,10 +321,10 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
 
     await waitFor(() => {
       expect(screen.getByTestId("budget-duration-dropdown")).toBeInTheDocument();
@@ -337,10 +337,10 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
 
     await waitFor(() => {
       expect(screen.getByTestId("model-select")).toBeInTheDocument();
@@ -353,10 +353,10 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
 
     await waitFor(() => {
       expect(screen.getAllByRole("spinbutton")).toHaveLength(3);
@@ -375,10 +375,10 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
     const permissionComboboxes = screen.getAllByRole("combobox");
     const permissionCombobox = permissionComboboxes[permissionComboboxes.length - 1];
     expect(permissionCombobox).toBeInTheDocument();
@@ -410,21 +410,21 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
     await userEvent.click(screen.getByRole("button", { name: /Save Changes/i }));
 
     await waitFor(() => {
       expect(mockUpdateDefaultTeamSettings).toHaveBeenCalledWith("test-token", expect.any(Object));
     });
 
-    expect(mockToast.success).toHaveBeenCalledWith("Default team settings updated successfully");
+    expect(mockToast.success).toHaveBeenCalledWith("Настройки команд по умолчанию обновлены");
 
     // Should exit edit mode after save
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
   });
 
@@ -441,7 +441,7 @@ describe("TeamSSOSettings", () => {
       expect(screen.getByText("Sales (org-2)")).toBeInTheDocument();
     });
     expect(
-      screen.getByText("Teams created without an explicit organization are assigned to this organization."),
+      screen.getByText("Команды, созданные без явной организации, относятся к этой организации."),
     ).toBeInTheDocument();
   });
 
@@ -457,13 +457,13 @@ describe("TeamSSOSettings", () => {
     });
   });
 
-  it("should display 'Not set' when the settings payload has no organization_id", async () => {
+  it("should display 'Не задано' when the settings payload has no organization_id", async () => {
     mockGetDefaultTeamSettings.mockResolvedValue(mockSettingsResponse);
 
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Not set")).toBeInTheDocument();
+      expect(screen.getByText("Не задано")).toBeInTheDocument();
     });
   });
 
@@ -473,10 +473,10 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
 
     await waitFor(() => {
       const dropdown = screen.getByTestId("organization-dropdown");
@@ -494,10 +494,10 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
     await waitFor(() => {
       expect(screen.getByRole("option", { name: "Sales (org-2)" })).toBeInTheDocument();
     });
@@ -527,10 +527,10 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
     await userEvent.click(screen.getByTestId("organization-dropdown-clear"));
     await userEvent.click(screen.getByRole("button", { name: /Save Changes/i }));
 
@@ -542,7 +542,7 @@ describe("TeamSSOSettings", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText("Not set")).toBeInTheDocument();
+      expect(screen.getByText("Не задано")).toBeInTheDocument();
     });
   });
 
@@ -553,14 +553,14 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
     await userEvent.click(screen.getByRole("button", { name: /Save Changes/i }));
 
     await waitFor(() => {
-      expect(mockToast.fromError).toHaveBeenCalledWith("Failed to update team settings");
+      expect(mockToast.fromError).toHaveBeenCalledWith("Не удалось обновить настройки команд");
     });
   });
 
@@ -573,12 +573,12 @@ describe("TeamSSOSettings", () => {
     renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /Edit Settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole("button", { name: /Edit Settings/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
     await userEvent.click(screen.getByRole("button", { name: /Save Changes/i }));
 
-    expect(screen.getByRole("button", { name: /Cancel/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Отмена" })).toBeDisabled();
   });
 });

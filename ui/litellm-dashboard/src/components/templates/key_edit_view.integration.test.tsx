@@ -363,7 +363,7 @@ describe("KeyEditView", () => {
       />,
     );
 
-    const metadataTextarea = screen.getByLabelText("Metadata") as HTMLTextAreaElement;
+    const metadataTextarea = screen.getByLabelText("Метаданные") as HTMLTextAreaElement;
     await waitFor(() => {
       expect(metadataTextarea).toHaveValue("{}");
     });
@@ -487,7 +487,7 @@ describe("KeyEditView", () => {
       />,
     );
 
-    const cancelButton = await screen.findByRole("button", { name: /cancel/i });
+    const cancelButton = await screen.findByRole("button", { name: /отмена/i });
     await userEvent.click(cancelButton);
 
     expect(onCancelMock).toHaveBeenCalledTimes(1);
@@ -508,7 +508,7 @@ describe("KeyEditView", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("Key Alias")).toBeInTheDocument();
+      expect(screen.getByLabelText("Псевдоним ключа")).toBeInTheDocument();
     });
   });
 
@@ -526,7 +526,7 @@ describe("KeyEditView", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Models")).toBeInTheDocument();
+      expect(screen.getByText("Модели")).toBeInTheDocument();
     });
   });
 
@@ -544,7 +544,7 @@ describe("KeyEditView", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText("Max Budget (USD)")).toBeInTheDocument();
+      expect(screen.getByLabelText("Макс. бюджет (USD)")).toBeInTheDocument();
     });
   });
 
@@ -671,7 +671,7 @@ describe("KeyEditView", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Models field is disabled for this key type")).toBeInTheDocument();
+      expect(screen.getByText("Поле «Модели» недоступно для этого типа ключа")).toBeInTheDocument();
     });
   });
 
@@ -694,7 +694,7 @@ describe("KeyEditView", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Models field is disabled for this key type")).toBeInTheDocument();
+      expect(screen.getByText("Поле «Модели» недоступно для этого типа ключа")).toBeInTheDocument();
     });
   });
 
@@ -712,7 +712,7 @@ describe("KeyEditView", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Guardrails")).toBeInTheDocument();
+      expect(screen.getByText("Гардрейлы")).toBeInTheDocument();
     });
   });
 
@@ -996,7 +996,7 @@ describe("KeyEditView", () => {
       />,
     );
 
-    await chooseSelectOption(userEvent, await screen.findByLabelText("Reset Budget"), "weekly");
+    await chooseSelectOption(userEvent, await screen.findByLabelText("Сброс бюджета"), "weekly");
 
     const submitButton = screen.getByRole("button", { name: /save changes/i });
     await userEvent.click(submitButton);
@@ -1071,11 +1071,11 @@ describe("KeyEditView", () => {
       />,
     );
 
-    const resetBudget = await screen.findByLabelText("Reset Budget");
-    await chooseSelectOption(userEvent, resetBudget, "Never resets");
+    const resetBudget = await screen.findByLabelText("Сброс бюджета");
+    await chooseSelectOption(userEvent, resetBudget, "Никогда не сбрасывать");
 
     await waitFor(() => {
-      expect(resetBudget).toHaveTextContent("Never resets");
+      expect(resetBudget).toHaveTextContent("Никогда не сбрасывать");
     });
 
     await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
@@ -1103,7 +1103,7 @@ describe("KeyEditView", () => {
       />,
     );
 
-    await chooseSelectOption(userEvent, await screen.findByLabelText("Reset Budget"), "Never resets");
+    await chooseSelectOption(userEvent, await screen.findByLabelText("Сброс бюджета"), "Никогда не сбрасывать");
 
     await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
@@ -1341,11 +1341,11 @@ describe("KeyEditView", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Key Type")).toBeInTheDocument();
+      expect(screen.getByText("Тип ключа")).toBeInTheDocument();
     });
 
     // The selected key type label should show "AI APIs" (not "LLM API")
-    await userEvent.click(screen.getByLabelText("Key Type"));
+    await userEvent.click(screen.getByLabelText("Тип ключа"));
 
     await waitFor(() => {
       // Verify "AI APIs" appears as an option label
@@ -1379,7 +1379,7 @@ describe("KeyEditView", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /cancel/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /отмена/i })).toBeInTheDocument();
     });
 
     const submitButton = screen.getByRole("button", { name: /save changes/i });
@@ -1393,7 +1393,7 @@ describe("KeyEditView", () => {
     // Wait for the cancel button to actually be disabled (state update may take a moment)
     await waitFor(
       () => {
-        const cancelButton = screen.getByRole("button", { name: /cancel/i });
+        const cancelButton = screen.getByRole("button", { name: /отмена/i });
         expect(cancelButton).toBeDisabled();
       },
       { timeout: 3000 },
@@ -1546,7 +1546,7 @@ describe("KeyEditView", () => {
       const view = renderWithProviders(renderEditor());
       await userEvent.click(await screen.findByRole("button", { name: "Detach from project" }));
       expect(screen.getByRole("combobox", { name: "Organization" })).toBeDisabled();
-      expect(screen.getByRole("combobox", { name: "Team ID" })).toBeDisabled();
+      expect(screen.getByRole("combobox", { name: "ID команды" })).toBeDisabled();
       await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
       expect(onCancel).toHaveBeenCalledOnce();
       expect(onSubmit).not.toHaveBeenCalled();
@@ -1555,9 +1555,9 @@ describe("KeyEditView", () => {
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
       const expectedDetach = { project_id: null, organization_id: "org-1", team_id: "group-maple", models: key.models };
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining(expectedDetach)));
-      expect(screen.getByRole("combobox", { name: "Team ID" })).toBeDisabled();
+      expect(screen.getByRole("combobox", { name: "ID команды" })).toBeDisabled();
       view.rerender(renderEditor({ ...key, project_id: null }));
-      expect(screen.getByRole("combobox", { name: "Team ID" })).toBeEnabled();
+      expect(screen.getByRole("combobox", { name: "ID команды" })).toBeEnabled();
       expect(screen.queryByRole("button", { name: "Detach from project" })).not.toBeInTheDocument();
       view.rerender(renderEditor(key, "Internal User"));
       expect(screen.queryByRole("button", { name: "Detach from project" })).not.toBeInTheDocument();
@@ -1588,7 +1588,7 @@ describe("KeyEditView", () => {
         />,
       );
       expect(await screen.findByRole("combobox", { name: "Organization" })).toBeDisabled();
-      expect(screen.getByRole("combobox", { name: "Team ID" })).toBeDisabled();
+      expect(screen.getByRole("combobox", { name: "ID команды" })).toBeDisabled();
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
       await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
       expect(onSubmit.mock.calls[0][0]).toMatchObject({ organization_id: "org-1", team_id: "group-maple" });
@@ -1598,7 +1598,7 @@ describe("KeyEditView", () => {
 
   describe("models dropdown team gating", () => {
     const openModelsDropdown = async () => {
-      await userEvent.click(screen.getByLabelText("Models"));
+      await userEvent.click(screen.getByLabelText("Модели"));
     };
 
     it("should offer all-proxy-models but not all-team-models for a teamless key", async () => {
@@ -1615,7 +1615,7 @@ describe("KeyEditView", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText("Models", { selector: "label" })).toBeInTheDocument();
+        expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
       await openModelsDropdown();
@@ -1646,7 +1646,7 @@ describe("KeyEditView", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText("Models", { selector: "label" })).toBeInTheDocument();
+        expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
       await openModelsDropdown();
@@ -1677,7 +1677,7 @@ describe("KeyEditView", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText("Models", { selector: "label" })).toBeInTheDocument();
+        expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
       await openModelsDropdown();
@@ -1704,7 +1704,7 @@ describe("KeyEditView", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText("Models", { selector: "label" })).toBeInTheDocument();
+        expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
       await openModelsDropdown();
@@ -1736,7 +1736,7 @@ describe("KeyEditView", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText("Models", { selector: "label" })).toBeInTheDocument();
+        expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
       await openModelsDropdown();
@@ -1776,7 +1776,7 @@ describe("KeyEditView", () => {
       );
 
       await waitFor(() => {
-        expect(screen.getByText("Models", { selector: "label" })).toBeInTheDocument();
+        expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
       await openModelsDropdown();
@@ -2118,14 +2118,14 @@ describe("KeyEditView", () => {
         await userEvent.type(control, text);
       };
 
-      await retype("Key Alias", "typed-alias");
-      await retype("Max Budget (USD)", "12.5");
-      await retype("TPM Limit", "111");
-      await retype("RPM Limit", "222");
-      await retype("Max Parallel Requests", "3");
-      await retype("Model TPM Limit", '{{"gpt-4": 7}');
-      await retype("Model RPM Limit", '{{"gpt-4": 8}');
-      await retype("Metadata", '{{"typed": true}');
+      await retype("Псевдоним ключа", "typed-alias");
+      await retype("Макс. бюджет (USD)", "12.5");
+      await retype("Лимит TPM", "111");
+      await retype("Лимит RPM", "222");
+      await retype("Макс. параллельных запросов", "3");
+      await retype("Лимит TPM модели", '{{"gpt-4": 7}');
+      await retype("Лимит RPM модели", '{{"gpt-4": 8}');
+      await retype("Метаданные", '{{"typed": true}');
 
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
@@ -2170,7 +2170,7 @@ describe("KeyEditView", () => {
       renderForPayload(onSubmitMock);
       await screen.findByRole("button", { name: /save changes/i });
 
-      await userEvent.type(screen.getByLabelText("Tags"), "typed-tag{Enter}");
+      await userEvent.type(screen.getByLabelText("Теги"), "typed-tag{Enter}");
 
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
@@ -2256,7 +2256,7 @@ describe("KeyEditView", () => {
       renderForPayload(onSubmitMock);
       await screen.findByRole("button", { name: /save changes/i });
 
-      await pickFromCombobox("Select vector stores", /VS One/);
+      await pickFromCombobox("Выберите векторные хранилища", /VS One/);
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
       await waitFor(() => {
@@ -2298,7 +2298,7 @@ describe("KeyEditView", () => {
       );
       await screen.findByRole("button", { name: /save changes/i });
 
-      await userEvent.click(screen.getByLabelText("Team ID"));
+      await userEvent.click(screen.getByLabelText("ID команды"));
       await userEvent.click(await screen.findByRole("option", { name: /Team Nine/ }));
 
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
@@ -2429,7 +2429,7 @@ describe("KeyEditView", () => {
     });
 
     const setRpmLimit = (value: string) => {
-      fireEvent.change(screen.getByLabelText("RPM Limit"), { target: { value } });
+      fireEvent.change(screen.getByLabelText("Лимит RPM"), { target: { value } });
     };
 
     it("carries an edited RPM limit and the key identifier onto the wire", async () => {
@@ -2453,7 +2453,7 @@ describe("KeyEditView", () => {
         renderForPayload(onSubmitMock);
         await screen.findByRole("button", { name: /save changes/i });
 
-        await userEvent.clear(screen.getByLabelText("Max Budget (USD)"));
+        await userEvent.clear(screen.getByLabelText("Макс. бюджет (USD)"));
         await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
         await waitFor(() => {

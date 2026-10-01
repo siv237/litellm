@@ -65,13 +65,13 @@ describe("AiSuggestionModal", () => {
   it("renders nothing while closed", () => {
     renderModal({ visible: false });
 
-    expect(screen.queryByText("AI Policy Suggestion")).not.toBeInTheDocument();
+    expect(screen.queryByText("Предложение политики ИИ")).not.toBeInTheDocument();
   });
 
   it("renders the header and prompt copy when opened", async () => {
     renderModal();
 
-    expect(await screen.findByText("AI Policy Suggestion")).toBeInTheDocument();
+    expect(await screen.findByText("Предложение политики ИИ")).toBeInTheDocument();
     expect(
       screen.getByText("Describe what you want to block and we'll suggest the best policy templates"),
     ).toBeInTheDocument();
@@ -89,10 +89,10 @@ describe("AiSuggestionModal", () => {
     const user = userEvent.setup();
     renderModal();
 
-    await screen.findByText("AI Policy Suggestion");
+    await screen.findByText("Предложение политики ИИ");
     expect(screen.getByRole("button", { name: "Suggest Policies" })).toBeDisabled();
 
-    fireEvent.change(screen.getByPlaceholderText(/Block PII leakage/), { target: { value: "block PII" } });
+    fireEvent.change(screen.getByPlaceholderText(/блокировать утечку ПДн/), { target: { value: "block PII" } });
     expect(screen.getByRole("button", { name: "Suggest Policies" })).toBeDisabled();
 
     await pickModel(user);
@@ -103,11 +103,11 @@ describe("AiSuggestionModal", () => {
     const user = userEvent.setup();
     renderModal();
 
-    await screen.findByText("AI Policy Suggestion");
+    await screen.findByText("Предложение политики ИИ");
     fireEvent.change(screen.getByPlaceholderText(/Ignore all previous instructions/), {
       target: { value: "my ssn is 123" },
     });
-    fireEvent.change(screen.getByPlaceholderText(/Block PII leakage/), { target: { value: "block PII" } });
+    fireEvent.change(screen.getByPlaceholderText(/блокировать утечку ПДн/), { target: { value: "block PII" } });
     await pickModel(user);
     await user.click(screen.getByRole("button", { name: "Suggest Policies" }));
 
@@ -120,25 +120,25 @@ describe("AiSuggestionModal", () => {
     const user = userEvent.setup();
     renderModal();
 
-    await screen.findByText("AI Policy Suggestion");
+    await screen.findByText("Предложение политики ИИ");
     const countExamples = () => screen.getAllByRole("textbox").length;
     const initial = countExamples();
 
-    await user.click(screen.getByRole("button", { name: "+ Add another example" }));
+    await user.click(screen.getByRole("button", { name: "+ Добавить пример" }));
     expect(countExamples()).toBe(initial + 1);
 
-    await user.click(screen.getByRole("button", { name: "+ Add another example" }));
-    await user.click(screen.getByRole("button", { name: "+ Add another example" }));
+    await user.click(screen.getByRole("button", { name: "+ Добавить пример" }));
+    await user.click(screen.getByRole("button", { name: "+ Добавить пример" }));
     expect(countExamples()).toBe(initial + 3);
-    expect(screen.queryByRole("button", { name: "+ Add another example" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "+ Добавить пример" })).not.toBeInTheDocument();
   });
 
   it("shows each suggested template with the reason it was picked", async () => {
     const user = userEvent.setup();
     renderModal();
 
-    await screen.findByText("AI Policy Suggestion");
-    fireEvent.change(screen.getByPlaceholderText(/Block PII leakage/), { target: { value: "block PII" } });
+    await screen.findByText("Предложение политики ИИ");
+    fireEvent.change(screen.getByPlaceholderText(/блокировать утечку ПДн/), { target: { value: "block PII" } });
     await pickModel(user);
     await user.click(screen.getByRole("button", { name: "Suggest Policies" }));
 
@@ -153,26 +153,26 @@ describe("AiSuggestionModal", () => {
     const user = userEvent.setup();
     renderModal();
 
-    await screen.findByText("AI Policy Suggestion");
-    fireEvent.change(screen.getByPlaceholderText(/Block PII leakage/), { target: { value: "block PII" } });
+    await screen.findByText("Предложение политики ИИ");
+    fireEvent.change(screen.getByPlaceholderText(/блокировать утечку ПДн/), { target: { value: "block PII" } });
     await pickModel(user);
     await user.click(screen.getByRole("button", { name: "Suggest Policies" }));
 
-    expect(await screen.findByRole("button", { name: "Use 2 Selected Templates" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Использовать 2 выбранный шаблон" })).toBeInTheDocument();
   });
 
   it("deselecting a suggestion lowers the confirm count", async () => {
     const user = userEvent.setup();
     renderModal();
 
-    await screen.findByText("AI Policy Suggestion");
-    fireEvent.change(screen.getByPlaceholderText(/Block PII leakage/), { target: { value: "block PII" } });
+    await screen.findByText("Предложение политики ИИ");
+    fireEvent.change(screen.getByPlaceholderText(/блокировать утечку ПДн/), { target: { value: "block PII" } });
     await pickModel(user);
     await user.click(screen.getByRole("button", { name: "Suggest Policies" }));
 
     await user.click(await screen.findByText("PII Protection"));
 
-    expect(await screen.findByRole("button", { name: "Use 1 Selected Template" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Использовать 1 выбранный шаблон" })).toBeInTheDocument();
   });
 
   it("hands the selected templates back to the caller", async () => {
@@ -180,11 +180,11 @@ describe("AiSuggestionModal", () => {
     const user = userEvent.setup();
     renderModal({ onSelectTemplates });
 
-    await screen.findByText("AI Policy Suggestion");
-    fireEvent.change(screen.getByPlaceholderText(/Block PII leakage/), { target: { value: "block PII" } });
+    await screen.findByText("Предложение политики ИИ");
+    fireEvent.change(screen.getByPlaceholderText(/блокировать утечку ПДн/), { target: { value: "block PII" } });
     await pickModel(user);
     await user.click(screen.getByRole("button", { name: "Suggest Policies" }));
-    await user.click(await screen.findByRole("button", { name: "Use 2 Selected Templates" }));
+    await user.click(await screen.findByRole("button", { name: "Использовать 2 выбранный шаблон" }));
 
     expect(onSelectTemplates).toHaveBeenCalledTimes(1);
     expect(onSelectTemplates.mock.calls[0][0].map((t: { id: string }) => t.id)).toEqual(["tpl-pii", "tpl-inj"]);
@@ -194,11 +194,11 @@ describe("AiSuggestionModal", () => {
     const user = userEvent.setup();
     renderModal();
 
-    await screen.findByText("AI Policy Suggestion");
-    fireEvent.change(screen.getByPlaceholderText(/Block PII leakage/), { target: { value: "block PII" } });
+    await screen.findByText("Предложение политики ИИ");
+    fireEvent.change(screen.getByPlaceholderText(/блокировать утечку ПДн/), { target: { value: "block PII" } });
     await pickModel(user);
     await user.click(screen.getByRole("button", { name: "Suggest Policies" }));
-    await user.click(await screen.findByRole("button", { name: "Back" }));
+    await user.click(await screen.findByRole("button", { name: "Назад" }));
 
     expect(
       await screen.findByText("Describe what you want to block and we'll suggest the best policy templates"),
@@ -210,13 +210,13 @@ describe("AiSuggestionModal", () => {
     const user = userEvent.setup();
     renderModal();
 
-    await screen.findByText("AI Policy Suggestion");
-    fireEvent.change(screen.getByPlaceholderText(/Block PII leakage/), { target: { value: "block PII" } });
+    await screen.findByText("Предложение политики ИИ");
+    fireEvent.change(screen.getByPlaceholderText(/блокировать утечку ПДн/), { target: { value: "block PII" } });
     await pickModel(user);
     await user.click(screen.getByRole("button", { name: "Suggest Policies" }));
 
-    expect(await screen.findByText("No matching templates found")).toBeInTheDocument();
-    expect(screen.getByText("Try adjusting your examples or description.")).toBeInTheDocument();
+    expect(await screen.findByText("Шаблон по вашему запросу не найден")).toBeInTheDocument();
+    expect(screen.getByText("Уточните примеры или описание.")).toBeInTheDocument();
   });
 
   it("cancels back to the caller", async () => {
@@ -224,8 +224,8 @@ describe("AiSuggestionModal", () => {
     const user = userEvent.setup();
     renderModal({ onCancel });
 
-    await screen.findByText("AI Policy Suggestion");
-    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    await screen.findByText("Предложение политики ИИ");
+    await user.click(screen.getByRole("button", { name: "Отмена" }));
 
     expect(onCancel).toHaveBeenCalledTimes(1);
   });

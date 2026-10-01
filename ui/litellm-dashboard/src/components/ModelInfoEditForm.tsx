@@ -52,10 +52,10 @@ interface PtuEditField {
 }
 
 const PTU_EDIT_FIELDS: PtuEditField[] = [
-  { name: PTU_COUNT_FIELD, label: "PTU Count", input: "number", placeholder: "e.g. 15", isCount: true },
-  { name: PTU_RATE_FIELD, label: "Cost per PTU / Hour (USD)", input: "number", placeholder: "e.g. 2.00" },
-  { name: PTU_START_FIELD, label: "PTU Effective From (UTC)", input: "datetime" },
-  { name: PTU_END_FIELD, label: "PTU Effective To (UTC)", input: "datetime" },
+  { name: PTU_COUNT_FIELD, label: "Количество PTU", input: "number", placeholder: "напр. 15", isCount: true },
+  { name: PTU_RATE_FIELD, label: "Стоимость PTU / час (USD)", input: "number", placeholder: "напр. 2.00" },
+  { name: PTU_START_FIELD, label: "PTU действует с (UTC)", input: "datetime" },
+  { name: PTU_END_FIELD, label: "PTU действует по (UTC)", input: "datetime" },
 ];
 
 export type TouchedPricingField = "input_cost" | "output_cost" | "cache_read_cost" | "cache_write_cost";
@@ -165,7 +165,7 @@ const buildSchema = (ptuEnabled: boolean, isFieldTouched: (field: TouchedPricing
     }
 
     if (!isPositiveWholePtuCount(values.ptu_count)) {
-      reject("ptu_count", `PTU Count must be a whole number between 1 and ${MAX_PTU_COUNT.toLocaleString()}`);
+      reject("ptu_count", `Количество PTU — целое число от 1 до ${MAX_PTU_COUNT.toLocaleString()}`);
     }
     if (!isNonNegativePtuRate(values.cost_per_ptu_per_hour)) {
       reject(
@@ -174,7 +174,7 @@ const buildSchema = (ptuEnabled: boolean, isFieldTouched: (field: TouchedPricing
       );
     }
     if (isFilledPtuValue(values.ptu_count) !== isFilledPtuValue(values.cost_per_ptu_per_hour)) {
-      const message = "PTU Count and Cost per PTU / Hour must be set together";
+      const message = "Количество PTU и стоимость PTU/час задаются вместе";
       reject("ptu_count", message);
       reject("cost_per_ptu_per_hour", message);
     }
@@ -265,7 +265,7 @@ export const toModelEditFormValues = (localModelData: any, isWildcardModel: bool
 const displayCost = (localModelData: any, field: TouchedPricingField): string => {
   const { param, info } = COST_SOURCES[field];
   const rate = localModelData?.litellm_params?.[param] ?? localModelData?.model_info?.[info];
-  return rate != null ? (Number(rate) * 1_000_000).toFixed(4) : "Not Set";
+  return rate != null ? (Number(rate) * 1_000_000).toFixed(4) : "Не задано";
 };
 
 interface ModelInfoEditFormProps {
@@ -319,7 +319,7 @@ const DocsHint: React.FC<{ text: string; href: string }> = ({ text, href }) => (
 
 const ChipList: React.FC<{ values: unknown; emptyLabel: string }> = ({ values, emptyLabel }) => {
   if (!values) {
-    return <>Not Set</>;
+    return <>Не задано</>;
   }
   if (!Array.isArray(values)) {
     return <>{String(values)}</>;
@@ -391,7 +391,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
           {({ value, ...control }) => <Input {...control} value={(value as string) ?? ""} placeholder={placeholder} />}
         </FormField>
       ) : (
-        <Display>{(stored as string) || "Not Set"}</Display>
+        <Display>{(stored as string) || "Не задано"}</Display>
       )}
     </div>
   );
@@ -404,7 +404,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
           {({ value, ...control }) => <NumericalInput {...control} value={value ?? ""} placeholder={placeholder} />}
         </FormField>
       ) : (
-        <Display>{(stored as string) || "Not Set"}</Display>
+        <Display>{(stored as string) || "Не задано"}</Display>
       )}
     </div>
   );
@@ -497,7 +497,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                     <Display>
                       {(ptuField.input === "datetime"
                         ? formatPtuUtcDisplay(localModelData?.model_info?.[ptuField.name])
-                        : localModelData?.model_info?.[ptuField.name]) ?? "Not Set"}
+                        : localModelData?.model_info?.[ptuField.name]) ?? "Не задано"}
                     </Display>
                   )}
                 </div>
@@ -542,12 +542,12 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
             )}
 
             <div>
-              <FieldLabel>Model Access Groups</FieldLabel>
+              <FieldLabel>Группы доступа моделей</FieldLabel>
               {isEditing ? (
                 tagsField(
                   "model_access_group",
                   (modelAccessGroups ?? []).map((group) => ({ value: group, label: group })),
-                  "Select existing groups or type to create new ones",
+                  "Выберите существующие группы или введите новые",
                 )
               ) : (
                 <Display>
@@ -558,7 +558,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
 
             <div>
               <FieldLabel>
-                Guardrails
+                Гардрейлы
                 <DocsHint
                   text="Apply safety guardrails to this model to filter content or enforce policies"
                   href="https://docs.litellm.ai/docs/proxy/guardrails/quick_start"
@@ -568,7 +568,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                 tagsField(
                   "guardrails",
                   guardrailsList.map((name) => ({ value: name, label: name })),
-                  "Select existing guardrails or type to create new ones",
+                  "Выберите существующие гардрейлы или введите новые",
                 )
               ) : (
                 <Display>
@@ -579,7 +579,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
 
             <div>
               <FieldLabel>
-                Attached Knowledge Bases (RAG)
+                Подключённые базы знаний (RAG)
                 <DocsHint
                   text="Vector stores used for RAG. Every request to this model will automatically retrieve context from these knowledge bases."
                   href="https://docs.litellm.ai/docs/completion/knowledgebase"
@@ -592,7 +592,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                       value={value as string[] | undefined}
                       onChange={onChange}
                       accessToken={accessToken || ""}
-                      placeholder="Select knowledge bases (optional)"
+                      placeholder="Выберите базы знаний (необязательно)"
                     />
                   )}
                 </FormField>
@@ -607,12 +607,12 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
             </div>
 
             <div>
-              <FieldLabel>Tags</FieldLabel>
+              <FieldLabel>Теги</FieldLabel>
               {isEditing ? (
                 tagsField(
                   "tags",
                   Object.values(tagsList).map((tag: Tag) => ({ value: tag.name, label: tag.name })),
-                  "Select existing tags or type to create new ones",
+                  "Выберите существующие теги или введите новые",
                 )
               ) : (
                 <Display>
@@ -622,7 +622,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
             </div>
 
             <div>
-              <FieldLabel>Existing Credentials</FieldLabel>
+              <FieldLabel>Существующие учётные данные</FieldLabel>
               {isEditing ? (
                 <FormField control={form.control} name="litellm_credential_name">
                   {({ id, value, onChange, onBlur }) => {
@@ -640,7 +640,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                         onValueChange={(selected: string | null) => onChange(selected ?? "")}
                       >
                         <SelectTrigger id={id} className="w-full" onBlur={onBlur}>
-                          <SelectValue placeholder="Select or search for existing credentials" />
+                          <SelectValue placeholder="Выберите или найдите существующие учётные данные" />
                         </SelectTrigger>
                         <SelectContent>
                           {items.map((item) => (
@@ -660,7 +660,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
 
             {isWildcardModel && (
               <div>
-                <FieldLabel>Health Check Model</FieldLabel>
+                <FieldLabel>Модель проверки доступности</FieldLabel>
                 {isEditing ? (
                   <FormField control={form.control} name="health_check_model">
                     {({ id, value, onChange, onBlur }) => (
@@ -670,7 +670,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                         onValueChange={onChange}
                       >
                         <SelectTrigger id={id} className="w-full" onBlur={onBlur}>
-                          <SelectValue placeholder="Select existing health check model" />
+                          <SelectValue placeholder="Выберите существующую модель проверки доступности" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value={null}>Нет</SelectItem>
@@ -684,7 +684,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                     )}
                   </FormField>
                 ) : (
-                  <Display>{localModelData.model_info?.health_check_model || "Not Set"}</Display>
+                  <Display>{localModelData.model_info?.health_check_model || "Не задано"}</Display>
                 )}
               </div>
             )}
@@ -727,7 +727,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
               </>
             ) : (
               <div>
-                <FieldLabel>Cache Control</FieldLabel>
+                <FieldLabel>Управление кэшем</FieldLabel>
                 <Display>
                   {localModelData.litellm_params?.cache_control_injection_points ? (
                     <div>
@@ -735,8 +735,8 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                       <div className="mt-2">
                         {localModelData.litellm_params.cache_control_injection_points.map((point: any, i: number) => (
                           <div key={i} className="mb-1 text-sm text-muted-foreground">
-                            Location: {point.location},{point.role && <span> Role: {point.role}</span>}
-                            {point.index !== undefined && <span> Index: {point.index}</span>}
+                            Location: {point.location},{point.role && <span> Роль: {point.role}</span>}
+                            {point.index !== undefined && <span> Индекс: {point.index}</span>}
                           </div>
                         ))}
                       </div>
@@ -749,7 +749,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
             )}
 
             <div>
-              <FieldLabel>Model Info</FieldLabel>
+              <FieldLabel>Сведения о модели</FieldLabel>
               {isEditing ? (
                 <FormField control={form.control} name="model_info">
                   {({ value, ...control }) => (
@@ -772,7 +772,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
 
             <div>
               <FieldLabel>
-                LiteLLM Params
+                Параметры LiteLLM
                 <DocsHint
                   text="Optional litellm params used for making a litellm.completion() call. Some params are automatically added by LiteLLM."
                   href="https://docs.litellm.ai/docs/completion/input"
@@ -799,8 +799,8 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
             </div>
 
             <div>
-              <FieldLabel>Team ID</FieldLabel>
-              <Display>{modelData.model_info.team_id || "Not Set"}</Display>
+              <FieldLabel>ID команды</FieldLabel>
+              <Display>{modelData.model_info.team_id || "Не задано"}</Display>
             </div>
           </div>
 

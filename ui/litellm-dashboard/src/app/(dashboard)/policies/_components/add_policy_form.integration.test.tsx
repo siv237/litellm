@@ -75,7 +75,7 @@ describe("AddPolicyForm", () => {
     renderWithProviders(<AddPolicyForm {...defaultProps} />);
     await enterSimpleForm(user);
 
-    fireEvent.change(await screen.findByLabelText("Policy Name"), { target: { value: "brand-new-policy" } });
+    fireEvent.change(await screen.findByLabelText("Название политики"), { target: { value: "brand-new-policy" } });
     await user.click(screen.getByRole("button", { name: "Create Policy" }));
 
     await waitFor(() => {
@@ -105,10 +105,10 @@ describe("AddPolicyForm", () => {
     renderWithProviders(<AddPolicyForm {...defaultProps} />);
     await enterSimpleForm(user);
 
-    const description = await screen.findByLabelText("Description");
+    const description = await screen.findByLabelText("Описание");
     fireEvent.change(description, { target: { value: "x" } });
     await user.clear(description);
-    fireEvent.change(await screen.findByLabelText("Policy Name"), { target: { value: "blank-description" } });
+    fireEvent.change(await screen.findByLabelText("Название политики"), { target: { value: "blank-description" } });
     await user.click(screen.getByRole("button", { name: "Create Policy" }));
 
     await waitFor(() => {
@@ -142,7 +142,7 @@ describe("AddPolicyForm", () => {
   it("should keep the policy name field disabled while editing", async () => {
     renderWithProviders(<AddPolicyForm {...defaultProps} editingPolicy={EXISTING_POLICY} />);
 
-    expect(await screen.findByLabelText("Policy Name")).toBeDisabled();
+    expect(await screen.findByLabelText("Название политики")).toBeDisabled();
   });
 
   it("should block submission and call neither api when the policy name is missing", async () => {
@@ -162,7 +162,7 @@ describe("AddPolicyForm", () => {
     renderWithProviders(<AddPolicyForm {...defaultProps} />);
     await enterSimpleForm(user);
 
-    fireEvent.change(await screen.findByLabelText("Policy Name"), { target: { value: "not a valid name!" } });
+    fireEvent.change(await screen.findByLabelText("Название политики"), { target: { value: "not a valid name!" } });
     await user.click(screen.getByRole("button", { name: "Create Policy" }));
 
     expect(
@@ -175,13 +175,13 @@ describe("AddPolicyForm", () => {
     const user = userEvent.setup();
     renderWithProviders(<AddPolicyForm {...defaultProps} editingPolicy={EXISTING_POLICY} />);
 
-    expect(await screen.findByLabelText("Model (Optional)")).toBeInTheDocument();
+    expect(await screen.findByLabelText("Модель (необязательно)")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("radio", { name: "Custom Regex Pattern" }));
+    await user.click(screen.getByRole("radio", { name: "Свой шаблон regex" }));
 
-    const regexField = await screen.findByLabelText("Regex Pattern (Optional)");
+    const regexField = await screen.findByLabelText("Шаблон regex (необязательно)");
     expect(regexField).toHaveValue("");
-    expect(screen.queryByLabelText("Model (Optional)")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Модель (необязательно)")).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Update Policy" }));
 
@@ -197,10 +197,10 @@ describe("AddPolicyForm", () => {
     const onOpenFlowBuilder = vi.fn();
     renderWithProviders(<AddPolicyForm {...defaultProps} onClose={onClose} onOpenFlowBuilder={onOpenFlowBuilder} />);
 
-    await user.click(await screen.findByText("Flow Builder"));
+    await user.click(await screen.findByText("Конструктор потока"));
 
     expect(
-      screen.getByText("You'll be taken to the Flow Builder to design your policy logic visually."),
+      screen.getByText("Вы перейдёте в конструктор потока, чтобы задать логику политики визуально."),
     ).toBeInTheDocument();
     expect(screen.queryByText(/full-screen/i)).not.toBeInTheDocument();
 

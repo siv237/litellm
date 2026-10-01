@@ -83,16 +83,16 @@ describe("KeyAutoRouterUsageTab", () => {
     renderWithProviders(<KeyAutoRouterUsageTab accessToken="test-token" keyToken="key-hash-1" activity={activity} />);
 
     expect(await screen.findByText("$8.75")).toBeInTheDocument();
-    expect(screen.getByText("Actual auto-router spend")).toBeInTheDocument();
+    expect(screen.getByText("Фактический расход автомаршрутизатора")).toBeInTheDocument();
     expect(screen.getByText("$1.25")).toBeInTheDocument();
-    expect(screen.getByText("LLM spend")).toBeInTheDocument();
+    expect(screen.getByText("Расход LLM")).toBeInTheDocument();
     expect(screen.getByText("$1.00")).toBeInTheDocument();
-    expect(screen.getByText("Classification cost")).toBeInTheDocument();
+    expect(screen.getByText("Стоимость классификации")).toBeInTheDocument();
     expect(screen.getByText("$0.2500")).toBeInTheDocument();
     expect(screen.getByText("($62.50 / 1K turns)")).toBeInTheDocument();
-    expect(screen.getByText("Estimated spend at highest-tier model")).toBeInTheDocument();
+    expect(screen.getByText("Оценка расходов на модели самого дорогого уровня")).toBeInTheDocument();
     expect(screen.getByText("$10.00")).toBeInTheDocument();
-    expect(screen.getByText("Auto-router prompt caching")).toBeInTheDocument();
+    expect(screen.getByText("Кэширование промптов автомаршрутизатора")).toBeInTheDocument();
     expect(screen.getAllByText("50.0%").length).toBeGreaterThan(0);
     expect(screen.getByText("All auto-routers")).toBeInTheDocument();
 
