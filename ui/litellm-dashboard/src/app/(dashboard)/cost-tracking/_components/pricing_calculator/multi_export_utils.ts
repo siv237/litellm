@@ -21,33 +21,33 @@ const generateModelSection = (result: CostEstimateResponse): string => {
       <h3>${result.model} ${result.provider ? `<span class="provider">(${result.provider})</span>` : ""}</h3>
       
       <div class="meta">
-        <p><strong>Input Tokens per Request:</strong> ${formatRequestsForExport(result.input_tokens)}</p>
-        <p><strong>Output Tokens per Request:</strong> ${formatRequestsForExport(result.output_tokens)}</p>
-        ${result.num_requests_per_day ? `<p><strong>Requests per Day:</strong> ${formatRequestsForExport(result.num_requests_per_day)}</p>` : ""}
-        ${result.num_requests_per_month ? `<p><strong>Requests per Month:</strong> ${formatRequestsForExport(result.num_requests_per_month)}</p>` : ""}
+        <p><strong>Входных токенов на запрос:</strong> ${formatRequestsForExport(result.input_tokens)}</p>
+        <p><strong>Выходных токенов на запрос:</strong> ${formatRequestsForExport(result.output_tokens)}</p>
+        ${result.num_requests_per_day ? `<p><strong>Запросов в день:</strong> ${formatRequestsForExport(result.num_requests_per_day)}</p>` : ""}
+        ${result.num_requests_per_month ? `<p><strong>Запросов в месяц:</strong> ${formatRequestsForExport(result.num_requests_per_month)}</p>` : ""}
       </div>
 
       <table>
         <tr>
-          <th>Cost Type</th>
-          <th>Per Request</th>
-          ${result.daily_cost !== null ? "<th>Daily</th>" : ""}
-          ${result.monthly_cost !== null ? "<th>Monthly</th>" : ""}
+          <th>Тип стоимости</th>
+          <th>На запрос</th>
+          ${result.daily_cost !== null ? "<th >В день</th>" : ""}
+          ${result.monthly_cost !== null ? "<th >В месяц</th>" : ""}
         </tr>
         <tr>
-          <td>Input Cost</td>
+          <td>Стоимость входа</td>
           <td class="cost-value">${formatCostForExport(result.input_cost_per_request)}</td>
           ${result.daily_cost !== null ? `<td class="cost-value">${formatCostForExport(result.daily_input_cost)}</td>` : ""}
           ${result.monthly_cost !== null ? `<td class="cost-value">${formatCostForExport(result.monthly_input_cost)}</td>` : ""}
         </tr>
         <tr>
-          <td>Output Cost</td>
+          <td>Стоимость выхода</td>
           <td class="cost-value">${formatCostForExport(result.output_cost_per_request)}</td>
           ${result.daily_cost !== null ? `<td class="cost-value">${formatCostForExport(result.daily_output_cost)}</td>` : ""}
           ${result.monthly_cost !== null ? `<td class="cost-value">${formatCostForExport(result.monthly_output_cost)}</td>` : ""}
         </tr>
         <tr>
-          <td>Margin/Fee</td>
+          <td>Надбавка/комиссия</td>
           <td class="cost-value">${formatCostForExport(result.margin_cost_per_request)}</td>
           ${result.daily_cost !== null ? `<td class="cost-value">${formatCostForExport(result.daily_margin_cost)}</td>` : ""}
           ${result.monthly_cost !== null ? `<td class="cost-value">${formatCostForExport(result.monthly_margin_cost)}</td>` : ""}
@@ -77,7 +77,7 @@ export const exportMultiToPDF = (multiResult: MultiModelResult): void => {
     <!DOCTYPE html>
     <html>
     <head>
-      <title>Multi-Model Cost Estimate Report</title>
+      <title>Отчёт оценки стоимости (несколько моделей)</title>
       <style>
         body {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -193,22 +193,22 @@ export const exportMultiToPDF = (multiResult: MultiModelResult): void => {
       </style>
     </head>
     <body>
-      <h1>LLM Cost Estimate Report</h1>
-      <p style="color: #666; margin-top: -20px; margin-bottom: 30px;">${modelCount} model${modelCount !== 1 ? "s" : ""} configured</p>
+      <h1>Отчёт оценки стоимости LLM</h1>
+      <p style="color: #666; margin-top: -20px; margin-bottom: 30px;">${modelCount} ${modelCount !== 1 ? "моделей" : "модель"} в расчёте</p>
       
       <div class="summary-box">
-        <h2>Combined Totals</h2>
+        <h2>Итоги суммарно</h2>
         <div class="summary-grid">
           <div class="summary-item">
-            <div class="label">Total Per Request</div>
+            <div class="label">Итого на запрос</div>
             <div class="value blue">${formatCostForExport(multiResult.totals.cost_per_request)}</div>
           </div>
           <div class="summary-item">
-            <div class="label">Total Daily</div>
+            <div class="label">Итого в день</div>
             <div class="value green">${formatCostForExport(multiResult.totals.daily_cost)}</div>
           </div>
           <div class="summary-item">
-            <div class="label">Total Monthly</div>
+            <div class="label">Итого в месяц</div>
             <div class="value purple">${formatCostForExport(multiResult.totals.monthly_cost)}</div>
           </div>
         </div>
@@ -217,15 +217,15 @@ export const exportMultiToPDF = (multiResult: MultiModelResult): void => {
             ? `
         <div class="summary-grid" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
           <div class="summary-item">
-            <div class="label">Margin/Request</div>
+            <div class="label">Надбавка на запрос</div>
             <div class="value" style="color: #faad14;">${formatCostForExport(multiResult.totals.margin_per_request)}</div>
           </div>
           <div class="summary-item">
-            <div class="label">Daily Margin</div>
+            <div class="label">Надбавка в день</div>
             <div class="value" style="color: #faad14;">${formatCostForExport(multiResult.totals.daily_margin)}</div>
           </div>
           <div class="summary-item">
-            <div class="label">Monthly Margin</div>
+            <div class="label">Надбавка в месяц</div>
             <div class="value" style="color: #faad14;">${formatCostForExport(multiResult.totals.monthly_margin)}</div>
           </div>
         </div>
@@ -234,11 +234,11 @@ export const exportMultiToPDF = (multiResult: MultiModelResult): void => {
         }
       </div>
 
-      <h2>Model Breakdown</h2>
+      <h2>Разбивка по моделям</h2>
       ${validEntries.map((e) => generateModelSection(e.result!)).join("")}
 
       <div class="footer">
-        <p>Generated by LiteLLM Pricing Calculator on ${new Date().toLocaleString()}</p>
+        <p>Сформировано калькулятором стоимости LiteLLM ${new Date().toLocaleString()}</p>
       </div>
     </body>
     </html>

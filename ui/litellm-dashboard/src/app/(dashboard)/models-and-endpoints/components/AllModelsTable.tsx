@@ -33,13 +33,13 @@ export const WILDCARD_MODEL_GROUP_VALUE = "wildcard";
 const MODEL_TABLE_BODY_HEIGHT = 600;
 
 const FILTER_LABELS: Record<string, string> = {
-  [MODEL_NAME_COLUMN_ID]: "Public Model Name",
-  [ACCESS_GROUPS_COLUMN_ID]: "Model Access Group",
+  [MODEL_NAME_COLUMN_ID]: "Публичное название модели",
+  [ACCESS_GROUPS_COLUMN_ID]:  "Группа доступа модели",
 };
 
 const VIEW_MODE_LABELS: Record<ModelViewMode, string> = {
-  current_team: "Current Team Models",
-  all: "All Available Models",
+  current_team: "Модели текущей команды",
+  all: "Все доступные модели",
 };
 
 export interface ModelsTableTeamOption {
@@ -86,9 +86,9 @@ function EmptyState() {
       <div className="mb-1 flex size-11 items-center justify-center rounded-xl bg-muted">
         <Search className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-base font-semibold text-foreground">No models found</div>
+      <div className="text-base font-semibold text-foreground">Модели не найдены</div>
       <div className="max-w-80 text-sm text-muted-foreground">
-        No models match your search or filters. Try resetting them.
+        Ни одна модель не подходит под поиск или фильтры. Попробуйте сбросить их.
       </div>
     </div>
   );
@@ -143,8 +143,8 @@ export function AllModelsTable({
 
   const modelGroupOptions = useMemo(
     () => [
-      { label: "All Models", value: ALL_MODEL_GROUPS_VALUE },
-      { label: "Wildcard Models (*)", value: WILDCARD_MODEL_GROUP_VALUE },
+      { label:  "Все модели", value: ALL_MODEL_GROUPS_VALUE },
+      { label:  "Модели с маской (*)", value: WILDCARD_MODEL_GROUP_VALUE },
       ...availableModelGroups.map((group) => ({ label: group, value: group })),
     ],
     [availableModelGroups],
@@ -152,7 +152,7 @@ export function AllModelsTable({
 
   const accessGroupOptions = useMemo(
     () => [
-      { label: "All Model Access Groups", value: ALL_MODEL_GROUPS_VALUE },
+      { label: "Все группы доступа моделей", value: ALL_MODEL_GROUPS_VALUE },
       ...availableModelAccessGroups.map((accessGroup) => ({ label: accessGroup, value: accessGroup })),
     ],
     [availableModelAccessGroups],
@@ -161,7 +161,7 @@ export function AllModelsTable({
   const formatFilterValue = (columnId: string, value: unknown): string => {
     const raw = String(value);
     if (columnId === MODEL_NAME_COLUMN_ID && raw === WILDCARD_MODEL_GROUP_VALUE) {
-      return "Wildcard Models (*)";
+      return  "Модели с маской (*)";
     }
     return raw;
   };
@@ -209,7 +209,7 @@ export function AllModelsTable({
             <Select value={selectedTeamValue} onValueChange={(value) => onTeamChange(String(value))}>
               <SelectTrigger
                 size="sm"
-                aria-label="Current team"
+                aria-label="Текущая команда"
                 data-testid="models-team-select"
                 className="gap-2 bg-secondary"
               >
@@ -239,8 +239,8 @@ export function AllModelsTable({
             </Select>
 
             <Select value={viewMode} onValueChange={(value) => onViewModeChange(value as ModelViewMode)}>
-              <SelectTrigger size="sm" aria-label="View" data-testid="models-view-select" className="gap-2">
-                <span className="text-muted-foreground">View</span>
+              <SelectTrigger size="sm" aria-label="Вид" data-testid="models-view-select" className="gap-2">
+                <span className="text-muted-foreground">Вид</span>
                 <span className="truncate">{VIEW_MODE_LABELS[viewMode]}</span>
               </SelectTrigger>
               <SelectContent>
@@ -254,8 +254,8 @@ export function AllModelsTable({
             <Button
               variant="outline"
               size="icon-sm"
-              aria-label="Model Settings"
-              title="Model Settings"
+              aria-label="Настройки моделей"
+              title="Настройки моделей"
               data-testid="models-settings-trigger"
               onClick={onOpenModelSettings}
             >
@@ -266,33 +266,33 @@ export function AllModelsTable({
             table={table}
             open={filtersOpen}
             onOpenChange={setFiltersOpen}
-            title="Filters"
-            description="Narrow down models + endpoints"
-            resetLabel="Reset Filters"
+            title="Фильтры"
+            description="Отфильтровать модели и эндпоинты"
+            resetLabel="Сбросить фильтры"
             onReset={onResetFilters}
           >
             {({ get, set }) => (
               <>
-                <DataTableFilterField label="Public Model Name">
+                <DataTableFilterField label="Публичное название модели">
                   <SearchSelect
                     options={modelGroupOptions}
                     value={(get(MODEL_NAME_COLUMN_ID) as string) ?? ALL_MODEL_GROUPS_VALUE}
                     onValueChange={(value) =>
                       set(MODEL_NAME_COLUMN_ID, value === ALL_MODEL_GROUPS_VALUE ? undefined : value ?? undefined)
                     }
-                    placeholder="Filter by Public Model Name"
-                    emptyText="No models found"
+                    placeholder="Фильтр по названию модели"
+                    emptyText="Модели не найдены"
                   />
                 </DataTableFilterField>
-                <DataTableFilterField label="Model Access Group">
+                <DataTableFilterField label= "Группа доступа модели">
                   <SearchSelect
                     options={accessGroupOptions}
                     value={(get(ACCESS_GROUPS_COLUMN_ID) as string) ?? ALL_MODEL_GROUPS_VALUE}
                     onValueChange={(value) =>
                       set(ACCESS_GROUPS_COLUMN_ID, value === ALL_MODEL_GROUPS_VALUE ? undefined : value ?? undefined)
                     }
-                    placeholder="Filter by Model Access Group"
-                    emptyText="No model access groups found"
+                    placeholder="Фильтр по группе доступа модели"
+                    emptyText="Группы доступа моделей не найдены"
                   />
                 </DataTableFilterField>
               </>

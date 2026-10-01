@@ -152,7 +152,7 @@ describe("AllModelsTab", () => {
     render(<AllModelsTab {...defaultProps} />);
 
     expect(await screen.findByText("gpt-4")).toBeInTheDocument();
-    expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-50 of 137");
+    expect(screen.getByTestId("pagination-range")).toHaveTextContent("Показано 1-50 из 137");
   });
 
   it("does not re-query after the mount-time debounced search settles unchanged", async () => {
@@ -168,7 +168,7 @@ describe("AllModelsTab", () => {
     setModelsInfo([], 0);
     render(<AllModelsTab {...defaultProps} />);
 
-    expect(screen.getByText("No models found")).toBeInTheDocument();
+    expect(screen.getByText("Модели не найдены")).toBeInTheDocument();
   });
 
   it("shows the loading skeleton while the first page is in flight", () => {
@@ -176,7 +176,7 @@ describe("AllModelsTab", () => {
     render(<AllModelsTab {...defaultProps} />);
 
     expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
-    expect(screen.queryByText("No models found")).not.toBeInTheDocument();
+    expect(screen.queryByText("Модели не найдены")).not.toBeInTheDocument();
   });
 
   describe("server sort contract", () => {
@@ -259,7 +259,7 @@ describe("AllModelsTab", () => {
     render(<AllModelsTab {...defaultProps} />);
 
     await user.click(screen.getByTestId("datatable-filters-trigger"));
-    await user.click(await screen.findByPlaceholderText("Filter by Public Model Name"));
+    await user.click(await screen.findByPlaceholderText("Фильтр по названию модели"));
     await user.click(await screen.findByRole("option", { name: "gpt-3.5-turbo" }));
     await user.click(screen.getByTestId("filter-drawer-apply"));
 
@@ -275,7 +275,7 @@ describe("AllModelsTab", () => {
     const table = screen.getByRole("table");
     expect(within(table).getByText("claude-opus")).toBeInTheDocument();
     expect(within(table).getByText("gpt-4")).toBeInTheDocument();
-    expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-2 of 2");
+    expect(screen.getByTestId("pagination-range")).toHaveTextContent("Показано 1-2 из 2");
   });
 
   it("asks the server for wildcard deployments instead of hiding rows client-side", () => {
@@ -284,7 +284,7 @@ describe("AllModelsTab", () => {
 
     expect(lastModelsInfoCall().wildcardOnly).toBe(true);
     expect(within(screen.getByRole("table")).getByText("gpt-4")).toBeInTheDocument();
-    expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-2 of 2");
+    expect(screen.getByTestId("pagination-range")).toHaveTextContent("Показано 1-2 из 2");
   });
 
   it("asks the server for the selected access group instead of hiding rows client-side", async () => {
@@ -293,13 +293,13 @@ describe("AllModelsTab", () => {
     expect(lastModelsInfoCall().wildcardOnly).toBe(false);
 
     await user.click(screen.getByTestId("datatable-filters-trigger"));
-    await user.click(await screen.findByPlaceholderText("Filter by Model Access Group"));
+    await user.click(await screen.findByPlaceholderText("Фильтр по группе доступа модели"));
     await user.click(await screen.findByRole("option", { name: "sales-team" }));
     await user.click(screen.getByTestId("filter-drawer-apply"));
 
     await waitFor(() => expect(lastModelsInfoCall().accessGroup).toBe("sales-team"));
     expect(within(screen.getByRole("table")).getByText("gpt-4")).toBeInTheDocument();
-    expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-1 of 1");
+    expect(screen.getByTestId("pagination-range")).toHaveTextContent("Показано 1-1 из 1");
   });
 
   it("asks the server for the exact selected model group so deployments beyond the first page are found", () => {
@@ -432,7 +432,7 @@ describe("AllModelsTab", () => {
       render(<AllModelsTab {...defaultProps} />);
 
       await user.click(screen.getByTestId("models-view-select"));
-      await user.click(await screen.findByRole("option", { name: "All Available Models" }));
+      await user.click(await screen.findByRole("option", { name: "Все доступные модели" }));
 
       await waitFor(() => {
         expect(screen.queryByText(/create a Virtual Key/i)).not.toBeInTheDocument();

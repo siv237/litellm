@@ -71,26 +71,26 @@ function ModelInformationCell({ model, displayName }: { model: ModelData; displa
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
             {model.provider ? <ProviderLogo provider={model.provider} className="size-4 shrink-0" /> : null}
-            <span className="truncate text-xs text-muted-foreground">{model.provider || "Unknown provider"}</span>
+            <span className="truncate text-xs text-muted-foreground">{model.provider || "Провайдер неизвестен"}</span>
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-xs text-muted-foreground">Public Model Name</span>
+            <span className="text-xs text-muted-foreground">Публичное название модели</span>
             <span className="truncate text-sm font-medium text-foreground" title={displayName}>
               {displayName}
             </span>
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-xs text-muted-foreground">LiteLLM Model Name</span>
+            <span className="text-xs text-muted-foreground">Название модели LiteLLM</span>
             <span className="flex min-w-0 items-center gap-1.5">
               <span className="truncate font-mono text-sm text-foreground" title={litellmModelName}>
                 {litellmModelName}
               </span>
               <button
                 type="button"
-                aria-label="Copy LiteLLM model name"
+                aria-label="Скопировать название модели LiteLLM"
                 data-testid={`copy-litellm-model-name-${model.model_info.id}`}
                 className="shrink-0 cursor-pointer text-muted-foreground hover:text-foreground"
-                onClick={() => void copyToClipboard(litellmModelName, "LiteLLM model name copied")}
+                onClick={() => void copyToClipboard(litellmModelName, "Название модели LiteLLM скопировано")}
               >
                 <Copy className="size-3.5" />
               </button>
@@ -105,13 +105,13 @@ function ModelInformationCell({ model, displayName }: { model: ModelData; displa
 function CredentialsHeader() {
   return (
     <span className="flex items-center gap-1">
-      Credentials
+      Учётные данные
       <HoverCard>
         <HoverCardTrigger
           render={
             <button
               type="button"
-              aria-label="About credential types"
+              aria-label="О типах учётных данных"
               data-testid="credentials-header-info"
               className="cursor-pointer text-muted-foreground hover:text-foreground"
             />
@@ -121,23 +121,23 @@ function CredentialsHeader() {
         </HoverCardTrigger>
         <HoverCardContent align="start" className="w-80">
           <div className="flex flex-col gap-3">
-            <span className="text-sm font-medium text-foreground">Credential types</span>
+            <span className="text-sm font-medium text-foreground">Типы учётных данных</span>
             <div className="flex flex-col gap-1">
               <span className="flex items-center gap-1.5 text-sm font-medium text-info">
                 <RefreshCw className="size-3.5" />
-                Reusable
+                Переиспользуемые
               </span>
               <span className="text-xs text-muted-foreground">
-                Credentials saved in LiteLLM that can be added to models repeatedly.
+                Учётные данные, сохранённые в LiteLLM, которые можно многократно добавлять к моделям.
               </span>
             </div>
             <div className="flex flex-col gap-1">
               <span className="flex items-center gap-1.5 text-sm font-medium text-foreground">
                 <Pencil className="size-3.5" />
-                Manual
+                Вручную
               </span>
               <span className="text-xs text-muted-foreground">
-                Credentials added directly during model creation or defined in the config file.
+                Учётные данные, добавленные напрямую при создании модели или заданные в файле конфигурации.
               </span>
             </div>
           </div>
@@ -152,7 +152,7 @@ function CredentialsCell({ credentialName }: { credentialName: string | undefine
     return (
       <Badge variant="outline" className="gap-1 font-normal text-muted-foreground">
         <Pencil className="size-3" />
-        Manual
+        Вручную
       </Badge>
     );
   }
@@ -168,8 +168,8 @@ function CredentialsCell({ credentialName }: { credentialName: string | undefine
 function CreatedByCell({ model }: { model: ModelData }) {
   const isConfigModel = !model.model_info?.db_model;
   const createdAt = formatShortDate(model.model_info.created_at);
-  const primary = isConfigModel ? "Defined in config" : model.model_info.created_by || "Unknown";
-  const secondaryForDbModel = createdAt ?? "Unknown date";
+  const primary = isConfigModel ? "Задана в конфигурации" : model.model_info.created_by || "Неизвестно";
+  const secondaryForDbModel = createdAt ?? "Дата неизвестна";
 
   return (
     <div className="flex min-w-0 flex-col gap-0.5">
@@ -190,7 +190,7 @@ function CostsCell({ model }: { model: ModelData }) {
 
   return (
     <CellTooltip
-      content="Cost per 1M tokens"
+      content="Стоимость за 1 млн токенов"
       trigger={
         <div className="flex flex-col gap-0.5 whitespace-nowrap">
           {inputCost != null && (
@@ -234,7 +234,7 @@ function AccessGroupsCell({ accessGroups }: { accessGroups: string[] | null }) {
           }
           trigger={
             <Badge variant="outline" className="shrink-0 cursor-default font-normal">
-              +{overflow.length} more
+              +{overflow.length} ещё
             </Badge>
           }
         />
@@ -318,7 +318,7 @@ function ModelRowActions({
             <Button
               variant="ghost"
               size="icon-sm"
-              aria-label="Delete model"
+              aria-label="Удалить модель"
               data-testid={`model-delete-${modelId}`}
               disabled={isConfigModel || !canEditModel}
               className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
@@ -359,8 +359,8 @@ export const getModelsTableColumns = ({
   {
     id: MODEL_ID_COLUMN_ID,
     accessorFn: (row) => row.model_info.id,
-    meta: { title: "Model ID" },
-    header: "Model ID",
+    meta: { title: "ID модели" },
+    header: "ID модели",
     enableSorting: false,
     size: 140,
     minSize: 90,
@@ -375,8 +375,8 @@ export const getModelsTableColumns = ({
   {
     id: MODEL_NAME_COLUMN_ID,
     accessorFn: (row) => row.model_name ?? "",
-    meta: { title: "Model Information", skeleton: "twoLine" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Model Information" />,
+    meta: { title:  "Сведения о модели", skeleton: "twoLine" },
+    header: ({ column }) => <DataTableSortHeader column={column} title= "Сведения о модели" />,
     enableSorting: true,
     size: 280,
     minSize: 160,
@@ -387,7 +387,7 @@ export const getModelsTableColumns = ({
   {
     id: CREDENTIALS_COLUMN_ID,
     accessorFn: (row) => row.litellm_params?.litellm_credential_name ?? "",
-    meta: { title: "Credentials" },
+    meta: { title: "Учётные данные" },
     header: () => <CredentialsHeader />,
     enableSorting: false,
     size: 180,
@@ -397,8 +397,8 @@ export const getModelsTableColumns = ({
   {
     id: CREATED_BY_COLUMN_ID,
     accessorFn: (row) => row.model_info.created_by ?? "",
-    meta: { title: "Created By", skeleton: "twoLine" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created By" />,
+    meta: { title:  "Создал", skeleton: "twoLine" },
+    header: ({ column }) => <DataTableSortHeader column={column} title= "Создал" />,
     enableSorting: true,
     size: 180,
     minSize: 110,
@@ -407,8 +407,8 @@ export const getModelsTableColumns = ({
   {
     id: UPDATED_AT_COLUMN_ID,
     accessorFn: (row) => row.model_info.updated_at ?? "",
-    meta: { title: "Updated At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Updated At" />,
+    meta: { title: "Обновлено" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Обновлено" />,
     enableSorting: true,
     size: 140,
     minSize: 100,
@@ -417,8 +417,8 @@ export const getModelsTableColumns = ({
   {
     id: COSTS_COLUMN_ID,
     accessorFn: (row) => row.input_cost,
-    meta: { title: "Costs" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Costs" />,
+    meta: { title: "Стоимость" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Стоимость" />,
     enableSorting: true,
     size: 130,
     minSize: 90,
@@ -427,8 +427,8 @@ export const getModelsTableColumns = ({
   {
     id: TEAM_ID_COLUMN_ID,
     accessorFn: (row) => row.model_info.team_id ?? "",
-    meta: { title: "Team ID" },
-    header: "Team ID",
+    meta: { title: "ID команды" },
+    header: "ID команды",
     enableSorting: false,
     size: 140,
     minSize: 90,
@@ -443,8 +443,8 @@ export const getModelsTableColumns = ({
   {
     id: ACCESS_GROUPS_COLUMN_ID,
     accessorFn: (row) => row.model_info.access_groups ?? [],
-    meta: { title: "Model Access Group", skeleton: "chips" },
-    header: "Model Access Group",
+    meta: { title: "Группа доступа модели", skeleton: "chips" },
+    header: "Группа доступа модели",
     enableSorting: false,
     size: 200,
     minSize: 120,
@@ -453,16 +453,16 @@ export const getModelsTableColumns = ({
   {
     id: STATUS_COLUMN_ID,
     accessorFn: (row) => row.model_info.db_model,
-    meta: { title: "Source", skeleton: "badge" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Source" />,
+    meta: { title:  "Источник", skeleton: "badge" },
+    header: ({ column }) => <DataTableSortHeader column={column} title= "Источник" />,
     enableSorting: true,
     size: 140,
     minSize: 100,
     cell: ({ row }) =>
       row.original.model_info.db_model ? (
-        <StatusBadge tone="info" label="DB Model" />
+        <StatusBadge tone="info" label="Модель из БД" />
       ) : (
-        <StatusBadge tone="neutral" label="Config Model" />
+        <StatusBadge tone="neutral" label="Модель из конфигурации" />
       ),
   },
   {
