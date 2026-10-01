@@ -708,7 +708,7 @@ export default function ComplianceUI({
         {/* Top config */}
         <div className="shrink-0 border-b border-border px-6 py-4">
           <div className="mb-3">
-            <h3 className="text-sm font-semibold text-foreground">Test Configuration</h3>
+            <h3 className="text-sm font-semibold text-foreground">Тестовая конфигурация</h3>
             <p className="text-xs text-muted-foreground mt-0.5">
               {canViewPolicies
                 ? "Select policies, guardrails, or both to test against."
@@ -721,7 +721,7 @@ export default function ComplianceUI({
               <>
                 <div className="flex-1 min-w-[200px]">
                   <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide mb-1.5 block">
-                    Policies
+                    Политики
                   </label>
                   {accessToken && (
                     <PolicySelector
@@ -743,7 +743,7 @@ export default function ComplianceUI({
 
             <div className="flex-1 min-w-[200px]">
               <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide mb-1.5 block">
-                Guardrails
+                Гардрейлы
               </label>
               <div className="relative">
                 <button
@@ -760,7 +760,7 @@ export default function ComplianceUI({
                   <div className="absolute z-floating top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg py-1 max-h-52 overflow-y-auto">
                     {guardrailOptions.length === 0 ? (
                       <div className="px-3 py-2 text-xs text-muted-foreground">
-                        No guardrails available. Create guardrails in the Guardrails page.
+                      Нет доступных гардрейлов. Создайте их на странице «Гардрейлы».
                       </div>
                     ) : (
                       guardrailOptions.map((g) => (
@@ -817,7 +817,7 @@ export default function ComplianceUI({
                   onClick={() => batchAbortControllerRef.current?.abort()}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap bg-destructive text-destructive-foreground hover:bg-destructive/80"
                 >
-                  <Square className="w-3.5 h-3.5" /> Stop
+                  <Square className="w-3.5 h-3.5" /> Стоп
                 </button>
               ) : (
                 <button
@@ -826,7 +826,7 @@ export default function ComplianceUI({
                   disabled={selectedPromptIds.size === 0 || disabledPersonalKeyCreation}
                   className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${selectedPromptIds.size === 0 || disabledPersonalKeyCreation ? "bg-muted text-muted-foreground cursor-not-allowed" : "bg-info text-info-foreground hover:bg-info/80"}`}
                 >
-                  <Play className="w-3.5 h-3.5" /> Simulate ({selectedPromptIds.size})
+                  <Play className="w-3.5 h-3.5" /> Симуляция ({selectedPromptIds.size})
                 </button>
               )}
               {isRunning && (
@@ -857,7 +857,7 @@ export default function ComplianceUI({
             <div className="flex-1 overflow-y-auto min-h-0">
               <div className="px-4 pt-4 pb-2">
                 <div className="flex items-center justify-between mb-2.5">
-                  <h3 className="text-sm font-semibold text-foreground">Test Prompts</h3>
+                  <h3 className="text-sm font-semibold text-foreground">Тестовые промпты</h3>
                   <span className="text-[11px] text-muted-foreground tabular-nums">
                     {selectedPromptIds.size}/{totalPromptCount}
                   </span>
@@ -881,7 +881,7 @@ export default function ComplianceUI({
                       onClick={selectAll}
                       className="text-[11px] font-medium text-info hover:text-info/80"
                     >
-                      Select All
+                      Выбрать все
                     </button>
                     <span className="text-muted-foreground text-[10px]">·</span>
                     <button
@@ -889,7 +889,7 @@ export default function ComplianceUI({
                       onClick={deselectAll}
                       className="text-[11px] font-medium text-muted-foreground hover:text-foreground"
                     >
-                      Clear
+                      Очистить
                     </button>
                   </div>
                   <div className="flex items-center gap-1">
@@ -933,14 +933,14 @@ export default function ComplianceUI({
                         onClick={() => setNewPromptExpected("fail")}
                         className={`text-[10px] font-semibold px-2 py-0.5 rounded-sm ${newPromptExpected === "fail" ? "bg-destructive/15 text-destructive" : "bg-muted text-muted-foreground"}`}
                       >
-                        Should Fail
+                      Должен не пройти
                       </button>
                       <button
                         type="button"
                         onClick={() => setNewPromptExpected("pass")}
                         className={`text-[10px] font-semibold px-2 py-0.5 rounded-sm ${newPromptExpected === "pass" ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"}`}
                       >
-                        Should Pass
+                      Должен пройти
                       </button>
                     </div>
                     <div className="flex items-center gap-1.5">
@@ -970,25 +970,25 @@ export default function ComplianceUI({
               {showCsvUpload && (
                 <div className="mx-4 mb-2 border border-info/20 bg-info/5 rounded-lg p-3">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[11px] font-semibold text-foreground">Upload CSV Dataset</span>
+                    <span className="text-[11px] font-semibold text-foreground">Загрузка CSV-датасета</span>
                     <button
                       type="button"
                       onClick={downloadCsvTemplate}
                       className="flex items-center gap-1 text-[10px] font-medium text-info hover:text-info/80"
                     >
-                      <Download className="w-3 h-3" /> Download Template
+                      <Download className="w-3 h-3" /> Скачать шаблон
                     </button>
                   </div>
 
                   <div className="mb-2 p-2 bg-card rounded-sm border border-border">
                     <p className="text-[10px] text-muted-foreground leading-relaxed">
-                      <span className="font-semibold text-muted-foreground">Required columns:</span>{" "}
+                      <span className="font-semibold text-muted-foreground">Обязательные колонки:</span>{" "}
                       <code className="bg-muted px-1 rounded-sm text-[10px]">prompt</code>,{" "}
                       <code className="bg-muted px-1 rounded-sm text-[10px]">expected_result</code>{" "}
-                      <span className="text-muted-foreground">(fail or pass)</span>
+                      <span className="text-muted-foreground">(fail или pass)</span>
                     </p>
                     <p className="text-[10px] text-muted-foreground leading-relaxed mt-0.5">
-                      <span className="font-semibold text-muted-foreground">Optional columns:</span>{" "}
+                      <span className="font-semibold text-muted-foreground">Необязательные колонки:</span>{" "}
                       <code className="bg-muted px-1 rounded-sm text-[10px]">framework</code>,{" "}
                       <code className="bg-muted px-1 rounded-sm text-[10px]">category</code>
                     </p>
@@ -1009,7 +1009,7 @@ export default function ComplianceUI({
                     onClick={() => csvInputRef.current?.click()}
                     className="w-full flex items-center justify-center gap-1.5 py-2 border-2 border-dashed border-border rounded-lg text-xs text-muted-foreground hover:border-info hover:text-info transition-colors"
                   >
-                    <Upload className="w-3.5 h-3.5" /> Choose CSV file
+                    <Upload className="w-3.5 h-3.5" /> Выбрать CSV-файл
                   </button>
 
                   {csvError && (
@@ -1215,7 +1215,7 @@ export default function ComplianceUI({
                 <div className="px-5 pt-4 pb-2 shrink-0">
                   {hasAnyConfig ? (
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[11px] font-medium text-muted-foreground">Testing against:</span>
+                      <span className="text-[11px] font-medium text-muted-foreground">Тест против:</span>
                       {selectedPolicies.map((id) => (
                         <span key={id} className="text-[11px] bg-info/10 text-info px-2 py-0.5 rounded-sm font-medium">
                           {policyValueToLabel.get(id) ?? id}
@@ -1235,7 +1235,7 @@ export default function ComplianceUI({
                     </div>
                   ) : (
                     <p className="text-[11px] text-muted-foreground">
-                      No policies or guardrails selected — select above to test against specific rules.
+                      Политика или гардрейлы не выбраны — выберите выше, чтобы тестировать против конкретных правил.
                     </p>
                   )}
                 </div>
@@ -1247,7 +1247,7 @@ export default function ComplianceUI({
                         <div className="w-10 h-10 bg-muted rounded-xl flex items-center justify-center mx-auto mb-3">
                           <MessageSquare className="w-5 h-5 text-muted-foreground" />
                         </div>
-                        <p className="text-xs text-muted-foreground">Type a prompt below to quickly test it.</p>
+                        <p className="text-xs text-muted-foreground">Введите промпт ниже, чтобы быстро его протестировать.</p>
                       </div>
                     </div>
                   )}
@@ -1273,7 +1273,7 @@ export default function ComplianceUI({
                           {msg.text}
                           {msg.type === "system" && msg.returnedText != null && (
                             <span className="block mt-1.5 pt-1.5 border-t border-gray-200/60">
-                              <span className="text-muted-foreground">Returned: </span>
+                              <span className="text-muted-foreground">Ответ модели: </span>
                               <span className="font-medium text-foreground break-all">{msg.returnedText}</span>
                             </span>
                           )}
@@ -1304,10 +1304,8 @@ export default function ComplianceUI({
                     />
                     <div className="flex items-center justify-between px-3 pb-2">
                       <span className="text-[10px] text-muted-foreground">
-                        Press <kbd className="px-1 py-0.5 bg-muted rounded-sm text-[10px] font-mono">Enter</kbd> to
-                        submit ·{" "}
-                        <kbd className="px-1 py-0.5 bg-muted rounded-sm text-[10px] font-mono">Shift+Enter</kbd> for new
-                        line
+                        Отправка по <kbd className="px-1 py-0.5 bg-muted rounded-sm text-[10px] font-mono">Enter</kbd>, новая строка —{" "}
+                        <kbd className="px-1 py-0.5 bg-muted rounded-sm text-[10px] font-mono">Shift+Enter</kbd>
                       </span>
                       <span className="text-[10px] text-muted-foreground tabular-nums">{quickTestInput.length}</span>
                     </div>
@@ -1329,7 +1327,7 @@ export default function ComplianceUI({
               <div className="flex-1 flex flex-col overflow-hidden bg-card min-h-0">
                 <div className="px-5 py-3 border-b border-border shrink-0">
                   <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-sm font-semibold text-foreground">Results</h2>
+                    <h2 className="text-sm font-semibold text-foreground">Результаты</h2>
                     {testResults.length > 0 && (
                       <div className="flex items-center gap-2">
                         <button
@@ -1338,7 +1336,7 @@ export default function ComplianceUI({
                           disabled={filteredResults.length === 0}
                           className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-accent px-2 py-1 rounded-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                         >
-                          <Download className="w-3 h-3" /> Export CSV
+                          <Download className="w-3 h-3" /> Экспорт CSV
                         </button>
                         <div className="flex items-center gap-2.5 text-[11px]">
                           <span className="flex items-center gap-1 text-success">
@@ -1347,14 +1345,14 @@ export default function ComplianceUI({
                           </span>
                           <span
                             className="flex items-center gap-1 text-warning"
-                            title="Allowed content that should have been blocked"
+                            title="Разрешённый контент, который следовало заблокировать"
                           >
                             <AlertTriangle className="w-3 h-3" />
                             {falseNegativeCount} FN
                           </span>
                           <span
                             className="flex items-center gap-1 text-destructive"
-                            title="Blocked content that should have been allowed"
+                            title="Заблокированный контент, который следовало разрешить"
                           >
                             <X className="w-3 h-3" />
                             {falsePositiveCount} FP
@@ -1403,7 +1401,7 @@ export default function ComplianceUI({
                           <FlaskConical className="w-6 h-6 text-muted-foreground" />
                         </div>
                         <p className="text-xs text-muted-foreground max-w-[240px]">
-                          Select prompts and click Simulate to run batch compliance tests.
+                          Выберите промпты и нажмите «Симуляция», чтобы запустить пакетный тест соответствия.
                         </p>
                       </div>
                     </div>
@@ -1422,12 +1420,12 @@ export default function ComplianceUI({
                               <span className="text-muted-foreground">correct</span>
                             </span>
                             <div className="w-px h-4 bg-border" />
-                            <span title="Allowed content that should have been blocked">
+                            <span title="Разрешённый контент, который следовало заблокировать">
                               <span className="font-semibold text-warning">{falseNegativeCount}</span>{" "}
                               <span className="text-muted-foreground">false negative</span>
                             </span>
                             <div className="w-px h-4 bg-border" />
-                            <span title="Blocked content that should have been allowed">
+                            <span title="Заблокированный контент, который следовало разрешить">
                               <span className="font-semibold text-destructive">{falsePositiveCount}</span>{" "}
                               <span className="text-muted-foreground">false positive</span>
                             </span>
@@ -1441,7 +1439,7 @@ export default function ComplianceUI({
                                   : "bg-destructive/10 border-destructive/20 text-destructive"
                             }`}
                           >
-                            <span className="text-[10px] font-semibold uppercase tracking-wider opacity-90">Score</span>
+                            <span className="text-[10px] font-semibold uppercase tracking-wider opacity-90">Оценка</span>
                             <span>{Math.round((matchCount / completedResults.length) * 100)}%</span>
                           </div>
                         </div>
@@ -1512,14 +1510,14 @@ export default function ComplianceUI({
                                 <div className="mt-2 pt-2 border-t border-border text-[11px] space-y-1">
                                   {result.triggeredBy && (
                                     <div>
-                                      <span className="text-muted-foreground">Triggered by:</span>{" "}
+                                      <span className="text-muted-foreground">Сработало на:</span>{" "}
                                       <span className="font-medium text-foreground bg-muted px-1.5 py-0.5 rounded-sm">
                                         {result.triggeredBy}
                                       </span>
                                     </div>
                                   )}
                                   <div>
-                                    <span className="text-muted-foreground">Verdict:</span>{" "}
+                                    <span className="text-muted-foreground">Вердикт:</span>{" "}
                                     <span className={result.isMatch ? "text-success" : "text-destructive"}>
                                       {result.isMatch
                                         ? "Correctly handled"
@@ -1530,7 +1528,7 @@ export default function ComplianceUI({
                                   </div>
                                   {result.returnedText != null && result.returnedText !== "" && (
                                     <div className="mt-1.5">
-                                      <span className="text-muted-foreground block mb-0.5">LLM response:</span>
+                                      <span className="text-muted-foreground block mb-0.5">Ответ LLM:</span>
                                       <div className="text-foreground bg-muted rounded-sm px-2 py-1.5 border border-border max-h-32 overflow-y-auto whitespace-pre-wrap wrap-break-word">
                                         {result.returnedText}
                                       </div>

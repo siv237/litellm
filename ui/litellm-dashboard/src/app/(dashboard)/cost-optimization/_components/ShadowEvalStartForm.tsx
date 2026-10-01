@@ -32,8 +32,8 @@ const MAX_MODELS = 100;
 const RECOMMENDED_JUDGE_MODELS = ["anthropic/claude-sonnet-5", "openai/gpt-4o", "gemini/gemini-2.5-pro"] as const;
 
 const DIRECTION_OPTIONS: readonly { value: ShadowEvalDirection; label: string }[] = [
-  { value: "forward", label: "Adoption check: key's traffic vs the router" },
-  { value: "reverse", label: "Regression check: router's picks vs a baseline" },
+  { value: "forward", label: "Проверка внедрения: трафик ключа против маршрутизатора" },
+  { value: "reverse", label: "Проверка регресса: выбор маршрутизатора против базовой линии" },
 ] as const;
 
 const START_FORM_DESCRIPTION: Record<ShadowEvalDirection, string> = {
@@ -92,8 +92,8 @@ const KeySelect: React.FC<{ value: string[]; onChange: (tokens: string[]) => voi
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}
       isLoading={isPending}
-      placeholder="Search keys by alias"
-      emptyText="No matching keys"
+      placeholder="Поиск ключей по псевдониму"
+      emptyText="Совпадающие ключи не найдены"
       errorText={isError ? "Keys could not be loaded. Refresh the page to retry." : undefined}
     />
   );
@@ -127,8 +127,8 @@ const UserSelect: React.FC<{ value: string[]; onChange: (ids: string[]) => void 
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}
       isLoading={isPending}
-      placeholder="Search users by email"
-      emptyText="No matching users"
+      placeholder="Поиск пользователей по email"
+      emptyText="Совпадающие пользователи не найдены"
       errorText={isError ? "Users could not be loaded. Refresh the page to retry." : undefined}
     />
   );
@@ -140,23 +140,23 @@ const RouterField: React.FC<{
   onChange: (names: string[]) => void;
   direction: ShadowEvalDirection;
 }> = ({ options, routerNames, onChange, direction }) => (
-  <Field label="Auto-routers">
+  <Field label="Автомаршрутизаторы">
     <MultiSelect
       options={options}
       value={routerNames}
       onValueChange={onChange}
-      placeholder="Select up to 4 auto-routers"
-      emptyText="No auto-routers configured"
+      placeholder="Выберите до 4 автомаршрутизаторов"
+      emptyText="Автомаршрутизаторы не настроены"
     />
     {routerNames.length > MAX_ROUTERS && (
-      <p className="text-xs text-destructive">Pick at most {MAX_ROUTERS} auto-routers</p>
+      <p className="text-xs text-destructive">Можно выбрать не более {MAX_ROUTERS} автомаршрутизаторов</p>
     )}
     {direction === "reverse" && routerNames.length > 1 && (
-      <p className="text-xs text-destructive">A regression check compares one router to its baseline</p>
+      <p className="text-xs text-destructive">Проверка регресса сравнивает один маршрутизатор с его базовой линией</p>
     )}
     {direction === "forward" && routerNames.length > 1 && (
       <p className="text-xs text-muted-foreground">
-        Every router sees the same sampled requests, judged against the same live responses
+        Каждый маршрутизатор получает одни и те же отобранные запросы, оценка — по тем же ответам в реальном времени
       </p>
     )}
   </Field>
@@ -306,12 +306,12 @@ export const StartForm: React.FC = () => {
   return (
     <Card size="sm">
       <CardHeader>
-        <CardTitle className="text-sm font-medium text-foreground">Start a shadow eval</CardTitle>
+        <CardTitle className="text-sm font-medium text-foreground">Запустить теневую оценку</CardTitle>
         <p className="text-xs text-muted-foreground">{START_FORM_DESCRIPTION[direction]}</p>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="grid gap-3 sm:grid-cols-3">
-          <Field label="Direction">
+          <Field label="Направление">
             <Select
               value={direction}
               onValueChange={(v: string | null) => setDirection(v === "reverse" ? "reverse" : "forward")}
@@ -328,28 +328,28 @@ export const StartForm: React.FC = () => {
               </SelectContent>
             </Select>
           </Field>
-          <Field label="Keys to shadow" htmlFor="shadow-eval-key">
+          <Field label="Ключи для теневой копии" htmlFor="shadow-eval-key">
             <KeySelect value={apiKeyIds} onChange={setApiKeyIds} />
           </Field>
-          <Field label="Teams to shadow">
-            <TeamMultiSelect value={teamIds} onChange={setTeamIds} placeholder="Search teams by alias" />
+          <Field label="Команды для теневой копии">
+            <TeamMultiSelect value={teamIds} onChange={setTeamIds} placeholder="Поиск команд по псевдониму" />
           </Field>
-          <Field label="Users to shadow" htmlFor="shadow-eval-user">
+          <Field label="Пользователи для теневой копии" htmlFor="shadow-eval-user">
             <UserSelect value={userIds} onChange={setUserIds} />
           </Field>
           {direction === "forward" && (
-            <Field label="Only on models">
+            <Field label="Только на моделях">
               <MultiSelect
                 options={modelOptions}
                 value={models}
                 onValueChange={setModels}
-                placeholder="Every model the targets use"
-                emptyText="No models configured"
+                placeholder="Все модели, используемые выбранными объектами"
+                emptyText="Модели не настроены"
               />
               {models.length > MAX_MODELS ? (
-                <p className="text-xs text-destructive">Pick at most {MAX_MODELS} models</p>
+                <p className="text-xs text-destructive">Можно выбрать не более {MAX_MODELS} моделей</p>
               ) : (
-                <p className="text-xs text-muted-foreground">Narrows every target above to requests for these models</p>
+                <p className="text-xs text-muted-foreground">Сужает все выбранные объекты до запросов к этим моделям</p>
               )}
             </Field>
           )}
@@ -359,7 +359,7 @@ export const StartForm: React.FC = () => {
             onChange={setRouterNames}
             direction={direction}
           />
-          <Field label="Traffic sampled" htmlFor="shadow-eval-pct">
+          <Field label="Доля трафика" htmlFor="shadow-eval-pct">
             <div className="flex items-center gap-2">
               <Input
                 id="shadow-eval-pct"
@@ -371,15 +371,15 @@ export const StartForm: React.FC = () => {
                 value={percentage}
                 onChange={(e) => setPercentage(e.target.value)}
               />
-              <span className="text-sm text-muted-foreground">% of traffic</span>
+              <span className="text-sm text-muted-foreground">% трафика</span>
             </div>
             <div>
               {percentage.trim() !== "" && !percentageValid && (
-                <p className="text-xs text-destructive">Enter a value from 0.1 to 100</p>
+                <p className="text-xs text-destructive">Укажите значение от 0,1 до 100</p>
               )}
             </div>
           </Field>
-          <Field label="Duration">
+          <Field label="Длительность">
             <Select value={durationDays} onValueChange={(v: string | null) => setDurationDays(v ?? "7")}>
               <SelectTrigger className="w-full">
                 <SelectValue>{DURATION_OPTIONS.find((o) => o.value === durationDays)?.label}</SelectValue>
@@ -393,7 +393,7 @@ export const StartForm: React.FC = () => {
               </SelectContent>
             </Select>
           </Field>
-          <Field label="Spend budget">
+          <Field label="Бюджет расхода">
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">$</span>
               <Input
@@ -408,27 +408,27 @@ export const StartForm: React.FC = () => {
               <span className="text-sm text-muted-foreground">max shadow + judge spend, per target</span>
             </div>
             {maxBudget.trim() !== "" && !maxBudgetValid && (
-              <p className="text-xs text-destructive">Enter a value from 0.01 to 10000</p>
+              <p className="text-xs text-destructive">Укажите значение от 0,01 до 10000</p>
             )}
           </Field>
           {direction === "reverse" && (
-            <Field label="Baseline model">
+            <Field label="Базовая модель">
               <SearchSelect
                 options={chatOptions}
                 value={baselineModel}
                 onValueChange={setBaselineModel}
-                placeholder="Select a baseline model"
-                emptyText="No chat models available"
+                placeholder="Выберите базовую модель"
+                emptyText="Чат-модели недоступны"
               />
             </Field>
           )}
-          <Field label="Judge model" className="sm:col-span-2">
+          <Field label="Модель-судья" className="sm:col-span-2">
             <SearchSelect
               options={judgeOptions}
               value={judgeModel}
               onValueChange={setJudgeModel}
-              placeholder="Select a judge model"
-              emptyText="No chat models available"
+              placeholder="Выберите модель-судью"
+              emptyText="Чат-модели недоступны"
             />
           </Field>
         </div>

@@ -14,7 +14,7 @@ import { expectControlBesideLabel } from "../../../../../../tests/fieldOrientati
 const user = () => userEvent.setup({ pointerEventsCheck: 0 });
 
 const openProviderDropdown = async () => {
-  await user().click(screen.getByLabelText("SSO Provider"));
+  await user().click(screen.getByLabelText("Провайдер SSO"));
 };
 
 describe("BaseSSOSettingsForm", () => {
@@ -32,9 +32,9 @@ describe("BaseSSOSettingsForm", () => {
 
     renderWithProviders(<TestWrapper />);
 
-    expect(screen.getByText("SSO Provider")).toBeInTheDocument();
-    expect(screen.getByText("Proxy Admin Email")).toBeInTheDocument();
-    expect(screen.getByText("Proxy Base URL")).toBeInTheDocument();
+    expect(screen.getByText("Провайдер SSO")).toBeInTheDocument();
+    expect(screen.getByText("Email администратора прокси")).toBeInTheDocument();
+    expect(screen.getByText("Базовый URL прокси")).toBeInTheDocument();
   });
 
   it("should render provider fields when provider is selected", async () => {
@@ -74,7 +74,7 @@ describe("BaseSSOSettingsForm", () => {
     await user().click(oktaOption);
 
     await waitFor(() => {
-      expect(screen.getByText("Use Role Mappings")).toBeInTheDocument();
+      expect(screen.getByText("Использовать сопоставления ролей")).toBeInTheDocument();
     });
   });
 
@@ -95,7 +95,7 @@ describe("BaseSSOSettingsForm", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText(/URL must start with http:\/\/ or https:\/\//i)).toBeInTheDocument();
+      expect(screen.getByText(/URL должен начинаться с http:\/\/ или https:\/\//i)).toBeInTheDocument();
     });
   });
 
@@ -116,7 +116,7 @@ describe("BaseSSOSettingsForm", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText(/URL must not end with a trailing slash/i)).toBeInTheDocument();
+      expect(screen.getByText(/URL не должен заканчиваться слэшем/i)).toBeInTheDocument();
     });
   });
 
@@ -136,14 +136,14 @@ describe("BaseSSOSettingsForm", () => {
     await user().click(genericOption);
 
     await waitFor(() => {
-      expect(screen.getByText("Use Role Mappings")).toBeInTheDocument();
+      expect(screen.getByText("Использовать сопоставления ролей")).toBeInTheDocument();
     });
 
-    await user().click(screen.getAllByLabelText("Use Role Mappings")[0]);
+    await user().click(screen.getAllByLabelText("Использовать сопоставления ролей")[0]);
 
     await waitFor(() => {
-      expect(screen.getByText("Group Claim")).toBeInTheDocument();
-      expect(screen.getByText("Default Role")).toBeInTheDocument();
+      expect(screen.getByText("Claim группы")).toBeInTheDocument();
+      expect(screen.getByText("Роль по умолчанию")).toBeInTheDocument();
     });
   });
 
@@ -163,7 +163,7 @@ describe("BaseSSOSettingsForm", () => {
     await user().click(oktaOption);
 
     await waitFor(() => {
-      expect(screen.getByText("Use Team Mappings")).toBeInTheDocument();
+      expect(screen.getByText("Использовать сопоставления команд")).toBeInTheDocument();
     });
   });
 
@@ -183,7 +183,7 @@ describe("BaseSSOSettingsForm", () => {
     await user().click(genericOption);
 
     await waitFor(() => {
-      expect(screen.getByText("Use Team Mappings")).toBeInTheDocument();
+      expect(screen.getByText("Использовать сопоставления команд")).toBeInTheDocument();
     });
   });
 
@@ -203,13 +203,13 @@ describe("BaseSSOSettingsForm", () => {
     await user().click(oktaOption);
 
     await waitFor(() => {
-      expect(screen.getByText("Use Team Mappings")).toBeInTheDocument();
+      expect(screen.getByText("Использовать сопоставления команд")).toBeInTheDocument();
     });
 
-    await user().click(screen.getAllByLabelText("Use Team Mappings")[0]);
+    await user().click(screen.getAllByLabelText("Использовать сопоставления команд")[0]);
 
     await waitFor(() => {
-      expect(screen.getByText("Team IDs JWT Field")).toBeInTheDocument();
+      expect(screen.getByText("Поле JWT со списком ID команд")).toBeInTheDocument();
     });
   });
 
@@ -232,7 +232,7 @@ describe("BaseSSOSettingsForm", () => {
       expect(screen.getByText("Google Client ID")).toBeInTheDocument();
     });
 
-    expect(screen.queryByText("Use Team Mappings")).not.toBeInTheDocument();
+    expect(screen.queryByText("Использовать сопоставления команд")).not.toBeInTheDocument();
   });
 
   it("lays a provider checkbox field out beside its label", async () => {
@@ -248,11 +248,11 @@ describe("BaseSSOSettingsForm", () => {
     await user().click(await screen.findByText(/saml sso/i));
 
     expectControlBesideLabel(
-      await screen.findByRole("checkbox", { name: "Allow IdP-initiated (unsolicited) responses" }),
+      await screen.findByRole("checkbox", { name: "Разрешить ответы по инициативе IdP (без запроса)" }),
     );
   });
 
-  it.each(["Use Role Mappings", "Use Team Mappings"])("lays the %s toggle out beside its label", async (label) => {
+  it.each(["Использовать сопоставления ролей", "Использовать сопоставления команд"])("lays the %s toggle out beside its label", async (label) => {
     const TestWrapper = () => {
       const form = useSSOSettingsForm("sso-settings");
 
@@ -433,6 +433,6 @@ describe("renderProviderFields", () => {
       form.reset({ ...emptySSOSettingsFormValues, sso_provider: "okta", use_role_mappings: true });
     });
 
-    expect(await screen.findByLabelText("Default Role")).toHaveTextContent("Internal User");
+    expect(await screen.findByLabelText("Роль по умолчанию")).toHaveTextContent("Внутренний пользователь");
   });
 });

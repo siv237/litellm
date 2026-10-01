@@ -35,15 +35,15 @@ export const AGENT_FORM_CONFIG: {
 } = {
   basic: {
     key: "basic",
-    title: "Basic Information",
+    title: "Основная информация",
     defaultExpanded: true,
     fields: [
       {
         name: "name",
-        label: "Display Name",
+        label: "Отображаемое имя",
         type: "text",
         required: true,
-        placeholder: "e.g., Customer Support Agent",
+        placeholder: "напр., Агент поддержки клиентов",
       },
       {
         name: "description",
@@ -59,23 +59,23 @@ export const AGENT_FORM_CONFIG: {
         type: "url",
         required: false,
         placeholder: "http://localhost:9999/",
-        tooltip: "Base URL where the agent is hosted (optional)",
+        tooltip: "Базовый URL, где размещён агент (необязательно)",
       },
       {
         name: "version",
-        label: "Version",
+        label: "Версия",
         type: "text",
         placeholder: "1.0.0",
         defaultValue: "1.0.0",
       },
       {
         name: "protocolVersion",
-        label: "Protocol Version",
+        label: "Версия протокола",
         type: "select",
         options: ["1.0", "0.3"],
         defaultValue: "1.0",
         tooltip:
-          "The A2A protocol version LiteLLM serves to clients for this agent. LiteLLM converts the upstream agent's responses to this version, so clients always see the version you pick here regardless of the original agent's version.",
+          "Версия протокола A2A, которую LiteLLM отдаёт клиентам для этого агента. LiteLLM преобразует ответы вышестоящего агента к этой версии, поэтому клиенты всегда видят выбранную здесь версию, независимо от версии исходного агента.",
         helpText:
           "LiteLLM serves this version to clients and converts the upstream agent's responses to match it, regardless of the original agent's version.",
       },
@@ -83,11 +83,11 @@ export const AGENT_FORM_CONFIG: {
   },
   skills: {
     key: "skills",
-    title: "Skills",
+    title: "Навыки",
     fields: [
       {
         name: "skills",
-        label: "Skills",
+        label: "Навыки",
         type: "list",
         defaultValue: [],
       },
@@ -95,102 +95,102 @@ export const AGENT_FORM_CONFIG: {
   },
   capabilities: {
     key: "capabilities",
-    title: "Capabilities",
+    title: "Возможности",
     fields: [
       {
         name: "streaming",
-        label: "Streaming",
+        label: "Потоковая передача",
         type: "switch",
         defaultValue: false,
       },
       {
         name: "pushNotifications",
-        label: "Push Notifications",
+        label: "Push-уведомления",
         type: "switch",
       },
       {
         name: "stateTransitionHistory",
-        label: "State Transition History",
+        label: "История переходов состояний",
         type: "switch",
       },
     ],
   },
   optional: {
     key: "optional",
-    title: "Optional Settings",
+    title: "Дополнительные настройки",
     fields: [
       {
         name: "iconUrl",
-        label: "Icon URL",
+        label: "URL значка",
         type: "url",
         placeholder: "https://example.com/icon.png",
       },
       {
         name: "documentationUrl",
-        label: "Documentation URL",
+        label: "URL документации",
         type: "url",
         placeholder: "https://docs.example.com",
       },
       {
         name: "supportsAuthenticatedExtendedCard",
-        label: "Supports Authenticated Extended Card",
+        label: "Поддержка расширенной аутентифицированной карточки",
         type: "switch",
       },
     ],
   },
   litellm: {
     key: "litellm",
-    title: "LiteLLM Parameters",
+    title: "Параметры LiteLLM",
     fields: [
       {
         name: "model",
-        label: "Model (Optional)",
+        label: "Модель (необязательно)",
         type: "text",
       },
       {
         name: "make_public",
-        label: "Make Public",
+        label: "Сделать публичным",
         type: "switch",
       },
     ],
   },
   cost: {
     key: "cost",
-    title: "Cost Configuration",
+    title: "Настройка стоимости",
     fields: [
       {
         name: "cost_per_query",
-        label: "Cost Per Query ($)",
+        label: "Стоимость запроса ($)",
         type: "text",
         placeholder: "0.0",
-        tooltip: "Fixed cost per query",
+        tooltip: "Фиксированная стоимость запроса",
       },
       {
         name: "input_cost_per_token",
-        label: "Input Cost Per Token ($)",
+        label: "Стоимость входного токена ($)",
         type: "text",
         placeholder: "0.000001",
-        tooltip: "Cost per input token",
+        tooltip: "Стоимость входного токена",
       },
       {
         name: "output_cost_per_token",
-        label: "Output Cost Per Token ($)",
+        label: "Стоимость выходного токена ($)",
         type: "text",
         placeholder: "0.000002",
-        tooltip: "Cost per output token",
+        tooltip: "Стоимость выходного токена",
       },
     ],
   },
   tracing: {
     key: "tracing",
-    title: "Tracing",
+    title: "Трассировка",
     fields: [
       {
         name: "enable_tracing",
-        label: "Enable Tracing",
+        label: "Включить трассировку",
         type: "switch",
         defaultValue: false,
-        tooltip: "Enable request tracing for this agent",
+        tooltip: "Включить трассировку запросов для этого агента",
       },
     ],
   },
@@ -199,13 +199,13 @@ export const AGENT_FORM_CONFIG: {
 export const SKILL_FIELD_CONFIG = {
   id: {
     name: "id",
-    label: "Skill ID",
+    label: "ID навыка",
     required: true,
     placeholder: "e.g., hello_world",
   },
   name: {
     name: "name",
-    label: "Skill Name",
+    label: "Название навыка",
     required: true,
     placeholder: "e.g., Returns hello world",
   },
@@ -213,19 +213,19 @@ export const SKILL_FIELD_CONFIG = {
     name: "description",
     label: "Описание",
     required: true,
-    placeholder: "What this skill does",
+    placeholder: "Что делает этот навык",
     rows: 2,
   },
   tags: {
     name: "tags",
-    label: "Tags",
+    label: "Теги",
     required: true,
-    placeholder: "Type a tag and press Enter",
+    placeholder: "Введите тег и нажмите Enter",
   },
   examples: {
     name: "examples",
-    label: "Examples",
-    placeholder: "Type an example and press Enter",
+    label: "Примеры",
+    placeholder: "Введите пример и нажмите Enter",
   },
 };
 

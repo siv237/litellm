@@ -96,17 +96,17 @@ export const ssoProviderConfigs: Record<string, SSOProviderConfig> = {
       { label: "Generic Client ID", name: "generic_client_id" },
       { label: "Generic Client Secret", name: "generic_client_secret" },
       {
-        label: "Authorization Endpoint",
+        label: "Эндпоинт авторизации",
         name: "generic_authorization_endpoint",
         placeholder: "https://your-domain/authorize",
       },
-      { label: "Token Endpoint", name: "generic_token_endpoint", placeholder: "https://your-domain/token" },
+      { label: "Эндпоинт токена", name: "generic_token_endpoint", placeholder: "https://your-domain/token" },
       {
-        label: "Userinfo Endpoint",
+        label: "Эндпоинт данных пользователя",
         name: "generic_userinfo_endpoint",
         placeholder: "https://your-domain/userinfo",
       },
-      { label: "Scopes", name: "generic_scope", placeholder: "openid email profile", required: false },
+      { label: "Области доступа", name: "generic_scope", placeholder: "openid email profile", required: false },
     ],
   },
   generic: {
@@ -121,10 +121,10 @@ export const ssoProviderConfigs: Record<string, SSOProviderConfig> = {
     fields: [
       { label: "Generic Client ID", name: "generic_client_id" },
       { label: "Generic Client Secret", name: "generic_client_secret" },
-      { label: "Authorization Endpoint", name: "generic_authorization_endpoint" },
-      { label: "Token Endpoint", name: "generic_token_endpoint" },
-      { label: "Userinfo Endpoint", name: "generic_userinfo_endpoint" },
-      { label: "Scopes", name: "generic_scope", placeholder: "openid email profile", required: false },
+      { label: "Эндпоинт авторизации", name: "generic_authorization_endpoint" },
+      { label: "Эндпоинт токена", name: "generic_token_endpoint" },
+      { label: "Эндпоинт данных пользователя", name: "generic_userinfo_endpoint" },
+      { label: "Области доступа", name: "generic_scope", placeholder: "openid email profile", required: false },
     ],
   },
   saml: {
@@ -136,26 +136,26 @@ export const ssoProviderConfigs: Record<string, SSOProviderConfig> = {
     },
     fields: [
       {
-        label: "IdP Metadata URL",
+        label: "URL метаданных IdP",
         name: "saml_idp_metadata_url",
         required: false,
         placeholder: "https://idp.example.com/metadata (use this or the metadata XML below)",
       },
       {
-        label: "IdP Metadata XML",
+        label: "XML метаданных IdP",
         name: "saml_idp_metadata_xml",
         required: false,
         type: "textarea",
-        placeholder: "Paste the IdP metadata XML here if you do not have a metadata URL",
+        placeholder: "Вставьте сюда XML метаданных IdP, если у вас нет URL метаданных",
       },
       {
-        label: "SP Entity ID",
+        label: "Идентификатор сущности (SP)",
         name: "saml_sp_entity_id",
         required: false,
         placeholder: "Defaults to <proxy base url>/sso/saml/metadata",
       },
       {
-        label: "Allow IdP-initiated (unsolicited) responses",
+        label: "Разрешить ответы по инициативе IdP (без запроса)",
         name: "saml_allow_unsolicited",
         required: false,
         type: "checkbox",
@@ -258,7 +258,7 @@ export const buildSSOSettingsSchema = (variant: SSOFormVariant) =>
       ctx.addIssue({
         code: "custom",
         path: ["proxy_base_url"],
-        message: "URL must start with http:// or https://",
+        message: "URL должен начинаться с http:// или https://",
       });
       return;
     }
@@ -266,7 +266,7 @@ export const buildSSOSettingsSchema = (variant: SSOFormVariant) =>
       ctx.addIssue({
         code: "custom",
         path: ["proxy_base_url"],
-        message: "URL must not end with a trailing slash",
+        message: "URL не должен заканчиваться слэшем",
       });
     }
   });
@@ -341,7 +341,7 @@ export const SSOProviderSelectField = () => {
   const { control } = useFormContext<SSOSettingsFormValues>();
 
   return (
-    <FormField control={control} name="sso_provider" label="SSO Provider">
+    <FormField control={control} name="sso_provider" label="Провайдер SSO">
       {({ value, onChange, onBlur, id, ...rest }) => (
         <Select value={(value as string) ?? ""} onValueChange={onChange}>
           <SelectTrigger
@@ -379,7 +379,7 @@ export const ProxyAdminEmailField = () => {
   const { control } = useFormContext<SSOSettingsFormValues>();
 
   return (
-    <FormField control={control} name="user_email" label="Proxy Admin Email">
+    <FormField control={control} name="user_email" label="Email администратора прокси">
       {({ ref, value, ...rest }) => <Input ref={ref} value={(value as string) ?? ""} {...rest} />}
     </FormField>
   );
@@ -389,7 +389,7 @@ export const ProxyBaseUrlField = () => {
   const { control } = useFormContext<SSOSettingsFormValues>();
 
   return (
-    <FormField control={control} name="proxy_base_url" label="Proxy Base URL">
+    <FormField control={control} name="proxy_base_url" label="Базовый URL прокси">
       {({ ref, value, onChange, ...rest }) => (
         <Input
           ref={ref}
@@ -432,17 +432,17 @@ export const GroupClaimField = () => {
   const { control } = useFormContext<SSOSettingsFormValues>();
 
   return (
-    <FormField control={control} name="group_claim" label="Group Claim">
+    <FormField control={control} name="group_claim" label="Claim группы">
       {({ ref, value, ...rest }) => <Input ref={ref} value={(value as string) ?? ""} {...rest} />}
     </FormField>
   );
 };
 
 const DEFAULT_ROLE_OPTIONS: ReadonlyArray<{ value: string; label: string }> = [
-  { value: "internal_user_viewer", label: "Internal Viewer" },
-  { value: "internal_user", label: "Internal User" },
-  { value: "proxy_admin_viewer", label: "Admin Viewer" },
-  { value: "proxy_admin", label: "Proxy Admin" },
+  { value: "internal_user_viewer", label: "Внутренний наблюдатель" },
+  { value: "internal_user", label: "Внутренний пользователь" },
+  { value: "proxy_admin_viewer", label: "Наблюдатель администрирования" },
+  { value: "proxy_admin", label: "Администратор прокси" },
 ];
 
 const providerOptionLabel = (value: string) =>
@@ -453,7 +453,7 @@ export const RoleMappingTeamFields = () => {
 
   return (
     <>
-      <FormField control={control} name="default_role" label="Default Role">
+      <FormField control={control} name="default_role" label="Роль по умолчанию">
         {({ value, onChange, onBlur, id, ...rest }) => (
           <Select value={(value as string) ?? ""} onValueChange={onChange}>
             <SelectTrigger
@@ -478,19 +478,19 @@ export const RoleMappingTeamFields = () => {
         )}
       </FormField>
 
-      <FormField control={control} name="proxy_admin_teams" label="Proxy Admin Teams">
+      <FormField control={control} name="proxy_admin_teams" label="Команды администраторов прокси">
         {({ ref, value, ...rest }) => <Input ref={ref} value={(value as string) ?? ""} {...rest} />}
       </FormField>
 
-      <FormField control={control} name="admin_viewer_teams" label="Admin Viewer Teams">
+      <FormField control={control} name="admin_viewer_teams" label="Команды наблюдателей администрирования">
         {({ ref, value, ...rest }) => <Input ref={ref} value={(value as string) ?? ""} {...rest} />}
       </FormField>
 
-      <FormField control={control} name="internal_user_teams" label="Internal User Teams">
+      <FormField control={control} name="internal_user_teams" label="Команды внутренних пользователей">
         {({ ref, value, ...rest }) => <Input ref={ref} value={(value as string) ?? ""} {...rest} />}
       </FormField>
 
-      <FormField control={control} name="internal_viewer_teams" label="Internal Viewer Teams">
+      <FormField control={control} name="internal_viewer_teams" label="Команды внутренних наблюдателей">
         {({ ref, value, ...rest }) => <Input ref={ref} value={(value as string) ?? ""} {...rest} />}
       </FormField>
     </>
@@ -501,7 +501,7 @@ export const TeamIdsJwtFieldField = () => {
   const { control } = useFormContext<SSOSettingsFormValues>();
 
   return (
-    <FormField control={control} name="team_ids_jwt_field" label="Team IDs JWT Field">
+    <FormField control={control} name="team_ids_jwt_field" label="Поле JWT со списком ID команд">
       {({ ref, value, ...rest }) => <Input ref={ref} value={(value as string) ?? ""} {...rest} />}
     </FormField>
   );
@@ -527,14 +527,14 @@ const BaseSSOSettingsForm: React.FC<BaseSSOSettingsFormProps> = ({ form, onFormS
             {provider ? renderProviderFields(provider) : null}
             <ProxyAdminEmailField />
             <ProxyBaseUrlField />
-            {showMappingToggles && <MappingToggleField name="use_role_mappings" label="Use Role Mappings" />}
+            {showMappingToggles && <MappingToggleField name="use_role_mappings" label="Использовать сопоставления ролей" />}
             {useRoleMappings && showMappingToggles && (
               <>
                 <GroupClaimField />
                 <RoleMappingTeamFields />
               </>
             )}
-            {showMappingToggles && <MappingToggleField name="use_team_mappings" label="Use Team Mappings" />}
+            {showMappingToggles && <MappingToggleField name="use_team_mappings" label="Использовать сопоставления команд" />}
             {useTeamMappings && showMappingToggles && <TeamIdsJwtFieldField />}
           </FieldGroup>
         </form>

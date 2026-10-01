@@ -35,17 +35,17 @@ function getPromptsForTestSource(source: string): CompliancePrompt[] {
 }
 
 const ACTION_OPTIONS = [
-  { label: "Next Step", value: "next" },
-  { label: "Allow", value: "allow" },
-  { label: "Block", value: "block" },
-  { label: "Custom Response", value: "modify_response" },
+  { label: "Следующий шаг", value: "next" },
+  { label: "Разрешить", value: "allow" },
+  { label: "Заблокировать", value: "block" },
+  { label: "Свой ответ", value: "modify_response" },
 ];
 
 const ACTION_LABELS: Record<string, string> = {
-  allow: "Allow",
-  block: "Block",
-  next: "Next Step",
-  modify_response: "Custom Response",
+  allow: "Разрешить",
+  block: "Заблокировать",
+  next: "Следующий шаг",
+  modify_response: "Свой ответ",
 };
 
 function createDefaultStep(): PipelineStep {
@@ -245,7 +245,7 @@ const Connector: React.FC<ConnectorProps> = ({ onInsert }) => (
         e.currentTarget.style.borderColor = "var(--color-border)";
         e.currentTarget.style.backgroundColor = "var(--color-card)";
       }}
-      title="Insert step"
+      title="Вставить шаг"
     >
       <Plus style={{ width: 12, height: 12, color: "var(--color-muted-foreground)" }} />
     </button>
@@ -307,7 +307,7 @@ const StepCard: React.FC<StepCardProps> = ({
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span style={{ fontSize: 13, color: "var(--color-muted-foreground)" }}>Step {stepIndex + 1}</span>
+          <span style={{ fontSize: 13, color: "var(--color-muted-foreground)" }}>Шаг {stepIndex + 1}</span>
           <button
             onClick={onDelete}
             disabled={totalSteps <= 1}
@@ -320,7 +320,7 @@ const StepCard: React.FC<StepCardProps> = ({
               display: "flex",
               alignItems: "center",
             }}
-            title="Delete step"
+            title="Удалить шаг"
           >
             <MoreVertical style={{ width: 16, height: 16, color: "var(--color-muted-foreground)" }} />
           </button>
@@ -338,14 +338,14 @@ const StepCard: React.FC<StepCardProps> = ({
             marginBottom: 6,
           }}
         >
-          Guardrail
+          Гардрейл
         </label>
         <SearchSelect
           options={guardrailOptions}
           value={step.guardrail || undefined}
           onValueChange={(value) => onChange({ guardrail: value ?? undefined })}
-          placeholder="Select a guardrail"
-          emptyText="No guardrails found"
+          placeholder="Выберите гардрейл"
+          emptyText="Гардрейлы не найдены"
         />
       </div>
 
@@ -353,7 +353,7 @@ const StepCard: React.FC<StepCardProps> = ({
       <div style={{ borderTop: "1px solid var(--color-border)", padding: "14px 20px" }}>
         <div className="flex items-center gap-2" style={{ marginBottom: 8 }}>
           <PassIcon />
-          <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-foreground)" }}>ON PASS</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-foreground)" }}>ПРИ ПРОХОЖДЕНИИ</span>
         </div>
         <label
           style={{
@@ -364,7 +364,7 @@ const StepCard: React.FC<StepCardProps> = ({
             marginBottom: 6,
           }}
         >
-          Action
+          Действие
         </label>
         <Select value={step.on_pass} onValueChange={(value) => onChange({ on_pass: value as PipelineStep["on_pass"] })}>
           <SelectTrigger className="w-full">
@@ -389,10 +389,10 @@ const StepCard: React.FC<StepCardProps> = ({
                 marginBottom: 6,
               }}
             >
-              Custom Response Message
+              Сообщение своего ответа
             </label>
             <Input
-              placeholder="Enter custom response..."
+              placeholder="Введите свой ответ..."
               value={step.modify_response_message || ""}
               onChange={(e) => onChange({ modify_response_message: e.target.value || null })}
             />
@@ -404,7 +404,7 @@ const StepCard: React.FC<StepCardProps> = ({
       <div style={{ borderTop: "1px solid var(--color-border)", padding: "14px 20px" }}>
         <div className="flex items-center gap-2" style={{ marginBottom: 8 }}>
           <FailIcon />
-          <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-foreground)" }}>ON FAIL</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-foreground)" }}>ПРИ ОТКАЗЕ</span>
         </div>
         <label
           style={{
@@ -415,7 +415,7 @@ const StepCard: React.FC<StepCardProps> = ({
             marginBottom: 6,
           }}
         >
-          Action
+          Действие
         </label>
         <Select value={step.on_fail} onValueChange={(value) => onChange({ on_fail: value as PipelineStep["on_fail"] })}>
           <SelectTrigger className="w-full">
@@ -440,10 +440,10 @@ const StepCard: React.FC<StepCardProps> = ({
                 marginBottom: 6,
               }}
             >
-              Custom Response Message
+              Сообщение своего ответа
             </label>
             <Input
-              placeholder="Enter custom response..."
+              placeholder="Введите свой ответ..."
               value={step.modify_response_message || ""}
               onChange={(e) => onChange({ modify_response_message: e.target.value || null })}
             />
@@ -455,7 +455,7 @@ const StepCard: React.FC<StepCardProps> = ({
       <div style={{ borderTop: "1px solid var(--color-border)", padding: "14px 20px" }}>
         <div className="flex items-center gap-2" style={{ marginBottom: 8 }}>
           <ApiFailureIcon />
-          <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-foreground)" }}>ON API FAILURE</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-foreground)" }}>ПРИ СБОЕ API</span>
         </div>
         <label
           style={{
@@ -466,7 +466,7 @@ const StepCard: React.FC<StepCardProps> = ({
             marginBottom: 6,
           }}
         >
-          Action
+          Действие
         </label>
         <Select
           value={step.on_error ?? null}
@@ -476,11 +476,11 @@ const StepCard: React.FC<StepCardProps> = ({
         >
           <SelectTrigger className="w-full">
             <SelectValue>
-              {step.on_error != null ? ACTION_LABELS[step.on_error] || step.on_error : "Same as ON FAIL"}
+              {step.on_error != null ? ACTION_LABELS[step.on_error] || step.on_error : "Как при отказе"}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={null}>Same as ON FAIL</SelectItem>
+            <SelectItem value={null}>Как при отказе</SelectItem>
             {ACTION_OPTIONS.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
@@ -499,10 +499,10 @@ const StepCard: React.FC<StepCardProps> = ({
                 marginBottom: 6,
               }}
             >
-              Custom Response Message
+              Сообщение своего ответа
             </label>
             <Input
-              placeholder="Enter custom response..."
+              placeholder="Введите свой ответ..."
               value={step.modify_response_message || ""}
               onChange={(e) => onChange({ modify_response_message: e.target.value || null })}
             />
@@ -569,10 +569,10 @@ const PipelineFlowBuilder: React.FC<PipelineFlowBuilderProps> = ({ pipeline, onC
               TRIGGER
             </span>
             <span style={{ fontSize: 14, fontWeight: 600, color: "var(--color-foreground)", display: "block" }}>
-              Incoming LLM Request
+              Входящий LLM-запрос
             </span>
             <span style={{ fontSize: 13, color: "var(--color-muted-foreground)" }}>
-              This flow runs when a request matches this policy
+              Этот поток выполняется, когда запрос соответствует данной политике
             </span>
           </div>
         </div>
@@ -650,9 +650,9 @@ const PipelineFlowBuilder: React.FC<PipelineFlowBuilderProps> = ({ pipeline, onC
               END
             </span>
             <span style={{ fontSize: 14, fontWeight: 600, color: "var(--color-foreground)", display: "block" }}>
-              Continue to LLM
+              Переход к LLM
             </span>
-            <span style={{ fontSize: 13, color: "var(--color-muted-foreground)" }}>Request proceeds to the model</span>
+            <span style={{ fontSize: 13, color: "var(--color-muted-foreground)" }}>Запрос передаётся модели</span>
           </div>
         </div>
       </div>
@@ -697,7 +697,7 @@ export const PipelineInfoDisplay: React.FC<PipelineInfoDisplayProps> = ({ pipeli
           >
             TRIGGER
           </span>
-          <span style={{ fontSize: 14, fontWeight: 600, color: "var(--color-foreground)" }}>Incoming LLM Request</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: "var(--color-foreground)" }}>Входящий LLM-запрос</span>
         </div>
       </div>
     </div>
@@ -735,7 +735,7 @@ export const PipelineInfoDisplay: React.FC<PipelineInfoDisplayProps> = ({ pipeli
                 GUARDRAIL
               </span>
             </div>
-            <span style={{ fontSize: 13, color: "var(--color-muted-foreground)" }}>Step {index + 1}</span>
+            <span style={{ fontSize: 13, color: "var(--color-muted-foreground)" }}>Шаг {index + 1}</span>
           </div>
 
           {/* Name */}
@@ -749,16 +749,16 @@ export const PipelineInfoDisplay: React.FC<PipelineInfoDisplayProps> = ({ pipeli
           {/* Pass / Fail / API failure */}
           <div className="flex flex-col gap-2" style={{ fontSize: 13, color: "var(--color-foreground)" }}>
             <span className="flex items-center gap-1.5">
-              <PassIcon /> Pass &#8594; {ACTION_LABELS[step.on_pass] || step.on_pass}
+              <PassIcon /> Пройдено &#8594; {ACTION_LABELS[step.on_pass] || step.on_pass}
             </span>
             <span className="flex items-center gap-1.5">
-              <FailIcon /> On fail &#8594; {ACTION_LABELS[step.on_fail] || step.on_fail}
+              <FailIcon /> Отказ &#8594; {ACTION_LABELS[step.on_fail] || step.on_fail}
             </span>
             <span className="flex items-center gap-1.5">
-              <ApiFailureIcon /> On API failure &#8594;{" "}
+              <ApiFailureIcon /> Сбой API &#8594;{" "}
               {step.on_error != null
                 ? ACTION_LABELS[step.on_error] || step.on_error
-                : `${ACTION_LABELS[step.on_fail] || step.on_fail} (same as on fail)`}
+                : `${ACTION_LABELS[step.on_fail] || step.on_fail} (как при отказе)`}
             </span>
           </div>
         </div>
@@ -816,9 +816,9 @@ function complianceMatchExpected(expected: "pass" | "fail", terminalAction: stri
 }
 
 const testSourceOptions = [
-  { value: TEST_SOURCE_QUICK, label: "Quick chat (custom message)" },
+  { value: TEST_SOURCE_QUICK, label: "Быстрый чат (свой запрос)" },
   ...getFrameworks().map((f) => ({ value: f.name, label: f.name })),
-  { value: TEST_SOURCE_ALL, label: "All compliance datasets" },
+  { value: TEST_SOURCE_ALL, label: "Все датасеты соответствия" },
 ];
 
 const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessToken, onClose }) => {
@@ -838,7 +838,7 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
 
     const emptySteps = pipeline.steps.filter((s) => !s.guardrail);
     if (emptySteps.length > 0) {
-      setError("All steps must have a guardrail selected");
+      setError("Для всех шагов должен быть выбран гардрейл");
       return;
     }
 
@@ -901,7 +901,7 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
           justifyContent: "space-between",
         }}
       >
-        <span style={{ fontSize: 14, fontWeight: 600, color: "var(--color-foreground)" }}>Test Pipeline</span>
+        <span style={{ fontSize: 14, fontWeight: 600, color: "var(--color-foreground)" }}>Тест конвейера</span>
         <button
           onClick={onClose}
           style={{
@@ -928,7 +928,7 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
             marginBottom: 6,
           }}
         >
-          Test with
+          Источник теста
         </label>
         <Select value={testSource} onValueChange={(value) => value !== null && setTestSource(value)}>
           <SelectTrigger className="mb-3 w-full">
@@ -955,12 +955,12 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
                 marginBottom: 6,
               }}
             >
-              Message
+              Сообщение
             </label>
             <textarea
               value={testMessage}
               onChange={(e) => setTestMessage(e.target.value)}
-              placeholder="Enter a test message..."
+              placeholder="Введите тестовое сообщение..."
               rows={3}
               style={{
                 width: "100%",
@@ -988,12 +988,12 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
             }}
           >
             {testSource === TEST_SOURCE_ALL
-              ? "Run pipeline against all compliance prompts (EU AI Act, GDPR, Topic Blocking, Airline, etc.)."
-              : `Run pipeline against ${promptsForSource.length} prompts from "${testSource}".`}
+              ? "Прогнать конвейер на всех тестах соответствия (EU AI Act, GDPR, Topic Blocking, Airline и др.)."
+              : `Прогнать конвейер на ${promptsForSource.length} тестах из «${testSource}».`}
           </div>
         )}
         <Button onClick={handleRunTest} disabled={isRunning} style={{ marginTop: 8, width: "100%" }}>
-          Run Test
+          Запустить тест
         </Button>
       </div>
 
@@ -1032,7 +1032,7 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
                 >
                   <div className="flex items-center justify-between" style={{ marginBottom: 4 }}>
                     <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-foreground)" }}>
-                      Step {i + 1}: {step.guardrail_name}
+                      Шаг {i + 1}: {step.guardrail_name}
                     </span>
                     <span
                       style={{
@@ -1048,9 +1048,9 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
                     </span>
                   </div>
                   <div style={{ fontSize: 12, color: "var(--color-muted-foreground)" }}>
-                    Action: {ACTION_LABELS[step.action_taken] || step.action_taken}
+                    Действие: {ACTION_LABELS[step.action_taken] || step.action_taken}
                     {step.duration_seconds != null && (
-                      <span style={{ marginLeft: 8 }}>({(step.duration_seconds * 1000).toFixed(0)}ms)</span>
+                      <span style={{ marginLeft: 8 }}>{(step.duration_seconds * 1000).toFixed(0)} мс</span>
                     )}
                   </div>
                   {step.error_detail && (
@@ -1071,7 +1071,7 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
               }}
             >
               <div className="flex items-center justify-between">
-                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-foreground)" }}>Result</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--color-foreground)" }}>Результат</span>
                 {(() => {
                   const ts = TERMINAL_STYLES[result.terminal_action] || TERMINAL_STYLES.block;
                   return (
@@ -1086,7 +1086,7 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
                         textTransform: "uppercase",
                       }}
                     >
-                      {result.terminal_action === "modify_response" ? "Custom Response" : result.terminal_action}
+                      {result.terminal_action === "modify_response" ? "Свой ответ" : result.terminal_action}
                     </span>
                   );
                 })()}
@@ -1098,7 +1098,7 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
               )}
               {result.modify_response_message && (
                 <div style={{ fontSize: 12, color: "var(--color-info)", marginTop: 6 }}>
-                  Response: {result.modify_response_message}
+                  Ответ: {result.modify_response_message}
                 </div>
               )}
             </div>
@@ -1115,7 +1115,7 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
                 marginBottom: 8,
               }}
             >
-              Compliance dataset
+              Датасет соответствия
             </div>
             <div
               style={{
@@ -1124,7 +1124,7 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
                 marginBottom: 10,
               }}
             >
-              {complianceResults.filter((e) => e.matched).length} / {complianceResults.length} matched expected
+              Совпало с ожидаемым: {complianceResults.filter((e) => e.matched).length} / {complianceResults.length}
             </div>
             <div
               style={{
@@ -1172,10 +1172,10 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
                       }}
                     >
                       <span style={{ color: "var(--color-muted-foreground)" }}>
-                        expected: {entry.prompt.expectedResult}
+                        ожидалось: {entry.prompt.expectedResult}
                       </span>
                       <span style={{ color: "var(--color-muted-foreground)" }}>→</span>
-                      <span style={{ color: "var(--color-muted-foreground)" }}>actual: {actual}</span>
+                      <span style={{ color: "var(--color-muted-foreground)" }}>факт: {actual}</span>
                       <span
                         style={{
                           backgroundColor: matchStyle.bg,
@@ -1200,7 +1200,7 @@ const PipelineTestPanel: React.FC<PipelineTestPanelProps> = ({ pipeline, accessT
 
         {!result && !error && complianceResults.length === 0 && (
           <div style={{ textAlign: "center", color: "var(--color-muted-foreground)", fontSize: 13, marginTop: 24 }}>
-            Choose a test source above (quick chat or a compliance dataset) and click &quot;Run Test&quot;
+            Выберите источник теста выше (быстрый чат или датасет соответствия) и нажмите «Запустить тест»
           </div>
         )}
       </div>
@@ -1276,7 +1276,7 @@ const PolicyVersionsSidebar: React.FC<PolicyVersionsSidebarProps> = ({
               marginBottom: 4,
             }}
           >
-            Versions
+            Версии
           </span>
           <span
             style={{
@@ -1287,21 +1287,21 @@ const PolicyVersionsSidebar: React.FC<PolicyVersionsSidebarProps> = ({
               marginBottom: 12,
             }}
           >
-            Production = the version used when anyone calls this policy by name.
+            Production — версия, которая используется при обращении к политике по имени.
           </span>
           <Button
             onClick={onNewVersion}
             disabled={!accessToken || isCreatingVersion}
             style={{ width: "100%", marginBottom: 12 }}
           >
-            + New Version
+            + Новая версия
           </Button>
           {isLoading ? (
             <div style={{ display: "flex", justifyContent: "center", padding: 16 }}>
               <UiLoadingSpinner className="size-4" />
             </div>
           ) : versions.length === 0 ? (
-            <span style={{ fontSize: 13, color: "var(--color-muted-foreground)" }}>No versions found</span>
+            <span style={{ fontSize: 13, color: "var(--color-muted-foreground)" }}>Версии не найдены</span>
           ) : (
             <div className="flex flex-col gap-1">
               {versions.map((v) => {
@@ -1359,7 +1359,7 @@ const PolicyVersionsSidebar: React.FC<PolicyVersionsSidebarProps> = ({
                     disabled={!accessToken || isUpdatingStatus}
                     style={{ width: "100%", marginBottom: 8 }}
                   >
-                    Publish
+                    Опубликовать
                   </Button>
                   <span
                     style={{
@@ -1370,7 +1370,7 @@ const PolicyVersionsSidebar: React.FC<PolicyVersionsSidebarProps> = ({
                       marginBottom: canPromote ? 8 : 0,
                     }}
                   >
-                    Published versions can be tested in the Playground before promoting to production.
+                    Опубликованные версии можно протестировать в Playground перед переводом в production.
                   </span>
                 </>
               )}
@@ -1381,7 +1381,7 @@ const PolicyVersionsSidebar: React.FC<PolicyVersionsSidebarProps> = ({
                     disabled={!accessToken || isUpdatingStatus}
                     style={{ width: "100%", marginBottom: 8 }}
                   >
-                    Promote to production
+                    Перевести в production
                   </Button>
                   <span
                     style={{
@@ -1391,7 +1391,7 @@ const PolicyVersionsSidebar: React.FC<PolicyVersionsSidebarProps> = ({
                       display: "block",
                     }}
                   >
-                    This version will be used when anyone calls this policy by name.
+                    Эта версия будет использоваться при обращении к политике по имени.
                   </span>
                 </>
               )}
@@ -1411,7 +1411,7 @@ const PolicyVersionsSidebar: React.FC<PolicyVersionsSidebarProps> = ({
                 letterSpacing: "0.06em",
               }}
             >
-              Silent Mirroring
+              Теневое копирование
             </span>
             <span
               style={{
@@ -1423,7 +1423,7 @@ const PolicyVersionsSidebar: React.FC<PolicyVersionsSidebarProps> = ({
                 borderRadius: 4,
               }}
             >
-              COMING SOON
+              СКОРО
             </span>
           </div>
           <span
@@ -1434,8 +1434,8 @@ const PolicyVersionsSidebar: React.FC<PolicyVersionsSidebarProps> = ({
               display: "block",
             }}
           >
-            Test policy versions on production traffic without blocking requests. Shadow testing helps validate changes
-            before full rollout.
+            Тестируйте версии политики на боевом трафике без блокировки запросов. Теневое тестирование помогает
+            проверить изменения перед полным развёртыванием.
           </span>
         </div>
       </div>
@@ -1526,12 +1526,12 @@ export const FlowBuilderPage: React.FC<FlowBuilderPageProps> = ({
     setIsCreatingVersion(true);
     try {
       const newPolicy = await createPolicyVersion(accessToken, editingPolicy.policy_name);
-      toast.success("New draft version created");
+      toast.success("Новая черновая версия создана");
       onVersionCreated?.(newPolicy);
       const list = await listPolicyVersions(accessToken, editingPolicy.policy_name);
       setVersions(list.versions ?? []);
     } catch (error) {
-      toast.fromError("Failed to create version: " + (error instanceof Error ? error.message : String(error)));
+      toast.fromError("Не удалось создать версию: " + (error instanceof Error ? error.message : String(error)));
     } finally {
       setIsCreatingVersion(false);
     }
@@ -1547,13 +1547,13 @@ export const FlowBuilderPage: React.FC<FlowBuilderPageProps> = ({
     try {
       const updated = await updatePolicyVersionStatus(accessToken, editingPolicy.policy_id, "published");
       toast.success(
-        "Version published. You can test it in the Playground by selecting this version in the Policies dropdown.",
+        "Версия опубликована. Её можно протестировать в Playground, выбрав эту версию в списке политик.",
       );
       const list = await listPolicyVersions(accessToken, editingPolicy.policy_name ?? "");
       setVersions(list.versions ?? []);
       onVersionStatusUpdated?.(updated);
     } catch (error) {
-      toast.fromError("Failed to publish: " + (error instanceof Error ? error.message : String(error)));
+      toast.fromError("Не удалось опубликовать: " + (error instanceof Error ? error.message : String(error)));
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -1564,12 +1564,12 @@ export const FlowBuilderPage: React.FC<FlowBuilderPageProps> = ({
     setIsUpdatingStatus(true);
     try {
       const updated = await updatePolicyVersionStatus(accessToken, editingPolicy.policy_id, "production");
-      toast.success("Version promoted to production");
+      toast.success("Версия переведена в production");
       const list = await listPolicyVersions(accessToken, editingPolicy.policy_name ?? "");
       setVersions(list.versions ?? []);
       onVersionStatusUpdated?.(updated);
     } catch (error) {
-      toast.fromError("Failed to promote to production: " + (error instanceof Error ? error.message : String(error)));
+      toast.fromError("Не удалось перевести в production: " + (error instanceof Error ? error.message : String(error)));
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -1577,17 +1577,17 @@ export const FlowBuilderPage: React.FC<FlowBuilderPageProps> = ({
 
   const handleSave = async () => {
     if (!policyName.trim()) {
-      toast.error("Please enter a policy name");
+      toast.error("Введите название политики");
       return;
     }
     if (!accessToken) {
-      toast.error("No access token available");
+      toast.error("Недоступен токен доступа");
       return;
     }
 
     const emptySteps = pipeline.steps.filter((s) => !s.guardrail);
     if (emptySteps.length > 0) {
-      toast.error("Please select a guardrail for all steps");
+      toast.error("Выберите гардрейл для всех шагов");
       return;
     }
 
@@ -1605,17 +1605,17 @@ export const FlowBuilderPage: React.FC<FlowBuilderPageProps> = ({
 
       if (isEditing && editingPolicy) {
         await updatePolicy(accessToken, editingPolicy.policy_id, data as PolicyUpdateRequest);
-        toast.success("Policy updated successfully");
+        toast.success("Политика обновлена");
         onSuccess();
       } else {
         await createPolicy(accessToken, data as PolicyCreateRequest);
-        toast.success("Policy created successfully");
+        toast.success("Политика создана");
         onSuccess();
         onBack();
       }
     } catch (error) {
       console.error("Failed to save policy:", error);
-      toast.fromError("Failed to save policy: " + (error instanceof Error ? error.message : String(error)));
+      toast.fromError("Не удалось сохранить политику: " + (error instanceof Error ? error.message : String(error)));
     } finally {
       setIsSubmitting(false);
     }
@@ -1649,10 +1649,10 @@ export const FlowBuilderPage: React.FC<FlowBuilderPageProps> = ({
           >
             <ArrowLeft style={{ width: 18, height: 18, color: "var(--color-muted-foreground)" }} />
           </button>
-          <span style={{ fontSize: 14, color: "var(--color-muted-foreground)" }}>Policies</span>
+          <span style={{ fontSize: 14, color: "var(--color-muted-foreground)" }}>Политики</span>
           <span style={{ fontSize: 14, color: "var(--color-border)" }}>/</span>
           <Input
-            placeholder="Policy name..."
+            placeholder="Название политики..."
             value={policyName}
             onChange={(e) => setPolicyName(e.target.value)}
             disabled={isEditing}
@@ -1669,7 +1669,7 @@ export const FlowBuilderPage: React.FC<FlowBuilderPageProps> = ({
               letterSpacing: "0.02em",
             }}
           >
-            Flow
+            Поток
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -1677,10 +1677,10 @@ export const FlowBuilderPage: React.FC<FlowBuilderPageProps> = ({
             Отмена
           </Button>
           <Button variant="secondary" onClick={() => setShowTestPanel(!showTestPanel)}>
-            {showTestPanel ? "Hide Test" : "Test Pipeline"}
+            {showTestPanel ? "Скрыть тест" : "Тест конвейера"}
           </Button>
           <Button onClick={handleSave} disabled={isSubmitting}>
-            {isEditing ? "Update Policy" : "Save Policy"}
+            {isEditing ? "Обновить политику" : "Сохранить политику"}
           </Button>
         </div>
       </div>
@@ -1695,7 +1695,7 @@ export const FlowBuilderPage: React.FC<FlowBuilderPageProps> = ({
         }}
       >
         <Input
-          placeholder="Add a description (optional)..."
+          placeholder="Добавьте описание (необязательно)..."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           style={{ maxWidth: 500 }}

@@ -252,9 +252,9 @@ describe("ShadowEvalSection", () => {
     mockHooks({});
     render(<ShadowEvalSection />);
 
-    await user.click(screen.getByPlaceholderText("Search keys by alias"));
+    await user.click(screen.getByPlaceholderText("Поиск ключей по псевдониму"));
     expect(await screen.findByText("Keys could not be loaded. Refresh the page to retry.")).toBeInTheDocument();
-    expect(screen.queryByText("No matching keys")).not.toBeInTheDocument();
+    expect(screen.queryByText("Совпадающие ключи не найдены")).not.toBeInTheDocument();
     if (defaultKeysImpl) vi.mocked(useInfiniteKeys).mockImplementation(defaultKeysImpl);
   });
 
@@ -263,17 +263,17 @@ describe("ShadowEvalSection", () => {
     mockHooks({});
     render(<ShadowEvalSection />);
 
-    await user.click(screen.getByPlaceholderText("Select a judge model"));
+    await user.click(screen.getByPlaceholderText("Выберите модель-судью"));
     expect(screen.getByRole("option", { name: /prod-judge.*Recommended/ })).toBeInTheDocument();
     expect(screen.queryByRole("option", { name: /openai\/gpt-4o/ })).not.toBeInTheDocument();
 
     await user.keyboard("{Escape}");
     await chooseSelectOption(
       user,
-      screen.getByText("Adoption check: key's traffic vs the router"),
-      "Regression check: router's picks vs a baseline",
+      screen.getByText("Проверка внедрения: трафик ключа против маршрутизатора"),
+      "Проверка регресса: выбор маршрутизатора против базовой линии",
     );
-    await user.click(screen.getByPlaceholderText("Select a baseline model"));
+    await user.click(screen.getByPlaceholderText("Выберите базовую модель"));
     expect(screen.getByRole("option", { name: "prod-judge", exact: true })).toBeInTheDocument();
     expect(screen.queryByText("Recommended")).not.toBeInTheDocument();
   });
@@ -308,22 +308,22 @@ describe("ShadowEvalSection", () => {
             <ShadowEvalSection />
           </QueryClientProvider>,
         );
-        await chooseSelectOption(user, screen.getByPlaceholderText("Every model the targets use"), "responses-only");
-        await chooseSelectOption(user, screen.getByPlaceholderText("Every model the targets use"), "custom-chat");
+        await chooseSelectOption(user, screen.getByPlaceholderText("Все модели, используемые выбранными объектами"), "responses-only");
+        await chooseSelectOption(user, screen.getByPlaceholderText("Все модели, используемые выбранными объектами"), "custom-chat");
         await chooseSelectOption(
           user,
-          screen.getByText("Adoption check: key's traffic vs the router"),
-          "Regression check: router's picks vs a baseline",
+          screen.getByText("Проверка внедрения: трафик ключа против маршрутизатора"),
+          "Проверка регресса: выбор маршрутизатора против базовой линии",
         );
-        await user.click(screen.getByPlaceholderText("Search keys by alias"));
+        await user.click(screen.getByPlaceholderText("Поиск ключей по псевдониму"));
         await user.click(within(await screen.findByTestId("paginated-multi-select-list")).getByText("prod-alpha"));
-        await chooseSelectOption(user, screen.getByPlaceholderText("Select up to 4 auto-routers"), "gpt-auto");
-        await user.click(screen.getByPlaceholderText("Select a judge model"));
+        await chooseSelectOption(user, screen.getByPlaceholderText("Выберите до 4 автомаршрутизаторов"), "gpt-auto");
+        await user.click(screen.getByPlaceholderText("Выберите модель-судью"));
         expect(screen.getAllByRole("option")).toHaveLength(2);
         expect(screen.getByRole("option", { name: "custom-chat", exact: true })).toBeInTheDocument();
         expect(screen.getByRole("option", { name: "custom-judge", exact: true })).toBeInTheDocument();
         await user.click(screen.getByRole("option", { name: "custom-judge", exact: true }));
-        await user.click(screen.getByPlaceholderText("Select a baseline model"));
+        await user.click(screen.getByPlaceholderText("Выберите базовую модель"));
         expect(screen.getAllByRole("option")).toHaveLength(2);
         expect(screen.getByRole("option", { name: "custom-chat", exact: true })).toBeInTheDocument();
         expect(screen.getByRole("option", { name: "custom-judge", exact: true })).toBeInTheDocument();
@@ -341,7 +341,7 @@ describe("ShadowEvalSection", () => {
     mockHooks({ isPending: true });
     render(<ShadowEvalSection />);
     expect(screen.getByText("Loading evaluations...")).toBeInTheDocument();
-    expect(screen.getByText("Start a shadow eval")).toBeInTheDocument();
+    expect(screen.getByText("Запустить теневую оценку")).toBeInTheDocument();
   });
 
   it("re-offers the start form when the polled detail sees the job finish before the list does", () => {
@@ -350,7 +350,7 @@ describe("ShadowEvalSection", () => {
       detailsById: { "job-1": job({ status: "completed" }) },
     });
     render(<ShadowEvalSection />);
-    expect(screen.getByText("Start a shadow eval")).toBeInTheDocument();
+    expect(screen.getByText("Запустить теневую оценку")).toBeInTheDocument();
   });
 
   it("gives every active job its own card with a stop button, with the form still offered", () => {
@@ -362,7 +362,7 @@ describe("ShadowEvalSection", () => {
     });
     render(<ShadowEvalSection />);
     expect(screen.getAllByRole("button", { name: "Stop" })).toHaveLength(2);
-    expect(screen.getByText("Start a shadow eval")).toBeInTheDocument();
+    expect(screen.getByText("Запустить теневую оценку")).toBeInTheDocument();
     expect(screen.queryByText(/Previous evaluations/)).not.toBeInTheDocument();
   });
 
@@ -376,7 +376,7 @@ describe("ShadowEvalSection", () => {
     authorizedRoleMock.mockReturnValue({ accessToken: "token", isViewOnly: true });
     mockHooks({ jobs: [job({ status: "running" })] });
     render(<ShadowEvalSection />);
-    expect(screen.queryByText("Start a shadow eval")).not.toBeInTheDocument();
+    expect(screen.queryByText("Запустить теневую оценку")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Stop" })).not.toBeInTheDocument();
     expect(screen.getByText("running")).toBeInTheDocument();
   });
@@ -402,7 +402,7 @@ describe("ShadowEvalSection", () => {
     mockHooks({ error: new Error("boom") });
     render(<ShadowEvalSection />);
     expect(screen.getByText(/Existing evaluations could not be loaded/)).toBeInTheDocument();
-    expect(screen.getByText("Start a shadow eval")).toBeInTheDocument();
+    expect(screen.getByText("Запустить теневую оценку")).toBeInTheDocument();
   });
 
   it("shows a failure line instead of loading forever when the detail fetch errors", () => {
@@ -433,7 +433,7 @@ describe("ShadowEvalSection", () => {
   it("shows the start form when there are no jobs", () => {
     mockHooks({});
     render(<ShadowEvalSection />);
-    expect(screen.getByText("Start a shadow eval")).toBeInTheDocument();
+    expect(screen.getByText("Запустить теневую оценку")).toBeInTheDocument();
     expect(screen.getByText("Start shadow eval")).toBeInTheDocument();
   });
 
@@ -505,7 +505,7 @@ describe("ShadowEvalSection", () => {
     mockHooks({ jobs: [done], detailsById: { "job-1": done } });
     render(<ShadowEvalSection />);
     expect(screen.queryByText("Stop")).not.toBeInTheDocument();
-    expect(screen.getByText("Start a shadow eval")).toBeInTheDocument();
+    expect(screen.getByText("Запустить теневую оценку")).toBeInTheDocument();
   });
 
   it("renders nothing for non-admins when the proxy answers 403", () => {
@@ -521,17 +521,17 @@ describe("ShadowEvalSection", () => {
 
     expect(screen.getByText("Start shadow eval")).toBeDisabled();
 
-    const keyInput = screen.getByPlaceholderText("Search keys by alias");
+    const keyInput = screen.getByPlaceholderText("Поиск ключей по псевдониму");
     await user.click(keyInput);
     const keyList = await screen.findByTestId("paginated-multi-select-list");
     await user.click(within(keyList).getByText("prod-alpha"));
     await user.click(keyInput);
     await user.click(within(keyList).getByText("staging-beta"));
-    await chooseSelectOption(user, screen.getByPlaceholderText("Select up to 4 auto-routers"), "gpt-auto");
+    await chooseSelectOption(user, screen.getByPlaceholderText("Выберите до 4 автомаршрутизаторов"), "gpt-auto");
 
     expect(screen.getByText("Start shadow eval")).toBeDisabled();
 
-    await user.click(screen.getByPlaceholderText("Select a judge model"));
+    await user.click(screen.getByPlaceholderText("Выберите модель-судью"));
     expect(screen.queryByRole("option", { name: /openai\/gpt-4o/ })).not.toBeInTheDocument();
     await user.click(await screen.findByRole("option", { name: /prod-judge/ }));
     await user.click(screen.getByText("Start shadow eval"));
@@ -558,11 +558,11 @@ describe("ShadowEvalSection", () => {
 
     expect(screen.getByText("Start shadow eval")).toBeDisabled();
 
-    await user.click(screen.getByPlaceholderText("Search teams by alias"));
+    await user.click(screen.getByPlaceholderText("Поиск команд по псевдониму"));
     const teamList = await screen.findByTestId("paginated-multi-select-list");
     await user.click(within(teamList).getByText("engineering"));
-    await chooseSelectOption(user, screen.getByPlaceholderText("Select up to 4 auto-routers"), "gpt-auto");
-    await user.click(screen.getByPlaceholderText("Select a judge model"));
+    await chooseSelectOption(user, screen.getByPlaceholderText("Выберите до 4 автомаршрутизаторов"), "gpt-auto");
+    await user.click(screen.getByPlaceholderText("Выберите модель-судью"));
     await user.click(await screen.findByRole("option", { name: /prod-judge/ }));
     await user.click(screen.getByText("Start shadow eval"));
 
@@ -586,12 +586,12 @@ describe("ShadowEvalSection", () => {
     const { start } = mockHooks({});
     render(<ShadowEvalSection />);
 
-    await user.click(screen.getByPlaceholderText("Search teams by alias"));
+    await user.click(screen.getByPlaceholderText("Поиск команд по псевдониму"));
     const teamList = await screen.findByTestId("paginated-multi-select-list");
     await user.click(within(teamList).getByText("engineering"));
-    await chooseSelectOption(user, screen.getByPlaceholderText("Every model the targets use"), "prod-claude");
-    await chooseSelectOption(user, screen.getByPlaceholderText("Select up to 4 auto-routers"), "gpt-auto");
-    await user.click(screen.getByPlaceholderText("Select a judge model"));
+    await chooseSelectOption(user, screen.getByPlaceholderText("Все модели, используемые выбранными объектами"), "prod-claude");
+    await chooseSelectOption(user, screen.getByPlaceholderText("Выберите до 4 автомаршрутизаторов"), "gpt-auto");
+    await user.click(screen.getByPlaceholderText("Выберите модель-судью"));
     await user.click(await screen.findByRole("option", { name: /prod-judge/ }));
     await user.click(screen.getByText("Start shadow eval"));
 
@@ -610,25 +610,25 @@ describe("ShadowEvalSection", () => {
     const { start } = mockHooks({});
     render(<ShadowEvalSection />);
 
-    expect(screen.queryByPlaceholderText("Select a baseline model")).not.toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Every model the targets use")).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText("Выберите базовую модель")).not.toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Все модели, используемые выбранными объектами")).toBeInTheDocument();
 
     await chooseSelectOption(
       user,
-      screen.getByText("Adoption check: key's traffic vs the router"),
-      "Regression check: router's picks vs a baseline",
+      screen.getByText("Проверка внедрения: трафик ключа против маршрутизатора"),
+      "Проверка регресса: выбор маршрутизатора против базовой линии",
     );
-    expect(screen.queryByPlaceholderText("Every model the targets use")).not.toBeInTheDocument();
-    await user.click(screen.getByPlaceholderText("Search keys by alias"));
+    expect(screen.queryByPlaceholderText("Все модели, используемые выбранными объектами")).not.toBeInTheDocument();
+    await user.click(screen.getByPlaceholderText("Поиск ключей по псевдониму"));
     const keyList = await screen.findByTestId("paginated-multi-select-list");
     await user.click(within(keyList).getByText("prod-alpha"));
-    await chooseSelectOption(user, screen.getByPlaceholderText("Select up to 4 auto-routers"), "gpt-auto");
-    await user.click(screen.getByPlaceholderText("Select a judge model"));
+    await chooseSelectOption(user, screen.getByPlaceholderText("Выберите до 4 автомаршрутизаторов"), "gpt-auto");
+    await user.click(screen.getByPlaceholderText("Выберите модель-судью"));
     await user.click(await screen.findByRole("option", { name: /prod-judge/ }));
 
     expect(screen.getByText("Start shadow eval")).toBeDisabled();
 
-    await user.click(screen.getByPlaceholderText("Select a baseline model"));
+    await user.click(screen.getByPlaceholderText("Выберите базовую модель"));
     expect(screen.queryByRole("option", { name: /openai\/gpt-4o/ })).not.toBeInTheDocument();
     await user.click(screen.getByRole("option", { name: /prod-claude/ }));
     await user.click(screen.getByText("Start shadow eval"));
@@ -654,18 +654,18 @@ describe("ShadowEvalSection", () => {
     const { start } = mockHooks({});
     render(<ShadowEvalSection />);
 
-    await user.click(screen.getByPlaceholderText("Search keys by alias"));
+    await user.click(screen.getByPlaceholderText("Поиск ключей по псевдониму"));
     const keyList = await screen.findByTestId("paginated-multi-select-list");
     await user.click(within(keyList).getByText("prod-alpha"));
-    const routerInput = screen.getByPlaceholderText("Select up to 4 auto-routers");
+    const routerInput = screen.getByPlaceholderText("Выберите до 4 автомаршрутизаторов");
     await user.click(routerInput);
     await user.click(await screen.findByText("gpt-auto"));
     await user.click(routerInput);
     await user.click(await screen.findByText("claude-auto"));
     expect(
-      screen.getByText("Every router sees the same sampled requests, judged against the same live responses"),
+      screen.getByText("Каждый маршрутизатор получает одни и те же отобранные запросы, оценка — по тем же ответам в реальном времени"),
     ).toBeInTheDocument();
-    await user.click(screen.getByPlaceholderText("Select a judge model"));
+    await user.click(screen.getByPlaceholderText("Выберите модель-судью"));
     await user.click(await screen.findByRole("option", { name: /prod-judge/ }));
     await user.click(screen.getByText("Start shadow eval"));
 
@@ -689,25 +689,25 @@ describe("ShadowEvalSection", () => {
     mockHooks({});
     render(<ShadowEvalSection />);
 
-    await user.click(screen.getByPlaceholderText("Search keys by alias"));
+    await user.click(screen.getByPlaceholderText("Поиск ключей по псевдониму"));
     const keyList = await screen.findByTestId("paginated-multi-select-list");
     await user.click(within(keyList).getByText("prod-alpha"));
-    const routerInput = screen.getByPlaceholderText("Select up to 4 auto-routers");
+    const routerInput = screen.getByPlaceholderText("Выберите до 4 автомаршрутизаторов");
     await user.click(routerInput);
     await user.click(await screen.findByText("gpt-auto"));
     await user.click(routerInput);
     await user.click(await screen.findByText("claude-auto"));
     await chooseSelectOption(
       user,
-      screen.getByText("Adoption check: key's traffic vs the router"),
-      "Regression check: router's picks vs a baseline",
+      screen.getByText("Проверка внедрения: трафик ключа против маршрутизатора"),
+      "Проверка регресса: выбор маршрутизатора против базовой линии",
     );
-    await user.click(screen.getByPlaceholderText("Select a judge model"));
+    await user.click(screen.getByPlaceholderText("Выберите модель-судью"));
     await user.click(await screen.findByRole("option", { name: /prod-judge/ }));
-    await user.click(screen.getByPlaceholderText("Select a baseline model"));
+    await user.click(screen.getByPlaceholderText("Выберите базовую модель"));
     await user.click(screen.getByRole("option", { name: /prod-claude/ }));
 
-    expect(screen.getByText("A regression check compares one router to its baseline")).toBeInTheDocument();
+    expect(screen.getByText("Проверка регресса сравнивает один маршрутизатор с его базовой линией")).toBeInTheDocument();
     expect(screen.getByText("Start shadow eval")).toBeDisabled();
   });
 
