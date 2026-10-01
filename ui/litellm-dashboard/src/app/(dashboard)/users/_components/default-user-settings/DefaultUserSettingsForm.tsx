@@ -350,7 +350,7 @@ const SettingsForm = ({ initialValues, roleOptions, updateSettings, onCancel, on
           Отмена
         </Button>
         <Button type="submit" disabled={!isDirty || mutation.isPending}>
-          {mutation.isPending ? "Saving..." : "Save Changes"}
+          {mutation.isPending ? "Сохранение..." : "Сохранить изменения"}
         </Button>
       </div>
     </form>

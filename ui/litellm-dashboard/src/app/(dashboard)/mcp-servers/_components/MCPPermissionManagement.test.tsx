@@ -19,7 +19,7 @@ describe("MCPPermissionManagement", () => {
   const expandPanel = async () => {
     const user = userEvent.setup();
     const headerButton = screen.getByRole("button", {
-      name: /permission management/i,
+      name: /управление разрешениями/i,
     });
     await user.click(headerButton);
     return user;
@@ -31,7 +31,7 @@ describe("MCPPermissionManagement", () => {
   it("should default allow_all_keys switch to unchecked for new servers", async () => {
     renderWithForm();
     await expandPanel();
-    expect(screen.getByRole("switch", { name: "Allow All LiteLLM Keys" })).not.toBeChecked();
+    expect(screen.getByRole("switch", { name: "Разрешить всем ключам LiteLLM" })).not.toBeChecked();
   });
 
   const renderWithInitialValues = (initialValues: Record<string, unknown>, props = {}) =>
@@ -47,9 +47,9 @@ describe("MCPPermissionManagement", () => {
   it("shows only the oauth2 PKCE-delegation toggle for oauth2 servers", async () => {
     renderWithInitialValues({ allow_all_keys: false, auth_type: "oauth2" });
     await expandPanel();
-    expect(screen.getByText("Delegate auth to upstream (PKCE passthrough)")).toBeInTheDocument();
+    expect(screen.getByText("Делегировать аутентификацию на вышестоящий сервер (PKCE напрямую)")).toBeInTheDocument();
     // The non-oauth2 pass-through toggle must NOT appear for oauth2 servers.
-    expect(screen.queryByText("OAuth pass-through")).not.toBeInTheDocument();
+    expect(screen.queryByText("Прямая передача OAuth")).not.toBeInTheDocument();
   });
 
   it("shows only the OAuth pass-through toggle for none-auth servers forwarding Authorization", async () => {
@@ -59,9 +59,9 @@ describe("MCPPermissionManagement", () => {
       extra_headers: ["Authorization"],
     });
     await expandPanel();
-    expect(screen.getByText("OAuth pass-through")).toBeInTheDocument();
+    expect(screen.getByText("Прямая передача OAuth")).toBeInTheDocument();
     // The oauth2-only PKCE delegation toggle must NOT appear here.
-    expect(screen.queryByText("Delegate auth to upstream (PKCE passthrough)")).not.toBeInTheDocument();
+    expect(screen.queryByText("Делегировать аутентификацию на вышестоящий сервер (PKCE напрямую)")).not.toBeInTheDocument();
   });
 
   it("hides both upstream-auth toggles for none-auth servers without an Authorization header", async () => {
@@ -71,8 +71,8 @@ describe("MCPPermissionManagement", () => {
       extra_headers: ["x-api-key"],
     });
     await expandPanel();
-    expect(screen.queryByText("OAuth pass-through")).not.toBeInTheDocument();
-    expect(screen.queryByText("Delegate auth to upstream (PKCE passthrough)")).not.toBeInTheDocument();
+    expect(screen.queryByText("Прямая передача OAuth")).not.toBeInTheDocument();
+    expect(screen.queryByText("Делегировать аутентификацию на вышестоящий сервер (PKCE напрямую)")).not.toBeInTheDocument();
   });
 
   it("should reflect allow_all_keys when editing an existing server", async () => {
@@ -89,7 +89,7 @@ describe("MCPPermissionManagement", () => {
     });
 
     const user = await expandPanel();
-    // Find the switch associated with "Allow All LiteLLM Keys" text
+    // Find the switch associated with "Разрешить всем ключам LiteLLM" text
     // The first switch in the component is for allow_all_keys
     const switches = screen.getAllByRole("switch");
     const toggle = switches[0];

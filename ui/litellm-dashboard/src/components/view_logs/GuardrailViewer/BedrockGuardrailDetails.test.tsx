@@ -26,7 +26,7 @@ describe("BedrockGuardrailDetails", () => {
     });
     renderWithProviders(<BedrockGuardrailDetails response={resp} />);
 
-    expect(screen.getByText("Action:")).toBeInTheDocument();
+    expect(screen.getByText("Действие:")).toBeInTheDocument();
     expect(screen.getByText("Policy violation")).toBeInTheDocument();
     expect(screen.getByText("[blocked]")).toBeInTheDocument();
   });
@@ -48,7 +48,7 @@ describe("BedrockGuardrailDetails", () => {
     // Using outputs
     let resp = makeBedrockResponse({ outputs: [{ text: "hello" }] });
     const { rerender } = renderWithProviders(<BedrockGuardrailDetails response={resp} />);
-    expect(screen.getByText("Outputs")).toBeInTheDocument();
+    expect(screen.getByText("Результаты")).toBeInTheDocument();
     expect(screen.getByText("hello")).toBeInTheDocument();
 
     // Using output
@@ -67,35 +67,35 @@ describe("BedrockGuardrailDetails", () => {
     expect(screen.getByText("Assessment #1")).toBeInTheDocument();
 
     // Word policy sections
-    expect(screen.getByText("Word Policy")).toBeInTheDocument();
-    expect(screen.getByText("Custom Words")).toBeInTheDocument();
-    expect(screen.getByText("Managed Word Lists")).toBeInTheDocument();
+    expect(screen.getByText("Словарная политика")).toBeInTheDocument();
+    expect(screen.getByText("Пользовательские слова")).toBeInTheDocument();
+    expect(screen.getByText("Управляемые списки слов")).toBeInTheDocument();
 
     // Contextual grounding table headers
-    expect(screen.getByText("Contextual Grounding")).toBeInTheDocument();
-    expect(screen.getAllByText("Score").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Threshold").length).toBeGreaterThan(0);
+    expect(screen.getByText("Контекстная обоснованность")).toBeInTheDocument();
+    expect(screen.getAllByText("Оценка").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Порог").length).toBeGreaterThan(0);
 
     // Sensitive Info sections
-    expect(screen.getByText("Sensitive Information")).toBeInTheDocument();
-    expect(screen.getByText("PII Entities")).toBeInTheDocument();
-    expect(screen.getByText("Custom Regexes")).toBeInTheDocument();
+    expect(screen.getByText("Конфиденциальная информация")).toBeInTheDocument();
+    expect(screen.getByText("Персональные данные (PII)")).toBeInTheDocument();
+    expect(screen.getByText("Пользовательские регулярные выражения")).toBeInTheDocument();
 
     // Topic Policy
-    expect(screen.getByText("Topic Policy")).toBeInTheDocument();
+    expect(screen.getByText("Тематическая политика")).toBeInTheDocument();
     expect(screen.getByText("weapons")).toBeInTheDocument();
 
     // Invocation Metrics
-    expect(screen.getByText("Invocation Metrics")).toBeInTheDocument();
+    expect(screen.getByText("Метрики вызова")).toBeInTheDocument();
 
     // Raw JSON section exists (closed by default)
-    expect(screen.getByText("Raw Bedrock Guardrail Response")).toBeInTheDocument();
+    expect(screen.getByText("Исходный ответ AWS Bedrock Guardrails")).toBeInTheDocument();
   });
 
   it("handles non-text outputs gracefully", () => {
     const resp = makeBedrockResponse({ outputs: [{}, { text: "texty" }] });
     renderWithProviders(<BedrockGuardrailDetails response={resp} />);
-    expect(screen.getByText("(non-text output)")).toBeInTheDocument();
+    expect(screen.getByText("(не текстовый вывод)")).toBeInTheDocument();
     expect(screen.getByText("texty")).toBeInTheDocument();
   });
 

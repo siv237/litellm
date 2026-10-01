@@ -110,7 +110,7 @@ export function ProjectBaseForm({ form, advancedOpen, onAdvancedOpenChange }: Pr
     { value: ALL_TEAM_MODELS, label: "Все модели команды" },
     ...modelsToPick.map((model) => ({ value: model, label: getModelDisplayName(model) })),
   ];
-  const modelsPlaceholder = selectedTeam ? "Select models" : "Select a team first";
+  const modelsPlaceholder = selectedTeam ? "Выберите модели" : "Сначала выберите команду";
 
   return (
     <div className="mt-6">
@@ -159,7 +159,7 @@ export function ProjectBaseForm({ form, advancedOpen, onAdvancedOpenChange }: Pr
           control={form.control}
           name="models"
           label="Разрешённые модели (в пределах моделей выбранной команды)"
-          description={!selectedTeam ? "Select a team first to see available models" : undefined}
+          description={!selectedTeam ? "Сначала выберите команду, чтобы увидеть доступные модели" : undefined}
         >
           {({ id, value, onChange, "aria-invalid": ariaInvalid, "aria-describedby": ariaDescribedBy }) => (
             <Select

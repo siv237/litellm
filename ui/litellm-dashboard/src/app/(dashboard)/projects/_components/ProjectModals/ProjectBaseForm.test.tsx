@@ -36,33 +36,33 @@ describe("ProjectBaseForm", () => {
 
   it("should render", () => {
     renderWithProviders(<FormWrapper />);
-    expect(screen.getByLabelText("Project Name")).toBeInTheDocument();
+    expect(screen.getByLabelText("Название проекта")).toBeInTheDocument();
   });
 
   it("should show a 'Basic Information' section heading", () => {
     renderWithProviders(<FormWrapper />);
-    expect(screen.getByText("Basic Information")).toBeInTheDocument();
+    expect(screen.getByText("Основные сведения")).toBeInTheDocument();
   });
 
   it("should show a Project Name input", () => {
     renderWithProviders(<FormWrapper />);
-    expect(screen.getByPlaceholderText("e.g. Customer Support Bot")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("напр. Бот поддержки клиентов")).toBeInTheDocument();
   });
 
   it("should show a Team select", () => {
     renderWithProviders(<FormWrapper />);
-    expect(screen.getByText("Team")).toBeInTheDocument();
+    expect(screen.getByText("Команда")).toBeInTheDocument();
   });
 
   it("should show a Description textarea", () => {
     renderWithProviders(<FormWrapper />);
-    expect(screen.getByPlaceholderText("Describe the purpose of this project")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Опишите назначение этого проекта")).toBeInTheDocument();
   });
 
   it("should show the models select as disabled when no team is selected", () => {
     renderWithProviders(<FormWrapper />);
     // The models select should be disabled — its placeholder indicates no team yet
-    expect(screen.getByText("Select a team first")).toBeInTheDocument();
+    expect(screen.getByText("Сначала выберите команду")).toBeInTheDocument();
   });
 
   it("should show available team options when the Team dropdown is opened", async () => {
@@ -76,7 +76,7 @@ describe("ProjectBaseForm", () => {
     });
     renderWithProviders(<FormWrapper />);
     // The form label "Team" is associated with the combobox input inside the Select
-    await user.click(screen.getByLabelText("Team"));
+    await user.click(screen.getByLabelText("Команда"));
     await waitFor(() => {
       expect(screen.getByText("Engineering")).toBeInTheDocument();
     });
@@ -90,29 +90,29 @@ describe("ProjectBaseForm", () => {
 
   it("should show the Advanced Settings collapse panel", () => {
     renderWithProviders(<FormWrapper />);
-    expect(screen.getByText("Advanced Settings")).toBeInTheDocument();
+    expect(screen.getByText("Расширенные настройки")).toBeInTheDocument();
   });
 
   it("should show a Guardrails field in the Advanced Settings section", async () => {
     const user = userEvent.setup();
     renderWithProviders(<FormWrapper />);
-    await user.click(screen.getByText("Advanced Settings"));
+    await user.click(screen.getByText("Расширенные настройки"));
     await waitFor(() => {
-      expect(screen.getByText("Guardrails")).toBeInTheDocument();
+      expect(screen.getByText("Гардрейлы")).toBeInTheDocument();
     });
   });
 
   it("should show combined, input, and output TPM limit inputs for a model row", async () => {
     const user = userEvent.setup();
     renderWithProviders(<FormWrapper />);
-    await user.click(screen.getByText("Advanced Settings"));
-    await user.click(screen.getByRole("button", { name: /add model limit/i }));
+    await user.click(screen.getByText("Расширенные настройки"));
+    await user.click(screen.getByRole("button", { name: /добавить лимит модели/i }));
 
-    expect(screen.getByPlaceholderText("TPM Limit")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Input TPM Limit")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Output TPM Limit")).toBeInTheDocument();
-    expect(screen.getByLabelText("TPM Limit")).toBeInTheDocument();
-    expect(screen.getByLabelText("Input TPM Limit")).toBeInTheDocument();
-    expect(screen.getByLabelText("Output TPM Limit")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Лимит TPM")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Лимит входных TPM")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Лимит выходных TPM")).toBeInTheDocument();
+    expect(screen.getByLabelText("Лимит TPM")).toBeInTheDocument();
+    expect(screen.getByLabelText("Лимит входных TPM")).toBeInTheDocument();
+    expect(screen.getByLabelText("Лимит выходных TPM")).toBeInTheDocument();
   });
 });

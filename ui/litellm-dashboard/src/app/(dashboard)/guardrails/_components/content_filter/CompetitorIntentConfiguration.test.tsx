@@ -66,18 +66,18 @@ describe("CompetitorIntentConfiguration reported config", () => {
     const user = userEvent.setup();
     render(<Harness />);
 
-    await chooseOption(user, 0, "Generic (specify competitors manually)");
+    await chooseOption(user, 0, "Общий (конкуренты указываются вручную)");
 
     expect(lastConfig()).toStrictEqual({ ...DEFAULT_CONFIG, competitor_intent_type: "generic" });
-    expect(screen.getByText("Competitors")).toBeInTheDocument();
-    expect(screen.queryByText("Locations (optional)")).not.toBeInTheDocument();
+    expect(screen.getByText("Конкуренты")).toBeInTheDocument();
+    expect(screen.queryByText("Локации (необязательно)")).not.toBeInTheDocument();
   });
 
   it("reports a policy change without dropping the other policy key", async () => {
     const user = userEvent.setup();
     render(<Harness />);
 
-    await chooseOption(user, 3, "Reframe (suggest alternative)");
+    await chooseOption(user, 3, "Переформулировать (предложить альтернативу)");
 
     expect(lastConfig()).toStrictEqual({
       ...DEFAULT_CONFIG,
@@ -176,9 +176,9 @@ describe("CompetitorIntentConfiguration reported config", () => {
   });
 
   it.each([
-    ["Type", "Airline (auto-load competitors from IATA)"],
-    ["Policy: Competitor comparison", "Refuse (block request)"],
-    ["Policy: Possible competitor comparison", "Reframe (suggest alternative to backend LLM)"],
+    ["Тип", "Авиакомпания (конкуренты из IATA автоматически)"],
+    ["Политика: сравнение с конкурентами", "Отказать (блокировать запрос)"],
+    ["Политика: возможное сравнение с конкурентами", "Переформулировать (предложить альтернативу для LLM бэкенда)"],
   ])("shows the human label on the %s trigger", (name, label) => {
     render(<Harness />);
 
@@ -189,9 +189,9 @@ describe("CompetitorIntentConfiguration reported config", () => {
     const user = userEvent.setup();
     render(<Harness />);
 
-    await user.click(screen.getByRole("combobox", { name: "Type" }));
-    await user.click(await screen.findByRole("option", { name: "Generic (specify competitors manually)" }));
+    await user.click(screen.getByRole("combobox", { name: "Тип" }));
+    await user.click(await screen.findByRole("option", { name: "Общий (конкуренты указываются вручную)" }));
 
-    expect(screen.getByRole("combobox", { name: "Type" })).toHaveTextContent("Generic (specify competitors manually)");
+    expect(screen.getByRole("combobox", { name: "Тип" })).toHaveTextContent("Общий (конкуренты указываются вручную)");
   });
 });

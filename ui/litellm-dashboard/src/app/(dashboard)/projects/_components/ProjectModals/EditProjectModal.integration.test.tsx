@@ -11,7 +11,7 @@ vi.mock("@/app/(dashboard)/hooks/projects/useUpdateProject", () => ({
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({
-  default: () => ({ accessToken: "test-token", userId: "u-1", userRole: "Admin" }),
+  default: () => ({ accessToken: "test-token", userId: "u-1", userRole: "Администратор" }),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({
@@ -72,7 +72,7 @@ const project: ProjectResponse = {
 const renderModal = (data: ProjectResponse = project) =>
   renderWithProviders(<EditProjectModal isOpen project={data} onClose={vi.fn()} />);
 
-const save = async (user: User) => user.click(screen.getByRole("button", { name: /save changes/i }));
+const save = async (user: User) => user.click(screen.getByRole("button", { name: /save|update/i }));
 
 const variables = () => mutate.mock.calls.at(-1)?.[0] as { projectId: string; params: Record<string, unknown> };
 
@@ -106,7 +106,7 @@ describe("EditProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    const budgetInput = screen.getByRole("spinbutton", { name: "Max Budget (USD)" });
+    const budgetInput = screen.getByRole("spinbutton", { name: "Макс. бюджет (USD)" });
     await user.clear(budgetInput);
     await user.tab();
     expect(budgetInput).toHaveValue(null);
@@ -121,9 +121,9 @@ describe("EditProjectModal submit payload", () => {
     renderModal();
     await screen.findByDisplayValue("My Project");
 
-    await user.click(screen.getByText("Advanced Settings"));
-    await screen.findByText("Model-Specific Limits");
-    await user.click(screen.getByText("Advanced Settings"));
+    await user.click(screen.getByText("Расширенные настройки"));
+    await screen.findByText("Лимиты по моделям");
+    await user.click(screen.getByText("Расширенные настройки"));
     await save(user);
 
     await waitFor(() => expect(mutate).toHaveBeenCalled());
@@ -164,8 +164,8 @@ describe("EditProjectModal submit payload", () => {
     renderModal();
     await screen.findByDisplayValue("My Project");
 
-    await user.click(screen.getByText("Advanced Settings"));
-    await screen.findByText("Model-Specific Limits");
+    await user.click(screen.getByText("Расширенные настройки"));
+    await screen.findByText("Лимиты по моделям");
     await save(user);
 
     await waitFor(() => expect(mutate).toHaveBeenCalled());
@@ -176,7 +176,7 @@ describe("EditProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    await user.clear(screen.getByLabelText("Project Name"));
+    await user.clear(screen.getByLabelText("Название проекта"));
     await save(user);
 
     expect(await screen.findByText("Please enter a project name")).toBeInTheDocument();
@@ -228,8 +228,8 @@ describe("EditProjectModal submit payload", () => {
     renderModal();
     await screen.findByDisplayValue("My Project");
 
-    await user.click(screen.getByText("Advanced Settings"));
-    await screen.findByText("Model-Specific Limits");
+    await user.click(screen.getByText("Расширенные настройки"));
+    await screen.findByText("Лимиты по моделям");
     await user.click(screen.getByRole("button", { name: "Remove model limit 1" }));
     await save(user);
 
@@ -246,9 +246,9 @@ describe("EditProjectModal submit payload", () => {
     renderModal();
     await screen.findByDisplayValue("My Project");
 
-    await user.click(screen.getByText("Advanced Settings"));
-    await screen.findByText("Model-Specific Limits");
-    await user.clear(screen.getByLabelText("Input TPM Limit"));
+    await user.click(screen.getByText("Расширенные настройки"));
+    await screen.findByText("Лимиты по моделям");
+    await user.clear(screen.getByLabelText("Лимит входных TPM"));
     await save(user);
 
     await waitFor(() => expect(mutate).toHaveBeenCalled());
@@ -262,8 +262,8 @@ describe("EditProjectModal submit payload", () => {
     renderModal({ ...project, metadata: { owner: "platform" } } as unknown as ProjectResponse);
     await screen.findByDisplayValue("My Project");
 
-    await user.click(screen.getByText("Advanced Settings"));
-    await screen.findByText("Metadata");
+    await user.click(screen.getByText("Расширенные настройки"));
+    await screen.findByText("Метаданные");
     await user.click(screen.getByRole("button", { name: "Remove metadata pair 1" }));
     await save(user);
 
@@ -282,8 +282,8 @@ describe("EditProjectModal submit payload", () => {
     } as unknown as ProjectResponse);
     await screen.findByDisplayValue("My Project");
 
-    await user.click(screen.getByText("Advanced Settings"));
-    await screen.findByText("Model-Specific Limits");
+    await user.click(screen.getByText("Расширенные настройки"));
+    await screen.findByText("Лимиты по моделям");
     await save(user);
 
     await waitFor(() => expect(mutate).toHaveBeenCalled());

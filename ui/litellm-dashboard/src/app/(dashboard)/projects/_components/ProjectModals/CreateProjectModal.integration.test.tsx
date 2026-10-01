@@ -10,7 +10,7 @@ vi.mock("@/app/(dashboard)/hooks/projects/useCreateProject", () => ({
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({
-  default: () => ({ accessToken: "test-token", userId: "u-1", userRole: "Admin" }),
+  default: () => ({ accessToken: "test-token", userId: "u-1", userRole: "Администратор" }),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({
@@ -46,15 +46,15 @@ type User = ReturnType<typeof setup>;
 const renderModal = () => renderWithProviders(<CreateProjectModal isOpen onClose={vi.fn()} />);
 
 const pickTeam = async (user: User) => {
-  await user.click(screen.getByLabelText("Team"));
+  await user.click(screen.getByLabelText("Команда"));
   await user.click(await screen.findByText("Engineering"));
 };
 
 const submit = async (user: User) => user.click(screen.getByRole("button", { name: /create project/i }));
 
 const expandAdvanced = async (user: User) => {
-  await user.click(screen.getByText("Advanced Settings"));
-  await screen.findByText("Model-Specific Limits");
+  await user.click(screen.getByText("Расширенные настройки"));
+  await screen.findByText("Лимиты по моделям");
 };
 
 const params = () => mutate.mock.calls.at(-1)?.[0] as Record<string, unknown>;
@@ -68,7 +68,7 @@ describe("CreateProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Project Name"), { target: { value: "My Project" } });
+    fireEvent.change(screen.getByLabelText("Название проекта"), { target: { value: "My Project" } });
     await pickTeam(user);
     await submit(user);
 
@@ -100,7 +100,7 @@ describe("CreateProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Project Name"), { target: { value: "My Project" } });
+    fireEvent.change(screen.getByLabelText("Название проекта"), { target: { value: "My Project" } });
     await submit(user);
 
     expect(await screen.findByText("Please select a team")).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe("CreateProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Project Name"), { target: { value: "My Project" } });
+    fireEvent.change(screen.getByLabelText("Название проекта"), { target: { value: "My Project" } });
     await pickTeam(user);
     fireEvent.change(screen.getByLabelText("Description"), { target: { value: "Handles support" } });
     fireEvent.change(screen.getByPlaceholderText("0.00"), { target: { value: "42.567" } });
@@ -126,7 +126,7 @@ describe("CreateProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Project Name"), { target: { value: "My Project" } });
+    fireEvent.change(screen.getByLabelText("Название проекта"), { target: { value: "My Project" } });
     await pickTeam(user);
     await user.click(screen.getByLabelText(/Allowed Models/));
     await user.click(await screen.findByTitle("gpt-4"));
@@ -140,11 +140,11 @@ describe("CreateProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Project Name"), { target: { value: "My Project" } });
+    fireEvent.change(screen.getByLabelText("Название проекта"), { target: { value: "My Project" } });
     await pickTeam(user);
     await user.click(screen.getByLabelText(/Allowed Models/));
     await user.click(await screen.findByTitle("gpt-4"));
-    await user.click(await screen.findByTitle("All Team Models"));
+    await user.click(await screen.findByTitle("Все модели команды"));
     await submit(user);
 
     await waitFor(() => expect(mutate).toHaveBeenCalled());
@@ -155,7 +155,7 @@ describe("CreateProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Project Name"), { target: { value: "My Project" } });
+    fireEvent.change(screen.getByLabelText("Название проекта"), { target: { value: "My Project" } });
     await pickTeam(user);
     await expandAdvanced(user);
     await user.click(screen.getByRole("switch"));
@@ -169,7 +169,7 @@ describe("CreateProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Project Name"), { target: { value: "My Project" } });
+    fireEvent.change(screen.getByLabelText("Название проекта"), { target: { value: "My Project" } });
     await pickTeam(user);
     await expandAdvanced(user);
     await submit(user);
@@ -185,16 +185,16 @@ describe("CreateProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Project Name"), { target: { value: "My Project" } });
+    fireEvent.change(screen.getByLabelText("Название проекта"), { target: { value: "My Project" } });
     await pickTeam(user);
     await expandAdvanced(user);
 
-    await user.click(screen.getByRole("button", { name: /add model limit/i }));
+    await user.click(screen.getByRole("button", { name: /добавить лимит модели/i }));
     fireEvent.change(screen.getByPlaceholderText("Model name (e.g. gpt-4)"), { target: { value: "gpt-4" } });
-    fireEvent.change(screen.getByPlaceholderText("TPM Limit"), { target: { value: "100" } });
-    fireEvent.change(screen.getByPlaceholderText("RPM Limit"), { target: { value: "20" } });
-    fireEvent.change(screen.getByPlaceholderText("Input TPM Limit"), { target: { value: "60" } });
-    fireEvent.change(screen.getByPlaceholderText("Output TPM Limit"), { target: { value: "40" } });
+    fireEvent.change(screen.getByPlaceholderText("Лимит TPM"), { target: { value: "100" } });
+    fireEvent.change(screen.getByPlaceholderText("Лимит RPM"), { target: { value: "20" } });
+    fireEvent.change(screen.getByPlaceholderText("Лимит входных TPM"), { target: { value: "60" } });
+    fireEvent.change(screen.getByPlaceholderText("Лимит выходных TPM"), { target: { value: "40" } });
     await submit(user);
 
     await waitFor(() => expect(mutate).toHaveBeenCalled());
@@ -208,7 +208,7 @@ describe("CreateProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Project Name"), { target: { value: "My Project" } });
+    fireEvent.change(screen.getByLabelText("Название проекта"), { target: { value: "My Project" } });
     await pickTeam(user);
     await expandAdvanced(user);
 
@@ -225,11 +225,11 @@ describe("CreateProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Project Name"), { target: { value: "My Project" } });
+    fireEvent.change(screen.getByLabelText("Название проекта"), { target: { value: "My Project" } });
     await pickTeam(user);
     await expandAdvanced(user);
 
-    await user.click(screen.getByLabelText("Guardrails"));
+    await user.click(screen.getByLabelText("Гардрейлы"));
     await user.click(await screen.findByTitle("pii-guard"));
     await user.keyboard("{Escape}");
     await submit(user);
@@ -242,12 +242,12 @@ describe("CreateProjectModal submit payload", () => {
     const user = setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Project Name"), { target: { value: "My Project" } });
+    fireEvent.change(screen.getByLabelText("Название проекта"), { target: { value: "My Project" } });
     await pickTeam(user);
     await expandAdvanced(user);
 
-    await user.click(screen.getByRole("button", { name: /add model limit/i }));
-    await user.click(screen.getByRole("button", { name: /add model limit/i }));
+    await user.click(screen.getByRole("button", { name: /добавить лимит модели/i }));
+    await user.click(screen.getByRole("button", { name: /добавить лимит модели/i }));
     const modelInputs = screen.getAllByPlaceholderText("Model name (e.g. gpt-4)");
     fireEvent.change(modelInputs[0], { target: { value: "gpt-4" } });
     fireEvent.change(modelInputs[1], { target: { value: "gpt-4" } });

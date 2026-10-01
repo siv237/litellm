@@ -395,7 +395,7 @@ describe("EntityUsage", () => {
     entityType: "tag" as const,
     entityId: "test-tag",
     userID: "user-123",
-    userRole: "Admin",
+    userRole: "Администратор",
     entityList: [
       { label: "Tag 1", value: "tag-1" },
       { label: "Tag 2", value: "tag-2" },
@@ -438,7 +438,7 @@ describe("EntityUsage", () => {
       expect(mockTagDailyActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Tag Spend Overview")).toBeInTheDocument();
+    expect(screen.getByText("Tag Обзор расходов")).toBeInTheDocument();
     expect(screen.getByText("Total Spend")).toBeInTheDocument();
 
     await waitFor(() => {
@@ -457,7 +457,7 @@ describe("EntityUsage", () => {
     });
 
     // Check that it shows team-specific label
-    expect(screen.getByText("Team Spend Overview")).toBeInTheDocument();
+    expect(screen.getByText("Team Обзор расходов")).toBeInTheDocument();
 
     await waitFor(() => {
       const spendElements = screen.getAllByText("$100.50");
@@ -492,7 +492,7 @@ describe("EntityUsage", () => {
       expect(mockOrganizationDailyActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Organization Spend Overview")).toBeInTheDocument();
+    expect(screen.getByText("Organization Обзор расходов")).toBeInTheDocument();
 
     await waitFor(() => {
       const spendElements = screen.getAllByText("$100.50");
@@ -507,7 +507,7 @@ describe("EntityUsage", () => {
       expect(mockCustomerDailyActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Customer Spend Overview")).toBeInTheDocument();
+    expect(screen.getByText("Customer Обзор расходов")).toBeInTheDocument();
 
     await waitFor(() => {
       const spendElements = screen.getAllByText("$100.50");
@@ -522,7 +522,7 @@ describe("EntityUsage", () => {
       expect(mockAgentDailyActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Agent Spend Overview")).toBeInTheDocument();
+    expect(screen.getByText("Agent Обзор расходов")).toBeInTheDocument();
 
     await waitFor(() => {
       const spendElements = screen.getAllByText("$444.30");
@@ -537,7 +537,7 @@ describe("EntityUsage", () => {
       expect(mockUserDailyActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("User Spend Overview")).toBeInTheDocument();
+    expect(screen.getByText("User Обзор расходов")).toBeInTheDocument();
 
     await waitFor(() => {
       const spendElements = screen.getAllByText("$100.50");
@@ -552,16 +552,16 @@ describe("EntityUsage", () => {
       expect(mockTagDailyActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Tag Spend Overview")).toBeInTheDocument();
+    expect(screen.getByText("Tag Обзор расходов")).toBeInTheDocument();
 
-    const modelActivityTab = screen.getByText("Model Activity");
+    const modelActivityTab = screen.getByText("Активность моделей");
     act(() => {
       fireEvent.click(modelActivityTab);
     });
 
     expect(screen.getAllByText("Activity Metrics")[0]).toBeInTheDocument();
 
-    const keyActivityTab = screen.getByText("Key Activity");
+    const keyActivityTab = screen.getByText("Активность ключей");
     act(() => {
       fireEvent.click(keyActivityTab);
     });
@@ -588,10 +588,10 @@ describe("EntityUsage", () => {
   };
 
   const NON_TEAM_PANELS: [string, string][] = [
-    ["Cost", "Tag Spend Overview"],
-    ["Model Activity", "metrics-source:model_groups"],
-    ["Key Activity", "metrics-source:api_keys"],
-    ["Endpoint Activity", "Endpoint Usage Panel"],
+    ["Стоимость", "Tag Обзор расходов"],
+    ["Активность моделей", "metrics-source:model_groups"],
+    ["Активность ключей", "metrics-source:api_keys"],
+    ["Активность эндпоинтов", "Endpoint Usage Panel"],
   ];
 
   it.each(NON_TEAM_PANELS)("shows only the %s panel for a non-team entity type", async (tabLabel, marker) => {
@@ -613,11 +613,11 @@ describe("EntityUsage", () => {
   });
 
   const TEAM_PANELS: [string, string][] = [
-    ["Cost", "Team Spend Overview"],
-    ["Model Activity", "metrics-source:model_groups"],
-    ["Agent Activity", "metrics-source:entities"],
-    ["Key Activity", "metrics-source:api_keys"],
-    ["Endpoint Activity", "Endpoint Usage Panel"],
+    ["Стоимость", "Team Обзор расходов"],
+    ["Активность моделей", "metrics-source:model_groups"],
+    ["Activity Metrics", "metrics-source:entities"],
+    ["Активность ключей", "metrics-source:api_keys"],
+    ["Активность эндпоинтов", "Endpoint Usage Panel"],
   ];
 
   it.each(TEAM_PANELS)("shows only the %s panel for the team entity type", async (tabLabel, marker) => {
@@ -658,7 +658,7 @@ describe("EntityUsage", () => {
       expect(mockTagDailyActivityCall).toHaveBeenCalled();
     });
 
-    expect(await screen.findByText("Tag Spend Overview")).toBeInTheDocument();
+    expect(await screen.findByText("Tag Обзор расходов")).toBeInTheDocument();
     expect(await screen.findByText("$0.00")).toBeInTheDocument();
     expect(screen.getByText("Total Spend")).toBeInTheDocument();
     expect(screen.getAllByText("0")[0]).toBeInTheDocument();
@@ -671,17 +671,17 @@ describe("EntityUsage", () => {
       expect(mockTagDailyActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Model Activity")).toBeInTheDocument();
+    expect(screen.getByText("Активность моделей")).toBeInTheDocument();
   });
 
-  it("should display Request / Token Consumption tab for agent entity type", async () => {
+  it("should display Потребление запросов / токенов tab for agent entity type", async () => {
     render(<EntityUsage {...defaultProps} entityType="agent" />);
 
     await waitFor(() => {
       expect(mockAgentDailyActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Request / Token Consumption")).toBeInTheDocument();
+    expect(screen.getByText("Потребление запросов / токенов")).toBeInTheDocument();
   });
 
   it("should display Top Public Model Names title for non-agent entity types", async () => {
@@ -702,7 +702,7 @@ describe("EntityUsage", () => {
     });
 
     act(() => {
-      fireEvent.click(screen.getByText("Model Activity"));
+      fireEvent.click(screen.getByText("Активность моделей"));
     });
 
     expect(showingCount("metrics-source:model_groups")).toBeGreaterThan(0);
@@ -800,7 +800,7 @@ describe("EntityUsage", () => {
       expect(mockTeamDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Agent Activity")).toBeInTheDocument();
+    expect(screen.getByText("Activity Metrics")).toBeInTheDocument();
   });
 
   it("should not display Agent Activity tab for non-team entity types", async () => {
@@ -810,7 +810,7 @@ describe("EntityUsage", () => {
       expect(mockTagDailyActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.queryByText("Agent Activity")).not.toBeInTheDocument();
+    expect(screen.queryByText("Activity Metrics")).not.toBeInTheDocument();
   });
 
   it("should display Top Agents Driving Spend card for team entity type", async () => {
@@ -820,7 +820,7 @@ describe("EntityUsage", () => {
       expect(mockTeamDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Top Agents Driving Spend")).toBeInTheDocument();
+    expect(screen.getByText("Топ агентов по расходам")).toBeInTheDocument();
   });
 
   it("should not display Top Agents Driving Spend card for non-team entity types", async () => {
@@ -830,7 +830,7 @@ describe("EntityUsage", () => {
       expect(mockTagDailyActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.queryByText("Top Agents Driving Spend")).not.toBeInTheDocument();
+    expect(screen.queryByText("Топ агентов по расходам")).not.toBeInTheDocument();
   });
 
   it("should fetch agent activity data when entity type is team", async () => {
@@ -864,7 +864,7 @@ describe("EntityUsage", () => {
       expect(mockTeamDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
-    const agentActivityTab = screen.getByText("Agent Activity");
+    const agentActivityTab = screen.getByText("Activity Metrics");
     act(() => {
       fireEvent.click(agentActivityTab);
     });
@@ -977,8 +977,8 @@ describe("EntityUsage", () => {
 
   describe("capability gating", () => {
     it.each([
-      ["organization", () => mockOrganizationDailyActivityCall, "Organization Spend Overview"],
-      ["agent", () => mockAgentDailyActivityCall, "Agent Spend Overview"],
+      ["organization", () => mockOrganizationDailyActivityCall, "Organization Обзор расходов"],
+      ["agent", () => mockAgentDailyActivityCall, "Agent Обзор расходов"],
     ] as const)("fetches %s activity for an admin but not for an internal user", async (entityType, call, heading) => {
       render(<EntityUsage {...defaultProps} entityType={entityType} />);
       await waitFor(() => {
@@ -1008,7 +1008,7 @@ describe("EntityUsage", () => {
           expect(call()).toHaveBeenCalled();
         });
       } else {
-        expect(await screen.findByText("Agent Spend Overview")).toBeInTheDocument();
+        expect(await screen.findByText("Agent Обзор расходов")).toBeInTheDocument();
         expect(call()).not.toHaveBeenCalled();
       }
     });
@@ -1019,11 +1019,11 @@ describe("EntityUsage", () => {
       await waitFor(() => {
         expect(mockTeamDailyActivityAggregatedCall).toHaveBeenCalled();
       });
-      expect(screen.getByText("Team Spend Overview")).toBeInTheDocument();
+      expect(screen.getByText("Team Обзор расходов")).toBeInTheDocument();
 
       expect(mockAgentDailyActivityCall).not.toHaveBeenCalled();
-      expect(screen.queryByText("Agent Activity")).not.toBeInTheDocument();
-      expect(screen.queryByText("Top Agents Driving Spend")).not.toBeInTheDocument();
+      expect(screen.queryByText("Activity Metrics")).not.toBeInTheDocument();
+      expect(screen.queryByText("Топ агентов по расходам")).not.toBeInTheDocument();
     });
 
     it("keeps the tag breakdown for an internal user", async () => {
@@ -1032,7 +1032,7 @@ describe("EntityUsage", () => {
       await waitFor(() => {
         expect(mockTagDailyActivityCall).toHaveBeenCalled();
       });
-      expect(screen.getByText("Tag Spend Overview")).toBeInTheDocument();
+      expect(screen.getByText("Tag Обзор расходов")).toBeInTheDocument();
     });
   });
 
