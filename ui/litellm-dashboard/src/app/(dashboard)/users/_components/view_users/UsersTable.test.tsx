@@ -110,17 +110,19 @@ describe("UsersTable", () => {
     const headerRow = screen.getAllByRole("row")[0];
 
     [
-      "User ID",
-      "Email",
-      "Status",
-      "Global Proxy Role",
-      "User Alias",
-      "Spend (USD)",
-      "Budget (USD)",
+      "ID пользователя",
+      "Эл. почта",
+      "Статус",
+      "Глобальная роль прокси",
+      "Псевдоним пользователя",
+      "Расход (USD)",
+      "Бюджет (USD)",
+      "Квота",
+      "Использовано",
       "SSO ID",
-      "Virtual Keys",
-      "Created At",
-      "Updated At",
+      "Виртуальные ключи",
+      "Создан",
+      "Обновлён",
     ].forEach((header) => {
       expect(headerRow).toHaveTextContent(header);
     });

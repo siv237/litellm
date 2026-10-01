@@ -32,13 +32,13 @@ const STATUS_CONFIG: Record<MCPStatus, { label: string; bg: string; text: string
     dot: "bg-success",
   },
   pending_review: {
-    label: "Pending Review",
+    label: "На проверке",
     bg: "bg-warning/10",
     text: "text-warning",
     dot: "bg-warning",
   },
   rejected: {
-    label: "Rejected",
+    label: "Отклонён",
     bg: "bg-destructive/10",
     text: "text-destructive",
     dot: "bg-destructive",
@@ -76,8 +76,8 @@ function ConfirmDialog({ action, serverName, isCurrentlyActive, onConfirm, onCan
   const [reviewNotes, setReviewNotes] = useState("");
   const isApprove = action === "approve";
   const rejectBody = isCurrentlyActive
-    ? "This server is currently live. Rejecting it will immediately remove it from the proxy runtime."
-    : "This will mark the submission as rejected.";
+    ? "Сервер сейчас работает. Отклонение немедленно удалит его из среды прокси."
+    : "Заявка будет помечена как отклонённая.";
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-overlay">
       <div className="bg-card rounded-xl shadow-xl p-6 max-w-sm w-full mx-4">
@@ -93,18 +93,18 @@ function ConfirmDialog({ action, serverName, isCurrentlyActive, onConfirm, onCan
           )}
         </div>
         <h3 className="text-base font-semibold text-foreground mb-1">
-          {isApprove ? "Approve MCP Server" : "Reject MCP Server"}
+          {isApprove ? "Одобрить MCP-сервер" : "Отклонить MCP-сервер"}
         </h3>
         <p className="text-sm text-muted-foreground mb-4">
-          Are you sure you want to {action}{" "}
+          Вы уверены, что хотите {action === "approve" ? "одобрить" : "отклонить"}{" "}
           <span className="font-medium text-foreground">&quot;{serverName}&quot;</span>?{" "}
           {isApprove
-            ? "This will activate the server. The submitting user will see it in their MCP Servers list once approved."
+            ? "Сервер будет активирован. Отправитель увидит его в списке MCP-серверов после одобрения."
             : rejectBody}
         </p>
         {!isApprove && (
           <textarea
-            placeholder="Reason for rejection (optional)"
+            placeholder="Причина отклонения (необязательно)"
             value={reviewNotes}
             onChange={(e) => setReviewNotes(e.target.value)}
             className="w-full border border-border rounded-md px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-ring mb-4 resize-none"
@@ -128,7 +128,7 @@ function ConfirmDialog({ action, serverName, isCurrentlyActive, onConfirm, onCan
                 : "bg-destructive text-destructive-foreground hover:bg-destructive/80"
             }`}
           >
-            {isApprove ? "Approve" : "Reject"}
+            {isApprove ? "Одобрить" : "Отклонить"}
           </button>
         </div>
       </div>
@@ -160,13 +160,13 @@ function SubmissionRulesPanel({ requiredFields, onChange, onSave, isSaving }: Su
       >
         <div className="flex items-center gap-2">
           <SettingsIcon className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-semibold text-foreground">Submission Rules</span>
+          <span className="text-sm font-semibold text-foreground">Правила заявок</span>
           {activeLabels.length > 0 ? (
             <span className="text-xs text-muted-foreground">
-              ({activeLabels.length} required field{activeLabels.length !== 1 ? "s" : ""})
+              ({activeLabels.length} {activeLabels.length === 1 ? "обязательное поле" : activeLabels.length < 5 ? "обязательных поля" : "обязательных полей"})
             </span>
           ) : (
-            <span className="text-xs text-muted-foreground italic">no rules set</span>
+            <span className="text-xs text-muted-foreground italic">правила не заданы</span>
           )}
         </div>
         <div className="flex items-center gap-3">
@@ -196,8 +196,8 @@ function SubmissionRulesPanel({ requiredFields, onChange, onSave, isSaving }: Su
       {expanded && (
         <div className="border-t border-border px-4 pt-4 pb-4">
           <p className="text-xs text-muted-foreground mb-4">
-            Select which fields must be filled in before a submission is considered compliant. LiteLLM will show ✓ / ✗
-            for each rule on every submission card below.
+            Выберите, какие поля должны быть заполнены, чтобы заявка считалась соответствующей. LiteLLM покажет
+            ✓ / ✗ по каждому правилу на каждой карточке заявки ниже.
           </p>
           <div className="grid grid-cols-2 gap-x-8 gap-y-5">
             {FIELD_GROUPS.map((group) => (
@@ -239,7 +239,7 @@ function SubmissionRulesPanel({ requiredFields, onChange, onSave, isSaving }: Su
               }}
               className="px-4 py-1.5 text-sm font-medium text-info-foreground bg-info hover:bg-info/80 disabled:opacity-50 rounded-md transition-colors"
             >
-              {isSaving ? "Saving…" : "Save Rules"}
+              {isSaving ? "Сохранение…" : "Сохранить правила"}
             </button>
             <button
               type="button"
@@ -304,17 +304,17 @@ function MCPServerCard({ server, onApprove, onReject, requiredFields }: MCPServe
             )}
             <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
               <span>
-                Transport: <span className="text-muted-foreground">{server.transport ?? "sse"}</span>
+                Транспорт: <span className="text-muted-foreground">{server.transport ?? "sse"}</span>
               </span>
               <span>·</span>
               <span>
-                Submitted by: <span className="text-muted-foreground">{server.submitted_by ?? "—"}</span>
+                Отправил: <span className="text-muted-foreground">{server.submitted_by ?? "—"}</span>
               </span>
               <span>·</span>
               <span>{formatDate(server.submitted_at)}</span>
             </div>
             {approvalStatus === "rejected" && server.review_notes && (
-              <p className="text-xs text-destructive mt-1.5">Rejection reason: {server.review_notes}</p>
+              <p className="text-xs text-destructive mt-1.5">Причина отклонения: {server.review_notes}</p>
             )}
           </div>
           {/* Approve/Reject when no checks panel (no rules configured) */}
@@ -326,7 +326,7 @@ function MCPServerCard({ server, onApprove, onReject, requiredFields }: MCPServe
                   onClick={onApprove}
                   className="text-xs bg-success hover:bg-success/80 text-success-foreground px-3 py-1.5 rounded-md transition-colors font-medium"
                 >
-                  Approve
+                  Одобрить
                 </button>
               )}
               <button
@@ -334,7 +334,7 @@ function MCPServerCard({ server, onApprove, onReject, requiredFields }: MCPServe
                 onClick={onReject}
                 className="text-xs border border-destructive/30 text-destructive hover:bg-destructive/10 px-3 py-1.5 rounded-md transition-colors font-medium"
               >
-                Reject
+                Отклонить
               </button>
             </div>
           )}
@@ -345,7 +345,7 @@ function MCPServerCard({ server, onApprove, onReject, requiredFields }: MCPServe
                 onClick={onApprove}
                 className="text-xs bg-success hover:bg-success/80 text-success-foreground px-3 py-1.5 rounded-md transition-colors font-medium"
               >
-                Re-approve
+                Повторно одобрить
               </button>
             </div>
           )}
@@ -391,7 +391,7 @@ function MCPServerCard({ server, onApprove, onReject, requiredFields }: MCPServe
                   onClick={onApprove}
                   className="text-xs bg-success hover:bg-success/80 text-success-foreground px-3 py-1.5 rounded-md transition-colors font-medium"
                 >
-                  Approve
+                  Одобрить
                 </button>
               )}
               {approvalStatus === "rejected" && (
@@ -400,7 +400,7 @@ function MCPServerCard({ server, onApprove, onReject, requiredFields }: MCPServe
                   onClick={onApprove}
                   className="text-xs bg-success hover:bg-success/80 text-success-foreground px-3 py-1.5 rounded-md transition-colors font-medium"
                 >
-                  Re-approve
+                  Повторно одобрить
                 </button>
               )}
               {approvalStatus !== "rejected" && (
@@ -409,7 +409,7 @@ function MCPServerCard({ server, onApprove, onReject, requiredFields }: MCPServe
                   onClick={onReject}
                   className="text-xs border border-destructive/30 text-destructive hover:bg-destructive/10 bg-card px-3 py-1.5 rounded-md transition-colors font-medium"
                 >
-                  Reject
+                  Отклонить
                 </button>
               )}
             </div>
@@ -509,9 +509,9 @@ export function MCPSubmissionsTab({ accessToken }: MCPSubmissionsTabProps) {
     setIsSavingRules(true);
     try {
       await updateConfigFieldSetting(accessToken, SETTINGS_KEY, requiredFields);
-      toast.success("Submission rules saved");
+      toast.success("Правила заявок сохранены");
     } catch {
-      toast.fromError("Failed to save submission rules");
+      toast.fromError("Не удалось сохранить правила заявок");
     } finally {
       setIsSavingRules(false);
     }
@@ -533,9 +533,9 @@ export function MCPSubmissionsTab({ accessToken }: MCPSubmissionsTabProps) {
     try {
       await approveMCPServer(accessToken, serverId);
       await fetchData();
-      toast.success(`MCP server "${serverName}" approved`);
+      toast.success(`MCP-сервер «${serverName}» одобрен`);
     } catch {
-      toast.fromError("Failed to approve MCP server");
+      toast.fromError("Не удалось одобрить MCP-сервер");
     } finally {
       setConfirmAction(null);
     }
@@ -546,9 +546,9 @@ export function MCPSubmissionsTab({ accessToken }: MCPSubmissionsTabProps) {
     try {
       await rejectMCPServer(accessToken, serverId, reviewNotes);
       await fetchData();
-      toast.success(`MCP server "${serverName}" rejected`);
+      toast.success(`MCP-сервер «${serverName}» отклонён`);
     } catch {
-      toast.fromError("Failed to reject MCP server");
+      toast.fromError("Не удалось отклонить MCP-сервер");
     } finally {
       setConfirmAction(null);
     }
@@ -565,10 +565,10 @@ export function MCPSubmissionsTab({ accessToken }: MCPSubmissionsTabProps) {
       />
 
       <div className="grid grid-cols-4 gap-4 mb-6">
-        <StatCard label="Total Submitted" value={summary.total} color="text-foreground" />
-        <StatCard label="Pending Review" value={summary.pending_review} color="text-warning" />
+        <StatCard label="Всего заявок" value={summary.total} color="text-foreground" />
+        <StatCard label="На проверке" value={summary.pending_review} color="text-warning" />
         <StatCard label="Активный" value={summary.active} color="text-success" />
-        <StatCard label="Rejected" value={summary.rejected} color="text-destructive" />
+        <StatCard label="Отклонён" value={summary.rejected} color="text-destructive" />
       </div>
 
       <div className="flex items-center gap-3 mb-5">
@@ -576,7 +576,7 @@ export function MCPSubmissionsTab({ accessToken }: MCPSubmissionsTabProps) {
           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search MCP servers..."
+            placeholder="Поиск MCP-серверов..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2 border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-ring focus:border-info"
@@ -587,19 +587,19 @@ export function MCPSubmissionsTab({ accessToken }: MCPSubmissionsTabProps) {
           onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
           className="border border-border rounded-md px-3 py-2 text-sm text-foreground focus:outline-hidden focus:ring-1 focus:ring-ring focus:border-info bg-card"
         >
-          <option value="all">All Status</option>
-          <option value="pending_review">Pending Review</option>
+          <option value="all">Любой статус</option>
+          <option value="pending_review">На проверке</option>
           <option value="active">Активный</option>
-          <option value="rejected">Rejected</option>
+          <option value="rejected">Отклонён</option>
         </select>
       </div>
 
       <div className="space-y-3">
-        {isLoading && <div className="text-center py-12 text-muted-foreground text-sm">Loading submissions…</div>}
+        {isLoading && <div className="text-center py-12 text-muted-foreground text-sm">Загрузка заявок…</div>}
         {error && <div className="text-center py-12 text-destructive text-sm">{error}</div>}
         {!isLoading && !error && filtered.length === 0 && (
           <div className="text-center py-12 text-muted-foreground text-sm">
-            No MCP server submissions match your filters.
+            Нет заявок на MCP-серверы по вашим фильтрам.
           </div>
         )}
         {!isLoading &&

@@ -71,7 +71,7 @@ vi.mock("./mcp_tool_configuration", () => ({
     onAllowedToolsChange?: (tools: string[]) => void;
     onToolAllowlistInteraction?: () => void;
   }) => (
-    <div data-testid="mcp-tool-config">
+    <div data-testid="mcp-инструмента-config">
       <button
         type="button"
         onClick={() => {
@@ -79,15 +79,15 @@ vi.mock("./mcp_tool_configuration", () => ({
           onAllowedToolsChange?.([]);
         }}
       >
-        Disable all tools
+        Disable all инструментов
       </button>
     </div>
   ),
 }));
 
 vi.mock("./mcp_connection_status", () => ({
-  default: ({ tools }: { tools?: any[] }) => (
-    <div data-testid="mcp-connection-status" data-tool-count={tools?.length ?? 0} />
+  default: ({ инструментов }: { инструментов?: any[] }) => (
+    <div data-testid="mcp-connection-status" data-tools-count={инструментов?.length ?? 0} />
   ),
 }));
 
@@ -117,7 +117,7 @@ describe("CreateMCPServer", () => {
   it("should render the modal with title when visible", () => {
     render(<CreateMCPServer {...defaultProps} />);
 
-    expect(screen.getByText("Add New MCP Server")).toBeInTheDocument();
+    expect(screen.getByText("Добавить MCP-сервер")).toBeInTheDocument();
   });
 
   // The modal DOES render for a non-admin; it retitles and routes the submit to the review endpoint.
@@ -126,8 +126,8 @@ describe("CreateMCPServer", () => {
   it("routes a non-admin submission to the review endpoint instead of creating the server", async () => {
     render(<CreateMCPServer {...defaultProps} userRole="Internal User" />);
 
-    expect(screen.getByText("Submit MCP Server for Review")).toBeInTheDocument();
-    expect(screen.queryByText("Add New MCP Server")).not.toBeInTheDocument();
+    expect(screen.getByText("Отправить MCP-сервер на проверку")).toBeInTheDocument();
+    expect(screen.queryByText("Добавить MCP-сервер")).not.toBeInTheDocument();
 
     await selectOption("Transport Type", "Streamable HTTP");
     await waitFor(() => {
@@ -141,7 +141,7 @@ describe("CreateMCPServer", () => {
         target: { value: "https://example.com/mcp" },
       });
     });
-    await selectOption("Authentication", "None");
+    await selectOption("Аутентификация", "None");
 
     vi.mocked(networking.registerMCPServer).mockResolvedValue({
       server_id: "submitted-1",
@@ -157,7 +157,7 @@ describe("CreateMCPServer", () => {
     });
 
     await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Add MCP Server" }));
+      fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
     });
 
     await waitFor(() => expect(networking.registerMCPServer).toHaveBeenCalledTimes(1));
@@ -195,23 +195,23 @@ describe("CreateMCPServer", () => {
     it("should show auth type dropdown after selecting HTTP transport", async () => {
       await selectHttpTransport();
 
-      expect(screen.getByText("Authentication")).toBeInTheDocument();
+      expect(screen.getByText("Аутентификация")).toBeInTheDocument();
     });
 
-    it("should show auth value field when API Key auth type is selected", async () => {
+    it("should show auth value field when API ключ auth type is selected", async () => {
       await selectHttpTransport();
 
-      await selectOption("Authentication", "API Key");
+      await selectOption("Аутентификация", "API ключ");
 
       await waitFor(() => {
-        expect(screen.getByText("Authentication Value")).toBeInTheDocument();
+        expect(screen.getByText("Аутентификация Value")).toBeInTheDocument();
       });
     });
 
     it("should warn that LiteLLM auth is disabled when True Passthrough is selected", async () => {
       await selectHttpTransport();
 
-      await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+      await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
 
       await waitFor(() => {
         expect(
@@ -223,7 +223,7 @@ describe("CreateMCPServer", () => {
     it("should not show the True Passthrough warning when OAuth Delegate is selected", async () => {
       await selectHttpTransport();
 
-      await selectOption("Authentication", "OAuth Delegate (client-supplied upstream token)");
+      await selectOption("Аутентификация", "OAuth Delegate (client-supplied upstream token)");
 
       await waitFor(() => {
         expect(screen.getAllByText("OAuth Delegate (client-supplied upstream token)").length).toBeGreaterThan(0);
@@ -238,28 +238,28 @@ describe("CreateMCPServer", () => {
       async (optionLabel) => {
         await selectHttpTransport();
 
-        await selectOption("Authentication", optionLabel);
+        await selectOption("Аутентификация", optionLabel);
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: "Authorize & Fetch Tools (browser-only)" })).toBeInTheDocument();
+          expect(screen.getByRole("button", { name: "Authorize & Fetch Инструменты (browser-only)" })).toBeInTheDocument();
         });
         expect(screen.getByText("OAuth Client ID (optional)")).toBeInTheDocument();
         expect(screen.getByText("OAuth Client Secret (optional)")).toBeInTheDocument();
       },
     );
 
-    it("should not show the browser-only authorize section for API Key auth", async () => {
+    it("should not show the browser-only authorize section for API ключ auth", async () => {
       await selectHttpTransport();
 
-      await selectOption("Authentication", "API Key");
+      await selectOption("Аутентификация", "API ключ");
 
       await waitFor(() => {
-        expect(screen.getByText("Authentication Value")).toBeInTheDocument();
+        expect(screen.getByText("Аутентификация Value")).toBeInTheDocument();
       });
-      expect(screen.queryByRole("button", { name: "Authorize & Fetch Tools (browser-only)" })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: "Authorize & Fetch Инструменты (browser-only)" })).not.toBeInTheDocument();
     });
 
-    it("should not require auth value when creating a server with API Key auth type", async () => {
+    it("should not require auth value when creating a server with API ключ auth type", async () => {
       await selectHttpTransport();
 
       const user = userEvent.setup({ delay: null });
@@ -272,11 +272,11 @@ describe("CreateMCPServer", () => {
       const urlInput = screen.getByPlaceholderText("https://your-mcp-server.com");
       fireEvent.change(urlInput, { target: { value: "https://example.com/mcp" } });
 
-      // Select API Key auth type
-      await selectOption("Authentication", "API Key");
+      // Select API ключ auth type
+      await selectOption("Аутентификация", "API ключ");
 
       await waitFor(() => {
-        expect(screen.getByText("Authentication Value")).toBeInTheDocument();
+        expect(screen.getByText("Аутентификация Value")).toBeInTheDocument();
       });
 
       // Leave auth value empty and submit
@@ -293,7 +293,7 @@ describe("CreateMCPServer", () => {
         updated_by: "user-1",
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -315,10 +315,10 @@ describe("CreateMCPServer", () => {
       const urlInput = screen.getByPlaceholderText("https://your-mcp-server.com");
       fireEvent.change(urlInput, { target: { value: "https://example.com/mcp" } });
 
-      await selectOption("Authentication", "Bearer Token");
+      await selectOption("Аутентификация", "Bearer Token");
 
       await waitFor(() => {
-        expect(screen.getByText("Authentication Value")).toBeInTheDocument();
+        expect(screen.getByText("Аутентификация Value")).toBeInTheDocument();
       });
 
       // Leave auth value empty and submit
@@ -335,7 +335,7 @@ describe("CreateMCPServer", () => {
         updated_by: "user-1",
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -356,14 +356,14 @@ describe("CreateMCPServer", () => {
       const urlInput = screen.getByPlaceholderText("https://your-mcp-server.com");
       fireEvent.change(urlInput, { target: { value: "https://example.com/mcp" } });
 
-      await selectOption("Authentication", "API Key");
+      await selectOption("Аутентификация", "API ключ");
 
       await waitFor(() => {
-        expect(screen.getByText("Authentication Value")).toBeInTheDocument();
+        expect(screen.getByText("Аутентификация Value")).toBeInTheDocument();
       });
 
       // Fill in auth value
-      const authInput = screen.getByPlaceholderText("Enter token or secret");
+      const authInput = screen.getByPlaceholderText("Введите токен или секрет");
       fireEvent.change(authInput, { target: { value: "my-secret-key" } });
 
       vi.mocked(networking.createMCPServer).mockResolvedValue({
@@ -379,7 +379,7 @@ describe("CreateMCPServer", () => {
         updated_by: "user-1",
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -402,7 +402,7 @@ describe("CreateMCPServer", () => {
         target: { value: "https://example.com/mcp" },
       });
 
-      await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+      await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
 
       // Simulate the browser Authorize & Fetch flow handing back an upstream token.
       await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
@@ -420,7 +420,7 @@ describe("CreateMCPServer", () => {
     it.each([
       ["true_passthrough", "True Passthrough (no LiteLLM auth)"],
       ["oauth_delegate", "OAuth Delegate (client-supplied upstream token)"],
-    ])("persists only tool config on create for %s; the token stays browser-held", async (_authType, optionLabel) => {
+    ])("persists only инструмента config on create for %s; the token stays browser-held", async (_authType, optionLabel) => {
       oauthHook.tokenResponse = { access_token: "upstream-tok", token_type: "Bearer" };
       await selectHttpTransport();
 
@@ -430,14 +430,14 @@ describe("CreateMCPServer", () => {
         target: { value: "https://example.com/mcp" },
       });
 
-      await selectOption("Authentication", optionLabel);
+      await selectOption("Аутентификация", optionLabel);
 
       await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
         oauthHook.onTokenReceived!({ access_token: "upstream-tok", token_type: "Bearer" }, undefined);
       });
 
-      fireEvent.click(screen.getByRole("button", { name: "Disable all tools" }));
+      fireEvent.click(screen.getByRole("button", { name: "Disable all инструментов" }));
 
       // Previewing and configuring must stay stateless: nothing is persisted anywhere (server row,
       // per-user DB credential, sessionStorage) until the admin submits.
@@ -459,7 +459,7 @@ describe("CreateMCPServer", () => {
       };
       vi.mocked(networking.createMCPServer).mockResolvedValue(createdServer);
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -467,7 +467,7 @@ describe("CreateMCPServer", () => {
       await waitFor(() => expect(networking.createMCPServer).toHaveBeenCalledTimes(1));
       const [, payload] = vi.mocked(networking.createMCPServer).mock.calls[0];
 
-      // Only the tool configuration persists on the server row; the upstream token appears nowhere
+      // Only the инструмента configuration persists on the server row; the upstream token appears nowhere
       // in the create payload and no per-user DB credential is written. The token is committed to
       // sessionStorage only, keyed to the created server.
       expect(payload.allowed_tools).toEqual([]);
@@ -496,11 +496,11 @@ describe("CreateMCPServer", () => {
           target: { value: "https://example.com/mcp" },
         });
 
-        await selectOption("Authentication", optionLabel);
+        await selectOption("Аутентификация", optionLabel);
 
         // Admin declares the org's pre-registered upstream app; unlike the browser-authorized
         // token, this is config and must survive onto the server row so internal users'
-        // Tools-page Authorize relays through it (required for non-DCR upstreams like Slack).
+        // Инструменты-page Authorize relays through it (required for non-DCR upstreams like Slack).
         fireEvent.change(screen.getByPlaceholderText("Leave blank to use dynamic client registration"), {
           target: { value: "org-app-client-id" },
         });
@@ -527,7 +527,7 @@ describe("CreateMCPServer", () => {
         };
         vi.mocked(networking.createMCPServer).mockResolvedValue(createdServer);
 
-        const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+        const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
         await act(async () => {
           fireEvent.click(submitButton);
         });
@@ -560,7 +560,7 @@ describe("CreateMCPServer", () => {
         target: { value: "https://example.com/mcp" },
       });
 
-      await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+      await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
 
       fireEvent.change(screen.getByPlaceholderText("Leave blank to use dynamic client registration"), {
         target: { value: "org-app-client-id" },
@@ -598,7 +598,7 @@ describe("CreateMCPServer", () => {
       vi.mocked(networking.createMCPServer).mockResolvedValue(keptAppServer);
 
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "Add MCP Server" }));
+        fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
       await waitFor(() => expect(networking.createMCPServer).toHaveBeenCalledTimes(1));
@@ -620,7 +620,7 @@ describe("CreateMCPServer", () => {
         target: { value: "https://example.com/mcp" },
       });
 
-      await selectOption("Authentication", "OAuth");
+      await selectOption("Аутентификация", "OAuth");
 
       // The oauth2 onTokenReceived branch writes the fetched token AND the DCR client into
       // form.credentials; both are minted for the oauth2 identity.
@@ -635,7 +635,7 @@ describe("CreateMCPServer", () => {
       // Switching into a client-forwarded mode changes the identity with auth_type in the changed
       // values, so the preserve carve-out must NOT apply: the minted material would otherwise ride
       // into a mode that now persists credentials onto the server row.
-      await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+      await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
 
       const switchedServer = {
         server_id: "switched-server",
@@ -652,7 +652,7 @@ describe("CreateMCPServer", () => {
       vi.mocked(networking.createMCPServer).mockResolvedValue(switchedServer);
 
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "Add MCP Server" }));
+        fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
       await waitFor(() => expect(networking.createMCPServer).toHaveBeenCalledTimes(1));
@@ -669,7 +669,7 @@ describe("CreateMCPServer", () => {
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
-      await selectOption("Authentication", "OAuth");
+      await selectOption("Аутентификация", "OAuth");
 
       await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
@@ -696,7 +696,7 @@ describe("CreateMCPServer", () => {
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
-      await selectOption("Authentication", "OAuth");
+      await selectOption("Аутентификация", "OAuth");
 
       await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
@@ -725,7 +725,7 @@ describe("CreateMCPServer", () => {
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
-      await selectOption("Authentication", "OAuth");
+      await selectOption("Аутентификация", "OAuth");
 
       await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
@@ -749,7 +749,7 @@ describe("CreateMCPServer", () => {
       };
       vi.mocked(networking.createMCPServer).mockResolvedValue(dcrSubmitServer);
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "Add MCP Server" }));
+        fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
       await waitFor(() => expect(networking.createMCPServer).toHaveBeenCalledTimes(1));
@@ -767,7 +767,7 @@ describe("CreateMCPServer", () => {
       await selectHttpTransport();
       fillText(getServerNameInput(), "CF_Switch_Keep");
       fillText(screen.getByPlaceholderText("https://your-mcp-server.com"), "https://example.com/mcp");
-      await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+      await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
       fillText(screen.getByPlaceholderText("Leave blank to use dynamic client registration"), "app-id");
       fillText(screen.getByPlaceholderText("Leave blank for public clients / PKCE"), "app-secret");
 
@@ -776,7 +776,7 @@ describe("CreateMCPServer", () => {
         oauthHook.onTokenReceived!({ access_token: "cf-tok", token_type: "Bearer" }, undefined);
       });
 
-      await selectOption("Authentication", "OAuth Delegate (client-supplied upstream token)");
+      await selectOption("Аутентификация", "OAuth Delegate (client-supplied upstream token)");
 
       const switched = {
         server_id: "cf-switch-keep",
@@ -792,7 +792,7 @@ describe("CreateMCPServer", () => {
       };
       vi.mocked(networking.createMCPServer).mockResolvedValue(switched);
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "Add MCP Server" }));
+        fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
       await waitFor(() => expect(networking.createMCPServer).toHaveBeenCalledTimes(1));
@@ -804,7 +804,7 @@ describe("CreateMCPServer", () => {
       await selectHttpTransport();
       fillText(getServerNameInput(), "CF_Round");
       fillText(screen.getByPlaceholderText("https://your-mcp-server.com"), "https://example.com/mcp");
-      await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+      await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
       fillText(screen.getByPlaceholderText("Leave blank to use dynamic client registration"), "app-id");
       fillText(screen.getByPlaceholderText("Leave blank for public clients / PKCE"), "app-secret");
 
@@ -813,8 +813,8 @@ describe("CreateMCPServer", () => {
         oauthHook.onTokenReceived!({ access_token: "cf-tok", token_type: "Bearer" }, undefined);
       });
 
-      await selectOption("Authentication", "OAuth");
-      await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+      await selectOption("Аутентификация", "OAuth");
+      await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
 
       const cfRoundServer = {
         server_id: "cf-round",
@@ -830,7 +830,7 @@ describe("CreateMCPServer", () => {
       };
       vi.mocked(networking.createMCPServer).mockResolvedValue(cfRoundServer);
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "Add MCP Server" }));
+        fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
       await waitFor(() => expect(networking.createMCPServer).toHaveBeenCalledTimes(1));
@@ -845,7 +845,7 @@ describe("CreateMCPServer", () => {
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
-      await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+      await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
       fireEvent.change(screen.getByPlaceholderText("Leave blank to use dynamic client registration"), {
         target: { value: "app-id" },
       });
@@ -871,7 +871,7 @@ describe("CreateMCPServer", () => {
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
-      await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+      await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
       fireEvent.change(screen.getByPlaceholderText("Leave blank to use dynamic client registration"), {
         target: { value: "app-id" },
       });
@@ -904,7 +904,7 @@ describe("CreateMCPServer", () => {
       };
       vi.mocked(networking.createMCPServer).mockResolvedValue(cfKeystrokeServer);
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "Add MCP Server" }));
+        fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
       await waitFor(() => expect(networking.createMCPServer).toHaveBeenCalledTimes(1));
@@ -919,7 +919,7 @@ describe("CreateMCPServer", () => {
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
-      await selectOption("Authentication", "OAuth");
+      await selectOption("Аутентификация", "OAuth");
 
       await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       const firstToken = { access_token: "T1", refresh_token: "R1", scope: "read", token_type: "Bearer" };
@@ -939,11 +939,11 @@ describe("CreateMCPServer", () => {
     it("should not show auth value field when None auth type is selected", async () => {
       await selectHttpTransport();
 
-      await selectOption("Authentication", "None");
+      await selectOption("Аутентификация", "None");
 
       // Auth value field should not appear for "None"
       await waitFor(() => {
-        expect(screen.queryByText("Authentication Value")).not.toBeInTheDocument();
+        expect(screen.queryByText("Аутентификация Value")).not.toBeInTheDocument();
       });
     });
 
@@ -958,7 +958,7 @@ describe("CreateMCPServer", () => {
       const urlInput = screen.getByPlaceholderText("https://your-mcp-server.com");
       fireEvent.change(urlInput, { target: { value: "https://example.com/mcp" } });
 
-      await selectOption("Authentication", "None");
+      await selectOption("Аутентификация", "None");
 
       vi.mocked(networking.createMCPServer).mockResolvedValue({
         server_id: "new-server-1",
@@ -973,7 +973,7 @@ describe("CreateMCPServer", () => {
         updated_by: "user-1",
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -992,30 +992,30 @@ describe("CreateMCPServer", () => {
       await selectHttpTransport();
 
       // Plain OAuth must not render the token-exchange section.
-      await selectOption("Authentication", "OAuth");
+      await selectOption("Аутентификация", "OAuth");
       await waitFor(() => {
         expect(screen.queryByText("Token Exchange Endpoint (optional)")).not.toBeInTheDocument();
       });
-      expect(screen.queryByText("Subject Token Type (optional)")).not.toBeInTheDocument();
+      expect(screen.queryByText("Тип токена субъекта (необязательно)")).not.toBeInTheDocument();
 
-      await selectOption("Authentication", "OAuth Token Exchange (OBO)");
+      await selectOption("Аутентификация", "OAuth Token Exchange (OBO)");
       await waitFor(() => {
         expect(screen.getByText("Token Exchange Endpoint (optional)")).toBeInTheDocument();
       });
-      expect(screen.getByText("Subject Token Type (optional)")).toBeInTheDocument();
+      expect(screen.getByText("Тип токена субъекта (необязательно)")).toBeInTheDocument();
 
       // Switching away hides the section again.
-      await selectOption("Authentication", "API Key");
+      await selectOption("Аутентификация", "API ключ");
       await waitFor(() => {
         expect(screen.queryByText("Token Exchange Endpoint (optional)")).not.toBeInTheDocument();
       });
-      expect(screen.queryByText("Subject Token Type (optional)")).not.toBeInTheDocument();
+      expect(screen.queryByText("Тип токена субъекта (необязательно)")).not.toBeInTheDocument();
 
       // Selecting token exchange and then switching transport to stdio unmounts the
-      // whole Authentication section (the section-level transport gate), taking the
+      // whole Аутентификация section (the section-level transport gate), taking the
       // token-exchange fields with it — their required client_id/client_secret rules
       // cannot block a stdio submit because antd does not validate unmounted fields.
-      await selectOption("Authentication", "OAuth Token Exchange (OBO)");
+      await selectOption("Аутентификация", "OAuth Token Exchange (OBO)");
       await waitFor(() => {
         expect(screen.getByText("Token Exchange Endpoint (optional)")).toBeInTheDocument();
       });
@@ -1023,7 +1023,7 @@ describe("CreateMCPServer", () => {
       await waitFor(() => {
         expect(screen.queryByText("Token Exchange Endpoint (optional)")).not.toBeInTheDocument();
       });
-      expect(screen.queryByText("Subject Token Type (optional)")).not.toBeInTheDocument();
+      expect(screen.queryByText("Тип токена субъекта (необязательно)")).not.toBeInTheDocument();
     });
 
     it("sends max_concurrent_requests in the create payload when set", async () => {
@@ -1037,7 +1037,7 @@ describe("CreateMCPServer", () => {
       const urlInput = screen.getByPlaceholderText("https://your-mcp-server.com");
       fireEvent.change(urlInput, { target: { value: "https://example.com/mcp" } });
 
-      await selectOption("Authentication", "None");
+      await selectOption("Аутентификация", "None");
 
       const limitInput = screen.getByPlaceholderText("e.g. 10");
       fireEvent.change(limitInput, { target: { value: "5" } });
@@ -1055,7 +1055,7 @@ describe("CreateMCPServer", () => {
         updated_by: "user-1",
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -1079,7 +1079,7 @@ describe("CreateMCPServer", () => {
       const urlInput = screen.getByPlaceholderText("https://your-mcp-server.com");
       fireEvent.change(urlInput, { target: { value: "https://upstream.example.com/mcp" } });
 
-      await selectOption("Authentication", "OAuth Token Exchange (OBO)");
+      await selectOption("Аутентификация", "OAuth Token Exchange (OBO)");
 
       await waitFor(() => {
         expect(screen.getByPlaceholderText("https://idp.example.com/oauth2/token")).toBeInTheDocument();
@@ -1108,7 +1108,7 @@ describe("CreateMCPServer", () => {
         updated_by: "user-1",
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -1131,24 +1131,24 @@ describe("CreateMCPServer", () => {
       await selectHttpTransport();
 
       // The sibling OBO mode must not render the ID-JAG section.
-      await selectOption("Authentication", "OAuth Token Exchange (OBO)");
+      await selectOption("Аутентификация", "OAuth Token Exchange (OBO)");
       await waitFor(() => {
-        expect(screen.queryByText("Org Token Endpoint (leg 1)")).not.toBeInTheDocument();
+        expect(screen.queryByText("Токен-эндпоинт организации (шаг 1)")).not.toBeInTheDocument();
       });
-      expect(screen.queryByText("Resource Token Endpoint (leg 2)")).not.toBeInTheDocument();
+      expect(screen.queryByText("Токен-эндпоинт ресурса (шаг 2)")).not.toBeInTheDocument();
 
-      await selectOption("Authentication", "ID-JAG (Okta Cross App Access)");
+      await selectOption("Аутентификация", "ID-JAG (Okta Cross App Access)");
       await waitFor(() => {
-        expect(screen.getByText("Org Token Endpoint (leg 1)")).toBeInTheDocument();
+        expect(screen.getByText("Токен-эндпоинт организации (шаг 1)")).toBeInTheDocument();
       });
-      expect(screen.getByText("Resource Token Endpoint (leg 2)")).toBeInTheDocument();
-      expect(screen.getByText("Client Private Key (PEM)")).toBeInTheDocument();
+      expect(screen.getByText("Токен-эндпоинт ресурса (шаг 2)")).toBeInTheDocument();
+      expect(screen.getByText("Закрытый ключ клиента (PEM)")).toBeInTheDocument();
 
-      await selectOption("Authentication", "API Key");
+      await selectOption("Аутентификация", "API ключ");
       await waitFor(() => {
-        expect(screen.queryByText("Org Token Endpoint (leg 1)")).not.toBeInTheDocument();
+        expect(screen.queryByText("Токен-эндпоинт организации (шаг 1)")).not.toBeInTheDocument();
       });
-      expect(screen.queryByText("Resource Token Endpoint (leg 2)")).not.toBeInTheDocument();
+      expect(screen.queryByText("Токен-эндпоинт ресурса (шаг 2)")).not.toBeInTheDocument();
     });
 
     it("routes ID-JAG config to the backend payload with both legs and the private key", async () => {
@@ -1159,7 +1159,7 @@ describe("CreateMCPServer", () => {
         target: { value: "https://upstream.example.com/mcp" },
       });
 
-      await selectOption("Authentication", "ID-JAG (Okta Cross App Access)");
+      await selectOption("Аутентификация", "ID-JAG (Okta Cross App Access)");
 
       await waitFor(() => {
         expect(screen.getByPlaceholderText("https://your-org.okta.com/oauth2/v1/token")).toBeInTheDocument();
@@ -1195,7 +1195,7 @@ describe("CreateMCPServer", () => {
       });
 
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "Add MCP Server" }));
+        fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
       await waitFor(() => {
@@ -1222,7 +1222,7 @@ describe("CreateMCPServer", () => {
         target: { value: "https://upstream.example.com/mcp" },
       });
 
-      await selectOption("Authentication", "ID-JAG (Okta Cross App Access)");
+      await selectOption("Аутентификация", "ID-JAG (Okta Cross App Access)");
 
       await waitFor(() => {
         expect(screen.getByPlaceholderText("https://your-org.okta.com/oauth2/v1/token")).toBeInTheDocument();
@@ -1239,11 +1239,11 @@ describe("CreateMCPServer", () => {
       });
 
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "Add MCP Server" }));
+        fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
       await waitFor(() => {
-        expect(screen.getByText("Provide either a client secret or a client private key")).toBeInTheDocument();
+        expect(screen.getByText("Укажите секрет клиента или закрытый ключ клиента")).toBeInTheDocument();
       });
       expect(networking.createMCPServer).not.toHaveBeenCalled();
     });
@@ -1259,7 +1259,7 @@ describe("CreateMCPServer", () => {
         target: { value: "https://upstream.example.com/mcp" },
       });
 
-      await selectOption("Authentication", "OAuth Token Exchange (OBO)");
+      await selectOption("Аутентификация", "OAuth Token Exchange (OBO)");
       await waitFor(() => {
         expect(screen.getByPlaceholderText("https://idp.example.com/oauth2/token")).toBeInTheDocument();
       });
@@ -1278,7 +1278,7 @@ describe("CreateMCPServer", () => {
 
       // Selecting Entra OBO makes the scope required; submitting without one is blocked by validation
       // (rfc8693 would not require it), which confirms the profile selection took effect.
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -1290,7 +1290,7 @@ describe("CreateMCPServer", () => {
       expect(networking.createMCPServer).not.toHaveBeenCalled();
     });
 
-    it("enforces the allowlist when the user explicitly deselects every tool", async () => {
+    it("enforces the allowlist when the user explicitly deselects every инструмента", async () => {
       await selectHttpTransport();
 
       const user = userEvent.setup({ delay: null });
@@ -1301,10 +1301,10 @@ describe("CreateMCPServer", () => {
       const urlInput = screen.getByPlaceholderText("https://your-mcp-server.com");
       fireEvent.change(urlInput, { target: { value: "https://example.com/mcp" } });
 
-      await selectOption("Authentication", "None");
+      await selectOption("Аутентификация", "None");
 
       await act(async () => {
-        fireEvent.click(screen.getByRole("button", { name: "Disable all tools" }));
+        fireEvent.click(screen.getByRole("button", { name: "Disable all инструментов" }));
       });
 
       vi.mocked(networking.createMCPServer).mockResolvedValue({
@@ -1320,7 +1320,7 @@ describe("CreateMCPServer", () => {
         updated_by: "user-1",
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -1345,7 +1345,7 @@ describe("CreateMCPServer", () => {
         expect(screen.getByPlaceholderText("https://your-mcp-server.com")).toBeInTheDocument();
       });
 
-      await selectOption("Authentication", "OAuth");
+      await selectOption("Аутентификация", "OAuth");
 
       // Wait for OAuthFormFields to render (OAuth Flow Type selector is the sentinel)
       await waitFor(() => {
@@ -1375,8 +1375,8 @@ describe("CreateMCPServer", () => {
       });
       oauthHook.reset.mockClear();
 
-      // Switching the Authentication mode changes the OAuth identity, so the held token is discarded.
-      await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+      // Switching the Аутентификация mode changes the OAuth identity, so the held token is discarded.
+      await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
 
       await waitFor(() => expect(oauthHook.reset).toHaveBeenCalled());
     });
@@ -1398,14 +1398,14 @@ describe("CreateMCPServer", () => {
       });
 
       // server_name is not part of the OAuth identity, so the held token must survive the edit.
-      await waitFor(() => expect(screen.getAllByRole("button", { name: "Add MCP Server" }).length).toBeGreaterThan(0));
+      await waitFor(() => expect(screen.getAllByRole("button", { name: "Добавить MCP-сервер" }).length).toBeGreaterThan(0));
       expect(oauthHook.reset).not.toHaveBeenCalled();
     });
 
-    it("does not refetch the tool preview with a discarded token after invalidation", async () => {
+    it("does not refetch the инструмента preview with a discarded token after invalidation", async () => {
       // Regression: handleFormValuesChange used to publish the pre-reset antd snapshot into
       // formValues after clearHeldOAuthToken, so useTestMCPConnection kept the discarded OAuth
-      // material (the DCR client minted for the old identity) and sent it on the next tool-preview
+      // material (the DCR client minted for the old identity) and sent it on the next инструмента-preview
       // request.
       await setupOAuthInteractive();
       const urlInput = screen.getByPlaceholderText("https://your-mcp-server.com");
@@ -1421,7 +1421,7 @@ describe("CreateMCPServer", () => {
       });
       vi.mocked(networking.testMCPToolsListRequest).mockClear();
 
-      await selectOption("Authentication", "API Key");
+      await selectOption("Аутентификация", "API ключ");
 
       await waitFor(() => expect(vi.mocked(networking.testMCPToolsListRequest)).toHaveBeenCalled());
       for (const call of vi.mocked(networking.testMCPToolsListRequest).mock.calls) {
@@ -1483,7 +1483,7 @@ describe("CreateMCPServer", () => {
         fireEvent.change(textarea, { target: { value: '{"organization": "my-org", "team.id": "42"}' } });
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -1532,7 +1532,7 @@ describe("CreateMCPServer", () => {
         updated_by: "user-1",
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -1549,7 +1549,7 @@ describe("CreateMCPServer", () => {
       await waitFor(() => {
         expect(screen.getByPlaceholderText("https://petstore3.swagger.io/api/v3/openapi.json")).toBeInTheDocument();
       });
-      await selectOption("Authentication", "OAuth");
+      await selectOption("Аутентификация", "OAuth");
       await waitFor(() => {
         expect(screen.getByText("OAuth Flow Type")).toBeInTheDocument();
       });
@@ -1587,7 +1587,7 @@ describe("CreateMCPServer", () => {
         updated_by: "user-1",
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -1605,7 +1605,7 @@ describe("CreateMCPServer", () => {
       await waitFor(() => {
         expect(screen.getByPlaceholderText("https://petstore3.swagger.io/api/v3/openapi.json")).toBeInTheDocument();
       });
-      await selectOption("Authentication", "OAuth");
+      await selectOption("Аутентификация", "OAuth");
       await waitFor(() => {
         expect(screen.getByText("OAuth Flow Type")).toBeInTheDocument();
       });
@@ -1648,7 +1648,7 @@ describe("CreateMCPServer", () => {
         updated_by: "user-1",
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -1690,7 +1690,7 @@ describe("CreateMCPServer", () => {
 
       await selectOption("Token Endpoint Auth Method (optional)", "Client Secret Basic");
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -1740,7 +1740,7 @@ describe("CreateMCPServer", () => {
         fireEvent.change(urlInput, { target: { value: "https://example.com/mcp" } });
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -1771,7 +1771,7 @@ describe("CreateMCPServer", () => {
         fireEvent.change(nameInput, { target: { value: "OAuth_Server" } });
       });
 
-      const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+      const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -1808,7 +1808,7 @@ describe("CreateMCPServer", () => {
       await waitFor(() => {
         expect(screen.getByPlaceholderText("https://your-mcp-server.com")).toBeInTheDocument();
       });
-      await selectOption("Authentication", "OAuth");
+      await selectOption("Аутентификация", "OAuth");
       await waitFor(() => {
         expect(screen.getByText("OAuth Flow Type")).toBeInTheDocument();
       });
@@ -1823,7 +1823,7 @@ describe("CreateMCPServer", () => {
         oauthHook.onTokenReceived?.({ access_token: "stale-token-A", expires_in: 3600 });
       });
 
-      // Precondition: the freshly fetched token drives the tool preview for server A.
+      // Precondition: the freshly fetched token drives the инструмента preview for server A.
       await waitFor(() => {
         expect(usedToken("stale-token-A")).toBe(true);
       });
@@ -1854,7 +1854,7 @@ describe("CreateMCPServer", () => {
         tools: [{ name: "tool_a" }],
         error: null,
       });
-      const toolCount = () => screen.getByTestId("mcp-connection-status").getAttribute("data-tool-count");
+      const ToolCount = () => screen.getByTestId("mcp-connection-status").getAttribute("data-tools-count");
 
       const { rerender } = render(<CreateMCPServer {...defaultProps} />);
 
@@ -1862,7 +1862,7 @@ describe("CreateMCPServer", () => {
       await waitFor(() => {
         expect(screen.getByPlaceholderText("https://your-mcp-server.com")).toBeInTheDocument();
       });
-      await selectOption("Authentication", "OAuth");
+      await selectOption("Аутентификация", "OAuth");
       await waitFor(() => {
         expect(screen.getByText("OAuth Flow Type")).toBeInTheDocument();
       });
@@ -1875,9 +1875,9 @@ describe("CreateMCPServer", () => {
         oauthHook.onTokenReceived?.({ access_token: "stale-token-A", expires_in: 3600 });
       });
 
-      // Precondition: a tool list is shown for server A.
+      // Precondition: a инструмента list is shown for server A.
       await waitFor(() => {
-        expect(toolCount()).toBe("1");
+        expect(ToolCount()).toBe("1");
       });
 
       // Parent dismisses the modal without routing through Cancel or create.
@@ -1887,11 +1887,11 @@ describe("CreateMCPServer", () => {
         expect(screen.queryByTestId("mcp-connection-status")).not.toBeInTheDocument();
       });
 
-      // Reopening starts clean: neither the prior server's URL nor its tool list survives.
+      // Reopening starts clean: neither the prior server's URL nor its инструмента list survives.
       rerender(<CreateMCPServer {...defaultProps} isModalVisible={true} />);
       const reopenedUrlInput = screen.getByPlaceholderText("https://your-mcp-server.com") as HTMLInputElement;
       expect(reopenedUrlInput.value).toBe("");
-      expect(toolCount()).toBe("0");
+      expect(ToolCount()).toBe("0");
     });
 
     it("does not reset an in-flight OAuth resume when mounted with the modal closed (post-redirect restore)", () => {
@@ -1919,7 +1919,7 @@ describe("CreateMCPServer", () => {
 
       // Auth and URL fields should not be present for stdio
       await waitFor(() => {
-        expect(screen.queryByText("Authentication")).not.toBeInTheDocument();
+        expect(screen.queryByText("Аутентификация")).not.toBeInTheDocument();
         expect(screen.queryByPlaceholderText("https://your-mcp-server.com")).not.toBeInTheDocument();
       });
     });
@@ -1999,7 +1999,7 @@ describe("CreateMCPServer oauth2_flow persistence", () => {
   }
 
   async function submitCreate() {
-    const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+    const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
     await act(async () => {
       fireEvent.click(submitButton);
     });
@@ -2013,7 +2013,7 @@ describe("CreateMCPServer oauth2_flow persistence", () => {
   it("persists authorization_code for an interactive OAuth create", async () => {
     vi.mocked(networking.createMCPServer).mockResolvedValue(createdServer);
     await setupHttpServerForm();
-    await selectOption("Authentication", "OAuth");
+    await selectOption("Аутентификация", "OAuth");
     await waitFor(() => {
       expect(screen.getByText("OAuth Flow Type")).toBeInTheDocument();
     });
@@ -2026,7 +2026,7 @@ describe("CreateMCPServer oauth2_flow persistence", () => {
   it("persists client_credentials for an M2M OAuth create", async () => {
     vi.mocked(networking.createMCPServer).mockResolvedValue({ ...createdServer, oauth2_flow: "client_credentials" });
     await setupHttpServerForm();
-    await selectOption("Authentication", "OAuth");
+    await selectOption("Аутентификация", "OAuth");
     await waitFor(() => {
       expect(screen.getByText("OAuth Flow Type")).toBeInTheDocument();
     });
@@ -2093,7 +2093,7 @@ describe("CreateMCPServer dcr_bridge toggle", () => {
   }
 
   async function submitCreate() {
-    const submitButton = screen.getByRole("button", { name: "Add MCP Server" });
+    const submitButton = screen.getByRole("button", { name: "Добавить MCP-сервер" });
     await act(async () => {
       fireEvent.click(submitButton);
     });
@@ -2109,7 +2109,7 @@ describe("CreateMCPServer dcr_bridge toggle", () => {
     async (optionLabel) => {
       await setupHttpServerForm();
 
-      await selectOption("Authentication", optionLabel);
+      await selectOption("Аутентификация", optionLabel);
 
       await waitFor(() => {
         expect(getDcrToggle()).toBeInTheDocument();
@@ -2119,10 +2119,10 @@ describe("CreateMCPServer dcr_bridge toggle", () => {
     },
   );
 
-  it.each([["None"], ["API Key"], ["OAuth"]])("does not render the toggle for %s", async (optionLabel) => {
+  it.each([["None"], ["API ключ"], ["OAuth"]])("does not render the toggle for %s", async (optionLabel) => {
     await setupHttpServerForm();
 
-    await selectOption("Authentication", optionLabel);
+    await selectOption("Аутентификация", optionLabel);
 
     await waitFor(() => {
       expect(screen.queryByText("Gateway-hosted sign-in (DCR bridge)")).not.toBeInTheDocument();
@@ -2133,14 +2133,14 @@ describe("CreateMCPServer dcr_bridge toggle", () => {
   it("renders the toggle between the OAuth client fields and the Authorize button", async () => {
     await setupHttpServerForm();
 
-    await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+    await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
 
     await waitFor(() => {
       expect(getDcrToggle()).toBeInTheDocument();
     });
     const toggle = getDcrToggle() as HTMLElement;
     const secretInput = screen.getByPlaceholderText("Leave blank for public clients / PKCE");
-    const authorizeButton = screen.getByRole("button", { name: "Authorize & Fetch Tools (browser-only)" });
+    const authorizeButton = screen.getByRole("button", { name: "Authorize & Fetch Инструменты (browser-only)" });
     expect(secretInput.compareDocumentPosition(toggle) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(toggle.compareDocumentPosition(authorizeButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
@@ -2151,7 +2151,7 @@ describe("CreateMCPServer dcr_bridge toggle", () => {
   ])("sends dcr_bridge: true by default on create for %s", async (authType, optionLabel) => {
     vi.mocked(networking.createMCPServer).mockResolvedValue({ ...createdServer, auth_type: authType });
     await setupHttpServerForm();
-    await selectOption("Authentication", optionLabel);
+    await selectOption("Аутентификация", optionLabel);
     await waitFor(() => {
       expect(getDcrToggle()).toBeInTheDocument();
     });
@@ -2163,7 +2163,7 @@ describe("CreateMCPServer dcr_bridge toggle", () => {
   it("sends an explicit dcr_bridge: false when the toggle is unchecked", async () => {
     vi.mocked(networking.createMCPServer).mockResolvedValue({ ...createdServer, auth_type: "oauth_delegate" });
     await setupHttpServerForm();
-    await selectOption("Authentication", "OAuth Delegate (client-supplied upstream token)");
+    await selectOption("Аутентификация", "OAuth Delegate (client-supplied upstream token)");
     await waitFor(() => {
       expect(getDcrToggle()).toBeInTheDocument();
     });
@@ -2184,7 +2184,7 @@ describe("CreateMCPServer dcr_bridge toggle", () => {
   it("forces dcr_bridge: false when the auth type is switched away after toggling", async () => {
     vi.mocked(networking.createMCPServer).mockResolvedValue({ ...createdServer, auth_type: "none" });
     await setupHttpServerForm();
-    await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+    await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
     await waitFor(() => {
       expect(getDcrToggle()).toBeInTheDocument();
     });
@@ -2192,7 +2192,7 @@ describe("CreateMCPServer dcr_bridge toggle", () => {
       fireEvent.click(getDcrToggle()!);
     });
 
-    await selectOption("Authentication", "None");
+    await selectOption("Аутентификация", "None");
     await waitFor(() => {
       expect(getDcrToggle()).not.toBeInTheDocument();
     });
@@ -2204,7 +2204,7 @@ describe("CreateMCPServer dcr_bridge toggle", () => {
   it("preserves the toggle value when switching between the two client-forwarded modes", async () => {
     vi.mocked(networking.createMCPServer).mockResolvedValue({ ...createdServer, auth_type: "oauth_delegate" });
     await setupHttpServerForm();
-    await selectOption("Authentication", "True Passthrough (no LiteLLM auth)");
+    await selectOption("Аутентификация", "True Passthrough (no LiteLLM auth)");
     await waitFor(() => {
       expect(getDcrToggle()).toBeInTheDocument();
     });
@@ -2212,7 +2212,7 @@ describe("CreateMCPServer dcr_bridge toggle", () => {
 
     // The field is mounted in both client-forwarded modes, so switching between them keeps the
     // live toggle value rather than forcing it back to the default or to false.
-    await selectOption("Authentication", "OAuth Delegate (client-supplied upstream token)");
+    await selectOption("Аутентификация", "OAuth Delegate (client-supplied upstream token)");
     await waitFor(() => {
       expect(getDcrToggle()).toBeInTheDocument();
     });

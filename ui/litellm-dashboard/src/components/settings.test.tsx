@@ -88,10 +88,10 @@ describe("Settings", () => {
     render(<Settings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByText("CloudZero Cost Tracking")).toBeInTheDocument();
-      expect(screen.getByText("Alerting Types")).toBeInTheDocument();
-      expect(screen.getByText("Alerting Settings")).toBeInTheDocument();
-      expect(screen.getByText("Email Alerts")).toBeInTheDocument();
+      expect(screen.getByText("Учёт стоимости CloudZero")).toBeInTheDocument();
+      expect(screen.getByText("Типы оповещений")).toBeInTheDocument();
+      expect(screen.getByText("Настройки оповещений")).toBeInTheDocument();
+      expect(screen.getByText("Оповещения по email")).toBeInTheDocument();
     });
   });
 
@@ -154,7 +154,7 @@ describe("Settings", () => {
     await user.click(await screen.findByTestId("callback-action-edit"));
 
     await waitFor(() => {
-      expect(screen.getByText("Edit Callback Settings")).toBeInTheDocument();
+      expect(screen.getByText("Изменить настройки коллбэка")).toBeInTheDocument();
     });
 
     return user;
@@ -190,7 +190,7 @@ describe("Settings", () => {
 
     await user.clear(screen.getByLabelText("Host"));
     fireEvent.change(screen.getByLabelText("Host"), { target: { value: "https://edited.langfuse.com" } });
-    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Save Changes" }));
+    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Сохранить изменения" }));
 
     await waitFor(() => {
       expect(vi.mocked(setCallbacksCall)).toHaveBeenCalledWith("token", {
@@ -213,9 +213,9 @@ describe("Settings", () => {
     });
 
     await user.clear(screen.getByLabelText("Public Key"));
-    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Save Changes" }));
+    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Сохранить изменения" }));
 
-    expect(await screen.findByText("Please enter the public key")).toBeInTheDocument();
+    expect(await screen.findByText("Укажите значение поля: Public Key")).toBeInTheDocument();
     expect(vi.mocked(setCallbacksCall)).not.toHaveBeenCalled();
   });
 
@@ -265,7 +265,7 @@ describe("Settings", () => {
     await user.click(await screen.findByRole("option", { name: "http/json" }));
     expect(screen.getByLabelText("Export Protocol")).toHaveTextContent("http/json");
 
-    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Save Changes" }));
+    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Сохранить изменения" }));
 
     await waitFor(() => {
       expect(vi.mocked(setCallbacksCall)).toHaveBeenCalledWith(
@@ -288,7 +288,7 @@ describe("Settings", () => {
     expect(await screen.findByLabelText("Endpoint URL")).toHaveValue("http://collector:4318");
     expect(screen.getByLabelText("Export Protocol")).toHaveTextContent("http/json");
 
-    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Save Changes" }));
+    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Сохранить изменения" }));
 
     await waitFor(() => {
       expect(vi.mocked(setCallbacksCall)).toHaveBeenCalledWith("token", {
@@ -306,13 +306,13 @@ describe("Settings", () => {
     const user = userEvent.setup();
     render(<Settings {...defaultProps} />);
 
-    await user.click(await screen.findByRole("tab", { name: "Alerting Types" }));
+    await user.click(await screen.findByRole("tab", { name: "Типы оповещений" }));
 
     const webhookInput = document.querySelector('input[name="llm_exceptions"]') as HTMLInputElement;
     expect(webhookInput).not.toBeNull();
     fireEvent.change(webhookInput, { target: { value: "https://hooks.example.com/llm-exceptions" } });
 
-    await user.click(screen.getByRole("button", { name: "Save Changes" }));
+    await user.click(screen.getByRole("button", { name: "Сохранить изменения" }));
 
     await waitFor(() => {
       expect(vi.mocked(setCallbacksCall)).toHaveBeenCalledWith("token", {
@@ -368,7 +368,7 @@ describe("Settings", () => {
       expect(screen.getByText("Active Logging Callbacks")).toBeInTheDocument();
     });
 
-    expect(screen.getByText("CloudZero Cost Tracking")).toBeInTheDocument();
+    expect(screen.getByText("Учёт стоимости CloudZero")).toBeInTheDocument();
   });
 });
 

@@ -33,7 +33,7 @@ const LOADED_WITH_ADVANCED = {
 const renderSettings = () => renderWithProviders(<CacheSettings accessToken="sk-test" userRole="Admin" userID="u1" />);
 
 const save = async (user: ReturnType<typeof userEvent.setup>) =>
-  user.click(screen.getByRole("button", { name: /save changes/i }));
+  user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
 describe("CacheSettings advanced settings round-trip", () => {
   beforeEach(() => {
@@ -48,7 +48,7 @@ describe("CacheSettings advanced settings round-trip", () => {
     renderSettings();
     await screen.findByText("Connection Settings");
 
-    expect(screen.queryByLabelText("Namespace")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Пространство имён")).not.toBeInTheDocument();
     await save(user);
 
     await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
@@ -74,7 +74,7 @@ describe("CacheSettings advanced settings round-trip", () => {
 
     expect(await screen.findByText("SSL Settings")).toBeInTheDocument();
     expect(screen.getByText("Cache Management")).toBeInTheDocument();
-    expect(screen.getByText("GCP Authentication")).toBeInTheDocument();
+    expect(screen.getByText("GCP Аутентификация")).toBeInTheDocument();
   });
 
   it("sends the same payload whether or not the advanced section was expanded", async () => {
@@ -86,7 +86,7 @@ describe("CacheSettings advanced settings round-trip", () => {
     const whileCollapsed = updateCacheSettingsCall.mock.calls[0][1];
 
     await user.click(screen.getByText("Advanced Settings"));
-    await screen.findByLabelText("Namespace");
+    await screen.findByLabelText("Пространство имён");
     await save(user);
 
     await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(2));
@@ -100,9 +100,9 @@ describe("CacheSettings advanced settings round-trip", () => {
     await screen.findByText("Connection Settings");
 
     await user.click(screen.getByText("Advanced Settings"));
-    fireEvent.change(await screen.findByLabelText("Namespace"), { target: { value: "typed-ns" } });
+    fireEvent.change(await screen.findByLabelText("Пространство имён"), { target: { value: "typed-ns" } });
     await user.click(screen.getByText("Advanced Settings"));
-    await waitFor(() => expect(screen.queryByLabelText("Namespace")).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByLabelText("Пространство имён")).not.toBeInTheDocument());
 
     await save(user);
 
@@ -117,12 +117,12 @@ describe("CacheSettings advanced settings round-trip", () => {
     await screen.findByText("Connection Settings");
 
     await user.click(screen.getByText("Advanced Settings"));
-    fireEvent.change(await screen.findByLabelText("Namespace"), { target: { value: "typed-ns" } });
+    fireEvent.change(await screen.findByLabelText("Пространство имён"), { target: { value: "typed-ns" } });
     await user.click(screen.getByText("Advanced Settings"));
-    await waitFor(() => expect(screen.queryByLabelText("Namespace")).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByLabelText("Пространство имён")).not.toBeInTheDocument());
     await user.click(screen.getByText("Advanced Settings"));
 
-    expect(await screen.findByLabelText("Namespace")).toHaveValue("typed-ns");
+    expect(await screen.findByLabelText("Пространство имён")).toHaveValue("typed-ns");
   });
 
   it("keeps a hidden section's fields out of the payload when the redis type does not use them", async () => {
@@ -131,7 +131,7 @@ describe("CacheSettings advanced settings round-trip", () => {
     });
     const user = userEvent.setup();
     renderSettings();
-    await screen.findByLabelText("Service Name");
+    await screen.findByLabelText("Имя сервиса");
     await save(user);
 
     await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
@@ -145,11 +145,11 @@ describe("CacheSettings advanced settings round-trip", () => {
     });
     const user = userEvent.setup();
     renderSettings();
-    const trigger = await screen.findByLabelText("Semantic Cache Scope");
-    expect(trigger).toHaveTextContent("Key (shared by all end users of the key/team/org)");
+    const trigger = await screen.findByLabelText("Область семантического кэша");
+    expect(trigger).toHaveTextContent("Ключ (общий для всех конечных пользователей ключа/команды/организации)");
 
     await user.click(trigger);
-    await user.click(await screen.findByRole("option", { name: "End user (isolated per end user)" }));
+    await user.click(await screen.findByRole("option", { name: "Конечный пользователь (изоляция по пользователю)" }));
     await save(user);
 
     await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
@@ -166,9 +166,9 @@ describe("CacheSettings advanced settings round-trip", () => {
     await screen.findByText("Connection Settings");
 
     await user.click(screen.getByText("Advanced Settings"));
-    fireEvent.change(await screen.findByLabelText("TTL (seconds)"), { target: { value: "not-a-number" } });
+    fireEvent.change(await screen.findByLabelText("TTL (секунды)"), { target: { value: "not-a-number" } });
     await user.click(screen.getByText("Advanced Settings"));
-    await waitFor(() => expect(screen.queryByLabelText("TTL (seconds)")).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByLabelText("TTL (секунды)")).not.toBeInTheDocument());
 
     await save(user);
 
@@ -193,7 +193,7 @@ describe("CacheSettings advanced settings round-trip", () => {
     });
     const user = userEvent.setup();
     renderSettings();
-    await screen.findByRole("combobox", { name: "Embedding Model" });
+    await screen.findByRole("combobox", { name: "Модель эмбеддингов" });
     await user.click(screen.getByRole("button", { name: "Clear" }));
     const expected = {
       type: "redis",

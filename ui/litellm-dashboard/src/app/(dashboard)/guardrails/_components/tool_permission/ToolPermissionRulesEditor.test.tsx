@@ -9,9 +9,9 @@ describe("ToolPermissionRulesEditor", () => {
     const onChange = vi.fn();
     render(<ToolPermissionRulesEditor value={undefined} onChange={onChange} />);
 
-    expect(screen.getByText(/No tool rules added yet/i)).toBeInTheDocument();
+    expect(screen.getByText(/Правила инструментов ещё не добавлены/i)).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole("button", { name: /add rule/i }));
+    await userEvent.click(screen.getByRole("button", { name: /добавить правило/i }));
 
     expect(onChange).toHaveBeenCalled();
     const payload = onChange.mock.calls[0][0] as ToolPermissionConfig;
@@ -45,12 +45,12 @@ describe("ToolPermissionRulesEditor", () => {
 
     render(<Wrapper />);
 
-    await userEvent.click(screen.getByRole("button", { name: /restrict tool arguments/i }));
-    const initialInput = await screen.findByPlaceholderText(/messages\[0\].content/i);
+    await userEvent.click(screen.getByRole("button", { name: /ограничить аргументы/i }));
+    const initialInput = await screen.findByPlaceholderText(/сообщения\[0\]/i);
     await userEvent.clear(initialInput);
     fireEvent.change(initialInput, { target: { value: "input.location" } });
 
-    const violationArea = await screen.findByPlaceholderText(/violates our org policy/i);
+    const violationArea = await screen.findByPlaceholderText(/нарушает политику/i);
     await userEvent.clear(violationArea);
     fireEvent.change(violationArea, { target: { value: "Do not run bash" } });
 

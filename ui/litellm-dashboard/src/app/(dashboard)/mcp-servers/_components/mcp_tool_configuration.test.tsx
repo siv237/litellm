@@ -33,10 +33,10 @@ describe("MCPToolConfiguration", () => {
   it("shows legacy unrestricted edit tools enabled in flat view", async () => {
     const onAllowedToolsChange = renderToolConfiguration();
 
-    fireEvent.click(screen.getByText("Flat List"));
+    fireEvent.click(screen.getByText("Плоский список"));
 
-    expect(screen.getByText("2 of 2 tools enabled for user access")).toBeInTheDocument();
-    expect(screen.getAllByText("Enabled")).toHaveLength(2);
+    expect(screen.getByText(/разрешено пользователям/)).toBeInTheDocument();
+    expect(screen.getAllByText("Включён")).toHaveLength(2);
 
     fireEvent.click(screen.getByText("read_user"));
 
@@ -100,19 +100,19 @@ describe("MCPToolConfiguration", () => {
 
     render(<Wrapper />);
 
-    fireEvent.click(screen.getByText("Flat List"));
+    fireEvent.click(screen.getByText("Плоский список"));
     fireEvent.click(screen.getByText("read_user"));
     fireEvent.click(screen.getByText("delete_user"));
 
     await waitFor(() => {
-      expect(screen.getByText("0 of 2 tools enabled for user access")).toBeInTheDocument();
-      expect(screen.getAllByText("Disabled")).toHaveLength(2);
+      expect(screen.getByText(/разрешено пользователям/)).toBeInTheDocument();
+      expect(screen.getAllByText("Отключён")).toHaveLength(2);
     });
   });
 
   it("shows a validation error for a display name containing a space", async () => {
     const Wrapper = () => {
-      const [toolNameToDisplayName, setToolNameToDisplayName] = useState<Record<string, string>>({});
+      const [toolNameToDisplayName, settoolNameToDisplayName] = useState<Record<string, string>>({});
 
       return (
         <MCPToolConfiguration
@@ -123,7 +123,7 @@ describe("MCPToolConfiguration", () => {
           onAllowedToolsChange={vi.fn()}
           toolNameToDisplayName={toolNameToDisplayName}
           toolNameToDescription={{}}
-          onToolNameToDisplayNameChange={setToolNameToDisplayName}
+          onToolNameToDisplayNameChange={settoolNameToDisplayName}
           onToolNameToDescriptionChange={vi.fn()}
           externalTools={tools}
           externalCanFetch
@@ -134,22 +134,22 @@ describe("MCPToolConfiguration", () => {
 
     render(<Wrapper />);
 
-    fireEvent.click(screen.getByText("Flat List"));
-    fireEvent.click(screen.getAllByTitle("Edit display name and description")[0]);
+    fireEvent.click(screen.getByText("Плоский список"));
+    fireEvent.click(screen.getAllByTitle("Изменить отображаемое имя и описание")[0]);
 
     const input = screen.getByPlaceholderText("read_user");
     fireEvent.change(input, { target: { value: "Browse Repo Docs" } });
 
     await waitFor(() => {
       expect(
-        screen.getByText("Only letters, digits, underscores, and hyphens are allowed (no spaces)."),
+        screen.getByText("Допускаются только буквы, цифры, подчёркивания и дефисы (без пробелов)."),
       ).toBeInTheDocument();
     });
   });
 
   it("accepts a Bedrock-safe display name without showing a validation error", async () => {
     const Wrapper = () => {
-      const [toolNameToDisplayName, setToolNameToDisplayName] = useState<Record<string, string>>({});
+      const [toolNameToDisplayName, settoolNameToDisplayName] = useState<Record<string, string>>({});
 
       return (
         <MCPToolConfiguration
@@ -160,7 +160,7 @@ describe("MCPToolConfiguration", () => {
           onAllowedToolsChange={vi.fn()}
           toolNameToDisplayName={toolNameToDisplayName}
           toolNameToDescription={{}}
-          onToolNameToDisplayNameChange={setToolNameToDisplayName}
+          onToolNameToDisplayNameChange={settoolNameToDisplayName}
           onToolNameToDescriptionChange={vi.fn()}
           externalTools={tools}
           externalCanFetch
@@ -171,15 +171,15 @@ describe("MCPToolConfiguration", () => {
 
     render(<Wrapper />);
 
-    fireEvent.click(screen.getByText("Flat List"));
-    fireEvent.click(screen.getAllByTitle("Edit display name and description")[0]);
+    fireEvent.click(screen.getByText("Плоский список"));
+    fireEvent.click(screen.getAllByTitle("Изменить отображаемое имя и описание")[0]);
 
     const input = screen.getByPlaceholderText("read_user");
     fireEvent.change(input, { target: { value: "browse_repo_docs" } });
 
     await waitFor(() => {
       expect(
-        screen.queryByText("Only letters, digits, underscores, and hyphens are allowed (no spaces)."),
+        screen.queryByText("Допускаются только буквы, цифры, подчёркивания и дефисы (без пробелов)."),
       ).not.toBeInTheDocument();
     });
   });

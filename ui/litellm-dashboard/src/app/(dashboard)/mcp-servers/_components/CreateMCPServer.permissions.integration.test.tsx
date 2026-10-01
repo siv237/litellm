@@ -36,7 +36,7 @@ vi.mock("./mcp_server_cost_config", () => ({
 }));
 
 vi.mock("./mcp_tool_configuration", () => ({
-  default: () => <div data-testid="mcp-tool-config" />,
+  default: () => <div data-testid="mcp-инструмента-config" />,
 }));
 
 vi.mock("./mcp_connection_status", () => ({
@@ -80,12 +80,12 @@ const fillMinimalHttpServer = async (name: string) => {
   const user = userEvent.setup({ delay: null });
   await user.type(getServerNameInput(), name);
   await user.type(screen.getByPlaceholderText("https://your-mcp-server.com"), "https://example.com/mcp");
-  await selectOption("Authentication", "None");
+  await selectOption("Аутентификация", "None");
 };
 
 const submitAndReadPayload = async () => {
   await act(async () => {
-    fireEvent.click(screen.getByRole("button", { name: "Add MCP Server" }));
+    fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
   });
   await waitFor(() => expect(networking.createMCPServer).toHaveBeenCalledTimes(1));
   return vi.mocked(networking.createMCPServer).mock.calls[0][1];
@@ -124,7 +124,7 @@ describe("CreateMCPServer permission toggles reaching the payload", () => {
     render(<CreateMCPServer {...defaultProps} />);
     await fillMinimalHttpServer("Perm_Server");
 
-    const allowAllKeys = await switchFor("Allow All LiteLLM Keys");
+    const allowAllKeys = await switchFor("Разрешить All LiteLLM ключей");
     await act(async () => {
       fireEvent.click(allowAllKeys);
     });
@@ -155,7 +155,7 @@ describe("CreateMCPServer permission toggles reaching the payload", () => {
     render(<CreateMCPServer {...defaultProps} />);
     await fillMinimalHttpServer("Perm_Server");
 
-    expect(screen.getByText("Allow All LiteLLM Keys")).toBeInTheDocument();
+    expect(screen.getByText("Разрешить All LiteLLM ключей")).toBeInTheDocument();
     expect(screen.queryByText("Delegate auth to upstream (PKCE passthrough)")).not.toBeInTheDocument();
 
     const payload = await submitAndReadPayload();

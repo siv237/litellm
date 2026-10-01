@@ -34,27 +34,27 @@ import { cn } from "@/lib/cva.config";
 import { copyToClipboard } from "@/utils/dataUtils";
 
 const SSO_ID_HINT =
-  "SSO ID is the ID of the user in the SSO provider. If the user is not using SSO, this will be null.";
+  "SSO ID — это ID пользователя у SSO-провайдера. Если пользователь не использует SSO, значение отсутствует.";
 
-const SCIM_INACTIVE_HINT = "Deactivated via SCIM (external identity provider). The user's virtual keys are blocked.";
+const SCIM_INACTIVE_HINT = "Деактивирован через SCIM (внешний провайдер идентичности). Виртуальные ключи пользователя заблокированы.";
 
 const DURATION_LABELS: Record<string, string> = {
-  "30m": "Every 30 min",
-  "1h": "Hourly",
-  "6h": "Every 6 hours",
-  "12h": "Every 12 hours",
-  "24h": "Daily",
-  "1d": "Daily",
-  "7d": "Weekly",
-  "1w": "Weekly",
-  "14d": "Biweekly",
-  "28d": "Monthly",
-  "30d": "Monthly",
-  "1mo": "Monthly",
-  "3mo": "Quarterly",
-  "6mo": "Semi-annual",
-  "12mo": "Annual",
-  "1y": "Annual",
+  "30m": "каждые 30 мин",
+  "1h": "ежечасно",
+  "6h": "каждые 6 часов",
+  "12h": "каждые 12 часов",
+  "24h": "ежедневно",
+  "1d": "ежедневно",
+  "7d": "еженедельно",
+  "1w": "еженедельно",
+  "14d": "раз в 2 недели",
+  "28d": "ежемесячно",
+  "30d": "ежемесячно",
+  "1mo": "ежемесячно",
+  "3mo": "ежеквартально",
+  "6mo": "раз в полгода",
+  "12mo": "ежегодно",
+  "1y": "ежегодно",
 };
 
 function isScimInactive(user: UserInfo): boolean {
@@ -72,7 +72,7 @@ function UserRowActions({ user, onUserClick, onDeleteUser, onResetPassword }: Us
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open user actions"
+        aria-label="Действия пользователя"
         data-testid={`user-actions-${user.user_id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -81,23 +81,23 @@ function UserRowActions({ user, onUserClick, onDeleteUser, onResetPassword }: Us
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuItem onClick={() => onUserClick(user.user_id, true)} data-testid="user-action-edit">
           <Pencil />
-          Edit user
+          Изменить пользователя
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => onResetPassword(user.user_id)} data-testid="user-action-reset-password">
           <KeyRound />
-          Reset password
+          Сбросить пароль
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => void copyToClipboard(user.user_id, "User ID copied")}
+          onClick={() => void copyToClipboard(user.user_id, "ID пользователя скопирован")}
           data-testid="user-action-copy"
         >
           <Copy />
-          Copy user ID
+          Копировать ID пользователя
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onClick={() => onDeleteUser(user)} data-testid="user-action-delete">
           <Trash2 />
-          Delete user
+          Удалить пользователя
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -122,19 +122,19 @@ async function patchUser(accessToken: string | null, body: Record<string, unknow
     toast.success(okMessage);
     return true;
   } catch (error) {
-    toast.fromError(error instanceof Error ? error.message : "Update failed");
+    toast.fromError(error instanceof Error ? error.message : "Не удалось обновить");
     return false;
   }
 }
 
 const DURATION_MENU_OPTIONS: { value: string | null; label: string }[] = [
-  { value: null, label: "No reset (Fixed)" },
-  { value: "1h", label: "Hourly" },
-  { value: "6h", label: "Every 6 hours" },
-  { value: "12h", label: "Every 12 hours" },
-  { value: "1d", label: "Daily" },
-  { value: "7d", label: "Weekly" },
-  { value: "1mo", label: "Monthly" },
+  { value: null, label: "Без сброса (фикс.)" },
+  { value: "1h", label: "Ежечасно" },
+  { value: "6h", label: "Каждые 6 часов" },
+  { value: "12h", label: "Каждые 12 часов" },
+  { value: "1d", label: "Ежедневно" },
+  { value: "7d", label: "Еженедельно" },
+  { value: "1mo", label: "Ежемесячно" },
 ];
 
 function QuotaModeCell({
@@ -163,16 +163,16 @@ function QuotaModeCell({
         canEdit && "cursor-pointer hover:border-primary/50",
       )}
     >
-      {maxBudget == null ? "No budget" : (resetLabel ?? "Fixed")}
+      {maxBudget == null ? "Нет бюджета" : (resetLabel ?? "Фикс.")}
     </Badge>
   );
   const hint =
     maxBudget == null
-      ? "No budget is set, so a reset window has no effect. Click Budget to set one."
+      ? "Бюджет не задан, окно сброса не действует. Нажмите «Бюджет», чтобы задать его."
       : budgetDuration
         ? budgetResetAt
-          ? `Budget resets every ${budgetDuration}; next reset: ${new Date(budgetResetAt).toLocaleString()}`
-          : `Budget resets every ${budgetDuration}`
+          ? `Бюджет сбрасывается ${budgetDuration}; следующий сброс: ${new Date(budgetResetAt).toLocaleString()}`
+          : `Бюджет сбрасывается ${budgetDuration}`
         : null;
 
   if (!canEdit) {
@@ -241,7 +241,7 @@ function BudgetCell({
   }
 
   const save = async (next: number | null) => {
-    const ok = await patchUser(accessToken, { user_id: user.user_id, max_budget: next }, "Budget updated");
+    const ok = await patchUser(accessToken, { user_id: user.user_id, max_budget: next }, "Бюджет обновлён");
     if (ok) {
       setOpen(false);
       onQuotaChanged();
@@ -253,7 +253,7 @@ function BudgetCell({
       <PopoverTrigger
         aria-label={`Edit budget for ${user.user_email || user.user_id}`}
         className="rounded px-1 -mx-1 cursor-pointer hover:bg-muted"
-        title="Click to edit budget"
+        title="Нажмите, чтобы изменить бюджет"
       >
         <MoneyCell value={user.max_budget} decimals={2} emptyText="Без ограничений" showZero />
       </PopoverTrigger>
@@ -268,7 +268,7 @@ function BudgetCell({
             }
             const parsed = Number.parseFloat(trimmed.replace(",", "."));
             if (!Number.isFinite(parsed) || parsed < 0) {
-              toast.fromError("Enter a valid amount");
+              toast.fromError("Введите корректную сумму");
               return;
             }
             void save(parsed === 0 ? null : parsed);
@@ -278,7 +278,7 @@ function BudgetCell({
             type="number"
             min="0"
             step="0.01"
-            placeholder="Amount ($)"
+            placeholder="Сумма ($)"
             value={value}
             onChange={(event) => setValue(event.target.value)}
             autoFocus
@@ -330,25 +330,25 @@ function UsageCell({
   );
 
   if (!canEdit || spend <= 0) {
-    return <CellTooltip content={`$${spend.toFixed(2)} of $${maxBudget.toFixed(2)}`} trigger={bar} />;
+    return <CellTooltip content={`$${spend.toFixed(2)} из $${maxBudget.toFixed(2)}`} trigger={bar} />;
   }
 
   return (
     <span className="flex w-full items-center justify-between gap-2">
-      <CellTooltip content={`$${spend.toFixed(2)} of $${maxBudget.toFixed(2)}`} trigger={bar} />
+      <CellTooltip content={`$${spend.toFixed(2)} из $${maxBudget.toFixed(2)}`} trigger={bar} />
       <AlertDialog>
         <AlertDialogTrigger
           aria-label={`Reset usage for ${user.user_email || user.user_id}`}
-          title="Emergency reset: set spend to 0 now"
+          title="Экстренный сброс: обнулить расход сейчас"
           className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground hover:text-destructive")}
         >
           <RotateCcw className="size-3.5" />
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Reset usage to zero?</AlertDialogTitle>
+            <AlertDialogTitle>Сбросить использование до нуля?</AlertDialogTitle>
             <AlertDialogDescription>
-              {`Spend for ${user.user_email || user.user_id} will be set from $${spend.toFixed(2)} back to $0 immediately. The quota window schedule stays unchanged; request history is not deleted.`}
+              {`Расход ${user.user_email || user.user_id} будет немедленно снижен с $${spend.toFixed(2)} до $0. Расписание окна квоты останется прежним; история запросов не удаляется.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -357,12 +357,12 @@ function UsageCell({
               disabled={resetting}
               onClick={async () => {
                 setResetting(true);
-                const ok = await patchUser(accessToken, { user_id: user.user_id, spend: 0 }, "Usage reset to $0");
+                const ok = await patchUser(accessToken, { user_id: user.user_id, spend: 0 }, "Использование сброшено до $0");
                 setResetting(false);
                 if (ok) onQuotaChanged();
               }}
             >
-              {resetting ? "Resetting…" : "Reset now"}
+              {resetting ? "Сброс…" : "Сбросить сейчас"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -433,8 +433,8 @@ export const getUsersTableColumns = ({
     {
       id: "user_role",
       accessorKey: "user_role",
-      meta: { title: "Global Proxy Role" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Global Proxy Role" variant="header-cycle" />,
+      meta: { title: "Глобальная роль прокси" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Глобальная роль прокси" variant="header-cycle" />,
       size: 160,
       enableSorting: true,
       cell: ({ row }) => <span className="text-sm">{possibleUIRoles?.[row.original.user_role]?.ui_label || "-"}</span>,
@@ -474,8 +474,8 @@ export const getUsersTableColumns = ({
     },
     {
       id: "quota_mode",
-      meta: { title: "Quota" },
-      header: "Quota",
+      meta: { title: "Квота" },
+      header: "Квота",
       size: 140,
       enableSorting: false,
       cell: ({ row }) => (
@@ -484,8 +484,8 @@ export const getUsersTableColumns = ({
     },
     {
       id: "quota_used",
-      meta: { title: "Used", numeric: true },
-      header: "Used",
+      meta: { title: "Использовано", numeric: true },
+      header: "Использовано",
       size: 190,
       enableSorting: false,
       cell: ({ row }) => (
@@ -501,7 +501,7 @@ export const getUsersTableColumns = ({
           SSO ID
           <CellTooltip
             content={SSO_ID_HINT}
-            trigger={<Info className="size-3.5 shrink-0 text-muted-foreground" aria-label="About SSO ID" />}
+            trigger={<Info className="size-3.5 shrink-0 text-muted-foreground" aria-label="О SSO ID" />}
           />
         </span>
       ),
@@ -528,7 +528,7 @@ export const getUsersTableColumns = ({
               variant="outline"
               className="whitespace-nowrap border-indigo-200 bg-indigo-50 font-normal text-indigo-600 dark:border-indigo-800 dark:bg-indigo-950 dark:text-indigo-300"
             >
-              {keyCount} {keyCount === 1 ? "Key" : "Keys"}
+              {keyCount} {keyCount === 1 ? "ключ" : "ключей"}
             </Badge>
           );
         }
@@ -537,7 +537,7 @@ export const getUsersTableColumns = ({
             variant="outline"
             className="whitespace-nowrap border-border bg-muted font-normal text-muted-foreground"
           >
-            No Keys
+            Нет ключей
           </Badge>
         );
       },

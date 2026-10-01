@@ -137,11 +137,11 @@ const labelWithHint = (label: string, hint: string): React.ReactNode => (
 const EmailInvitationsNotice: React.FC = () => (
   <Alert variant="info" className="mb-4">
     <Info />
-    <AlertTitle>Email invitations</AlertTitle>
+    <AlertTitle>Email-приглашения</AlertTitle>
     <AlertDescription>
-      New users receive an email invite only when an email integration (SMTP, Resend, or SendGrid) is configured.{" "}
+      Новые пользователи получат приглашение по email, только когда настроена интеграция email (SMTP, Resend или SendGrid).{" "}
       <a href="https://docs.litellm.ai/docs/proxy/email" target="_blank" rel="noreferrer">
-        Learn how to set up email notifications
+        Как настроить уведомления по email
       </a>
     </AlertDescription>
   </Alert>
@@ -201,7 +201,7 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
 
   const handleCreate = async (formValues: CreateUserFormValues) => {
     try {
-      toast.info("Making API Call");
+      toast.info("Выполняется запрос к API");
       if (!isEmbedded) {
         setIsModalVisible(true);
       }
@@ -228,11 +228,11 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
         setIsInvitationLinkModalVisible(true);
       }
 
-      toast.success("API user Created");
+      toast.success("Пользователь создан");
       form.reset(defaultValues);
       localStorage.removeItem("userData" + userID);
     } catch (error: any) {
-      const errorMessage = error.response?.data?.detail || error?.message || "Error creating the user";
+      const errorMessage = error.response?.data?.detail || error?.message || "Не удалось создать пользователя";
       toast.fromError(errorMessage);
       console.error("Error creating the user:", error);
     }
@@ -245,7 +245,7 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
   }));
 
   const userEmailField = (
-    <FormField control={form.control} name="user_email" label="User Email">
+    <FormField control={form.control} name="user_email" label="Email пользователя">
       {({ ref, value, ...control }) => <Input {...control} ref={ref} value={value ?? ""} />}
     </FormField>
   );
@@ -255,22 +255,22 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
       control={form.control}
       name="team_id"
       label="Команда"
-      description="If selected, user will be added as a 'user' role to the team."
+      description="Если выбрано, пользователь будет добавлен в команду с ролью «user»."
     >
       {({ id, value, onChange }) => <TeamDropdown id={id} value={value} onChange={onChange} />}
     </FormField>
   );
 
   const metadataField = (
-    <FormField control={form.control} name="metadata" label="Metadata">
+    <FormField control={form.control} name="metadata" label="Метаданные">
       {({ ref, value, ...control }) => (
-        <Textarea {...control} ref={ref} value={value ?? ""} rows={4} placeholder="Enter metadata as JSON" />
+        <Textarea {...control} ref={ref} value={value ?? ""} rows={4} placeholder="Введите метаданные в JSON" />
       )}
     </FormField>
   );
 
   const sendInviteEmailField = (
-    <FormField control={form.control} name="send_invite_email" label="Send invitation email" orientation="horizontal">
+    <FormField control={form.control} name="send_invite_email" label="Отправить приглашение по email" orientation="horizontal">
       {({ id, value, onChange, onBlur }) => (
         <Checkbox id={id} checked={value} onCheckedChange={onChange} onBlur={onBlur} />
       )}
@@ -309,13 +309,13 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
           <EmailInvitationsNotice />
           <FieldGroup>
             {userEmailField}
-            {roleField("User Role")}
+            {roleField("Роль пользователя")}
             {teamField}
             {metadataField}
             {sendInviteEmailField}
           </FieldGroup>
           <div className="mt-4 text-right">
-            <Button type="submit">Create User</Button>
+            <Button type="submit">Создать пользователя</Button>
           </div>
         </form>
       </TooltipProvider>
@@ -326,15 +326,15 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
   return (
     <>
       <Button type="button" onClick={() => setIsModalVisible(true)}>
-        + Invite User
+        + Пригласить пользователя
       </Button>
       <Dialog open={isModalVisible} onOpenChange={(open) => !open && handleCancel()}>
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[800px]">
           <DialogHeader>
-            <DialogTitle>Invite User</DialogTitle>
+            <DialogTitle>Пригласить пользователя</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col gap-3">
-            <p className="mb-1 text-sm text-foreground">Create a User who can own keys</p>
+            <p className="mb-1 text-sm text-foreground">Создайте пользователя, которому будут принадлежать ключи</p>
             <EmailInvitationsNotice />
           </div>
           <TooltipProvider>
@@ -343,8 +343,8 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
                 {userEmailField}
                 {roleField(
                   labelWithHint(
-                    "Global Proxy Role",
-                    "This role is independent of any team/org specific roles. Configure Team / Organization Admins in the Settings",
+                    "Глобальная роль прокси",
+                    "Эта роль не зависит от ролей в команде или организации. Админов команд и организаций настройте в разделе «Настройки»",
                   ),
                 )}
                 {teamField}
@@ -352,8 +352,8 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
                 <FormField
                   control={form.control}
                   name="organization_ids"
-                  label="Organization"
-                  description="The user will be added to the selected organization(s)."
+                  label="Организация"
+                  description="Пользователь будет добавлен в выбранные организации."
                 >
                   {({ id, value, onChange }) => (
                     <Select
@@ -363,10 +363,10 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
                       onValueChange={(selected: string[]) => onChange(selected.length === 0 ? undefined : selected)}
                     >
                       <SelectTrigger id={id} className="w-full">
-                        <SelectValue placeholder="Select Organization">
+                        <SelectValue placeholder="Выберите организацию">
                           {(selected: string[]) =>
                             selected.length === 0
-                              ? "Select Organization"
+                              ? "Выберите организацию"
                               : organizationOptions
                                   .filter((option) => selected.includes(option.value))
                                   .map((option) => option.label)
@@ -394,25 +394,25 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
                       className={`size-4 transition-transform ${isPersonalKeyOpen ? "rotate-90" : ""}`}
                       aria-hidden
                     />
-                    Personal Key Creation
+                    Создание персонального ключа
                   </CollapsibleTrigger>
                   <CollapsibleContent className="pt-4">
                     <FormField
                       control={form.control}
                       name="models"
-                      label={labelWithHint("Models", "Models user has access to, outside of team scope.")}
-                      description="Models user has access to, outside of team scope."
+                      label={labelWithHint("Модели", "Модели, доступные пользователю вне области команды.")}
+                      description="Модели, доступные пользователю вне области команды."
                     >
                       {({ value, onChange }) => (
                         <MultiSelect
                           options={[
-                            { label: "All Proxy Models", value: "all-proxy-models" },
-                            { label: "No Default Models", value: "no-default-models" },
+                            { label: "Все модели прокси", value: "all-proxy-models" },
+                            { label: "Без моделей по умолчанию", value: "no-default-models" },
                             ...userModels.map((model) => ({ label: getModelDisplayName(model), value: model })),
                           ]}
                           value={value ?? []}
                           onValueChange={onChange}
-                          placeholder="Select models"
+                          placeholder="Выберите модели"
                         />
                       )}
                     </FormField>
@@ -423,7 +423,7 @@ export const CreateUserButton: React.FC<CreateuserProps> = ({
               <div className="mt-4 text-right">
                 <Button type="submit">
                   <UserPlus />
-                  Invite User
+                  Пригласить пользователя
                 </Button>
               </div>
             </form>

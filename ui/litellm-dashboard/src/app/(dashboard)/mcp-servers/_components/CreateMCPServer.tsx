@@ -85,11 +85,11 @@ interface CreateMCPServerProps {
 const payloadErrorMessage = (result: Exclude<BuildCreatePayloadResult, { kind: "ok" }>): string => {
   switch (result.kind) {
     case "invalid_tool_display_name":
-      return `Tool display name "${result.displayName}" is invalid. Only letters, digits, underscores, and hyphens are allowed (no spaces).`;
+      return `Некорректное отображаемое имя инструмента «${result.displayName}». Допускаются только буквы, цифры, подчёркивания и дефисы (без пробелов).`;
     case "invalid_stdio_json":
-      return "Invalid JSON in stdio configuration";
+      return "Некорректный JSON в конфигурации stdio";
     case "invalid_token_validation_json":
-      return "Invalid JSON in Token Validation Rules";
+      return "Некорректный JSON в правилах валидации токена";
   }
 };
 
@@ -250,7 +250,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
         // edit form's onTokenReceived early return.
         setAuthorizedIdentity(getOAuthAuthorizationIdentity(allFieldsValue(form)));
         toast.success(
-          "Token held for this browser session. Tools can now be previewed and configured; the token is not saved to LiteLLM.",
+          "Токен хранится в этой сессии браузера. Инструменты можно просматривать и настраивать; токен не сохраняется в LiteLLM.",
         );
         return;
       }
@@ -282,7 +282,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
       // its own credential write.
       setAuthorizedIdentity(getOAuthAuthorizationIdentity(allFieldsValue(form)));
 
-      toast.success("OAuth authorization successful! Please click 'Create MCP Server' to save the configuration.");
+      toast.success("Авторизация OAuth выполнена. Нажмите «Добавить MCP-сервер», чтобы сохранить конфигурацию.");
     },
     onBeforeRedirect: persistCreateUiState,
     flowSource: "create",
@@ -471,10 +471,10 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
         }
 
         if (isAdmin) {
-          toast.success("MCP Server created successfully");
+          toast.success("MCP-сервер создан");
         } else {
-          toast.success("MCP Server submitted for admin review", {
-            description: "Once an admin approves it, the server will appear in your MCP Servers list.",
+          toast.success("MCP-сервер отправлен на проверку админу", {
+            description: "После одобрения админом сервер появится в вашем списке MCP-серверов.",
           });
         }
         form.reset(CREATE_DEFAULTS);
@@ -629,9 +629,9 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                 &#8592;
               </Button>
             )}
-            <img src={mcpLogoImg} alt="MCP Logo" className="size-5 object-contain" />
+            <img src={mcpLogoImg} alt="Логотип MCP" className="size-5 object-contain" />
             <DialogTitle className="text-xl font-semibold">
-              {isAdmin ? "Add New MCP Server" : "Submit MCP Server for Review"}
+              {isAdmin ? "Добавить MCP-сервер" : "Отправить MCP-сервер на проверку"}
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -642,16 +642,16 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
               <form onSubmit={handleSubmit} className="space-y-6">
                 {!isAdmin && (
                   <div className="rounded-md bg-info/10 border border-info/20 px-4 py-3 text-sm text-info">
-                    Your submission will be sent for admin review. Once approved, the server will appear in your MCP
-                    Servers list. The request must be made with a team-scoped API key.
+                    Ваша заявка будет отправлена на проверку админу. После одобрения сервер появится в вашем списке
+                    MCP-серверов. Запрос должен быть выполнен командным API-ключом.
                   </div>
                 )}
                 <div className="grid grid-cols-1 gap-6">
                   <MountedFormField
                     label={
                       <span className="text-sm font-medium text-foreground flex items-center">
-                        MCP Server Name
-                        <SimpleTooltip content="Best practice: Use a descriptive name that indicates the server's purpose (e.g., 'GitHub_MCP', 'Email_Service'). Cannot contain spaces or hyphens; use underscores instead. Names must comply with SEP-986 and will be rejected if invalid (https://modelcontextprotocol.io/specification/2025-11-25/server/tools#tool-names).">
+                        Название MCP-сервера
+                        <SimpleTooltip content="Рекомендация: используйте описательное имя, отражающее назначение сервера (напр. 'GitHub_MCP', 'Email_Service'). Без пробелов и дефисов — используйте подчёркивания. Имена должны соответствовать SEP-986 и отклоняются при нарушении (https://modelcontextprotocol.io/specification/2025-11-25/server/tools#tool-names).">
                           <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                         </SimpleTooltip>
                       </span>
@@ -662,7 +662,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                     {(control) => (
                       <Input
                         {...textControl(control)}
-                        placeholder="e.g., GitHub_MCP, Zapier_MCP, etc."
+                        placeholder="напр. GitHub_MCP, Zapier_MCP"
                         className="rounded-lg border-border focus:border-info focus:ring-ring"
                       />
                     )}
@@ -672,7 +672,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                     label={
                       <span className="text-sm font-medium text-foreground flex items-center">
                         Псевдоним
-                        <SimpleTooltip content="A short, unique identifier for this server. Defaults to the server name if not provided. Cannot contain spaces or hyphens; use underscores instead.">
+                        <SimpleTooltip content="Короткий уникальный идентификатор сервера. По умолчанию — название сервера. Без пробелов и дефисов — используйте подчёркивания.">
                           <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                         </SimpleTooltip>
                       </span>
@@ -683,7 +683,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                     {(control) => (
                       <Input
                         {...textControl(control)}
-                        placeholder="e.g., GitHub_MCP, Zapier_MCP, etc."
+                        placeholder="напр. GitHub_MCP, Zapier_MCP"
                         className="rounded-lg border-border focus:border-info focus:ring-ring"
                         onChange={(event) => {
                           control.onChange(event);
@@ -700,7 +700,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                     {(control) => (
                       <Input
                         {...textControl(control)}
-                        placeholder="Brief description of what this server does"
+                        placeholder="Краткое описание назначения сервера"
                         className="rounded-lg border-border focus:border-info focus:ring-ring"
                       />
                     )}
@@ -709,7 +709,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                   <MCPLogoSelector value={logoUrl} onChange={setLogoUrl} />
 
                   <MountedFormField
-                    label={<span className="text-sm font-medium text-foreground">GitHub / Source URL</span>}
+                    label={<span className="text-sm font-medium text-foreground">GitHub / URL исходников</span>}
                     name="source_url"
                   >
                     {(control) => (
@@ -722,10 +722,10 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                   </MountedFormField>
 
                   <MountedFormField
-                    label={<span className="text-sm font-medium text-foreground">Transport Type</span>}
+                    label={<span className="text-sm font-medium text-foreground">Тип транспорта</span>}
                     name="transport"
                     required
-                    rules={{ validate: { required: requiredRule("Please select a transport type") } }}
+                    rules={{ validate: { required: requiredRule("Выберите тип транспорта") } }}
                   >
                     {(control) => (
                       <Select
@@ -734,7 +734,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                         onValueChange={handleTransportSelected(control.onChange)}
                       >
                         <SelectTrigger {...selectTriggerControl(control)} className="w-full rounded-lg">
-                          <SelectValue placeholder="Select transport" />
+                          <SelectValue placeholder="Выберите транспорт" />
                         </SelectTrigger>
                         <SelectContent>
                           {TRANSPORT_ITEMS.map((item) => (
@@ -750,12 +750,12 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                   {/* URL field - only show for HTTP and SSE */}
                   {(transportType === "http" || transportType === "sse") && (
                     <MountedFormField
-                      label={<span className="text-sm font-medium text-foreground">MCP Server URL</span>}
+                      label={<span className="text-sm font-medium text-foreground">URL MCP-сервера</span>}
                       name="url"
                       required
                       rules={{
                         validate: {
-                          required: requiredRule("Please enter a server URL"),
+                          required: requiredRule("Укажите URL сервера"),
                           ...validatorRules({ validator: (_, value) => validateMCPServerUrl(value) }),
                         },
                       }}
@@ -790,8 +790,8 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                   <MountedFormField
                     label={
                       <span className="text-sm font-medium text-foreground flex items-center">
-                        Max Concurrent Requests (optional)
-                        <SimpleTooltip content="Maximum number of tool calls LiteLLM will run against this server at the same time. Additional calls wait for a free slot. Leave blank for no limit.">
+                        Макс. одновременных запросов (необязательно)
+                        <SimpleTooltip content="Максимальное число вызовов инструментов, которые LiteLLM выполняет на этом сервере одновременно. Лишние вызовы ждут свободный слот. Оставьте пустым без ограничения.">
                           <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                         </SimpleTooltip>
                       </span>
@@ -813,20 +813,20 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                   {transportType !== "stdio" && transportType !== "" && (
                     <Collapsible defaultOpen className="mb-4">
                       <CollapsibleTrigger className="group flex w-full items-center justify-between gap-4 py-2 text-left">
-                        <span className="text-sm font-semibold text-foreground">Authentication settings</span>
+                        <span className="text-sm font-semibold text-foreground">Настройки аутентификации</span>
                         <ChevronDown className="size-4 text-muted-foreground transition-transform group-data-[panel-open]:rotate-180" />
                       </CollapsibleTrigger>
                       <CollapsibleContent keepMounted className="space-y-6 pt-2">
                         <MountedFormField
-                          label="Authentication"
+                          label="Аутентификация"
                           name="auth_type"
                           required
-                          rules={{ validate: { required: requiredRule("Please select an auth type") } }}
+                          rules={{ validate: { required: requiredRule("Выберите тип аутентификации") } }}
                         >
                           {(control) => (
                             <Select {...selectControl<string>(control)} items={AUTH_TYPE_ITEMS}>
                               <SelectTrigger {...selectTriggerControl(control)} className="w-full rounded-lg">
-                                <SelectValue placeholder="Select auth type" />
+                                <SelectValue placeholder="Выберите тип аутентификации" />
                               </SelectTrigger>
                               <SelectContent>
                                 {AUTH_TYPE_ITEMS.map((item) => (
@@ -857,8 +857,8 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                           <MountedFormField
                             label={
                               <span className="text-sm font-medium text-foreground flex items-center">
-                                Authentication Value
-                                <SimpleTooltip content="Token, password, or header value to send with each request for the selected auth type.">
+                                Значение аутентификации
+                                <SimpleTooltip content="Токен, пароль или значение заголовка, отправляемое с каждым запросом для выбранного типа аутентификации.">
                                   <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                                 </SimpleTooltip>
                               </span>
@@ -866,14 +866,14 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                             name={["credentials", "auth_value"]}
                             rules={{
                               validate: {
-                                notWhitespace: notOnlyWhitespace("Authentication value cannot be empty whitespace"),
+                                notWhitespace: notOnlyWhitespace("Значение аутентификации не может быть пустым"),
                               },
                             }}
                           >
                             {(control) => (
                               <PasswordInput
                                 {...textControl(control)}
-                                placeholder="Enter token or secret"
+                                placeholder="Введите токен или секрет"
                                 groupClassName="rounded-lg border-border focus:border-info focus:ring-ring"
                               />
                             )}
@@ -974,7 +974,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                   </Button>
                   <Button type="submit" disabled={isLoading} aria-busy={isLoading}>
                     {isLoading && <UiLoadingSpinner className="size-4" />}
-                    {isLoading ? "Creating..." : "Add MCP Server"}
+                    {isLoading ? "Создание…" : "Добавить MCP-сервер"}
                   </Button>
                 </div>
               </form>

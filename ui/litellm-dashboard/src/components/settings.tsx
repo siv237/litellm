@@ -78,7 +78,7 @@ const DynamicParamsFields: React.FC<DynamicParamsFieldsProps> = ({ params, callb
         const selectOptions: string[] = Array.isArray(paramConfig.options) ? paramConfig.options : [];
         const isSelect = paramType === "select" && selectOptions.length > 0;
         const fieldId = `${fieldIdPrefix}-${param}`;
-        const validationRules = isRequired ? { required: `Please enter the ${fieldLabel.toLowerCase()}` } : undefined;
+        const validationRules = isRequired ? { required: `Укажите значение поля: ${fieldLabel}` } : undefined;
         const registration = isSelect ? undefined : register(param, validationRules);
 
         return (
@@ -168,10 +168,10 @@ export const CallbackSelector: React.FC<CallbackSelectorProps> = ({
     <Controller
       control={control}
       name="callback"
-      rules={disabled ? undefined : { required: "Please select a callback" }}
+      rules={disabled ? undefined : { required: "Выберите коллбэк" }}
       render={({ field, fieldState }) => (
         <Field>
-          <FieldLabel htmlFor={inputId}>Callback</FieldLabel>
+          <FieldLabel htmlFor={inputId}>Коллбэк</FieldLabel>
           <Combobox
             items={callbackConfigs}
             value={selectedConfig}
@@ -188,14 +188,14 @@ export const CallbackSelector: React.FC<CallbackSelectorProps> = ({
           >
             <ComboboxInput
               id={inputId}
-              placeholder="Choose a logging callback..."
+              placeholder="Выберите коллбэк логирования..."
               className="w-full"
               disabled={disabled}
               onBlur={field.onBlur}
               aria-invalid={fieldState.error !== undefined || undefined}
             />
             <ComboboxContent>
-              <ComboboxEmpty>No results</ComboboxEmpty>
+              <ComboboxEmpty>Нет результатов</ComboboxEmpty>
               <ComboboxList>
                 {(callbackConfig: CallbackConfigOption) => (
                   <ComboboxItem key={callbackConfig.id} value={callbackConfig}>
@@ -292,7 +292,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
         setCallbackConfigs(data || []);
       })
       .catch((error) => {
-        toast.fromError("Failed to load callback configs: " + parseErrorMessage(error));
+        toast.fromError("Не удалось загрузить конфигурации коллбэков: " + parseErrorMessage(error));
       });
   }, [accessToken]);
 
@@ -323,16 +323,16 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
     }
   };
   const alerts_to_UI_NAME: Record<string, string> = {
-    llm_exceptions: "LLM Exceptions",
-    llm_too_slow: "LLM Responses Too Slow",
-    llm_requests_hanging: "LLM Requests Hanging",
-    budget_alerts: "Budget Alerts (API Keys, Users)",
-    user_spend_thresholds: "User Spend Thresholds (Daily/Monthly)",
-    user_spend_anomalies: "User Spend Anomaly Detection",
-    db_exceptions: "Database Exceptions (Read/Write)",
-    daily_reports: "Weekly/Monthly Spend Reports",
-    outage_alerts: "Outage Alerts",
-    region_outage_alerts: "Region Outage Alerts",
+    llm_exceptions: "Исключения LLM",
+    llm_too_slow: "Слишком долгие ответы LLM",
+    llm_requests_hanging: "Зависшие запросы к LLM",
+    budget_alerts: "Оповещения о бюджете (ключи, пользователи)",
+    user_spend_thresholds: "Пороги расхода пользователей (день/месяц)",
+    user_spend_anomalies: "Обнаружение аномалий расхода пользователей",
+    db_exceptions: "Исключения БД (чтение/запись)",
+    daily_reports: "Отчёты о расходе (неделя/месяц)",
+    outage_alerts: "Оповещения о сбоях",
+    region_outage_alerts: "Оповещения о сбоях региона",
     model_deprecation_warnings: "Model Deprecation Warnings",
   };
 
@@ -479,7 +479,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
     } catch (error) {
       toast.fromError(error);
     }
-    toast.success("Alerts updated successfully");
+    toast.success("Настройки оповещений обновлены");
   };
 
   const handleDeleteCallback = (callback: any) => {
@@ -495,7 +495,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
     try {
       setIsDeletingCallback(true);
       await deleteCallback(accessToken, callbackToDelete.name);
-      toast.success(`Callback ${callbackToDelete.name} deleted successfully`);
+      toast.success(`Коллбэк ${callbackToDelete.name} удалён`);
 
       // Refresh the callbacks list
       if (userID && userRole) {
@@ -506,7 +506,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
       setShowDeleteConfirmModal(false);
       setCallbackToDelete(null);
     } catch (error) {
-      console.error("Failed to delete callback:", error);
+      console.error("Не удалось удалить коллбэк:", error);
       toast.fromError(error);
     } finally {
       setIsDeletingCallback(false);
@@ -522,12 +522,12 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
       <div className="grid grid-cols-1 gap-2 p-8 w-full mt-2">
         <Tabs defaultValue="logging-callbacks">
           <TabsList variant="line">
-            <TabsTrigger value="logging-callbacks">Logging Callbacks</TabsTrigger>
-            <TabsTrigger value="cloudzero-cost-tracking">CloudZero Cost Tracking</TabsTrigger>
-            <TabsTrigger value="alerting-types">Alerting Types</TabsTrigger>
-            <TabsTrigger value="alerting-settings">Alerting Settings</TabsTrigger>
-            <TabsTrigger value="email-alerts">Email Alerts</TabsTrigger>
-            <TabsTrigger value="ms-teams-alerts">MS Teams Alerts</TabsTrigger>
+            <TabsTrigger value="logging-callbacks">Коллбэки логирования</TabsTrigger>
+            <TabsTrigger value="cloudzero-cost-tracking">Учёт стоимости CloudZero</TabsTrigger>
+            <TabsTrigger value="alerting-types">Типы оповещений</TabsTrigger>
+            <TabsTrigger value="alerting-settings">Настройки оповещений</TabsTrigger>
+            <TabsTrigger value="email-alerts">Оповещения по email</TabsTrigger>
+            <TabsTrigger value="ms-teams-alerts">Оповещения MS Teams</TabsTrigger>
           </TabsList>
           <TabsContent value="logging-callbacks" keepMounted>
             <LoggingCallbacksTable
@@ -543,7 +543,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
               onTest={async (cb) => {
                 try {
                   await serviceHealthCheck(accessToken, cb.name);
-                  toast.success("Health check triggered");
+                  toast.success("Проверка здоровья выполнена");
                 } catch (error) {
                   toast.fromError(parseErrorMessage(error));
                 }
@@ -558,10 +558,10 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
           <TabsContent value="alerting-types" keepMounted>
             <Card className="p-6">
               <p className="my-2">
-                Alerts are sent to any Slack-compatible incoming webhook URL (Slack, Rocket.Chat, Mattermost, etc.). Get
-                Slack webhook urls from{" "}
+                Оповещения отправляются на любой webhook-URL, совместимый со Slack (Slack, Rocket.Chat, Mattermost и т.д.). Получить
+                URL webhook Slack можно{" "}
                 <a href="https://api.slack.com/messaging/webhooks" target="_blank" style={{ color: "blue" }}>
-                  here
+                  здесь
                 </a>
               </p>
               <Table>
@@ -569,7 +569,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
                   <TableRow>
                     <TableHead></TableHead>
                     <TableHead></TableHead>
-                    <TableHead>Webhook URL (Slack-compatible)</TableHead>
+                    <TableHead>Webhook URL (совместимый со Slack)</TableHead>
                   </TableRow>
                 </TableHeader>
 
@@ -588,7 +588,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
                           ) : (
                             <Button className="flex items-center justify-center">
                               <a href="https://forms.gle/W3U4PZpJGFHWtHyA9" target="_blank">
-                                ✨ Enterprise Feature
+                                ✨ Корпоративная функция
                               </a>
                             </Button>
                           )
@@ -628,7 +628,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
                   try {
                     await serviceHealthCheck(accessToken, "slack");
                     toast.success(
-                      "Alert test triggered. Test request to slack made - check logs/alerts on slack to verify",
+                      "Тест оповещений выполнен — запрос в Slack отправлен, проверьте журнал/оповещения в Slack",
                     );
                   } catch (error) {
                     toast.fromError(parseErrorMessage(error));
@@ -636,7 +636,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
                 }}
                 className="mx-2"
               >
-                Test Alerts
+                Тестировать оповещения
               </Button>
             </Card>
           </TabsContent>
@@ -655,7 +655,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
       <Dialog open={showAddCallbacksModal} onOpenChange={(open) => !open && closeAddCallbackModal()}>
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[800px]">
           <DialogHeader>
-            <DialogTitle>Add Logging Callback</DialogTitle>
+            <DialogTitle>Добавить коллбэк логирования</DialogTitle>
           </DialogHeader>
           <a
             href="https://docs.litellm.ai/docs/proxy/logging"
@@ -664,7 +664,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
             style={{ color: "blue" }}
           >
             {" "}
-            LiteLLM Docs: Logging
+            Документация LiteLLM: Логирование
           </a>
 
           <FormProvider {...addForm}>
@@ -686,7 +686,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
                   Отмена
                 </Button>
                 <Button type="submit" disabled={isAddingCallback}>
-                  {isAddingCallback ? "Adding..." : "Add Callback"}
+                  {isAddingCallback ? "Добавление…" : "Добавить коллбэк"}
                 </Button>
               </div>
             </form>
@@ -697,7 +697,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
       <Dialog open={showEditCallback} onOpenChange={(open) => !open && closeEditCallbackModal()}>
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[800px]">
           <DialogHeader>
-            <DialogTitle>Edit Callback Settings</DialogTitle>
+            <DialogTitle>Изменить настройки коллбэка</DialogTitle>
           </DialogHeader>
           <FormProvider {...editForm}>
             <form onSubmit={editForm.handleSubmit(updateCallbackCall)}>
@@ -727,7 +727,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
                   Отмена
                 </Button>
                 <Button type="submit" disabled={isUpdatingCallback}>
-                  {isUpdatingCallback ? "Saving..." : "Save Changes"}
+                  {isUpdatingCallback ? "Сохранение…" : "Сохранить изменения"}
                 </Button>
               </div>
             </form>
@@ -737,12 +737,12 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
 
       <DeleteResourceModal
         isOpen={showDeleteConfirmModal}
-        title="Delete Callback"
-        message="Are you sure you want to delete this callback? This action cannot be undone."
-        resourceInformationTitle="Callback Information"
+        title="Удалить коллбэк"
+        message="Вы уверены, что хотите удалить этот коллбэк? Действие необратимо."
+        resourceInformationTitle="Сведения о коллбэке"
         resourceInformation={[
-          { label: "Callback Name", value: callbackToDelete?.name },
-          { label: "Mode", value: callbackToDelete?.mode || "success" },
+          { label: "Имя коллбэка", value: callbackToDelete?.name },
+          { label: "Режим", value: callbackToDelete?.mode || "success" },
         ]}
         onCancel={() => {
           setShowDeleteConfirmModal(false);

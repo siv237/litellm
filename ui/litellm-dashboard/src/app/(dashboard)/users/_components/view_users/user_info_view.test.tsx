@@ -328,7 +328,7 @@ describe("UserInfoView", () => {
       const expectedObjectPermission = {
         mcp_servers: ["srv-1"],
         mcp_access_groups: ["dev-group"],
-        mcp_toolsets: [],
+        mcp_Toolsets: [],
         mcp_tool_permissions: { "srv-1": ["list_issues"] },
       };
       expect(payload.object_permission).toEqual(expectedObjectPermission);
@@ -337,7 +337,7 @@ describe("UserInfoView", () => {
       expect(payload).not.toHaveProperty("mcp_servers");
     });
 
-    it("should send tool selections made in the edit form", async () => {
+    it("should send инструмента selections made in the edit form", async () => {
       const user = userEvent.setup();
       render(<UserInfoView {...defaultProps} userRole="proxy_admin" initialTab={1} startInEditMode />);
 
@@ -346,7 +346,7 @@ describe("UserInfoView", () => {
         expect(mockListMCPTools).toHaveBeenCalledWith("test-token", "srv-1");
       });
       await waitFor(() => {
-        expect(screen.queryByText("Loading tools...")).not.toBeInTheDocument();
+        expect(screen.queryByText("Loading инструментов...")).not.toBeInTheDocument();
       });
 
       await user.click(screen.getByRole("button", { name: "Deselect All" }));
@@ -360,7 +360,7 @@ describe("UserInfoView", () => {
       expect(payload.object_permission.mcp_tool_permissions).toEqual({ "srv-1": [] });
     });
 
-    it("should preserve every tool allowlist when the granted servers are unchanged", async () => {
+    it("should preserve every инструмента allowlist when the granted servers are unchanged", async () => {
       const user = userEvent.setup();
       mockUserGetInfoV2.mockResolvedValue({
         ...MOCK_USER_DATA,
@@ -412,22 +412,22 @@ describe("extractMcpEntitlement", () => {
   ] as any;
 
   const TOOLSETS = [
-    { toolset_id: "ts-1", toolset_name: "audit", tools: [{ server_id: "srv-via-group", tool_name: "read" }] },
+    { Toolset_id: "ts-1", Toolset_name: "audit", tools: [{ server_id: "srv-via-group", tool_name: "read" }] },
   ] as any;
 
   const form = (
-    selection: { servers?: string[]; accessGroups?: string[]; toolsets?: string[] },
-    toolPermissions: Record<string, string[]>,
+    selection: { servers?: string[]; accessGroups?: string[]; Toolsets?: string[] },
+    ToolPermissions: Record<string, string[]>,
   ) => ({
     mcp_servers_and_groups: {
       servers: selection.servers ?? [],
       accessGroups: selection.accessGroups ?? [],
-      toolsets: selection.toolsets ?? [],
+      Toolsets: selection.Toolsets ?? [],
     },
-    mcp_tool_permissions: toolPermissions,
+    mcp_tool_permissions: ToolPermissions,
   });
 
-  it("drops the tool allowlist of a server the admin just deselected", () => {
+  it("drops the инструмента allowlist of a server the admin just deselected", () => {
     const result = extractMcpEntitlement(
       form({ servers: ["srv-1"] }, { "srv-1": ["read"], "srv-2": ["delete"] }),
       CATALOG,
@@ -441,7 +441,7 @@ describe("extractMcpEntitlement", () => {
   });
 
   it("keeps a name-keyed allowlist for a server that is still selected by id", () => {
-    // The gateway resolves a tool-permission key by id, name OR alias, so an entry written by the
+    // The gateway resolves a инструмента-permission key by id, name OR alias, so an entry written by the
     // API or by config may be keyed by name. Comparing keys to the selector's ids alone drops it
     // while the server stays granted, which removes the restriction entirely.
     const result = extractMcpEntitlement(form({ servers: ["srv-1"] }, { deploy_tracker: ["create_issue"] }), CATALOG);
@@ -525,24 +525,24 @@ describe("extractMcpEntitlement", () => {
     expect(result?.mcp_tool_permissions).toEqual({});
   });
 
-  it("keeps the allowlist of a deselected server that a retained toolset still supplies", () => {
+  it("keeps the allowlist of a deselected server that a retained Toolset still supplies", () => {
     const result = extractMcpEntitlement(
-      form({ toolsets: ["ts-1"] }, { "srv-via-group": ["read"] }),
+      form({ Toolsets: ["ts-1"] }, { "srv-via-group": ["read"] }),
       CATALOG,
       TOOLSETS,
     );
     expect(result?.mcp_tool_permissions).toEqual({ "srv-via-group": ["read"] });
   });
 
-  it("drops the allowlist of a deselected server that the retained toolset does not cover", () => {
-    const result = extractMcpEntitlement(form({ toolsets: ["ts-1"] }, { "srv-1": ["read"] }), CATALOG, TOOLSETS);
+  it("drops the allowlist of a deselected server that the retained Toolset does not cover", () => {
+    const result = extractMcpEntitlement(form({ Toolsets: ["ts-1"] }, { "srv-1": ["read"] }), CATALOG, TOOLSETS);
     expect(result?.mcp_tool_permissions).toEqual({});
   });
 
-  it("prunes nothing when a selected toolset is missing from the toolset catalog", () => {
-    // An unresolvable toolset could supply any server, so pruning against it would be a guess in
+  it("prunes nothing when a selected Toolset is missing from the Toolset catalog", () => {
+    // An unresolvable Toolset could supply any server, so pruning against it would be a guess in
     // the widening direction.
-    const result = extractMcpEntitlement(form({ toolsets: ["ts-unknown"] }, { "srv-1": ["read"] }), CATALOG, TOOLSETS);
+    const result = extractMcpEntitlement(form({ Toolsets: ["ts-unknown"] }, { "srv-1": ["read"] }), CATALOG, TOOLSETS);
     expect(result?.mcp_tool_permissions).toEqual({ "srv-1": ["read"] });
   });
 

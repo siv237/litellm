@@ -31,7 +31,7 @@ describe("CacheSettings", () => {
 
   it("should render the connection fields once current values load", async () => {
     renderSettings();
-    expect(await screen.findByText("Connection Settings")).toBeInTheDocument();
+    expect(await screen.findByText("Настройки соединения")).toBeInTheDocument();
   });
 
   describe("when the redis type is node", () => {
@@ -39,10 +39,10 @@ describe("CacheSettings", () => {
       renderSettings();
 
       expect(await screen.findByText("Redis URL")).toBeInTheDocument();
-      expect(screen.getByText("Database Index")).toBeInTheDocument();
-      expect(screen.queryByText("Startup Nodes")).not.toBeInTheDocument();
-      expect(screen.queryByText("Sentinel Nodes")).not.toBeInTheDocument();
-      expect(screen.queryByText("Embedding Model")).not.toBeInTheDocument();
+      expect(screen.getByText("Индекс базы данных")).toBeInTheDocument();
+      expect(screen.queryByText("Startup-узлы")).not.toBeInTheDocument();
+      expect(screen.queryByText("Узлы Sentinel")).not.toBeInTheDocument();
+      expect(screen.queryByText("Модель эмбеддингов")).not.toBeInTheDocument();
     });
   });
 
@@ -50,7 +50,7 @@ describe("CacheSettings", () => {
     it("should reveal the cluster startup nodes field", async () => {
       getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "cluster" } });
       renderSettings();
-      expect(await screen.findByText("Startup Nodes")).toBeInTheDocument();
+      expect(await screen.findByText("Startup-узлы")).toBeInTheDocument();
     });
   });
 
@@ -58,8 +58,8 @@ describe("CacheSettings", () => {
     it("should reveal the sentinel fields", async () => {
       getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "sentinel" } });
       renderSettings();
-      expect(await screen.findByText("Sentinel Nodes")).toBeInTheDocument();
-      expect(screen.getByText("Service Name")).toBeInTheDocument();
+      expect(await screen.findByText("Узлы Sentinel")).toBeInTheDocument();
+      expect(screen.getByText("Имя сервиса")).toBeInTheDocument();
     });
   });
 
@@ -67,8 +67,8 @@ describe("CacheSettings", () => {
     it("should reveal the semantic fields", async () => {
       getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "semantic" } });
       renderSettings();
-      expect(await screen.findByText("Similarity Threshold")).toBeInTheDocument();
-      expect(screen.getByText("Embedding Model")).toBeInTheDocument();
+      expect(await screen.findByText("Порог схожести")).toBeInTheDocument();
+      expect(screen.getByText("Модель эмбеддингов")).toBeInTheDocument();
     });
   });
 
@@ -77,12 +77,12 @@ describe("CacheSettings", () => {
       const user = userEvent.setup();
       renderSettings();
 
-      const port = await screen.findByLabelText("Port");
+      const port = await screen.findByLabelText("Порт");
       await user.clear(port);
       fireEvent.change(port, { target: { value: "99999" } });
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
-      expect(await screen.findByText(/Port must be an integer between 1 and 65535/i)).toBeInTheDocument();
+      expect(await screen.findByText(/Порт — целое число от 1 до 65535/i)).toBeInTheDocument();
       expect(updateCacheSettingsCall).not.toHaveBeenCalled();
     });
 
@@ -91,11 +91,11 @@ describe("CacheSettings", () => {
       getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "cluster" } });
       renderSettings();
 
-      const startupNodes = await screen.findByLabelText("Startup Nodes");
+      const startupNodes = await screen.findByLabelText("Startup-узлы");
       fireEvent.change(startupNodes, { target: { value: "not json" } });
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
-      expect(await screen.findByText(/Must be a valid JSON array/i)).toBeInTheDocument();
+      expect(await screen.findByText(/корректный JSON-массив/i)).toBeInTheDocument();
       expect(updateCacheSettingsCall).not.toHaveBeenCalled();
     });
 
@@ -103,11 +103,11 @@ describe("CacheSettings", () => {
       const user = userEvent.setup();
       renderSettings();
 
-      const db = await screen.findByLabelText("Database Index");
+      const db = await screen.findByLabelText("Индекс базы данных");
       fireEvent.change(db, { target: { value: "redis://host:6379/1" } });
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
-      expect(await screen.findByText(/Must be a non-negative integer/i)).toBeInTheDocument();
+      expect(await screen.findByText(/Должно быть целым неотрицательным числом/i)).toBeInTheDocument();
       expect(updateCacheSettingsCall).not.toHaveBeenCalled();
     });
   });
@@ -117,9 +117,9 @@ describe("CacheSettings", () => {
       const user = userEvent.setup();
       renderSettings();
 
-      const host = await screen.findByLabelText("Host");
+      const host = await screen.findByLabelText("Хост");
       fireEvent.change(host, { target: { value: "localhost" } });
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
       await waitFor(() =>
         expect(updateCacheSettingsCall).toHaveBeenCalledWith("sk-test", {
@@ -132,13 +132,13 @@ describe("CacheSettings", () => {
       );
     });
 
-    it("should include a numeric field like Database Index in the save payload", async () => {
+    it("should include a numeric field like Индекс базы данных in the save payload", async () => {
       const user = userEvent.setup();
       renderSettings();
 
       fireEvent.change(await screen.findByLabelText("Redis URL"), { target: { value: "redis://host:6379/1" } });
-      fireEvent.change(await screen.findByLabelText("Database Index"), { target: { value: "2" } });
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      fireEvent.change(await screen.findByLabelText("Индекс базы данных"), { target: { value: "2" } });
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
       await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalled());
       expect(updateCacheSettingsCall.mock.calls[0][1]).toMatchObject({ db: 2, url: "redis://host:6379/1" });

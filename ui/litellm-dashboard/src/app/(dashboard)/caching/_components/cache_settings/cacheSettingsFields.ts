@@ -41,10 +41,10 @@ export interface CacheField {
 export const REDIS_TYPES: readonly RedisType[] = ["node", "cluster", "sentinel", "semantic"];
 
 export const REDIS_TYPE_DESCRIPTIONS: Readonly<Record<RedisType, string>> = {
-  node: "Standard Redis node/single instance",
-  cluster: "Redis Cluster mode for high availability and horizontal scaling",
-  sentinel: "Redis Sentinel mode for high availability with automatic failover",
-  semantic: "Semantic caching that reuses responses for similar prompts",
+  node: "Обычный узел/единственный экземпляр Redis",
+  cluster: "Режим Redis Cluster для высокой доступности и горизонтального масштабирования",
+  sentinel: "Режим Redis Sentinel для высокой доступности с автоматическим переключением",
+  semantic: "Семантический кэш: переиспользует ответы для похожих запросов",
 };
 
 const isBlank = (value: unknown): boolean => value === undefined || value === null || String(value).trim() === "";
@@ -54,7 +54,7 @@ const portRule: CacheFieldRule = (value) => {
     return null;
   }
   const port = Number(value);
-  return Number.isInteger(port) && port >= 1 && port <= 65535 ? null : "Port must be an integer between 1 and 65535";
+  return Number.isInteger(port) && port >= 1 && port <= 65535 ? null : "Порт — целое число от 1 до 65535";
 };
 
 const jsonListRule: CacheFieldRule = (value) => {
@@ -65,9 +65,9 @@ const jsonListRule: CacheFieldRule = (value) => {
   try {
     parsed = JSON.parse(String(value));
   } catch {
-    return "Must be a valid JSON array (use double quotes)";
+    return "Должен быть корректный JSON-массив (двойные кавычки)";
   }
-  return Array.isArray(parsed) ? null : "Must be a JSON array";
+  return Array.isArray(parsed) ? null : "Должен быть JSON-массив";
 };
 
 const nonNegativeIntegerRule: CacheFieldRule = (value) => {
@@ -75,14 +75,14 @@ const nonNegativeIntegerRule: CacheFieldRule = (value) => {
     return null;
   }
   const parsed = Number(value);
-  return Number.isInteger(parsed) && parsed >= 0 ? null : "Must be a non-negative integer";
+  return Number.isInteger(parsed) && parsed >= 0 ? null : "Должно быть целым неотрицательным числом";
 };
 
 const numberRule: CacheFieldRule = (value) => {
   if (isBlank(value)) {
     return null;
   }
-  return Number.isNaN(Number(value)) ? "Must be a number" : null;
+  return Number.isNaN(Number(value)) ? "Должно быть числом" : null;
 };
 
 export const CACHE_FIELDS: readonly CacheField[] = [
@@ -92,119 +92,119 @@ export const CACHE_FIELDS: readonly CacheField[] = [
     type: "string",
     section: "connection",
     helpText:
-      "Full Redis/Valkey connection URL (e.g. redis://:password@host:6379/1). When set, it takes precedence over Host, Port, Password, and Database Index.",
+      "Полный URL подключения Redis/Valkey (напр. redis://:password@host:6379/1). Если задан, имеет приоритет над хостом, портом, паролем и индексом БД.",
     redisType: null,
     secret: true,
   },
   {
     name: "host",
-    label: "Host",
+    label: "Хост",
     type: "string",
     section: "connection",
-    helpText: "Redis server hostname or IP address",
+    helpText: "Имя хоста или IP-адрес сервера Redis",
     redisType: null,
   },
   {
     name: "port",
-    label: "Port",
+    label: "Порт",
     type: "string",
     section: "connection",
-    helpText: "Redis server port number",
+    helpText: "Номер порта сервера Redis",
     redisType: null,
     defaultValue: "6379",
     rules: [portRule],
   },
   {
     name: "db",
-    label: "Database Index",
+    label: "Индекс базы данных",
     type: "integer",
     section: "connection",
-    helpText: "Logical database index to isolate the cache (e.g. 1 for redis://host:6379/1)",
+    helpText: "Логический индекс базы данных для изоляции кэша (напр. 1 для redis://host:6379/1)",
     redisType: null,
     rules: [nonNegativeIntegerRule],
   },
   {
     name: "password",
-    label: "Password",
+    label: "Пароль",
     type: "password",
     section: "connection",
-    helpText: "Redis server password",
+    helpText: "Пароль сервера Redis",
     redisType: null,
     secret: true,
   },
   {
     name: "username",
-    label: "Username",
+    label: "Имя пользователя",
     type: "string",
     section: "connection",
-    helpText: "Redis server username (if required)",
+    helpText: "Имя пользователя сервера Redis (если требуется)",
     redisType: null,
   },
   {
     name: "redis_startup_nodes",
-    label: "Startup Nodes",
+    label: "Startup-узлы",
     type: "list",
     section: "cluster",
-    helpText: 'List of startup nodes for Redis Cluster (e.g., [{"host": "127.0.0.1", "port": "7001"}])',
+    helpText: 'Список startup-узлов Redis Cluster (напр. [{"host": "127.0.0.1", "port": "7001"}])',
     redisType: "cluster",
     rules: [jsonListRule],
   },
   {
     name: "sentinel_nodes",
-    label: "Sentinel Nodes",
+    label: "Узлы Sentinel",
     type: "list",
     section: "sentinel",
-    helpText: 'List of Sentinel nodes (e.g., [["localhost", 26379]])',
+    helpText: 'Список узлов Sentinel (напр. [["localhost", 26379]])',
     redisType: "sentinel",
     rules: [jsonListRule],
   },
   {
     name: "service_name",
-    label: "Service Name",
+    label: "Имя сервиса",
     type: "string",
     section: "sentinel",
-    helpText: "Master service name for Redis Sentinel",
+    helpText: "Имя master-сервиса для Redis Sentinel",
     redisType: "sentinel",
   },
   {
     name: "sentinel_password",
-    label: "Sentinel Password",
+    label: "Пароль Sentinel",
     type: "password",
     section: "sentinel",
-    helpText: "Password for Redis Sentinel authentication",
+    helpText: "Пароль для аутентификации Redis Sentinel",
     redisType: "sentinel",
     secret: true,
   },
   {
     name: "similarity_threshold",
-    label: "Similarity Threshold",
+    label: "Порог схожести",
     type: "float",
     section: "semantic",
-    helpText: "Similarity threshold for semantic cache",
+    helpText: "Порог схожести для семантического кэша",
     redisType: "semantic",
     defaultValue: 0.8,
     rules: [numberRule],
   },
   {
     name: "redis_semantic_cache_embedding_model",
-    label: "Embedding Model",
+    label: "Модель эмбеддингов",
     type: "model-select",
     section: "semantic",
-    helpText: "Embedding model for semantic cache",
+    helpText: "Модель эмбеддингов для семантического кэша",
     redisType: "semantic",
   },
   {
     name: "semantic_cache_scope",
-    label: "Semantic Cache Scope",
+    label: "Область семантического кэша",
     type: "select",
     section: "semantic",
     helpText:
-      "Who can share a semantic cache hit. Key shares hits between all end users of a key/team/org. End user also isolates per end user; requests without an end user fall back to the key scope.",
+      "Кто может разделять попадание в семантический кэш. «Ключ» разделяет попадания между всеми конечными пользователями ключа/команды/организации. «Конечный пользователь» изолирует по пользователю; запросы без конечного пользователя используют область ключа.",
     redisType: "semantic",
     defaultValue: "key",
     options: [
-      { value: "key", label: "Key (shared by all end users of the key/team/org)" },
-      { value: "end_user", label: "End user (isolated per end user)" },
+      { value: "key", label: "Ключ (общий для всех конечных пользователей ключа/команды/организации)" },
+      { value: "end_user", label: "Конечный пользователь (изоляция по пользователю)" },
     ],
   },
   {
@@ -212,68 +212,68 @@ export const CACHE_FIELDS: readonly CacheField[] = [
     label: "SSL",
     type: "boolean",
     section: "ssl",
-    helpText: "Enable SSL/TLS connection",
+    helpText: "Включить подключение SSL/TLS",
     redisType: null,
     defaultValue: false,
   },
   {
     name: "ssl_cert_reqs",
-    label: "SSL Cert Reqs",
+    label: "Требования к SSL-сертификату",
     type: "string",
     section: "ssl",
-    helpText: "SSL certificate requirements (None, CERT_REQUIRED, CERT_OPTIONAL)",
+    helpText: "Требования к SSL-сертификату (None, CERT_REQUIRED, CERT_OPTIONAL)",
     redisType: null,
   },
   {
     name: "ssl_check_hostname",
-    label: "SSL Check Hostname",
+    label: "Проверять имя хоста SSL",
     type: "boolean",
     section: "ssl",
-    helpText: "Enable SSL hostname verification",
+    helpText: "Включить проверку имени хоста SSL",
     redisType: null,
     defaultValue: false,
   },
   {
     name: "namespace",
-    label: "Namespace",
+    label: "Пространство имён",
     type: "string",
     section: "cacheManagement",
-    helpText: "Namespace prefix for cache keys",
+    helpText: "Префикс пространства имён для ключей кэша",
     redisType: null,
   },
   {
     name: "ttl",
-    label: "TTL (seconds)",
+    label: "TTL (секунды)",
     type: "float",
     section: "cacheManagement",
-    helpText: "Time-to-live for cached items in seconds",
+    helpText: "Время жизни записей кэша в секундах",
     redisType: null,
     rules: [numberRule],
   },
   {
     name: "max_connections",
-    label: "Max Connections",
+    label: "Макс. соединений",
     type: "integer",
     section: "cacheManagement",
-    helpText: "Maximum number of connections in the connection pool",
+    helpText: "Максимальное число соединений в пуле",
     redisType: null,
     rules: [nonNegativeIntegerRule],
   },
   {
     name: "gcp_service_account",
-    label: "GCP Service Account",
+    label: "Сервисный аккаунт GCP",
     type: "string",
     section: "gcp",
     helpText:
-      "GCP service account for IAM authentication (e.g., projects/-/serviceAccounts/your-sa@project.iam.gserviceaccount.com)",
+      "Сервисный аккаунт GCP для аутентификации IAM (напр. projects/-/serviceAccounts/your-sa@project.iam.gserviceaccount.com)",
     redisType: null,
   },
   {
     name: "gcp_ssl_ca_certs",
-    label: "GCP SSL CA Certs",
+    label: "SSL CA-серты GCP",
     type: "string",
     section: "gcp",
-    helpText: "Path to SSL CA certificate file for GCP Memorystore Redis",
+    helpText: "Путь к файлу SSL CA-сертификата для GCP Memorystore Redis",
     redisType: null,
   },
 ];

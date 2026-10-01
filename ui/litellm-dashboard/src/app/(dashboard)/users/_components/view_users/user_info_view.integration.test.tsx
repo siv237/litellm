@@ -246,7 +246,7 @@ describe("UserInfoView add-to-team form", () => {
     const user = setup();
     await openAddTeam(user);
 
-    expect(submitButton()).toBeDisabled();
+    expect(submitButton()).toBeОтключён();
 
     await chooseTeam(user, "Gamma Team");
 
