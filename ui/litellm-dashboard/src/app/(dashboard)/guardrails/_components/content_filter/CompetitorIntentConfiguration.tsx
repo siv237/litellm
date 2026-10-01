@@ -50,24 +50,24 @@ const DEFAULT_CONFIG: CompetitorIntentConfig = {
 };
 
 const INTENT_TYPES = [
-  { value: "airline", label: "Airline (auto-load competitors from IATA)" },
-  { value: "generic", label: "Generic (specify competitors manually)" },
+  { value: "airline", label: "Авиакомпания (конкуренты из IATA автоматически)" },
+  { value: "generic", label: "Общий (конкуренты указываются вручную)" },
 ] as const;
 
 const COMPETITOR_COMPARISON_POLICIES = [
-  { value: "refuse", label: "Refuse (block request)" },
-  { value: "reframe", label: "Reframe (suggest alternative)" },
+  { value: "refuse", label: "Отказать (блокировать запрос)" },
+  { value: "reframe", label: "Переформулировать (предложить альтернативу)" },
 ] as const;
 
 const POSSIBLE_COMPETITOR_COMPARISON_POLICIES = [
-  { value: "refuse", label: "Refuse (block request)" },
-  { value: "reframe", label: "Reframe (suggest alternative to backend LLM)" },
+  { value: "refuse", label: "Отказать (блокировать запрос)" },
+  { value: "reframe", label: "Переформулировать (предложить альтернативу для LLM бэкенда)" },
 ] as const;
 
 const THRESHOLDS = [
-  { field: "threshold_high", label: "High", hint: "e.g. 0.7", fallback: 0.7 },
-  { field: "threshold_medium", label: "Medium", hint: "e.g. 0.45", fallback: 0.45 },
-  { field: "threshold_low", label: "Low", hint: "e.g. 0.3", fallback: 0.3 },
+  { field: "threshold_high", label: "Высокая", hint: "e.g. 0.7", fallback: 0.7 },
+  { field: "threshold_medium", label: "Средняя", hint: "e.g. 0.45", fallback: 0.45 },
+  { field: "threshold_low", label: "Низкая", hint: "e.g. 0.3", fallback: 0.3 },
 ] as const;
 
 const CompetitorIntentConfiguration: React.FC<CompetitorIntentConfigurationProps> = ({
@@ -139,7 +139,7 @@ const CompetitorIntentConfiguration: React.FC<CompetitorIntentConfigurationProps
 
   const header = (
     <CardHeader className="gap-0">
-      <CardTitle className="text-base">Competitor Intent Filter</CardTitle>
+      <CardTitle className="text-base">Фильтр намерений о конкурентах</CardTitle>
       <CardAction>
         <Switch checked={enabled} onCheckedChange={handleEnabledChange} />
       </CardAction>
@@ -205,7 +205,7 @@ const CompetitorIntentConfiguration: React.FC<CompetitorIntentConfigurationProps
           </Field>
 
           <Field>
-            <FieldLabel htmlFor={`${fieldId}-brand-self`}>Your Brand (brand_self)</FieldLabel>
+            <FieldLabel htmlFor={`${fieldId}-brand-self`}>Ваш бренд (brand_self)</FieldLabel>
             <TagsInput
               id={`${fieldId}-brand-self`}
               value={effectiveConfig.brand_self}
@@ -232,34 +232,34 @@ const CompetitorIntentConfiguration: React.FC<CompetitorIntentConfigurationProps
 
           {effectiveConfig.competitor_intent_type === "airline" && (
             <Field>
-              <FieldLabel htmlFor={`${fieldId}-locations`}>Locations (optional)</FieldLabel>
+              <FieldLabel htmlFor={`${fieldId}-locations`}>Локации (необязательно)</FieldLabel>
               <TagsInput
                 id={`${fieldId}-locations`}
                 value={effectiveConfig.locations ?? []}
                 onValueChange={(v) => handleNestedArrayChange("locations", v)}
                 tokenSeparators={[","]}
-                placeholder="Type and press Enter to add"
+                placeholder="Введите и нажмите Enter для добавления"
               />
-              <FieldDescription>Countries, cities, airports for disambiguation (e.g. qatar, doha)</FieldDescription>
+              <FieldDescription>Страны, города, аэропорты для уточнения (напр. qatar, doha)</FieldDescription>
             </Field>
           )}
 
           {effectiveConfig.competitor_intent_type === "generic" && (
             <Field>
-              <FieldLabel htmlFor={`${fieldId}-competitors`}>Competitors</FieldLabel>
+              <FieldLabel htmlFor={`${fieldId}-competitors`}>Конкуренты</FieldLabel>
               <TagsInput
                 id={`${fieldId}-competitors`}
                 value={effectiveConfig.competitors ?? []}
                 onValueChange={(v) => handleNestedArrayChange("competitors", v)}
                 tokenSeparators={[","]}
-                placeholder="Type and press Enter to add"
+                placeholder="Введите и нажмите Enter для добавления"
               />
-              <FieldDescription>Competitor names to detect (required for generic type)</FieldDescription>
+              <FieldDescription>Имена конкурентов для обнаружения (обязательно для типа «Общий»)</FieldDescription>
             </Field>
           )}
 
           <Field>
-            <FieldLabel htmlFor={`${fieldId}-competitor-comparison`}>Policy: Competitor comparison</FieldLabel>
+            <FieldLabel htmlFor={`${fieldId}-competitor-comparison`}>Политика: сравнение с конкурентами</FieldLabel>
             <Select
               items={COMPETITOR_COMPARISON_POLICIES}
               value={effectiveConfig.policy?.competitor_comparison ?? "refuse"}
@@ -280,7 +280,7 @@ const CompetitorIntentConfiguration: React.FC<CompetitorIntentConfigurationProps
 
           <Field>
             <FieldLabel htmlFor={`${fieldId}-possible-competitor-comparison`}>
-              Policy: Possible competitor comparison
+              Политика: возможное сравнение с конкурентами
             </FieldLabel>
             <Select
               items={POSSIBLE_COMPETITOR_COMPARISON_POLICIES}
@@ -303,7 +303,7 @@ const CompetitorIntentConfiguration: React.FC<CompetitorIntentConfigurationProps
           </Field>
 
           <Field>
-            <FieldLabel>Confidence thresholds</FieldLabel>
+            <FieldLabel>Пороги уверенности</FieldLabel>
             <div className="flex flex-wrap gap-4">
               {THRESHOLDS.map((threshold) => (
                 <Field key={threshold.field} className="w-20">
@@ -321,18 +321,18 @@ const CompetitorIntentConfiguration: React.FC<CompetitorIntentConfigurationProps
               ))}
             </div>
             <FieldDescription>
-              Classify competitor intent by confidence (0–1). Higher confidence -&gt; stronger intent.
+              Классификация намерения о конкурентах по уверенности (0–1). Чем выше уверенность — тем сильнее намерение.
               <ul className="mt-1 mb-0 list-disc pl-5">
                 <li>
-                  <strong>High (≥)</strong>: Treat as full competitor comparison -&gt; uses &quot;Competitor
-                  comparison&quot; policy
+                  <strong>Высокая (≥)</strong>: полное сравнение с конкурентами -&gt; политика
+                  «Сравнение с конкурентами»
                 </li>
                 <li>
-                  <strong>Medium (≥)</strong>: Treat as possible comparison -&gt; uses &quot;Possible competitor
-                  comparison&quot; policy
+                  <strong>Средняя (≥)</strong>: возможное сравнение -&gt; политика
+                  «Возможное сравнение с конкурентами»
                 </li>
                 <li>
-                  <strong>Low (≥)</strong>: Log only; allow request. Below Low -&gt; allow with no action
+                  <strong>Низкая (≥)</strong>: только журнал, запрос разрешён. Ниже «Низкая» -&gt; разрешить без действий
                 </li>
               </ul>
               Raise thresholds to be more permissive; lower them to be stricter.
