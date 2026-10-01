@@ -684,15 +684,15 @@ export default function ModelInfoView({
                 <p className="text-sm">Провайдер</p>
                 <div className="mt-2 flex items-center space-x-2">
                   {modelData.provider && <Logo provider={modelData.provider} className="w-4 h-4" />}
-                  <h3 className="text-lg font-medium">{modelData.provider || "Not Set"}</h3>
+                  <h3 className="text-lg font-medium">{modelData.provider ||  "Не задано"}</h3>
                 </div>
               </Card>
               <Card className="block p-6">
                 <p className="text-sm">Модель LiteLLM</p>
                 <div className="mt-2 overflow-hidden">
-                  <SimpleTooltip content={modelData.litellm_model_name || "Not Set"} className="w-full min-w-0">
+                  <SimpleTooltip content={modelData.litellm_model_name ||  "Не задано"} className="w-full min-w-0">
                     <div className="break-all text-sm font-medium leading-relaxed cursor-pointer">
-                      {modelData.litellm_model_name || "Not Set"}
+                      {modelData.litellm_model_name ||  "Не задано"}
                     </div>
                   </SimpleTooltip>
                 </div>
@@ -724,7 +724,7 @@ export default function ModelInfoView({
                       day: "numeric",
                       year: "numeric",
                     })
-                  : "Not Set"}
+                  :  "Не задано"}
               </div>
               <div className="flex items-center gap-x-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -735,7 +735,7 @@ export default function ModelInfoView({
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                   />
                 </svg>
-                Создал {modelData.model_info.created_by || "Not Set"}
+                Создал {modelData.model_info.created_by ||  "Не задано"}
               </div>
             </div>
 
@@ -804,19 +804,19 @@ export default function ModelInfoView({
         resourceInformation={[
           {
             label: "Название модели",
-            value: modelData?.model_name || "Not Set",
+            value: modelData?.model_name ||  "Не задано",
           },
           {
             label: "Имя модели LiteLLM",
-            value: modelData?.litellm_model_name || "Not Set",
+            value: modelData?.litellm_model_name ||  "Не задано",
           },
           {
             label: "Провайдер",
-            value: modelData?.provider || "Not Set",
+            value: modelData?.provider ||  "Не задано",
           },
           {
             label: "Создал",
-            value: modelData?.model_info?.created_by || "Not Set",
+            value: modelData?.model_info?.created_by ||  "Не задано",
           },
         ]}
         onCancel={() => setIsDeleteModalOpen(false)}

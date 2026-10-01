@@ -156,7 +156,7 @@ const buildSchema = (ptuEnabled: boolean, isFieldTouched: (field: TouchedPricing
       ctx.addIssue({ code: "custom", path: [path], message });
 
     if (values.litellm_extra_params && !isJson(values.litellm_extra_params)) {
-      reject("litellm_extra_params", "Please enter valid JSON");
+      reject("litellm_extra_params", "Введите корректный JSON");
     }
 
     // antd validates only mounted fields, and the PTU block does not render when the flag is off.
@@ -170,7 +170,7 @@ const buildSchema = (ptuEnabled: boolean, isFieldTouched: (field: TouchedPricing
     if (!isNonNegativePtuRate(values.cost_per_ptu_per_hour)) {
       reject(
         "cost_per_ptu_per_hour",
-        `Cost per PTU / Hour must be between 0 and ${MAX_COST_PER_PTU_PER_HOUR.toLocaleString()}`,
+        `Стоимость PTU / час (USD) должна быть от 0 до ${MAX_COST_PER_PTU_PER_HOUR.toLocaleString()}`,
       );
     }
     if (isFilledPtuValue(values.ptu_count) !== isFilledPtuValue(values.cost_per_ptu_per_hour)) {
@@ -179,10 +179,10 @@ const buildSchema = (ptuEnabled: boolean, isFieldTouched: (field: TouchedPricing
       reject("cost_per_ptu_per_hour", message);
     }
     if (isFilledPtuValue(values.ptu_count) && !isFilledPtuValue(values.ptu_effective_from)) {
-      reject("ptu_effective_from", "PTU Effective From is required when PTU Count is set");
+      reject("ptu_effective_from", "«PTU действует с (UTC)» обязательно, если задано «Количество PTU»");
     }
     if (!ptuWindowIsOrdered(values.ptu_effective_from, values.ptu_effective_to)) {
-      const message = "PTU Effective To must be after PTU Effective From";
+      const message = "«PTU действует по (UTC)» должно быть позже «PTU действует с (UTC)»";
       reject("ptu_effective_from", message);
       reject("ptu_effective_to", message);
     }
@@ -195,7 +195,7 @@ const buildSchema = (ptuEnabled: boolean, isFieldTouched: (field: TouchedPricing
         isFilledPtuValue(value) &&
         Number(value) !== 0
       ) {
-        reject(field, "A PTU deployment bills by reserved capacity, so this cost must be 0 or blank");
+        reject(field, "Развёртывание PTU тарифицируется по зарезервированной мощности, поэтому стоимость должна быть 0 или пустой");
       }
     }
   });
@@ -455,16 +455,16 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
       <form onSubmit={submit}>
         <div className="space-y-4">
           <div className="space-y-4">
-            {textField("model_name", "Model Name", "Enter model name", localModelData.model_name)}
+            {textField("model_name", "Название модели", "Введите название модели", localModelData.model_name)}
             {textField(
               "litellm_model_name",
               "LiteLLM Model Name",
-              "Enter LiteLLM model name",
+              "Введите название модели LiteLLM",
               localModelData.litellm_model_name,
             )}
 
-            {pricingField("input_cost", "Input Cost (per 1M tokens)", "Enter input cost")}
-            {pricingField("output_cost", "Output Cost (per 1M tokens)", "Enter output cost")}
+            {pricingField("input_cost", "Стоимость входных токенов (за 1 млн)", "Введите стоимость входных токенов")}
+            {pricingField("output_cost", "Стоимость выходных токенов (за 1 млн)", "Введите стоимость выходных токенов")}
 
             {ptuCostAttributionEnabled &&
               PTU_EDIT_FIELDS.map((ptuField) => (
@@ -505,39 +505,39 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
 
             {pricingField(
               "cache_read_cost",
-              "Cache Read Cost (per 1M tokens)",
-              "Defaults to Input Cost if blank",
-              "If left blank on save, defaults to Input Cost.",
+              "Стоимость чтения из кэша (за 1 млн)",
+               "По умолчанию — стоимость входных токенов",
+              "Если оставить пустым при сохранении, будет использована стоимость входных токенов.",
             )}
             {pricingField(
               "cache_write_cost",
               "Cache Write Cost (per 1M tokens)",
-              "Defaults to Input Cost if blank",
-              "If left blank on save, defaults to Input Cost (backend falls back to input_cost_per_token).",
+               "По умолчанию — стоимость входных токенов",
+              "Если оставить пустым при сохранении, будет использована стоимость входных токенов (бэкенд использует input_cost_per_token).",
             )}
 
-            {textField("api_base", "API Base", "Enter API base", localModelData.litellm_params?.api_base)}
+            {textField("api_base", "Базовый URL API", "Введите базовый URL API", localModelData.litellm_params?.api_base)}
             {textField(
               "custom_llm_provider",
-              "Custom LLM Provider",
-              "Enter custom LLM provider",
+              "Свой LLM-провайдер",
+              "Введите своего LLM-провайдера",
               localModelData.litellm_params?.custom_llm_provider,
             )}
             {textField(
               "organization",
               "Organization",
-              "Enter organization",
+              "Введите организацию",
               localModelData.litellm_params?.organization,
             )}
 
-            {numberField("tpm", "TPM (Tokens per Minute)", "Enter TPM", localModelData.litellm_params?.tpm)}
-            {numberField("rpm", "RPM (Requests per Minute)", "Enter RPM", localModelData.litellm_params?.rpm)}
-            {numberField("max_retries", "Max Retries", "Enter max retries", localModelData.litellm_params?.max_retries)}
-            {numberField("timeout", "Timeout (seconds)", "Enter timeout", localModelData.litellm_params?.timeout)}
+            {numberField("tpm", "TPM (токенов в минуту)", "Введите TPM", localModelData.litellm_params?.tpm)}
+            {numberField("rpm", "RPM (запросов в минуту)", "Введите RPM", localModelData.litellm_params?.rpm)}
+            {numberField("max_retries", "Макс. попыток", "Введите макс. число попыток", localModelData.litellm_params?.max_retries)}
+            {numberField("timeout", "Тайм-аут (секунды)", "Введите тайм-аут", localModelData.litellm_params?.timeout)}
             {numberField(
               "stream_timeout",
-              "Stream Timeout (seconds)",
-              "Enter stream timeout",
+              "Тайм-аут потока (секунды)",
+              "Введите тайм-аут потока",
               localModelData.litellm_params?.stream_timeout,
             )}
 
@@ -551,7 +551,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                 )
               ) : (
                 <Display>
-                  <ChipList values={localModelData.model_info?.access_groups} emptyLabel="No groups assigned" />
+                  <ChipList values={localModelData.model_info?.access_groups} emptyLabel="Группы не назначены" />
                 </Display>
               )}
             </div>
@@ -560,7 +560,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
               <FieldLabel>
                 Гардрейлы
                 <DocsHint
-                  text="Apply safety guardrails to this model to filter content or enforce policies"
+                  text="Примените гардрейлы безопасности к этой модели для фильтрации контента или соблюдения политик"
                   href="https://docs.litellm.ai/docs/proxy/guardrails/quick_start"
                 />
               </FieldLabel>
@@ -572,7 +572,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                 )
               ) : (
                 <Display>
-                  <ChipList values={localModelData.litellm_params?.guardrails} emptyLabel="No guardrails assigned" />
+                  <ChipList values={localModelData.litellm_params?.guardrails} emptyLabel="Гардрейлы не назначены" />
                 </Display>
               )}
             </div>
@@ -581,7 +581,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
               <FieldLabel>
                 Подключённые базы знаний (RAG)
                 <DocsHint
-                  text="Vector stores used for RAG. Every request to this model will automatically retrieve context from these knowledge bases."
+                  text="Векторные хранилища для RAG. Каждый запрос к этой модели будет автоматически добавлять контекст из этих баз знаний."
                   href="https://docs.litellm.ai/docs/completion/knowledgebase"
                 />
               </FieldLabel>
@@ -600,7 +600,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                 <Display>
                   <ChipList
                     values={localModelData.litellm_params?.vector_store_ids}
-                    emptyLabel="No knowledge bases attached"
+                    emptyLabel="Базы знаний не подключены"
                   />
                 </Display>
               )}
@@ -616,7 +616,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                 )
               ) : (
                 <Display>
-                  <ChipList values={localModelData.litellm_params?.tags} emptyLabel="No tags assigned" />
+                  <ChipList values={localModelData.litellm_params?.tags} emptyLabel="Теги не назначены" />
                 </Display>
               )}
             </div>
@@ -654,7 +654,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                   }}
                 </FormField>
               ) : (
-                <Display>{localModelData.litellm_params?.litellm_credential_name || "Manual"}</Display>
+                <Display>{localModelData.litellm_params?.litellm_credential_name || "Вручную"}</Display>
               )}
             </div>
 
@@ -735,14 +735,14 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
                       <div className="mt-2">
                         {localModelData.litellm_params.cache_control_injection_points.map((point: any, i: number) => (
                           <div key={i} className="mb-1 text-sm text-muted-foreground">
-                            Location: {point.location},{point.role && <span> Роль: {point.role}</span>}
+                            Расположение: {point.location},{point.role && <span> Роль: {point.role}</span>}
                             {point.index !== undefined && <span> Индекс: {point.index}</span>}
                           </div>
                         ))}
                       </div>
                     </div>
                   ) : (
-                    "Disabled"
+                    "Отключено"
                   )}
                 </Display>
               </div>
@@ -774,7 +774,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
               <FieldLabel>
                 Параметры LiteLLM
                 <DocsHint
-                  text="Optional litellm params used for making a litellm.completion() call. Some params are automatically added by LiteLLM."
+                  text="Необязательные параметры litellm для вызова litellm.completion(). Некоторые параметры добавляются LiteLLM автоматически."
                   href="https://docs.litellm.ai/docs/completion/input"
                 />
               </FieldLabel>
@@ -811,7 +811,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
               </Button>
               <Button type="submit" disabled={isSaving} aria-busy={isSaving}>
                 {isSaving && <UiLoadingSpinner className="size-4" />}
-                Save Changes
+                Сохранить изменения
               </Button>
             </div>
           )}

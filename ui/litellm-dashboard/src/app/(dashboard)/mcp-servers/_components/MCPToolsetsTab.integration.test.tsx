@@ -35,7 +35,7 @@ const renderTab = (toolsets: MCPToolset[] = []) => {
   );
 };
 
-const dialogWithButton = async (name: string) => {
+const dialogWithButton = async (name: string | RegExp) => {
   const button = await screen.findByRole("button", { name });
   const dialog = button.closest('[role="dialog"]');
   if (dialog === null) {
@@ -46,13 +46,13 @@ const dialogWithButton = async (name: string) => {
 
 const openEditFor = async (user: ReturnType<typeof setup>) => {
   await user.click(await screen.findByRole("button", { name: "Open toolset actions" }));
-  await user.click(await screen.findByRole("menuitem", { name: "Edit" }));
-  return dialogWithButton("Save Changes");
+  await user.click(await screen.findByRole("menuitem", { name: /изменить/i }));
+  return dialogWithButton(/сохранить изменения/i);
 };
 
 const openCreate = async (user: ReturnType<typeof setup>) => {
   await user.click(screen.getByRole("button", { name: /новый набор/i }));
-  return dialogWithButton("Create Toolset");
+  return dialogWithButton(/создать набор/i);
 };
 
 describe("MCPToolsetsTab create/edit toolset form", () => {
@@ -72,7 +72,7 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
       target: { value: "github-linear-tools" },
     });
     fireEvent.change(dialog.getByPlaceholderText("Необязательное описание"), { target: { value: "tools for triage" } });
-    await user.click(dialog.getByRole("button", { name: "Create Toolset" }));
+    await user.click(dialog.getByRole("button", { name: /создать набор/i }));
 
     await waitFor(() => {
       expect(networking.createMCPToolset).toHaveBeenCalledWith("sk-test", {
@@ -93,7 +93,7 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
 
     const dialog = await openCreate(user);
     fireEvent.change(dialog.getByPlaceholderText("напр. github-linear-tools"), { target: { value: "solo" } });
-    await user.click(dialog.getByRole("button", { name: "Create Toolset" }));
+    await user.click(dialog.getByRole("button", { name: /создать набор/i }));
 
     await waitFor(() => {
       expect(networking.createMCPToolset).toHaveBeenCalledWith("sk-test", {
@@ -109,9 +109,9 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
     renderTab();
 
     const dialog = await openCreate(user);
-    await user.click(dialog.getByRole("button", { name: "Create Toolset" }));
+    await user.click(dialog.getByRole("button", { name: /создать набор/i }));
 
-    expect(await dialog.findByText("Please enter a toolset name")).toBeInTheDocument();
+    expect(await dialog.findByText("Введите название набора")).toBeInTheDocument();
     expect(networking.createMCPToolset).not.toHaveBeenCalled();
   });
 
@@ -125,7 +125,7 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
     const dialog = await openCreate(user);
     fireEvent.change(dialog.getByPlaceholderText("напр. github-linear-tools"), { target: { value: "spaced" } });
     fireEvent.change(dialog.getByPlaceholderText("Необязательное описание"), { target: { value: "  " } });
-    await user.click(dialog.getByRole("button", { name: "Create Toolset" }));
+    await user.click(dialog.getByRole("button", { name: /создать набор/i }));
 
     await waitFor(() => {
       expect(networking.createMCPToolset).toHaveBeenCalledWith("sk-test", {
@@ -157,7 +157,7 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
 
     await user.clear(name);
     fireEvent.change(name, { target: { value: "renamed" } });
-    await user.click(dialog.getByRole("button", { name: "Save Changes" }));
+    await user.click(dialog.getByRole("button", { name: /сохранить изменения/i }));
 
     const expectedUpdate = {
       toolset_id: "ts-1",
@@ -187,7 +187,7 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
     await dialog.findByDisplayValue("no-desc");
     expect(dialog.getByPlaceholderText("Необязательное описание")).toHaveValue("");
 
-    await user.click(dialog.getByRole("button", { name: "Save Changes" }));
+    await user.click(dialog.getByRole("button", { name: /сохранить изменения/i }));
 
     const expectedUpdate = { toolset_id: "ts-2", toolset_name: "no-desc", description: "", tools: [] };
     await waitFor(() => {

@@ -232,7 +232,7 @@ describe("ModelInfoView", () => {
       expect(screen.getByText("Настройки модели")).toBeInTheDocument();
     });
 
-    const backButton = screen.getByRole("button", { name: /back to models/i });
+    const backButton = screen.getByRole("button", { name: /назад к моделям/i });
     await user.click(backButton);
 
     expect(mockOnClose).toHaveBeenCalledTimes(1);
@@ -400,16 +400,16 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await user.click(await screen.findByRole("button", { name: /редактировать настройки/i }));
-    const costInput = screen.getByPlaceholderText("Enter input cost") as HTMLInputElement;
+    const costInput = screen.getByPlaceholderText("Введите стоимость входных токенов") as HTMLInputElement;
     await user.clear(costInput);
     await user.type(costInput, "5");
 
     await user.click(screen.getByRole("tab", { name: /raw json/i }));
     await user.click(screen.getByRole("tab", { name: /overview/i }));
 
-    expect(screen.getByPlaceholderText("Enter input cost")).toBe(costInput);
+    expect(screen.getByPlaceholderText("Введите стоимость входных токенов")).toBe(costInput);
     expect(Number(costInput.value)).toBe(5);
-    await user.click(screen.getByRole("button", { name: /save changes/i }));
+    await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
     await waitFor(() => {
       expect(mockModelPatchUpdateCall).toHaveBeenCalled();
@@ -420,7 +420,7 @@ describe("ModelInfoView", () => {
   it("should display model information in overview tab", async () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText("Provider")).toBeInTheDocument();
+      expect(screen.getByText("Провайдер")).toBeInTheDocument();
       expect(screen.getByText("Модель LiteLLM")).toBeInTheDocument();
       expect(screen.getByText("Цены")).toBeInTheDocument();
     });
@@ -468,8 +468,8 @@ describe("ModelInfoView", () => {
     await user.click(editButton);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: /cancel/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /сохранить изменения/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /отмена/i })).toBeInTheDocument();
     });
   });
 
@@ -485,8 +485,8 @@ describe("ModelInfoView", () => {
     await user.click(editButton);
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText("Enter model name")).toBeInTheDocument();
-      expect(screen.getByPlaceholderText("Enter LiteLLM model name")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Введите название модели")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Введите название модели LiteLLM")).toBeInTheDocument();
     });
   });
 
@@ -501,7 +501,7 @@ describe("ModelInfoView", () => {
     const editButton = screen.getByRole("button", { name: /редактировать настройки/i });
     await user.click(editButton);
 
-    const modelNameInput = await screen.findByPlaceholderText("Enter model name");
+    const modelNameInput = await screen.findByPlaceholderText("Введите название модели");
     await user.clear(modelNameInput);
     fireEvent.change(modelNameInput, { target: { value: "Updated Model Name" } });
 
@@ -520,15 +520,15 @@ describe("ModelInfoView", () => {
     await user.click(editButton);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /cancel/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /отмена/i })).toBeInTheDocument();
     });
 
-    const cancelButton = screen.getByRole("button", { name: /cancel/i });
+    const cancelButton = screen.getByRole("button", { name: /отмена/i });
     await user.click(cancelButton);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
-      expect(screen.queryByRole("button", { name: /save changes/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /сохранить изменения/i })).not.toBeInTheDocument();
     });
   });
 
@@ -545,10 +545,10 @@ describe("ModelInfoView", () => {
     await user.click(editButton);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /сохранить изменения/i })).toBeInTheDocument();
     });
 
-    const saveButton = screen.getByRole("button", { name: /save changes/i });
+    const saveButton = screen.getByRole("button", { name: /сохранить изменения/i });
     await user.click(saveButton);
 
     await waitFor(() => {
@@ -561,14 +561,14 @@ describe("ModelInfoView", () => {
   it("should display tags section", async () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText("Tags")).toBeInTheDocument();
+      expect(screen.getByText("Теги")).toBeInTheDocument();
     });
   });
 
   it("should display LiteLLM Params section", async () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText("LiteLLM Params")).toBeInTheDocument();
+      expect(screen.getByText("Параметры LiteLLM")).toBeInTheDocument();
     });
   });
 
@@ -583,7 +583,7 @@ describe("ModelInfoView", () => {
     await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Existing Credentials")).toBeInTheDocument();
+      expect(screen.getByText("Существующие учётные данные")).toBeInTheDocument();
     });
   });
 
@@ -611,7 +611,7 @@ describe("ModelInfoView", () => {
     await user.clear(litellmParamsInput);
     await user.paste(`{"litellm_credential_name":"from-json","timeout":42}`);
 
-    await user.click(screen.getByRole("button", { name: /save changes/i }));
+    await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
     await waitFor(() => {
       expect(mockModelPatchUpdateCall).toHaveBeenCalled();
@@ -636,10 +636,10 @@ describe("ModelInfoView", () => {
     await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /сохранить изменения/i })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: /save changes/i }));
+    await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
     await waitFor(() => {
       expect(mockModelPatchUpdateCall).toHaveBeenCalled();
@@ -680,10 +680,10 @@ describe("ModelInfoView", () => {
         expect(screen.getByText("Настройки модели")).toBeInTheDocument();
       });
 
-      expect(screen.queryByText("PTU Count")).not.toBeInTheDocument();
-      expect(screen.queryByText("Cost per PTU / Hour (USD)")).not.toBeInTheDocument();
-      expect(screen.queryByText("PTU Effective From (UTC)")).not.toBeInTheDocument();
-      expect(screen.queryByText("PTU Effective To (UTC)")).not.toBeInTheDocument();
+      expect(screen.queryByText("Количество PTU")).not.toBeInTheDocument();
+      expect(screen.queryByText("Стоимость PTU / час (USD)")).not.toBeInTheDocument();
+      expect(screen.queryByText("PTU действует с (UTC)")).not.toBeInTheDocument();
+      expect(screen.queryByText("PTU действует по (UTC)")).not.toBeInTheDocument();
     });
 
     it("shows the PTU fields when enabled", async () => {
@@ -691,11 +691,11 @@ describe("ModelInfoView", () => {
       renderWithPtuModel();
 
       await waitFor(() => {
-        expect(screen.getByText("PTU Count")).toBeInTheDocument();
+        expect(screen.getByText("Количество PTU")).toBeInTheDocument();
       });
-      expect(screen.getByText("Cost per PTU / Hour (USD)")).toBeInTheDocument();
-      expect(screen.getByText("PTU Effective From (UTC)")).toBeInTheDocument();
-      expect(screen.getByText("PTU Effective To (UTC)")).toBeInTheDocument();
+      expect(screen.getByText("Стоимость PTU / час (USD)")).toBeInTheDocument();
+      expect(screen.getByText("PTU действует с (UTC)")).toBeInTheDocument();
+      expect(screen.getByText("PTU действует по (UTC)")).toBeInTheDocument();
     });
 
     it("omits PTU fields from the save payload when disabled, so an unrelated edit cannot clear stored config", async () => {
@@ -708,9 +708,9 @@ describe("ModelInfoView", () => {
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /сохранить изменения/i })).toBeInTheDocument();
       });
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
       await waitFor(() => {
         expect(mockModelPatchUpdateCall).toHaveBeenCalled();
@@ -728,9 +728,9 @@ describe("ModelInfoView", () => {
       renderWithPtuModel();
 
       await waitFor(() => {
-        expect(screen.getByText("Input Cost (per 1M tokens)")).toBeInTheDocument();
+        expect(screen.getByText("Стоимость входных токенов (за 1 млн)")).toBeInTheDocument();
       });
-      for (const label of ["Input Cost (per 1M tokens)", "Output Cost (per 1M tokens)"]) {
+      for (const label of ["Стоимость входных токенов (за 1 млн)", "Стоимость выходных токенов (за 1 млн)"]) {
         expect(screen.getByText(label).parentElement).toHaveTextContent("0.0000");
       }
     });
@@ -746,14 +746,14 @@ describe("ModelInfoView", () => {
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("Enter input cost")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText("Введите стоимость входных токенов")).toBeInTheDocument();
       });
-      await user.clear(screen.getByPlaceholderText("Enter input cost"));
-      fireEvent.change(screen.getByPlaceholderText("Enter input cost"), { target: { value: "2.5" } });
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      await user.clear(screen.getByPlaceholderText("Введите стоимость входных токенов"));
+      fireEvent.change(screen.getByPlaceholderText("Введите стоимость входных токенов"), { target: { value: "2.5" } });
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
       await waitFor(() => {
-        expect(screen.getByText(/bills by reserved capacity/i)).toBeInTheDocument();
+        expect(screen.getByText(/тарифицируется по зарезервированной мощности/i)).toBeInTheDocument();
       });
       expect(mockModelPatchUpdateCall).not.toHaveBeenCalled();
     });
@@ -777,13 +777,13 @@ describe("ModelInfoView", () => {
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
       await waitFor(() => {
-        expect(screen.getByPlaceholderText("e.g. 15")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText("напр. 15")).toBeInTheDocument();
       });
-      fireEvent.change(screen.getByPlaceholderText("e.g. 15"), { target: { value: "15" } });
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      fireEvent.change(screen.getByPlaceholderText("напр. 15"), { target: { value: "15" } });
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
       await waitFor(() => {
-        expect(screen.queryByText(/bills by reserved capacity/i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/тарифицируется по зарезервированной мощности/i)).not.toBeInTheDocument();
       });
     });
 
@@ -792,11 +792,11 @@ describe("ModelInfoView", () => {
       renderWithPtuModel();
       expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
-      expect(await screen.findByPlaceholderText("e.g. 15")).toBeInTheDocument();
+      expect(await screen.findByPlaceholderText("напр. 15")).toBeInTheDocument();
     };
 
     const expectBlocked = async (user: ReturnType<typeof userEvent.setup>, message: RegExp) => {
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
       expect(await screen.findAllByText(message)).not.toHaveLength(0);
       expect(mockModelPatchUpdateCall).not.toHaveBeenCalled();
     };
@@ -814,8 +814,8 @@ describe("ModelInfoView", () => {
 
       expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
-      expect(await screen.findByRole("button", { name: /save changes/i })).toBeInTheDocument();
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      expect(await screen.findByRole("button", { name: /сохранить изменения/i })).toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
       await waitFor(() => expect(mockModelPatchUpdateCall).toHaveBeenCalled());
       expect(screen.queryByText(/must be set together/i)).not.toBeInTheDocument();
@@ -825,29 +825,29 @@ describe("ModelInfoView", () => {
       const user = userEvent.setup();
       await enterPtuEdit(user);
 
-      await user.clear(screen.getByPlaceholderText("e.g. 15"));
-      await user.type(screen.getByPlaceholderText("e.g. 15"), "1000001");
+      await user.clear(screen.getByPlaceholderText("напр. 15"));
+      await user.type(screen.getByPlaceholderText("напр. 15"), "1000001");
 
-      await expectBlocked(user, /PTU Count must be a whole number between 1 and 1,000,000/i);
+      await expectBlocked(user, /целое число от/i);
     });
 
     it("blocks a cost per PTU hour above the backend ceiling", async () => {
       const user = userEvent.setup();
       await enterPtuEdit(user);
 
-      await user.clear(screen.getByPlaceholderText("e.g. 2.00"));
-      await user.type(screen.getByPlaceholderText("e.g. 2.00"), "2000000");
+      await user.clear(screen.getByPlaceholderText("напр. 2.00"));
+      await user.type(screen.getByPlaceholderText("напр. 2.00"), "2000000");
 
-      await expectBlocked(user, /Cost per PTU \/ Hour must be between 0 and 1,000,000/i);
+      await expectBlocked(user, /должна быть от/i);
     });
 
     it("blocks a half-set PTU count and rate pair", async () => {
       const user = userEvent.setup();
       await enterPtuEdit(user);
 
-      await user.clear(screen.getByPlaceholderText("e.g. 2.00"));
+      await user.clear(screen.getByPlaceholderText("напр. 2.00"));
 
-      await expectBlocked(user, /PTU Count and Cost per PTU \/ Hour must be set together/i);
+      await expectBlocked(user, /количество PTU и стоимость PTU\/час задаются вместе/i);
     });
 
     it("blocks PTU config with no effective start", async () => {
@@ -863,20 +863,20 @@ describe("ModelInfoView", () => {
 
       expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
-      expect(await screen.findByPlaceholderText("e.g. 15")).toBeInTheDocument();
+      expect(await screen.findByPlaceholderText("напр. 15")).toBeInTheDocument();
 
-      await expectBlocked(user, /PTU Effective From is required when PTU Count is set/i);
+      await expectBlocked(user, /«PTU действует с \(UTC\)» обязательно/i);
     });
 
     it("blocks a PTU window whose end is not after its start", async () => {
       const user = userEvent.setup();
       await enterPtuEdit(user);
 
-      fireEvent.change(screen.getByLabelText("PTU Effective To (UTC)"), {
+      fireEvent.change(screen.getByLabelText("PTU действует по (UTC)"), {
         target: { value: "2026-06-01T00:00:00" },
       });
 
-      await expectBlocked(user, /PTU Effective To must be after PTU Effective From/i);
+      await expectBlocked(user, /«PTU действует по \(UTC\)» должно быть позже/i);
     });
 
     it("sends the PTU fields on save when enabled", async () => {
@@ -890,9 +890,9 @@ describe("ModelInfoView", () => {
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /сохранить изменения/i })).toBeInTheDocument();
       });
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
       await waitFor(() => {
         expect(mockModelPatchUpdateCall).toHaveBeenCalled();
@@ -910,22 +910,22 @@ describe("ModelInfoView", () => {
 
       expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
-      expect(await screen.findByRole("button", { name: /save changes/i })).toBeInTheDocument();
+      expect(await screen.findByRole("button", { name: /сохранить изменения/i })).toBeInTheDocument();
 
-      await user.clear(screen.getByPlaceholderText("e.g. 15"));
-      await user.type(screen.getByPlaceholderText("e.g. 15"), "20");
-      await user.clear(screen.getByPlaceholderText("e.g. 2.00"));
-      await user.type(screen.getByPlaceholderText("e.g. 2.00"), "3.5");
+      await user.clear(screen.getByPlaceholderText("напр. 15"));
+      await user.type(screen.getByPlaceholderText("напр. 15"), "20");
+      await user.clear(screen.getByPlaceholderText("напр. 2.00"));
+      await user.type(screen.getByPlaceholderText("напр. 2.00"), "3.5");
 
-      const from = screen.getByLabelText("PTU Effective From (UTC)");
-      const to = screen.getByLabelText("PTU Effective To (UTC)");
+      const from = screen.getByLabelText("PTU действует с (UTC)");
+      const to = screen.getByLabelText("PTU действует по (UTC)");
       expect(from).toHaveValue("2026-07-01T00:00");
       expect(to).toHaveValue("2026-08-01T00:00");
 
       fireEvent.change(to, { target: { value: "2026-10-03T02:00:00" } });
       fireEvent.change(from, { target: { value: "2026-09-02T01:00:00" } });
 
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
       await waitFor(() => expect(mockModelPatchUpdateCall).toHaveBeenCalled());
 
       const modelInfo = mockModelPatchUpdateCall.mock.calls[0][1].model_info;
@@ -952,9 +952,9 @@ describe("ModelInfoView", () => {
     await user.clear(extraParams);
     await user.paste("{not json");
 
-    await user.click(screen.getByRole("button", { name: /save changes/i }));
+    await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
-    expect(await screen.findByText("Please enter valid JSON")).toBeInTheDocument();
+    expect(await screen.findByText("Введите корректный JSON")).toBeInTheDocument();
     expect(mockModelPatchUpdateCall).not.toHaveBeenCalled();
   });
 
@@ -972,10 +972,10 @@ describe("ModelInfoView", () => {
     await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /сохранить изменения/i })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: /save changes/i }));
+    await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
     await waitFor(() => {
       expect(mockModelPatchUpdateCall).toHaveBeenCalled();
@@ -1017,9 +1017,9 @@ describe("ModelInfoView", () => {
     await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /сохранить изменения/i })).toBeInTheDocument();
     });
-    await user.click(screen.getByRole("button", { name: /save changes/i }));
+    await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
     await waitFor(() => {
       expect(mockModelPatchUpdateCall).toHaveBeenCalled();
@@ -1050,7 +1050,7 @@ describe("ModelInfoView", () => {
 
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText("Health Check Model")).toBeInTheDocument();
+      expect(screen.getByText("Модель проверки доступности")).toBeInTheDocument();
     });
   });
 
@@ -1058,7 +1058,7 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Настройки модели")).toBeInTheDocument();
-      expect(screen.queryByText("Health Check Model")).not.toBeInTheDocument();
+      expect(screen.queryByText("Модель проверки доступности")).not.toBeInTheDocument();
     });
   });
 
@@ -1278,30 +1278,30 @@ describe("ModelInfoView", () => {
   it("should display model access groups field", async () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText("Model Access Groups")).toBeInTheDocument();
+      expect(screen.getByText("Группы доступа моделей")).toBeInTheDocument();
     });
   });
 
   it("should display guardrails field", async () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText("Guardrails")).toBeInTheDocument();
+      expect(screen.getByText("Гардрейлы")).toBeInTheDocument();
     });
   });
 
   it("should display pricing information", async () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText(/Input:/)).toBeInTheDocument();
-      expect(screen.getByText(/Output:/)).toBeInTheDocument();
+      expect(screen.getByText(/Вход:/)).toBeInTheDocument();
+      expect(screen.getByText(/Выход:/)).toBeInTheDocument();
     });
   });
 
   it("should display created at and created by information", async () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText(/Created At/)).toBeInTheDocument();
-      expect(screen.getByText(/Created By/)).toBeInTheDocument();
+      expect(screen.getByText(/Создано/)).toBeInTheDocument();
+      expect(screen.getByText(/Создал/)).toBeInTheDocument();
     });
   });
 
@@ -1428,11 +1428,11 @@ describe("ModelInfoView", () => {
       render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
       expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
-      expect(await screen.findByRole("button", { name: /save changes/i })).toBeInTheDocument();
+      expect(await screen.findByRole("button", { name: /сохранить изменения/i })).toBeInTheDocument();
     };
 
     const save = async (user: ReturnType<typeof userEvent.setup>) => {
-      await user.click(screen.getByRole("button", { name: /save changes/i }));
+      await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
       await waitFor(() => expect(mockModelPatchUpdateCall).toHaveBeenCalled());
       return mockModelPatchUpdateCall.mock.calls[0][1] as {
         model_name: string;
@@ -1480,20 +1480,20 @@ describe("ModelInfoView", () => {
       const user = userEvent.setup();
       await enterEditMode(user);
 
-      await user.clear(screen.getByPlaceholderText("Enter model name"));
-      await user.type(screen.getByPlaceholderText("Enter model name"), "renamed-model");
-      await user.clear(screen.getByPlaceholderText("Enter LiteLLM model name"));
-      await user.type(screen.getByPlaceholderText("Enter LiteLLM model name"), "gpt-4o");
-      await user.clear(screen.getByPlaceholderText("Enter API base"));
-      await user.type(screen.getByPlaceholderText("Enter API base"), "https://example.test/v1");
-      await user.clear(screen.getByPlaceholderText("Enter custom LLM provider"));
-      await user.type(screen.getByPlaceholderText("Enter custom LLM provider"), "azure");
-      await user.type(screen.getByPlaceholderText("Enter organization"), "org-9");
-      await user.type(screen.getByPlaceholderText("Enter TPM"), "111");
-      await user.type(screen.getByPlaceholderText("Enter RPM"), "222");
-      await user.type(screen.getByPlaceholderText("Enter max retries"), "4");
-      await user.type(screen.getByPlaceholderText("Enter timeout"), "33");
-      await user.type(screen.getByPlaceholderText("Enter stream timeout"), "44");
+      await user.clear(screen.getByPlaceholderText("Введите название модели"));
+      await user.type(screen.getByPlaceholderText("Введите название модели"), "renamed-model");
+      await user.clear(screen.getByPlaceholderText("Введите название модели LiteLLM"));
+      await user.type(screen.getByPlaceholderText("Введите название модели LiteLLM"), "gpt-4o");
+      await user.clear(screen.getByPlaceholderText("Введите базовый URL API"));
+      await user.type(screen.getByPlaceholderText("Введите базовый URL API"), "https://example.test/v1");
+      await user.clear(screen.getByPlaceholderText("Введите своего LLM-провайдера"));
+      await user.type(screen.getByPlaceholderText("Введите своего LLM-провайдера"), "azure");
+      await user.type(screen.getByPlaceholderText("Введите организацию"), "org-9");
+      await user.type(screen.getByPlaceholderText("Введите TPM"), "111");
+      await user.type(screen.getByPlaceholderText("Введите RPM"), "222");
+      await user.type(screen.getByPlaceholderText("Введите макс. число попыток"), "4");
+      await user.type(screen.getByPlaceholderText("Введите тайм-аут"), "33");
+      await user.type(screen.getByPlaceholderText("Введите тайм-аут потока"), "44");
 
       const payload = await save(user);
 
@@ -1515,9 +1515,9 @@ describe("ModelInfoView", () => {
       const user = userEvent.setup();
       await enterEditMode(user);
 
-      await user.clear(screen.getByPlaceholderText("Enter output cost"));
-      await user.type(screen.getByPlaceholderText("Enter output cost"), "12");
-      const [cacheRead, cacheWrite] = screen.getAllByPlaceholderText("Defaults to Input Cost if blank");
+      await user.clear(screen.getByPlaceholderText("Введите стоимость выходных токенов"));
+      await user.type(screen.getByPlaceholderText("Введите стоимость выходных токенов"), "12");
+      const [cacheRead, cacheWrite] = screen.getAllByPlaceholderText("По умолчанию — стоимость входных токенов");
       await user.type(cacheRead, "5");
       await user.type(cacheWrite, "9");
 
@@ -1540,9 +1540,9 @@ describe("ModelInfoView", () => {
       const user = userEvent.setup();
       await enterEditMode(user);
 
-      await addTag(user, "Select existing groups or type to create new ones", "beta-testers");
-      await addTag(user, "Select existing guardrails or type to create new ones", "content_filter");
-      await addTag(user, "Select existing tags or type to create new ones", "production_tag");
+      await addTag(user, "Выберите существующие группы или введите новые", "beta-testers");
+      await addTag(user, "Выберите существующие гардрейлы или введите новые", "content_filter");
+      await addTag(user, "Выберите существующие теги или введите новые", "production_tag");
 
       const payload = await save(user);
 
@@ -1604,7 +1604,7 @@ describe("ModelInfoView", () => {
       const user = userEvent.setup();
       await enterEditMode(user);
 
-      await user.click(screen.getByPlaceholderText("Select knowledge bases (optional)"));
+      await user.click(screen.getByPlaceholderText("Выберите базы знаний (необязательно)"));
       await user.click(await screen.findByText("Beta (vs-beta)"));
       await user.keyboard("{Escape}");
 
@@ -1628,7 +1628,7 @@ describe("ModelInfoView", () => {
       const user = userEvent.setup();
       await enterEditMode(user);
 
-      await user.click(screen.getByText("Select existing health check model"));
+      await user.click(screen.getByText("Выберите существующую модель проверки доступности"));
       await user.click(await screen.findByText("openai/gpt-4o"));
 
       const payload = await save(user);
@@ -1643,7 +1643,7 @@ describe("ModelInfoView", () => {
       const user = userEvent.setup();
       await enterEditMode(user);
 
-      const inputCost = screen.getByPlaceholderText("Enter input cost") as HTMLInputElement;
+      const inputCost = screen.getByPlaceholderText("Введите стоимость входных токенов") as HTMLInputElement;
       const seeded = inputCost.value;
       expect(seeded).toBe("30");
 
@@ -1662,7 +1662,7 @@ describe("ModelInfoView", () => {
       const user = userEvent.setup();
       await enterEditMode(user);
 
-      await user.clear(screen.getByPlaceholderText("Enter input cost"));
+      await user.clear(screen.getByPlaceholderText("Введите стоимость входных токенов"));
       const payload = await save(user);
 
       expect(payload.litellm_params.input_cost_per_token).toBeNull();
@@ -1723,7 +1723,7 @@ describe("ModelInfoView", () => {
         const user = userEvent.setup();
         await enterEditMode(user);
 
-        await user.type(screen.getByPlaceholderText("Optional"), "2");
+        await user.type(screen.getByPlaceholderText("Необязательно"), "2");
         const payload = await save(user);
 
         expect(payload.litellm_params.cache_control_injection_points).toEqual([{ location: "message", index: "2" }]);
@@ -1731,7 +1731,7 @@ describe("ModelInfoView", () => {
     });
 
     const setInputCost = (value: string) => {
-      fireEvent.change(screen.getByPlaceholderText("Enter input cost"), { target: { value } });
+      fireEvent.change(screen.getByPlaceholderText("Введите стоимость входных токенов"), { target: { value } });
     };
 
     it("carries an edited input cost and the model identifier onto the wire", async () => {

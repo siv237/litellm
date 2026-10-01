@@ -31,7 +31,7 @@ interface MCPToolsetsTabProps {
 }
 
 const toolsetSchema = z.object({
-  toolset_name: z.string().min(1, "Please enter a toolset name"),
+  toolset_name: z.string().min(1, "Введите название набора"),
   description: z.string(),
 });
 
@@ -208,7 +208,7 @@ function CreateToolsetModal({ open, onClose, onSave, accessToken, initialToolset
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[960px]">
         <DialogHeader>
-          <DialogTitle>{initialToolset ? "Edit Toolset" : "New Toolset"}</DialogTitle>
+          <DialogTitle>{initialToolset ? "Изменить набор" : "Новый набор"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={(event) => event.preventDefault()} className="mt-2">
           <FieldGroup className="mb-4 flex-row gap-4">
@@ -305,7 +305,7 @@ function CreateToolsetModal({ open, onClose, onSave, accessToken, initialToolset
           </Button>
           <Button onClick={() => void form.handleSubmit(handleSubmit)()} disabled={saving} aria-busy={saving}>
             {saving && <UiLoadingSpinner className="size-4" />}
-            {initialToolset ? "Save Changes" : "Create Toolset"}
+            {initialToolset ? "Сохранить изменения" : "Создать набор"}
           </Button>
         </div>
       </DialogContent>
@@ -355,8 +355,8 @@ function ToolsetUsageGuide() {
       <p className="text-sm font-medium text-foreground mb-1">Как работают наборы</p>
       <p className="text-sm text-muted-foreground mb-3">
         Создайте набор и назначьте его ключу через{" "}
-        <span className="font-medium text-foreground">«API-ключи» → «Изменить ключ» → «Серверы MCP»</span>, then point your MCP
-        client at the toolset URL. The client only sees the tools you picked.
+        <span className="font-medium text-foreground">«API-ключи» → «Изменить ключ» → «Серверы MCP»</span> и укажите
+        клиенту MCP URL набора. Клиент увидит только выбранные вами инструменты.
       </p>
       <div className="text-xs text-muted-foreground mb-1">конфиг Claude Code / Cursor</div>
       <div className="relative">
@@ -368,7 +368,7 @@ function ToolsetUsageGuide() {
           onClick={copy}
           className="absolute top-2 right-2 px-2 py-1 text-xs rounded-sm border bg-card hover:bg-muted text-muted-foreground hover:text-foreground border-border transition-colors"
         >
-          {copied ? "✓" : "copy"}
+          {copied ? "✓" : "копировать"}
         </button>
       </div>
     </div>
@@ -458,7 +458,7 @@ export function MCPToolsetsTab({ accessToken, userRole }: MCPToolsetsTabProps) {
         sorting={sorting}
         onSortingChange={setSorting}
         isLoading={isLoading}
-        loadingMessage="Loading toolsets…"
+        loadingMessage="Загрузка наборов…"
         noDataMessage={<ToolsetsEmptyState />}
         size="compact"
       />
@@ -486,7 +486,7 @@ export function MCPToolsetsTab({ accessToken, userRole }: MCPToolsetsTabProps) {
             <DialogTitle>Удалить набор</DialogTitle>
           </DialogHeader>
           <p>
-            Удалить этот набор? Ключи и команды, использующие его, потеряют lose access to the scoped tools.
+            Удалить этот набор? Ключи и команды, использующие его, потеряют доступ к инструментам этого набора.
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteId(null)}>
