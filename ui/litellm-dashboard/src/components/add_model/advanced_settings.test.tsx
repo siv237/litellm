@@ -9,7 +9,7 @@ vi.mock("@/app/(dashboard)/hooks/uiSettings/usePtuCostAttributionEnabled", () =>
   usePtuCostAttributionEnabled: () => mockUsePtuCostAttributionEnabled(),
 }));
 
-const PTU_LABELS = ["PTU Count", "Calculated Cost per PTU / Hour (USD)", "PTU Effective From (UTC)"];
+const PTU_LABELS = ["Количество PTU", "Расчётная стоимость PTU / час (USD)", "PTU действует с (UTC)"];
 
 const renderAdvancedSettings = () =>
   render(
@@ -36,50 +36,50 @@ describe("AdvancedSettings", () => {
 
   it("should render tags list", async () => {
     renderAdvancedSettings();
-    fireEvent.click(screen.getByText("Advanced Settings"));
+    fireEvent.click(screen.getByText("Дополнительные настройки"));
     await waitFor(() => {
-      expect(screen.getByText("Tags")).toBeInTheDocument();
+      expect(screen.getByText("Теги")).toBeInTheDocument();
     });
   });
 
   it("should render the litellm params", async () => {
     renderAdvancedSettings();
     act(() => {
-      fireEvent.click(screen.getByText("Advanced Settings"));
+      fireEvent.click(screen.getByText("Дополнительные настройки"));
     });
     await waitFor(() => {
-      expect(screen.getByText("LiteLLM Params")).toBeInTheDocument();
+      expect(screen.getByText("Параметры LiteLLM")).toBeInTheDocument();
     });
   });
 
   it("hides every PTU field when PTU cost attribution is disabled", async () => {
     renderAdvancedSettings();
     act(() => {
-      fireEvent.click(screen.getByText("Advanced Settings"));
+      fireEvent.click(screen.getByText("Дополнительные настройки"));
     });
     await waitFor(() => {
-      expect(screen.getByText("Tags")).toBeInTheDocument();
+      expect(screen.getByText("Теги")).toBeInTheDocument();
     });
 
     for (const label of PTU_LABELS) {
       expect(screen.queryByText(label)).not.toBeInTheDocument();
     }
-    expect(screen.queryByText("PTU Effective To (UTC)")).not.toBeInTheDocument();
+    expect(screen.queryByText("PTU действует по (UTC)")).not.toBeInTheDocument();
   });
 
   it("shows every PTU field when PTU cost attribution is enabled", async () => {
     mockUsePtuCostAttributionEnabled.mockReturnValue(true);
     renderAdvancedSettings();
     act(() => {
-      fireEvent.click(screen.getByText("Advanced Settings"));
+      fireEvent.click(screen.getByText("Дополнительные настройки"));
     });
 
     await waitFor(() => {
-      expect(screen.getByText("PTU Count")).toBeInTheDocument();
+      expect(screen.getByText("Количество PTU")).toBeInTheDocument();
     });
     for (const label of PTU_LABELS) {
       expect(screen.getByText(label)).toBeInTheDocument();
     }
-    expect(screen.getByText("PTU Effective To (UTC)")).toBeInTheDocument();
+    expect(screen.getByText("PTU действует по (UTC)")).toBeInTheDocument();
   });
 });

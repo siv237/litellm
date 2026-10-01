@@ -145,9 +145,9 @@ const getEntryOutcome = (entry: GuardrailInformation): EntryOutcome => {
 const isEntrySuccess = (entry: GuardrailInformation): boolean => getEntryOutcome(entry) === "passed";
 
 const OUTCOME_LABEL: Record<EntryOutcome, string> = {
-  passed: "PASSED",
-  flagged: "FLAGGED",
-  failed: "FAILED",
+  passed: "ПРОЙДЕНО",
+  flagged: "ФЛАГ",
+  failed: "СБОЙ",
 };
 
 const OUTCOME_BADGE_CLASS: Record<EntryOutcome, string> = {
@@ -278,15 +278,15 @@ const MatchDetailsTable = ({ matchDetails }: { matchDetails: MatchDetail[] }) =>
 
   return (
     <div className="mt-3">
-      <h5 className="text-sm font-medium mb-2 text-foreground">Match Details ({matchDetails.length})</h5>
+      <h5 className="text-sm font-medium mb-2 text-foreground">Подробности совпадений ({matchDetails.length})</h5>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b text-left text-muted-foreground">
               <th className="pb-2 pr-4 font-medium">Тип</th>
-              <th className="pb-2 pr-4 font-medium">Method</th>
-              <th className="pb-2 pr-4 font-medium">Action</th>
-              <th className="pb-2 font-medium">Detail</th>
+              <th className="pb-2 pr-4 font-medium">Метод</th>
+              <th className="pb-2 pr-4 font-medium">Действие</th>
+              <th className="pb-2 font-medium">Подробности</th>
             </tr>
           </thead>
           <tbody>
@@ -331,7 +331,7 @@ const GenericGuardrailResponse = ({ response }: { response: any }) => {
         >
           <div className="flex items-center">
             <ChevronIcon expanded={showRaw} />
-            <h5 className="font-medium text-sm ml-1">Raw Guardrail Response</h5>
+            <h5 className="font-medium text-sm ml-1">Сырой ответ гардрейла</h5>
           </div>
         </div>
         {showRaw && (
@@ -363,7 +363,7 @@ const RequestLifecycle = ({ entries }: { entries: GuardrailInformation[] }) => {
     const items: TimelineEntry[] = [];
 
     // Request received
-    items.push({ type: "request", label: "Request received", offsetMs: 0 });
+    items.push({ type: "request", label: "Запрос получен", offsetMs: 0 });
 
     // Pre-call guardrails — use modeMatches so array modes (e.g. ["pre_call", "post_call"])
     // place the entry in every matching bucket.
@@ -377,7 +377,7 @@ const RequestLifecycle = ({ entries }: { entries: GuardrailInformation[] }) => {
       const offsetMs = Math.round((e.end_time - baseTime) * 1000);
       items.push({
         type: "guardrail",
-        label: `Pre-call guardrail: ${getDisplayName(e)}`,
+        label: `Гардрейл до вызова: ${getDisplayName(e)}`,
         offsetMs,
         outcome: getEntryOutcome(e),
       });
@@ -391,7 +391,7 @@ const RequestLifecycle = ({ entries }: { entries: GuardrailInformation[] }) => {
 
     items.push({
       type: "llm",
-      label: "LLM call",
+      label: "Вызов LLM",
       offsetMs: llmOffsetMs,
     });
 
@@ -400,7 +400,7 @@ const RequestLifecycle = ({ entries }: { entries: GuardrailInformation[] }) => {
       const offsetMs = Math.round((e.end_time - baseTime) * 1000);
       items.push({
         type: "guardrail",
-        label: `During-call guardrail: ${getDisplayName(e)}`,
+        label: `Гардрейл во время вызова: ${getDisplayName(e)}`,
         offsetMs,
         outcome: getEntryOutcome(e),
       });
@@ -411,7 +411,7 @@ const RequestLifecycle = ({ entries }: { entries: GuardrailInformation[] }) => {
       const offsetMs = Math.round((e.end_time - baseTime) * 1000);
       items.push({
         type: "guardrail",
-        label: `Post-call guardrail: ${getDisplayName(e)}`,
+        label: `Гардрейл после вызова: ${getDisplayName(e)}`,
         offsetMs,
         outcome: getEntryOutcome(e),
       });
@@ -420,14 +420,14 @@ const RequestLifecycle = ({ entries }: { entries: GuardrailInformation[] }) => {
     // Response returned
     const maxEnd = Math.max(...sorted.map((e) => e.end_time));
     const responseOffsetMs = Math.round((maxEnd - baseTime) * 1000) + 1;
-    items.push({ type: "response", label: "Response returned", offsetMs: responseOffsetMs });
+    items.push({ type: "response", label: "Ответ получен", offsetMs: responseOffsetMs });
 
     return items;
   }, [sorted]);
 
   return (
     <div>
-      <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">Request Lifecycle</h4>
+      <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">Жизненный цикл запроса</h4>
       <div className="relative">
         {timeline.map((item, idx) => (
           <div key={idx} className="flex items-start gap-3 relative">
@@ -458,7 +458,7 @@ const RequestLifecycle = ({ entries }: { entries: GuardrailInformation[] }) => {
                     {OUTCOME_LABEL[item.outcome]}
                   </span>
                 )}
-                <span className="text-xs text-muted-foreground font-mono ml-auto shrink-0">T+{item.offsetMs}ms</span>
+                <span className="text-xs text-muted-foreground font-mono ml-auto shrink-0">T+{item.offsetMs} мс</span>
               </div>
             </div>
           </div>
@@ -546,7 +546,7 @@ const EvaluationCard = ({ entry }: { entry: GuardrailInformation }) => {
 
           {entry.confidence_score != null && (
             <span className="px-2 py-0.5 bg-muted text-muted-foreground border border-border rounded-sm text-[11px] font-medium shrink-0">
-              {(entry.confidence_score * 100).toFixed(0)}% conf
+              {(entry.confidence_score * 100).toFixed(0)}% уверен.
             </span>
           )}
 
@@ -560,9 +560,9 @@ const EvaluationCard = ({ entry }: { entry: GuardrailInformation }) => {
                     />
                   }
                 >
-                  Risk {riskScore}/10
+                  Риск {riskScore}/10
                 </TooltipTrigger>
-                <TooltipContent>{`Risk score: ${riskScore}/10`}</TooltipContent>
+                <TooltipContent>{`Оценка риска: ${riskScore}/10`}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           )}
@@ -611,28 +611,28 @@ const EvaluationCard = ({ entry }: { entry: GuardrailInformation }) => {
           {/* Classification details for llm-judge */}
           {entry.classification && (
             <div className="mb-3 bg-muted rounded-lg p-3 space-y-1">
-              <h5 className="text-sm font-medium text-foreground mb-2">Classification</h5>
+              <h5 className="text-sm font-medium text-foreground mb-2">Классификация</h5>
               {entry.classification.category && (
                 <div className="flex text-sm">
-                  <span className="font-medium w-1/3 text-muted-foreground">Category:</span>
+                  <span className="font-medium w-1/3 text-muted-foreground">Категория:</span>
                   <span>{entry.classification.category}</span>
                 </div>
               )}
               {entry.classification.article_reference && (
                 <div className="flex text-sm">
-                  <span className="font-medium w-1/3 text-muted-foreground">Reference:</span>
+                  <span className="font-medium w-1/3 text-muted-foreground">Ссылка:</span>
                   <span className="font-mono">{entry.classification.article_reference}</span>
                 </div>
               )}
               {entry.classification.confidence != null && (
                 <div className="flex text-sm">
-                  <span className="font-medium w-1/3 text-muted-foreground">Confidence:</span>
+                  <span className="font-medium w-1/3 text-muted-foreground">Уверенность:</span>
                   <span>{(entry.classification.confidence * 100).toFixed(0)}%</span>
                 </div>
               )}
               {entry.classification.reason && (
                 <div className="flex text-sm">
-                  <span className="font-medium w-1/3 text-muted-foreground">Reason:</span>
+                  <span className="font-medium w-1/3 text-muted-foreground">Причина:</span>
                   <span>{entry.classification.reason}</span>
                 </div>
               )}
@@ -647,7 +647,7 @@ const EvaluationCard = ({ entry }: { entry: GuardrailInformation }) => {
           {/* Masked entity summary */}
           {totalMasked > 0 && (
             <div className="mt-3">
-              <h5 className="text-sm font-medium text-foreground mb-2">Masked Entities</h5>
+              <h5 className="text-sm font-medium text-foreground mb-2">Маскированные сущности</h5>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(entry.masked_entity_count || {}).map(([entityType, count]) => (
                   <span key={entityType} className="px-2 py-1 bg-info/10 text-info rounded-sm text-xs font-medium">
@@ -730,10 +730,10 @@ const GuardrailViewer = ({ data, accessToken, logEntry }: GuardrailViewerProps) 
         <div className="flex items-center gap-4">
           <ShieldIcon />
           <div>
-            <h3 className="text-lg font-semibold text-foreground">Guardrails &amp; Policy Compliance</h3>
+            <h3 className="text-lg font-semibold text-foreground">Гардрейлы и соответствие политикам</h3>
             <div className="flex items-center gap-2 mt-0.5">
               <span className="text-sm text-muted-foreground">
-                {guardrailEntries.length} guardrail{guardrailEntries.length !== 1 ? "s" : ""} evaluated
+                {guardrailEntries.length} {guardrailEntries.length !== 1 ? "гардрейлов" : "гардрейл"} проверено
               </span>
               <span className="text-muted-foreground">|</span>
               <span
@@ -750,13 +750,13 @@ const GuardrailViewer = ({ data, accessToken, logEntry }: GuardrailViewerProps) 
                     />
                   </svg>
                 ) : null}
-                {passedCount} Passed
+                {passedCount} пройдено
               </span>
               {flaggedCount > 0 && (
                 <span
                   className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${OUTCOME_BADGE_CLASS.flagged}`}
                 >
-                  {flaggedCount} Flagged
+                  {flaggedCount} с флагом
                 </span>
               )}
             </div>
@@ -765,7 +765,7 @@ const GuardrailViewer = ({ data, accessToken, logEntry }: GuardrailViewerProps) 
 
         <div className="flex items-center gap-6">
           <div className="text-right">
-            <div className="text-sm font-medium text-foreground">Total: {totalOverheadMs}ms overhead</div>
+            <div className="text-sm font-medium text-foreground">Суммарные накладные расходы: {totalOverheadMs} мс</div>
           </div>
 
           <button
@@ -773,7 +773,7 @@ const GuardrailViewer = ({ data, accessToken, logEntry }: GuardrailViewerProps) 
             className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm font-medium text-foreground bg-card hover:bg-accent transition-colors"
           >
             <DownloadIcon />
-            Export Compliance Log
+            Экспорт журнала соответствия
           </button>
         </div>
       </div>
@@ -795,7 +795,7 @@ const GuardrailViewer = ({ data, accessToken, logEntry }: GuardrailViewerProps) 
         {/* Evaluation Details */}
         <div className="px-6 py-5">
           <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-            Evaluation Details
+            Подробности проверки
           </h4>
           <div className="space-y-3">
             {guardrailEntries.map((entry, index) => (

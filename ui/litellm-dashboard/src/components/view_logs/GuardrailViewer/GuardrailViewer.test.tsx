@@ -23,11 +23,11 @@ describe("GuardrailViewer", () => {
     const data = makeGuardrailInformation({ duration: 1.23456, guardrail_status: "success" });
     renderWithProviders(<GuardrailViewer data={data} />);
 
-    expect(screen.getByText("Guardrails & Policy Compliance")).toBeInTheDocument();
+    expect(screen.getByText("Гардрейлы и соответствие политикам")).toBeInTheDocument();
     // header shows passed count
-    expect(screen.getByText(/1 Passed/)).toBeInTheDocument();
+    expect(screen.getByText(/1 пройдено/)).toBeInTheDocument();
     // The PASSED badge in the evaluation card
-    expect(screen.getByText("PASSED")).toBeInTheDocument();
+    expect(screen.getByText("ПРОЙДЕНО")).toBeInTheDocument();
 
     // duration displays in ms format: Math.round(1.23456 * 1000) = 1235
     expect(screen.getByText("1235ms")).toBeInTheDocument();
@@ -41,12 +41,12 @@ describe("GuardrailViewer", () => {
     });
     renderWithProviders(<GuardrailViewer data={data} />);
 
-    expect(screen.getByText(/0 Passed/)).toBeInTheDocument();
-    expect(screen.getByText(/1 Flagged/)).toBeInTheDocument();
-    const badges = screen.getAllByText("FLAGGED");
+    expect(screen.getByText(/0 пройдено/)).toBeInTheDocument();
+    expect(screen.getByText(/1 с флагом/)).toBeInTheDocument();
+    const badges = screen.getAllByText("ФЛАГ");
     expect(badges.length).toBeGreaterThan(0);
     expect(badges[0]).toHaveClass("text-warning");
-    expect(screen.queryByText("FAILED")).not.toBeInTheDocument();
+    expect(screen.queryByText("СБОЙ")).not.toBeInTheDocument();
   });
 
   it("calculates and displays masked entity totals", async () => {
@@ -158,7 +158,7 @@ describe("GuardrailViewer", () => {
     });
     renderWithProviders(<GuardrailViewer data={data} />);
     // Header still present
-    expect(screen.getByText("Guardrails & Policy Compliance")).toBeInTheDocument();
+    expect(screen.getByText("Гардрейлы и соответствие политикам")).toBeInTheDocument();
 
     // Expand the card
     await user.click(screen.getByText("pii-rail"));
@@ -171,7 +171,7 @@ describe("GuardrailViewer", () => {
     const data = makeGuardrailInformation({ guardrail_mode: null });
     renderWithProviders(<GuardrailViewer data={data} />);
 
-    expect(screen.getByText("Guardrails & Policy Compliance")).toBeInTheDocument();
+    expect(screen.getByText("Гардрейлы и соответствие политикам")).toBeInTheDocument();
     // Null mode should display as dash
     expect(screen.getByText("—")).toBeInTheDocument();
   });
@@ -182,7 +182,7 @@ describe("GuardrailViewer", () => {
     });
     renderWithProviders(<GuardrailViewer data={data} />);
 
-    expect(screen.getByText("Guardrails & Policy Compliance")).toBeInTheDocument();
+    expect(screen.getByText("Гардрейлы и соответствие политикам")).toBeInTheDocument();
     expect(screen.getByText("PRE-CALL")).toBeInTheDocument();
   });
 
@@ -192,12 +192,12 @@ describe("GuardrailViewer", () => {
     });
     renderWithProviders(<GuardrailViewer data={data} />);
 
-    expect(screen.getByText("Guardrails & Policy Compliance")).toBeInTheDocument();
+    expect(screen.getByText("Гардрейлы и соответствие политикам")).toBeInTheDocument();
     // Mode badge shows first element formatted
     expect(screen.getByText("PRE-CALL")).toBeInTheDocument();
     // Entry should appear in both pre-call and post-call timeline sections
-    expect(screen.getByText(/Pre-call guardrail:/)).toBeInTheDocument();
-    expect(screen.getByText(/Post-call guardrail:/)).toBeInTheDocument();
+    expect(screen.getByText(/Гардрейл до вызова:/)).toBeInTheDocument();
+    expect(screen.getByText(/Гардрейл после вызова:/)).toBeInTheDocument();
   });
 
   it("integration: renders with real Bedrock details without mocks", async () => {
@@ -215,7 +215,7 @@ describe("GuardrailViewer", () => {
     await user.click(screen.getByText("pii-rail"));
 
     // Bedrock summary bits
-    expect(screen.getByText("Outputs")).toBeInTheDocument();
+    expect(screen.getByText("Результаты")).toBeInTheDocument();
     expect(screen.getByText("ok")).toBeInTheDocument();
   });
 });
