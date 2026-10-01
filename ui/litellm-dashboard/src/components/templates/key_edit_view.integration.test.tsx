@@ -1547,7 +1547,7 @@ describe("KeyEditView", () => {
       await userEvent.click(await screen.findByRole("button", { name: "Detach from project" }));
       expect(screen.getByRole("combobox", { name: "Organization" })).toBeDisabled();
       expect(screen.getByRole("combobox", { name: "ID команды" })).toBeDisabled();
-      await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
+      await userEvent.click(screen.getByRole("button", { name: "Отмена" }));
       expect(onCancel).toHaveBeenCalledOnce();
       expect(onSubmit).not.toHaveBeenCalled();
       view.rerender(renderEditor({ ...key }));
@@ -1624,8 +1624,8 @@ describe("KeyEditView", () => {
         expect(screen.getAllByText("gpt-4").length).toBeGreaterThan(0);
       });
 
-      expect(screen.getAllByText("All Proxy Models").length).toBeGreaterThan(0);
-      expect(screen.queryAllByText("All Team Models")).toHaveLength(0);
+      expect(screen.getAllByText("Все модели прокси").length).toBeGreaterThan(0);
+      expect(screen.queryAllByText("Все модели команды")).toHaveLength(0);
     });
 
     it("should offer all-team-models but hide all-proxy-models for a team key", async () => {
@@ -1655,8 +1655,8 @@ describe("KeyEditView", () => {
         expect(screen.getAllByText("team-model-1").length).toBeGreaterThan(0);
       });
 
-      expect(screen.getAllByText("All Team Models").length).toBeGreaterThan(0);
-      expect(screen.queryAllByText("All Proxy Models")).toHaveLength(0);
+      expect(screen.getAllByText("Все модели команды").length).toBeGreaterThan(0);
+      expect(screen.queryAllByText("Все модели прокси")).toHaveLength(0);
       expect(screen.queryAllByText("all-proxy-models")).toHaveLength(0);
     });
 
@@ -1682,8 +1682,8 @@ describe("KeyEditView", () => {
 
       await openModelsDropdown();
 
-      expect(screen.queryAllByText("All Team Models")).toHaveLength(0);
-      expect(screen.queryAllByText("All Proxy Models")).toHaveLength(0);
+      expect(screen.queryAllByText("Все модели команды")).toHaveLength(0);
+      expect(screen.queryAllByText("Все модели прокси")).toHaveLength(0);
     });
 
     it("should not duplicate the all-proxy-models option when the teamless model list already carries the sentinel", async () => {
@@ -1716,7 +1716,7 @@ describe("KeyEditView", () => {
       });
 
       const labels = proxyOptionLabels();
-      expect(labels.filter((label) => label === "All Proxy Models")).toHaveLength(1);
+      expect(labels.filter((label) => label === "Все модели прокси")).toHaveLength(1);
       expect(labels).not.toContain("all-proxy-models");
     });
 
@@ -1751,7 +1751,7 @@ describe("KeyEditView", () => {
       };
 
       await clickOption("gpt-4");
-      await clickOption("All Proxy Models");
+      await clickOption("Все модели прокси");
       await userEvent.keyboard("{Escape}");
 
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
@@ -1792,7 +1792,7 @@ describe("KeyEditView", () => {
 
       fireEvent.click(
         await waitFor(() => {
-          const match = findOption("All Proxy Models");
+          const match = findOption("Все модели прокси");
           expect(match).toBeTruthy();
           return match!;
         }),
