@@ -293,9 +293,9 @@ export default function ModelInfoView({
         custom_llm_provider: localModelData.litellm_params?.custom_llm_provider,
       },
     };
-    toast.info("Storing credential..");
+    toast.info("Сохраняем учётные данные..");
     let credentialResponse = await credentialCreateCall(accessToken, credentialItem);
-    toast.success("Credential stored successfully");
+    toast.success("Учётные данные сохранены");
   };
 
   const handleModelUpdate = async (
@@ -312,7 +312,7 @@ export default function ModelInfoView({
         parsedExtraParams = values.litellm_extra_params ? JSON.parse(values.litellm_extra_params) : {};
         delete parsedExtraParams.litellm_credential_name;
       } catch (e) {
-        toast.fromError("Invalid JSON in LiteLLM Params");
+        toast.fromError("Некорректный JSON в LiteLLM Params");
         setIsSaving(false);
         return;
       }
@@ -423,7 +423,7 @@ export default function ModelInfoView({
         }
         updatedModelInfo = applyPtuModelInfo(updatedModelInfo, values, ptuCostAttributionEnabled);
       } catch (e) {
-        toast.fromError("Invalid JSON in Model Info");
+        toast.fromError("Некорректный JSON в Model Info");
         return;
       }
 
@@ -455,11 +455,11 @@ export default function ModelInfoView({
         onModelUpdate(updatedModelData);
       }
 
-      toast.success("Model settings updated successfully");
+      toast.success("Настройки модели обновлены");
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating model:", error);
-      toast.fromError("Failed to update model settings");
+      toast.fromError("Не удалось обновить настройки модели");
     } finally {
       setIsSaving(false);
     }
@@ -471,7 +471,7 @@ export default function ModelInfoView({
       <div className="p-4">
         <Button variant="ghost" onClick={onClose} className="mb-4">
           <ArrowLeft className="size-4" />
-          Back to Models
+          Назад к моделям
         </Button>
         <p className="text-sm">Загрузка…</p>
       </div>
@@ -484,9 +484,9 @@ export default function ModelInfoView({
       <div className="p-4">
         <Button variant="ghost" onClick={onClose} className="mb-4">
           <ArrowLeft className="size-4" />
-          Back to Models
+          Назад к моделям
         </Button>
-        <p className="text-sm">Model not found</p>
+        <p className="text-sm">Модель не найдена</p>
       </div>
     );
   }
@@ -496,7 +496,7 @@ export default function ModelInfoView({
     if (isComplexityRouterModel) {
       const targets = buildComplexityRouterTestTargets(localModelData ?? modelData);
       if (targets.length === 0) {
-        toast.warning("No complexity tiers are configured yet, so there is nothing to test.");
+        toast.warning("Уровни сложности ещё не настроены — тестировать нечего.");
         return;
       }
       setAutoRouterTestTargets(targets);
@@ -595,7 +595,7 @@ export default function ModelInfoView({
         <div>
           <Button variant="ghost" onClick={onClose} className="mb-4">
             <ArrowLeft className="size-4" />
-            Back to Models
+            Назад к моделям
           </Button>
           <h2 className="text-xl font-semibold">Public Model Name: {getDisplayModelName(modelData)}</h2>
           <div className="flex items-center cursor-pointer">
@@ -688,7 +688,7 @@ export default function ModelInfoView({
                 </div>
               </Card>
               <Card className="block p-6">
-                <p className="text-sm">LiteLLM Model</p>
+                <p className="text-sm">Модель LiteLLM</p>
                 <div className="mt-2 overflow-hidden">
                   <SimpleTooltip content={modelData.litellm_model_name || "Not Set"} className="w-full min-w-0">
                     <div className="break-all text-sm font-medium leading-relaxed cursor-pointer">
@@ -698,10 +698,10 @@ export default function ModelInfoView({
                 </div>
               </Card>
               <Card className="block p-6">
-                <p className="text-sm">Pricing</p>
+                <p className="text-sm">Цены</p>
                 <div className="mt-2">
-                  <p className="text-sm">Input: ${modelData.input_cost}/1M tokens</p>
-                  <p className="text-sm">Output: ${modelData.output_cost}/1M tokens</p>
+                  <p className="text-sm">Вход: ${modelData.input_cost}/1 млн токенов</p>
+                  <p className="text-sm">Выход: ${modelData.output_cost}/1 млн токенов</p>
                 </div>
               </Card>
             </div>
@@ -717,7 +717,7 @@ export default function ModelInfoView({
                     d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                Created At{" "}
+                Создано{" "}
                 {modelData.model_info.created_at
                   ? new Date(modelData.model_info.created_at).toLocaleDateString("en-US", {
                       month: "short",
@@ -735,28 +735,28 @@ export default function ModelInfoView({
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                   />
                 </svg>
-                Created By {modelData.model_info.created_by || "Not Set"}
+                Создал {modelData.model_info.created_by || "Not Set"}
               </div>
             </div>
 
             {/* Settings Card */}
             <Card className="block p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">Model Settings</h3>
+                <h3 className="text-lg font-medium">Настройки модели</h3>
                 <div className="flex gap-2">
                   {isAutoRouterModel && canEditModel && !isEditing && (
                     <Button onClick={() => setIsAutoRouterModalOpen(true)} className="flex items-center">
-                      Edit Auto Router
+                      Изменить автомаршрутизатор
                     </Button>
                   )}
                   {canEditModel ? (
                     !isEditing && (
                       <Button onClick={() => setIsEditing(true)} className="flex items-center">
-                        Edit Settings
+                        Редактировать настройки
                       </Button>
                     )
                   ) : (
-                    <SimpleTooltip content="Only DB models can be edited. You must be an admin or the creator of the model to edit it.">
+                    <SimpleTooltip content="Редактировать можно только модели из БД, и только администратору или создателю модели.">
                       <Info className="size-4 text-muted-foreground" />
                     </SimpleTooltip>
                   )}
@@ -803,11 +803,11 @@ export default function ModelInfoView({
         resourceInformationTitle="Model Information"
         resourceInformation={[
           {
-            label: "Model Name",
+            label: "Название модели",
             value: modelData?.model_name || "Not Set",
           },
           {
-            label: "LiteLLM Model Name",
+            label: "Имя модели LiteLLM",
             value: modelData?.litellm_model_name || "Not Set",
           },
           {
@@ -815,7 +815,7 @@ export default function ModelInfoView({
             value: modelData?.provider || "Not Set",
           },
           {
-            label: "Created By",
+            label: "Создал",
             value: modelData?.model_info?.created_by || "Not Set",
           },
         ]}
@@ -836,7 +836,7 @@ export default function ModelInfoView({
         <Dialog open={isCredentialModalOpen} onOpenChange={(open) => !open && setIsCredentialModalOpen(false)}>
           <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Using Existing Credential</DialogTitle>
+              <DialogTitle>Используется существующая учётная запись</DialogTitle>
             </DialogHeader>
             <p className="text-sm">{modelData.litellm_params.litellm_credential_name}</p>
             <DialogFooter>
@@ -873,7 +873,7 @@ export default function ModelInfoView({
       <Dialog open={isAutoRouterTestModalOpen} onOpenChange={(open) => !open && setIsAutoRouterTestModalOpen(false)}>
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[700px]">
           <DialogHeader>
-            <DialogTitle>Connection Test Results</DialogTitle>
+            <DialogTitle>Результаты теста подключения</DialogTitle>
           </DialogHeader>
           {isAutoRouterTestModalOpen && accessToken && (
             <AutoRouterConnectionTest

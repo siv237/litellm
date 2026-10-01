@@ -186,7 +186,7 @@ describe("ModelInfoView", () => {
   it("should render", async () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText("Model Settings")).toBeInTheDocument();
+      expect(screen.getByText("Настройки модели")).toBeInTheDocument();
     });
   });
 
@@ -198,7 +198,7 @@ describe("ModelInfoView", () => {
     });
 
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Загрузка…")).toBeInTheDocument();
   });
 
   it("should display not found message when model data is not available", async () => {
@@ -212,7 +212,7 @@ describe("ModelInfoView", () => {
 
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText("Model not found")).toBeInTheDocument();
+      expect(screen.getByText("Модель не найдена")).toBeInTheDocument();
     });
   });
 
@@ -229,7 +229,7 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} onClose={mockOnClose} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByText("Model Settings")).toBeInTheDocument();
+      expect(screen.getByText("Настройки модели")).toBeInTheDocument();
     });
 
     const backButton = screen.getByRole("button", { name: /back to models/i });
@@ -250,7 +250,7 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByText("Model Settings")).toBeInTheDocument();
+      expect(screen.getByText("Настройки модели")).toBeInTheDocument();
     });
 
     const testButton = screen.getByRole("button", { name: /test connection/i });
@@ -272,7 +272,7 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByText("Model Settings")).toBeInTheDocument();
+      expect(screen.getByText("Настройки модели")).toBeInTheDocument();
     });
 
     const testButton = screen.getByRole("button", { name: /test connection/i });
@@ -296,7 +296,7 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByText("Model Settings")).toBeInTheDocument();
+      expect(screen.getByText("Настройки модели")).toBeInTheDocument();
     });
 
     const testButton = screen.getByRole("button", { name: /test connection/i });
@@ -399,7 +399,7 @@ describe("ModelInfoView", () => {
     const user = userEvent.setup();
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
-    await user.click(await screen.findByRole("button", { name: /edit settings/i }));
+    await user.click(await screen.findByRole("button", { name: /редактировать настройки/i }));
     const costInput = screen.getByPlaceholderText("Enter input cost") as HTMLInputElement;
     await user.clear(costInput);
     await user.type(costInput, "5");
@@ -421,15 +421,15 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Provider")).toBeInTheDocument();
-      expect(screen.getByText("LiteLLM Model")).toBeInTheDocument();
-      expect(screen.getByText("Pricing")).toBeInTheDocument();
+      expect(screen.getByText("Модель LiteLLM")).toBeInTheDocument();
+      expect(screen.getByText("Цены")).toBeInTheDocument();
     });
   });
 
   it("should display edit settings button when user can edit model", async () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
   });
 
@@ -452,7 +452,7 @@ describe("ModelInfoView", () => {
 
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.queryByRole("button", { name: /edit settings/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /редактировать настройки/i })).not.toBeInTheDocument();
     });
   });
 
@@ -461,10 +461,10 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
 
-    const editButton = screen.getByRole("button", { name: /edit settings/i });
+    const editButton = screen.getByRole("button", { name: /редактировать настройки/i });
     await user.click(editButton);
 
     await waitFor(() => {
@@ -478,10 +478,10 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
 
-    const editButton = screen.getByRole("button", { name: /edit settings/i });
+    const editButton = screen.getByRole("button", { name: /редактировать настройки/i });
     await user.click(editButton);
 
     await waitFor(() => {
@@ -495,10 +495,10 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
 
-    const editButton = screen.getByRole("button", { name: /edit settings/i });
+    const editButton = screen.getByRole("button", { name: /редактировать настройки/i });
     await user.click(editButton);
 
     const modelNameInput = await screen.findByPlaceholderText("Enter model name");
@@ -513,10 +513,10 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
 
-    const editButton = screen.getByRole("button", { name: /edit settings/i });
+    const editButton = screen.getByRole("button", { name: /редактировать настройки/i });
     await user.click(editButton);
 
     await waitFor(() => {
@@ -527,7 +527,7 @@ describe("ModelInfoView", () => {
     await user.click(cancelButton);
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       expect(screen.queryByRole("button", { name: /save changes/i })).not.toBeInTheDocument();
     });
   });
@@ -538,10 +538,10 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} onModelUpdate={mockOnModelUpdate} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
 
-    const editButton = screen.getByRole("button", { name: /edit settings/i });
+    const editButton = screen.getByRole("button", { name: /редактировать настройки/i });
     await user.click(editButton);
 
     await waitFor(() => {
@@ -553,7 +553,7 @@ describe("ModelInfoView", () => {
 
     await waitFor(() => {
       expect(mockModelPatchUpdateCall).toHaveBeenCalled();
-      expect(mockToast.success).toHaveBeenCalledWith("Model settings updated successfully");
+      expect(mockToast.success).toHaveBeenCalledWith("Настройки модели обновлены");
       expect(mockOnModelUpdate).toHaveBeenCalled();
     });
   });
@@ -577,10 +577,10 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: /edit settings/i }));
+    await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
     await waitFor(() => {
       expect(screen.getByText("Existing Credentials")).toBeInTheDocument();
@@ -592,10 +592,10 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: /edit settings/i }));
+    await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
     const litellmParamsInput = screen
       .getAllByRole("textbox")
@@ -630,10 +630,10 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: /edit settings/i }));
+    await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
@@ -677,7 +677,7 @@ describe("ModelInfoView", () => {
       renderWithPtuModel();
 
       await waitFor(() => {
-        expect(screen.getByText("Model Settings")).toBeInTheDocument();
+        expect(screen.getByText("Настройки модели")).toBeInTheDocument();
       });
 
       expect(screen.queryByText("PTU Count")).not.toBeInTheDocument();
@@ -703,9 +703,9 @@ describe("ModelInfoView", () => {
       renderWithPtuModel();
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       });
-      await user.click(screen.getByRole("button", { name: /edit settings/i }));
+      await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
       await waitFor(() => {
         expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
@@ -741,9 +741,9 @@ describe("ModelInfoView", () => {
       renderWithPtuModel();
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       });
-      await user.click(screen.getByRole("button", { name: /edit settings/i }));
+      await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
       await waitFor(() => {
         expect(screen.getByPlaceholderText("Enter input cost")).toBeInTheDocument();
@@ -772,9 +772,9 @@ describe("ModelInfoView", () => {
       render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       });
-      await user.click(screen.getByRole("button", { name: /edit settings/i }));
+      await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
       await waitFor(() => {
         expect(screen.getByPlaceholderText("e.g. 15")).toBeInTheDocument();
@@ -790,8 +790,8 @@ describe("ModelInfoView", () => {
     const enterPtuEdit = async (user: ReturnType<typeof userEvent.setup>) => {
       mockUsePtuCostAttributionEnabled.mockReturnValue(true);
       renderWithPtuModel();
-      expect(await screen.findByRole("button", { name: /edit settings/i })).toBeInTheDocument();
-      await user.click(screen.getByRole("button", { name: /edit settings/i }));
+      expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
       expect(await screen.findByPlaceholderText("e.g. 15")).toBeInTheDocument();
     };
 
@@ -812,8 +812,8 @@ describe("ModelInfoView", () => {
       const user = userEvent.setup();
       render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
-      expect(await screen.findByRole("button", { name: /edit settings/i })).toBeInTheDocument();
-      await user.click(screen.getByRole("button", { name: /edit settings/i }));
+      expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
       expect(await screen.findByRole("button", { name: /save changes/i })).toBeInTheDocument();
       await user.click(screen.getByRole("button", { name: /save changes/i }));
 
@@ -861,8 +861,8 @@ describe("ModelInfoView", () => {
       const user = userEvent.setup();
       render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
-      expect(await screen.findByRole("button", { name: /edit settings/i })).toBeInTheDocument();
-      await user.click(screen.getByRole("button", { name: /edit settings/i }));
+      expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
       expect(await screen.findByPlaceholderText("e.g. 15")).toBeInTheDocument();
 
       await expectBlocked(user, /PTU Effective From is required when PTU Count is set/i);
@@ -885,9 +885,9 @@ describe("ModelInfoView", () => {
       renderWithPtuModel();
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       });
-      await user.click(screen.getByRole("button", { name: /edit settings/i }));
+      await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
       await waitFor(() => {
         expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
@@ -908,8 +908,8 @@ describe("ModelInfoView", () => {
       const user = userEvent.setup();
       renderWithPtuModel();
 
-      expect(await screen.findByRole("button", { name: /edit settings/i })).toBeInTheDocument();
-      await user.click(screen.getByRole("button", { name: /edit settings/i }));
+      expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
       expect(await screen.findByRole("button", { name: /save changes/i })).toBeInTheDocument();
 
       await user.clear(screen.getByPlaceholderText("e.g. 15"));
@@ -940,8 +940,8 @@ describe("ModelInfoView", () => {
     const user = userEvent.setup();
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
-    expect(await screen.findByRole("button", { name: /edit settings/i })).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /edit settings/i }));
+    expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
     const extraParams = screen
       .getAllByRole("textbox")
@@ -966,10 +966,10 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: /edit settings/i }));
+    await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
@@ -1012,9 +1012,9 @@ describe("ModelInfoView", () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit settings/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
-    await user.click(screen.getByRole("button", { name: /edit settings/i }));
+    await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
@@ -1057,7 +1057,7 @@ describe("ModelInfoView", () => {
   it("should not display health check model field for non-wildcard models", async () => {
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText("Model Settings")).toBeInTheDocument();
+      expect(screen.getByText("Настройки модели")).toBeInTheDocument();
       expect(screen.queryByText("Health Check Model")).not.toBeInTheDocument();
     });
   });
@@ -1081,7 +1081,7 @@ describe("ModelInfoView", () => {
 
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /edit auto router/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /изменить автомаршрутизатор/i })).toBeInTheDocument();
     });
   });
 
@@ -1104,7 +1104,7 @@ describe("ModelInfoView", () => {
 
     render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByText("Model Settings")).toBeInTheDocument();
+      expect(screen.getByText("Настройки модели")).toBeInTheDocument();
     });
     expect(screen.queryByTestId("test-connection-button")).not.toBeInTheDocument();
   });
@@ -1231,7 +1231,7 @@ describe("ModelInfoView", () => {
 
     await waitFor(() => {
       expect(mockToast.warning).toHaveBeenCalledWith(
-        "No complexity tiers are configured yet, so there is nothing to test.",
+        "Уровни сложности ещё не настроены — тестировать нечего.",
       );
     });
     expect(mockTestModelGroupConnection).not.toHaveBeenCalled();
@@ -1359,14 +1359,14 @@ describe("ModelInfoView", () => {
       render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
       expect(await screen.findByText("GPT-4")).toBeInTheDocument();
-      expect(screen.queryByRole("button", { name: /edit auto router/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: /изменить автомаршрутизатор/i })).not.toBeInTheDocument();
     });
 
     it("is present for a complexity router, which the modal does understand", async () => {
       withRouter({ model: "auto_router/complexity_router", complexity_router_config: { tiers: {} } });
       render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
-      expect(await screen.findByRole("button", { name: /edit auto router/i })).toBeInTheDocument();
+      expect(await screen.findByRole("button", { name: /изменить автомаршрутизатор/i })).toBeInTheDocument();
     });
   });
 
@@ -1426,8 +1426,8 @@ describe("ModelInfoView", () => {
   describe("payload parity pins", () => {
     const enterEditMode = async (user: ReturnType<typeof userEvent.setup>) => {
       render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
-      expect(await screen.findByRole("button", { name: /edit settings/i })).toBeInTheDocument();
-      await user.click(screen.getByRole("button", { name: /edit settings/i }));
+      expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
       expect(await screen.findByRole("button", { name: /save changes/i })).toBeInTheDocument();
     };
 

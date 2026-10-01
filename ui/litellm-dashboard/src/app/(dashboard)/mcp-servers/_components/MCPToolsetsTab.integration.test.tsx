@@ -51,7 +51,7 @@ const openEditFor = async (user: ReturnType<typeof setup>) => {
 };
 
 const openCreate = async (user: ReturnType<typeof setup>) => {
-  await user.click(screen.getByRole("button", { name: /new toolset/i }));
+  await user.click(screen.getByRole("button", { name: /новый набор/i }));
   return dialogWithButton("Create Toolset");
 };
 
@@ -68,10 +68,10 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
     renderTab();
 
     const dialog = await openCreate(user);
-    fireEvent.change(dialog.getByPlaceholderText("e.g. github-linear-tools"), {
+    fireEvent.change(dialog.getByPlaceholderText("напр. github-linear-tools"), {
       target: { value: "github-linear-tools" },
     });
-    fireEvent.change(dialog.getByPlaceholderText("Optional description"), { target: { value: "tools for triage" } });
+    fireEvent.change(dialog.getByPlaceholderText("Необязательное описание"), { target: { value: "tools for triage" } });
     await user.click(dialog.getByRole("button", { name: "Create Toolset" }));
 
     await waitFor(() => {
@@ -92,7 +92,7 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
     renderTab();
 
     const dialog = await openCreate(user);
-    fireEvent.change(dialog.getByPlaceholderText("e.g. github-linear-tools"), { target: { value: "solo" } });
+    fireEvent.change(dialog.getByPlaceholderText("напр. github-linear-tools"), { target: { value: "solo" } });
     await user.click(dialog.getByRole("button", { name: "Create Toolset" }));
 
     await waitFor(() => {
@@ -123,8 +123,8 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
     renderTab();
 
     const dialog = await openCreate(user);
-    fireEvent.change(dialog.getByPlaceholderText("e.g. github-linear-tools"), { target: { value: "spaced" } });
-    fireEvent.change(dialog.getByPlaceholderText("Optional description"), { target: { value: "  " } });
+    fireEvent.change(dialog.getByPlaceholderText("напр. github-linear-tools"), { target: { value: "spaced" } });
+    fireEvent.change(dialog.getByPlaceholderText("Необязательное описание"), { target: { value: "  " } });
     await user.click(dialog.getByRole("button", { name: "Create Toolset" }));
 
     await waitFor(() => {
@@ -151,9 +151,9 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
 
     const dialog = await openEditFor(user);
     const name = await dialog.findByDisplayValue("existing");
-    expect(name).toBe(dialog.getByPlaceholderText("e.g. github-linear-tools"));
-    expect(dialog.getByText("Toolset Name")).toBeInTheDocument();
-    expect(dialog.getByPlaceholderText("Optional description")).toHaveValue("old description");
+    expect(name).toBe(dialog.getByPlaceholderText("напр. github-linear-tools"));
+    expect(dialog.getByText("Набор инструментов")).toBeInTheDocument();
+    expect(dialog.getByPlaceholderText("Необязательное описание")).toHaveValue("old description");
 
     await user.clear(name);
     fireEvent.change(name, { target: { value: "renamed" } });
@@ -185,7 +185,7 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
 
     const dialog = await openEditFor(user);
     await dialog.findByDisplayValue("no-desc");
-    expect(dialog.getByPlaceholderText("Optional description")).toHaveValue("");
+    expect(dialog.getByPlaceholderText("Необязательное описание")).toHaveValue("");
 
     await user.click(dialog.getByRole("button", { name: "Save Changes" }));
 
