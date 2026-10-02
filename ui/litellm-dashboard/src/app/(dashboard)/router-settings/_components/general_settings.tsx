@@ -94,10 +94,10 @@ const SettingValueEditor: React.FC<{
     return (
       <Select value={setting.field_value ?? null} onValueChange={(newValue) => onChange(setting.field_name, newValue)}>
         <SelectTrigger className="min-w-32">
-          <SelectValue placeholder="Default" />
+          <SelectValue placeholder="По умолчанию" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={null}>Default</SelectItem>
+          <SelectItem value={null}>По умолчанию</SelectItem>
           {(setting.field_options ?? []).map((option) => (
             <SelectItem key={option} value={option}>
               {option}
@@ -140,11 +140,11 @@ export const PromptCachingPanel: React.FC<{
   return (
     <Card>
       <CardContent>
-        <CardTitle>Prompt Caching</CardTitle>
+        <CardTitle>Кэширование промптов</CardTitle>
 
         <div className="mt-6 flex items-start justify-between gap-8">
           <div className="min-w-0 max-w-2xl">
-            <p className="font-medium">Automatic Anthropic prompt caching</p>
+            <p className="font-medium">Автоматическое кэширование промптов Anthropic</p>
             <p className="mt-1 break-words text-xs text-muted-foreground">{enableSetting.field_description}</p>
           </div>
           <Switch checked={enabled} onCheckedChange={(checked) => persist(ENABLE_ANTHROPIC_PROMPT_CACHING, checked)} />
@@ -153,7 +153,7 @@ export const PromptCachingPanel: React.FC<{
         {ttlSetting && (
           <div className="mt-6 flex items-start justify-between gap-8">
             <div className="min-w-0 max-w-2xl">
-              <p className={`font-medium ${enabled ? "" : "text-muted-foreground"}`}>Cache lifetime (TTL)</p>
+              <p className={`font-medium ${enabled ? "" : "text-muted-foreground"}`}>Время жизни кэша (TTL)</p>
               <p className="mt-1 break-words text-xs text-muted-foreground">{ttlSetting.field_description}</p>
             </div>
             <Select
@@ -162,10 +162,10 @@ export const PromptCachingPanel: React.FC<{
               onValueChange={(newValue) => persist(ANTHROPIC_PROMPT_CACHING_TTL, newValue)}
             >
               <SelectTrigger className="min-w-40">
-                <SelectValue placeholder="5m (default)" />
+                <SelectValue placeholder="5 мин (по умолчанию)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={null}>5m (default)</SelectItem>
+                <SelectItem value={null}>5 мин (по умолчанию)</SelectItem>
                 {(ttlSetting.field_options ?? []).map((option) => (
                   <SelectItem key={option} value={option}>
                     {option}
@@ -254,11 +254,11 @@ const GeneralSettings: React.FC<GeneralSettingsPageProps> = ({ accessToken, user
     <div className="w-full">
       <Tabs defaultValue="loadbalancing" className="h-[75vh] w-full">
         <TabsList variant="line" className="mx-8 mt-4">
-          <TabsTrigger value="loadbalancing">Loadbalancing</TabsTrigger>
-          <TabsTrigger value="routing-groups">Routing Groups</TabsTrigger>
-          <TabsTrigger value="fallbacks">Fallbacks</TabsTrigger>
-          <TabsTrigger value="prompt-caching">Prompt Caching</TabsTrigger>
-          <TabsTrigger value="general">General</TabsTrigger>
+          <TabsTrigger value="loadbalancing">Балансировка нагрузки</TabsTrigger>
+          <TabsTrigger value="routing-groups">Группы маршрутизации</TabsTrigger>
+          <TabsTrigger value="fallbacks">Фолбэки</TabsTrigger>
+          <TabsTrigger value="prompt-caching">Кэширование промптов</TabsTrigger>
+          <TabsTrigger value="general">Общие</TabsTrigger>
         </TabsList>
         <TabsContent value="loadbalancing" className="px-8 py-6" keepMounted>
           <RouterSettings accessToken={accessToken} userRole={userRole} userID={userID} />
@@ -278,10 +278,10 @@ const GeneralSettings: React.FC<GeneralSettingsPageProps> = ({ accessToken, user
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Setting</TableHead>
-                    <TableHead>Value</TableHead>
+                    <TableHead>Параметр</TableHead>
+                    <TableHead>Значение</TableHead>
                     <TableHead>Статус</TableHead>
-                    <TableHead>Action</TableHead>
+                    <TableHead>Действие</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -307,15 +307,15 @@ const GeneralSettings: React.FC<GeneralSettingsPageProps> = ({ accessToken, user
                         </TableCell>
                         <TableCell>
                           {value.stored_in_db == true ? (
-                            <StatusBadge tone="success" label="In DB" />
+                            <StatusBadge tone="success" label="В БД" />
                           ) : value.stored_in_db == false ? (
-                            <StatusBadge tone="neutral" label="In Config" />
+                            <StatusBadge tone="neutral" label="В конфигурации" />
                           ) : (
-                            <StatusBadge tone="neutral" label="Not Set" />
+                            <StatusBadge tone="neutral" label="Не задано" />
                           )}
                         </TableCell>
                         <TableCell>
-                          <Button onClick={() => handleUpdateField(value.field_name)}>Update</Button>
+                          <Button onClick={() => handleUpdateField(value.field_name)}>Обновить</Button>
                           <span
                             onClick={() => handleResetField(value.field_name)}
                             className="inline-flex shrink-0 cursor-pointer items-center justify-center px-1.5 py-1.5 text-destructive"

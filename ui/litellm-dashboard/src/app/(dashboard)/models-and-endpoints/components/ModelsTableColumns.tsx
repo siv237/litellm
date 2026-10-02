@@ -80,17 +80,17 @@ function ModelInformationCell({ model, displayName }: { model: ModelData; displa
             </span>
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-xs text-muted-foreground">Название модели LiteLLM</span>
+            <span className="text-xs text-muted-foreground">Название модели ruLiteLLM</span>
             <span className="flex min-w-0 items-center gap-1.5">
               <span className="truncate font-mono text-sm text-foreground" title={litellmModelName}>
                 {litellmModelName}
               </span>
               <button
                 type="button"
-                aria-label="Скопировать название модели LiteLLM"
+                aria-label="Скопировать название модели ruLiteLLM"
                 data-testid={`copy-litellm-model-name-${model.model_info.id}`}
                 className="shrink-0 cursor-pointer text-muted-foreground hover:text-foreground"
-                onClick={() => void copyToClipboard(litellmModelName, "Название модели LiteLLM скопировано")}
+                onClick={() => void copyToClipboard(litellmModelName, "Название модели ruLiteLLM скопировано")}
               >
                 <Copy className="size-3.5" />
               </button>
@@ -128,7 +128,7 @@ function CredentialsHeader() {
                 Переиспользуемые
               </span>
               <span className="text-xs text-muted-foreground">
-                Учётные данные, сохранённые в LiteLLM, которые можно многократно добавлять к моделям.
+                Учётные данные, сохранённые в ruLiteLLM, которые можно многократно добавлять к моделям.
               </span>
             </div>
             <div className="flex flex-col gap-1">

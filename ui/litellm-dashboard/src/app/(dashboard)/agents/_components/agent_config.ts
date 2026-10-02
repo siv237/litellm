@@ -75,7 +75,7 @@ export const AGENT_FORM_CONFIG: {
         options: ["1.0", "0.3"],
         defaultValue: "1.0",
         tooltip:
-          "Версия протокола A2A, которую LiteLLM отдаёт клиентам для этого агента. LiteLLM преобразует ответы вышестоящего агента к этой версии, поэтому клиенты всегда видят выбранную здесь версию, независимо от версии исходного агента.",
+          "Версия протокола A2A, которую ruLiteLLM отдаёт клиентам для этого агента. ruLiteLLM преобразует ответы вышестоящего агента к этой версии, поэтому клиенты всегда видят выбранную здесь версию, независимо от версии исходного агента.",
         helpText:
           "LiteLLM serves this version to clients and converts the upstream agent's responses to match it, regardless of the original agent's version.",
       },
@@ -140,7 +140,7 @@ export const AGENT_FORM_CONFIG: {
   },
   litellm: {
     key: "litellm",
-    title: "Параметры LiteLLM",
+    title: "Параметры ruLiteLLM",
     fields: [
       {
         name: "model",

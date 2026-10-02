@@ -46,8 +46,8 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
   ];
 
   const tabs = [
-    { key: "overview", label: "Overview" },
-    { key: "usage", label: "How to Use" },
+    { key: "overview", label: "Обзор" },
+    { key: "usage", label: "Как использовать" },
   ];
 
   return (
@@ -58,7 +58,7 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
         className="mb-6 inline-flex cursor-pointer items-center gap-1.5 text-sm text-muted-foreground"
       >
         <ArrowLeft className="size-3" />
-        <span>Skills</span>
+        <span>Навыки</span>
       </div>
 
       {/* Header */}
@@ -94,12 +94,12 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
         <div className="flex gap-16">
           {/* Left column */}
           <div className="min-w-0 flex-1">
-            <h2 className="m-0 mb-1 text-lg font-normal text-foreground">Skill Details</h2>
-            <p className="m-0 mb-4 text-[13px] text-muted-foreground">Metadata registered with this skill</p>
+            <h2 className="m-0 mb-1 text-lg font-normal text-foreground">Сведения о навыке</h2>
+            <p className="m-0 mb-4 text-[13px] text-muted-foreground">Метаданные, зарегистрированные для этого навыка</p>
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="w-40 py-3 text-left font-medium text-muted-foreground">Property</th>
+                  <th className="w-40 py-3 text-left font-medium text-muted-foreground">Свойство</th>
                   <th className="py-3 text-left font-medium text-muted-foreground">{skill.name}</th>
                 </tr>
               </thead>
@@ -130,7 +130,7 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
 
             {sourceUrl && (
               <div className="mb-6">
-                <div className="mb-1 text-xs text-muted-foreground">Source</div>
+                <div className="mb-1 text-xs text-muted-foreground">Источник</div>
                 <a
                   href={sourceUrl}
                   target="_blank"
@@ -145,7 +145,7 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
 
             {skill.keywords && skill.keywords.length > 0 && (
               <div className="mb-6">
-                <div className="mb-2 text-xs text-muted-foreground">Tags</div>
+                <div className="mb-2 text-xs text-muted-foreground">Теги</div>
                 <div className="flex flex-wrap gap-1.5">
                   {skill.keywords.map((kw) => (
                     <span
@@ -160,7 +160,7 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
             )}
 
             <div>
-              <div className="mb-1 text-xs text-muted-foreground">Skill ID</div>
+              <div className="mb-1 text-xs text-muted-foreground">ID навыка</div>
               <div className="break-all font-mono text-xs text-foreground">{skill.id}</div>
             </div>
           </div>
@@ -170,15 +170,15 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
       {/* How to Use tab */}
       {activeTab === "usage" && (
         <div className="max-w-[640px]">
-          <h2 className="m-0 mb-2 text-lg font-normal text-foreground">Using this skill</h2>
+          <h2 className="m-0 mb-2 text-lg font-normal text-foreground">Как использовать этот навык</h2>
           <p className="m-0 mb-6 text-sm leading-relaxed text-muted-foreground">
-            Once your proxy is set as a marketplace, enable this skill in Claude Code with one command:
+            После настройки прокси как маркетплейса включите навык в Claude Code одной командой:
           </p>
 
           {/* Install command */}
           <div className="mb-6 overflow-hidden rounded-lg border border-border">
             <div className="flex items-center justify-between border-b border-border bg-muted px-4 py-2.5">
-              <span className="text-[13px] font-medium text-foreground">Run in Claude Code</span>
+              <span className="text-[13px] font-medium text-foreground">Выполнить в Claude Code</span>
               <button
                 onClick={() => copyToClipboard(installCommand, "install")}
                 className={cn(
@@ -196,7 +196,7 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
           {/* Shown when the marketplace catalog is stale and the plugin isn't found yet */}
           <div className="mb-4 rounded-lg border border-warning/30 bg-warning/10 px-4 py-3">
             <p className="m-0 mb-2 text-[13px] leading-relaxed text-muted-foreground">
-              If you see &quot;Plugin {skill.name} not found in marketplace&quot;, update the catalog first:
+              Если видно «Plugin {skill.name} not found in marketplace», сначала обновите каталог:
             </p>
             <pre className="m-0 bg-transparent font-mono text-[13px] text-foreground">
               /plugin marketplace update litellm
@@ -204,9 +204,9 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
           </div>
 
           <p className="m-0 text-[13px] leading-relaxed text-muted-foreground">
-            Don&apos;t have the marketplace configured yet?{" "}
+            Маркетплейс ещё не настроен?{" "}
             <span onClick={() => setActiveTab("setup")} className="cursor-pointer text-info">
-              See one-time setup →
+              Смотреть одноразовую настройку →
             </span>
           </p>
         </div>
@@ -215,15 +215,15 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
       {/* Setup tab (linked from usage) */}
       {activeTab === "setup" && (
         <div className="max-w-[640px]">
-          <h2 className="m-0 mb-2 text-lg font-normal text-foreground">One-time marketplace setup</h2>
+          <h2 className="m-0 mb-2 text-lg font-normal text-foreground">Одноразовая настройка маркетплейса</h2>
 
           {/* Option 1: single command — fastest path for most users */}
           <p className="m-0 mb-3 text-sm leading-relaxed text-muted-foreground">
-            Run this command in Claude Code to register the marketplace:
+            Выполните эту команду в Claude Code, чтобы зарегистрировать маркетплейс:
           </p>
           <div className="mb-6 overflow-hidden rounded-lg border border-border">
             <div className="flex items-center justify-between border-b border-border bg-muted px-4 py-2.5">
-              <span className="text-[13px] font-medium text-foreground">Run in Claude Code</span>
+              <span className="text-[13px] font-medium text-foreground">Выполнить в Claude Code</span>
               <button
                 onClick={() => {
                   const origin = typeof window !== "undefined" ? window.location.origin : "";
@@ -246,8 +246,8 @@ const SkillDetail: React.FC<SkillDetailProps> = ({ skill, onBack }) => {
           {/* Option 2: settings.json — for persistent config or managed deployments.
               extraKnownMarketplaces requires source to be a nested object, not a flat string. */}
           <p className="m-0 mb-3 text-sm leading-relaxed text-muted-foreground">
-            Or add this to <code className="rounded bg-muted px-1.5 py-px text-[13px]">~/.claude/settings.json</code>{" "}
-            for a persistent configuration:
+            Или добавьте это в <code className="rounded bg-muted px-1.5 py-px text-[13px]">~/.claude/settings.json</code>{" "}
+            для постоянной конфигурации:
           </p>
           <div className="overflow-hidden rounded-lg border border-border">
             <div className="flex items-center justify-between border-b border-border bg-muted px-4 py-2.5">

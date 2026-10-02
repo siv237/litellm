@@ -39,7 +39,7 @@ const IdJagFormFields: React.FC<IdJagFormFieldsProps> = ({ isEditing = false }) 
         label={
           <FieldLabel
             label="Токен-эндпоинт организации (шаг 1)"
-            tooltip="Токен-эндпоинт сервера авторизации вашего IdP организации. LiteLLM обменивает здесь утверждение идентичности пользователя на утверждение ID-JAG (RFC 8693 с requested_token_type=urn:ietf:params:oauth:token-type:id-jag)."
+            tooltip="Токен-эндпоинт сервера авторизации вашего IdP организации. ruLiteLLM обменивает здесь утверждение идентичности пользователя на утверждение ID-JAG (RFC 8693 с requested_token_type=urn:ietf:params:oauth:token-type:id-jag)."
           />
         }
         name="token_exchange_endpoint"
@@ -58,7 +58,7 @@ const IdJagFormFields: React.FC<IdJagFormFieldsProps> = ({ isEditing = false }) 
         label={
           <FieldLabel
             label="Токен-эндпоинт ресурса (шаг 2)"
-            tooltip="Токен-эндпоинт вышестоящего сервера авторизации ресурса. LiteLLM отправляет сюда утверждение ID-JAG как разрешение jwt-bearer по RFC 7523, чтобы получить токен доступа, принимаемый MCP-сервером."
+            tooltip="Токен-эндпоинт вышестоящего сервера авторизации ресурса. ruLiteLLM отправляет сюда утверждение ID-JAG как разрешение jwt-bearer по RFC 7523, чтобы получить токен доступа, принимаемый MCP-сервером."
           />
         }
         name={["credentials", "id_jag_resource_token_endpoint"]}
@@ -74,7 +74,7 @@ const IdJagFormFields: React.FC<IdJagFormFieldsProps> = ({ isEditing = false }) 
         )}
       </MountedFormField>
       <MountedFormField
-        label={<FieldLabel label="Client ID" tooltip="Client ID OAuth2, под которым LiteLLM аутентифицируется на обоих шагах." />}
+        label={<FieldLabel label="Client ID" tooltip="Client ID OAuth2, под которым ruLiteLLM аутентифицируется на обоих шагах." />}
         name={["credentials", "client_id"]}
         required={!isEditing}
         rules={requiredWhenCreating("Для ID-JAG обязателен Client ID")}
@@ -91,7 +91,7 @@ const IdJagFormFields: React.FC<IdJagFormFieldsProps> = ({ isEditing = false }) 
         label={
           <FieldLabel
             label="Client Secret"
-            tooltip="Аутентифицирует LiteLLM как OAuth-клиент через client_secret_post. Оставьте пустым, если вместо секрета используется закрытый ключ: закрытый ключ имеет приоритет."
+            tooltip="Аутентифицирует ruLiteLLM как OAuth-клиент через client_secret_post. Оставьте пустым, если вместо секрета используется закрытый ключ: закрытый ключ имеет приоритет."
           />
         }
         name={["credentials", "client_secret"]}

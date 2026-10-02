@@ -157,10 +157,10 @@ const HealthCheckDetails: React.FC<{ response: any }> = ({ response }) => {
       <Tabs defaultValue="summary">
         <TabsList className="border-b border-border px-4">
           <TabsTrigger value="summary" className="flex-none">
-            Summary
+            Сводка
           </TabsTrigger>
           <TabsTrigger value="raw" className="flex-none">
-            Raw Response
+            Сырой ответ
           </TabsTrigger>
         </TabsList>
 
@@ -175,7 +175,7 @@ const HealthCheckDetails: React.FC<{ response: any }> = ({ response }) => {
               <p
                 className={`text-sm font-medium ${response?.status === "healthy" ? "text-success" : "text-destructive"}`}
               >
-                Cache Status: {response?.status || "unhealthy"}
+                Статус кэша: {response?.status || "unhealthy"}
               </p>
             </div>
 
@@ -186,23 +186,23 @@ const HealthCheckDetails: React.FC<{ response: any }> = ({ response }) => {
                   <>
                     <tr>
                       <td colSpan={2} className="pt-4 pb-2 font-semibold text-destructive">
-                        Error Details
+                        Детали ошибки
                       </td>
                     </tr>
-                    <TableClickableErrorField label="Error Message" value={errorDetails.message} />
-                    <TableClickableErrorField label="Traceback" value={errorDetails.traceback} />
+                    <TableClickableErrorField label="Сообщение об ошибке" value={errorDetails.message} />
+                    <TableClickableErrorField label="Трейсбек" value={errorDetails.traceback} />
                   </>
                 )}
 
                 {/* Always show cache details, regardless of error state */}
                 <tr>
                   <td colSpan={2} className="pt-4 pb-2 font-semibold">
-                    Cache Details
+                    Детали кэша
                   </td>
                 </tr>
-                <TableClickableErrorField label="Cache Configuration" value={String(parsedLitellmParams?.type)} />
-                <TableClickableErrorField label="Ping Response" value={String(response.ping_response)} />
-                <TableClickableErrorField label="Set Cache Response" value={response.set_cache_response || "N/A"} />
+                <TableClickableErrorField label="Конфигурация кэша" value={String(parsedLitellmParams?.type)} />
+                <TableClickableErrorField label="Ответ пинга" value={String(response.ping_response)} />
+                <TableClickableErrorField label="Ответ Set Cache" value={response.set_cache_response || "N/A"} />
                 <TableClickableErrorField
                   label="litellm_settings.cache_params"
                   value={JSON.stringify(parsedLitellmParams, null, 2)}
@@ -213,14 +213,14 @@ const HealthCheckDetails: React.FC<{ response: any }> = ({ response }) => {
                   <>
                     <tr>
                       <td colSpan={2} className="pt-4 pb-2 font-semibold">
-                        Redis Details
+                        Детали Redis
                       </td>
                     </tr>
-                    <TableClickableErrorField label="Redis Host" value={redisDetails.redis_host || "N/A"} />
-                    <TableClickableErrorField label="Redis Port" value={redisDetails.redis_port || "N/A"} />
-                    <TableClickableErrorField label="Redis Version" value={redisDetails.redis_version || "N/A"} />
-                    <TableClickableErrorField label="Startup Nodes" value={redisDetails.startup_nodes || "N/A"} />
-                    <TableClickableErrorField label="Namespace" value={redisDetails.namespace || "N/A"} />
+                    <TableClickableErrorField label="Хост Redis" value={redisDetails.redis_host || "N/A"} />
+                    <TableClickableErrorField label="Порт Redis" value={redisDetails.redis_port || "N/A"} />
+                    <TableClickableErrorField label="Версия Redis" value={redisDetails.redis_version || "N/A"} />
+                    <TableClickableErrorField label="Узлы при старте" value={redisDetails.startup_nodes || "N/A"} />
+                    <TableClickableErrorField label="Пространство имён" value={redisDetails.namespace || "N/A"} />
                   </>
                 )}
               </tbody>

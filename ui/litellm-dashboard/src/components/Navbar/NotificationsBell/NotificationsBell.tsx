@@ -27,7 +27,7 @@ export const NotificationsBell: React.FC = () => {
 
   const content = (
     <div className="max-w-[280px]">
-      <PopoverTitle className="mt-0! mb-2!">Автомаршрутизатор LiteLLM</PopoverTitle>
+      <PopoverTitle className="mt-0! mb-2!">Автомаршрутизатор ruLiteLLM</PopoverTitle>
       <PopoverDescription className="mb-3! text-sm leading-snug">
         Направляйте каждый запрос на самую дешёвую модель, которая с ним справится, — без изменений промпта.
       </PopoverDescription>

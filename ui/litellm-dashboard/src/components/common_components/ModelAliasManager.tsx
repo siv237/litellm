@@ -48,13 +48,13 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
 
   const handleAddAlias = () => {
     if (!newAlias.aliasName || !newAlias.targetModel) {
-      toast.fromError("Please provide both alias name and target model");
+      toast.fromError("Укажите псевдоним и целевую модель");
       return;
     }
 
     // Check for duplicate alias names
     if (aliases.some((alias) => alias.aliasName === newAlias.aliasName)) {
-      toast.fromError("An alias with this name already exists");
+      toast.fromError("Псевдоним с таким именем уже существует");
       return;
     }
 
@@ -78,7 +78,7 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
       onAliasUpdate(aliasObject);
     }
 
-    toast.success("Alias added successfully");
+    toast.success("Псевдоним добавлен");
   };
 
   const handleEditAlias = (alias: AliasItem) => {
@@ -89,13 +89,13 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
     if (!editingAlias) return;
 
     if (!editingAlias.aliasName || !editingAlias.targetModel) {
-      toast.fromError("Please provide both alias name and target model");
+      toast.fromError("Укажите псевдоним и целевую модель");
       return;
     }
 
     // Check for duplicate alias names (excluding current alias)
     if (aliases.some((alias) => alias.id !== editingAlias.id && alias.aliasName === editingAlias.aliasName)) {
-      toast.fromError("An alias with this name already exists");
+      toast.fromError("Псевдоним с таким именем уже существует");
       return;
     }
 
@@ -115,7 +115,7 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
       onAliasUpdate(aliasObject);
     }
 
-    toast.success("Alias updated successfully");
+    toast.success("Псевдоним обновлён");
   };
 
   const handleCancelEdit = () => {
@@ -136,7 +136,7 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
       onAliasUpdate(aliasObject);
     }
 
-    toast.success("Alias deleted successfully");
+    toast.success("Псевдоним удалён");
   };
 
   // Convert current aliases to object for config example
@@ -151,11 +151,11 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
   return (
     <div className="mt-4">
       <div className="mb-6">
-        <p className="mb-2 text-sm font-medium text-foreground">Add New Alias</p>
+        <p className="mb-2 text-sm font-medium text-foreground">Добавить псевдоним</p>
         <div className="grid grid-cols-3 gap-4">
           <div>
             <label htmlFor={aliasNameId} className="mb-1 block text-xs text-muted-foreground">
-              Alias Name
+              Имя псевдонима
             </label>
             <Input
               id={aliasNameId}
@@ -171,11 +171,11 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs text-muted-foreground">Target Model</label>
+            <label className="mb-1 block text-xs text-muted-foreground">Целевая модель</label>
             <ModelSelector
               accessToken={accessToken}
               value={newAlias.targetModel}
-              placeholder="Select target model"
+              placeholder="Выберите целевую модель"
               onChange={(value) =>
                 setNewAlias({
                   ...newAlias,
@@ -188,20 +188,20 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
           <div className="flex items-end">
             <Button onClick={handleAddAlias} disabled={!newAlias.aliasName || !newAlias.targetModel}>
               <PlusCircleIcon className="mr-1 h-4 w-4" />
-              Add Alias
+              Добавить псевдоним
             </Button>
           </div>
         </div>
       </div>
 
-      <p className="mb-2 text-sm font-medium text-foreground">Manage Existing Aliases</p>
+      <p className="mb-2 text-sm font-medium text-foreground">Существующие псевдонимы</p>
       <div className="relative mb-6 rounded-lg border">
         <div className="overflow-x-auto">
           <Table className="[&_td]:py-0.5 [&_th]:py-1">
             <TableHeader>
               <TableRow>
-                <TableHead className="py-1 h-8">Alias Name</TableHead>
-                <TableHead className="py-1 h-8">Target Model</TableHead>
+                <TableHead className="py-1 h-8">Имя псевдонима</TableHead>
+                <TableHead className="py-1 h-8">Целевая модель</TableHead>
                 <TableHead className="py-1 h-8">Действия</TableHead>
               </TableRow>
             </TableHeader>
@@ -213,7 +213,7 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
                       <TableCell className="py-0.5">
                         <Input
                           type="text"
-                          aria-label="Edit alias name"
+                          aria-label="Изменить имя псевдонима"
                           value={editingAlias.aliasName}
                           onChange={(e) =>
                             setEditingAlias({
@@ -280,7 +280,7 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
               {aliases.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={3} className="py-0.5 text-center text-sm text-muted-foreground">
-                    No aliases added yet. Add a new alias above.
+                    Псевдонимы ещё не добавлены. Добавьте новый выше.
                   </TableCell>
                 </TableRow>
               )}
@@ -292,15 +292,15 @@ const ModelAliasManager: React.FC<ModelAliasManagerProps> = ({
       {/* Configuration Example */}
       {showExampleConfig && (
         <Card className="px-6">
-          <CardTitle className="mb-4">Configuration Example</CardTitle>
-          <p className="mb-4 text-muted-foreground">Here&apos;s how your current aliases would look in the config:</p>
+          <CardTitle className="mb-4">Пример конфигурации</CardTitle>
+          <p className="mb-4 text-muted-foreground">Так ваши псевдонимы выглядят в конфигурации:</p>
           <div className="rounded-lg bg-muted p-4 font-mono text-sm">
             <div className="text-foreground">
               model_aliases:
               {Object.keys(aliasObject).length === 0 ? (
                 <span className="text-muted-foreground">
                   <br />
-                  &nbsp;&nbsp;# No aliases configured yet
+                  &nbsp;&nbsp;# Псевдонимы ещё не настроены
                 </span>
               ) : (
                 Object.entries(aliasObject).map(([key, value]) => (

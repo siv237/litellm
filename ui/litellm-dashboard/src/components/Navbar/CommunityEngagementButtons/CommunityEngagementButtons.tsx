@@ -10,13 +10,13 @@ const COMMUNITY_LINKS = [
   {
     href: "https://www.litellm.ai/support",
     label: "Сообщество в Slack",
-    tooltip: "Сообщество LiteLLM в Slack",
+    tooltip: "Сообщество ruLiteLLM в Slack",
     Icon: Slack,
   },
   {
     href: "https://github.com/BerriAI/litellm",
-    label: "LiteLLM на GitHub",
-    tooltip: "LiteLLM на GitHub",
+    label: "ruLiteLLM на GitHub",
+    tooltip: "ruLiteLLM на GitHub",
     Icon: Github,
   },
 ] as const;

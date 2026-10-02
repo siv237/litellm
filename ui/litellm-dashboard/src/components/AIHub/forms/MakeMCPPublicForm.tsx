@@ -49,7 +49,7 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
   const handleNext = () => {
     if (currentStep === 0) {
       if (selectedServers.size === 0) {
-        toast.fromError("Please select at least one MCP server to make public");
+        toast.fromError("Выберите хотя бы один MCP-сервер для публикации");
         return;
       }
       setCurrentStep(1);
@@ -96,7 +96,7 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
 
   const handleSubmit = async () => {
     if (selectedServers.size === 0) {
-      toast.fromError("Please select at least one MCP server to make public");
+      toast.fromError("Выберите хотя бы один MCP-сервер для публикации");
       return;
     }
 
@@ -107,12 +107,12 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
       // Make batch API call for all servers
       await makeMCPPublicCall(accessToken, serverIdsToMakePublic);
 
-      toast.success(`Successfully made ${serverIdsToMakePublic.length} MCP server(s) public!`);
+      toast.success(`Опубликовано MCP-серверов: ${serverIdsToMakePublic.length}!`);
       handleClose();
       onSuccess();
     } catch (error) {
       console.error("Error making MCP servers public:", error);
-      toast.fromError("Failed to make MCP servers public. Please try again.");
+      toast.fromError("Не удалось опубликовать MCP-серверы. Повторите попытку.");
     } finally {
       setLoading(false);
     }
@@ -126,7 +126,7 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Select MCP Servers to Make Public</h3>
+          <h3 className="text-lg font-semibold">Выберите MCP-серверы для публикации</h3>
           <div className="flex items-center space-x-2">
             <label className="flex items-center gap-2 text-sm">
               <Checkbox
@@ -141,15 +141,14 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
         </div>
 
         <p className="text-sm text-muted-foreground">
-          Select the MCP servers you want to be visible on the public model hub. Users will still require a valid
-          Virtual Key to use these servers.
+          Выберите MCP-серверы, которые будут видны в публичном хабе моделей. Пользователям всё равно понадобится действующий виртуальный ключ.
         </p>
 
         <div className="max-h-96 overflow-y-auto border rounded-lg p-4">
           <div className="space-y-3">
             {mcpHubData.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                <p>No MCP servers available.</p>
+                <p>MCP-серверы недоступны.</p>
               </div>
             ) : (
               mcpHubData.map((server) => {
@@ -166,7 +165,7 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
                         <p className="font-medium break-words">{server.server_name}</p>
-                        {isPublic && <Badge>Public</Badge>}
+                        {isPublic && <Badge>Публичный</Badge>}
                         <Badge variant="secondary">{server.transport}</Badge>
                         <Badge variant={statusVariant(server.status)}>{server.status || "unknown"}</Badge>
                       </div>
@@ -181,7 +180,7 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
                             </Badge>
                           ))}
                           {server.allowed_tools.length > 3 && (
-                            <p className="text-xs text-muted-foreground">+{server.allowed_tools.length - 3} more</p>
+                            <p className="text-xs text-muted-foreground">+{server.allowed_tools.length - 3} ещё</p>
                           )}
                         </div>
                       )}
@@ -196,7 +195,7 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
         {selectedServers.size > 0 && (
           <div className="bg-info/10 border border-info/20 rounded-lg p-3">
             <p className="text-sm text-info">
-              <strong>{selectedServers.size}</strong> MCP server{selectedServers.size !== 1 ? "s" : ""} selected
+              <strong>{selectedServers.size}</strong> MCP-серверов выбрано
             </p>
           </div>
         )}
@@ -207,17 +206,17 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
   const renderStep2Content = () => {
     return (
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Confirm Making MCP Servers Public</h3>
+        <h3 className="text-lg font-semibold">Подтвердить публикацию MCP-серверов</h3>
 
         <div className="bg-warning/10 border border-warning/20 rounded-lg p-4">
           <p className="text-sm text-warning">
-            <strong>Warning:</strong> Once you make these MCP servers public, anyone who can go to the{" "}
-            <code>/ui/model_hub_table</code> will be able to know they exist on the proxy.
+            <strong>Внимание:</strong> После публикации этих MCP-серверов все, кто откроет{" "}
+            <code>/ui/model_hub_table</code> , смогут узнать об их существовании на прокси.
           </p>
         </div>
 
         <div className="space-y-3">
-          <p className="font-medium">MCP Servers to be made public:</p>
+          <p className="font-medium">MCP-серверы для публикации:</p>
           <div className="max-h-48 overflow-y-auto border rounded-lg p-3">
             <div className="space-y-2">
               {Array.from(selectedServers).map((serverId) => {
@@ -248,8 +247,7 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
 
         <div className="bg-info/10 border border-info/20 rounded-lg p-3">
           <p className="text-sm text-info">
-            Total: <strong>{selectedServers.size}</strong> MCP server{selectedServers.size !== 1 ? "s" : ""} will be
-            made public
+            Всего: <strong>{selectedServers.size}</strong> MCP-серверов будет опубликовано
           </p>
         </div>
       </div>
@@ -296,7 +294,7 @@ const MakeMCPPublicForm: React.FC<MakeMCPPublicFormProps> = ({
     <Dialog open={visible} onOpenChange={(open) => !open && handleClose()} disablePointerDismissal>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[1200px]">
         <DialogHeader>
-          <DialogTitle>Make MCP Servers Public</DialogTitle>
+          <DialogTitle>Опубликовать MCP-серверы</DialogTitle>
         </DialogHeader>
 
         <div>

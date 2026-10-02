@@ -312,7 +312,7 @@ export default function ModelInfoView({
         parsedExtraParams = values.litellm_extra_params ? JSON.parse(values.litellm_extra_params) : {};
         delete parsedExtraParams.litellm_credential_name;
       } catch (e) {
-        toast.fromError("Некорректный JSON в LiteLLM Params");
+        toast.fromError("Некорректный JSON в ruLiteLLM Params");
         setIsSaving(false);
         return;
       }
@@ -688,7 +688,7 @@ export default function ModelInfoView({
                 </div>
               </Card>
               <Card className="block p-6">
-                <p className="text-sm">Модель LiteLLM</p>
+                <p className="text-sm">Модель ruLiteLLM</p>
                 <div className="mt-2 overflow-hidden">
                   <SimpleTooltip content={modelData.litellm_model_name ||  "Не задано"} className="w-full min-w-0">
                     <div className="break-all text-sm font-medium leading-relaxed cursor-pointer">
@@ -807,7 +807,7 @@ export default function ModelInfoView({
             value: modelData?.model_name ||  "Не задано",
           },
           {
-            label: "Имя модели LiteLLM",
+            label: "Имя модели ruLiteLLM",
             value: modelData?.litellm_model_name ||  "Не задано",
           },
           {

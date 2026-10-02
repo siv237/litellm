@@ -336,7 +336,7 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
                   <Info />
                   <AlertTitle>Требуется настройка PG Vector</AlertTitle>
                   <AlertDescription>
-                    <p>LiteLLM предоставляет сервер для подключения к PG Vector. Чтобы использовать этот провайдер:</p>
+                    <p>ruLiteLLM предоставляет сервер для подключения к PG Vector. Чтобы использовать этот провайдер:</p>
                     <ol style={{ marginLeft: "16px", marginTop: "8px", listStyleType: "decimal" }}>
                       <li>
                         Разверните сервер litellm-pgvector из:{" "}
@@ -358,7 +358,7 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
                   <AlertTitle>Требуется настройка Valkey</AlertTitle>
                   <AlertDescription>
                     <p>
-                      LiteLLM ищет по документам, которые вы уже сохранили в Valkey. Индекс он не создаёт и документы не загружает. Перед созданием хранилища убедитесь:
+                      ruLiteLLM ищет по документам, которые вы уже сохранили в Valkey. Индекс он не создаёт и документы не загружает. Перед созданием хранилища убедитесь:
                     </p>
                     <ol style={{ marginLeft: "16px", marginTop: "8px", listStyleType: "decimal" }}>
                       <li>
@@ -376,7 +376,7 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
                       </li>
                     </ol>
                     <p style={{ marginTop: "8px" }}>
-                      При поступлении запроса LiteLLM преобразует его в эмбеддинг моделью ниже и возвращает ближайшие документы из вашего индекса.
+                      При поступлении запроса ruLiteLLM преобразует его в эмбеддинг моделью ниже и возвращает ближайшие документы из вашего индекса.
                     </p>
                   </AlertDescription>
                 </Alert>
@@ -443,7 +443,7 @@ const VectorStoreForm: React.FC<VectorStoreFormProps> = ({
                       <li>
                         Для источников website, healthcare и подключаемых (Drive, Gmail, Slack, Jira и т.п.): создайте приложение поиска поверх хранилища данных, затем скопируйте <strong>ID движка</strong> и введите его в поле
                         «ID движка». ID векторного хранилища по-прежнему обязателен как имя записи на стороне
-                        LiteLLM, но в URL GCP при заданном ID движка не используется.
+                        ruLiteLLM, но в URL GCP при заданном ID движка не используется.
                       </li>
                     </ol>
                   </AlertDescription>

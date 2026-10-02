@@ -764,7 +764,7 @@ const CreateKey: React.FC<CreateKeyProps> = ({ team, teams, data, addKey, autoOp
                       }))}
                     />
                     <div className="text-xs text-muted-foreground mt-2">
-                      Ключ будет использоваться выбранным агентом для запросов к LiteLLM
+                      Ключ будет использоваться выбранным агентом для запросов к ruLiteLLM
                     </div>
                   </div>
                 )}

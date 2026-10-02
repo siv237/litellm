@@ -238,7 +238,7 @@ export const exportMultiToPDF = (multiResult: MultiModelResult): void => {
       ${validEntries.map((e) => generateModelSection(e.result!)).join("")}
 
       <div class="footer">
-        <p>Сформировано калькулятором стоимости LiteLLM ${new Date().toLocaleString()}</p>
+        <p>Сформировано калькулятором стоимости ruLiteLLM ${new Date().toLocaleString()}</p>
       </div>
     </body>
     </html>

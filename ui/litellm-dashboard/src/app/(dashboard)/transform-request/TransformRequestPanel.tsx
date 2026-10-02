@@ -69,7 +69,7 @@ ${formattedBody}
       try {
         requestBody = JSON.parse(originalRequestJSON);
       } catch (e) {
-        toast.fromError("Invalid JSON in request body");
+        toast.fromError("Некорректный JSON в теле запроса");
         setIsLoading(false);
         return;
       }
@@ -82,7 +82,7 @@ ${formattedBody}
 
       // Make the API call using fetch
       if (!accessToken) {
-        toast.fromError("No access token found");
+        toast.fromError("Токен доступа не найден");
         setIsLoading(false);
         return;
       }
@@ -100,17 +100,17 @@ ${formattedBody}
 
         // Update state with the formatted curl command
         setTransformedResponse(formattedCurl);
-        toast.success("Request transformed successfully");
+        toast.success("Запрос преобразован");
       } else {
         // Handle the case where the API returns a different format
         // Try to extract the parts from a string response if needed
         const rawText = typeof data === "string" ? data : JSON.stringify(data);
         setTransformedResponse(rawText);
-        toast.info("Transformed request received in unexpected format");
+        toast.info("Преобразованный запрос получен в неожиданном формате");
       }
     } catch (err) {
       console.error("Error transforming request:", err);
-      toast.fromError("Failed to transform request");
+      toast.fromError("Не удалось преобразовать запрос");
     } finally {
       setIsLoading(false);
     }
@@ -128,14 +128,14 @@ ${formattedBody}
     <div className="p-2">
       <h1 className="text-lg font-medium text-foreground">Playground</h1>
       <p className="text-sm text-muted-foreground">
-        See how LiteLLM transforms your request for the specified provider.
+        Посмотрите, как ruLiteLLM преобразует ваш запрос для выбранного провайдера.
       </p>
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Original Request Panel */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl font-bold">Original Request</CardTitle>
-            <CardDescription>The request you would send to LiteLLM /chat/completions endpoint.</CardDescription>
+            <CardTitle className="text-2xl font-bold">Исходный запрос</CardTitle>
+            <CardDescription>Запрос, который вы отправили бы на эндпоинт ruLiteLLM /chat/completions.</CardDescription>
           </CardHeader>
 
           <CardContent>
@@ -144,13 +144,13 @@ ${formattedBody}
               value={originalRequestJSON}
               onChange={(e) => setOriginalRequestJSON(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Press Cmd/Ctrl + Enter to transform"
+              placeholder="Нажмите Cmd/Ctrl + Enter для преобразования"
             />
           </CardContent>
 
           <CardFooter className="justify-end">
             <Button onClick={handleTransform} disabled={isLoading}>
-              <span>Transform</span>
+              <span>Преобразовать</span>
               {isLoading ? <UiLoadingSpinner className="size-4" /> : <ArrowRight />}
             </Button>
           </CardFooter>
@@ -159,9 +159,9 @@ ${formattedBody}
         {/* Transformed Request Panel */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl font-bold">Transformed Request</CardTitle>
-            <CardDescription>How LiteLLM transforms your request for the specified provider.</CardDescription>
-            <p className="mt-2 text-xs text-muted-foreground">Note: Sensitive headers are not shown.</p>
+            <CardTitle className="text-2xl font-bold">Преобразованный запрос</CardTitle>
+            <CardDescription>Как ruLiteLLM преобразует ваш запрос для выбранного провайдера.</CardDescription>
+            <p className="mt-2 text-xs text-muted-foreground">Примечание: чувствительные заголовки не показаны.</p>
           </CardHeader>
 
           <CardContent>
@@ -187,11 +187,11 @@ ${formattedBody}
               <Button
                 variant="ghost"
                 size="icon-sm"
-                aria-label="Copy to clipboard"
+                aria-label="Копировать в буфер"
                 className="absolute top-2 right-2"
                 onClick={() => {
                   navigator.clipboard.writeText(transformedResponse || "");
-                  toast.success("Copied to clipboard");
+                  toast.success("Скопировано в буфер");
                 }}
               >
                 <Copy />
@@ -202,7 +202,7 @@ ${formattedBody}
       </div>
       <div className="mt-4 text-right">
         <p className="text-sm text-muted-foreground">
-          Found an error? File an issue{" "}
+          Нашли ошибку? Создайте issue{" "}
           <a
             className="underline underline-offset-4"
             href="https://github.com/BerriAI/litellm/issues"

@@ -81,7 +81,7 @@ function TotalCostMath({
   untracked: UsageUnits;
 }) {
   return (
-    <CalcPopover title="How this cost is calculated" formula="guardrail + guardrail + … = guardrail cost">
+    <CalcPopover title="Как рассчитана эта стоимость" formula="guardrail + guardrail + … = guardrail cost">
       <MathTable
         rows={rows
           .filter((row) => row.cost != null)
@@ -205,14 +205,14 @@ export function GuardrailsOverview({
       ),
     },
     {
-      header: ({ column }) => <DataTableSortHeader column={column} title="Requests" />,
+      header: ({ column }) => <DataTableSortHeader column={column} title="Запросы" />,
       accessorKey: "requestsEvaluated",
       meta: { numeric: true },
       sortDescFirst: false,
       cell: ({ row }) => row.original.requestsEvaluated.toLocaleString(),
     },
     {
-      header: ({ column }) => <DataTableSortHeader column={column} title="Fail Rate" />,
+      header: ({ column }) => <DataTableSortHeader column={column} title="Доля сбоев" />,
       accessorKey: "failRate",
       meta: { numeric: true },
       sortDescFirst: false,
@@ -233,7 +233,7 @@ export function GuardrailsOverview({
       ),
     },
     {
-      header: ({ column }) => <DataTableSortHeader column={column} title="Avg. latency added" />,
+      header: ({ column }) => <DataTableSortHeader column={column} title="Средняя добавленная задержка" />,
       accessorKey: "avgLatency",
       meta: { numeric: true },
       sortDescFirst: false,
@@ -261,7 +261,7 @@ export function GuardrailsOverview({
       cell: ({ row }) => <UsageUnitsCell units={row.original.usageUnits} />,
     },
     {
-      header: ({ column }) => <DataTableSortHeader column={column} title="Cost" />,
+      header: ({ column }) => <DataTableSortHeader column={column} title="Стоимость" />,
       accessorKey: "cost",
       meta: { numeric: true },
       sortDescFirst: false,
@@ -284,49 +284,49 @@ export function GuardrailsOverview({
     <div>
       <PageHeader
         icon={<HeartPulse />}
-        title="Guardrails Monitor"
+        title="Монитор гардрейлов"
         subtitle="Monitor guardrail performance across all requests"
         utilities={
           <>
             {dateRangeControl}
-            <Button variant="outline" title="Coming soon">
+            <Button variant="outline" title="Скоро">
               <Download className="size-4" />
-              Export Data
+              Экспорт данных
             </Button>
           </>
         }
       />
 
       <div className="mt-6 mb-6 grid grid-cols-[repeat(auto-fit,minmax(7rem,1fr))] gap-4">
-        <MetricCard label="Total Evaluations" value={metrics.totalRequests.toLocaleString()} />
+        <MetricCard label="Всего оценок" value={metrics.totalRequests.toLocaleString()} />
         <MetricCard
-          label="Blocked Requests"
+          label="Заблокированные запросы"
           value={metrics.totalBlocked.toLocaleString()}
           valueColor="text-destructive"
           icon={<TriangleAlert className="size-4 text-destructive" />}
         />
         <MetricCard
-          label="Pass Rate"
+          label="Доля прохождений"
           value={`${metrics.passRate}%`}
           valueColor="text-success"
           icon={<TrendingUp className="size-4 text-success" />}
         />
         <MetricCard
-          label="Avg. latency added"
+          label="Средняя добавленная задержка"
           value={`${metrics.avgLatency}ms`}
           valueColor={
             metrics.avgLatency > 150 ? "text-destructive" : metrics.avgLatency > 50 ? "text-warning" : "text-success"
           }
         />
         <MetricCard
-          label="Guardrail Cost"
+          label="Стоимость гардрейлов"
           value={formatCost(metrics.totalCost)}
           valueColor={metrics.totalCost != null ? "text-foreground" : "text-muted-foreground"}
           icon={<CircleDollarSign className="size-4" />}
           subtitle={unpricedSummary(metrics.untracked) ?? undefined}
           hint={<TotalCostMath rows={activeData} total={metrics.totalCost} untracked={metrics.untracked} />}
         />
-        <MetricCard label="Active Guardrails" value={metrics.count} />
+        <MetricCard label="Активные гардрейлы" value={metrics.count} />
       </div>
 
       <div className="mb-6">
@@ -341,7 +341,7 @@ export function GuardrailsOverview({
                 <UiLoadingSpinner className="size-4 text-primary" />
               </span>
             )}
-            {error && <span className="text-sm text-destructive">Failed to load data. Try again.</span>}
+            {error && <span className="text-sm text-destructive">Не удалось загрузить данные. Повторите попытку.</span>}
           </div>
         )}
         <DataTable
@@ -360,9 +360,9 @@ export function GuardrailsOverview({
           toolbar={() => (
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h5 className="mb-0 text-base font-semibold text-foreground">Guardrail Performance</h5>
+                <h5 className="mb-0 text-base font-semibold text-foreground">Эффективность гардрейлов</h5>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Click a guardrail to view details, logs, and configuration
+                  Нажмите на гардрейл, чтобы увидеть детали, журналы и конфигурацию
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -370,7 +370,7 @@ export function GuardrailsOverview({
                   variant="outline"
                   size="icon"
                   onClick={() => setEvaluationModalOpen(true)}
-                  title="Evaluation settings"
+                  title="Настройки оценки"
                 >
                   <Settings className="size-4" />
                 </Button>

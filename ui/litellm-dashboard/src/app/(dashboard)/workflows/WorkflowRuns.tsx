@@ -233,7 +233,7 @@ const GanttTimeline: React.FC<{
   events: WorkflowRunEvent[];
 }> = ({ run, events }) => {
   if (events.length === 0) {
-    return <div className="py-4 font-mono text-xs text-muted-foreground">No events recorded</div>;
+    return <div className="py-4 font-mono text-xs text-muted-foreground">События не записаны</div>;
   }
 
   const runStart = new Date(run.created_at).getTime();
@@ -455,8 +455,8 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
       {
         id: "run",
         accessorFn: (row) => `${runTitle(row)} ${row.run_id}`,
-        header: "Run",
-        meta: { title: "Run", skeleton: "twoLine" },
+        header: "Выполнение",
+        meta: { title: "Выполнение", skeleton: "twoLine" },
         cell: ({ row }) => {
           const run = row.original;
           return (
@@ -497,8 +497,8 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
       },
       {
         accessorKey: "created_at",
-        header: "Created",
-        meta: { title: "Created" },
+        header: "Создан",
+        meta: { title: "Создан" },
         cell: ({ row }) => <span className="text-xs text-muted-foreground">{timeAgo(row.original.created_at)}</span>,
       },
     ],
@@ -509,9 +509,9 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
     <div className="w-full px-8 py-6">
       {/* page header */}
       <div className="mb-5">
-        <div className="text-lg font-semibold text-foreground">Workflow Runs</div>
+        <div className="text-lg font-semibold text-foreground">Выполнения рабочих процессов</div>
         <div className="mt-0.5 text-[13px] text-muted-foreground">
-          Durable state tracking for agents and automated workflows
+          Надёжное отслеживание состояния агентов и автоматизированных рабочих процессов
         </div>
       </div>
 
@@ -521,7 +521,7 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
         getRowId={(run) => run.run_id}
         isLoading={loadingRuns}
         loadingMessage="Loading workflow runs…"
-        noDataMessage={<div className="py-6 text-center text-[13px] text-muted-foreground">No workflow runs yet</div>}
+        noDataMessage={<div className="py-6 text-center text-[13px] text-muted-foreground">Выполнений рабочих процессов пока нет</div>}
         paginationMode="client"
         pageSizeOptions={[50, 100]}
         filterMode="client"
@@ -546,8 +546,8 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
               table={table}
               open={filtersOpen}
               onOpenChange={setFiltersOpen}
-              title="Filters"
-              description="Narrow down workflow runs"
+              title="Фильтры"
+              description="Сузьте выборку выполнений рабочих процессов"
             >
               {({ get, set }) => (
                 <>
@@ -558,10 +558,10 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
                       onValueChange={(value: string | null) => set("status", value ?? "")}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="All statuses" />
+                        <SelectValue placeholder="Все статусы" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={null}>All statuses</SelectItem>
+                        <SelectItem value={null}>Все статусы</SelectItem>
                         {RUN_STATUS_OPTIONS.map((status) => (
                           <SelectItem key={status} value={status}>
                             {STATUS_LABELS[status]}
@@ -574,7 +574,7 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
                     <Input
                       value={(get("workflow_type") as string) ?? ""}
                       onChange={(event) => set("workflow_type", event.target.value)}
-                      placeholder="Filter by type…"
+                      placeholder="Фильтр по типу…"
                     />
                   </DataTableFilterField>
                 </>
@@ -590,9 +590,9 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
           showCloseButton={false}
           className="overflow-y-auto p-0 data-[side=right]:w-full data-[side=right]:sm:max-w-[680px]"
         >
-          <SheetTitle className="sr-only">Workflow run details</SheetTitle>
+          <SheetTitle className="sr-only">Детали выполнения рабочего процесса</SheetTitle>
           <SheetDescription className="sr-only">
-            Metadata, timeline and messages for the selected workflow run
+            Метаданные, хронология и сообщения выбранного выполнения
           </SheetDescription>
           {!selectedRun ? null : loadingDetail ? (
             <div className="flex justify-center py-20">
@@ -623,7 +623,7 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
               {/* collapsible sections */}
               <div className="divide-y overflow-hidden rounded-lg border">
                 <DetailSection
-                  title="Timeline"
+                  title="Хронология"
                   meta={
                     <>
                       {events.length} {events.length === 1 ? "event" : "events"}
@@ -633,9 +633,9 @@ const WorkflowRuns: React.FC<WorkflowRunsProps> = ({ accessToken }) => {
                 >
                   <GanttTimeline run={selectedRun} events={events} />
                 </DetailSection>
-                <DetailSection title="Messages" meta={messages.length}>
+                <DetailSection title="Сообщения" meta={messages.length}>
                   {messages.length === 0 ? (
-                    <div className="py-3 font-mono text-xs text-muted-foreground">No messages</div>
+                    <div className="py-3 font-mono text-xs text-muted-foreground">Сообщений нет</div>
                   ) : (
                     <div>
                       {messages.map((msg) => (

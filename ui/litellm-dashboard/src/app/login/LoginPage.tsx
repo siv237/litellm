@@ -42,7 +42,7 @@ function SsoEnabledNotice() {
     <Alert variant="info" className="mt-4">
       <Info />
       <AlertTitle>
-        Включён Single Sign-On (SSO). LiteLLM больше не перенаправляет на SSO-вход автоматически при открытии страницы. Чтобы вернуть авто-редирект, установите{" "}
+        Включён Single Sign-On (SSO). ruLiteLLM больше не перенаправляет на SSO-вход автоматически при открытии страницы. Чтобы вернуть авто-редирект, установите{" "}
         <code className="bg-muted px-1 py-0.5 rounded-sm text-xs">AUTO_REDIRECT_UI_LOGIN_TO_SSO=true</code> в конфигурации окружения.
       </AlertTitle>
       <AlertAction>
@@ -224,7 +224,7 @@ function LoginPageContent() {
 
               <div className="text-center">
                 <h3 className="text-2xl font-semibold text-foreground">Вход</h3>
-                <p className="text-sm text-muted-foreground">Вход в админ-интерфейс LiteLLM.</p>
+                <p className="text-sm text-muted-foreground">Вход в админ-интерфейс ruLiteLLM.</p>
               </div>
 
               {!uiConfig?.hide_default_credentials_hint && (
@@ -233,7 +233,7 @@ function LoginPageContent() {
                   <AlertTitle>Учётные данные по умолчанию</AlertTitle>
                   <AlertDescription>
                     <p className="text-sm">
-                      По умолчанию имя пользователя <code className="bg-muted px-1 py-0.5 rounded-sm text-xs">admin</code> , а пароль — заданный на LiteLLM-прокси
+                      По умолчанию имя пользователя <code className="bg-muted px-1 py-0.5 rounded-sm text-xs">admin</code> , а пароль — заданный на ruLiteLLM-прокси
                       <code className="bg-muted px-1 py-0.5 rounded-sm text-xs">MASTER_KEY</code>.
                     </p>
                     <p className="mt-2 text-sm">

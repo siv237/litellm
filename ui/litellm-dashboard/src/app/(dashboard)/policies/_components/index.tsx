@@ -572,7 +572,7 @@ const PoliciesPanel: React.FC<PoliciesPanelProps> = ({ accessToken, userRole }) 
           </DismissibleAlert>
 
           <DismissibleAlert title="Функция Enterprise" icon={<TriangleAlert />}>
-            Часть функциональности привязок политик будет доступна в LiteLLM Enterprise в будущих версиях.
+            Часть функциональности привязок политик будет доступна в ruLiteLLM Enterprise в будущих версиях.
           </DismissibleAlert>
 
           <div className="mb-4 flex items-center justify-between">

@@ -202,10 +202,10 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
       <div className="bg-linear-to-r from-success/15 to-success/5 p-6 rounded-lg border border-success/15">
         <div className="flex items-center gap-3 mb-3">
           <Zap className="text-success" size={24} />
-          <h4 className="mb-0 text-xl font-semibold text-success">Интеграция с API LiteLLM Proxy</h4>
+          <h4 className="mb-0 text-xl font-semibold text-success">Интеграция с API ruLiteLLM Proxy</h4>
         </div>
         <span className="text-success">
-          Подключитесь к Responses API LiteLLM Proxy для работы с инструментами у разных провайдеров моделей
+          Подключитесь к Responses API ruLiteLLM Proxy для работы с инструментами у разных провайдеров моделей
         </span>
       </div>
 
@@ -213,11 +213,11 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
         <FeatureCard
           icon={<KeyIcon className="text-success" size={16} />}
           title="Настройка виртуального ключа"
-          description="Настройте виртуальный ключ LiteLLM Proxy для авторизации"
+          description="Настройте виртуальный ключ ruLiteLLM Proxy для авторизации"
         >
           <div className="flex w-full flex-col gap-4">
             <div>
-              <span>Получите виртуальный ключ в панели LiteLLM Proxy или у администратора</span>
+              <span>Получите виртуальный ключ в панели ruLiteLLM Proxy или у администратора</span>
             </div>
             <CodeBlock title="Переменная окружения" code='export LITELLM_API_KEY="sk-..."' copyKey="litellm-env" />
           </div>
@@ -226,7 +226,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
         <FeatureCard
           icon={<ServerIcon className="text-success" size={16} />}
           title="Данные сервера MCP"
-          description="Параметры подключения к вашему серверу MCP LiteLLM"
+          description="Параметры подключения к вашему серверу MCP ruLiteLLM"
         >
           <CodeBlock title="URL сервера" code={`${proxyBaseUrl}/mcp`} copyKey="litellm-server-url" />
         </FeatureCard>
@@ -234,7 +234,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
         <FeatureCard
           icon={<Code className="text-success" size={16} />}
           title="Пример реализации"
-          description="Полный пример cURL для Responses API LiteLLM Proxy"
+          description="Полный пример cURL для Responses API ruLiteLLM Proxy"
           serverName={currentServer}
           accessGroups={["dev-group"]}
         >
@@ -275,7 +275,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
           <h4 className="mb-0 text-xl font-semibold text-info">Интеграция с OpenAI Responses API</h4>
         </div>
         <span className="text-info">
-          Подключите OpenAI Responses API к вашему серверу MCP LiteLLM для работы с инструментами
+          Подключите OpenAI Responses API к вашему серверу MCP ruLiteLLM для работы с инструментами
         </span>
       </div>
 
@@ -306,7 +306,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
         <FeatureCard
           icon={<ServerIcon className="text-info" size={16} />}
           title="Данные сервера MCP"
-          description="Параметры подключения к вашему серверу MCP LiteLLM"
+          description="Параметры подключения к вашему серверу MCP ruLiteLLM"
         >
           <CodeBlock title="URL сервера" code={`${proxyBaseUrl}/mcp`} copyKey="openai-server-url" />
         </FeatureCard>
@@ -355,7 +355,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
           <h4 className="mb-0 text-xl font-semibold text-purple-900 dark:text-purple-100">Интеграция с Cursor IDE</h4>
         </div>
         <span className="text-purple-700 dark:text-purple-300">
-          Используйте инструменты прямо из Cursor IDE с LiteLLM MCP. Ваш ИИ-помощник сможет решать реальные задачи,
+          Используйте инструменты прямо из Cursor IDE с ruLiteLLM MCP. Ваш ИИ-помощник сможет решать реальные задачи,
           не покидая среду разработки.
         </span>
       </div>
@@ -419,7 +419,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
           <h4 className="mb-0 text-xl font-semibold text-success">Потоковый транспорт HTTP</h4>
         </div>
         <span className="text-success">
-          Подключение к LiteLLM MCP по HTTP. Совместимо с любым MCP-клиентом с потоковым HTTP.
+          Подключение к ruLiteLLM MCP по HTTP. Совместимо с любым MCP-клиентом с потоковым HTTP.
         </span>
       </div>
 
@@ -475,7 +475,7 @@ const MCPConnect: React.FC<MCPConnectProps> = ({ currentServerAccessGroups = [] 
         <div>
           <h2 className="text-3xl font-bold text-foreground mb-3">Подключение к вашему MCP-клиенту</h2>
           <p className="text-lg text-muted-foreground">
-            Используйте инструменты прямо из любого MCP-клиента с LiteLLM MCP. Ваш ИИ-помощник сможет решать реальные
+            Используйте инструменты прямо из любого MCP-клиента с ruLiteLLM MCP. Ваш ИИ-помощник сможет решать реальные
             задачи через простое и безопасное подключение.
           </p>
         </div>

@@ -253,7 +253,7 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
     <div className="mb-4 rounded-lg border border-border bg-muted/50 p-4">
       <div className="mb-2 flex items-center gap-2">
         <LinkIcon className="size-4 text-primary" />
-        <span className="text-sm font-medium text-foreground">Discover from agent URL</span>
+        <span className="text-sm font-medium text-foreground">Обнаружить по URL агента</span>
         <TooltipProvider delay={300}>
           <Tooltip>
             <TooltipTrigger
@@ -273,11 +273,11 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
       {isParentDriven ? (
         <>
           <p className="mb-2 text-xs text-muted-foreground">
-            Using the connection details you entered above. We&apos;ll fetch:
+            С указанными выше параметрами подключения будет получено:
           </p>
           <div className="mb-3 rounded-sm border border-border bg-background px-3 py-2 font-mono text-xs break-all text-foreground">
             {discoveryRequest!.display_url || effectiveUrl || (
-              <span className="text-muted-foreground italic">Fill in the fields above first</span>
+              <span className="text-muted-foreground italic">Сначала заполните поля выше</span>
             )}
           </div>
           <div className="flex justify-end">
@@ -290,8 +290,8 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
       ) : (
         <>
           <p className="mb-3 text-xs text-muted-foreground">
-            Paste the upstream agent&apos;s base URL. We&apos;ll try <code>/.well-known/agent-card.json</code>,{" "}
-            <code>/.well-known/agent.json</code>, and <code>/agent.json</code> in order.
+            Вставьте базовый URL вышестоящего агента. Будет пробоваться <code>/.well-known/agent-card.json</code>,{" "}
+            <code>/.well-known/agent.json</code>, and <code>/agent.json</code> по порядку.
           </p>
 
           <div className="flex w-full items-center gap-2">
@@ -315,10 +315,10 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
       {error && (
         <Alert variant="destructive" className="mt-3">
           <CircleAlert />
-          <AlertTitle>Discovery failed</AlertTitle>
+          <AlertTitle>Обнаружение не удалось</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
           <AlertAction>
-            <Button variant="ghost" size="icon-xs" aria-label="Dismiss error" onClick={() => setError(null)}>
+            <Button variant="ghost" size="icon-xs" aria-label="Закрыть ошибку" onClick={() => setError(null)}>
               <X />
             </Button>
           </AlertAction>
@@ -335,7 +335,7 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
         <div className="mt-4 rounded-lg border border-border bg-background p-4">
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <CircleCheck className="size-4 text-success" />
-            <span className="text-sm font-medium text-foreground">Upstream card loaded</span>
+            <span className="text-sm font-medium text-foreground">Карточка загружена</span>
             {card.version && <Badge variant="secondary">v{card.version}</Badge>}
             {card.provider?.organization && <Badge variant="secondary">{card.provider.organization}</Badge>}
           </div>
@@ -343,9 +343,9 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
           <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2">
             <div>
               <label className="mb-1 block text-xs font-medium text-muted-foreground">
-                Name (shown to API clients)
+                Имя (видно клиентам API)
               </label>
-              <Input value={editedName} onChange={(e) => setEditedName(e.target.value)} placeholder="Agent name" />
+              <Input value={editedName} onChange={(e) => setEditedName(e.target.value)} placeholder="Имя агента" />
             </div>
             <div>
               <label className="mb-1 block text-xs font-medium text-muted-foreground">Описание</label>
@@ -354,7 +354,7 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
                 rows={2}
-                placeholder="What this agent does"
+                placeholder="Назначение этого агента"
               />
             </div>
           </div>
@@ -366,7 +366,7 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
                   render={
                     <button type="button" className="group flex items-center gap-2">
                       <ChevronDown className="size-4 text-muted-foreground transition-transform group-data-[panel-open]:rotate-180" />
-                      <span className="text-sm font-medium text-foreground">Skills</span>
+                      <span className="text-sm font-medium text-foreground">Навыки</span>
                     </button>
                   }
                 />
@@ -376,7 +376,7 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
               </div>
               <CollapsibleContent className="pt-2">
                 {skillCount === 0 ? (
-                  <div className="py-6 text-center text-sm text-muted-foreground">Upstream card has no skills</div>
+                  <div className="py-6 text-center text-sm text-muted-foreground">У вышестоящей карточки нет навыков</div>
                 ) : (
                   <div className="space-y-2">
                     {(card.skills ?? []).map((skill, idx) => {
@@ -418,7 +418,7 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
                   render={
                     <button type="button" className="group flex items-center gap-2">
                       <ChevronDown className="size-4 text-muted-foreground transition-transform group-data-[panel-open]:rotate-180" />
-                      <span className="text-sm font-medium text-foreground">Capabilities</span>
+                      <span className="text-sm font-medium text-foreground">Возможности</span>
                     </button>
                   }
                 />
@@ -432,8 +432,7 @@ const AgentCardDiscovery: React.FC<AgentCardDiscoveryProps> = ({
                       }
                     />
                     <TooltipContent>
-                      Only capabilities LiteLLM can faithfully proxy today are listed. Others (push notifications,
-                      extensions) are coming soon.
+                      Перечислены только возможности, которые ruLiteLLM сегодня корректно проксирует. Остальные (push-уведомления, расширения) скоро появятся.
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

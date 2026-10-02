@@ -45,7 +45,7 @@ export function GuardrailTestPanel({
 
   const handleSubmit = () => {
     if (!inputText.trim()) {
-      toast.fromError("Please enter text to test");
+      toast.fromError("Введите текст для теста");
       return;
     }
 
@@ -98,9 +98,9 @@ export function GuardrailTestPanel({
   const handleCopyInput = async () => {
     const success = await copyToClipboard(inputText);
     if (success) {
-      toast.success("Input copied to clipboard");
+      toast.success("Вход скопирован в буфер");
     } else {
-      toast.fromError("Failed to copy input");
+      toast.fromError("Не удалось скопировать вход");
     }
   };
 
@@ -111,7 +111,7 @@ export function GuardrailTestPanel({
         <div className="flex items-center space-x-3">
           <div className="flex-1 min-w-0">
             <div className="mb-1 flex items-center space-x-2">
-              <h2 className="text-lg font-semibold">Test Guardrails:</h2>
+              <h2 className="text-lg font-semibold">Тест гардрейлов:</h2>
               <div className="flex flex-wrap gap-2">
                 {guardrailNames.map((name) => (
                   <div
@@ -124,7 +124,7 @@ export function GuardrailTestPanel({
               </div>
             </div>
             <p className="text-sm text-muted-foreground">
-              Test {guardrailNames.length > 1 ? "guardrails" : "guardrail"} and compare results
+              Тест {guardrailNames.length > 1 ? "guardrails" : "guardrail"} and compare results
             </p>
           </div>
         </div>
@@ -136,7 +136,7 @@ export function GuardrailTestPanel({
           <div>
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium">Input Text</label>
+                <label className="text-sm font-medium">Текст входа</label>
                 <Tooltip>
                   <TooltipTrigger
                     render={
@@ -145,13 +145,13 @@ export function GuardrailTestPanel({
                       </span>
                     }
                   />
-                  <TooltipContent>Press Enter to submit. Use Shift+Enter for new line.</TooltipContent>
+                  <TooltipContent>Нажмите Enter для отправки. Shift+Enter — перенос строки.</TooltipContent>
                 </Tooltip>
               </div>
               {inputText && (
                 <Button size="sm" variant="secondary" onClick={handleCopyInput}>
                   <Copy />
-                  Copy Input
+                  Копировать вход
                 </Button>
               )}
             </div>
@@ -165,17 +165,16 @@ export function GuardrailTestPanel({
             />
             <div className="mt-1 flex items-center justify-between">
               <span className="text-xs text-muted-foreground">
-                Press <kbd className="rounded-sm border border-border bg-muted px-1 py-0.5 text-xs">Enter</kbd> to
-                submit • <kbd className="rounded-sm border border-border bg-muted px-1 py-0.5 text-xs">Shift+Enter</kbd>{" "}
+                Нажмите <kbd className="rounded-sm border border-border bg-muted px-1 py-0.5 text-xs">Enter</kbd> для отправки • <kbd className="rounded-sm border border-border bg-muted px-1 py-0.5 text-xs">Shift+Enter</kbd>{" "}
                 for new line
               </span>
-              <span className="text-xs text-muted-foreground">Characters: {inputText.length}</span>
+              <span className="text-xs text-muted-foreground">Символов: {inputText.length}</span>
             </div>
           </div>
 
           <div>
             <div className="mb-2 flex items-center gap-2">
-              <label className="text-sm font-medium">Metadata (optional)</label>
+              <label className="text-sm font-medium">Метаданные (необязательно)</label>
               <Tooltip>
                 <TooltipTrigger
                   render={
@@ -185,8 +184,8 @@ export function GuardrailTestPanel({
                   }
                 />
                 <TooltipContent>
-                  JSON object forwarded to the guardrail as request_data[&apos;metadata&apos;]. Custom guardrails can
-                  read per-request configuration from it.
+                  JSON-объект, передаваемый гардрейлу как request_data[&apos;metadata&apos;]. Пользовательские гардрейлы могут
+                  читать из него настройки запроса.
                 </TooltipContent>
               </Tooltip>
             </div>

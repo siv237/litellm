@@ -93,9 +93,9 @@ const PolicyInfoView: React.FC<PolicyInfoViewProps> = ({
     return (
       <Card>
         <CardContent>
-          <p className="text-destructive">Policy not found</p>
+          <p className="text-destructive">Политика не найдена</p>
           <Button variant="secondary" onClick={onClose} className="mt-4">
-            Go Back
+            Назад
           </Button>
         </CardContent>
       </Card>
@@ -109,12 +109,12 @@ const PolicyInfoView: React.FC<PolicyInfoViewProps> = ({
           <div className="flex items-center justify-between">
             <Button variant="secondary" onClick={onClose}>
               <ArrowLeft />
-              Back to Policies
+              К политикам
             </Button>
             {isAdmin && (
               <Button onClick={() => onEdit(policy)}>
                 <Pencil />
-                Edit Policy
+                Редактировать политику
               </Button>
             )}
           </div>
@@ -122,43 +122,42 @@ const PolicyInfoView: React.FC<PolicyInfoViewProps> = ({
           <h4 className="text-lg font-semibold">{policy.policy_name}</h4>
 
           <dl className="rounded-md border border-border">
-            <DetailRow label="Policy ID">
+            <DetailRow label="ID политики">
               <code className="rounded-sm bg-muted px-2 py-1 text-xs">{policy.policy_id}</code>
             </DetailRow>
-            <DetailRow label="Описание">{policy.description || <Muted>No description</Muted>}</DetailRow>
-            <DetailRow label="Inherits From">
+            <DetailRow label="Описание">{policy.description || <Muted>Без описания</Muted>}</DetailRow>
+            <DetailRow label="Наследует от">
               {policy.inherit ? <Badge variant="secondary">{policy.inherit}</Badge> : <Muted>Нет</Muted>}
             </DetailRow>
-            <DetailRow label="Created At">
+            <DetailRow label="Создан">
               {policy.created_at ? new Date(policy.created_at).toLocaleString() : "-"}
             </DetailRow>
-            <DetailRow label="Updated At">
+            <DetailRow label="Обновлено">
               {policy.updated_at ? new Date(policy.updated_at).toLocaleString() : "-"}
             </DetailRow>
           </dl>
 
           {policy.pipeline && (
             <>
-              <SectionHeading>Pipeline Flow</SectionHeading>
+              <SectionHeading>Поток конвейера</SectionHeading>
               <Alert className="mb-4">
                 <Info />
                 <AlertTitle>
-                  Pipeline ({policy.pipeline.mode} mode, {policy.pipeline.steps.length} step
-                  {policy.pipeline.steps.length !== 1 ? "s" : ""})
+                  Конвейер (режим {policy.pipeline.mode}, шагов: {policy.pipeline.steps.length})
                 </AlertTitle>
               </Alert>
               <PipelineInfoDisplay pipeline={policy.pipeline} />
             </>
           )}
 
-          <SectionHeading>Guardrails Configuration</SectionHeading>
+          <SectionHeading>Конфигурация гардрейлов</SectionHeading>
 
           {resolvedGuardrails.length > 0 && (
             <Alert className="mb-4">
               <Info />
-              <AlertTitle>Resolved Guardrails</AlertTitle>
+              <AlertTitle>Разрешённые гардрейлы</AlertTitle>
               <AlertDescription>
-                <span className="mb-2 block">Final guardrails that will be applied (including inheritance):</span>
+                <span className="mb-2 block">Итоговые гардрейлы, которые будут применены (включая наследование):</span>
                 <div className="flex flex-wrap gap-1">
                   {resolvedGuardrails.map((g) => (
                     <Badge key={g} variant="secondary">
@@ -171,7 +170,7 @@ const PolicyInfoView: React.FC<PolicyInfoViewProps> = ({
           )}
 
           <dl className="rounded-md border border-border">
-            <DetailRow label="Guardrails to Add">
+            <DetailRow label="Гардрейлы для добавления">
               <div className="flex flex-wrap gap-1">
                 {policy.guardrails_add && policy.guardrails_add.length > 0 ? (
                   policy.guardrails_add.map((g) => (
@@ -184,7 +183,7 @@ const PolicyInfoView: React.FC<PolicyInfoViewProps> = ({
                 )}
               </div>
             </DetailRow>
-            <DetailRow label="Guardrails to Remove">
+            <DetailRow label="Гардрейлы для удаления">
               <div className="flex flex-wrap gap-1">
                 {policy.guardrails_remove && policy.guardrails_remove.length > 0 ? (
                   policy.guardrails_remove.map((g) => (
@@ -199,10 +198,10 @@ const PolicyInfoView: React.FC<PolicyInfoViewProps> = ({
             </DetailRow>
           </dl>
 
-          <SectionHeading>Conditions</SectionHeading>
+          <SectionHeading>Условия</SectionHeading>
 
           <dl className="rounded-md border border-border">
-            <DetailRow label="Model Condition">
+            <DetailRow label="Условие по модели">
               {policy.condition?.model ? (
                 <Badge variant="secondary">
                   {typeof policy.condition.model === "string"
@@ -210,7 +209,7 @@ const PolicyInfoView: React.FC<PolicyInfoViewProps> = ({
                     : JSON.stringify(policy.condition.model)}
                 </Badge>
               ) : (
-                <Muted>No model condition (applies to all models)</Muted>
+                <Muted>Без условия по модели (применяется ко всем моделям)</Muted>
               )}
             </DetailRow>
           </dl>

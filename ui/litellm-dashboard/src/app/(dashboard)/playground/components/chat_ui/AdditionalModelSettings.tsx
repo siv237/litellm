@@ -111,18 +111,17 @@ const AdditionalModelSettings: React.FC<AdditionalModelSettingsProps> = ({
             id={streamingId}
             checked={streamingEnabled}
             onCheckedChange={(checked) => onStreamingChange(checked === true)}
-            aria-label="Stream responses"
+            aria-label="Потоковые ответы"
           />
           <label htmlFor={streamingId} className="cursor-pointer text-sm font-medium">
-            Stream responses
+            Потоковые ответы
           </label>
           <Tooltip>
-            <TooltipTrigger aria-label="Help: Stream responses">
+            <TooltipTrigger aria-label="Справка: потоковые ответы">
               <Info className="size-3 shrink-0 cursor-pointer text-muted-foreground hover:text-foreground" />
             </TooltipTrigger>
             <TooltipContent className="max-w-xs">
-              Streams the answer token by token. Uncheck to send a non-streaming request and render the full response at
-              once.
+              Передаёт ответ по токенам. Снимите, чтобы отправить без стрима и показать весь ответ сразу.
             </TooltipContent>
           </Tooltip>
         </div>
@@ -134,10 +133,10 @@ const AdditionalModelSettings: React.FC<AdditionalModelSettingsProps> = ({
             id={advancedId}
             checked={useAdvancedParams}
             onCheckedChange={(checked) => handleUseAdvancedParamsChange(checked === true)}
-            aria-label="Use Advanced Parameters"
+            aria-label="Использовать расширенные параметры"
           />
           <label htmlFor={advancedId} className="cursor-pointer text-sm font-medium">
-            Use Advanced Parameters
+            Использовать расширенные параметры
           </label>
         </div>
       )}
@@ -148,29 +147,28 @@ const AdditionalModelSettings: React.FC<AdditionalModelSettingsProps> = ({
             id={fallbacksId}
             checked={mockTestFallbacks ?? false}
             onCheckedChange={(checked) => onMockTestFallbacksChange(checked === true)}
-            aria-label="Simulate failure to test fallbacks"
+            aria-label="Симулировать сбой для проверки фолбэков"
           />
           <label htmlFor={fallbacksId} className="cursor-pointer text-sm font-medium">
-            Simulate failure to test fallbacks
+            Симулировать сбой для проверки фолбэков
           </label>
           <Popover>
-            <PopoverTrigger aria-label="Help: Simulate failure to test fallbacks">
+            <PopoverTrigger aria-label="Справка: симуляция сбоя для проверки фолбэков">
               <Info className="size-3 shrink-0 cursor-pointer text-muted-foreground hover:text-foreground" />
             </PopoverTrigger>
             <PopoverContent side="right" className="max-w-[340px] gap-2 p-3 text-sm">
               <p>
-                Causes the first request to fail so the router tries fallbacks (if configured). Use this to verify your
-                fallback setup.
+                Заставляет первый запрос упасть, чтобы роутер попробовал фолбэки (если настроены). Проверьте настройку фолбэков.
               </p>
               <p>
-                Behavior can differ when keys, teams, or router settings are configured.{" "}
+                Поведение может отличаться при настроенных ключах, командах или настройках роутера.{" "}
                 <a
                   href="https://docs.litellm.ai/docs/proxy/keys_teams_router_settings"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-info hover:text-info/80"
                 >
-                  Learn more
+                  Подробнее
                 </a>
               </p>
             </PopoverContent>
@@ -186,14 +184,14 @@ const AdditionalModelSettings: React.FC<AdditionalModelSettingsProps> = ({
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <label htmlFor={temperatureId} className={cn("text-sm", disabledTextColor)}>
-                  Temperature
+                  Температура
                 </label>
                 <Tooltip>
-                  <TooltipTrigger aria-label="Help: Temperature">
+                  <TooltipTrigger aria-label="Справка: температура">
                     <Info className={cn("size-3 cursor-help", disabledTextColor)} />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-xs">
-                    Controls randomness. Lower values make output more deterministic, higher values more creative.
+                    Управляет случайностью. Меньше — детерминированнее, больше — креативнее.
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -201,7 +199,7 @@ const AdditionalModelSettings: React.FC<AdditionalModelSettingsProps> = ({
                 id={`${temperatureId}-number`}
                 type="text"
                 inputMode="decimal"
-                aria-label="Temperature value"
+                aria-label="Значение температуры"
                 value={temperatureText}
                 disabled={!useAdvancedParams}
                 className="h-8 w-20"
@@ -217,7 +215,7 @@ const AdditionalModelSettings: React.FC<AdditionalModelSettingsProps> = ({
               step={0.1}
               value={localTemperature}
               disabled={!useAdvancedParams}
-              aria-label="Temperature"
+              aria-label="Температура"
               className="w-full accent-primary disabled:cursor-not-allowed"
               onChange={(event) => handleTemperatureChange(Number(event.target.value))}
             />
@@ -232,14 +230,14 @@ const AdditionalModelSettings: React.FC<AdditionalModelSettingsProps> = ({
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <label htmlFor={maxTokensId} className={cn("text-sm", disabledTextColor)}>
-                  Max Tokens
+                  Макс. токенов
                 </label>
                 <Tooltip>
-                  <TooltipTrigger aria-label="Help: Max Tokens">
+                  <TooltipTrigger aria-label="Справка: макс. токенов">
                     <Info className={cn("size-3 cursor-help", disabledTextColor)} />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-xs">
-                    Maximum number of tokens to generate in the response.
+                    Максимальное число токенов в ответе.
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -247,7 +245,7 @@ const AdditionalModelSettings: React.FC<AdditionalModelSettingsProps> = ({
                 id={`${maxTokensId}-number`}
                 type="text"
                 inputMode="numeric"
-                aria-label="Max tokens value"
+                aria-label="Значение макс. токенов"
                 value={maxTokensText}
                 disabled={!useAdvancedParams}
                 className="h-8 w-24"
@@ -263,7 +261,7 @@ const AdditionalModelSettings: React.FC<AdditionalModelSettingsProps> = ({
               step={1}
               value={localMaxTokens}
               disabled={!useAdvancedParams}
-              aria-label="Max Tokens"
+              aria-label="Макс. токенов"
               className="w-full accent-primary disabled:cursor-not-allowed"
               onChange={(event) => handleMaxTokensChange(Number(event.target.value))}
             />

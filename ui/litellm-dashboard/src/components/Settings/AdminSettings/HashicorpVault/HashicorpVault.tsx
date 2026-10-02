@@ -63,7 +63,7 @@ export default function HashicorpVault() {
   const handleDelete = () => {
     deleteConfig(undefined, {
       onSuccess: () => {
-        toast.success("Hashicorp Vault configuration deleted");
+        toast.success("Конфигурация HashiCorp Vault удалена");
         setIsDeleteModalOpen(false);
       },
       onError: (err) => toast.fromError(err),
@@ -86,7 +86,7 @@ export default function HashicorpVault() {
 
   const renderValue = (key: string) => {
     const value = rawValues[key];
-    if (!value) return <span className="text-muted-foreground italic">Not configured</span>;
+    if (!value) return <span className="text-muted-foreground italic">Не настроено</span>;
     if (!SENSITIVE_FIELDS.has(key)) return <span className="font-mono text-muted-foreground">{value}</span>;
 
     return (
@@ -110,7 +110,7 @@ export default function HashicorpVault() {
   return (
     <>
       {isLoading ? (
-        <Card role="status" aria-label="Loading Hashicorp Vault configuration">
+        <Card role="status" aria-label="Загрузка конфигурации HashiCorp Vault">
           <CardContent className="space-y-3">
             <Skeleton className="h-8 w-64" />
             <Skeleton className="h-40 w-full" />
@@ -120,7 +120,7 @@ export default function HashicorpVault() {
         <Card>
           <CardContent>
             <Alert variant="error">
-              <AlertTitle>Could not load Hashicorp Vault configuration</AlertTitle>
+              <AlertTitle>Не удалось загрузить конфигурацию HashiCorp Vault</AlertTitle>
               {error instanceof Error && <AlertDescription>{error.message}</AlertDescription>}
             </Alert>
           </CardContent>
@@ -134,7 +134,7 @@ export default function HashicorpVault() {
                 <CardTitle>
                   <h3>Hashicorp Vault</h3>
                 </CardTitle>
-                <CardDescription>Manage secret manager configuration</CardDescription>
+                <CardDescription>Управление конфигурацией менеджера секретов</CardDescription>
               </div>
             </div>
             {isConfigured && (
@@ -145,11 +145,11 @@ export default function HashicorpVault() {
                 </Button>
                 <Button type="button" variant="outline" onClick={() => setIsEditModalVisible(true)}>
                   <Edit />
-                  Edit Configuration
+                  Изменить конфигурацию
                 </Button>
                 <Button type="button" variant="destructive" onClick={() => setIsDeleteModalOpen(true)}>
                   <Trash2 />
-                  Delete Configuration
+                  Удалить конфигурацию
                 </Button>
               </CardAction>
             )}
@@ -167,7 +167,7 @@ export default function HashicorpVault() {
                     rel="noreferrer"
                     className="inline-flex items-center gap-1"
                   >
-                    View documentation
+                    Смотреть документацию
                     <ExternalLink className="size-3" />
                   </a>
                 </AlertDescription>
@@ -177,7 +177,7 @@ export default function HashicorpVault() {
             {isConfigured ? (
               fieldsToShow.length > 0 && (
                 <dl className="divide-y divide-border overflow-hidden rounded-md border border-border">
-                  <DetailRow label="Auth Method">{detectAuthMethod(rawValues)}</DetailRow>
+                  <DetailRow label="Метод аутентификации">{detectAuthMethod(rawValues)}</DetailRow>
                   {fieldsToShow.map(([key]) => (
                     <DetailRow key={key} label={FIELD_LABELS[key] ?? key}>
                       {renderValue(key)}
@@ -199,10 +199,10 @@ export default function HashicorpVault() {
       />
       <DeleteResourceModal
         isOpen={isDeleteModalOpen}
-        title="Delete Hashicorp Vault Configuration?"
+        title="Удалить конфигурацию HashiCorp Vault?"
         message="Models using Vault secrets will lose access to their API keys until a new configuration is saved."
         resourceInformationTitle="Vault Configuration"
-        resourceInformation={[{ label: "Vault Address", value: rawValues.vault_addr }]}
+        resourceInformation={[{ label: "Адрес Vault", value: rawValues.vault_addr }]}
         onCancel={() => setIsDeleteModalOpen(false)}
         onOk={handleDelete}
         confirmLoading={isDeleting}
@@ -213,7 +213,7 @@ export default function HashicorpVault() {
         message="This will remove the stored value."
         resourceInformationTitle="Field"
         resourceInformation={[
-          { label: "Field", value: clearingField ? FIELD_LABELS[clearingField] ?? clearingField : "" },
+          { label: "Поле", value: clearingField ? FIELD_LABELS[clearingField] ?? clearingField : "" },
         ]}
         onCancel={() => setClearingField(null)}
         onOk={handleClearField}

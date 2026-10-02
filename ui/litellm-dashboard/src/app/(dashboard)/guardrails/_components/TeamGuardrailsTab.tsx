@@ -505,12 +505,12 @@ function DetailPanel({
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <KeyIcon className="h-3.5 w-3.5 text-info" />
-                <span className="text-xs font-semibold text-info">Пересылать API-ключ LiteLLM</span>
+                <span className="text-xs font-semibold text-info">Пересылать API-ключ ruLiteLLM</span>
               </div>
               <Toggle enabled={g.forwardKey} onToggle={onToggleForwardKey} disabled={!isAdmin} />
             </div>
             <p className="text-xs text-info leading-relaxed">
-              При включении API-ключ вызывающего LiteLLM пересылается как заголовок{" "}
+              При включении API-ключ вызывающего ruLiteLLM пересылается как заголовок{" "}
               <code className="font-mono bg-info/15 px-1 rounded-sm">Authorization</code>. Это позволяет гардрейлу авторизовать вызовы моделей от имени исходного вызывающего.
             </p>
           </div>
@@ -709,7 +709,7 @@ function DetailPanel({
                 rel="noopener noreferrer"
                 className="text-info hover:underline"
               >
-                документация LiteLLM Generic Guardrail API
+                документация ruLiteLLM Generic Guardrail API
               </a>{" "}
               подробности настройки.
             </p>

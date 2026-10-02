@@ -229,7 +229,7 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
       name: "mongodb_text_field",
       label: "Текстовое поле",
       tooltip:
-        "Поле в каждом документе с читаемым текстом. LiteLLM возвращает его в результатах поиска; допускается путь через точку, напр. metadata.body (по умолчанию: text)",
+        "Поле в каждом документе с читаемым текстом. ruLiteLLM возвращает его в результатах поиска; допускается путь через точку, напр. metadata.body (по умолчанию: text)",
       placeholder: "text",
       required: false,
       type: "text",
@@ -287,7 +287,7 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
       name: "embedding_model",
       label: "Модель эмбеддингов",
       tooltip:
-        "Модель эмбеддингов на этом прокси, которой созданы эмбеддинги, уже сохранённые в индексе Valkey. LiteLLM ею же эмбеддит и поисковые запросы, поэтому модель должна быть та же — иначе результаты будут неверны. Если её нет в списке, сначала добавьте её в «Модели»",
+        "Модель эмбеддингов на этом прокси, которой созданы эмбеддинги, уже сохранённые в индексе Valkey. ruLiteLLM ею же эмбеддит и поисковые запросы, поэтому модель должна быть та же — иначе результаты будут неверны. Если её нет в списке, сначала добавьте её в «Модели»",
       placeholder: "text-embedding-3-small",
       required: true,
       type: "select",
@@ -296,7 +296,7 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
       name: "valkey_text_field",
       label: "Текстовое поле",
       tooltip:
-        "Поле с читаемым текстом в каждом сохранённом документе. LiteLLM возвращает его в результатах поиска. Должно совпадать со способом сохранения документов (по умолчанию: text)",
+        "Поле с читаемым текстом в каждом сохранённом документе. ruLiteLLM возвращает его в результатах поиска. Должно совпадать со способом сохранения документов (по умолчанию: text)",
       placeholder: "text",
       required: false,
       type: "text",
@@ -306,7 +306,7 @@ export const vectorStoreProviderFields: Record<string, VectorStoreFieldConfig[]>
       name: "valkey_embedding_field",
       label: "Имя векторного поля",
       tooltip:
-        "Поле с эмбеддингом в каждом сохранённом документе. LiteLLM ищет по нему, поэтому оно должно совпадать с полем, на котором создан индекс (по умолчанию: embedding)",
+        "Поле с эмбеддингом в каждом сохранённом документе. ruLiteLLM ищет по нему, поэтому оно должно совпадать с полем, на котором создан индекс (по умолчанию: embedding)",
       placeholder: "embedding",
       required: false,
       type: "text",

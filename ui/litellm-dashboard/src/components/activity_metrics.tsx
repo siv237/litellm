@@ -31,13 +31,13 @@ const ModelSection = ({
       <div className="grid grid-cols-4 gap-4">
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Total Requests</p>
+            <p className="text-sm text-muted-foreground">Всего запросов</p>
             <h3 className="text-lg font-medium text-foreground">{metrics.total_requests.toLocaleString()}</h3>
           </CardContent>
         </Card>
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Total Successful Requests</p>
+            <p className="text-sm text-muted-foreground">Всего успешных запросов</p>
             <h3 className="text-lg font-medium text-foreground">
               {metrics.total_successful_requests.toLocaleString()}
             </h3>
@@ -45,20 +45,19 @@ const ModelSection = ({
         </Card>
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Total Tokens</p>
+            <p className="text-sm text-muted-foreground">Всего токенов</p>
             <h3 className="text-lg font-medium text-foreground">{metrics.total_tokens.toLocaleString()}</h3>
             <p className="text-sm text-muted-foreground">
-              {Math.round(metrics.total_tokens / metrics.total_successful_requests)} avg per successful request
+              {Math.round(metrics.total_tokens / metrics.total_successful_requests)} в среднем за успешный запрос
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Total Spend</p>
+            <p className="text-sm text-muted-foreground">Всего расходов</p>
             <h3 className="text-lg font-medium text-foreground">${formatNumberWithCommas(metrics.total_spend, 2)}</h3>
             <p className="text-sm text-muted-foreground">
-              ${formatNumberWithCommas(metrics.total_spend / metrics.total_successful_requests, 3)} per successful
-              request
+              ${formatNumberWithCommas(metrics.total_spend / metrics.total_successful_requests, 3)} за успешный запрос
             </p>
           </CardContent>
         </Card>
@@ -67,19 +66,19 @@ const ModelSection = ({
       {metrics.top_api_keys && metrics.top_api_keys.length > 0 && (
         <Card className="mt-4">
           <CardContent>
-            <h3 className="text-lg font-medium text-foreground">Top Virtual Keys by Spend</h3>
+            <h3 className="text-lg font-medium text-foreground">Топ виртуальных ключей по расходам</h3>
             <div className="mt-3">
               <div className="grid grid-cols-1 gap-2">
                 {metrics.top_api_keys.map((keyData) => (
                   <div key={keyData.api_key} className="flex justify-between items-center p-3 bg-muted rounded-lg">
                     <div>
                       <p className="font-medium">{keyData.key_alias || `${keyData.api_key.substring(0, 10)}...`}</p>
-                      {keyData.team_id && <p className="text-xs text-muted-foreground">Team: {keyData.team_id}</p>}
+                      {keyData.team_id && <p className="text-xs text-muted-foreground">Команда: {keyData.team_id}</p>}
                     </div>
                     <div className="text-right">
                       <p className="font-medium">${formatNumberWithCommas(keyData.spend, 2)}</p>
                       <p className="text-xs text-muted-foreground">
-                        {keyData.requests.toLocaleString()} requests | {keyData.tokens.toLocaleString()} tokens
+                        {keyData.requests.toLocaleString()} запросов | {keyData.tokens.toLocaleString()} токенов
                       </p>
                     </div>
                   </div>
@@ -96,7 +95,7 @@ const ModelSection = ({
       <Card className="mt-4">
         <CardContent>
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium text-foreground">Spend per day</h3>
+            <h3 className="text-lg font-medium text-foreground">Расходы в день</h3>
             <CustomLegend categories={["metrics.spend"]} colors={["green"]} />
           </div>
           <BarChart
@@ -116,7 +115,7 @@ const ModelSection = ({
         <Card>
           <CardContent>
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-medium text-foreground">Total Tokens</h3>
+              <h3 className="text-lg font-medium text-foreground">Всего токенов</h3>
               <CustomLegend
                 categories={["metrics.prompt_tokens", "metrics.completion_tokens", "metrics.total_tokens"]}
                 colors={["blue", "cyan", "indigo"]}
@@ -138,7 +137,7 @@ const ModelSection = ({
         <Card>
           <CardContent>
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-medium text-foreground">Requests per day</h3>
+              <h3 className="text-lg font-medium text-foreground">Запросов в день</h3>
               <CustomLegend categories={["metrics.api_requests"]} colors={["blue"]} />
             </div>
             <BarChart
@@ -157,7 +156,7 @@ const ModelSection = ({
         <Card>
           <CardContent>
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-medium text-foreground">Success vs Failed Requests</h3>
+              <h3 className="text-lg font-medium text-foreground">Успешные vs сбойные запросы</h3>
               <CustomLegend
                 categories={["metrics.successful_requests", "metrics.failed_requests"]}
                 colors={["green", "red"]}
@@ -180,7 +179,7 @@ const ModelSection = ({
           <Card>
             <CardContent>
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium text-foreground">Prompt Caching Metrics</h3>
+                <h3 className="text-lg font-medium text-foreground">Метрики кэширования промптов</h3>
                 <CustomLegend
                   categories={["metrics.cache_read_input_tokens", "metrics.cache_creation_input_tokens"]}
                   colors={["cyan", "purple"]}
@@ -188,10 +187,10 @@ const ModelSection = ({
               </div>
               <div className="mb-2">
                 <p className="text-sm">
-                  Cache Read: {metrics.total_cache_read_input_tokens?.toLocaleString() || 0} tokens
+                  Чтение кэша: {metrics.total_cache_read_input_tokens?.toLocaleString() || 0} токенов
                 </p>
                 <p className="text-sm">
-                  Cache Creation: {metrics.total_cache_creation_input_tokens?.toLocaleString() || 0} tokens
+                  Запись в кэш: {metrics.total_cache_creation_input_tokens?.toLocaleString() || 0} токенов
                 </p>
               </div>
               <AreaChart
@@ -322,17 +321,17 @@ export const ActivityMetrics: React.FC<ActivityMetricsProps> = ({ modelMetrics, 
     <div className="space-y-8">
       {/* Global Summary */}
       <div className="border rounded-lg p-4">
-        <h3 className="text-lg font-medium text-foreground">Overall Usage</h3>
+        <h3 className="text-lg font-medium text-foreground">Общий расход</h3>
         <div className="grid grid-cols-4 gap-4 mb-4">
           <Card>
             <CardContent>
-              <p className="text-sm text-muted-foreground">Total Requests</p>
+              <p className="text-sm text-muted-foreground">Всего запросов</p>
               <h3 className="text-lg font-medium text-foreground">{totalMetrics.total_requests.toLocaleString()}</h3>
             </CardContent>
           </Card>
           <Card>
             <CardContent>
-              <p className="text-sm text-muted-foreground">Total Successful Requests</p>
+              <p className="text-sm text-muted-foreground">Всего успешных запросов</p>
               <h3 className="text-lg font-medium text-foreground">
                 {totalMetrics.total_successful_requests.toLocaleString()}
               </h3>
@@ -340,13 +339,13 @@ export const ActivityMetrics: React.FC<ActivityMetricsProps> = ({ modelMetrics, 
           </Card>
           <Card>
             <CardContent>
-              <p className="text-sm text-muted-foreground">Total Tokens</p>
+              <p className="text-sm text-muted-foreground">Всего токенов</p>
               <h3 className="text-lg font-medium text-foreground">{totalMetrics.total_tokens.toLocaleString()}</h3>
             </CardContent>
           </Card>
           <Card>
             <CardContent>
-              <p className="text-sm text-muted-foreground">Total Spend</p>
+              <p className="text-sm text-muted-foreground">Всего расходов</p>
               <h3 className="text-lg font-medium text-foreground">
                 ${formatNumberWithCommas(totalMetrics.total_spend, 2)}
               </h3>
@@ -358,7 +357,7 @@ export const ActivityMetrics: React.FC<ActivityMetricsProps> = ({ modelMetrics, 
           <Card>
             <CardContent>
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium text-foreground">Total Tokens Over Time</h3>
+                <h3 className="text-lg font-medium text-foreground">Всего токенов со временем</h3>
                 <CustomLegend
                   categories={["metrics.prompt_tokens", "metrics.completion_tokens", "metrics.total_tokens"]}
                   colors={["blue", "cyan", "indigo"]}
@@ -380,7 +379,7 @@ export const ActivityMetrics: React.FC<ActivityMetricsProps> = ({ modelMetrics, 
           <Card>
             <CardContent>
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium text-foreground">Total Requests Over Time</h3>
+                <h3 className="text-lg font-medium text-foreground">Всего запросов со временем</h3>
                 <CustomLegend
                   categories={["metrics.successful_requests", "metrics.failed_requests"]}
                   colors={["emerald", "red"]}
@@ -521,7 +520,7 @@ export const processActivityData = (
                 key_alias: keyActivityLabel(keyData.metadata, "") || null,
                 team_id: keyData.metadata.team_id,
                 spend: 0,
-                requests: 0,
+  requests: 0,
                 tokens: 0,
               };
             }
@@ -556,7 +555,7 @@ export const processActivityData = (
                 modelBreakdown[modelName] = {
                   model: modelName,
                   spend: 0,
-                  requests: 0,
+    requests: 0,
                   successful_requests: 0,
                   failed_requests: 0,
                   tokens: 0,

@@ -250,7 +250,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
         // edit form's onTokenReceived early return.
         setAuthorizedIdentity(getOAuthAuthorizationIdentity(allFieldsValue(form)));
         toast.success(
-          "Токен хранится в этой сессии браузера. Инструменты можно просматривать и настраивать; токен не сохраняется в LiteLLM.",
+          "Токен хранится в этой сессии браузера. Инструменты можно просматривать и настраивать; токен не сохраняется в ruLiteLLM.",
         );
         return;
       }
@@ -791,7 +791,7 @@ const CreateMCPServer: React.FC<CreateMCPServerProps> = ({
                     label={
                       <span className="text-sm font-medium text-foreground flex items-center">
                         Макс. одновременных запросов (необязательно)
-                        <SimpleTooltip content="Максимальное число вызовов инструментов, которые LiteLLM выполняет на этом сервере одновременно. Лишние вызовы ждут свободный слот. Оставьте пустым без ограничения.">
+                        <SimpleTooltip content="Максимальное число вызовов инструментов, которые ruLiteLLM выполняет на этом сервере одновременно. Лишние вызовы ждут свободный слот. Оставьте пустым без ограничения.">
                           <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                         </SimpleTooltip>
                       </span>

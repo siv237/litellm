@@ -40,7 +40,7 @@ const DetailRow = ({ label, children }: DetailRowProps) => (
   </div>
 );
 
-const NotConfigured = () => <span className="text-muted-foreground italic">Not configured</span>;
+const NotConfigured = () => <span className="text-muted-foreground italic">Не настроено</span>;
 
 export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: CloudZeroIntegrationSettingsProps) {
   const { accessToken } = useAuthorized();
@@ -59,7 +59,7 @@ export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: Cl
       { limit: 10 },
       {
         onSuccess: (data) => {
-          toast.success("Dry run completed successfully");
+          toast.success("Пробный прогон завершён");
         },
         onError: (error) => {
           toast.error(error?.message || "Failed to perform dry run");
@@ -77,7 +77,7 @@ export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: Cl
       { operation: "replace_hourly" },
       {
         onSuccess: () => {
-          toast.success("Data successfully exported to CloudZero");
+          toast.success("Данные экспортированы в CloudZero");
           setIsExportConfirmOpen(false);
         },
         onError: (error) => {
@@ -109,7 +109,7 @@ export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: Cl
 
     deleteMutation.mutate(undefined, {
       onSuccess: () => {
-        toast.success("CloudZero integration deleted successfully");
+        toast.success("Интеграция CloudZero удалена");
         setIsDeleteModalOpen(false);
         onSettingsUpdated();
       },
@@ -129,7 +129,7 @@ export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: Cl
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              CloudZero Configuration
+              Конфигурация CloudZero
               <Badge variant="secondary" className="capitalize">
                 {settings.status || "Active"}
               </Badge>
@@ -148,14 +148,14 @@ export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: Cl
 
           <CardContent>
             <dl className="rounded-md border border-border">
-              <DetailRow label="API Key (Redacted)">
+              <DetailRow label="API-ключ (скрыт)">
                 <span className="font-mono">{settings.api_key_masked || <NotConfigured />}</span>
               </DetailRow>
-              <DetailRow label="Connection ID">
+              <DetailRow label="ID подключения">
                 <span className="font-mono">{settings.connection_id || <NotConfigured />}</span>
               </DetailRow>
-              <DetailRow label="Timezone">
-                {settings.timezone || <span className="text-muted-foreground italic">Default (UTC)</span>}
+              <DetailRow label="Часовой пояс">
+                {settings.timezone || <span className="text-muted-foreground italic">По умолчанию (UTC)</span>}
               </DetailRow>
             </dl>
 
@@ -167,21 +167,21 @@ export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: Cl
             <div className="mt-4 mb-6 flex flex-wrap gap-4">
               <Button variant="outline" onClick={handleDryRun} disabled={dryRunMutation.isPending}>
                 <Play />
-                Run Dry Run Simulation
+                Запустить пробную симуляцию
               </Button>
 
               <Button onClick={() => setIsExportConfirmOpen(true)} disabled={exportMutation.isPending}>
                 <Upload />
-                Export Data Now
+                Экспортировать данные сейчас
               </Button>
             </div>
 
             {dryRunResult && (
               <Alert>
                 <CheckCircle />
-                <AlertTitle>Dry Run Results</AlertTitle>
+                <AlertTitle>Результаты пробной симуляции</AlertTitle>
                 <AlertDescription>
-                  <p>Simulation output for connection: {settings.connection_id}</p>
+                  <p>Вывод симуляции для подключения: {settings.connection_id}</p>
                   <pre className="overflow-x-auto rounded-md border border-border bg-muted p-4 font-mono text-xs text-foreground">
                     {dryRunResult}
                   </pre>
@@ -195,9 +195,9 @@ export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: Cl
       <AlertDialog open={isExportConfirmOpen} onOpenChange={setIsExportConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Export Data to CloudZero</AlertDialogTitle>
+            <AlertDialogTitle>Экспорт данных в CloudZero</AlertDialogTitle>
             <AlertDialogDescription>
-              This will push the current accumulated cost data to CloudZero. Continue?
+              Это отправит накопленные данные о стоимости в CloudZero. Продолжить?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -218,17 +218,17 @@ export function CloudZeroIntegrationSettings({ settings, onSettingsUpdated }: Cl
 
       <DeleteResourceModal
         isOpen={isDeleteModalOpen}
-        title="Delete CloudZero Integration?"
+        title="Удалить интеграцию CloudZero?"
         message="Are you sure you want to delete this CloudZero integration? All associated settings and configurations will be permanently removed."
         resourceInformationTitle="Integration Details"
         resourceInformation={[
           {
-            label: "Connection ID",
+            label: "ID подключения",
             value: settings.connection_id,
             code: true,
           },
           {
-            label: "Timezone",
+            label: "Часовой пояс",
             value: settings.timezone || "Default (UTC)",
           },
         ]}

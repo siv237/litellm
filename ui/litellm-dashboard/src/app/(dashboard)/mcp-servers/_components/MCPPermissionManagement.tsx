@@ -199,7 +199,7 @@ const MCPPermissionManagement: React.FC<MCPPermissionManagementProps> = ({
           <div className="flex items-start justify-between gap-4">
             <div>
               <span className="text-sm font-medium text-foreground flex items-center">
-                Разрешить всем ключам LiteLLM
+                Разрешить всем ключам ruLiteLLM
                 <SimpleTooltip content="Если включено, каждый API-ключ может обращаться к этому MCP-серверу.">
                   <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                 </SimpleTooltip>
@@ -209,7 +209,7 @@ const MCPPermissionManagement: React.FC<MCPPermissionManagementProps> = ({
               </p>
             </div>
             <MountedFormField name="allow_all_keys" defaultValue={mcpServer?.allow_all_keys ?? false} className="mb-0">
-              {(control) => <Switch aria-label="Разрешить всем ключам LiteLLM" {...switchControl(control)} />}
+              {(control) => <Switch aria-label="Разрешить всем ключам ruLiteLLM" {...switchControl(control)} />}
             </MountedFormField>
           </div>
 
@@ -235,12 +235,12 @@ const MCPPermissionManagement: React.FC<MCPPermissionManagementProps> = ({
               <div>
                 <span className="text-sm font-medium text-foreground flex items-center">
                   Делегировать аутентификацию на вышестоящий сервер (PKCE напрямую)
-                  <SimpleTooltip content="Если включено, LiteLLM пропускает собственную проверку API-ключа/SSO для этого сервера и позволяет клиенту выполнить PKCE напрямую с вышестоящим MCP-сервером. Работает только при типе аутентификации oauth2. Учёт расходов и лимиты по ключам на этом маршруте не выполняются.">
+                  <SimpleTooltip content="Если включено, ruLiteLLM пропускает собственную проверку API-ключа/SSO для этого сервера и позволяет клиенту выполнить PKCE напрямую с вышестоящим MCP-сервером. Работает только при типе аутентификации oauth2. Учёт расходов и лимиты по ключам на этом маршруте не выполняются.">
                     <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                   </SimpleTooltip>
                 </span>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Обход аутентификации LiteLLM: клиент аутентифицируется напрямую на вышестоящем OAuth MCP-сервере.
+                  Обход аутентификации ruLiteLLM: клиент аутентифицируется напрямую на вышестоящем OAuth MCP-сервере.
                 </p>
               </div>
               <MountedFormField
@@ -285,7 +285,7 @@ const MCPPermissionManagement: React.FC<MCPPermissionManagementProps> = ({
               <AlertTitle>Внутренний сервер с делегированием OAuth на вышестоящий</AlertTitle>
               <AlertDescription>
                 Этот MCP-сервер настроен как внутренний, но делегирует аутентификацию на вышестоящий сервер. Анонимные смогут
-                able to reach the upstream OAuth2 /authorize flow without a LiteLLM session. Ensure your upstream
+                able to reach the upstream OAuth2 /authorize flow without a ruLiteLLM session. Ensure your upstream
                 provider and network enforce access controls.
               </AlertDescription>
             </Alert>

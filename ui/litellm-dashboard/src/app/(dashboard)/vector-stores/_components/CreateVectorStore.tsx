@@ -57,14 +57,14 @@ const IngestSuccessAlert: React.FC<{ ingestResults: RAGIngestResponse[] }> = ({ 
   return (
     <Alert variant="success">
       <CircleCheck />
-      <AlertTitle>Vector Store Created Successfully</AlertTitle>
+      <AlertTitle>Векторное хранилище создано</AlertTitle>
       <AlertDescription>
         <div>
           <p>
-            <strong>Vector Store ID:</strong> {ingestResults[0]?.vector_store_id}
+            <strong>ID векторного хранилища:</strong> {ingestResults[0]?.vector_store_id}
           </p>
           <p>
-            <strong>Documents Ingested:</strong> {ingestResults.length}
+            <strong>Документов загружено:</strong> {ingestResults.length}
           </p>
         </div>
       </AlertDescription>
@@ -135,12 +135,12 @@ const CreateVectorStore: React.FC<CreateVectorStoreProps> = ({ accessToken, onSu
 
   const handleCreateVectorStore = async () => {
     if (documents.length === 0) {
-      toast.warning("Please upload at least one document");
+      toast.warning("Загрузите хотя бы один документ");
       return;
     }
 
     if (!selectedProvider) {
-      toast.warning("Please select a provider");
+      toast.warning("Выберите провайдера");
       return;
     }
 
@@ -158,17 +158,17 @@ const CreateVectorStore: React.FC<CreateVectorStoreProps> = ({ accessToken, onSu
       const bucketName = asText(providerParams.vector_bucket_name);
       const indexName = asText(providerParams.index_name);
       if (bucketName && bucketName.length < 3) {
-        toast.warning("Vector bucket name must be at least 3 characters");
+        toast.warning("Имя векторного ведра должно быть не менее 3 символов");
         return;
       }
       if (indexName && indexName.length > 0 && indexName.length < 3) {
-        toast.warning("Index name must be at least 3 characters if provided");
+        toast.warning("Имя индекса должно быть не менее 3 символов (если указано)");
         return;
       }
     }
 
     if (!accessToken) {
-      toast.error("No access token available");
+      toast.error("Токен доступа недоступен");
       return;
     }
 
@@ -238,9 +238,9 @@ const CreateVectorStore: React.FC<CreateVectorStoreProps> = ({ accessToken, onSu
     <TooltipProvider>
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-medium">Create Vector Store</h3>
+          <h3 className="text-lg font-medium">Создать векторное хранилище</h3>
           <p className="text-sm text-muted-foreground">
-            Upload documents and select a provider to create a new vector store with embedded content.
+            Загрузите документы и выберите провайдера, чтобы создать векторное хранилище с встроенным содержимым.
           </p>
         </div>
 
@@ -248,9 +248,9 @@ const CreateVectorStore: React.FC<CreateVectorStoreProps> = ({ accessToken, onSu
         <Card>
           <CardContent>
             <div className="mb-4">
-              <p className="font-medium">Step 1: Upload Documents</p>
+              <p className="font-medium">Шаг 1: загрузка документов</p>
               <p className="text-sm text-muted-foreground block mt-1">
-                Upload one or more documents (PDF, TXT, DOCX, MD). Maximum file size: 50MB per file.
+                Загрузите один или несколько документов (PDF, TXT, DOCX, MD). Максимальный размер файла: 50 МБ.
               </p>
             </div>
             <label
@@ -263,9 +263,9 @@ const CreateVectorStore: React.FC<CreateVectorStoreProps> = ({ accessToken, onSu
               }}
             >
               <Inbox className="size-12 text-primary" />
-              <span className="text-base">Click or drag files to this area to upload</span>
+              <span className="text-base">Нажмите или перетащите файлы в эту область для загрузки</span>
               <span className="text-sm text-muted-foreground">
-                Support for single or bulk upload. Supported formats: PDF, TXT, DOCX, MD
+                Поддерживается одиночная и пакетная загрузка. Форматы: PDF, TXT, DOCX, MD
               </span>
               <input
                 id={documentsInputId}
@@ -287,7 +287,7 @@ const CreateVectorStore: React.FC<CreateVectorStoreProps> = ({ accessToken, onSu
           <Card>
             <CardContent>
               <div className="mb-4">
-                <p className="font-medium">Uploaded Documents ({documents.length})</p>
+                <p className="font-medium">Загруженные документы ({documents.length})</p>
               </div>
               <DocumentsTable documents={documents} onRemove={handleRemoveDocument} />
             </CardContent>
@@ -298,9 +298,9 @@ const CreateVectorStore: React.FC<CreateVectorStoreProps> = ({ accessToken, onSu
         <Card>
           <CardContent className="space-y-4">
             <div>
-              <p className="font-medium">Step 2: Configure Vector Store</p>
+              <p className="font-medium">Шаг 2: настройка векторного хранилища</p>
               <p className="text-sm text-muted-foreground block mt-1">
-                Choose the provider and optionally provide a name and description for your vector store.
+                Выберите провайдера и при желании укажите название и описание хранилища.
               </p>
             </div>
 
@@ -313,7 +313,7 @@ const CreateVectorStore: React.FC<CreateVectorStoreProps> = ({ accessToken, onSu
                   id="vector-store-name"
                   value={vectorStoreName}
                   onChange={(e) => setVectorStoreName(e.target.value)}
-                  placeholder="e.g., Product Documentation, Customer Support KB"
+                  placeholder="напр., Документация продукта, База знаний поддержки"
                 />
               </Field>
 
@@ -325,7 +325,7 @@ const CreateVectorStore: React.FC<CreateVectorStoreProps> = ({ accessToken, onSu
                   id="vector-store-description"
                   value={vectorStoreDescription}
                   onChange={(e) => setVectorStoreDescription(e.target.value)}
-                  placeholder="e.g., Contains all product documentation and user guides"
+                  placeholder="напр., Вся документация продукта и руководства пользователя"
                   rows={2}
                 />
               </Field>
@@ -340,7 +340,7 @@ const CreateVectorStore: React.FC<CreateVectorStoreProps> = ({ accessToken, onSu
                   onValueChange={(value: string | null) => value !== null && setSelectedProvider(value)}
                 >
                   <SelectTrigger id="vector-store-provider" className="w-full">
-                    <SelectValue placeholder="Select a provider" />
+                    <SelectValue placeholder="Выберите провайдера" />
                   </SelectTrigger>
                   <SelectContent>
                     {providerItems.map((item) => (

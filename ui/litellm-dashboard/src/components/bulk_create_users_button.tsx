@@ -780,7 +780,7 @@ const BulkCreateUsersButton: React.FC<BulkCreateUsersProps> = ({
                         <div>
                           <p className="font-medium text-info">Создание пользователей завершено</p>
                           <p className="block text-sm text-info mt-1">
-                            <span className="font-medium">Следующий шаг:</span> Скачайте файл учётных данных с виртуальными ключами и ссылками-приглашениями. Эти ключи понадобятся пользователям для запросов к LLM через LiteLLM.
+                            <span className="font-medium">Следующий шаг:</span> Скачайте файл учётных данных с виртуальными ключами и ссылками-приглашениями. Эти ключи понадобятся пользователям для запросов к LLM через ruLiteLLM.
                           </p>
                         </div>
                       </div>

@@ -33,27 +33,27 @@ interface AuditLogsTableProps {
 const ALL_VALUE = "all";
 
 const ACTION_OPTIONS = [
-  { label: "Created", value: "created" },
-  { label: "Updated", value: "updated" },
-  { label: "Deleted", value: "deleted" },
-  { label: "Rotated", value: "rotated" },
+  { label: "Создан", value: "created" },
+  { label: "Обновлён", value: "updated" },
+  { label: "Удалён", value: "deleted" },
+  { label: "Ротирован", value: "rotated" },
 ] as const;
 
 const TABLE_OPTIONS = [
-  { label: "Keys", value: "LiteLLM_VerificationToken" },
-  { label: "Teams", value: "LiteLLM_TeamTable" },
+  { label: "Ключи", value: "LiteLLM_VerificationToken" },
+  { label: "Команды", value: "LiteLLM_TeamTable" },
   { label: "Пользователи", value: "LiteLLM_UserTable" },
-  { label: "Organizations", value: "LiteLLM_OrganizationTable" },
+  { label: "Организации", value: "LiteLLM_OrganizationTable" },
   { label: "Модели", value: "LiteLLM_ProxyModelTable" },
 ] as const;
 
 const ACTION_FILTER_ITEMS = [
-  { value: ALL_VALUE, label: "All Actions" },
+  { value: ALL_VALUE, label: "Все действия" },
   ...ACTION_OPTIONS.map((option) => ({ value: option.value, label: option.label })),
 ];
 
 const TABLE_FILTER_ITEMS = [
-  { value: ALL_VALUE, label: "All Tables" },
+  { value: ALL_VALUE, label: "Все таблицы" },
   ...TABLE_OPTIONS.map((option) => ({ value: option.value, label: option.label })),
 ];
 
@@ -147,50 +147,50 @@ export function AuditLogsTable({
             table={table}
             open={filtersOpen}
             onOpenChange={setFiltersOpen}
-            title="Filters"
-            description="Narrow down audit log entries"
+            title="Фильтры"
+            description="Сузьте выборку записей журнала аудита"
           >
             {({ get, set }) => (
               <>
-                <DataTableFilterField label="Object ID">
+                <DataTableFilterField label="ID объекта">
                   <Input
                     value={(get("object_id") as string) ?? ""}
                     onChange={(event) => set("object_id", event.target.value)}
-                    placeholder="Enter object ID…"
+                    placeholder="Введите ID объекта…"
                   />
                 </DataTableFilterField>
-                <DataTableFilterField label="Changed By">
+                <DataTableFilterField label="Изменено кем">
                   <Input
                     value={(get("changed_by") as string) ?? ""}
                     onChange={(event) => set("changed_by", event.target.value)}
-                    placeholder="Enter user ID…"
+                    placeholder="Введите ID пользователя…"
                   />
                 </DataTableFilterField>
-                <DataTableFilterField label="Team ID">
+                <DataTableFilterField label="ID команды">
                   <Input
                     value={(get("team_id") as string) ?? ""}
                     onChange={(event) => set("team_id", event.target.value)}
-                    placeholder="Enter team ID…"
+                    placeholder="Введите ID команды…"
                   />
                 </DataTableFilterField>
-                <DataTableFilterField label="Key Hash">
+                <DataTableFilterField label="Хеш ключа">
                   <Input
                     value={(get("key_hash") as string) ?? ""}
                     onChange={(event) => set("key_hash", event.target.value)}
-                    placeholder="Enter key hash…"
+                    placeholder="Введите хеш ключа…"
                   />
                 </DataTableFilterField>
-                <DataTableFilterField label="Action">
+                <DataTableFilterField label="Действие">
                   <Select
                     items={ACTION_FILTER_ITEMS}
                     value={(get("action") as string) ?? ALL_VALUE}
                     onValueChange={(value) => set("action", value === ALL_VALUE ? undefined : value)}
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="All Actions" />
+                      <SelectValue placeholder="Все действия" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={ALL_VALUE}>All Actions</SelectItem>
+                      <SelectItem value={ALL_VALUE}>Все действия</SelectItem>
                       {ACTION_OPTIONS.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
                           {option.label}
@@ -199,17 +199,17 @@ export function AuditLogsTable({
                     </SelectContent>
                   </Select>
                 </DataTableFilterField>
-                <DataTableFilterField label="Table">
+                <DataTableFilterField label="Таблица">
                   <Select
                     items={TABLE_FILTER_ITEMS}
                     value={(get("table_name") as string) ?? ALL_VALUE}
                     onValueChange={(value) => set("table_name", value === ALL_VALUE ? undefined : value)}
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="All Tables" />
+                      <SelectValue placeholder="Все таблицы" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={ALL_VALUE}>All Tables</SelectItem>
+                      <SelectItem value={ALL_VALUE}>Все таблицы</SelectItem>
                       {TABLE_OPTIONS.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
                           {option.label}

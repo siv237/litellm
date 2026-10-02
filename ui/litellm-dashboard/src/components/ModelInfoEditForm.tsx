@@ -459,7 +459,7 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
             {textField(
               "litellm_model_name",
               "LiteLLM Model Name",
-              "Введите название модели LiteLLM",
+              "Введите название модели ruLiteLLM",
               localModelData.litellm_model_name,
             )}
 
@@ -772,9 +772,9 @@ const ModelInfoEditForm: React.FC<ModelInfoEditFormProps> = ({
 
             <div>
               <FieldLabel>
-                Параметры LiteLLM
+                Параметры ruLiteLLM
                 <DocsHint
-                  text="Необязательные параметры litellm для вызова litellm.completion(). Некоторые параметры добавляются LiteLLM автоматически."
+                  text="Необязательные параметры litellm для вызова litellm.completion(). Некоторые параметры добавляются ruLiteLLM автоматически."
                   href="https://docs.litellm.ai/docs/completion/input"
                 />
               </FieldLabel>

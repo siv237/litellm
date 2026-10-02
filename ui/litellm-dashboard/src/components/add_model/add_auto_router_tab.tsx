@@ -321,7 +321,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
   const templateItems = React.useMemo(
     () => [
       ...sortedPresetOptions.map(({ preset }) => ({ value: preset.key, label: preset.label })),
-      { value: "custom", label: "Custom Configuration" },
+      { value: "custom", label: "Пользовательская конфигурация" },
     ],
     [sortedPresetOptions],
   );
@@ -342,7 +342,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
     setSelectedPreset(undefined);
     applyPrefill({ ...buildEmptyPrefill(), complexityRouterConfig: automaticRouterConfig });
     setDetailsExpanded(true);
-    toast.success("Automatic setup created", { description: tierConfigSummary(automaticRouterConfig) });
+    toast.success("Автоматическая настройка создана", { description: tierConfigSummary(automaticRouterConfig) });
   };
 
   const handlePresetChange = (presetKey: string | undefined) => {
@@ -455,7 +455,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
       : (["auto_router_name"] as const);
 
     if (!(await form.trigger(validatedFields))) {
-      toast.fromError("Please fill in all required fields");
+      toast.fromError("Заполните все обязательные поля");
       return;
     }
 
@@ -495,7 +495,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
     if (!name) {
       setShowValidationErrors(true);
       void form.trigger("auto_router_name");
-      toast.fromError("Please enter an Auto Router Name");
+      toast.fromError("Введите имя авто-роутера");
       return;
     }
 
@@ -525,7 +525,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
     const targets = buildAutoRouterTestTargets(testTargetParams);
 
     if (targets.length === 0) {
-      toast.fromError("Please select at least one model for a complexity tier");
+      toast.fromError("Выберите хотя бы одну модель для уровня сложности");
       return;
     }
 
@@ -559,31 +559,31 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
                   label={labelWithHint("Auto Router Name", "Unique name for this auto router configuration")}
                 >
                   {({ ref, ...field }) => (
-                    <Input {...field} ref={ref} placeholder="e.g., smart_router, auto_router_1" />
+                    <Input {...field} ref={ref} placeholder="напр., smart_router, auto_router_1" />
                   )}
                 </FormField>
 
                 {!automaticSetupLoading && automaticRouterConfig && (
                   <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-muted px-4 py-3">
                     <div>
-                      <p className="text-sm font-medium text-foreground">Not sure where to start?</p>
-                      <p className="text-sm text-muted-foreground">Let us pick models for each complexity tier.</p>
+                      <p className="text-sm font-medium text-foreground">Не знаете, с чего начать?</p>
+                      <p className="text-sm text-muted-foreground">Мы подберём модели для каждого уровня сложности.</p>
                     </div>
                     <Button type="button" data-testid="configure-automatically-button" onClick={handleAutomaticSetup}>
-                      Configure automatically
+                      Настроить автоматически
                     </Button>
                   </div>
                 )}
 
                 <div className="mt-5">
-                  <label className="block text-sm font-medium text-foreground mb-2">Template</label>
+                  <label className="block text-sm font-medium text-foreground mb-2">Шаблон</label>
                   <Select
                     items={templateItems}
                     value={selectedPreset ?? null}
                     onValueChange={(presetKey: string | null) => handlePresetChange(presetKey ?? undefined)}
                   >
                     <SelectTrigger data-testid="template-selector" className="w-full">
-                      <SelectValue placeholder="Choose a template or select Custom to define your own" />
+                      <SelectValue placeholder="Выберите шаблон или «Пользовательскую», чтобы задать свою конфигурацию" />
                     </SelectTrigger>
                     <SelectContent>
                       {sortedPresetOptions.map(({ preset, availability: presetState }) => {
@@ -613,17 +613,17 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
                           </SelectItem>
                         );
                       })}
-                      <SelectItem value="custom" label="Custom Configuration">
+                      <SelectItem value="custom" label="Пользовательская конфигурация">
                         <div>
-                          <div className="font-medium">Custom Configuration</div>
-                          <div className="text-xs text-muted-foreground">Define your auto router from scratch</div>
+                          <div className="font-medium">Пользовательская конфигурация</div>
+                          <div className="text-xs text-muted-foreground">Опишите авто-роутер с нуля</div>
                         </div>
                       </SelectItem>
                     </SelectContent>
                   </Select>
                   {modelsUnverifiable && (
                     <div className="text-xs mt-1 text-destructive">
-                      Could not load available models.{" "}
+                      Не удалось загрузить доступные модели.{" "}
                       <button type="button" className="underline" onClick={() => refetchModels()}>
                         Повторить
                       </button>
@@ -632,7 +632,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
                   {presetsPending && <div className="text-xs mt-1 text-muted-foreground">Loading templates...</div>}
                   {presetsUnavailable && (
                     <div className="text-xs mt-1 text-destructive">
-                      Could not load templates, so only Custom Configuration is shown.{" "}
+                      Не удалось загрузить шаблоны, поэтому доступна только пользовательская конфигурация.{" "}
                       <button type="button" className="underline" onClick={() => void refetchPresets()}>
                         Повторить
                       </button>
@@ -737,11 +737,11 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
                         href="https://github.com/BerriAI/litellm/issues"
                         className="text-sm text-primary underline-offset-4 hover:underline"
                       >
-                        Need Help?
+                        Нужна помощь?
                       </a>
                     }
                   />
-                  <TooltipContent>Get help on our github</TooltipContent>
+                  <TooltipContent>Помощь на нашем GitHub</TooltipContent>
                 </Tooltip>
                 <div className="flex gap-2">
                   <BlockedReasonTooltip reason={submitBlockedReason}>
@@ -752,7 +752,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
                       disabled={submitBlockedReason !== null || isSubmitting}
                       onClick={() => setIsRoutingTestVisible(true)}
                     >
-                      Test Routing
+                      Тест маршрутизации
                     </Button>
                   </BlockedReasonTooltip>
                   <Button
@@ -773,7 +773,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
                         void handleAutoRouterSubmit();
                       }}
                     >
-                      Add Auto Router
+                      Добавить авто-роутер
                     </Button>
                   </BlockedReasonTooltip>
                 </div>
@@ -786,7 +786,7 @@ const AddAutoRouterTab: React.FC<AddAutoRouterTabProps> = ({
       <Dialog open={isRoutingTestVisible} onOpenChange={(open) => !open && setIsRoutingTestVisible(false)}>
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[760px]">
           <DialogHeader>
-            <DialogTitle>Test Routing</DialogTitle>
+            <DialogTitle>Тест маршрутизации</DialogTitle>
           </DialogHeader>
           {isRoutingTestVisible && (
             <AutoRouterRoutingTest

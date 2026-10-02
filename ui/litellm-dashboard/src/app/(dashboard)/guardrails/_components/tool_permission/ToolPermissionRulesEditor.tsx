@@ -196,7 +196,7 @@ const ToolPermissionRulesEditor: React.FC<ToolPermissionRulesEditorProps> = ({ v
       <CardContent>
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-lg font-semibold">Инструмент ограничений доступа LiteLLM</p>
+            <p className="text-lg font-semibold">Инструмент ограничений доступа ruLiteLLM</p>
             <p className="text-sm text-muted-foreground">
               укажите регулярные выражения (напр. ^mcp__github_.*$) для имён или типов инструментов
               и при необходимости ограничьте поля полезной нагрузки.

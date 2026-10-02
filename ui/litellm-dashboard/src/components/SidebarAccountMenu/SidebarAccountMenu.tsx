@@ -174,7 +174,7 @@ const SidebarAccountMenu: React.FC<SidebarAccountMenuProps> = ({ onLogout, colla
             <span
               className="animate-bounce text-lg leading-none"
               style={{ animationDuration: "2s" }}
-              title="Спасибо, что пользуетесь LiteLLM!"
+              title="Спасибо, что пользуетесь ruLiteLLM!"
               aria-hidden
             >
               🌴

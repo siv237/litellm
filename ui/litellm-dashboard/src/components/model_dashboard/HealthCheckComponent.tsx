@@ -51,12 +51,12 @@ const ERROR_TO_STATUS: Record<string, string> = {
 };
 
 const KEYWORD_ERRORS: ReadonlyArray<{ pattern: RegExp; label: string }> = [
-  { pattern: /missing.*api.*key|invalid.*key|unauthorized/i, label: "AuthenticationError: 401" },
-  { pattern: /rate.*limit|too.*many.*requests/i, label: "RateLimitError: 429" },
-  { pattern: /timeout|timed.*out/i, label: "TimeoutError: 408" },
-  { pattern: /not.*found/i, label: "NotFoundError: 404" },
-  { pattern: /forbidden|access.*denied/i, label: "ForbiddenError: 403" },
-  { pattern: /internal.*server.*error/i, label: "InternalServerError: 500" },
+  { pattern: /missing.*api.*key|invalid.*key|unauthorized/i, label: "Ошибка аутентификации: 401" },
+  { pattern: /rate.*limit|too.*many.*requests/i, label: "Превышение лимита: 429" },
+  { pattern: /timeout|timed.*out/i, label: "Тайм-аут: 408" },
+  { pattern: /not.*found/i, label: "Не найдено: 404" },
+  { pattern: /forbidden|access.*denied/i, label: "Доступ запрещён: 403" },
+  { pattern: /internal.*server.*error/i, label: "Внутренняя ошибка сервера: 500" },
 ];
 
 const truncate = (value: string): string => (value.length > 100 ? `${value.substring(0, 97)}...` : value);
@@ -501,9 +501,9 @@ const HealthCheckComponent: React.FC<HealthCheckComponentProps> = ({
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-foreground">Model Health Status</h2>
+            <h2 className="text-lg font-semibold text-foreground">Состояние здоровья моделей</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Run health checks on individual models to verify they are working correctly
+              Запустите проверки здоровья моделей, чтобы убедиться в их работоспособности
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -514,7 +514,7 @@ const HealthCheckComponent: React.FC<HealthCheckComponentProps> = ({
                 onClick={() => setRowSelection({})}
                 data-testid="clear-health-selection"
               >
-                Clear Selection
+                Сбросить выбор
               </Button>
             )}
             <Button
@@ -558,19 +558,19 @@ const HealthCheckComponent: React.FC<HealthCheckComponentProps> = ({
             <DialogTitle>
               {selectedErrorDetails ? `Health Check Error - ${selectedErrorDetails.modelName}` : "Error Details"}
             </DialogTitle>
-            <DialogDescription>Details returned by the model health check.</DialogDescription>
+            <DialogDescription>Детали, возвращённые проверкой здоровья модели.</DialogDescription>
           </DialogHeader>
           {selectedErrorDetails && (
             <div className="space-y-4">
               <div>
-                <span className="font-medium">Error:</span>
+                <span className="font-medium">Ошибка:</span>
                 <div className="mt-2 rounded-md border border-destructive/30 bg-destructive/10 p-3">
                   <span className="text-destructive">{selectedErrorDetails.cleanedError}</span>
                 </div>
               </div>
 
               <div>
-                <span className="font-medium">Full Error Details:</span>
+                <span className="font-medium">Полные детали ошибки:</span>
                 <div className="mt-2 max-h-96 overflow-y-auto rounded-md border bg-muted/50 p-3">
                   <pre className="whitespace-pre-wrap text-sm text-foreground">{selectedErrorDetails.fullError}</pre>
                 </div>
@@ -598,19 +598,19 @@ const HealthCheckComponent: React.FC<HealthCheckComponentProps> = ({
                 ? `Health Check Response - ${selectedSuccessDetails.modelName}`
                 : "Response Details"}
             </DialogTitle>
-            <DialogDescription>Response returned by the successful model health check.</DialogDescription>
+            <DialogDescription>Ответ успешной проверки здоровья модели.</DialogDescription>
           </DialogHeader>
           {selectedSuccessDetails && (
             <div className="space-y-4">
               <div>
-                <span className="font-medium">Status:</span>
+                <span className="font-medium">Статус:</span>
                 <div className="mt-2 rounded-md border border-primary/30 bg-primary/5 p-3">
-                  <span className="text-foreground">Health check passed successfully</span>
+                  <span className="text-foreground">Проверка здоровья пройдена</span>
                 </div>
               </div>
 
               <div>
-                <span className="font-medium">Response Details:</span>
+                <span className="font-medium">Детали ответа:</span>
                 <div className="mt-2 max-h-96 overflow-y-auto rounded-md border bg-muted/50 p-3">
                   <pre className="whitespace-pre-wrap text-sm text-foreground">
                     {JSON.stringify(selectedSuccessDetails.response, null, 2)}

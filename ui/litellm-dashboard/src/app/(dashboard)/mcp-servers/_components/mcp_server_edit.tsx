@@ -922,7 +922,7 @@ const MCPServerEdit: React.FC<MCPServerEditProps> = ({
                   label={
                     <span className="text-sm font-medium text-foreground flex items-center">
                       Макс. одновременных запросов (необязательно)
-                      <SimpleTooltip content="Максимальное число вызовов инструментов LiteLLM к этому серверу одновременно. Дополнительные вызовы ждут свободный слот. Оставьте пустым без ограничения.">
+                      <SimpleTooltip content="Максимальное число вызовов инструментов ruLiteLLM к этому серверу одновременно. Дополнительные вызовы ждут свободный слот. Оставьте пустым без ограничения.">
                         <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                       </SimpleTooltip>
                     </span>
@@ -1067,7 +1067,7 @@ const MCPServerEdit: React.FC<MCPServerEditProps> = ({
                         <TriangleAlert />
                         <AlertTitle>Для этого сервера не выбран поток OAuth</AlertTitle>
                         <AlertDescription>
-                          Выберите Machine-to-Machine (M2M) или Interactive (PKCE), чтобы LiteLLM аутентифицировал сервер так, как вы задумали, и сохраните. Пока не выбрано, LiteLLM использует интерактивную аутентификацию от имени пользователя и консервативно обращается с машинными учётными данными.
+                          Выберите Machine-to-Machine (M2M) или Interactive (PKCE), чтобы ruLiteLLM аутентифицировал сервер так, как вы задумали, и сохраните. Пока не выбрано, ruLiteLLM использует интерактивную аутентификацию от имени пользователя и консервативно обращается с машинными учётными данными.
                         </AlertDescription>
                       </Alert>
                     )}
@@ -1200,7 +1200,7 @@ const MCPServerEdit: React.FC<MCPServerEditProps> = ({
                       label={
                         <span className="text-sm font-medium text-foreground flex items-center">
                           ARN роли AWS
-                          <SimpleTooltip content="Необязательно. ARN роли IAM, принимаемой через STS перед подписью. Если задан, LiteLLM вызывает sts:AssumeRole для получения временных учётных данных.">
+                          <SimpleTooltip content="Необязательно. ARN роли IAM, принимаемой через STS перед подписью. Если задан, ruLiteLLM вызывает sts:AssumeRole для получения временных учётных данных.">
                             <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                           </SimpleTooltip>
                         </span>

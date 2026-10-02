@@ -1,15 +1,15 @@
 export const ERROR_CODE_OPTIONS: { label: string; value: string }[] = [
-  { label: "400 - Bad Request", value: "400" },
-  { label: "401 - Invalid Authentication", value: "401" },
-  { label: "403 - Permission Denied", value: "403" },
-  { label: "404 - Not Found", value: "404" },
-  { label: "408 - Request Timeout", value: "408" },
-  { label: "422 - Unprocessable Entity", value: "422" },
-  { label: "429 - Rate Limited", value: "429" },
-  { label: "500 - Internal Server Error", value: "500" },
-  { label: "502 - Bad Gateway", value: "502" },
-  { label: "503 - Service Unavailable", value: "503" },
-  { label: "529 - Overloaded", value: "529" },
+  { label: "400 — неверный запрос", value: "400" },
+  { label: "401 — неверная аутентификация", value: "401" },
+  { label: "403 — доступ запрещён", value: "403" },
+  { label: "404 — не найдено", value: "404" },
+  { label: "408 — тайм-аут запроса", value: "408" },
+  { label: "422 — необработываемая сущность", value: "422" },
+  { label: "429 — превышен лимит запросов", value: "429" },
+  { label: "500 — внутренняя ошибка сервера", value: "500" },
+  { label: "502 — неверный шлюз", value: "502" },
+  { label: "503 — сервис недоступен", value: "503" },
+  { label: "529 — перегрузка", value: "529" },
 ];
 
 /** Call types that represent MCP tool invocations (shared across columns, index, drawer). */
@@ -22,10 +22,10 @@ export const AGENT_CALL_TYPES = ["asend_message"];
 export const BATCH_CALL_TYPES = ["acreate_batch", "create_batch", "aretrieve_batch", "retrieve_batch"];
 
 export const QUICK_SELECT_OPTIONS: { label: string; value: number; unit: string }[] = [
-  { label: "Last Minute", value: 1, unit: "minutes" },
-  { label: "Last 15 Minutes", value: 15, unit: "minutes" },
-  { label: "Last Hour", value: 1, unit: "hours" },
-  { label: "Last 4 Hours", value: 4, unit: "hours" },
-  { label: "Last 24 Hours", value: 24, unit: "hours" },
-  { label: "Last 7 Days", value: 7, unit: "days" },
+  { label: "Последняя минута", value: 1, unit: "minutes" },
+  { label: "Последние 15 минут", value: 15, unit: "minutes" },
+  { label: "Последний час", value: 1, unit: "hours" },
+  { label: "Последние 4 часа", value: 4, unit: "hours" },
+  { label: "Последние 24 часа", value: 24, unit: "hours" },
+  { label: "Последние 7 дней", value: 7, unit: "days" },
 ];

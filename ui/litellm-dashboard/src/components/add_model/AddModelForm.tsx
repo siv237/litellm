@@ -164,7 +164,7 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
 
   return (
     <>
-      <h2 className="mb-4 text-2xl font-semibold text-foreground">Add Model</h2>
+      <h2 className="mb-4 text-2xl font-semibold text-foreground">Добавить модель</h2>
 
       <Card>
         <CardContent>
@@ -203,9 +203,9 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                       {!teamAdminSelectedTeam && (
                         <Alert variant="info" className="mb-4">
                           <Info />
-                          <AlertTitle>Team Selection Required</AlertTitle>
+                          <AlertTitle>Требуется выбор команды</AlertTitle>
                           <AlertDescription>
-                            As a team admin, you need to select your team first before adding models.
+                            Как админу команды, сначала выберите свою команду, затем добавляйте модели.
                           </AlertDescription>
                         </Alert>
                       )}
@@ -244,7 +244,7 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                       <ConditionalPublicModelName />
 
                       {/* Select Mode */}
-                      <MountedFormField label="Mode" name="mode" className="mb-1">
+                      <MountedFormField label="Режим" name="mode" className="mb-1">
                         {(control) => (
                           <Select
                             items={TEST_MODES}
@@ -254,7 +254,7 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                               setTestMode(value ?? "");
                             }}
                           >
-                            <SelectTrigger id={control.id} className="w-full" aria-label="Mode">
+                            <SelectTrigger id={control.id} className="w-full" aria-label="Режим">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -271,14 +271,14 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                         <div className="col-span-5" />
                         <div className="col-span-5">
                           <p className="text-sm mb-5 mt-1">
-                            <strong>Необязательно</strong> - LiteLLM endpoint to use when health checking this model{" "}
+                            <strong>Необязательно</strong> — эндпоинт ruLiteLLM для проверки здоровья этой модели{" "}
                             <a
                               href="https://docs.litellm.ai/docs/proxy/health#health"
                               target="_blank"
                               rel="noreferrer"
                               className="text-primary hover:underline"
                             >
-                              Learn more
+                              Подробнее
                             </a>
                           </p>
                         </div>
@@ -287,12 +287,12 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                       {/* Credentials */}
                       <div className="mb-4">
                         <span className="text-sm text-muted-foreground">
-                          Either select existing credentials OR enter new provider credentials below
+                          Выберите существующие учётные данные ИЛИ введите новые ниже
                         </span>
                       </div>
 
                       <MountedFormField
-                        label="Existing Credentials"
+                        label="Существующие учётные данные"
                         name="litellm_credential_name"
                         defaultValue={null}
                         className="mb-4"
@@ -300,7 +300,7 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                         {(control) => (
                           <SearchSelect
                             inputId={control.id}
-                            placeholder="Select or search for existing credentials"
+                            placeholder="Выберите или найдите существующие учётные данные"
                             options={credentialOptions}
                             value={(control.value as string | null | undefined) ?? ""}
                             onValueChange={(value) => control.onChange(value === "" ? null : value)}
@@ -321,7 +321,7 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                       )}
                       <div className="flex items-center my-4">
                         <div className="grow border-t border-border"></div>
-                        <span className="px-4 text-muted-foreground text-sm">Additional Model Info Settings</span>
+                        <span className="px-4 text-muted-foreground text-sm">Дополнительные настройки информации о модели</span>
                         <div className="grow border-t border-border"></div>
                       </div>
                       {/* Team-only Model Switch - Only show for proxy admins, not team admins */}
@@ -351,7 +351,7 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                                   }
                                 }}
                                 disabled={!premiumUser}
-                                aria-label="Team-BYOK Model"
+                                aria-label="Модель Team-BYOK"
                               />
                             </span>
                           </SimpleTooltip>
@@ -417,12 +417,12 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                     </>
                   )}
                   <div className="flex justify-between items-center mb-4">
-                    <SimpleTooltip content="Get help on our github">
+                    <SimpleTooltip content="Помощь на нашем GitHub">
                       <a
                         href="https://github.com/BerriAI/litellm/issues"
                         className="text-sm text-primary hover:underline"
                       >
-                        Need Help?
+                        Нужна помощь?
                       </a>
                     </SimpleTooltip>
                     <div className="space-x-2">
@@ -433,10 +433,10 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
                         disabled={isTestingConnection}
                         aria-busy={isTestingConnection}
                       >
-                        Test Connect
+                        Тест подключения
                       </Button>
                       <Button data-testid="add-model-btn" type="submit">
-                        Add Model
+                        Добавить модель
                       </Button>
                     </div>
                   </div>
@@ -459,7 +459,7 @@ const AddModelForm: React.FC<AddModelFormProps> = ({
       >
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[700px]">
           <DialogHeader>
-            <DialogTitle>Connection Test Results</DialogTitle>
+            <DialogTitle>Результаты теста подключения</DialogTitle>
           </DialogHeader>
           {/* Only render the ConnectionErrorDisplay when modal is visible and we have a test ID */}
           {isResultModalVisible && (

@@ -138,7 +138,7 @@ const CacheDashboard: React.FC<CachePageProps> = ({ accessToken, token, userRole
           errorData = { message: error.message };
         }
       } else {
-        errorData = { message: "Unknown error occurred" };
+        errorData = { message: "Произошла неизвестная ошибка" };
       }
       setHealthCheckResponse({ error: errorData });
     }
@@ -147,9 +147,9 @@ const CacheDashboard: React.FC<CachePageProps> = ({ accessToken, token, userRole
   const totals = activity?.totals;
   const hasRequests = totals != null && totals.api_requests + totals.cache_hits + totals.failed_requests > 0;
   const statCards = [
-    { label: "Cache Hit Ratio", value: `${hasRequests ? totals.cache_hit_ratio.toFixed(2) : "0"}%` },
-    { label: "Cache Hits", value: valueFormatterNumbers(totals?.cache_hits ?? 0) },
-    { label: "Cached Completion Tokens", value: valueFormatterNumbers(totals?.cached_completion_tokens ?? 0) },
+    { label: "Доля попаданий в кэш", value: `${hasRequests ? totals.cache_hit_ratio.toFixed(2) : "0"}%` },
+    { label: "Попадания в кэш", value: valueFormatterNumbers(totals?.cache_hits ?? 0) },
+    { label: "Кэшированные генерационные токены", value: valueFormatterNumbers(totals?.cached_completion_tokens ?? 0) },
   ];
 
   return (
@@ -157,21 +157,21 @@ const CacheDashboard: React.FC<CachePageProps> = ({ accessToken, token, userRole
       <div className="mt-2 flex w-full items-center justify-between border-b">
         <TabsList variant="line" className="h-auto rounded-none p-0">
           <TabsTrigger value="analytics" className="flex-none rounded-none px-4 py-2">
-            Cache Analytics
+            Аналитика кэша
           </TabsTrigger>
           <TabsTrigger value="health" className="flex-none rounded-none px-4 py-2">
-            Cache Health
+            Состояние кэша
           </TabsTrigger>
           <TabsTrigger value="settings" className="flex-none rounded-none px-4 py-2">
-            Cache Settings
+            Настройки кэша
           </TabsTrigger>
           <TabsTrigger value="coordination" className="flex-none rounded-none px-4 py-2">
-            Coordination Redis
+            Координационный Redis
           </TabsTrigger>
         </TabsList>
 
         <div className="flex items-center space-x-2">
-          {lastRefreshed && <p className="text-sm text-muted-foreground">Last Refreshed: {lastRefreshed}</p>}
+          {lastRefreshed && <p className="text-sm text-muted-foreground">Последнее обновление: {lastRefreshed}</p>}
           <Button variant="outline" size="icon-sm" onClick={handleRefreshClick} aria-label="Обновить">
             <RefreshCw />
           </Button>
@@ -182,7 +182,7 @@ const CacheDashboard: React.FC<CachePageProps> = ({ accessToken, token, userRole
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Analytics for LiteLLM&apos;s{" "}
+              Аналитика ruLiteLLM за {" "}
               <a
                 href="https://docs.litellm.ai/docs/proxy/caching"
                 target="_blank"
@@ -191,7 +191,7 @@ const CacheDashboard: React.FC<CachePageProps> = ({ accessToken, token, userRole
               >
                 response cache
               </a>{" "}
-              (e.g. Redis / in-memory): requests answered from cache without calling the LLM provider. Provider-side{" "}
+              (напр. Redis / in-memory): запросы, обработанные из кэша без обращения к провайдеру LLM. На стороне провайдера{" "}
               <a
                 href="https://docs.litellm.ai/docs/completion/prompt_caching"
                 target="_blank"
@@ -221,10 +221,10 @@ const CacheDashboard: React.FC<CachePageProps> = ({ accessToken, token, userRole
                       ))
                     }
                   </ComboboxValue>
-                  <ComboboxChipsInput placeholder="Select Virtual Keys" />
+                  <ComboboxChipsInput placeholder="Выберите виртуальные ключи" />
                 </ComboboxChips>
                 <ComboboxContent anchor={anchor1}>
-                  <ComboboxEmpty>No virtual keys found</ComboboxEmpty>
+                  <ComboboxEmpty>Виртуальные ключи не найдены</ComboboxEmpty>
                   <ComboboxList>
                     {(key: string) => (
                       <ComboboxItem key={key} value={key}>
@@ -251,10 +251,10 @@ const CacheDashboard: React.FC<CachePageProps> = ({ accessToken, token, userRole
                       ))
                     }
                   </ComboboxValue>
-                  <ComboboxChipsInput placeholder="Select Models" />
+                  <ComboboxChipsInput placeholder="Выберите модели" />
                 </ComboboxChips>
                 <ComboboxContent anchor={anchor2}>
-                  <ComboboxEmpty>No models found</ComboboxEmpty>
+                  <ComboboxEmpty>Модели не найдены</ComboboxEmpty>
                   <ComboboxList>
                     {(model: string) => (
                       <ComboboxItem key={model} value={model}>
@@ -288,11 +288,11 @@ const CacheDashboard: React.FC<CachePageProps> = ({ accessToken, token, userRole
 
             <Card className="mt-4">
               <CardHeader>
-                <CardTitle className="text-base font-semibold">Cache Hits vs API Requests</CardTitle>
+                <CardTitle className="text-base font-semibold">Попадания в кэш vs запросы к API</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Click a red failed-requests segment to see which error codes caused those failures.
+                  Нажмите на красный сегмент сбойных запросов, чтобы увидеть коды ошибок этих сбоев.
                 </p>
                 {hasUnknownGroup && <p className="mt-1 text-sm text-muted-foreground">{UNKNOWN_CALL_TYPE_NOTE}</p>}
                 <BarChart
@@ -323,7 +323,7 @@ const CacheDashboard: React.FC<CachePageProps> = ({ accessToken, token, userRole
             <Card className="mt-6">
               <CardHeader>
                 <CardTitle className="text-base font-semibold">
-                  Cached Completion Tokens vs Generated Completion Tokens
+                  Кэшированные vs сгенерированные генерационные токены
                 </CardTitle>
               </CardHeader>
               <CardContent>

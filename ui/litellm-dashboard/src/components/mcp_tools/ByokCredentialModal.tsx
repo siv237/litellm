@@ -45,7 +45,7 @@ export const ByokCredentialModal: React.FC<ByokCredentialModalProps> = ({ server
 
   const handleAuthorize = async () => {
     if (!apiKey.trim()) {
-      toast.error("Please enter your API key");
+      toast.error("Введите ваш API-ключ");
       return;
     }
     setLoading(true);
@@ -105,9 +105,9 @@ export const ByokCredentialModal: React.FC<ByokCredentialModalProps> = ({ server
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold text-foreground mb-2">Connect {serverDisplayName}</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-2">Подключить {serverDisplayName}</h2>
               <p className="text-muted-foreground mb-6">
-                LiteLLM needs access to {serverDisplayName} to complete your request.
+                ruLiteLLM нужен доступ к {serverDisplayName} для завершения запроса.
               </p>
 
               {/* How it works */}
@@ -120,9 +120,9 @@ export const ByokCredentialModal: React.FC<ByokCredentialModalProps> = ({ server
                     </svg>
                   </div>
                   <div>
-                    <p className="font-semibold text-foreground mb-1">How it works</p>
+                    <p className="font-semibold text-foreground mb-1">Как это работает</p>
                     <p className="text-muted-foreground text-sm">
-                      LiteLLM acts as a secure bridge. Your requests are routed through our MCP client directly to{" "}
+                      ruLiteLLM работает безопасным мостом. Запросы идут через наш MCP-клиент напрямую в API{" "}
                       {serverDisplayName}&apos;s API.
                     </p>
                   </div>
@@ -137,7 +137,7 @@ export const ByokCredentialModal: React.FC<ByokCredentialModalProps> = ({ server
                       <path d="M12 2L12 22M2 12L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                       <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
                     </svg>
-                    Requested Access
+                    Запрошен доступ
                   </p>
                   <ul className="space-y-2">
                     {server.byok_description.map((item, i) => (
@@ -154,7 +154,7 @@ export const ByokCredentialModal: React.FC<ByokCredentialModalProps> = ({ server
                 onClick={() => setStep(2)}
                 className="w-full bg-gray-900 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-colors"
               >
-                Continue to Authentication <ArrowRight className="size-4" />
+                Продолжить аутентификацию <ArrowRight className="size-4" />
               </button>
               <button
                 onClick={handleClose}
@@ -170,18 +170,18 @@ export const ByokCredentialModal: React.FC<ByokCredentialModalProps> = ({ server
                 <Key className="size-5 text-info" />
               </div>
 
-              <h2 className="text-2xl font-bold text-foreground mb-2">Provide API Key</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-2">Указать API-ключ</h2>
               <p className="text-muted-foreground mb-6">
-                Enter your {serverDisplayName} API key to authorize this connection.
+                Введите API-ключ {serverDisplayName} для авторизации этого подключения.
               </p>
 
               <div className="mb-4">
                 <label htmlFor={apiKeyInputId} className="block text-sm font-semibold text-foreground mb-2">
-                  {serverDisplayName} API Key
+                  {serverDisplayName} API-ключ
                 </label>
                 <PasswordInput
                   id={apiKeyInputId}
-                  placeholder="Enter your API key"
+                  placeholder="Введите API-ключ"
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                   groupClassName="rounded-lg"
@@ -193,7 +193,7 @@ export const ByokCredentialModal: React.FC<ByokCredentialModalProps> = ({ server
                     rel="noopener noreferrer"
                     className="text-info hover:text-info/80 text-sm mt-2 flex items-center gap-1"
                   >
-                    Where do I find my API key? <Link2 className="size-3.5" />
+                    Где найти мой API-ключ? <Link2 className="size-3.5" />
                   </a>
                 )}
               </div>
@@ -207,16 +207,16 @@ export const ByokCredentialModal: React.FC<ByokCredentialModalProps> = ({ server
                       fill="currentColor"
                     />
                   </svg>
-                  <span className="text-sm font-medium text-foreground">Save key for future use</span>
+                  <span className="text-sm font-medium text-foreground">Сохранить ключ для будущего использования</span>
                 </div>
-                <Switch checked={saveKey} onCheckedChange={setSaveKey} aria-label="Save key for future use" />
+                <Switch checked={saveKey} onCheckedChange={setSaveKey} aria-label="Сохранить ключ для будущего использования" />
               </div>
 
               {/* Security note */}
               <div className="bg-info/10 rounded-xl p-4 flex items-start gap-3 mb-6">
                 <Lock className="mt-0.5 size-4 shrink-0 text-info" />
                 <p className="text-sm text-info">
-                  Your key is stored securely and transmitted over HTTPS. It is never shared with third parties.
+                  Ключ хранится безопасно и передаётся по HTTPS. Он не передаётся третьим сторонам.
                 </p>
               </div>
 
@@ -225,7 +225,7 @@ export const ByokCredentialModal: React.FC<ByokCredentialModalProps> = ({ server
                 disabled={loading}
                 className="w-full bg-info hover:bg-info/80 disabled:opacity-60 text-info-foreground font-medium py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-colors"
               >
-                <Lock className="size-4" /> Connect &amp; Authorize
+                <Lock className="size-4" /> Подключить и авторизовать
               </button>
             </div>
           )}

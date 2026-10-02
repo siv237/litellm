@@ -112,13 +112,13 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
     setIsDeleting(true);
     try {
       await deleteSearchTool(accessToken, toolIdToDelete);
-      toast.success("Deleted search tool successfully");
+      toast.success("Инструмент поиска удалён");
       setIsDeleteModalOpen(false);
       setToolToDelete(null);
       refetch();
     } catch (error) {
       console.error("Error deleting the search tool:", error);
-      toast.error("Failed to delete search tool");
+      toast.error("Не удалось удалить инструмент поиска");
     } finally {
       setIsDeleting(false);
     }
@@ -145,19 +145,19 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
 
       try {
         await updateSearchTool(accessToken, selectedToolId, buildSearchToolPayload(values));
-        toast.success("Search tool updated successfully");
+        toast.success("Инструмент поиска обновлён");
         setEditModalVisible(false);
         form.reset(EMPTY_EDIT_VALUES);
         setSelectedToolId(null);
         refetch();
       } catch (error) {
         console.error("Failed to update search tool:", error);
-        toast.error("Failed to update search tool");
+        toast.error("Не удалось обновить инструмент поиска");
       }
     },
     (errors) => {
       console.error("Failed to update search tool:", errors);
-      toast.error("Failed to update search tool");
+      toast.error("Не удалось обновить инструмент поиска");
     },
   );
 
@@ -169,11 +169,11 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
   const renderEditForm = () => (
     <form onSubmit={(event) => event.preventDefault()}>
       <FieldGroup>
-        <FormField control={form.control} name="search_tool_name" label="Search Tool Name">
-          {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="e.g., my-perplexity-search" />}
+        <FormField control={form.control} name="search_tool_name" label="Имя инструмента поиска">
+          {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="напр., my-perplexity-search" />}
         </FormField>
 
-        <FormField control={form.control} name="search_provider" label="Search Provider">
+        <FormField control={form.control} name="search_provider" label="Провайдер поиска">
           {({ id, value, onChange, "aria-invalid": ariaInvalid, "aria-describedby": ariaDescribedBy }) => (
             <Select
               items={availableProviders.map((provider) => ({
@@ -184,7 +184,7 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
               onValueChange={(provider: string | null) => onChange(provider ?? "")}
             >
               <SelectTrigger id={id} aria-invalid={ariaInvalid} aria-describedby={ariaDescribedBy} className="w-full">
-                <SelectValue placeholder="Select a search provider" />
+                <SelectValue placeholder="Выберите провайдера поиска" />
                 {isLoadingProviders && <UiLoadingSpinner className="size-4" />}
               </SelectTrigger>
               <SelectContent>
@@ -198,15 +198,15 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
           )}
         </FormField>
 
-        <FormField control={form.control} name="api_key" label="API Key" description="API key for the search provider">
+        <FormField control={form.control} name="api_key" label="API-ключ" description="API-ключ провайдера поиска">
           {({ ref, value, ...field }) => (
-            <PasswordInput {...field} ref={ref} value={value ?? ""} placeholder="Enter API key" />
+            <PasswordInput {...field} ref={ref} value={value ?? ""} placeholder="Введите API-ключ" />
           )}
         </FormField>
 
         <FormField control={form.control} name="description" label="Описание">
           {({ ref, value, ...field }) => (
-            <Textarea {...field} ref={ref} value={value ?? ""} rows={3} placeholder="Description of this search tool" />
+            <Textarea {...field} ref={ref} value={value ?? ""} rows={3} placeholder="Описание этого инструмента поиска" />
           )}
         </FormField>
       </FieldGroup>
@@ -214,7 +214,7 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
   );
 
   if (!accessToken || !userRole || !userID) {
-    return <div className="p-6 text-center text-muted-foreground">Missing required authentication parameters.</div>;
+    return <div className="p-6 text-center text-muted-foreground">Отсутствуют обязательные параметры аутентификации.</div>;
   }
 
   const ToolsTab = () =>
@@ -255,7 +255,7 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
     <div className="w-full h-full p-6">
       <DeleteResourceModal
         isOpen={isDeleteModalOpen}
-        title="Delete Search Tool"
+        title="Удалить инструмент поиска"
         message="Are you sure you want to delete this search tool? This action cannot be undone."
         resourceInformationTitle="Search Tool Information"
         resourceInformation={
@@ -296,7 +296,7 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
       >
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle>Edit Search Tool</DialogTitle>
+            <DialogTitle>Редактировать инструмент поиска</DialogTitle>
           </DialogHeader>
           {renderEditForm()}
           <DialogFooter>
@@ -315,11 +315,11 @@ const SearchTools: React.FC<SearchToolsProps> = ({ accessToken, userRole, userID
         </DialogContent>
       </Dialog>
 
-      <h1 className="text-lg font-semibold text-foreground">Search Tools</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Configure and manage your search providers</p>
+      <h1 className="text-lg font-semibold text-foreground">Инструменты поиска</h1>
+      <p className="mt-2 text-sm text-muted-foreground">Настройте и управляйте провайдерами поиска</p>
       {isAdminRole(userRole) && (
         <Button className="mt-4 mb-4" variant="outline" onClick={() => setCreateModalVisible(true)}>
-          + Add New Search Tool
+          + Добавить инструмент поиска
         </Button>
       )}
 

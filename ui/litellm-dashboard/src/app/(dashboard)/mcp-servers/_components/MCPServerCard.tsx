@@ -155,7 +155,7 @@ const MCPServerCard: FC<MCPServerCardProps> = ({
                     type="button"
                     onClick={stop}
                     onKeyDown={stop}
-                    aria-label="Server actions"
+                    aria-label="Действия с сервером"
                     className="-mr-1 -mt-1 inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                   >
                     <Ellipsis className="size-5" />
@@ -172,7 +172,7 @@ const MCPServerCard: FC<MCPServerCardProps> = ({
                     }}
                   >
                     <Zap />
-                    Test Connection
+                    Тест подключения
                   </DropdownMenuItem>
                 )}
                 {onRecheckHealth && onDelete && <DropdownMenuSeparator />}
@@ -222,13 +222,12 @@ const MCPServerCard: FC<MCPServerCardProps> = ({
                 render={
                   <Badge variant="outline">
                     <CircleAlert />
-                    OAuth flow not set
+                    OAuth-поток не задан
                   </Badge>
                 }
               />
               <TooltipContent>
-                This OAuth server has no flow set (Machine-to-Machine vs Interactive). Open it and choose an OAuth Flow
-                Type so LiteLLM authenticates it as you intend.
+                У этого OAuth-сервера не задан поток (машина-машина vs интерактивный). Откройте его и выберите тип OAuth-потока, чтобы ruLiteLLM аутентифицировал его как задумано.
               </TooltipContent>
             </Tooltip>
           )}
@@ -272,7 +271,7 @@ const MCPServerCard: FC<MCPServerCardProps> = ({
                     }
                   />
                   <TooltipContent>
-                    <div className="mb-1 font-semibold">Missing user fields:</div>
+                    <div className="mb-1 font-semibold">Отсутствуют поля пользователя:</div>
                     <ul className="ml-3">
                       {missing.map((m) => (
                         <li key={m}>• {m}</li>
@@ -289,7 +288,7 @@ const MCPServerCard: FC<MCPServerCardProps> = ({
                       onOpenFillFields();
                     }}
                   >
-                    Set
+                    Задано
                   </Button>
                 )}
               </div>
@@ -324,7 +323,7 @@ const HealthChip: FC<HealthChipProps> = ({
     return (
       <Badge variant="outline" className="text-muted-foreground">
         <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground" />
-        Checking
+        Проверка
       </Badge>
     );
   }
@@ -350,16 +349,16 @@ const HealthChip: FC<HealthChipProps> = ({
         }
       />
       <TooltipContent side="top" className="max-w-xs">
-        <div className="mb-1 font-semibold">Health: {status}</div>
-        {lastCheck && <div className="mb-1 text-xs">Last check: {new Date(lastCheck).toLocaleString()}</div>}
+        <div className="mb-1 font-semibold">Здоровье: {status}</div>
+        {lastCheck && <div className="mb-1 text-xs">Последняя проверка: {new Date(lastCheck).toLocaleString()}</div>}
         {error && (
           <div className="text-xs">
             <div className="mb-1 font-medium">Ошибка</div>
             <div className="wrap-break-word">{error}</div>
           </div>
         )}
-        {!lastCheck && !error && <div className="text-xs">No health data</div>}
-        {onRecheck && <div className="mt-1 text-xs">Click to recheck</div>}
+        {!lastCheck && !error && <div className="text-xs">Нет данных о здоровье</div>}
+        {onRecheck && <div className="mt-1 text-xs">Нажмите для повторной проверки</div>}
       </TooltipContent>
     </Tooltip>
   );
@@ -374,10 +373,10 @@ const ByokRow: FC<ByokRowProps> = ({ connected, onConnect }) => {
   if (connected) {
     return (
       <div className="flex items-center justify-between gap-2 text-xs">
-        <span className="text-muted-foreground">BYOK credential</span>
+        <span className="text-muted-foreground">Учётные данные BYOK</span>
         <div className="flex items-center gap-2">
           <Badge variant="outline">
-            <Check /> Connected
+            <Check /> Подключено
           </Badge>
           {onConnect && (
             <Button
@@ -388,7 +387,7 @@ const ByokRow: FC<ByokRowProps> = ({ connected, onConnect }) => {
                 onConnect();
               }}
             >
-              Update
+              Обновить
             </Button>
           )}
         </div>
@@ -397,7 +396,7 @@ const ByokRow: FC<ByokRowProps> = ({ connected, onConnect }) => {
   }
   return (
     <div className="flex items-center justify-between gap-2 text-xs">
-      <span className="text-muted-foreground">BYOK credential</span>
+      <span className="text-muted-foreground">Учётные данные BYOK</span>
       {onConnect ? (
         <Button
           size="sm"
@@ -406,7 +405,7 @@ const ByokRow: FC<ByokRowProps> = ({ connected, onConnect }) => {
             onConnect();
           }}
         >
-          Connect
+          Подключить
         </Button>
       ) : (
         <span className="text-muted-foreground">—</span>

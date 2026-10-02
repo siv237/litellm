@@ -117,7 +117,7 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
       form.reset(toFormValues(response.vector_store));
     } catch (error) {
       console.error("Error fetching vector store details:", error);
-      toast.fromError("Error fetching vector store details: " + error);
+      toast.fromError("Не удалось получить сведения о векторном хранилище: " + error);
       setLoadFailed(true);
     }
   };
@@ -151,7 +151,7 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
       try {
         metadata = metadataString ? JSON.parse(metadataString) : {};
       } catch (e) {
-        toast.fromError("Invalid JSON in metadata field");
+        toast.fromError("Некорректный JSON в поле метаданных");
         return;
       }
 
@@ -164,12 +164,12 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
       };
 
       await vectorStoreUpdateCall(accessToken, updateData);
-      toast.success("Vector store updated successfully");
+      toast.success("Векторное хранилище обновлено");
       setIsEditing(false);
       fetchVectorStoreDetails();
     } catch (error) {
       console.error("Error updating vector store:", error);
-      toast.fromError("Error updating vector store: " + error);
+      toast.fromError("Не удалось обновить векторное хранилище: " + error);
     }
   };
 
@@ -186,11 +186,11 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
       <div className="p-4 max-w-full">
         <Button variant="ghost" className="mb-4" onClick={onClose}>
           <ArrowLeft />
-          Back to Vector Stores
+          К векторным хранилищам
         </Button>
-        <h1 className="text-xl font-semibold">Vector store not found</h1>
+        <h1 className="text-xl font-semibold">Векторное хранилище не найдено</h1>
         <p className="text-sm text-muted-foreground">
-          Vector store {vectorStoreId} could not be loaded. It may have been deleted.
+          Не удалось загрузить векторное хранилище {vectorStoreId}. Возможно, оно удалено.
         </p>
       </div>
     );
@@ -206,14 +206,14 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
         <div>
           <Button variant="ghost" className="mb-4" onClick={onClose}>
             <ArrowLeft />
-            Back to Vector Stores
+            К векторным хранилищам
           </Button>
-          <h1 className="text-xl font-semibold">Vector Store ID: {vectorStoreDetails.vector_store_id}</h1>
+          <h1 className="text-xl font-semibold">ID векторного хранилища: {vectorStoreDetails.vector_store_id}</h1>
           <p className="text-sm text-muted-foreground">
             {vectorStoreDetails.vector_store_description || "No description"}
           </p>
         </div>
-        {is_admin && !isEditing && <Button onClick={startEditing}>Edit Vector Store</Button>}
+        {is_admin && !isEditing && <Button onClick={startEditing}>Редактировать векторное хранилище</Button>}
       </div>
 
       <Tabs defaultValue="details">
@@ -222,7 +222,7 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
             Подробнее
           </TabsTrigger>
           <TabsTrigger value="test" className="flex-none rounded-none px-4 py-2">
-            Test Vector Store
+            Тест векторного хранилища
           </TabsTrigger>
         </TabsList>
 
@@ -230,18 +230,18 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
           {isEditing ? (
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">Edit Vector Store</h3>
+                <h3 className="text-lg font-medium">Редактировать векторное хранилище</h3>
               </div>
               <Card>
                 <CardContent>
                   <TooltipProvider>
                     <form onSubmit={form.handleSubmit(handleSave)}>
                       <FieldGroup>
-                        <FormField control={form.control} name="vector_store_id" label="Vector Store ID">
+                        <FormField control={form.control} name="vector_store_id" label="ID векторного хранилища">
                           {({ ref, ...field }) => <Input {...field} ref={ref} disabled />}
                         </FormField>
 
-                        <FormField control={form.control} name="vector_store_name" label="Vector Store Name">
+                        <FormField control={form.control} name="vector_store_name" label="Название векторного хранилища">
                           {({ ref, value, ...field }) => <Input {...field} ref={ref} value={value ?? ""} />}
                         </FormField>
 
@@ -295,10 +295,10 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
                         </FormField>
 
                         <p className="text-sm text-muted-foreground">
-                          Either select existing credentials OR enter provider credentials below
+                          Выберите существующие учётные данные ИЛИ введите учётные данные провайдера ниже
                         </p>
 
-                        <FormField control={form.control} name="litellm_credential_name" label="Existing Credentials">
+                        <FormField control={form.control} name="litellm_credential_name" label="Существующие учётные данные">
                           {({
                             id,
                             value,
@@ -321,12 +321,12 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
                                 id={id}
                                 aria-invalid={ariaInvalid}
                                 aria-describedby={ariaDescribedBy}
-                                placeholder="Select or search for existing credentials"
+                                placeholder="Выберите или найдите существующие учётные данные"
                                 className="w-full"
                                 showClear={value !== undefined}
                               />
                               <ComboboxContent>
-                                <ComboboxEmpty>No matching credentials</ComboboxEmpty>
+                                <ComboboxEmpty>Совпадающие учётные данные не найдены</ComboboxEmpty>
                                 <ComboboxList>
                                   {(option: CredentialOption) => (
                                     <ComboboxItem key={option.label} value={option}>
@@ -372,8 +372,8 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
           ) : (
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">Vector Store Details</h3>
-                {is_admin && <Button onClick={startEditing}>Edit Vector Store</Button>}
+                <h3 className="text-lg font-medium">Сведения о векторном хранилище</h3>
+                {is_admin && <Button onClick={startEditing}>Редактировать векторное хранилище</Button>}
               </div>
               <Card>
                 <CardContent>
@@ -407,19 +407,19 @@ const VectorStoreInfoView: React.FC<VectorStoreInfoViewProps> = ({
                       </div>
                     </div>
                     <div>
-                      <p className="font-medium">Metadata</p>
+                      <p className="font-medium">Метаданные</p>
                       <div className="bg-muted p-3 rounded-sm mt-2 font-mono text-xs overflow-auto max-h-48">
                         <pre>{metadataString}</pre>
                       </div>
                     </div>
                     <div>
-                      <p className="font-medium">Created</p>
+                      <p className="font-medium">Создан</p>
                       <p>
                         {vectorStoreDetails.created_at ? new Date(vectorStoreDetails.created_at).toLocaleString() : "-"}
                       </p>
                     </div>
                     <div>
-                      <p className="font-medium">Last Updated</p>
+                      <p className="font-medium">Последнее обновление</p>
                       <p>
                         {vectorStoreDetails.updated_at ? new Date(vectorStoreDetails.updated_at).toLocaleString() : "-"}
                       </p>

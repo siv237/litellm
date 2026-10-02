@@ -164,8 +164,8 @@ const AddPassThroughEndpoint: React.FC<AddFallbacksProps> = ({
                 <Info />
                 <AlertTitle>Что такое сквозной эндпоинт?</AlertTitle>
                 <AlertDescription>
-                  Направляет запросы из вашего LiteLLM-прокси на любой внешний API. Подходит для своих моделей, API
-                  генерации изображений и любого сервиса, который нужно проксировать через LiteLLM.
+                  Направляет запросы из вашего ruLiteLLM-прокси на любой внешний API. Подходит для своих моделей, API
+                  генерации изображений и любого сервиса, который нужно проксировать через ruLiteLLM.
                 </AlertDescription>
               </Alert>
 

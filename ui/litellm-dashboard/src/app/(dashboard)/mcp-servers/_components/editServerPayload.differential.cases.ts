@@ -120,14 +120,14 @@ export const CASES: readonly DifferentialCase[] = [
     ui: {},
   },
   {
-    label: "expand then collapse: the key is absent again even though a value was typed",
+    label: "при раскрытии и сворачивании ключ снова отсутствует, хотя значение было введено",
     values: { ...ROOT },
     ui: {},
   },
 
   // --- transport axis ---
   {
-    label: "stdio via the JSON config path",
+    label: "stdio через путь конфигурации JSON",
     values: {
       ...ROOT,
       transport: "stdio",
@@ -137,7 +137,7 @@ export const CASES: readonly DifferentialCase[] = [
     ui: {},
   },
   {
-    label: "stdio via a wrapped mcpServers config",
+    label: "stdio через обёрнутую конфигурацию mcpServers",
     values: {
       ...ROOT,
       transport: "stdio",
@@ -232,24 +232,24 @@ export const CASES: readonly DifferentialCase[] = [
     ui: {},
   },
   {
-    label: "oauth_passthrough with an Authorization extra header",
+    label: "oauth_passthrough с дополнительным заголовком Authorization",
     values: { ...ROOT, auth_type: "none", extra_headers: ["Authorization"], oauth_passthrough: true },
     ui: {},
   },
   {
-    label: "oauth_passthrough without the Authorization header, forced false",
+    label: "oauth_passthrough без заголовка Authorization, принудительно false",
     values: { ...ROOT, auth_type: "none", extra_headers: ["X-Other"], oauth_passthrough: true },
     ui: {},
   },
 
   // --- auth-type transitions that null out the previous subtree ---
   {
-    label: "was oauth2, now api_key: nulls the four oauth endpoints",
+    label: "было oauth2, стало api_key: обнуляет четыре oauth-эндпоинта",
     values: { ...ROOT, auth_type: "api_key", credentials: { auth_value: "v" } },
     ui: { mcpServer: { ...SERVER, auth_type: "oauth2" } },
   },
   {
-    label: "was token_exchange, now none: nulls the four exchange fields",
+    label: "было token_exchange, стало none: обнуляет четыре поля обмена",
     values: { ...ROOT, auth_type: "none" },
     ui: { mcpServer: { ...SERVER, auth_type: "oauth2_token_exchange" } },
   },
@@ -294,12 +294,12 @@ export const CASES: readonly DifferentialCase[] = [
   },
   { label: "credentials absent entirely", values: { ...ROOT, auth_type: "oauth2" }, ui: {} },
   {
-    label: "removeStoredApp forces an explicit-null app write",
+    label: "removeStoredApp принудительно пишет явный null app",
     values: { ...ROOT, auth_type: "true_passthrough", credentials: { ...CREDS } },
     ui: { removeStoredApp: true, mcpServer: { ...SERVER, auth_type: "true_passthrough" } },
   },
   {
-    label: "removeStoredApp ignored outside a client-forwarded mode",
+    label: "removeStoredApp игнорируется вне client-forwarded режима",
     values: { ...ROOT, auth_type: "api_key", credentials: { ...CREDS } },
     ui: { removeStoredApp: true },
   },
@@ -368,7 +368,7 @@ export const CASES: readonly DifferentialCase[] = [
 
   { label: "cost config present", values: { ...ROOT }, ui: { costConfig: { default_cost_per_query: 0.01 } as never } },
   { label: "logo url present", values: { ...ROOT }, ui: { logoUrl: "https://cdn/logo.png" } },
-  { label: "token validation JSON parses", values: { ...ROOT, token_validation_json: '{"aud":"x"}' }, ui: {} },
+  { label: "JSON валидации токена парсится", values: { ...ROOT, token_validation_json: '{"aud":"x"}' }, ui: {} },
   {
     label: "token validation blank clears an existing value",
     values: { ...ROOT, token_validation_json: "   " },
@@ -381,26 +381,26 @@ export const CASES: readonly DifferentialCase[] = [
   },
 
   // --- the six failure branches ---
-  { label: "ERR invalid tool display name", values: { ...ROOT }, ui: { toolNameToDisplayName: { a: "has spaces" } } },
+  { label: "ОШИБКА: неверное отображаемое имя инструмента", values: { ...ROOT }, ui: { toolNameToDisplayName: { a: "has spaces" } } },
   {
-    label: "ERR stdio config missing a command",
+    label: "ОШИБКА: в stdio-конфигурации нет команды",
     values: { ...ROOT, transport: "stdio", stdio_config: JSON.stringify({ args: [] }) },
     ui: {},
   },
   {
-    label: "ERR stdio config invalid JSON",
+    label: "ОШИБКА: некорректный JSON stdio-конфигурации",
     values: { ...ROOT, transport: "stdio", stdio_config: "{not json" },
     ui: {},
   },
   {
-    label: "ERR stdio env invalid JSON",
+    label: "ОШИБКА: некорректный JSON stdio env",
     values: { ...ROOT, transport: "stdio", command: "npx", env_json: "{not json" },
     ui: {},
   },
   {
-    label: "ERR stdio dedicated path with a blank command",
+    label: "ОШИБКА: выделенный stdio-путь с пустой командой",
     values: { ...ROOT, transport: "stdio", command: "   " },
     ui: {},
   },
-  { label: "ERR token validation invalid JSON", values: { ...ROOT, token_validation_json: "{not json" }, ui: {} },
+  { label: "ОШИБКА: некорректный JSON валидации токена", values: { ...ROOT, token_validation_json: "{not json" }, ui: {} },
 ];

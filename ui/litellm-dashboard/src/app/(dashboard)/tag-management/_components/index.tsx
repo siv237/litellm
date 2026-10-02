@@ -48,7 +48,7 @@ const TagManagement: React.FC<TagProps> = ({ accessToken, userID, userRole }) =>
       setTags(Object.values(response));
     } catch (error) {
       console.error("Error fetching tags:", error);
-      toast.fromError("Error fetching tags: " + error);
+      toast.fromError("Не удалось получить теги: " + error);
     } finally {
       setIsLoadingTags(false);
     }
@@ -73,12 +73,12 @@ const TagManagement: React.FC<TagProps> = ({ accessToken, userID, userRole }) =>
         rpm_limit: formValues.rpm_limit,
         budget_duration: formValues.budget_duration,
       });
-      toast.success("Tag created successfully");
+      toast.success("Тег создан");
       setIsCreateModalVisible(false);
       fetchTags();
     } catch (error) {
       console.error("Error creating tag:", error);
-      toast.fromError("Error creating tag: " + error);
+      toast.fromError("Не удалось создать тег: " + error);
     }
   };
 
@@ -92,11 +92,11 @@ const TagManagement: React.FC<TagProps> = ({ accessToken, userID, userRole }) =>
     setIsDeleting(true);
     try {
       await tagDeleteCall(accessToken, tagToDelete);
-      toast.success("Tag deleted successfully");
+      toast.success("Тег удалён");
       fetchTags();
     } catch (error) {
       console.error("Error deleting tag:", error);
-      toast.fromError("Error deleting tag: " + error);
+      toast.fromError("Не удалось удалить тег: " + error);
     } finally {
       setIsDeleting(false);
       setIsDeleteModalOpen(false);
@@ -114,7 +114,7 @@ const TagManagement: React.FC<TagProps> = ({ accessToken, userID, userRole }) =>
           }
         } catch (error) {
           console.error("Error fetching models:", error);
-          toast.fromError("Error fetching models: " + error);
+          toast.fromError("Не удалось получить модели: " + error);
         }
       };
       fetchModels();
@@ -141,20 +141,19 @@ const TagManagement: React.FC<TagProps> = ({ accessToken, userID, userRole }) =>
       ) : (
         <div className="flex h-full w-full flex-col p-8 pt-10">
           <div className="mt-2 mb-4 flex w-full items-center justify-between">
-            <h1>Tag Management</h1>
+            <h1>Управление тегами</h1>
             <div className="flex items-center space-x-2">
-              {lastRefreshed && <p className="text-sm">Last Refreshed: {lastRefreshed}</p>}
-              <Button variant="outline" size="icon-sm" aria-label="Refresh tags" onClick={handleRefreshClick}>
+              {lastRefreshed && <p className="text-sm">Последнее обновление: {lastRefreshed}</p>}
+              <Button variant="outline" size="icon-sm" aria-label="Обновить теги" onClick={handleRefreshClick}>
                 <RefreshCw />
               </Button>
             </div>
           </div>
 
           <div className="mb-4 text-sm">
-            Click on a tag name to view and edit its details.
+            Нажмите на имя тега, чтобы увидеть и редактировать его детали.
             <p>
-              You can use tags to restrict the usage of certain LLMs based on tags passed in the request. Read more
-              about tag routing{" "}
+              Теги позволяют ограничивать использование отдельных LLM по тегам в запросе. Подробнее о маршрутизации по тегам{" "}
               <a href="https://docs.litellm.ai/docs/proxy/tag_routing" target="_blank" rel="noopener noreferrer">
                 here
               </a>
@@ -163,7 +162,7 @@ const TagManagement: React.FC<TagProps> = ({ accessToken, userID, userRole }) =>
           </div>
 
           <Button className="mb-4 self-start" onClick={() => setIsCreateModalVisible(true)}>
-            + Create New Tag
+            + Создать тег
           </Button>
 
           <div className="mt-2 flex min-h-0 flex-1 flex-col">
@@ -190,10 +189,10 @@ const TagManagement: React.FC<TagProps> = ({ accessToken, userID, userRole }) =>
           {/* Delete Confirmation Modal */}
           <DeleteResourceModal
             isOpen={isDeleteModalOpen}
-            title="Delete Tag"
+            title="Удалить тег"
             message="Are you sure you want to delete this tag? This action cannot be undone."
             resourceInformationTitle="Tag Information"
-            resourceInformation={[{ label: "Tag Name", value: tagToDelete, code: true }]}
+            resourceInformation={[{ label: "Имя тега", value: tagToDelete, code: true }]}
             onCancel={() => {
               setIsDeleteModalOpen(false);
               setTagToDelete(null);

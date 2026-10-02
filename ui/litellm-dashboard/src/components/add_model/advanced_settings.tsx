@@ -467,7 +467,7 @@ const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
             <MountedFormField
               name="litellm_extra_params"
               label={labelWithHint(
-                "Параметры LiteLLM",
+                "Параметры ruLiteLLM",
                 "Optional litellm params used for making a litellm.completion() call.",
               )}
               className="mb-4 mt-4"

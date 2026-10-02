@@ -87,7 +87,7 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
         <Button variant="ghost" size="icon" aria-label="Назад" onClick={onBack} className="mb-4">
           <ArrowLeftIcon className="size-4" />
         </Button>
-        <p className="py-8 text-center text-sm text-muted-foreground">Access group not found</p>
+        <p className="py-8 text-center text-sm text-muted-foreground">Группа доступа не найдена</p>
       </div>
     );
   }
@@ -112,25 +112,25 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
             <h1 className="text-xl font-semibold tracking-tight text-foreground">{accessGroup.access_group_name}</h1>
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <span>ID: {accessGroup.access_group_id}</span>
-              <CopyButton value={accessGroup.access_group_id} label="Copy access group ID" />
+              <CopyButton value={accessGroup.access_group_id} label="Копировать ID группы доступа" />
             </div>
           </div>
         </div>
         <Button onClick={() => setIsEditModalVisible(true)}>
           <EditIcon className="size-4" />
-          Edit Access Group
+          Редактировать группу доступа
         </Button>
       </div>
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Group Details</CardTitle>
+          <CardTitle>Детали группы</CardTitle>
         </CardHeader>
         <CardContent>
           <dl className="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 text-sm">
             <dt className="text-muted-foreground">Описание</dt>
             <dd className="text-foreground">{accessGroup.description || "—"}</dd>
-            <dt className="text-muted-foreground">Created</dt>
+            <dt className="text-muted-foreground">Создан</dt>
             <dd className="flex items-center gap-1 text-foreground">
               {new Date(accessGroup.created_at).toLocaleString()}
               {accessGroup.created_by && (
@@ -140,7 +140,7 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
                 </>
               )}
             </dd>
-            <dt className="text-muted-foreground">Last Updated</dt>
+            <dt className="text-muted-foreground">Последнее обновление</dt>
             <dd className="flex items-center gap-1 text-foreground">
               {new Date(accessGroup.updated_at).toLocaleString()}
               {accessGroup.updated_by && (
@@ -159,7 +159,7 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <KeyIcon className="size-4" />
-              Attached Keys
+              Присоединённые ключи
               <Badge variant="secondary">{keys.length}</Badge>
             </CardTitle>
             {keys.length > MAX_PREVIEW && (
@@ -178,7 +178,7 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No keys attached</p>
+              <p className="text-sm text-muted-foreground">Ключи не присоединены</p>
             )}
           </CardContent>
         </Card>
@@ -187,7 +187,7 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UsersIcon className="size-4" />
-              Attached Teams
+              Присоединённые команды
               <Badge variant="secondary">{teams.length}</Badge>
             </CardTitle>
             {teams.length > MAX_PREVIEW && (
@@ -206,7 +206,7 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No teams attached</p>
+              <p className="text-sm text-muted-foreground">Команды не присоединены</p>
             )}
           </CardContent>
         </Card>
@@ -223,23 +223,23 @@ export function AccessGroupDetail({ accessGroupId, onBack }: AccessGroupDetailPr
               </TabsTrigger>
               <TabsTrigger value="mcp" className="flex-none gap-2 rounded-none px-4 py-2">
                 <ServerIcon className="size-4" />
-                MCP Servers
+                MCP-серверы
                 <Badge variant="secondary">{mcpServers.length}</Badge>
               </TabsTrigger>
               <TabsTrigger value="agents" className="flex-none gap-2 rounded-none px-4 py-2">
                 <BotIcon className="size-4" />
-                Agents
+                Агенты
                 <Badge variant="secondary">{agents.length}</Badge>
               </TabsTrigger>
             </TabsList>
             <TabsContent value="models" className="pt-4">
-              <ResourceList items={models} emptyMessage="No models assigned to this group" />
+              <ResourceList items={models} emptyMessage="Модели не назначены этой группе" />
             </TabsContent>
             <TabsContent value="mcp" className="pt-4">
-              <ResourceList items={mcpServers} emptyMessage="No MCP servers assigned to this group" />
+              <ResourceList items={mcpServers} emptyMessage="MCP-серверы не назначены этой группе" />
             </TabsContent>
             <TabsContent value="agents" className="pt-4">
-              <ResourceList items={agents} emptyMessage="No agents assigned to this group" />
+              <ResourceList items={agents} emptyMessage="Агенты не назначены этой группе" />
             </TabsContent>
           </Tabs>
         </CardContent>

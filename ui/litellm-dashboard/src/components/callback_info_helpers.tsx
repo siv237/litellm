@@ -30,7 +30,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       arize_api_key: "password",
       arize_space_id: "password",
     },
-    description: "Arize Logging Integration",
+    description: "Интеграция журналирования Arize",
   },
   {
     id: "braintrust",
@@ -41,7 +41,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       braintrust_api_key: "password",
       braintrust_project_name: "text",
     },
-    description: "Braintrust Logging Integration",
+    description: "Интеграция журналирования Braintrust",
   },
   {
     id: "custom_callback_api",
@@ -51,7 +51,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       custom_callback_api_url: "text",
       custom_callback_api_headers: "text",
     },
-    description: "Custom Callback API Logging Integration",
+    description: "Интеграция журналирования пользовательского API коллбэков",
   },
   {
     id: "galileo",
@@ -66,7 +66,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       GALILEO_USERNAME: "text",
       GALILEO_PASSWORD: "password",
     },
-    description: "Galileo AI Observability Integration",
+    description: "Интеграция наблюдаемости Galileo AI",
   },
   {
     id: "datadog",
@@ -77,7 +77,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       dd_api_key: "password",
       dd_site: "text",
     },
-    description: "Datadog Logging Integration",
+    description: "Интеграция журналирования Datadog",
   },
   {
     id: "newrelic",
@@ -88,7 +88,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       newrelic_api_key: "password",
       newrelic_region: "text",
     },
-    description: "New Relic Logging Integration",
+    description: "Интеграция журналирования New Relic",
   },
   {
     id: "lago",
@@ -99,7 +99,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       lago_api_url: "text",
       lago_api_key: "password",
     },
-    description: "Lago Billing Logging Integration",
+    description: "Интеграция журналирования Lago Billing",
   },
   {
     id: "langfuse",
@@ -112,7 +112,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       langfuse_host: "text",
       langfuse_environment: "text",
     },
-    description: "Langfuse v2 Logging Integration",
+    description: "Интеграция журналирования Langfuse v2",
   },
   {
     id: "langfuse_otel",
@@ -125,7 +125,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       langfuse_host: "text",
       langfuse_environment: "text",
     },
-    description: "Langfuse v3 OTEL Logging Integration",
+    description: "Интеграция журналирования Langfuse v3 OTEL",
   },
   {
     id: "langsmith",
@@ -138,7 +138,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       langsmith_base_url: "text",
       langsmith_sampling_rate: "number",
     },
-    description: "Langsmith Logging Integration",
+    description: "Интеграция журналирования Langsmith",
   },
   {
     id: "openmeter",
@@ -149,7 +149,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       openmeter_api_key: "password",
       openmeter_base_url: "text",
     },
-    description: "OpenMeter Logging Integration",
+    description: "Интеграция журналирования OpenMeter",
   },
   {
     id: "otel",
@@ -161,7 +161,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       otel_headers: "text",
       otel_exporter_otlp_protocol: "select",
     },
-    description: "OpenTelemetry Logging Integration",
+    description: "Интеграция журналирования OpenTelemetry",
   },
   {
     id: "pointfive",
@@ -172,7 +172,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       POINTFIVE_API_KEY: "password",
       POINTFIVE_API_URL: "text",
     },
-    description: "PointFive Logging Integration",
+    description: "Интеграция журналирования PointFive",
   },
   {
     id: "s3",
@@ -185,7 +185,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       aws_secret_access_key: "password",
       aws_region: "text",
     },
-    description: "S3 Bucket (AWS) Logging Integration",
+    description: "Интеграция журналирования S3 (AWS)",
   },
   {
     id: "SQS",
@@ -198,7 +198,7 @@ export const CALLBACK_CONFIGS: CallbackConfig[] = [
       aws_secret_access_key: "password",
       aws_region: "text",
     },
-    description: "SQS Queue (AWS) Logging Integration",
+    description: "Интеграция журналирования SQS (AWS)",
   },
 ];
 

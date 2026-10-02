@@ -149,7 +149,7 @@ const CacheSettings: React.FC<CacheSettingsProps> = ({ accessToken }) => {
         <form onSubmit={(event) => event.preventDefault()} className="space-y-6">
           <div className="max-w-3xl">
             <h3 className="text-sm font-medium text-foreground">Настройки кэша</h3>
-            <p className="text-xs text-muted-foreground mt-1">Настройте кэш Redis для LiteLLM</p>
+            <p className="text-xs text-muted-foreground mt-1">Настройте кэш Redis для ruLiteLLM</p>
           </div>
 
           <RedisTypeSelector

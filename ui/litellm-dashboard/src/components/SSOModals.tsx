@@ -129,7 +129,7 @@ const SSOModals: React.FC<SSOModalsProps> = ({
   // Enhanced form submission handler
   const handleFormSubmit = async (formValues: SSOSettingsFormValues) => {
     if (!accessToken) {
-      toast.fromError("No access token available");
+      toast.fromError("Токен доступа недоступен");
       return;
     }
 
@@ -191,14 +191,14 @@ const SSOModals: React.FC<SSOModalsProps> = ({
       // Continue with the original flow (show instructions)
       handleShowInstructions(formValues);
     } catch (error: unknown) {
-      toast.fromError("Failed to save SSO settings: " + parseErrorMessage(error));
+      toast.fromError("Не удалось сохранить настройки SSO: " + parseErrorMessage(error));
     }
   };
 
   // Handle clearing SSO settings
   const handleClearSSO = async () => {
     if (!accessToken) {
-      toast.fromError("No access token available");
+      toast.fromError("Токен доступа недоступен");
       return;
     }
 
@@ -237,10 +237,10 @@ const SSOModals: React.FC<SSOModalsProps> = ({
       // Close the main SSO modal and trigger refresh
       handleAddSSOOk();
 
-      toast.success("SSO settings cleared successfully");
+      toast.success("Настройки SSO очищены");
     } catch (error) {
       console.error("Failed to clear SSO settings:", error);
-      toast.fromError("Failed to clear SSO settings");
+      toast.fromError("Не удалось очистить настройки SSO");
     }
   };
 
@@ -264,7 +264,7 @@ const SSOModals: React.FC<SSOModalsProps> = ({
                 {provider ? renderProviderFields(provider) : null}
                 <ProxyAdminEmailField />
                 <ProxyBaseUrlField />
-                {showRoleMappingToggle && <MappingToggleField name="use_role_mappings" label="Use Role Mappings" />}
+                {showRoleMappingToggle && <MappingToggleField name="use_role_mappings" label="Использовать маппинги ролей" />}
                 {useRoleMappings && (
                   <>
                     <GroupClaimField />
@@ -275,7 +275,7 @@ const SSOModals: React.FC<SSOModalsProps> = ({
               <div className="mt-4 flex items-center justify-end gap-2">
                 {ssoConfigured && (
                   <Button type="button" variant="secondary" onClick={() => setIsClearConfirmModalVisible(true)}>
-                    Clear
+                    Очистить
                   </Button>
                 )}
                 <Button type="submit">Сохранить</Button>
@@ -289,16 +289,16 @@ const SSOModals: React.FC<SSOModalsProps> = ({
       <Dialog open={isClearConfirmModalVisible} onOpenChange={(open) => !open && setIsClearConfirmModalVisible(false)}>
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Confirm Clear SSO Settings</DialogTitle>
+            <DialogTitle>Подтвердить очистку настроек SSO</DialogTitle>
           </DialogHeader>
-          <p>Are you sure you want to clear all SSO settings? This action cannot be undone.</p>
-          <p>Users will no longer be able to login using SSO after this change.</p>
+          <p>Вы уверены, что хотите очистить все настройки SSO? Действие необратимо.</p>
+          <p>После этого пользователи не смогут входить через SSO.</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsClearConfirmModalVisible(false)}>
               Отмена
             </Button>
             <Button onClick={handleClearSSO} variant="destructive">
-              Yes, Clear
+              Да, очистить
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -307,13 +307,13 @@ const SSOModals: React.FC<SSOModalsProps> = ({
       <Dialog open={isInstructionsModalVisible} onOpenChange={(open) => !open && handleInstructionsCancel()}>
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[800px]">
           <DialogHeader>
-            <DialogTitle>SSO Setup Instructions</DialogTitle>
+            <DialogTitle>Инструкции по настройке SSO</DialogTitle>
           </DialogHeader>
-          <p>Follow these steps to complete the SSO setup:</p>
-          <p className="text-sm mt-2">1. DO NOT Exit this TAB</p>
-          <p className="text-sm mt-2">2. Open a new tab, visit your proxy base url</p>
-          <p className="text-sm mt-2">3. Confirm your SSO is configured correctly and you can login on the new Tab</p>
-          <p className="text-sm mt-2">4. If Step 3 is successful, you can close this tab</p>
+          <p>Выполните эти шаги, чтобы завершить настройку SSO:</p>
+          <p className="text-sm mt-2">1. НЕ закрывайте эту вкладку</p>
+          <p className="text-sm mt-2">2. Откройте новую вкладку и перейдите на базовый URL прокси</p>
+          <p className="text-sm mt-2">3. Убедитесь, что SSO настроен корректно и вход работает на новой вкладке</p>
+          <p className="text-sm mt-2">4. Если шаг 3 успешен, закройте эту вкладку</p>
           <div style={{ textAlign: "right", marginTop: "10px" }}>
             <Button type="button" onClick={handleInstructionsOk}>
               Готово

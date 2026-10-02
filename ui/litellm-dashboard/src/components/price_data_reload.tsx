@@ -442,7 +442,7 @@ const PriceDataReload: React.FC<PriceDataReloadProps> = ({
             <DialogHeader>
               <DialogTitle>Настроить периодическую перезагрузку</DialogTitle>
               <DialogDescription>
-                Укажите, как часто LiteLLM должен загружать актуальные данные цен из удалённого источника.
+                Укажите, как часто ruLiteLLM должен загружать актуальные данные цен из удалённого источника.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">

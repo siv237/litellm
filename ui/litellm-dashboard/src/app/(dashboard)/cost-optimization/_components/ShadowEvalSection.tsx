@@ -98,13 +98,13 @@ const jobModelScope = (job: ShadowEvalJob): React.ReactNode =>
 const jobHeadline = (job: ShadowEvalJob): React.ReactNode =>
   job.direction === "reverse" ? (
     <>
-      Comparing <span className="font-mono text-xs">{jobRouters(job)}</span> to{" "}
+      Сравнение <span className="font-mono text-xs">{jobRouters(job)}</span> to{" "}
       <span className="font-mono text-xs">{job.baseline_model}</span> on {job.shadow_percentage}% of{" "}
       <span className="font-mono text-xs">{shadowedTargetsLabel(job)}</span> traffic{jobModelScope(job)}
     </>
   ) : (
     <>
-      Shadowing {job.shadow_percentage}% of <span className="font-mono text-xs">{shadowedTargetsLabel(job)}</span>{" "}
+      Теневое копирование {job.shadow_percentage}% от <span className="font-mono text-xs">{shadowedTargetsLabel(job)}</span>{" "}
       traffic{jobModelScope(job)} via <span className="font-mono text-xs">{jobRouters(job)}</span>
     </>
   );
@@ -162,7 +162,7 @@ const SliceTable: React.FC<{
           <TableCell className="font-medium text-foreground">
             {slice.group}
             {slice.turn_count < MIN_TURNS_FOR_CONFIDENCE && (
-              <span className="ml-2 text-xs font-normal text-muted-foreground">(low sample)</span>
+              <span className="ml-2 text-xs font-normal text-muted-foreground">(малая выборка)</span>
             )}
           </TableCell>
           <TableCell className="text-right tabular-nums">{slice.turn_count.toLocaleString()}</TableCell>
@@ -196,7 +196,7 @@ const CostComparison: React.FC<{
   return (
     <div className="flex min-w-[240px] flex-1 flex-col gap-1 border-t px-6 py-4 sm:border-l sm:border-t-0">
       <p className="flex items-center gap-1 text-[11px] uppercase tracking-wide text-muted-foreground">
-        Router cost vs {direction === "reverse" ? "the baseline" : "your current model"}
+        Стоимость роутера vs {direction === "reverse" ? "the baseline" : "your current model"}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger render={<CircleHelp className="size-3.5 shrink-0 cursor-help" />} />
@@ -230,8 +230,8 @@ const VerdictBar: React.FC<{ direction: ShadowEvalDirection; results: NonNullabl
       ? Math.max(0, 100 - results.overall_shadow_win_rate_pct - ties)
       : results.overall_shadow_win_rate_pct;
   const segments = [
-    { label: "Router won", value: routerWins, fill: "bg-success" },
-    { label: "Tie", value: ties, fill: "bg-success/20" },
+    { label: "Роутер выиграл", value: routerWins, fill: "bg-success" },
+    { label: "Ничья", value: ties, fill: "bg-success/20" },
     {
       label: `${otherArmLabel(direction)} won`,
       value: Math.max(0, 100 - routerWins - ties),
@@ -240,7 +240,7 @@ const VerdictBar: React.FC<{ direction: ShadowEvalDirection; results: NonNullabl
   ];
   return (
     <div className="space-y-2 border-b px-6 py-4">
-      <div className="flex h-2 w-full overflow-hidden rounded-full" role="img" aria-label="Verdict breakdown">
+      <div className="flex h-2 w-full overflow-hidden rounded-full" role="img" aria-label="Разбивка вердиктов">
         {segments
           .filter((segment) => segment.value > 0)
           .map((segment) => (
@@ -264,7 +264,7 @@ const TargetTable: React.FC<{ job: ShadowEvalJob }> = ({ job }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Target</TableHead>
+          <TableHead>Цель</TableHead>
           <TableHead>Статус</TableHead>
           {["Budget used", "Router wins", `${otherArmLabel(job.direction)} wins`].map((label) => (
             <TableHead key={label} className="text-right">
@@ -303,7 +303,7 @@ const TargetTable: React.FC<{ job: ShadowEvalJob }> = ({ job }) => {
                 </>
               ) : (
                 <TableCell colSpan={2} className="text-right text-muted-foreground">
-                  No verdicts yet
+                  Вердиктов пока нет
                 </TableCell>
               )}
             </TableRow>
@@ -339,7 +339,7 @@ const ResultsBody: React.FC<{ job: ShadowEvalJob; resultsError?: boolean }> = ({
           <div className="flex flex-wrap border-b">
             <div className="flex min-w-[240px] flex-1 flex-col gap-1 px-6 py-4">
               <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                Router matched or beat {job.direction === "reverse" ? "the baseline" : "your current model"}
+                Роутер совпал или превзошёл {job.direction === "reverse" ? "the baseline" : "your current model"}
               </p>
               <p className="text-3xl font-semibold text-foreground">
                 {pct(routerMatchedOrBeatPct(job.direction, results))}
@@ -391,9 +391,9 @@ const JobResults: React.FC<{
           <div>
             <p className="text-sm font-medium text-foreground">{jobHeadline(job)}</p>
             <p className="text-xs text-muted-foreground">
-              {(job.judged_count ?? 0).toLocaleString()} turns judged · {(job.error_count ?? 0).toLocaleString()}{" "}
-              errored · {usd(totalSpend(job))}
-              {totalBudget(job) !== null ? ` of ${usd(totalBudget(job) ?? 0)}` : ""} eval spend
+              {(job.judged_count ?? 0).toLocaleString()} решений оценено · {(job.error_count ?? 0).toLocaleString()} {" "}
+              с ошибками · {usd(totalSpend(job))}
+              {totalBudget(job) !== null ? ` из ${usd(totalBudget(job) ?? 0)}` : ""} стоимость оценок
               {active && remaining ? ` · ${remaining}` : ""}
             </p>
           </div>
@@ -406,7 +406,7 @@ const JobResults: React.FC<{
       </div>
       {(job.error_count ?? 0) > 0 && job.last_error != null && (
         <p className="border-b bg-destructive/10 px-6 py-2 text-xs text-destructive">
-          Last failure: <span className="font-mono">{job.last_error}</span>
+          Последний сбой: <span className="font-mono">{job.last_error}</span>
         </p>
       )}
       <ResultsBody job={job} resultsError={resultsError} />
@@ -465,7 +465,7 @@ const PreviousJobs: React.FC<{ jobs: readonly ShadowEvalJob[] }> = ({ jobs }) =>
         onClick={() => setOpen((prev) => !prev)}
         className="flex w-full items-center justify-between gap-3 px-6 py-3 text-left hover:bg-muted/50"
       >
-        <span className="text-sm font-medium text-foreground">Previous evaluations ({jobs.length})</span>
+        <span className="text-sm font-medium text-foreground">Предыдущие оценки ({jobs.length})</span>
         <span className="text-xs text-muted-foreground">{open ? "Hide" : "Show"}</span>
       </button>
       {open && (
@@ -509,16 +509,14 @@ const ShadowEvalSection: React.FC = () => {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-baseline gap-2">
-        <h2 className="text-xl font-semibold text-foreground">Shadow eval</h2>
+        <h2 className="text-xl font-semibold text-foreground">Теневая оценка</h2>
         <p className="text-sm text-muted-foreground">
-          Blind-judge the auto-router on the real traffic of a key, team, or user (teams and users cover
-          JWT-authenticated traffic): against the models they use today before switching, or against a fixed baseline
-          after they have switched.
+          Слепо оцените авто-роутер на реальном трафике ключа, команды или пользователя (команды и пользователи — JWT-трафик): против используемых сейчас моделей до переключения или против фиксированного базлайна после.
         </p>
       </div>
 
       {error != null && (
-        <p className="text-sm text-destructive">Existing evaluations could not be loaded. Refresh the page to retry.</p>
+        <p className="text-sm text-destructive">Не удалось загрузить существующие оценки. Обновите страницу для повтора.</p>
       )}
 
       {isPending && error == null && <p className="text-sm text-muted-foreground">Loading evaluations...</p>}

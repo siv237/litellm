@@ -59,7 +59,7 @@ function MetricItem({ label, tooltip, icon, value }: MetricItemProps) {
 function ResponseCacheIndicator() {
   return (
     <MetricItem
-      label="Response Cache"
+      label="Кэш ответов"
       tooltip={RESPONSE_CACHE_TOOLTIP}
       icon={<History className="size-3" aria-hidden="true" />}
       value="Hit"
@@ -79,7 +79,7 @@ function PromptCacheChips({ usage }: { usage?: TokenUsage }) {
     <>
       {readTokens > 0 && (
         <MetricItem
-          label="Cache Read"
+          label="Чтение кэша"
           tooltip={PROMPT_CACHE_READ_TOOLTIP}
           icon={<Database className="size-3" aria-hidden="true" />}
           value={String(readTokens)}
@@ -88,7 +88,7 @@ function PromptCacheChips({ usage }: { usage?: TokenUsage }) {
 
       {creationTokens > 0 && (
         <MetricItem
-          label="Cache Write"
+          label="Запись в кэш"
           tooltip={PROMPT_CACHE_CREATION_TOOLTIP}
           icon={<DatabaseBackup className="size-3" aria-hidden="true" />}
           value={String(creationTokens)}
@@ -106,7 +106,7 @@ const ResponseMetrics: React.FC<ResponseMetricsProps> = ({ timeToFirstToken, tot
       {timeToFirstToken !== undefined && (
         <MetricItem
           label="TTFT"
-          tooltip="Time to first token"
+          tooltip="Время до первого токена"
           icon={<Clock className="size-3" aria-hidden="true" />}
           value={`${(timeToFirstToken / 1000).toFixed(2)}s`}
         />
@@ -114,8 +114,8 @@ const ResponseMetrics: React.FC<ResponseMetricsProps> = ({ timeToFirstToken, tot
 
       {totalLatency !== undefined && (
         <MetricItem
-          label="Total Latency"
-          tooltip="Total latency"
+          label="Полная задержка"
+          tooltip="Полная задержка"
           icon={<Clock className="size-3" aria-hidden="true" />}
           value={`${(totalLatency / 1000).toFixed(2)}s`}
         />
@@ -123,8 +123,8 @@ const ResponseMetrics: React.FC<ResponseMetricsProps> = ({ timeToFirstToken, tot
 
       {usage?.promptTokens !== undefined && (
         <MetricItem
-          label="In"
-          tooltip="Prompt tokens"
+          label="Вход"
+          tooltip="Промпт-токены"
           icon={<ArrowDownToLine className="size-3" aria-hidden="true" />}
           value={String(usage.promptTokens)}
         />
@@ -134,8 +134,8 @@ const ResponseMetrics: React.FC<ResponseMetricsProps> = ({ timeToFirstToken, tot
 
       {usage?.completionTokens !== undefined && (
         <MetricItem
-          label="Out"
-          tooltip="Completion tokens"
+          label="Выход"
+          tooltip="Генерационные токены"
           icon={<ArrowUpFromLine className="size-3" aria-hidden="true" />}
           value={String(usage.completionTokens)}
         />
@@ -143,8 +143,8 @@ const ResponseMetrics: React.FC<ResponseMetricsProps> = ({ timeToFirstToken, tot
 
       {usage?.reasoningTokens !== undefined && (
         <MetricItem
-          label="Reasoning"
-          tooltip="Reasoning tokens"
+          label="Рассуждение"
+          tooltip="Токены рассуждения"
           icon={<Lightbulb className="size-3" aria-hidden="true" />}
           value={String(usage.reasoningTokens)}
         />
@@ -153,7 +153,7 @@ const ResponseMetrics: React.FC<ResponseMetricsProps> = ({ timeToFirstToken, tot
       {usage?.totalTokens !== undefined && (
         <MetricItem
           label="Всего"
-          tooltip="Total tokens"
+          tooltip="Всего токенов"
           icon={<Hash className="size-3" aria-hidden="true" />}
           value={String(usage.totalTokens)}
         />
@@ -161,8 +161,8 @@ const ResponseMetrics: React.FC<ResponseMetricsProps> = ({ timeToFirstToken, tot
 
       {typeof usage?.cost === "number" && Number.isFinite(usage.cost) && (
         <MetricItem
-          label="Cost"
-          tooltip="Cost"
+          label="Стоимость"
+          tooltip="Стоимость"
           icon={<DollarSign className="size-3" aria-hidden="true" />}
           value={`$${usage.cost.toFixed(6)}`}
         />
@@ -170,8 +170,8 @@ const ResponseMetrics: React.FC<ResponseMetricsProps> = ({ timeToFirstToken, tot
 
       {toolName && (
         <MetricItem
-          label="Tool"
-          tooltip="Tool used"
+          label="Инструмент"
+          tooltip="Использованный инструмент"
           icon={<Wrench className="size-3" aria-hidden="true" />}
           value={toolName}
         />

@@ -25,18 +25,18 @@ const SECRET_KEY_PATH = ["credentials", "aws_secret_access_key"] as const;
 const AwsSigV4Fields: React.FC = () => (
   <>
     <p className="text-sm text-muted-foreground mb-2">
-      For MCP servers hosted on AWS Bedrock AgentCore.{" "}
+      Для MCP-серверов, размещённых на AWS Bedrock AgentCore.{" "}
       <a
         href="https://docs.litellm.ai/docs/mcp_aws_sigv4"
         target="_blank"
         rel="noopener noreferrer"
         className="text-info hover:text-info/80"
       >
-        View docs &rarr;
+        Смотреть документацию &rarr;
       </a>
     </p>
     <MountedFormField
-      label={<FieldLabel label="AWS Region" tooltip="AWS region for SigV4 signing (e.g., us-east-1)" />}
+      label={<FieldLabel label="Регион AWS" tooltip="Регион AWS для подписи SigV4 (например, us-east-1)" />}
       name={["credentials", "aws_region_name"]}
       required
       rules={{ validate: { required: requiredRule("AWS region is required for SigV4 auth") } }}
@@ -46,8 +46,8 @@ const AwsSigV4Fields: React.FC = () => (
     <MountedFormField
       label={
         <FieldLabel
-          label="AWS Service Name"
-          tooltip="AWS service name for SigV4 signing. Defaults to 'bedrock-agentcore'."
+          label="Имя сервиса AWS"
+          tooltip="Имя сервиса AWS для подписи SigV4. По умолчанию «bedrock-agentcore»."
         />
       }
       name={["credentials", "aws_service_name"]}
@@ -57,8 +57,8 @@ const AwsSigV4Fields: React.FC = () => (
     <MountedFormField
       label={
         <FieldLabel
-          label="AWS Access Key ID"
-          tooltip="Optional. If not provided, falls back to the boto3 credential chain (IAM role, env vars, etc.)."
+          label="ID ключа доступа AWS"
+          tooltip="Необязательно. Если не указано, используется цепочка учётных данных boto3 (IAM-роль, переменные окружения и т. д.)."
         />
       }
       name={ACCESS_KEY_PATH}
@@ -82,7 +82,7 @@ const AwsSigV4Fields: React.FC = () => (
     </MountedFormField>
     <MountedFormField
       label={
-        <FieldLabel label="AWS Secret Access Key" tooltip="Optional. Required if AWS Access Key ID is provided." />
+        <FieldLabel label="Секретный ключ AWS" tooltip="Необязательно. Обязательно, если указан ID ключа доступа AWS." />
       }
       name={SECRET_KEY_PATH}
       rules={{
@@ -98,19 +98,19 @@ const AwsSigV4Fields: React.FC = () => (
       {(control) => (
         <PasswordInput
           {...textControl(control)}
-          placeholder="Enter secret key (optional — uses IAM role if blank)"
+          placeholder="Введите секретный ключ (необязательно — при пустом значении используется IAM-роль)"
           groupClassName={fieldClassName}
         />
       )}
     </MountedFormField>
     <MountedFormField
-      label={<FieldLabel label="AWS Session Token" tooltip="Optional. Only needed for temporary STS credentials." />}
+      label={<FieldLabel label="Токен сессии AWS" tooltip="Необязательно. Нужен только для временных учётных данных STS." />}
       name={["credentials", "aws_session_token"]}
     >
       {(control) => (
         <PasswordInput
           {...textControl(control)}
-          placeholder="Enter session token (optional)"
+          placeholder="Введите токен сессии (необязательно)"
           groupClassName={fieldClassName}
         />
       )}
@@ -118,8 +118,8 @@ const AwsSigV4Fields: React.FC = () => (
     <MountedFormField
       label={
         <FieldLabel
-          label="AWS Role ARN"
-          tooltip="Optional. IAM role ARN to assume via STS before signing. If set, LiteLLM calls sts:AssumeRole to get temporary credentials. Uses ambient credentials (IAM role, env vars) as the source identity unless explicit keys are also provided."
+          label="ARN роли AWS"
+          tooltip="Необязательно. ARN IAM-роли, которая assumes через STS перед подписью. Если задан, ruLiteLLM вызывает sts:AssumeRole для получения временных учётных данных. Если явные ключи не переданы, используются окружение (IAM-роль, переменные окружения)."
         />
       }
       name={["credentials", "aws_role_name"]}
@@ -127,7 +127,7 @@ const AwsSigV4Fields: React.FC = () => (
       {(control) => (
         <Input
           {...textControl(control)}
-          placeholder="arn:aws:iam::123456789012:role/MyRole (optional)"
+          placeholder="arn:aws:iam::123456789012:role/MyRole (необязательно)"
           className={fieldClassName}
         />
       )}
@@ -135,8 +135,8 @@ const AwsSigV4Fields: React.FC = () => (
     <MountedFormField
       label={
         <FieldLabel
-          label="AWS Session Name"
-          tooltip="Optional. Session name for the AssumeRole call — appears in CloudTrail logs. Auto-generated if omitted."
+          label="Имя сессии AWS"
+          tooltip="Необязательно. Имя сессии для вызова AssumeRole — попадает в логи CloudTrail. Если пусто, генерируется автоматически."
         />
       }
       name={["credentials", "aws_session_name"]}
@@ -144,7 +144,7 @@ const AwsSigV4Fields: React.FC = () => (
       {(control) => (
         <Input
           {...textControl(control)}
-          placeholder="litellm-prod (optional, auto-generated if blank)"
+          placeholder="litellm-prod (необязательно, генерируется автоматически при пустом значении)"
           className={fieldClassName}
         />
       )}

@@ -52,19 +52,19 @@ const SingleModelBreakdown: React.FC<{
 
       <div className="grid grid-cols-4 gap-4">
         <div className="min-w-0">
-          <p className="text-xs text-muted-foreground block">Total/Request</p>
+          <p className="text-xs text-muted-foreground block">Всего/запрос</p>
           <p className="text-base font-semibold text-info break-words">{formatCost(result.cost_per_request)}</p>
         </div>
         <div className="min-w-0">
-          <p className="text-xs text-muted-foreground block">Input Cost</p>
+          <p className="text-xs text-muted-foreground block">Входная стоимость</p>
           <p className="text-sm break-words">{formatCost(result.input_cost_per_request)}</p>
         </div>
         <div className="min-w-0">
-          <p className="text-xs text-muted-foreground block">Output Cost</p>
+          <p className="text-xs text-muted-foreground block">Выходная стоимость</p>
           <p className="text-sm break-words">{formatCost(result.output_cost_per_request)}</p>
         </div>
         <div className="min-w-0">
-          <p className="text-xs text-muted-foreground block">Margin Fee</p>
+          <p className="text-xs text-muted-foreground block">Маржа</p>
           <p className={`text-sm break-words ${result.margin_cost_per_request > 0 ? "text-warning" : ""}`}>
             {formatCost(result.margin_cost_per_request)}
           </p>
@@ -75,7 +75,7 @@ const SingleModelBreakdown: React.FC<{
         <div className="grid grid-cols-4 gap-4 pt-2 border-t border-border">
           <div className="min-w-0">
             <p className="text-xs text-muted-foreground block">
-              {periodLabel} Total ({formatRequests(periodRequests)} req)
+              {periodLabel} Всего ({formatRequests(periodRequests)} запросов)
             </p>
             <p
               className={`text-base font-semibold break-words ${timePeriod === "day" ? "text-success" : "text-purple-600 dark:text-purple-300"}`}
@@ -84,15 +84,15 @@ const SingleModelBreakdown: React.FC<{
             </p>
           </div>
           <div className="min-w-0">
-            <p className="text-xs text-muted-foreground block">{periodLabel} Input</p>
+            <p className="text-xs text-muted-foreground block">{periodLabel} Вход</p>
             <p className="text-sm break-words">{formatCost(periodInputCost)}</p>
           </div>
           <div className="min-w-0">
-            <p className="text-xs text-muted-foreground block">{periodLabel} Output</p>
+            <p className="text-xs text-muted-foreground block">{periodLabel} Выход</p>
             <p className="text-sm break-words">{formatCost(periodOutputCost)}</p>
           </div>
           <div className="min-w-0">
-            <p className="text-xs text-muted-foreground block">{periodLabel} Margin Fee</p>
+            <p className="text-xs text-muted-foreground block">{periodLabel} Маржа</p>
             <p className={`text-sm break-words ${(periodMarginCost ?? 0) > 0 ? "text-warning" : ""}`}>
               {formatCost(periodMarginCost)}
             </p>
@@ -104,11 +104,11 @@ const SingleModelBreakdown: React.FC<{
         <div className="text-xs text-muted-foreground pt-2 border-t border-border">
           Token Pricing:{" "}
           {result.input_cost_per_token && (
-            <span>Input ${formatNumberWithCommas(result.input_cost_per_token * 1_000_000, 2)}/1M</span>
+            <span>Вход ${formatNumberWithCommas(result.input_cost_per_token * 1_000_000, 2)}/1M</span>
           )}
           {result.input_cost_per_token && result.output_cost_per_token && " | "}
           {result.output_cost_per_token && (
-            <span>Output ${formatNumberWithCommas(result.output_cost_per_token * 1_000_000, 2)}/1M</span>
+            <span>Выход ${formatNumberWithCommas(result.output_cost_per_token * 1_000_000, 2)}/1M</span>
           )}
         </div>
       )}
@@ -130,7 +130,7 @@ const MultiCostResults: React.FC<MultiCostResultsProps> = ({ multiResult, timePe
   if (!hasAnyResult && !isAnyLoading && !hasAnyError) {
     return (
       <div className="py-6 text-center border border-dashed border-border rounded-lg bg-muted">
-        <p className="text-muted-foreground">Select models above to see cost estimates</p>
+        <p className="text-muted-foreground">Выберите модели выше, чтобы увидеть оценку стоимости</p>
       </div>
     );
   }
@@ -151,7 +151,7 @@ const MultiCostResults: React.FC<MultiCostResultsProps> = ({ multiResult, timePe
       <div className="space-y-4">
         <Separator className="my-4" />
         <div className="flex items-center justify-between">
-          <p className="text-base font-semibold text-foreground">Cost Estimates</p>
+          <p className="text-base font-semibold text-foreground">Оценка стоимости</p>
           {isAnyLoading && <UiLoadingSpinner className="size-3.5" />}
         </div>
         {/* Error Messages */}
@@ -204,7 +204,7 @@ const MultiCostResults: React.FC<MultiCostResultsProps> = ({ multiResult, timePe
       <Separator className="my-4" />
 
       <div className="flex items-center justify-between">
-        <p className="text-base font-semibold text-foreground">Cost Estimates</p>
+        <p className="text-base font-semibold text-foreground">Оценка стоимости</p>
         <div className="flex items-center gap-2">
           {isAnyLoading && <UiLoadingSpinner className="size-3.5" />}
           <MultiExportDropdown multiResult={multiResult} />
@@ -215,13 +215,13 @@ const MultiCostResults: React.FC<MultiCostResultsProps> = ({ multiResult, timePe
       <Card size="sm" className="px-4 bg-linear-to-r from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-950">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
           <div className="min-w-0">
-            <span className="text-xs text-muted-foreground">Total Per Request</span>
+            <span className="text-xs text-muted-foreground">Всего за запрос</span>
             <div className="text-lg font-mono text-info break-words">
               {formatCost(multiResult.totals.cost_per_request)}
             </div>
           </div>
           <div className="min-w-0">
-            <span className="text-xs text-muted-foreground">Total {periodLabel}</span>
+            <span className="text-xs text-muted-foreground">Всего {periodLabel}</span>
             <div
               className={`text-lg font-mono break-words ${timePeriod === "day" ? "text-success" : "text-purple-600 dark:text-purple-300"}`}
             >
@@ -232,13 +232,13 @@ const MultiCostResults: React.FC<MultiCostResultsProps> = ({ multiResult, timePe
         {hasMargin && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 mt-3 pt-3 border-t border-border">
             <div className="min-w-0">
-              <div className="text-xs text-muted-foreground">Margin Fee/Request</div>
+              <div className="text-xs text-muted-foreground">Маржа за запрос</div>
               <div className="text-sm font-mono text-warning break-words">
                 {formatCost(multiResult.totals.margin_per_request)}
               </div>
             </div>
             <div className="min-w-0">
-              <div className="text-xs text-muted-foreground">{periodLabel} Margin Fee</div>
+              <div className="text-xs text-muted-foreground">{periodLabel} Маржа</div>
               <div className="text-sm font-mono text-warning break-words">
                 {formatCost(timePeriod === "day" ? multiResult.totals.daily_margin : multiResult.totals.monthly_margin)}
               </div>
@@ -253,11 +253,11 @@ const MultiCostResults: React.FC<MultiCostResultsProps> = ({ multiResult, timePe
           <TableHeader>
             <TableRow>
               <TableHead>Модель</TableHead>
-              <TableHead className="text-right">Per Request</TableHead>
-              <TableHead className="text-right">Margin Fee</TableHead>
+              <TableHead className="text-right">За запрос</TableHead>
+              <TableHead className="text-right">Маржа</TableHead>
               <TableHead className="text-right">{periodLabel}</TableHead>
               <TableHead className="w-10">
-                <span className="sr-only">Cost breakdown</span>
+                <span className="sr-only">Разбивка стоимости</span>
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -287,7 +287,7 @@ const MultiCostResults: React.FC<MultiCostResultsProps> = ({ multiResult, timePe
                         )}
                         {record.hasZeroCost && !record.error && (
                           <div className="text-xs text-warning bg-warning/10 px-2 py-1 rounded-sm">
-                            ⚠️ No pricing data found for this model. Set base_model in config.
+                            ⚠️ Нет данных о цене этой модели. Задайте base_model в конфигурации.
                           </div>
                         )}
                       </div>

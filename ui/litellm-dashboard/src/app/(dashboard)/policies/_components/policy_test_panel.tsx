@@ -79,7 +79,7 @@ const ContextCombobox: React.FC<ContextComboboxProps> = ({ id, value, onChange, 
   >
     <ComboboxInput id={id} placeholder={placeholder} className="w-full" showClear={Boolean(value)} />
     <ComboboxContent>
-      <ComboboxEmpty>No options found</ComboboxEmpty>
+      <ComboboxEmpty>Варианты не найдены</ComboboxEmpty>
       <ComboboxList>
         {(item: string) => (
           <ComboboxItem key={item} value={item} title={item}>
@@ -162,33 +162,32 @@ const PolicyTestPanel: React.FC<PolicyTestPanelProps> = ({ accessToken }) => {
     <div>
       <div className="bg-card border border-border rounded-lg p-6 mb-6">
         <div className="mb-5">
-          <h3 className="text-base font-semibold mb-1">Policy Simulator</h3>
+          <h3 className="text-base font-semibold mb-1">Симулятор политик</h3>
           <span className="text-muted-foreground">
-            Simulate a request to see which policies and guardrails would apply. Select a team, key, model, or tags
-            below and click &quot;Simulate&quot; to see the results.
+            Симулируйте запрос, чтобы увидеть применимые политики и гардрейлы. Выберите команду, ключ, модель или теги ниже
           </span>
         </div>
 
         <form onSubmit={(event) => event.preventDefault()} noValidate>
           <FieldGroup className="grid grid-cols-2 gap-4">
-            <FormField control={form.control} name="team_alias" label="Team Alias">
+            <FormField control={form.control} name="team_alias" label="Псевдоним команды">
               {({ id, value, onChange }) => (
                 <ContextCombobox
                   id={id}
                   value={value}
                   onChange={onChange}
-                  placeholder="Select or type a team alias"
+                  placeholder="Выберите или введите псевдоним команды"
                   options={availableTeams}
                 />
               )}
             </FormField>
-            <FormField control={form.control} name="key_alias" label="Key Alias">
+            <FormField control={form.control} name="key_alias" label="Псевдоним ключа">
               {({ id, value, onChange }) => (
                 <ContextCombobox
                   id={id}
                   value={value}
                   onChange={onChange}
-                  placeholder="Select or type a key alias"
+                  placeholder="Выберите или введите псевдоним ключа"
                   options={availableKeys}
                 />
               )}
@@ -199,19 +198,19 @@ const PolicyTestPanel: React.FC<PolicyTestPanelProps> = ({ accessToken }) => {
                   id={id}
                   value={value}
                   onChange={onChange}
-                  placeholder="Select or type a model"
+                  placeholder="Выберите или введите модель"
                   options={availableModels}
                 />
               )}
             </FormField>
-            <FormField control={form.control} name="tags" label="Tags">
+            <FormField control={form.control} name="tags" label="Теги">
               {({ id, value, onChange, onBlur }) => (
                 <TokenSelect
                   id={id}
                   value={value}
                   onValueChange={onChange}
                   onBlur={onBlur}
-                  placeholder="Type a tag and press Enter"
+                  placeholder="Введите тег и нажмите Enter"
                   allowCustomValues
                   tokenSeparators={[",", " "]}
                 />
@@ -248,10 +247,9 @@ const PolicyTestPanel: React.FC<PolicyTestPanelProps> = ({ accessToken }) => {
               />
             </svg>
           </div>
-          <p className="text-sm font-medium text-foreground mb-1">No simulation run yet</p>
+          <p className="text-sm font-medium text-foreground mb-1">Симуляция ещё не выполнялась</p>
           <p className="text-xs text-muted-foreground">
-            Fill in one or more fields above and click &quot;Simulate&quot; to see which policies and guardrails would
-            apply to that request.
+            Заполните поля выше и нажмите «Симулировать», чтобы увидеть применимые политики и гардрейлы.
           </p>
         </div>
       )}
@@ -261,12 +259,12 @@ const PolicyTestPanel: React.FC<PolicyTestPanelProps> = ({ accessToken }) => {
           {result.matched_policies.length === 0 ? (
             <div className="py-6 text-center">
               <Inbox className="mx-auto mb-2 size-8 text-muted-foreground" aria-hidden="true" />
-              <p className="text-sm text-muted-foreground">No policies matched this context</p>
+              <p className="text-sm text-muted-foreground">Ни одна политика не совпала с этим контекстом</p>
             </div>
           ) : (
             <>
               <div className="mb-4">
-                <p className="text-sm font-semibold mb-2">Effective Guardrails</p>
+                <p className="text-sm font-semibold mb-2">Действующие гардрейлы</p>
                 <div className="flex flex-wrap gap-1">
                   {result.effective_guardrails.length > 0 ? (
                     result.effective_guardrails.map((g) => (
@@ -281,13 +279,13 @@ const PolicyTestPanel: React.FC<PolicyTestPanelProps> = ({ accessToken }) => {
               </div>
 
               <div>
-                <p className="text-sm font-semibold mb-2">Matched Policies</p>
+                <p className="text-sm font-semibold mb-2">Совпавшие политики</p>
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border">
-                      <th className="text-left py-2 pr-4">Policy</th>
-                      <th className="text-left py-2 pr-4">Matched Via</th>
-                      <th className="text-left py-2">Guardrails Added</th>
+                      <th className="text-left py-2 pr-4">Политика</th>
+                      <th className="text-left py-2 pr-4">Совпадение через</th>
+                      <th className="text-left py-2">Гардрейлы добавлены</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -324,7 +322,7 @@ const PolicyTestPanel: React.FC<PolicyTestPanelProps> = ({ accessToken }) => {
         <Alert variant="error">
           <CircleAlert />
           <AlertTitle>Ошибка</AlertTitle>
-          <AlertDescription>Failed to resolve policies. Check the proxy logs.</AlertDescription>
+          <AlertDescription>Не удалось разрешить политики. Проверьте логи прокси.</AlertDescription>
         </Alert>
       )}
     </div>

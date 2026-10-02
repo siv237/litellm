@@ -222,7 +222,7 @@ const AddAttachmentForm: React.FC<AddAttachmentFormProps> = ({
       onClose();
     } catch (error) {
       console.error("Failed to create attachment:", error);
-      toast.fromError("Failed to create attachment: " + (error instanceof Error ? error.message : String(error)));
+      toast.fromError("Не удалось создать вложение: " + (error instanceof Error ? error.message : String(error)));
     } finally {
       setIsSubmitting(false);
     }
@@ -234,12 +234,12 @@ const AddAttachmentForm: React.FC<AddAttachmentFormProps> = ({
     <Dialog open={visible} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Create Policy Attachment</DialogTitle>
+          <DialogTitle>Создать вложение политики</DialogTitle>
         </DialogHeader>
         <TooltipProvider>
           <form onSubmit={(event) => event.preventDefault()} noValidate>
             <FieldGroup>
-              <FormField control={form.control} name="policy_names" label="Policies">
+              <FormField control={form.control} name="policy_names" label="Политики">
                 {({
                   id,
                   value,
@@ -253,9 +253,9 @@ const AddAttachmentForm: React.FC<AddAttachmentFormProps> = ({
                     value={value}
                     onValueChange={onChange}
                     onBlur={onBlur}
-                    placeholder="Select policies to attach"
+                    placeholder="Выберите политики для присоединения"
                     options={policyOptions}
-                    emptyText="No matching policies"
+                    emptyText="Совпадающие политики не найдены"
                     ariaInvalid={ariaInvalid}
                     ariaDescribedBy={ariaDescribedBy}
                   />
@@ -263,20 +263,20 @@ const AddAttachmentForm: React.FC<AddAttachmentFormProps> = ({
               </FormField>
 
               <div className="flex items-center gap-3">
-                <span className="text-sm font-semibold">Scope</span>
+                <span className="text-sm font-semibold">Охват</span>
                 <Separator className="flex-1" />
               </div>
 
               <div>
-                <FieldTitle className="mb-2">Scope Type</FieldTitle>
+                <FieldTitle className="mb-2">Тип охвата</FieldTitle>
                 <RadioGroup value={scopeType} onValueChange={(value: unknown) => setScopeType(value as ScopeType)}>
                   <FieldLabel className="font-normal">
                     <RadioGroupItem value="specific" />
-                    Specific (teams, keys, models, or tags)
+                    Конкретный (команды, ключи, модели или теги)
                   </FieldLabel>
                   <FieldLabel className="font-normal">
                     <RadioGroupItem value="global" />
-                    Global (applies to all requests)
+                    Глобальный (ко всем запросам)
                   </FieldLabel>
                 </RadioGroup>
               </div>
@@ -308,7 +308,7 @@ const AddAttachmentForm: React.FC<AddAttachmentFormProps> = ({
                         options={availableTeams}
                         allowCustomValues
                         tokenSeparators={[","]}
-                        emptyText="No matching teams"
+                        emptyText="Совпадающие команды не найдены"
                         ariaInvalid={ariaInvalid}
                         ariaDescribedBy={ariaDescribedBy}
                       />
@@ -340,7 +340,7 @@ const AddAttachmentForm: React.FC<AddAttachmentFormProps> = ({
                         options={availableKeys}
                         allowCustomValues
                         tokenSeparators={[","]}
-                        emptyText="No matching keys"
+                        emptyText="Совпадающие ключи не найдены"
                         ariaInvalid={ariaInvalid}
                         ariaDescribedBy={ariaDescribedBy}
                       />
@@ -374,7 +374,7 @@ const AddAttachmentForm: React.FC<AddAttachmentFormProps> = ({
                         options={availableModels}
                         allowCustomValues
                         tokenSeparators={[","]}
-                        emptyText="No matching models"
+                        emptyText="Совпадающие модели не найдены"
                         ariaInvalid={ariaInvalid}
                         ariaDescribedBy={ariaDescribedBy}
                       />
@@ -390,8 +390,7 @@ const AddAttachmentForm: React.FC<AddAttachmentFormProps> = ({
                     )}
                     description={
                       <span className="text-xs">
-                        Matches tags from key/team <code>metadata.tags</code> or tags passed dynamically in the request
-                        body. Use <code>*</code> as a suffix wildcard (e.g., <code>prod-*</code> matches{" "}
+                        Совпадает с тегами из ключа/команды <code>metadata.tags</code> или тегами, передаваемыми в теле запроса. Используйте <code>*</code> как wildcard (напр., <code>prod-*</code> совпадает с{" "}
                         <code>prod-us</code>, <code>prod-eu</code>).
                       </span>
                     }
@@ -409,7 +408,7 @@ const AddAttachmentForm: React.FC<AddAttachmentFormProps> = ({
                         value={value}
                         onValueChange={onChange}
                         onBlur={onBlur}
-                        placeholder="Type a tag and press Enter (e.g. healthcare, prod-*)"
+                        placeholder="Введите тег и нажмите Enter (напр., healthcare, prod-*)"
                         allowCustomValues
                         tokenSeparators={[",", " "]}
                         ariaInvalid={ariaInvalid}

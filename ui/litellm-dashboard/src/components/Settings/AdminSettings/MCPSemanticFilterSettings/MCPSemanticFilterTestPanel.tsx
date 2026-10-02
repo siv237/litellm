@@ -40,16 +40,16 @@ export default function MCPSemanticFilterTestPanel({
   return (
     <Card className="mb-4">
       <CardHeader>
-        <CardTitle>Test Configuration</CardTitle>
+        <CardTitle>Тест конфигурации</CardTitle>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="test">
           <TabsList>
             <TabsTrigger value="test" className="flex-none">
-              Test
+              Тест
             </TabsTrigger>
             <TabsTrigger value="api" className="flex-none">
-              API Usage
+              Расход API
             </TabsTrigger>
           </TabsList>
 
@@ -57,7 +57,7 @@ export default function MCPSemanticFilterTestPanel({
             <div className="flex w-full flex-col gap-6">
               <div>
                 <p className="mb-2 flex items-center gap-1.5 font-medium">
-                  <CirclePlay className="size-4" /> Test Query
+                  <CirclePlay className="size-4" /> Тестовый запрос
                 </p>
                 <Textarea
                   className="field-sizing-fixed"
@@ -82,28 +82,28 @@ export default function MCPSemanticFilterTestPanel({
 
               <Button className="w-full" onClick={onTest} disabled={testDisabled}>
                 <CirclePlay />
-                Test Filter
+                Тестовый фильтр
               </Button>
 
               {!filterEnabled && (
                 <Alert>
                   <Info />
-                  <AlertTitle>Semantic filtering is disabled</AlertTitle>
-                  <AlertDescription>Enable semantic filtering and save settings to test the filter.</AlertDescription>
+                  <AlertTitle>Семантическая фильтрация отключена</AlertTitle>
+                  <AlertDescription>Включите семантическую фильтрацию и сохраните настройки, чтобы протестировать фильтр.</AlertDescription>
                 </Alert>
               )}
 
               {testError && (
                 <Alert variant="destructive" className="mb-4">
                   <CircleAlert />
-                  <AlertTitle>Semantic filtering did not run</AlertTitle>
+                  <AlertTitle>Семантическая фильтрация не выполнялась</AlertTitle>
                   <AlertDescription>{testError}</AlertDescription>
                 </Alert>
               )}
 
               {testResult && (
                 <div>
-                  <h5 className="mb-2 text-base font-medium">Results</h5>
+                  <h5 className="mb-2 text-base font-medium">Результаты</h5>
                   <Alert className="mb-4">
                     <Info />
                     <AlertTitle>
@@ -114,7 +114,7 @@ export default function MCPSemanticFilterTestPanel({
                     </AlertDescription>
                   </Alert>
                   <div>
-                    <p className="mb-2 block font-medium">Selected Tools:</p>
+                    <p className="mb-2 block font-medium">Выбранные инструменты:</p>
                     <ul className="m-0 list-disc pl-5">
                       {testResult.tools.map((tool, index) => (
                         <li key={index} className="mb-1">
@@ -124,7 +124,7 @@ export default function MCPSemanticFilterTestPanel({
                     </ul>
                     {testResult.selectedTools > testResult.tools.length && (
                       <p className="mt-2 block text-sm text-muted-foreground">
-                        +{testResult.selectedTools - testResult.tools.length} more selected tools not shown
+                        +{testResult.selectedTools - testResult.tools.length} выбранных инструментов не показано
                       </p>
                     )}
                   </div>
@@ -137,21 +137,21 @@ export default function MCPSemanticFilterTestPanel({
             <div>
               <div className="mb-2 flex items-center gap-2">
                 <Code className="size-4" />
-                <p className="font-medium">API Usage</p>
+                <p className="font-medium">Расход API</p>
               </div>
               <p className="mb-2 block text-sm text-muted-foreground">
-                Use this curl command to test the semantic filter with your current configuration.
+                Эта curl-команда тестирует семантический фильтр с вашей конфигурацией.
               </p>
-              <p className="mb-2 block font-medium">Response headers to check:</p>
+              <p className="mb-2 block font-medium">Заголовки ответа для проверки:</p>
               <ul className="mt-0 mr-0 mb-3 ml-0 list-disc pl-5">
                 <li>
-                  <span>x-litellm-semantic-filter: shows total tools → selected tools</span>
-                  <span className="block text-sm text-muted-foreground">Example: 10→3</span>
+                  <span>x-litellm-semantic-filter: всего инструментов → выбранных инструментов</span>
+                  <span className="block text-sm text-muted-foreground">Пример: 10→3</span>
                 </li>
                 <li>
-                  <span>x-litellm-semantic-filter-tools: CSV of selected tool names</span>
+                  <span>x-litellm-semantic-filter-tools: список имён выбранных инструментов через запятую</span>
                   <span className="block text-sm text-muted-foreground">
-                    Example: wikipedia-fetch,github-search,slack-post
+                    Пример: wikipedia-fetch,github-search,slack-post
                   </span>
                 </li>
               </ul>

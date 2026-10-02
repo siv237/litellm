@@ -132,10 +132,10 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
 
       const response = await regenerateKeyCall(accessToken, rotateTarget.token || rotateTarget.token_id, payload);
       setRegeneratedKey(response.key);
-      toast.success("Key rotated successfully");
+      toast.success("Ключ ротирован");
       queryClient.invalidateQueries({ queryKey: [KEYS_QUERY_KEY] });
     } catch {
-      toast.error("Failed to rotate key");
+      toast.error("Не удалось ротировать ключ");
     } finally {
       setIsRegenerating(false);
     }
@@ -162,11 +162,11 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
   return (
     <div className="w-full">
       <div className="mb-4">
-        <h2 className="text-base font-semibold text-foreground mb-0.5">Your API Keys</h2>
+        <h2 className="text-base font-semibold text-foreground mb-0.5">Ваши API-ключи</h2>
         <p className="text-sm text-muted-foreground m-0">
-          View your virtual keys and spend
+          Ваши виртуальные ключи и расходы
           {premiumUser &&
-            ". Rotate keys to generate new credentials while optionally keeping the old key valid during a grace period"}
+            ". Ротирование создаёт новые учётные данные; старый ключ остаётся действующим в льготный период"}
         </p>
       </div>
 
@@ -175,10 +175,10 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50">
-                <TableHead className="text-xs font-semibold uppercase tracking-wide">Key</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wide">Ключ</TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wide">Расход</TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wide">Expires</TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wide">Created</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wide">Истекает</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wide">Создан</TableHead>
                 {premiumUser && (
                   <TableHead className="text-xs font-semibold uppercase tracking-wide text-right w-[80px]" />
                 )}
@@ -212,17 +212,17 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
       ) : keys.length === 0 ? (
         <div className="text-center text-muted-foreground text-sm py-12 border border-dashed rounded-lg">
           <KeyRound className="h-6 w-6 mb-3 mx-auto text-muted-foreground/50" />
-          No keys found
+          Ключи не найдены
         </div>
       ) : (
         <div className="rounded-lg border overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/50">
-                <TableHead className="text-xs font-semibold uppercase tracking-wide">Key</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wide">Ключ</TableHead>
                 <TableHead className="text-xs font-semibold uppercase tracking-wide">Расход</TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wide">Expires</TableHead>
-                <TableHead className="text-xs font-semibold uppercase tracking-wide">Created</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wide">Истекает</TableHead>
+                <TableHead className="text-xs font-semibold uppercase tracking-wide">Создан</TableHead>
                 {premiumUser && (
                   <TableHead className="text-xs font-semibold uppercase tracking-wide text-right w-[80px]" />
                 )}
@@ -245,7 +245,7 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
                     </TableCell>
                     <TableCell>
                       {!record.expires ? (
-                        <span className="text-muted-foreground text-[13px]">Never</span>
+                        <span className="text-muted-foreground text-[13px]">Никогда</span>
                       ) : (
                         <Badge variant={expired ? "destructive" : "outline"}>
                           {expired ? "Expired" : formatExpiresUtc(record.expires)}
@@ -257,9 +257,9 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
                     </TableCell>
                     {premiumUser && (
                       <TableCell className="text-right">
-                        <Button variant="outline" size="xs" onClick={() => openRotateModal(record)} title="Rotate key">
+                        <Button variant="outline" size="xs" onClick={() => openRotateModal(record)} title="Ротировать ключ">
                           <RefreshCw className="h-3 w-3" />
-                          Rotate
+                          Ротировать
                         </Button>
                       </TableCell>
                     )}
@@ -274,7 +274,7 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
       <Dialog open={!!rotateTarget} onOpenChange={(v) => !v && closeModal()}>
         <DialogContent className="sm:max-w-[520px]">
           <DialogHeader>
-            <DialogTitle>Rotate Key</DialogTitle>
+            <DialogTitle>Ротировать ключ</DialogTitle>
           </DialogHeader>
 
           {regeneratedKey ? (
@@ -282,7 +282,7 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
               <div className="rounded-lg border border-warning/20 bg-warning/10 px-3 py-2 text-sm text-warning mb-4">
                 Save this key now; you will not see it again
               </div>
-              <div className="text-xs text-muted-foreground mb-1">New Key</div>
+              <div className="text-xs text-muted-foreground mb-1">Новый ключ</div>
               <div className="bg-muted border rounded-md px-4 py-3 font-mono text-sm break-all text-foreground">
                 {regeneratedKey}
               </div>
@@ -290,12 +290,12 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
           ) : (
             <div className="flex flex-col gap-4 mt-1">
               <div className="flex flex-col gap-1.5">
-                <Label>Key Alias</Label>
+                <Label>Псевдоним ключа</Label>
                 <Input value={formState.key_alias} disabled />
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div className="flex flex-col gap-1.5">
-                  <Label>Max Budget (USD)</Label>
+                  <Label>Макс. бюджет (USD)</Label>
                   <Input
                     type="number"
                     step="0.01"
@@ -304,7 +304,7 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <Label>TPM Limit</Label>
+                  <Label>Лимит TPM</Label>
                   <Input
                     type="number"
                     value={formState.tpm_limit}
@@ -312,7 +312,7 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <Label>RPM Limit</Label>
+                  <Label>Лимит RPM</Label>
                   <Input
                     type="number"
                     value={formState.rpm_limit}
@@ -322,7 +322,7 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
-                  <Label>Expire Key</Label>
+                  <Label>Истощить ключ</Label>
                   <Input
                     placeholder="e.g. 30s, 30h, 30d"
                     value={formState.duration}
@@ -330,13 +330,13 @@ const KeysPanel: React.FC<Props> = ({ accessToken, userId, premiumUser }) => {
                   />
                   {formErrors.duration && <p className="text-xs text-destructive">{formErrors.duration}</p>}
                   <p className={`text-xs ${keyIsExpired ? "text-destructive" : "text-muted-foreground"}`}>
-                    Current: {rotateTarget?.expires ? formatExpiresUtc(rotateTarget.expires) : "Never"}
+                    Текущий: {rotateTarget?.expires ? formatExpiresUtc(rotateTarget.expires) : "Never"}
                     {keyIsExpired && " (expired)"}
                   </p>
-                  {newExpiryTime && <p className="text-xs text-success">New: {newExpiryTime}</p>}
+                  {newExpiryTime && <p className="text-xs text-success">Новый: {newExpiryTime}</p>}
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <Label>Grace Period</Label>
+                  <Label>Льготный период</Label>
                   <Input
                     placeholder="e.g. 24h, 2d"
                     value={formState.grace_period}

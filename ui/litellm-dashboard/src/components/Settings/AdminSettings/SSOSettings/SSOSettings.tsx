@@ -21,7 +21,7 @@ import { ssoProviderDisplayNames, ssoProviderLogoMap } from "./constants";
 import { detectSSOProvider } from "./utils";
 
 function NotConfigured() {
-  return <span className="text-muted-foreground italic">Not configured</span>;
+  return <span className="text-muted-foreground italic">Не настроено</span>;
 }
 
 function DetailRow({ children, label }: { children: React.ReactNode; label: string }) {
@@ -43,7 +43,7 @@ function EndpointValue({ value }: { value?: string | null }) {
         type="button"
         variant="ghost"
         size="icon-sm"
-        aria-label="Copy value"
+        aria-label="Скопировать значение"
         onClick={() => void copyToClipboard(value, "Copied to clipboard")}
       >
         <Copy className="size-3.5" />
@@ -81,58 +81,58 @@ export default function SSOSettings() {
       providerText: ssoProviderDisplayNames.google,
       fields: [
         {
-          label: "Client ID",
+          label: "ID клиента",
           render: (values: SSOSettingsValues) => <RedactableField value={values.google_client_id} />,
         },
         {
-          label: "Client Secret",
+          label: "Секрет клиента",
           render: (values: SSOSettingsValues) => <RedactableField value={values.google_client_secret} />,
         },
-        { label: "Proxy Base URL", render: (values: SSOSettingsValues) => renderSimpleValue(values.proxy_base_url) },
+        { label: "Базовый URL прокси", render: (values: SSOSettingsValues) => renderSimpleValue(values.proxy_base_url) },
       ],
     },
     microsoft: {
       providerText: ssoProviderDisplayNames.microsoft,
       fields: [
         {
-          label: "Client ID",
+          label: "ID клиента",
           render: (values: SSOSettingsValues) => <RedactableField value={values.microsoft_client_id} />,
         },
         {
-          label: "Client Secret",
+          label: "Секрет клиента",
           render: (values: SSOSettingsValues) => <RedactableField value={values.microsoft_client_secret} />,
         },
-        { label: "Tenant", render: (values: SSOSettingsValues) => renderSimpleValue(values.microsoft_tenant) },
-        { label: "Proxy Base URL", render: (values: SSOSettingsValues) => renderSimpleValue(values.proxy_base_url) },
+        { label: "Тенант", render: (values: SSOSettingsValues) => renderSimpleValue(values.microsoft_tenant) },
+        { label: "Базовый URL прокси", render: (values: SSOSettingsValues) => renderSimpleValue(values.proxy_base_url) },
       ],
     },
     okta: {
       providerText: ssoProviderDisplayNames.okta,
       fields: [
         {
-          label: "Client ID",
+          label: "ID клиента",
           render: (values: SSOSettingsValues) => <RedactableField value={values.generic_client_id} />,
         },
         {
-          label: "Client Secret",
+          label: "Секрет клиента",
           render: (values: SSOSettingsValues) => <RedactableField value={values.generic_client_secret} />,
         },
         {
-          label: "Authorization Endpoint",
+          label: "Эндпоинт авторизации",
           render: (values: SSOSettingsValues) => <EndpointValue value={values.generic_authorization_endpoint} />,
         },
         {
-          label: "Token Endpoint",
+          label: "Эндпоинт токена",
           render: (values: SSOSettingsValues) => <EndpointValue value={values.generic_token_endpoint} />,
         },
         {
-          label: "User Info Endpoint",
+          label: "Эндпоинт информации о пользователе",
           render: (values: SSOSettingsValues) => <EndpointValue value={values.generic_userinfo_endpoint} />,
         },
-        { label: "Scopes", render: (values: SSOSettingsValues) => renderSimpleValue(values.generic_scope) },
-        { label: "Proxy Base URL", render: (values: SSOSettingsValues) => renderSimpleValue(values.proxy_base_url) },
+        { label: "Области (scopes)", render: (values: SSOSettingsValues) => renderSimpleValue(values.generic_scope) },
+        { label: "Базовый URL прокси", render: (values: SSOSettingsValues) => renderSimpleValue(values.proxy_base_url) },
         isTeamMappingsEnabled
-          ? { label: "Team IDs JWT Field", render: (values: SSOSettingsValues) => renderTeamMappingsField(values) }
+          ? { label: "Поле ID команд в JWT", render: (values: SSOSettingsValues) => renderTeamMappingsField(values) }
           : null,
       ],
     },
@@ -140,29 +140,29 @@ export default function SSOSettings() {
       providerText: ssoProviderDisplayNames.generic,
       fields: [
         {
-          label: "Client ID",
+          label: "ID клиента",
           render: (values: SSOSettingsValues) => <RedactableField value={values.generic_client_id} />,
         },
         {
-          label: "Client Secret",
+          label: "Секрет клиента",
           render: (values: SSOSettingsValues) => <RedactableField value={values.generic_client_secret} />,
         },
         {
-          label: "Authorization Endpoint",
+          label: "Эндпоинт авторизации",
           render: (values: SSOSettingsValues) => <EndpointValue value={values.generic_authorization_endpoint} />,
         },
         {
-          label: "Token Endpoint",
+          label: "Эндпоинт токена",
           render: (values: SSOSettingsValues) => <EndpointValue value={values.generic_token_endpoint} />,
         },
         {
-          label: "User Info Endpoint",
+          label: "Эндпоинт информации о пользователе",
           render: (values: SSOSettingsValues) => <EndpointValue value={values.generic_userinfo_endpoint} />,
         },
-        { label: "Scopes", render: (values: SSOSettingsValues) => renderSimpleValue(values.generic_scope) },
-        { label: "Proxy Base URL", render: (values: SSOSettingsValues) => renderSimpleValue(values.proxy_base_url) },
+        { label: "Области (scopes)", render: (values: SSOSettingsValues) => renderSimpleValue(values.generic_scope) },
+        { label: "Базовый URL прокси", render: (values: SSOSettingsValues) => renderSimpleValue(values.proxy_base_url) },
         isTeamMappingsEnabled
-          ? { label: "Team IDs JWT Field", render: (values: SSOSettingsValues) => renderTeamMappingsField(values) }
+          ? { label: "Поле ID команд в JWT", render: (values: SSOSettingsValues) => renderTeamMappingsField(values) }
           : null,
       ],
     },
@@ -170,27 +170,27 @@ export default function SSOSettings() {
       providerText: ssoProviderDisplayNames.saml,
       fields: [
         {
-          label: "IdP Metadata URL",
+          label: "URL метаданных IdP",
           render: (values: SSOSettingsValues) => <EndpointValue value={values.saml_idp_metadata_url} />,
         },
         {
-          label: "IdP Metadata XML",
+          label: "XML метаданных IdP",
           render: (values: SSOSettingsValues) =>
-            values.saml_idp_metadata_xml ? <Badge variant="secondary">Provided</Badge> : <NotConfigured />,
+            values.saml_idp_metadata_xml ? <Badge variant="secondary">Указаны</Badge> : <NotConfigured />,
         },
         {
-          label: "SP Entity ID",
+          label: "ID сущности SP",
           render: (values: SSOSettingsValues) => <EndpointValue value={values.saml_sp_entity_id} />,
         },
         {
-          label: "Allow IdP-initiated (unsolicited) responses",
+          label: "Разрешить ответы, инициированные IdP (unsolicited)",
           render: (values: SSOSettingsValues) => (
             <Badge variant={values.saml_allow_unsolicited === "true" ? "default" : "secondary"}>
               {values.saml_allow_unsolicited === "true" ? "Enabled" : "Disabled"}
             </Badge>
           ),
         },
-        { label: "Proxy Base URL", render: (values: SSOSettingsValues) => renderSimpleValue(values.proxy_base_url) },
+        { label: "Базовый URL прокси", render: (values: SSOSettingsValues) => renderSimpleValue(values.proxy_base_url) },
       ],
     },
   };
@@ -238,20 +238,20 @@ export default function SSOSettings() {
                 <Shield className="size-6 text-muted-foreground" />
                 <div>
                   <CardTitle>
-                    <h3>SSO Configuration</h3>
+                    <h3>Конфигурация SSO</h3>
                   </CardTitle>
-                  <CardDescription>Manage Single Sign-On authentication settings</CardDescription>
+                  <CardDescription>Управление настройками единого входа (SSO)</CardDescription>
                 </div>
               </div>
               {isSSOConfigured && (
                 <CardAction className="flex gap-2">
                   <Button type="button" variant="outline" onClick={() => setIsEditModalVisible(true)}>
                     <Edit />
-                    Edit SSO Settings
+                    Изменить настройки SSO
                   </Button>
                   <Button type="button" variant="destructive" onClick={() => setIsDeleteModalVisible(true)}>
                     <Trash2 />
-                    Delete SSO Settings
+                    Удалить настройки SSO
                   </Button>
                 </CardAction>
               )}

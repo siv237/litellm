@@ -35,7 +35,7 @@ const ACTION_ITEMS = [
 const PROVIDER_ITEMS = [
   { value: "bedrock", label: "AWS Bedrock Guardrails" },
   { value: "google", label: "Google Cloud AI Safety" },
-  { value: "litellm", label: "Встроенный LiteLLM" },
+  { value: "litellm", label: "Встроенный ruLiteLLM" },
   { value: "custom", label: "Пользовательский код" },
 ];
 

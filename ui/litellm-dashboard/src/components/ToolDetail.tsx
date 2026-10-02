@@ -221,9 +221,9 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
       <div>
         <Button variant="link" onClick={onBack} className="mb-4 pl-0">
           <ArrowLeft />
-          Back to Tool Policies
+          К политикам инструментов
         </Button>
-        <p className="text-destructive">Failed to load tool details.</p>
+        <p className="text-destructive">Не удалось загрузить сведения об инструменте.</p>
       </div>
     );
   }
@@ -242,7 +242,7 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
       <div className="mb-6">
         <Button variant="link" onClick={onBack} className="mb-4 pl-0">
           <ArrowLeft />
-          Back to Tool Policies
+          К политикам инструментов
         </Button>
 
         <div className="flex items-start justify-between">
@@ -256,7 +256,7 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
             <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
               {tool.user_agent && (
                 <div className="flex items-center gap-1.5">
-                  <dt className="font-medium whitespace-nowrap">User Agent:</dt>
+                  <dt className="font-medium whitespace-nowrap">Клиентский агент:</dt>
                   <dd className="max-w-[40ch] truncate font-mono" title={tool.user_agent}>
                     {tool.user_agent}
                   </dd>
@@ -264,13 +264,13 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
               )}
               {tool.created_at && (
                 <div className="flex items-center gap-1.5">
-                  <dt className="font-medium whitespace-nowrap">First Discovered:</dt>
+                  <dt className="font-medium whitespace-nowrap">Впервые обнаружен:</dt>
                   <dd>{new Date(tool.created_at).toLocaleString()}</dd>
                 </div>
               )}
               {tool.last_used_at && (
                 <div className="flex items-center gap-1.5">
-                  <dt className="font-medium whitespace-nowrap">Last Used:</dt>
+                  <dt className="font-medium whitespace-nowrap">Последнее использование:</dt>
                   <dd>{new Date(tool.last_used_at).toLocaleString()}</dd>
                 </div>
               )}
@@ -283,7 +283,7 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
         {/* Two-panel policy layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <section className="rounded-lg border border-border bg-card p-5 shadow-xs">
-            <h2 className="mb-1 text-sm font-semibold">Input Policy</h2>
+            <h2 className="mb-1 text-sm font-semibold">Входная политика</h2>
             <p className="mb-3 text-xs text-muted-foreground">
               {inputDesc ?? "Controls what data this tool is allowed to accept."}
             </p>
@@ -300,7 +300,7 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
           </section>
 
           <section className="rounded-lg border border-border bg-card p-5 shadow-xs">
-            <h2 className="mb-1 text-sm font-semibold">Output Policy</h2>
+            <h2 className="mb-1 text-sm font-semibold">Выходная политика</h2>
             <p className="mb-3 text-xs text-muted-foreground">
               {outputDesc ?? "Controls how this tool's output is trusted by downstream tools."}
             </p>
@@ -319,7 +319,7 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
 
         {overrides.length > 0 && (
           <section className="rounded-lg border border-border bg-card p-5 shadow-xs">
-            <h2 className="mb-3 text-sm font-semibold">Blocked for team or key</h2>
+            <h2 className="mb-3 text-sm font-semibold">Заблокирован для команды или ключа</h2>
             <ul className="divide-y divide-border rounded-md border border-border">
               {overrides.map((ov) => (
                 <li key={ov.override_id} className="flex items-center justify-between px-3 py-2.5 text-sm">
@@ -339,10 +339,10 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
         )}
 
         <section className="rounded-lg border border-border bg-card p-5 shadow-xs">
-          <h2 className="mb-3 text-sm font-semibold">Block for team or key</h2>
+          <h2 className="mb-3 text-sm font-semibold">Заблокировать для команды или ключа</h2>
           <div className="flex max-w-md flex-col gap-4">
             <div>
-              <span className="mb-2 block text-sm font-medium">Scope</span>
+              <span className="mb-2 block text-sm font-medium">Охват</span>
               <div className="flex items-center gap-6">
                 <label className="flex cursor-pointer items-center gap-2 text-sm">
                   <input
@@ -360,7 +360,7 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
                     onChange={() => setBlockScope("key")}
                     className="align-middle"
                   />
-                  Key
+                  Ключ
                 </label>
               </div>
             </div>
@@ -376,9 +376,9 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
                     setBlockKey(keys.find((k) => k.token === item?.value) ?? null)
                   }
                 >
-                  <ComboboxInput placeholder="Select key" showClear className="w-full min-w-50" />
+                  <ComboboxInput placeholder="Выберите ключ" showClear className="w-full min-w-50" />
                   <ComboboxContent>
-                    <ComboboxEmpty>No keys found</ComboboxEmpty>
+                    <ComboboxEmpty>Ключи не найдены</ComboboxEmpty>
                     <ComboboxList>
                       {(item: KeyItem) => (
                         <ComboboxItem key={item.value} value={item}>
@@ -395,7 +395,7 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
               disabled={overrideSaving || (blockScope === "team" ? !blockTeamId : !blockKey?.token)}
               onClick={handleAddOverride}
             >
-              Block for {blockScope}
+              Заблокировать для {blockScope}
             </Button>
           </div>
         </section>
@@ -403,7 +403,7 @@ export function ToolDetail({ toolName, onBack, accessToken }: ToolDetailProps) {
         <section className="rounded-lg border border-border bg-card p-5 shadow-xs">
           <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold">
             <History className="size-4" />
-            Recent invocations
+            Недавние вызовы
           </h2>
           <LogViewer
             guardrailName={tool.tool_name}
