@@ -664,7 +664,7 @@ const Settings: React.FC<SettingsPageProps> = ({ accessToken, userRole, userID, 
             style={{ color: "blue" }}
           >
             {" "}
-            Документация LiteLLM: Логирование
+            Документация ruLiteLLM: Логирование
           </a>
 
           <FormProvider {...addForm}>

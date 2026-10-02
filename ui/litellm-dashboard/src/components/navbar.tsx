@@ -30,7 +30,7 @@ interface NavbarProps {
   onToggleSidebar?: () => void;
 }
 
-const NAV_LOGO_CLASS_NAME = "h-auto max-h-full w-auto max-w-full object-contain";
+const NAV_LOGO_CLASS_NAME = "h-8 w-8 shrink-0";
 
 const Navbar: React.FC<NavbarProps> = ({
   accessToken,
@@ -48,8 +48,9 @@ const Navbar: React.FC<NavbarProps> = ({
   const { isControlPlane, selectedWorker } = useWorker();
   const showWorkerSwitch = isControlPlane && selectedWorker !== null;
 
-  const imageUrl = logoUrl || resolveLogoSrc("/ui/assets/logos/litellm.jpg") || `${baseUrl}/get_image`;
-  const darkImageUrl = logoUrl || `${baseUrl}/get_image?theme=dark`;
+  const markSrc = resolveLogoSrc("/ui/assets/logos/rulitellm_mark.png");
+  const imageUrl = logoUrl || markSrc || `${baseUrl}/get_image`;
+  const darkImageUrl = logoUrl || markSrc || `${baseUrl}/get_image?theme=dark`;
 
   const handleLogout = () => {
     clearTokenCookies();
@@ -98,6 +99,7 @@ const Navbar: React.FC<NavbarProps> = ({
                       aria-hidden
                       className={cn(NAV_LOGO_CLASS_NAME, "hidden dark:block")}
                     />
+                    <span className="text-lg font-semibold leading-none tracking-tight">ruLiteLLM</span>
                   </div>
                 </div>
               </Link>

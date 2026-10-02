@@ -9,12 +9,12 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ReactQueryProvider from "@/contexts/ReactQueryProvider";
 import { Toaster } from "@/components/ui/sonner";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin", "cyrillic", "cyrillic-ext"] });
 
 export const metadata: Metadata = {
-  title: "LiteLLM Dashboard",
-  description: "LiteLLM Proxy Admin UI",
-  icons: { icon: "/get_favicon" },
+  title: "ruLiteLLM Dashboard",
+  description: "Админ-интерфейс ruLiteLLM-прокси",
+  icons: { icon: "/ui/assets/logos/rulitellm_mark.png" },
 };
 
 export default function RootLayout({

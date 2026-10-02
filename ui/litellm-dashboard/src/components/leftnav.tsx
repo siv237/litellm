@@ -83,7 +83,7 @@ import { routeSegmentForPathname, uiHref } from "@/utils/uiHref";
 
 const ICON = { strokeWidth: 1.75 } as const;
 
-const LOGO_CLASS_NAME = "h-7 w-auto max-w-[150px] object-contain group-data-[collapsed=true]/sidebar:w-7";
+const LOGO_CLASS_NAME = "h-7 w-7 shrink-0";
 
 interface SidebarProps {
   collapsed?: boolean;
@@ -603,9 +603,10 @@ const Sidebar_: React.FC<SidebarProps> = ({
     );
   };
 
-  const logoSrc = logoUrl || resolveLogoSrc("/ui/assets/logos/litellm.jpg") || `${baseUrl}/get_image`;
+  const markSrc = resolveLogoSrc("/ui/assets/logos/rulitellm_mark.png");
+  const logoSrc = logoUrl || markSrc || `${baseUrl}/get_image`;
   const reachableDarkLogo = logoUrlDark === erroredDarkLogo ? null : logoUrlDark;
-  const darkLogoSrc = reachableDarkLogo || logoUrl || resolveLogoSrc("/ui/assets/logos/litellm.jpg") || `${baseUrl}/get_image?theme=dark`;
+  const darkLogoSrc = reachableDarkLogo || logoUrl || markSrc || `${baseUrl}/get_image?theme=dark`;
 
   return (
     <Sidebar collapsed={collapsed}>
@@ -621,6 +622,9 @@ const Sidebar_: React.FC<SidebarProps> = ({
                 onError={() => setErroredDarkLogo(logoUrlDark)}
                 className={cn(LOGO_CLASS_NAME, "hidden dark:block")}
               />
+              <span className="truncate text-base font-semibold leading-none group-data-[collapsed=true]/sidebar:hidden">
+                ruLiteLLM
+              </span>
             </Link>
             {version && (
               <Badge
