@@ -5,6 +5,7 @@ import { useWorker } from "@/hooks/useWorker";
 import { getProxyBaseUrl } from "@/components/networking";
 import { uiHref } from "@/utils/uiHref";
 import { useTheme } from "@/contexts/ThemeContext";
+import { resolveLogoSrc } from "@/lib/assetPaths";
 import { clearTokenCookies } from "@/utils/cookieUtils";
 import { clearStoredReturnUrl, getLoginUrl } from "@/utils/returnUrlUtils";
 import useProxySettings from "@/app/(dashboard)/hooks/proxySettings/useProxySettings";
@@ -47,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const { isControlPlane, selectedWorker } = useWorker();
   const showWorkerSwitch = isControlPlane && selectedWorker !== null;
 
-  const imageUrl = logoUrl || `${baseUrl}/get_image`;
+  const imageUrl = logoUrl || resolveLogoSrc("/ui/assets/logos/litellm.jpg") || `${baseUrl}/get_image`;
   const darkImageUrl = logoUrl || `${baseUrl}/get_image?theme=dark`;
 
   const handleLogout = () => {

@@ -5,6 +5,7 @@ import { useHealthReadinessDetails } from "@/app/(dashboard)/hooks/healthReadine
 import { useLogout } from "@/app/(dashboard)/hooks/useLogout";
 import { getProxyBaseUrl } from "@/components/networking";
 import { useTheme } from "@/contexts/ThemeContext";
+import { resolveLogoSrc } from "@/lib/assetPaths";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -602,9 +603,9 @@ const Sidebar_: React.FC<SidebarProps> = ({
     );
   };
 
-  const logoSrc = logoUrl || `${baseUrl}/get_image`;
+  const logoSrc = logoUrl || resolveLogoSrc("/ui/assets/logos/litellm.jpg") || `${baseUrl}/get_image`;
   const reachableDarkLogo = logoUrlDark === erroredDarkLogo ? null : logoUrlDark;
-  const darkLogoSrc = reachableDarkLogo || logoUrl || `${baseUrl}/get_image?theme=dark`;
+  const darkLogoSrc = reachableDarkLogo || logoUrl || resolveLogoSrc("/ui/assets/logos/litellm.jpg") || `${baseUrl}/get_image?theme=dark`;
 
   return (
     <Sidebar collapsed={collapsed}>
@@ -612,7 +613,7 @@ const Sidebar_: React.FC<SidebarProps> = ({
         <div className="flex items-center justify-between gap-2 group-data-[collapsed=true]/sidebar:flex-col">
           <div className="flex min-w-0 items-center gap-2">
             <Link href={uiHref("")} className="flex min-w-0 items-center" aria-label="На главную ruLiteLLM">
-              <img src={logoSrc} alt="LiteLLM" className={cn(LOGO_CLASS_NAME, "dark:hidden")} />
+              <img src={logoSrc} alt="Логотип ruLiteLLM" className={cn(LOGO_CLASS_NAME, "dark:hidden")} />
               <img
                 src={darkLogoSrc}
                 alt=""
