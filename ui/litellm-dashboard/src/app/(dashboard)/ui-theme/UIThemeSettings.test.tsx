@@ -23,7 +23,7 @@ vi.mock("@/contexts/ThemeContext", () => ({
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: () => "",
-  getГлобальноLitellmHeaderName: () => "Authorization",
+  getGlobalLitellmHeaderName: () => "Authorization",
 }));
 
 const LOGO_PLACEHOLDER = "https://example.com/logo.png";
@@ -41,13 +41,13 @@ const bodyOf = (call: Parameters<typeof fetch>) => JSON.parse(String(call[1]?.bo
 
 describe("UIThemeSettings", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     fetchMock.mockImplementation(() => okОтвет());
     vi.stubГлобально("fetch", fetchMock);
   });
 
   afterEach(() => {
-    vi.unstubВсеГлобальноs();
+    vi.unstubAllGlobals();
   });
 
   it("should render nothing withвыход an access token", () => {

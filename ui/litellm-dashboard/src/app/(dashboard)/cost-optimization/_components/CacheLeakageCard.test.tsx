@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import type { Каждый деньData, КлючМетрикаWithМетаданные, РасходМетрикаs } from "@/components/ИспользованиеPage/types";
-import type { Каждый деньActivityRange } from "./useКаждый деньActivityRange";
+import type { Каждый деньActivityRange } from "./useDailyActivityRange";
 
 vi.mock("@/components/shared/advanced_date_picker", () => ({
   __esModule: true,
@@ -11,7 +11,7 @@ vi.mock("@/components/shared/advanced_date_picker", () => ({
 
 import CacheLeakageCard from "./CacheLeakageCard";
 
-const baseМетрикаs = (overrides: Partial<РасходМетрикаs>): РасходМетрикаs => ({
+const baseMetrics = (overrides: Partial<РасходМетрикаs>): РасходМетрикаs => ({
   spend: 0,
   prompt_tokens: 0,
   completion_tokens: 0,
@@ -25,13 +25,13 @@ const baseМетрикаs = (overrides: Partial<РасходМетрикаs>): �
 });
 
 const key = (alias: string, metrics: Partial<РасходМетрикаs>): КлючМетрикаWithМетаданные => ({
-  metrics: baseМетрикаs(metrics),
+  metrics: baseMetrics(metrics),
   metadata: { key_alias: alias, team_id: null },
 });
 
 const dayWithКлючи = (date: string, apiКлючи: Record<string, КлючМетрикаWithМетаданные>): Каждый деньData => ({
   date,
-  metrics: baseМетрикаs({}),
+  metrics: baseMetrics({}),
   breakdown: {
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {},
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups: {},
@@ -42,14 +42,14 @@ const dayWithКлючи = (date: string, apiКлючи: Record<string, Ключ�
   },
 });
 
-const dayWithРежимls = (date: string, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: Record<string, Partial<РасходМетрикаs>>): Каждый деньData => ({
+const dayWithModels = (date: string, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: Record<string, Partial<РасходМетрикаs>>): Каждый деньData => ({
   date,
-  metrics: baseМетрикаs({}),
+  metrics: baseMetrics({}),
   breakdown: {
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: Object.fromEntries(
       Object.entries(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs).map(([name, m]) => [
         name,
-        { metrics: baseМетрикаs(m), metadata: {}, api_key_breakdown: {} },
+        { metrics: baseMetrics(m), metadata: {}, api_key_breakdown: {} },
       ]),
     ),
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups: {},
@@ -111,7 +111,7 @@ describe("CacheLeakageCard", () => {
         }),
       }),
     ]);
-    const firstDataRow = () => screen.getВсеByRole("row")[1];
+    const firstDataRow = () => screen.getAllByRole("row")[1];
 
     expect(firstDataRow()).toHaveTextContent("alpha");
 
@@ -124,7 +124,7 @@ describe("CacheLeakageCard", () => {
 
   it("switches to the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию view and lists only Anthropic Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => {
     renderWith([
-      dayWithРежимls("2026-07-12", {
+      dayWithModels("2026-07-12", {
         "claude-sonnet-5": { prompt_tokens: 5000, cache_read_input_tokens: 0 },
         "gpt-4o": { prompt_tokens: 8000, cache_read_input_tokens: 0 },
       }),

@@ -1,23 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { fireEvent, renderWithПровайдерs, screen, waitFor } from "../../../../../../tests/test-utils";
+import { fireEvent, renderWithProviders, screen, waitFor } from "../../../../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import CacheSettings from "./index";
-import { fetchAvailableРежимls } from "@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs";
+import { fetchAvailableModels } from "@/components/llm_calls/fetch_models";
 
-const { getCacheSettingsCall, testCacheПодключениеCall, updateCacheSettingsCall } = vi.hoisted(() => ({
+const { getCacheSettingsCall, testCacheConnectionCall, updateCacheSettingsCall } = vi.hoisted(() => ({
   getCacheSettingsCall: vi.fn(),
-  testCacheПодключениеCall: vi.fn(),
+  testCacheConnectionCall: vi.fn(),
   updateCacheSettingsCall: vi.fn(),
 }));
 
 vi.mock("@/components/networking", () => ({
   getCacheSettingsCall,
-  testCacheПодключениеCall,
+  testCacheConnectionCall,
   updateCacheSettingsCall,
 }));
 
-vi.mock("@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => ({
-  fetchAvailableРежимls: vi.fn().mockResolvedЗначение([]),
+vi.mock("@/components/llm_calls/fetch_models", () => ({
+  fetchAvailableModels: vi.fn().mockResolvedЗначение([]),
 }));
 
 const LOADED_WITH_ADVANCED = {
@@ -30,17 +30,17 @@ const LOADED_WITH_ADVANCED = {
   },
 };
 
-const renderSettings = () => renderWithПровайдерs(<CacheSettings accessТокен="sk-test" userRole="Admin" userID="u1" />);
+const renderSettings = () => renderWithProviders(<CacheSettings accessТокен="sk-test" userRole="Admin" userID="u1" />);
 
 const save = async (user: ReturnType<typeof userEvent.setup>) =>
   user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
 describe("CacheSettings advanced settings round-trip", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     getCacheSettingsCall.mockResolvedЗначение(LOADED_WITH_ADVANCED);
     updateCacheSettingsCall.mockResolvedЗначение({ status: "success" });
-    testCacheПодключениеCall.mockResolvedЗначение({ status: "success" });
+    testCacheConnectionCall.mockResolvedЗначение({ status: "success" });
   });
 
   it("keeps loaded advanced values in the payload when the section is never opened", async () => {
@@ -51,7 +51,7 @@ describe("CacheSettings advanced settings round-trip", () => {
     expect(screen.queryByLabelText("Пространство имён")).not.toBeInTheDocument();
     await save(user);
 
-    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
     expect(updateCacheSettingsCall.mock.calls[0][1]).toEqual({
       type: "redis",
       host: "redis.internal",
@@ -82,14 +82,14 @@ describe("CacheSettings advanced settings round-trip", () => {
     renderSettings();
     await screen.findByText("Подключение Settings");
     await save(user);
-    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
     const whileCollapsed = updateCacheSettingsCall.mock.calls[0][1];
 
     await user.click(screen.getByText("Расширенные настройки"));
     await screen.findByLabelText("Пространство имён");
     await save(user);
 
-    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledВремяs(2));
+    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(2));
     expect(updateCacheSettingsCall.mock.calls[1][1]).toEqual(whileCollapsed);
   });
 
@@ -106,7 +106,7 @@ describe("CacheSettings advanced settings round-trip", () => {
 
     await save(user);
 
-    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
     expect(updateCacheSettingsCall.mock.calls[0][1]).toMatchObject({ namespace: "typed-ns" });
   });
 
@@ -134,7 +134,7 @@ describe("CacheSettings advanced settings round-trip", () => {
     await screen.findByLabelText("Имя сервиса");
     await save(user);
 
-    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
     expect(updateCacheSettingsCall.mock.calls[0][1]).toMatchObject({ service_name: "mymaster" });
     expect(updateCacheSettingsCall.mock.calls[0][1]).not.toHaveСвойство("redis_startup_nodes");
   });
@@ -152,7 +152,7 @@ describe("CacheSettings advanced settings round-trip", () => {
     await user.click(await screen.findByRole("option", { name: "Конечный пользователь (изоляция по пользователю)" }));
     await save(user);
 
-    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
     expect(updateCacheSettingsCall.mock.calls[0][1]).toMatchObject({
       type: "redis-semantic",
       semantic_cache_scope: "end_user",
@@ -172,14 +172,14 @@ describe("CacheSettings advanced settings round-trip", () => {
 
     await save(user);
 
-    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
     expect(updateCacheSettingsCall.mock.calls[0][1]).not.toHaveСвойство("ttl");
   });
 
   it("should omit a cleared cache Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию from save and test while retaining other settings", async () => {
-    vi.mocked(fetchAvailableРежимls).mockResolvedЗначение([
+    vi.mocked(fetchAvailableModels).mockResolvedЗначение([
       { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "synthetic-embedding", mode: "embedding" },
-    ] as Awaited<ReturnType<typeof fetchAvailableРежимls>>);
+    ] as Awaited<ReturnType<typeof fetchAvailableModels>>);
     getCacheSettingsCall.mockResolvedЗначение({
       current_values: {
         redis_type: "semantic",
@@ -207,7 +207,7 @@ describe("CacheSettings advanced settings round-trip", () => {
       namespace: "synthetic-cache",
     };
     await user.click(screen.getByRole("button", { name: "Test Подключение" }));
-    await waitFor(() => expect(testCacheПодключениеCall).toHaveBeenCalledWith("sk-test", expected));
+    await waitFor(() => expect(testCacheConnectionCall).toHaveBeenCalledWith("sk-test", expected));
     await save(user);
     await waitFor(() =>
       expect(updateCacheSettingsCall).toHaveBeenCalledWith("sk-test", { ...expected, type: "redis-semantic" }),

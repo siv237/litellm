@@ -2,10 +2,10 @@ import React from "react";
 import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
-import MCPПриложениеsPanel from "./MCPПриложениеsPanel";
+import MCPAppsPanel from "./MCPAppsPanel";
 import { fetchMCP-серверы, listMCPИнструменты } from "../networking";
 import type { MCPСервер } from "../mcp_tools/types";
-import { setСерверRootПуть } from "@/lib/serverRootПуть";
+import { setServerRootПуть } from "@/lib/serverRootПуть";
 
 vi.mock("../networking", () => ({
   fetchMCP-серверы: vi.fn(),
@@ -41,17 +41,17 @@ const servers = [
 const renderPanel = () =>
   render(
     <ЗапросClientПровайдер client={new ЗапросClient({ defaultOptions: { queries: { retry: false } } })}>
-      <MCPПриложениеsPanel accessТокен="tok" selected-серверы={[]} onChange={vi.fn()} />
+      <MCPAppsPanel accessТокен="tok" selected-серверы={[]} onChange={vi.fn()} />
     </ЗапросClientПровайдер>,
   );
 
-describe("MCPПриложениеsPanel logos", () => {
+describe("MCPAppsPanel logos", () => {
   afterEach(() => {
-    setСерверRootПуть("/");
+    setServerRootПуть("/");
   });
 
   it("resolves backend logo_url values in the server grid", async () => {
-    setСерверRootПуть("/litellm");
+    setServerRootПуть("/litellm");
     vi.mocked(fetchMCP-серверы).mockResolvedЗначение(servers);
     vi.mocked(listMCPИнструменты).mockResolvedЗначение({ tools: [] });
 
@@ -74,7 +74,7 @@ describe("MCPПриложениеsPanel logos", () => {
   });
 
   it("resolves the logo_url in the detail header", async () => {
-    setСерверRootПуть("/litellm");
+    setServerRootПуть("/litellm");
     vi.mocked(fetchMCP-серверы).mockResolvedЗначение(servers);
     vi.mocked(listMCPИнструменты).mockResolvedЗначение({ tools: [] });
 
@@ -109,23 +109,23 @@ const connect-серверы = [
   },
 ] as MCPСервер[];
 
-const renderПодключитьPanel = (connectРежим: boolean, selected-серверы: string[] = []) =>
+const renderConnectPanel = (connectРежим: boolean, selected-серверы: string[] = []) =>
   render(
     <ЗапросClientПровайдер client={new ЗапросClient({ defaultOptions: { queries: { retry: false } } })}>
-      <MCPПриложениеsPanel accessТокен="tok" selected-серверы={selected-серверы} onChange={vi.fn()} connectРежим={connectРежим} />
+      <MCPAppsPanel accessТокен="tok" selected-серверы={selected-серверы} onChange={vi.fn()} connectРежим={connectРежим} />
     </ЗапросClientПровайдер>,
   );
 
-describe("MCPПриложениеsPanel connected-app reachability (LIT-4861)", () => {
+describe("MCPAppsPanel connected-app reachability (LIT-4861)", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("requests the connected-app view and hides unreachable servers in connect mode", async () => {
     vi.mocked(fetchMCP-серверы).mockResolvedЗначение(connect-серверы);
     vi.mocked(listMCPИнструменты).mockResolvedЗначение({ tools: [] });
 
-    renderПодключитьPanel(true, ["reachable_srv", "unreachable_srv"]);
+    renderConnectPanel(true, ["reachable_srv", "unreachable_srv"]);
 
     expect(await screen.findByText("reachable_srv")).toBeInTheDocument();
     expect(vi.mocked(fetchMCP-серверы)).toHaveBeenCalledWith("tok", undefined, true);
@@ -151,7 +151,7 @@ describe("MCPПриложениеsPanel connected-app reachability (LIT-4861)", 
     vi.mocked(fetchMCP-серверы).mockResolvedЗначение(detail-серверы);
     vi.mocked(listMCPИнструменты).mockResolvedЗначение({ tools: [] });
 
-    renderПодключитьPanel(true);
+    renderConnectPanel(true);
 
     fireEvent.click(await screen.findByText("unsupported_srv"));
     expect(await screen.findByRole("heading", { name: "unsupported_srv" })).toBeInTheDocument();
@@ -163,7 +163,7 @@ describe("MCPПриложениеsPanel connected-app reachability (LIT-4861)", 
     vi.mocked(fetchMCP-серверы).mockResolvedЗначение(connect-серверы);
     vi.mocked(listMCPИнструменты).mockResolvedЗначение({ tools: [] });
 
-    renderПодключитьPanel(false);
+    renderConnectPanel(false);
 
     fireEvent.click(await screen.findByText("unreachable_srv"));
     expect(await screen.findByRole("heading", { name: "unreachable_srv" })).toBeInTheDocument();
@@ -174,7 +174,7 @@ describe("MCPПриложениеsPanel connected-app reachability (LIT-4861)", 
     vi.mocked(fetchMCP-серверы).mockResolvedЗначение(connect-серверы);
     vi.mocked(listMCPИнструменты).mockResolvedЗначение({ tools: [] });
 
-    renderПодключитьPanel(false, ["reachable_srv", "unreachable_srv"]);
+    renderConnectPanel(false, ["reachable_srv", "unreachable_srv"]);
 
     expect(await screen.findByText("unreachable_srv")).toBeInTheDocument();
     expect(vi.mocked(fetchMCP-серверы)).toHaveBeenCalledWith("tok", undefined, false);
@@ -200,14 +200,14 @@ describe("MCPПриложениеsPanel connected-app reachability (LIT-4861)", 
     client: ЗапросClient;
   }) => (
     <ЗапросClientПровайдер client={client}>
-      <MCPПриложениеsPanel accessТокен={token} selected-серверы={[]} onChange={onChange} connectРежим />
+      <MCPAppsPanel accessТокен={token} selected-серверы={[]} onChange={onChange} connectРежим />
     </ЗапросClientПровайдер>
   );
 
   const newClient = () => new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
 
   it("drops an open detail view when a refetch removes that server from the reachable set", async () => {
-    vi.mocked(fetchMCP-серверы).mockResolvedЗначениеOnce(revocable(true)).mockResolvedЗначениеOnce(revocable(false));
+    vi.mocked(fetchMCP-серверы).mockResolvedValueOnce(revocable(true)).mockResolvedValueOnce(revocable(false));
     vi.mocked(listMCPИнструменты).mockResolvedЗначение({ tools: [] });
 
     const client = newClient();
@@ -225,7 +225,7 @@ describe("MCPПриложениеsPanel connected-app reachability (LIT-4861)", 
   });
 
   it("does not select a server whose Подключить finishes after a refetch removed it", async () => {
-    vi.mocked(fetchMCP-серверы).mockResolvedЗначениеOnce(revocable(true)).mockResolvedЗначениеOnce(revocable(false));
+    vi.mocked(fetchMCP-серверы).mockResolvedValueOnce(revocable(true)).mockResolvedValueOnce(revocable(false));
     vi.mocked(listMCPИнструменты).mockResolvedЗначение({ tools: [] });
 
     const onChange = vi.fn();
@@ -254,7 +254,7 @@ describe("MCPПриложениеsPanel connected-app reachability (LIT-4861)", 
   it("does not select a server when Подключить resolves in the same tick the refetch drops it", async () => {
     let finishRefetch: (servers: MCPСервер[]) => void = () => {};
     vi.mocked(fetchMCP-серверы)
-      .mockResolvedЗначениеOnce(revocable(true))
+      .mockResolvedValueOnce(revocable(true))
       .mockImplementationOnce(() => new Promise((resolve) => (finishRefetch = resolve)));
     vi.mocked(listMCPИнструменты).mockResolvedЗначение({ tools: [] });
 
@@ -284,7 +284,7 @@ describe("MCPПриложениеsPanel connected-app reachability (LIT-4861)", 
     let finishStaleLoad: (servers: MCPСервер[]) => void = () => {};
     vi.mocked(fetchMCP-серверы)
       .mockImplementationOnce(() => new Promise((resolve) => (finishStaleLoad = resolve)))
-      .mockResolvedЗначениеOnce(revocable(false));
+      .mockResolvedValueOnce(revocable(false));
     vi.mocked(listMCPИнструменты).mockResolvedЗначение({ tools: [] });
 
     const client = newClient();

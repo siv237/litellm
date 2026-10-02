@@ -8,9 +8,9 @@ const MODELS = ["gpt-4", "gpt-3.5-turbo", "claude-3", "claude-haiku"];
 describe("БюджетРезервные моделиEditor", () => {
   it("renders empty state with add button", () => {
     const onChange = vi.fn();
-    render(<БюджетРезервные моделиEditor value={{}} onChange={onChange} availableРежимls={MODELS} />);
+    render(<БюджетРезервные моделиEditor value={{}} onChange={onChange} availableModels={MODELS} />);
     expect(screen.getByText("Add Бюджет Fallback")).toBeInTheDocument();
-    expect(screen.getByText(/rerвыходe to fallback Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/)).toBeInTheDocument();
+    expect(screen.getByText(/reroute to fallback models/)).toBeInTheDocument();
   });
 
   it("renders existing entries from value prop", () => {
@@ -19,7 +19,7 @@ describe("БюджетРезервные моделиEditor", () => {
       <БюджетРезервные моделиEditor
         value={{ "gpt-4": ["gpt-3.5-turbo", "claude-3"] }}
         onChange={onChange}
-        availableРежимls={MODELS}
+        availableModels={MODELS}
       />,
     );
     expect(screen.getByText("IF BUDGET EXCEEDED, TRY")).toBeInTheDocument();
@@ -30,7 +30,7 @@ describe("БюджетРезервные моделиEditor", () => {
   it("adds a new empty entry when clicking add button", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(<БюджетРезервные моделиEditor value={{}} onChange={onChange} availableРежимls={MODELS} />);
+    render(<БюджетРезервные моделиEditor value={{}} onChange={onChange} availableModels={MODELS} />);
 
     await user.click(screen.getByText("Add Бюджет Fallback"));
     expect(screen.getByText("Primary Режимl")).toBeInTheDocument();
@@ -44,11 +44,11 @@ describe("БюджетРезервные моделиEditor", () => {
       <БюджетРезервные моделиEditor
         value={{ "gpt-4": ["gpt-3.5-turbo"], "claude-3": ["claude-haiku"] }}
         onChange={onChange}
-        availableРежимls={MODELS}
+        availableModels={MODELS}
       />,
     );
 
-    const removeButtons = container.queryВыбратьorВсе<HTMLButtonElement>(".relative > button[type='button']");
+    const removeButtons = container.querySelectorВсе<HTMLButtonElement>(".relative > button[type='button']");
     expect(removeButtons.length).toBe(2);
 
     await user.click(removeButtons[0]);
@@ -61,10 +61,10 @@ describe("БюджетРезервные моделиEditor", () => {
       <БюджетРезервные моделиEditor
         value={{ "gpt-4": ["claude-3"], "gpt-3.5-turbo": ["claude-haiku"] }}
         onChange={onChange}
-        availableРежимls={MODELS}
+        availableModels={MODELS}
       />,
     );
-    const labels = screen.getВсеByText("Primary Режимl");
+    const labels = screen.getAllByText("Primary Режимl");
     expect(labels.length).toBe(2);
   });
 
@@ -75,12 +75,12 @@ describe("БюджетРезервные моделиEditor", () => {
         key={1}
         value={{ "gpt-4": ["gpt-3.5-turbo"] }}
         onChange={onChange}
-        availableРежимls={MODELS}
+        availableModels={MODELS}
       />,
     );
-    expect(screen.getВсеByText("Primary Режимl").length).toBe(1);
+    expect(screen.getAllByText("Primary Режимl").length).toBe(1);
 
-    rerender(<БюджетРезервные моделиEditor key={2} value={{}} onChange={onChange} availableРежимls={MODELS} />);
+    rerender(<БюджетРезервные моделиEditor key={2} value={{}} onChange={onChange} availableModels={MODELS} />);
     expect(screen.queryByText("Primary Режимl")).not.toBeInTheDocument();
     expect(screen.getByText("Add Бюджет Fallback")).toBeInTheDocument();
   });
@@ -91,7 +91,7 @@ describe("БюджетРезервные моделиEditor", () => {
       <БюджетРезервные моделиEditor
         value={{ "gpt-4": ["gpt-3.5-turbo", "claude-3"] }}
         onChange={onChange}
-        availableРежимls={MODELS}
+        availableModels={MODELS}
       />,
     );
     expect(screen.getByText(/first Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию still within its own budget/)).toBeInTheDocument();

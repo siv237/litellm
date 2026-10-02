@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Каждый деньData, РасходМетрикаs } from "@/components/ИспользованиеPage/types";
-import { mergeКаждый деньРезультатs, sumМетаданные, usePaginatedКаждый деньActivity } from "./usePaginatedКаждый деньActivity";
+import { mergeDailyResults, sumМетаданные, usePaginatedDailyActivity } from "./usePaginatedDailyActivity";
 
 describe("sumМетаданные", () => {
   it("sums flat cost across pages instead of keeping the first page's value", () => {
@@ -86,9 +86,9 @@ const dayOf = (date: string, spend: number, apiКлюч: string = "sk-1"): Ка�
   },
 });
 
-describe("mergeКаждый деньРезультатs", () => {
+describe("mergeDailyResults", () => {
   it("collapses repeated dates into one entry with summed metrics (the LIT-5818 $2/$2/$1 case)", () => {
-    const merged = mergeКаждый деньРезультатs(mergeКаждый деньРезультатs([dayOf("2026-08-16", 2)], [dayOf("2026-08-16", 2)]), [
+    const merged = mergeDailyResults(mergeDailyResults([dayOf("2026-08-16", 2)], [dayOf("2026-08-16", 2)]), [
       dayOf("2026-08-16", 1),
     ]);
 
@@ -98,23 +98,23 @@ describe("mergeКаждый деньРезультатs", () => {
   });
 
   it("appends unseen dates in arrival order", () => {
-    const merged = mergeКаждый деньРезультатs([dayOf("2026-08-16", 2)], [dayOf("2026-08-15", 0.5)]);
+    const merged = mergeDailyResults([dayOf("2026-08-16", 2)], [dayOf("2026-08-15", 0.5)]);
 
     expect(merged.map((d) => d.date)).toEqual(["2026-08-16", "2026-08-15"]);
     expect(merged[1].metrics.spend).toBe(0.5);
   });
 
   it("merges every breakdown level including the nested per-key breakdown", () => {
-    const merged = mergeКаждый деньРезультатs([dayOf("2026-08-16", 2, "sk-1")], [dayOf("2026-08-16", 3, "sk-1")]);
+    const merged = mergeDailyResults([dayOf("2026-08-16", 2, "sk-1")], [dayOf("2026-08-16", 3, "sk-1")]);
 
-    expect(merged[0].breakdown.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs["gpt-4o"].metrics.spend).toBe(5);
-    expect(merged[0].breakdown.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs["gpt-4o"].api_key_breakdown["sk-1"].metrics.spend).toBe(5);
+    expect(merged[0].breakdown.models["gpt-4o"].metrics.spend).toBe(5);
+    expect(merged[0].breakdown.models["gpt-4o"].api_key_breakdown["sk-1"].metrics.spend).toBe(5);
     expect(merged[0].breakdown.api_keys["sk-1"].metrics.spend).toBe(5);
     expect(merged[0].breakdown.api_keys["sk-1"].metadata.key_alias).toBe("alias-1");
   });
 
   it("unions breakdown keys that appear on different pages", () => {
-    const merged = mergeКаждый деньРезультатs([dayOf("2026-08-16", 2, "sk-1")], [dayOf("2026-08-16", 3, "sk-2")]);
+    const merged = mergeDailyResults([dayOf("2026-08-16", 2, "sk-1")], [dayOf("2026-08-16", 3, "sk-2")]);
 
     expect(merged[0].breakdown.api_keys["sk-1"].metrics.spend).toBe(2);
     expect(merged[0].breakdown.api_keys["sk-2"].metrics.spend).toBe(3);
@@ -125,13 +125,13 @@ describe("mergeКаждый деньРезультатs", () => {
       ...dayOf("2026-08-16", spend),
       metrics: { ...metricsOf(spend), future_savings_spend: spend } as РасходМетрикаs,
     });
-    const merged = mergeКаждый деньРезультатs([withExtra(2)], [withExtra(3)]);
+    const merged = mergeDailyResults([withExtra(2)], [withExtra(3)]);
 
     expect((merged[0].metrics as Record<string, number>).future_savings_spend).toBe(5);
   });
 });
 
-describe("usePaginatedКаждый деньActivity page accumulation", () => {
+describe("usePaginatedDailyActivity page accumulation", () => {
   it("returns one entry per date when a date's rows span multiple pages", async () => {
     const pages = [
       { results: [dayOf("2026-08-16", 2)], metadata: { total_pages: 3, page: 1, total_spend: 2 } },
@@ -146,7 +146,7 @@ describe("usePaginatedКаждый деньActivity page accumulation", () => {
     const end = new Date("2026-08-17");
 
     const { result } = renderHook(() =>
-      usePaginatedКаждый деньActivity({ fetchFn, args: ["tok", start, end, null], enabled: true }),
+      usePaginatedDailyActivity({ fetchFn, args: ["tok", start, end, null], enabled: true }),
     );
 
     await waitFor(() => expect(result.current.data.metadata.page).toBe(3), { timeвыход: 5000 });

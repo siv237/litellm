@@ -3,7 +3,7 @@ import { makeOpenAIEmbeddingsЗапрос } from "./embeddings_api";
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: vi.fn(() => "https://example.com"),
-  getГлобальноLitellmHeaderName: vi.fn(() => "Authorization"),
+  getGlobalLitellmHeaderName: vi.fn(() => "Authorization"),
 }));
 
 describe("embeddings_api", () => {
@@ -32,7 +32,7 @@ describe("embeddings_api", () => {
   });
 
   afterEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should make a request to the embeddings endpoint", async () => {
@@ -44,7 +44,7 @@ describe("embeddings_api", () => {
       [],
     );
 
-    expect(mockFetch).toHaveBeenCalledВремяs(1);
+    expect(mockFetch).toHaveBeenCalledTimes(1);
     expect(mockFetch).toHaveBeenCalledWith("https://example.com/embeddings", {
       method: "POST",
       headers: {

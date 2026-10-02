@@ -1,7 +1,7 @@
 import React from "react";
 import { act, fireEvent, screen, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderWithПровайдерs } from "@/../tests/test-utils";
+import { renderWithProviders } from "@/../tests/test-utils";
 import AddPluginForm from "./add_plugin_form";
 import { registerClaudeCodePlugin } from "@/components/networking";
 import { toast } from "@/lib/toast";
@@ -28,11 +28,11 @@ const DIGEST = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 
 describe("AddPluginForm", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("renders the host-agnostic source URL input and subfolder field, hiding the digest until a zip is entered", () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     expect(screen.getByText("Источник URL")).toBeInTheDocument();
     expect(screen.getByPlaceholderText(URL_PLACEHOLDER)).toBeInTheDocument();
@@ -42,7 +42,7 @@ describe("AddPluginForm", () => {
   });
 
   it("shows GitHub repo preview for a plain repo URL", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     const urlВход = screen.getByPlaceholderText(URL_PLACEHOLDER);
 
@@ -58,7 +58,7 @@ describe("AddPluginForm", () => {
   });
 
   it("shows git-subdir preview for a tree URL and disables the subfolder field", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     const urlВход = screen.getByPlaceholderText(URL_PLACEHOLDER);
 
@@ -77,7 +77,7 @@ describe("AddPluginForm", () => {
   });
 
   it("shows a raw url preview for a non-github host", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     const urlВход = screen.getByPlaceholderText(URL_PLACEHOLDER);
 
@@ -94,7 +94,7 @@ describe("AddPluginForm", () => {
   });
 
   it("combines a repo URL with a subfolder into a git-subdir preview", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     const urlВход = screen.getByPlaceholderText(URL_PLACEHOLDER);
     await act(async () => {
@@ -115,7 +115,7 @@ describe("AddPluginForm", () => {
   });
 
   it("auto-fills skill name from repo URL", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     const urlВход = screen.getByPlaceholderText(URL_PLACEHOLDER);
 
@@ -126,15 +126,15 @@ describe("AddPluginForm", () => {
     });
 
     await waitFor(() => {
-      const nameВход = screen.getByPlaceholderText("my-skill") as HTMLВходElement;
+      const nameВход = screen.getByPlaceholderText("my-skill") as HTMLInElement;
       expect(nameВход.value).toBe("my-awesome-skill");
     });
   });
 
   it("does not auto-fill name when name is already set", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
-    const nameВход = screen.getByPlaceholderText("my-skill") as HTMLВходElement;
+    const nameВход = screen.getByPlaceholderText("my-skill") as HTMLInElement;
     fireEvent.change(nameВход, { target: { value: "existing-name" } });
 
     const urlВход = screen.getByPlaceholderText(URL_PLACEHOLDER);
@@ -169,7 +169,7 @@ describe("AddPluginForm", () => {
   };
 
   it("submits a github repo source", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeUrl("https://github.com/anthropics/claude-code");
     await submit();
@@ -183,7 +183,7 @@ describe("AddPluginForm", () => {
   });
 
   it("submits a github subdir source from a tree URL", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeUrl("https://github.com/anthropics/claude-code/tree/main/plugins/my-skill");
     await submit();
@@ -199,7 +199,7 @@ describe("AddPluginForm", () => {
   });
 
   it("submits a raw url source for a gitlab repo", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeUrl("https://gitlab.com/group/repo");
     await submit();
@@ -213,7 +213,7 @@ describe("AddPluginForm", () => {
   });
 
   it("submits a git-subdir source from a gitlab repo plus subfolder field", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeUrl("https://gitlab.com/group/repo");
     await typeSubПуть("plugins/x");
@@ -230,10 +230,10 @@ describe("AddPluginForm", () => {
   });
 
   it("clears the subfolder field and uses the URL path once a tree URL is entered", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeSubПуть("plugins/x");
-    const subПутьВход = screen.getByPlaceholderText(SUBPATH_PLACEHOLDER) as HTMLВходElement;
+    const subПутьВход = screen.getByPlaceholderText(SUBPATH_PLACEHOLDER) as HTMLInElement;
     expect(subПутьВход.value).toBe("plugins/x");
 
     await typeUrl("https://github.com/anthropics/claude-code/tree/main/plugins/from-url");
@@ -260,7 +260,7 @@ describe("AddPluginForm", () => {
   });
 
   it("shows a zip archive preview, disables the subfolder field, and reveals the digest field", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeUrl(S3_ZIP_URL);
 
@@ -268,11 +268,11 @@ describe("AddPluginForm", () => {
     expect(screen.getByPlaceholderText(SUBPATH_PLACEHOLDER)).toBeDisabled();
     expect(screen.getByText("A zip archive is installed as a whole, so this field is disabled")).toBeInTheDocument();
     expect(screen.getByPlaceholderText(SHA256_PLACEHOLDER)).toBeInTheDocument();
-    expect((screen.getByPlaceholderText("my-skill") as HTMLВходElement).value).toBe("s3-skill-1-0-0");
+    expect((screen.getByPlaceholderText("my-skill") as HTMLInElement).value).toBe("s3-skill-1-0-0");
   });
 
   it("submits an archive source withвыход a digest when the field is left empty", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeUrl(S3_ZIP_URL);
     await submit();
@@ -286,7 +286,7 @@ describe("AddPluginForm", () => {
   });
 
   it("submits an archive source pinned to the lowercased digest", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeUrl(S3_ZIP_URL);
     await act(async () => {
@@ -305,7 +305,7 @@ describe("AddPluginForm", () => {
   });
 
   it("drops the digest once the archive URL changes so a stale checksum is never sent for a new file", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeUrl(S3_ZIP_URL);
     await act(async () => {
@@ -326,7 +326,7 @@ describe("AddPluginForm", () => {
   });
 
   it("blocks submission and shows the digest error for a malformed sha256", async () => {
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeUrl(S3_ZIP_URL);
     await act(async () => {
@@ -339,8 +339,8 @@ describe("AddPluginForm", () => {
   });
 
   it("surfaces the backend error message when registration fails", async () => {
-    mockRegister.mockRejectedЗначениеOnce(new Ошибка("Plugin 'claude-code' already exists"));
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    mockRegister.mockRejectedValueOnce(new Ошибка("Plugin 'claude-code' already exists"));
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeUrl("https://github.com/anthropics/claude-code");
     await submit();
@@ -353,8 +353,8 @@ describe("AddPluginForm", () => {
   it("surfaces the 409 name-conflict reason verbatim withвыход burying it under a generic failure prefix", async () => {
     const conflictСообщение =
       "A skill named 'gitlab' already exists. Update the existing skill instead of adding it again.";
-    mockRegister.mockRejectedЗначениеOnce(new Ошибка(conflictСообщение));
-    renderWithПровайдерs(<AddPluginForm {...DEFAULT_PROPS} />);
+    mockRegister.mockRejectedValueOnce(new Ошибка(conflictСообщение));
+    renderWithProviders(<AddPluginForm {...DEFAULT_PROPS} />);
 
     await typeUrl("https://github.com/anthropics/claude-code");
     await submit();
@@ -362,6 +362,6 @@ describe("AddPluginForm", () => {
     await waitFor(() => {
       expect(mockСообщениеОшибка).toHaveBeenCalledWith(conflictСообщение);
     });
-    expect(mockСообщениеОшибка).toHaveBeenCalledВремяs(1);
+    expect(mockСообщениеОшибка).toHaveBeenCalledTimes(1);
   });
 });

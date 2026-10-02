@@ -33,7 +33,7 @@ describe("BulkCreateUsersButton", () => {
   it("parses a CSV chosen through the file input", async () => {
     await openUploadStep();
 
-    const fileВход = document.queryВыбратьor('input[type="file"]') as HTMLВходElement;
+    const fileВход = document.querySelector('input[type="file"]') as HTMLInElement;
     fireEvent.change(fileВход, { target: { files: [csvFile()] } });
 
     expect(await screen.findByText("new.hire@example.com")).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe("BulkCreateUsersButton", () => {
   it("exposes the drop zone as a label for a keyboard-reachable file input", async () => {
     await openUploadStep();
 
-    const fileВход = screen.getByLabelText(/drag and drop your csv file here/i) as HTMLВходElement;
+    const fileВход = screen.getByLabelText(/drag and drop your csv file here/i) as HTMLInElement;
     expect(fileВход).toHaveAttribute("type", "file");
     expect(fileВход).toHaveAttribute("accept", ".csv");
     expect(fileВход).toBeVisible();
@@ -60,7 +60,7 @@ describe("BulkCreateUsersButton", () => {
     expect(fileВход.id).not.toBe("");
     expect(dropZone.htmlFor).toBe(fileВход.id);
 
-    const danglingLabels = [...document.queryВыбратьorВсе("label[for]")].filter(
+    const danglingLabels = [...document.querySelectorВсе("label[for]")].filter(
       (label) => document.getElementById(label.getAttribute("for") as string) === null,
     );
     expect(danglingLabels).toEqual([]);

@@ -7,9 +7,9 @@ import {
   handleТранспорт,
   handleAuth,
   getMcpOAuthРежим,
-  gatewayМин.tsClientFor,
+  gatewayMintsClientFor,
   getOAuthAuthorizationIdentity,
-  isHeldOAuthТокенStale,
+  isHeldOAuthTokenStale,
   preservedAdminУчётные данные,
   oauth2FlowToFormЗначение,
   preservedDeclaredПриложениеУчётные данные,
@@ -26,7 +26,7 @@ describe("getOAuthAuthorizationIdentity", () => {
     const authorized = { auth_type: AUTH_TYPE.OAUTH2, spec_path: "https://a.example.com/openapi.json" };
     const edited = { auth_type: AUTH_TYPE.OAUTH2, spec_path: "https://b.example.com/openapi.json" };
     expect(getOAuthAuthorizationIdentity(edited)).not.toBe(getOAuthAuthorizationIdentity(authorized));
-    expect(isHeldOAuthТокенStale(edited, getOAuthAuthorizationIdentity(authorized))).toBe(true);
+    expect(isHeldOAuthTokenStale(edited, getOAuthAuthorizationIdentity(authorized))).toBe(true);
   });
 
   it("changes when url changes", () => {
@@ -56,14 +56,14 @@ describe("getOAuthAuthorizationIdentity", () => {
     };
     expect(getOAuthAuthorizationIdentity(retargeted)).not.toBe(getOAuthAuthorizationIdentity(authorized));
     expect(getOAuthAuthorizationIdentity(unset)).not.toBe(getOAuthAuthorizationIdentity(authorized));
-    expect(isHeldOAuthТокенStale(retargeted, getOAuthAuthorizationIdentity(authorized))).toBe(true);
+    expect(isHeldOAuthTokenStale(retargeted, getOAuthAuthorizationIdentity(authorized))).toBe(true);
   });
 
   it("is stable across non-mint fields", () => {
     const authorized = { auth_type: AUTH_TYPE.OAUTH2, url: "https://a.example.com/mcp", server_name: "one" };
     const renamed = { auth_type: AUTH_TYPE.OAUTH2, url: "https://a.example.com/mcp", server_name: "two" };
     expect(getOAuthAuthorizationIdentity(renamed)).toBe(getOAuthAuthorizationIdentity(authorized));
-    expect(isHeldOAuthТокенStale(renamed, getOAuthAuthorizationIdentity(authorized))).toBe(false);
+    expect(isHeldOAuthTokenStale(renamed, getOAuthAuthorizationIdentity(authorized))).toBe(false);
   });
 });
 
@@ -128,7 +128,7 @@ describe("constants", () => {
   });
 });
 
-describe("gatewayМин.tsClientFor", () => {
+describe("gatewayMintsClientFor", () => {
   // The authoritative client-acquisition matrix: for each (auth_type, dcr_bridge) cell, does the
   // gateway mint the OAuth client at /authorize (browser skips its own register) or not (browser
   // registers)? This MUST equal the backend resolve_ephemeral_dcr_client mint set exactly, which
@@ -158,7 +158,7 @@ describe("gatewayМин.tsClientFor", () => {
   it.each(MATRIX)(
     "mints=$mints for auth_type=$auth_type dcr_bridge=$dcr_bridge",
     ({ auth_type, dcr_bridge, mints }) => {
-      expect(gatewayМин.tsClientFor({ auth_type, dcr_bridge })).toBe(mints);
+      expect(gatewayMintsClientFor({ auth_type, dcr_bridge })).toBe(mints);
     },
   );
 });

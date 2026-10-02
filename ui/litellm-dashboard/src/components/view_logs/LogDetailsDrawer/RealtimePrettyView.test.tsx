@@ -28,7 +28,7 @@ const sampleRealtimeОтвет = {
         },
         input_audio_format: "pcm16",
         выходput_audio_format: "pcm16",
-        max_response_выходput_tokens: "inf",
+        max_response_output_tokens: "inf",
       },
       event_id: "event_DDNQlB4VNUlpqTVIjBbm3",
     },
@@ -68,7 +68,7 @@ const sampleRealtimeОтвет = {
         ],
         status: "completed",
         conversation_id: "conv_DDNQlpNllPYhCCfXCtT8X",
-        max_выходput_tokens: "inf",
+        max_output_tokens: "inf",
       },
     },
     {
@@ -99,7 +99,7 @@ const sampleRealtimeОтвет = {
         ],
         status: "completed",
         conversation_id: "conv_DDNQlpNllPYhCCfXCtT8X",
-        max_выходput_tokens: "inf",
+        max_output_tokens: "inf",
       },
     },
   ],
@@ -145,7 +145,7 @@ describe("RealtimePrettyView", () => {
   const mockWriteText = vi.fn().mockResolvedЗначение(undefined);
 
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     Object.defineСвойство(navigator, "clipboard", {
       value: { writeText: mockWriteText },
       writable: true,
@@ -160,13 +160,13 @@ describe("RealtimePrettyView", () => {
 
   it("should display the session Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name", () => {
     render(<RealtimePrettyView response={sampleRealtimeОтвет} />);
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюElements = screen.getВсеByText("gpt-4o-mini-realtime-preview");
+    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюElements = screen.getAllByText("gpt-4o-mini-realtime-preview");
     expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюElements.length).toBeGreaterThanOrEqual(1);
   });
 
   it("should display the session voice tag", () => {
     render(<RealtimePrettyView response={sampleRealtimeОтвет} />);
-    const voiceElements = screen.getВсеByText("alloy");
+    const voiceElements = screen.getAllByText("alloy");
     expect(voiceElements.length).toBeGreaterThanOrEqual(1);
   });
 
@@ -232,7 +232,7 @@ describe("RealtimePrettyView", () => {
 
   it("should display completed status tags for response turns", () => {
     render(<RealtimePrettyView response={sampleRealtimeОтвет} />);
-    const completedТеги = screen.getВсеByText("completed");
+    const completedТеги = screen.getAllByText("completed");
     expect(completedТеги.length).toBe(2);
   });
 
@@ -273,13 +273,13 @@ describe("RealtimePrettyView", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Формат входного аудио")).toBeInTheDocument();
-      expect(screen.getВсеByText("pcm16").length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText("pcm16").length).toBeGreaterThanOrEqual(1);
     });
   });
 
   it("should display ASSISTANT label for выходput messages", () => {
     render(<RealtimePrettyView response={sampleRealtimeОтвет} />);
-    const assistantLabels = screen.getВсеByText("ASSISTANT");
+    const assistantLabels = screen.getAllByText("ASSISTANT");
     expect(assistantLabels.length).toBe(2);
   });
 

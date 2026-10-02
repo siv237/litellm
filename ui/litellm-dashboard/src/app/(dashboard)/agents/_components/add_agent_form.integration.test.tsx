@@ -5,12 +5,12 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import AddAgentForm from "./add_agent_form";
 import * as networking from "@/components/networking";
 import type { AgentCreateInfo } from "@/components/networking";
-import { chooseВыбратьOption, renderWithПровайдерs as render } from "../../../../../tests/test-utils";
+import { chooseSelectOption, renderWithProviders as render } from "../../../../../tests/test-utils";
 
 vi.mock("@/components/networking", () => ({
   createAgentCall: vi.fn(),
   getAgentCreateМетаданные: vi.fn(),
-  getАгентыList: vi.fn(),
+  getAgentsList: vi.fn(),
   keyCreateForAgentCall: vi.fn(),
   keyListCall: vi.fn(),
   keyUpdateCall: vi.fn(),
@@ -18,9 +18,9 @@ vi.mock("@/components/networking", () => ({
 }));
 
 vi.mock("./agent_card_discovery", () => ({ default: () => <div data-testid="agent-card-discovery" /> }));
-vi.mock("@/components/mcp_server_management/MCPСерверВыбратьor", () => ({ default: () => <div /> }));
+vi.mock("@/components/mcp_server_management/MCPServerSelector", () => ({ default: () => <div /> }));
 vi.mock("@/components/mcp_server_management/MCPToolPermissions", () => ({ default: () => <div /> }));
-vi.mock("@/components/гардрейловs/GuardrailВыбратьor", () => ({ default: () => <div /> }));
+vi.mock("@/components/гардрейловs/GuardrailSelector", () => ({ default: () => <div /> }));
 vi.mock("@/components/common_components/team_dropdown", () => ({ default: () => <div /> }));
 
 const a2aInfo: AgentCreateInfo = {
@@ -53,7 +53,7 @@ const renderForm = () =>
 const panel = (name: RegExp) => screen.findByRole("button", { name });
 
 const openAgentTypeMenu = async (user: ReturnType<typeof userEvent.setup>) => {
-  await user.click(screen.getВсеByRole("combobox")[0]);
+  await user.click(screen.getAllByRole("combobox")[0]);
 };
 
 const createdPayload = () => vi.mocked(networking.createAgentCall).mock.calls[0][1] as Record<string, unknown>;
@@ -63,7 +63,7 @@ const goToLastStepAndCreate = async (user: ReturnType<typeof userEvent.setup>) =
   await user.click(await screen.findByRole("button", { name: /^Next/ }));
   await user.click(await screen.findByRole("button", { name: /^Next/ }));
   await user.click(await screen.findByRole("button", { name: /Create Agent/ }));
-  await waitFor(() => expect(networking.createAgentCall).toHaveBeenCalledВремяs(1));
+  await waitFor(() => expect(networking.createAgentCall).toHaveBeenCalledTimes(1));
 };
 
 const selectAgentType = async (user: ReturnType<typeof userEvent.setup>, label: string) => {
@@ -74,11 +74,11 @@ const selectAgentType = async (user: ReturnType<typeof userEvent.setup>, label: 
 describe("AddAgentForm submit payload", () => {
   beforeEach(() => {
     vi.mocked(networking.getAgentCreateМетаданные).mockReset().mockResolvedЗначение([a2aInfo, langgraphInfo]);
-    vi.mocked(networking.getАгентыList)
+    vi.mocked(networking.getAgentsList)
       .mockReset()
       .mockResolvedЗначение({ agents: [{ agent_id: "sub-1", agent_name: "Sub Agent One" }] });
     vi.mocked(networking.keyListCall).mockReset().mockResolvedЗначение({ keys: [] });
-    vi.mocked(networking.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAvailableCall)
+    vi.mocked(networking.modelAvailableCall)
       .mockReset()
       .mockResolvedЗначение({ data: [{ id: "gpt-4o" }] });
     vi.mocked(networking.createAgentCall)
@@ -144,8 +144,8 @@ describe("AddAgentForm submit payload", () => {
         description: "answers questions",
         url: "http://localhost:9999/",
         version: "2.0.0",
-        defaultВходРежимs: ["text"],
-        defaultВыходРежимs: ["text"],
+        defaultInputModes: ["text"],
+        defaultOutputModes: ["text"],
         capabilities: { streaming: true, pushNotifications: true },
         skills: [
           {
@@ -230,8 +230,8 @@ describe("AddAgentForm submit payload", () => {
         description: "custom thing",
         url: "",
         version: "1.0.0",
-        defaultВходРежимs: ["text"],
-        defaultВыходРежимs: ["text"],
+        defaultInputModes: ["text"],
+        defaultOutputModes: ["text"],
         capabilities: { streaming: false },
         skills: [],
       },
@@ -261,8 +261,8 @@ describe("AddAgentForm submit payload", () => {
         description: "graph agent",
         url: "https://lg.example.com",
         version: "1.0.0",
-        defaultВходРежимs: ["text"],
-        defaultВыходРежимs: ["text"],
+        defaultInputModes: ["text"],
+        defaultOutputModes: ["text"],
         capabilities: { streaming: true },
         skills: [
           {
@@ -310,18 +310,18 @@ describe("AddAgentForm submit payload", () => {
 
     await user.type(await screen.findByLabelText("Разрешённые модели"), "gpt-4o,");
     await user.keyboard("{Escape}");
-    await chooseВыбратьOption(user, screen.getByLabelText("Разрешённые агенты (Sub-Агенты)"), "Sub Agent One");
+    await chooseSelectOption(user, screen.getByLabelText("Разрешённые агенты (Sub-Агенты)"), "Sub Agent One");
     await user.keyboard("{Escape}");
     await user.click(screen.getByText(/Конфигурацияure which Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs, agents, and MCP tools/));
     await user.click(screen.getByRole("button", { name: /^Next/ }));
 
-    await user.click((await screen.findВсеByRole("switch"))[1]);
+    await user.click((await screen.findAllByRole("switch"))[1]);
     await user.type(screen.getByLabelText("Лимит TPM"), "1000");
     await user.type(screen.getByLabelText("Сессия Лимит RPM"), "20");
     await user.click(screen.getByRole("button", { name: /^Next/ }));
 
     await user.click(await screen.findByRole("button", { name: /Create Agent/ }));
-    await waitFor(() => expect(networking.createAgentCall).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(networking.createAgentCall).toHaveBeenCalledTimes(1));
 
     const payload = createdPayload();
     expect(payload.tpm_limit).toBe(1000);
@@ -364,13 +364,13 @@ describe("AddAgentForm submit payload", () => {
       await user.click(screen.getByRole("button", { name: /^Next/ }));
     }
     await user.click(screen.getByRole("radio", { name: "Assign an existing key" }));
-    const keyВыбратьor = await screen.findByPlaceholderText("Search by key name…");
-    await chooseВыбратьOption(user, keyВыбратьor, "Maple key");
+    const keySelector = await screen.findByPlaceholderText("Search by key name…");
+    await chooseSelectOption(user, keySelector, "Maple key");
     await user.click(screen.getByRole("button", { name: "Clear" }));
     await user.click(screen.getByRole("button", { name: /Create Agent/ }));
     expect(networking.createAgentCall).not.toHaveBeenCalled();
     expect(networking.keyUpdateCall).not.toHaveBeenCalled();
-    await chooseВыбратьOption(user, keyВыбратьor, "Maple key");
+    await chooseSelectOption(user, keySelector, "Maple key");
     await user.click(screen.getByRole("button", { name: /Create Agent/ }));
     await waitFor(() =>
       expect(networking.keyUpdateCall).toHaveBeenCalledWith("tok", {
@@ -378,6 +378,6 @@ describe("AddAgentForm submit payload", () => {
         agent_id: "agent-1",
       }),
     );
-    expect(networking.createAgentCall).toHaveBeenCalledВремяs(1);
+    expect(networking.createAgentCall).toHaveBeenCalledTimes(1);
   });
 });

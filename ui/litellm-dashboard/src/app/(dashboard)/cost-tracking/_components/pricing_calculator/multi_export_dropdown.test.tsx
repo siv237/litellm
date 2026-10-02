@@ -1,9 +1,9 @@
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs, screen, waitFor } from "../../../../../../tests/test-utils";
+import { renderWithProviders, screen, waitFor } from "../../../../../../tests/test-utils";
 import MultiExportDropdown from "./multi_export_dropdown";
-import type { MultiРежимlРезультат } from "./types";
+import type { MultiModelРезультат } from "./types";
 
 vi.mock("./multi_export_utils", () => ({
   exportMultiToPDF: vi.fn(),
@@ -12,7 +12,7 @@ vi.mock("./multi_export_utils", () => ({
 
 import { exportMultiToPDF, exportMultiToCSV } from "./multi_export_utils";
 
-function makeMultiРезультат(hasРезультат: boolean): MultiРежимlРезультат {
+function makeMultiРезультат(hasРезультат: boolean): MultiModelРезультат {
   return {
     entries: [
       {
@@ -30,11 +30,11 @@ function makeMultiРезультат(hasРезультат: boolean): MultiРе�
               margin_cost_per_request: 0,
               daily_cost: null,
               daily_input_cost: null,
-              daily_выходput_cost: null,
+              daily_output_cost: null,
               daily_margin_cost: null,
               monthly_cost: null,
               monthly_input_cost: null,
-              monthly_выходput_cost: null,
+              monthly_output_cost: null,
               monthly_margin_cost: null,
               input_cost_per_token: null,
               выходput_cost_per_token: null,
@@ -58,22 +58,22 @@ function makeMultiРезультат(hasРезультат: boolean): MultiРе�
 
 describe("MultiExportDropdown", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should not render anything when no entries have results", () => {
-    const { container } = renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(false)} />);
+    const { container } = renderWithProviders(<MultiExportDropdown multiРезультат={makeMultiРезультат(false)} />);
     expect(container).toBeEmptyDOMElement();
   });
 
   it("should render the Export button when at least one entry has a result", () => {
-    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
+    renderWithProviders(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
     expect(screen.getByRole("button", { name: /^export$/i })).toBeInTheDocument();
   });
 
   it("should show the export menu when the Export button is clicked", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
+    renderWithProviders(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     await user.click(screen.getByRole("button", { name: /^export$/i }));
 
@@ -83,7 +83,7 @@ describe("MultiExportDropdown", () => {
 
   it("should hide the export menu when the Export button is clicked again", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
+    renderWithProviders(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     const trigger = screen.getByRole("button", { name: /^export$/i });
     await user.click(trigger);
@@ -95,32 +95,32 @@ describe("MultiExportDropdown", () => {
 
   it("should call exportMultiToPDF and close the menu when Export as PDF is clicked", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
+    renderWithProviders(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     const trigger = screen.getByRole("button", { name: /^export$/i });
     await user.click(trigger);
     await user.click(await screen.findByRole("menuitem", { name: "Export as PDF" }));
 
-    expect(exportMultiToPDF).toHaveBeenCalledВремяs(1);
+    expect(exportMultiToPDF).toHaveBeenCalledTimes(1);
     await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "false"));
   });
 
   it("should call exportMultiToCSV and close the menu when Export as CSV is clicked", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
+    renderWithProviders(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     const trigger = screen.getByRole("button", { name: /^export$/i });
     await user.click(trigger);
     await user.click(await screen.findByRole("menuitem", { name: "Export as CSV" }));
 
-    expect(exportMultiToCSV).toHaveBeenCalledВремяs(1);
+    expect(exportMultiToCSV).toHaveBeenCalledTimes(1);
     await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "false"));
   });
 
   it("should pass the multiРезультат to the export functions", async () => {
     const user = userEvent.setup();
     const multiРезультат = makeMultiРезультат(true);
-    renderWithПровайдерs(<MultiExportDropdown multiРезультат={multiРезультат} />);
+    renderWithProviders(<MultiExportDropdown multiРезультат={multiРезультат} />);
 
     await user.click(screen.getByRole("button", { name: /^export$/i }));
     await user.click(await screen.findByRole("menuitem", { name: "Export as PDF" }));
@@ -130,7 +130,7 @@ describe("MultiExportDropdown", () => {
 
   it("should close the menu when clicking выходside", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(
+    renderWithProviders(
       <div>
         <MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />
         <div data-testid="выходside">Выходside</div>
@@ -147,7 +147,7 @@ describe("MultiExportDropdown", () => {
 
   it("should focus and navigate export options with the keyboard", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
+    renderWithProviders(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     const trigger = screen.getByRole("button", { name: /^export$/i });
     trigger.focus();
@@ -162,7 +162,7 @@ describe("MultiExportDropdown", () => {
 
   it("should close the menu and restore trigger focus when Escape is pressed", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
+    renderWithProviders(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     const trigger = screen.getByRole("button", { name: /^export$/i });
     trigger.focus();

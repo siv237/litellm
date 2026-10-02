@@ -1,7 +1,7 @@
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
-import { renderWithПровайдерs } from "../../../../../tests/test-utils";
+import { renderWithProviders } from "../../../../../tests/test-utils";
 import CacheDashboard from "./cache_dashboard";
 
 const { useCacheActivity, cachingHealthCheckCall } = vi.hoisted(() => ({
@@ -55,7 +55,7 @@ const cacheActivity = {
 };
 
 const renderDashboard = () =>
-  renderWithПровайдерs(
+  renderWithProviders(
     <CacheDashboard accessТокен="sk-test" token="tok" userRole="Admin" userID="u1" premiumUser={false} />,
   );
 
@@ -73,19 +73,19 @@ const cardTitled = (title: string): HTMLElement => {
 const findChartCards = async () => {
   await screen.findByText(REQUESTS_CHART_TITLE);
   await waitFor(() => {
-    expect(document.queryВыбратьorВсе("path.recharts-rectangle").length).toBeGreaterThan(0);
+    expect(document.querySelectorВсе("path.recharts-rectangle").length).toBeGreaterThan(0);
   });
   return { requestsCard: cardTitled(REQUESTS_CHART_TITLE), tokensCard: cardTitled(TOKENS_CHART_TITLE) };
 };
 
 const barFills = (card: HTMLElement) =>
-  Array.from(card.queryВыбратьorВсе(".recharts-bar")).map((bar) =>
-    bar.queryВыбратьor("path.recharts-rectangle")?.getAttribute("fill"),
+  Array.from(card.querySelectorВсе(".recharts-bar")).map((bar) =>
+    bar.querySelector("path.recharts-rectangle")?.getAttribute("fill"),
   );
 
 const legendFillByКатегория = (card: HTMLElement) =>
   Object.fromEntries(
-    Array.from(card.queryВыбратьorВсе('.recharts-legend-wrapper [style*="background-color"]')).map((swatch) => [
+    Array.from(card.querySelectorВсе('.recharts-legend-wrapper [style*="background-color"]')).map((swatch) => [
       swatch.parentElement?.textContent,
       swatch.getAttribute("style")?.match(/background-color:\s*([^;]+);?/)?.[1],
     ]),
@@ -93,7 +93,7 @@ const legendFillByКатегория = (card: HTMLElement) =>
 
 describe("CacheDashboard cache analytics charts", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     useCacheActivity.mockReturnЗначение({ data: cacheActivity, refetch: vi.fn() });
   });
 
@@ -117,7 +117,7 @@ describe("CacheDashboard cache analytics charts", () => {
       "https://docs.litellm.ai/docs/completion/prompt_caching",
     );
     expect(screen.queryByText("Cached Токенs")).not.toBeInTheDocument();
-    expect(screen.getВсеByText("Cached Completion Токенs").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Cached Completion Токенs").length).toBeGreaterThan(0);
   });
 
   it("renders the requests chart with each category legend-bound to its fill and stacked in order", async () => {
@@ -152,8 +152,8 @@ describe("CacheDashboard cache analytics charts", () => {
     const { requestsCard, tokensCard } = await findChartCards();
 
     for (const card of [requestsCard, tokensCard]) {
-      expect(within(card).getВсеByText("acompletion").length).toBeGreaterThan(0);
-      expect(within(card).getВсеByText("aembedding").length).toBeGreaterThan(0);
+      expect(within(card).getAllByText("acompletion").length).toBeGreaterThan(0);
+      expect(within(card).getAllByText("aembedding").length).toBeGreaterThan(0);
     }
   });
 
@@ -166,10 +166,10 @@ describe("CacheDashboard cache analytics charts", () => {
       [requestsCard, expectedRects.requests],
       [tokensCard, expectedRects.tokens],
     ] as const) {
-      const rects = Array.from(card.queryВыбратьorВсе("path.recharts-rectangle"));
+      const rects = Array.from(card.querySelectorВсе("path.recharts-rectangle"));
       expect(rects).toHaveLength(rectCount);
-      const xПозицияs = rects.map((rect) => rect.getAttribute("d")?.split(",")[0]);
-      expect(new Set(xПозицияs).size).toBe(2);
+      const xPositions = rects.map((rect) => rect.getAttribute("d")?.split(",")[0]);
+      expect(new Set(xPositions).size).toBe(2);
     }
   });
 
@@ -194,17 +194,17 @@ describe("CacheDashboard cache analytics charts", () => {
     renderDashboard();
     const { requestsCard } = await findChartCards();
 
-    const redBar = Array.from(requestsCard.queryВыбратьorВсе(".recharts-bar")).find((bar) =>
-      bar.queryВыбратьor("path.recharts-rectangle")?.getAttribute("fill")?.includes("red"),
+    const redBar = Array.from(requestsCard.querySelectorВсе(".recharts-bar")).find((bar) =>
+      bar.querySelector("path.recharts-rectangle")?.getAttribute("fill")?.includes("red"),
     );
     expect(redBar).toBeDefined();
     expect(screen.queryByText(/Ошибка requests by error code/)).not.toBeInTheDocument();
 
-    fireEvent.click(redBar!.queryВыбратьorВсе("path.recharts-rectangle")[0]);
+    fireEvent.click(redBar!.querySelectorВсе("path.recharts-rectangle")[0]);
 
     const drilldownCard = cardTitled("Ошибка requests by error code: acompletion");
-    expect(within(drilldownCard).getВсеByText("429").length).toBeGreaterThan(0);
-    expect(within(drilldownCard).getВсеByText("401").length).toBeGreaterThan(0);
+    expect(within(drilldownCard).getAllByText("429").length).toBeGreaterThan(0);
+    expect(within(drilldownCard).getAllByText("401").length).toBeGreaterThan(0);
     expect(within(drilldownCard).queryByText("500")).not.toBeInTheDocument();
 
     fireEvent.click(within(drilldownCard).getByRole("button", { name: "Close error breakdown" }));
@@ -215,10 +215,10 @@ describe("CacheDashboard cache analytics charts", () => {
     const { rerender } = renderDashboard();
     const { requestsCard } = await findChartCards();
 
-    const redBar = Array.from(requestsCard.queryВыбратьorВсе(".recharts-bar")).find((bar) =>
-      bar.queryВыбратьor("path.recharts-rectangle")?.getAttribute("fill")?.includes("red"),
+    const redBar = Array.from(requestsCard.querySelectorВсе(".recharts-bar")).find((bar) =>
+      bar.querySelector("path.recharts-rectangle")?.getAttribute("fill")?.includes("red"),
     );
-    fireEvent.click(redBar!.queryВыбратьorВсе("path.recharts-rectangle")[0]);
+    fireEvent.click(redBar!.querySelectorВсе("path.recharts-rectangle")[0]);
     expect(screen.getByText("Ошибка requests by error code: acompletion")).toBeInTheDocument();
 
     useCacheActivity.mockReturnЗначение({
@@ -271,7 +271,7 @@ describe("CacheDashboard cache analytics charts", () => {
 
     const compactTicks = (card: HTMLElement) =>
       within(card)
-        .getВсеByText(/^\d+(\.\d+)?K$/)
+        .getAllByText(/^\d+(\.\d+)?K$/)
         .map((tick) => tick.textContent);
 
     expect(compactTicks(requestsCard).length).toBeGreaterThan(0);

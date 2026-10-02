@@ -15,7 +15,7 @@ describe("DonutChart", () => {
       <DonutChart data={data} index="provider" category="spend" colors={["cyan", "blue"]} />,
     );
 
-    const sectors = Array.from(container.queryВыбратьorВсе(".recharts-pie-sector path"));
+    const sectors = Array.from(container.querySelectorВсе(".recharts-pie-sector path"));
     expect(sectors).toHaveLength(3);
     expect(sectors.map((sector) => sector.getAttribute("fill"))).toEqual([
       "var(--color-cyan-500, #06b6d4)",
@@ -30,8 +30,8 @@ describe("DonutChart", () => {
       <DonutChart data={data} index="provider" category="spend" colors={["cyan"]} variant="pie" />,
     );
 
-    const donutПуть = donut.queryВыбратьor(".recharts-pie-sector path")?.getAttribute("d") ?? "";
-    const pieПуть = pie.queryВыбратьor(".recharts-pie-sector path")?.getAttribute("d") ?? "";
+    const donutПуть = donut.querySelector(".recharts-pie-sector path")?.getAttribute("d") ?? "";
+    const pieПуть = pie.querySelector(".recharts-pie-sector path")?.getAttribute("d") ?? "";
     expect(donutПуть).not.toEqual(pieПуть);
     expect((donutПуть.match(/A/g) ?? []).length).toBeGreaterThan((pieПуть.match(/A/g) ?? []).length);
   });
@@ -46,7 +46,7 @@ describe("DonutChart", () => {
         valueFormatter={(value) => `$${value.toFixed(2)}`}
       />,
     );
-    expect(container.queryВыбратьor("text.fill-foreground")).toBeNull();
+    expect(container.querySelector("text.fill-foreground")).toBeNull();
 
     rerender(
       <DonutChart
@@ -58,7 +58,7 @@ describe("DonutChart", () => {
         showLabel
       />,
     );
-    expect(container.queryВыбратьor("text.fill-foreground")?.textContent).toBe("$90.00");
+    expect(container.querySelector("text.fill-foreground")?.textContent).toBe("$90.00");
   });
 
   it("never invokes the valueFormatter for the center label unless it is shown", () => {
@@ -83,18 +83,18 @@ describe("DonutChart", () => {
     const { container } = render(
       <DonutChart data={data} index="provider" category="spend" colors={["cyan"]} showLabel label="Все providers" />,
     );
-    expect(container.queryВыбратьor("text.fill-foreground")?.textContent).toBe("Все providers");
+    expect(container.querySelector("text.fill-foreground")?.textContent).toBe("Все providers");
   });
 
   it("renders no center label when data is empty", () => {
     const { container } = render(
       <DonutChart data={[]} index="provider" category="spend" colors={["cyan"]} showLabel />,
     );
-    expect(container.queryВыбратьor("text.fill-foreground")).toBeNull();
+    expect(container.querySelector("text.fill-foreground")).toBeNull();
   });
 
-  const firstПутьPoint = (container: HTMLElement) => {
-    const d = container.queryВыбратьor(".recharts-pie-sector path")?.getAttribute("d") ?? "";
+  const firstPathPoint = (container: HTMLElement) => {
+    const d = container.querySelector(".recharts-pie-sector path")?.getAttribute("d") ?? "";
     const match = d.match(/M\s*([\d.-]+)\s*,\s*([\d.-]+)/);
     expect(match).not.toBeNull();
     return { x: Number(match![1]), y: Number(match![2]) };
@@ -108,8 +108,8 @@ describe("DonutChart", () => {
       <DonutChart data={data} index="provider" category="spend" colors={["cyan"]} startAngle={90} endAngle={-270} />,
     );
 
-    const defaultStart = firstПутьPoint(byDefault);
-    const angledStart = firstПутьPoint(clockwiseFromTop);
+    const defaultStart = firstPathPoint(byDefault);
+    const angledStart = firstPathPoint(clockwiseFromTop);
     expect(defaultStart.x).toBeGreaterThan(400);
     expect(Math.abs(defaultStart.y - 200)).toBeLessThan(1);
     expect(Math.abs(angledStart.x - 400)).toBeLessThan(1);

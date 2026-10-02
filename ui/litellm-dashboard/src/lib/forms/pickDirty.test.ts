@@ -1,11 +1,11 @@
 import { act, renderHook } from "@testing-library/react";
 import type { ПолеЗначениеs, FormState } from "react-hook-form";
-import { useПолеArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { describe, expect, it } from "vitest";
 
 import { pickDirty } from "./pickDirty";
 
-const dirty = <T extends ПолеЗначениеs>(map: Record<string, unknown>) => map as FormState<T>["dirtyПолеs"];
+const dirty = <T extends ПолеЗначениеs>(map: Record<string, unknown>) => map as FormState<T>["dirtyFields"];
 
 describe("pickDirty", () => {
   it("omits untouched keys entirely rather than sending them as undefined", () => {
@@ -90,23 +90,23 @@ describe("pickDirty", () => {
 
   it("does not mutate its inputs", () => {
     const values = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4"], tpm_limit: 5 };
-    const dirtyПолеs = dirty<typeof values>({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [true] });
+    const dirtyFields = dirty<typeof values>({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [true] });
 
-    pickDirty(values, dirtyПолеs);
+    pickDirty(values, dirtyFields);
 
     expect(values).toEqual({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4"], tpm_limit: 5 });
-    expect(dirtyПолеs).toEqual({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [true] });
+    expect(dirtyFields).toEqual({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [true] });
   });
 
   it("keeps value identity so nested references are not cloned", () => {
     const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs = ["gpt-4"];
 
-    expect(pickDirty({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs }, dirty({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: true })).Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs).toBe(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs);
+    expect(pickDirty({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs }, dirty({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: true })).models).toBe(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs);
   });
 });
 
 describe("pickDirty against a real react-hook-form instance", () => {
-  const defaultЗначениеs = {
+  const defaultValues = {
     team_alias: "team-a",
     max_budget: 10 as number | null,
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4", "opus"] as string[],
@@ -116,14 +116,14 @@ describe("pickDirty against a real react-hook-form instance", () => {
 
   const renderForm = () =>
     renderHook(() => {
-      const form = useForm({ defaultЗначениеs });
-      const fieldArray = useПолеArray({ control: form.control, name: "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюLimits" });
-      void form.formState.dirtyПолеs;
+      const form = useForm({ defaultValues });
+      const fieldArray = useFieldArray({ control: form.control, name: "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюLimits" });
+      void form.formState.dirtyFields;
       return { form, fieldArray };
     });
 
-  const patchOf = (result: { current: { form: ReturnType<typeof useForm<typeof defaultЗначениеs>> } }) =>
-    pickDirty(result.current.form.getЗначениеs(), result.current.form.formState.dirtyПолеs);
+  const patchOf = (result: { current: { form: ReturnType<typeof useForm<typeof defaultValues>> } }) =>
+    pickDirty(result.current.form.getValues(), result.current.form.formState.dirtyFields);
 
   it("sends nothing when the user opens the form and saves withвыход editing", () => {
     const { result } = renderForm();
@@ -151,7 +151,7 @@ describe("pickDirty against a real react-hook-form instance", () => {
     expect(patchOf(result)).toEqual({ max_budget: null });
   });
 
-  it("sends an empty array to clear a list emptied through useПолеArray", () => {
+  it("sends an empty array to clear a list emptied through useFieldArray", () => {
     const { result } = renderForm();
 
     act(() => {
@@ -191,7 +191,7 @@ describe("pickDirty against a real react-hook-form instance", () => {
       result.current.form.setЗначение("team_alias", "team-b", { shouldDirty: true });
     });
     act(() => {
-      result.current.form.reset({ ...defaultЗначениеs, team_alias: "team-b" });
+      result.current.form.reset({ ...defaultValues, team_alias: "team-b" });
     });
 
     expect(patchOf(result)).toEqual({});
@@ -206,16 +206,16 @@ describe("pickDirty picks up a pure reorder", () => {
   // omitting it is correct.
   const renderRows = (rows: Array<{ v: string }>) =>
     renderHook(() => {
-      const form = useForm({ defaultЗначениеs: { rows } });
-      const fieldArray = useПолеArray({ control: form.control, name: "rows" });
-      void form.formState.dirtyПолеs;
+      const form = useForm({ defaultValues: { rows } });
+      const fieldArray = useFieldArray({ control: form.control, name: "rows" });
+      void form.formState.dirtyFields;
       return { form, fieldArray };
     });
 
   const patchOf = (result: { current: { form: ReturnType<typeof useForm<{ rows: Array<{ v: string }> }>> } }) =>
-    pickDirty(result.current.form.getЗначениеs(), result.current.form.formState.dirtyПолеs);
+    pickDirty(result.current.form.getValues(), result.current.form.formState.dirtyFields);
 
-  it("sends the whole array after useПолеArray.move()", () => {
+  it("sends the whole array after useFieldArray.move()", () => {
     const { result } = renderRows([{ v: "a" }, { v: "b" }, { v: "c" }]);
 
     act(() => {
@@ -225,7 +225,7 @@ describe("pickDirty picks up a pure reorder", () => {
     expect(patchOf(result)).toEqual({ rows: [{ v: "b" }, { v: "c" }, { v: "a" }] });
   });
 
-  it("sends the whole array after useПолеArray.swap()", () => {
+  it("sends the whole array after useFieldArray.swap()", () => {
     const { result } = renderRows([{ v: "a" }, { v: "b" }, { v: "c" }]);
 
     act(() => {
@@ -237,8 +237,8 @@ describe("pickDirty picks up a pure reorder", () => {
 
   it("sends a reordered scalar array set through setЗначение", () => {
     const { result } = renderHook(() => {
-      const form = useForm({ defaultЗначениеs: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["a", "b", "c"] } });
-      void form.formState.dirtyПолеs;
+      const form = useForm({ defaultValues: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["a", "b", "c"] } });
+      void form.formState.dirtyFields;
       return form;
     });
 
@@ -246,7 +246,7 @@ describe("pickDirty picks up a pure reorder", () => {
       result.current.setЗначение("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", ["c", "b", "a"], { shouldDirty: true });
     });
 
-    expect(pickDirty(result.current.getЗначениеs(), result.current.formState.dirtyПолеs)).toEqual({
+    expect(pickDirty(result.current.getValues(), result.current.formState.dirtyFields)).toEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["c", "b", "a"],
     });
   });

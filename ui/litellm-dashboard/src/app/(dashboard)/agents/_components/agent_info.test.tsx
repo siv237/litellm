@@ -21,14 +21,14 @@ vi.mock("./agent_card_discovery", () => ({
 
 vi.mock("./agent_form_fields", () => ({
   default: () => <div data-testid="agent-form-fields" />,
-  unmountedA2AПолеNames: () => [],
+  unmountedA2AFieldNames: () => [],
 }));
 
 vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCP-серверы", () => ({
   useMCP-серверы: () => ({ data: [{ server_id: "srv-1", server_name: "github" }] }),
 }));
 
-vi.mock("@/components/mcp_server_management/MCPСерверВыбратьor", () => ({
+vi.mock("@/components/mcp_server_management/MCPServerSelector", () => ({
   default: () => <div data-testid="mcp-server-selector" />,
 }));
 
@@ -69,7 +69,7 @@ describe("AgentInfoView settings", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Save Changes/ }));
 
-    await waitFor(() => expect(networking.patchAgentCall).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(networking.patchAgentCall).toHaveBeenCalledTimes(1));
     const [token, agentId, payload] = vi.mocked(networking.patchAgentCall).mock.calls[0];
     expect(token).toBe("sk-test");
     expect(agentId).toBe("agent-1");

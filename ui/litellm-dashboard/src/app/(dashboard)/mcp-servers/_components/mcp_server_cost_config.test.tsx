@@ -45,7 +45,7 @@ describe("MCPСерверСтоимостьКонфигурация", () => {
     expect(screen.getByText("search")).toBeInTheDocument();
     expect(screen.getByText("Search the index")).toBeInTheDocument();
     expect(screen.getByText("fetch")).toBeInTheDocument();
-    expect(screen.getВсеByPlaceholderText("Use default")).toHaveLength(2);
+    expect(screen.getAllByPlaceholderText("Use default")).toHaveLength(2);
   });
 
   it("merges a per-tool override into the existing cost map", async () => {
@@ -59,7 +59,7 @@ describe("MCPСерверСтоимостьКонфигурация", () => {
     );
 
     await userEvent.click(screen.getByText("Доступные инструменты"));
-    fireEvent.change(screen.getВсеByPlaceholderText("Use default")[0], { target: { value: "3" } });
+    fireEvent.change(screen.getAllByPlaceholderText("Use default")[0], { target: { value: "3" } });
 
     expect(onChange).toHaveBeenLastCalledWith({
       default_cost_per_query: 0.01,

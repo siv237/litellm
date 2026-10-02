@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { VectorStore } from "./types";
-import VectorStoreВыбратьor from "./VectorStoreВыбратьor";
+import VectorStoreSelector from "./VectorStoreSelector";
 
 const mockVectorStoreListCall = vi.fn();
 
@@ -17,7 +17,7 @@ import { MultiВыбрать as MockedMultiВыбрать } from "@/components/s
 
 (MockedMultiВыбрать as unknown as ReturnType<typeof vi.fn>).mockImplementation(
   (props: {
-    onЗначениеChange?: (value: string[]) => void;
+    onValueChange?: (value: string[]) => void;
     value?: string[];
     placeholder?: string;
     loading?: boolean;
@@ -25,7 +25,7 @@ import { MultiВыбрать as MockedMultiВыбрать } from "@/components/s
     disabled?: boolean;
     options?: Array<{ value: string; label: string; description?: string }>;
   }) => {
-    const { onЗначениеChange, value, placeholder, loading, className, disabled, options } = props;
+    const { onValueChange, value, placeholder, loading, className, disabled, options } = props;
 
     return (
       <div
@@ -37,11 +37,11 @@ import { MultiВыбрать as MockedMultiВыбрать } from "@/components/s
         data-options={JSON.stringify(options)}
         className={className}
         onClick={(e) => {
-          const testВыбратьion = (e.target as HTMLElement).getAttribute("data-test-selection");
-          if (testВыбратьion && onЗначениеChange) {
-            onЗначениеChange(JSON.parse(testВыбратьion) as string[]);
-          } else if (onЗначениеChange && options && options.length > 0) {
-            onЗначениеChange([options[0].value]);
+          const testSelection = (e.target as HTMLElement).getAttribute("data-test-selection");
+          if (testSelection && onValueChange) {
+            onValueChange(JSON.parse(testSelection) as string[]);
+          } else if (onValueChange && options && options.length > 0) {
+            onValueChange([options[0].value]);
           }
         }}
       >
@@ -96,7 +96,7 @@ const defaultProps = {
 };
 
 const renderComponent = (props = {}) => {
-  return render(<VectorStoreВыбратьor {...defaultProps} {...props} />);
+  return render(<VectorStoreSelector {...defaultProps} {...props} />);
 };
 
 const waitForDataFetch = async () => {
@@ -105,14 +105,14 @@ const waitForDataFetch = async () => {
   });
 };
 
-const getВыбратьElement = () => screen.getByTestId("vector-store-select");
+const getSelectElement = () => screen.getByTestId("vector-store-select");
 
 const getOptionElements = () =>
-  screen.queryВсеByTestId(/^option-/).filter((el) => el.hasAttribute("data-option-value"));
+  screen.queryAllByTestId(/^option-/).filter((el) => el.hasAttribute("data-option-value"));
 
-describe("VectorStoreВыбратьor", () => {
+describe("VectorStoreSelector", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockVectorStoreListCall.mockResolvedЗначение({
       data: mockVectorStores,
     });
@@ -121,32 +121,32 @@ describe("VectorStoreВыбратьor", () => {
   describe("Rendering", () => {
     it("should render the select component", () => {
       renderComponent();
-      expect(getВыбратьElement()).toBeInTheDocument();
+      expect(getSelectElement()).toBeInTheDocument();
     });
 
     it("should render with default placeholder", () => {
       renderComponent();
-      expect(getВыбратьElement()).toHaveAttribute("data-placeholder", "Выберите векторные хранилища");
+      expect(getSelectElement()).toHaveAttribute("data-placeholder", "Выберите векторные хранилища");
     });
 
     it("should render with custom placeholder", () => {
       renderComponent({ placeholder: "Choose stores" });
-      expect(getВыбратьElement()).toHaveAttribute("data-placeholder", "Choose stores");
+      expect(getSelectElement()).toHaveAttribute("data-placeholder", "Choose stores");
     });
 
     it("should apply custom className", () => {
       renderComponent({ className: "custom-class" });
-      expect(getВыбратьElement()).toHaveClass("custom-class");
+      expect(getSelectElement()).toHaveClass("custom-class");
     });
 
     it("should render with disabled state", () => {
       renderComponent({ disabled: true });
-      expect(getВыбратьElement()).toHaveAttribute("data-disabled", "true");
+      expect(getSelectElement()).toHaveAttribute("data-disabled", "true");
     });
 
     it("should render with enabled state by default", () => {
       renderComponent();
-      expect(getВыбратьElement()).toHaveAttribute("data-disabled", "false");
+      expect(getSelectElement()).toHaveAttribute("data-disabled", "false");
     });
   });
 
@@ -159,24 +159,24 @@ describe("VectorStoreВыбратьor", () => {
     });
 
     it("should not fetch vector stores when accessТокен is falsy", () => {
-      const { rerender } = render(<VectorStoreВыбратьor {...defaultProps} accessТокен="" />);
+      const { rerender } = render(<VectorStoreSelector {...defaultProps} accessТокен="" />);
       expect(mockVectorStoreListCall).not.toHaveBeenCalled();
 
-      rerender(<VectorStoreВыбратьor {...defaultProps} accessТокен={null as unknown as string} />);
+      rerender(<VectorStoreSelector {...defaultProps} accessТокен={null as unknown as string} />);
       expect(mockVectorStoreListCall).not.toHaveBeenCalled();
 
-      rerender(<VectorStoreВыбратьor {...defaultProps} accessТокен={undefined as unknown as string} />);
+      rerender(<VectorStoreSelector {...defaultProps} accessТокен={undefined as unknown as string} />);
       expect(mockVectorStoreListCall).not.toHaveBeenCalled();
     });
 
     it("should fetch vector stores again when accessТокен changes", async () => {
-      const { rerender } = render(<VectorStoreВыбратьor {...defaultProps} accessТокен="token-1" />);
+      const { rerender } = render(<VectorStoreSelector {...defaultProps} accessТокен="token-1" />);
       await waitFor(() => {
         expect(mockVectorStoreListCall).toHaveBeenCalledWith("token-1");
       });
 
-      vi.clearВсеMocks();
-      rerender(<VectorStoreВыбратьor {...defaultProps} accessТокен="token-2" />);
+      vi.clearAllMocks();
+      rerender(<VectorStoreSelector {...defaultProps} accessТокен="token-2" />);
       await waitFor(() => {
         expect(mockVectorStoreListCall).toHaveBeenCalledWith("token-2");
       });
@@ -190,7 +190,7 @@ describe("VectorStoreВыбратьor", () => {
       mockVectorStoreListCall.mockReturnЗначение(promise);
 
       renderComponent();
-      const select = getВыбратьElement();
+      const select = getSelectElement();
       expect(select).toHaveAttribute("data-loading", "true");
 
       resolvePromise!({ data: mockVectorStores });
@@ -202,18 +202,18 @@ describe("VectorStoreВыбратьor", () => {
     it("should clear loading state after successful fetch", async () => {
       renderComponent();
       await waitForDataFetch();
-      expect(getВыбратьElement()).toHaveAttribute("data-loading", "false");
+      expect(getSelectElement()).toHaveAttribute("data-loading", "false");
     });
 
     it("should clear loading state after failed fetch", async () => {
-      const consoleОшибкаSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      mockVectorStoreListCall.mockRejectedЗначениеOnce(new Ошибка("Network error"));
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      mockVectorStoreListCall.mockRejectedValueOnce(new Ошибка("Network error"));
 
       renderComponent();
       await waitForDataFetch();
 
-      expect(getВыбратьElement()).toHaveAttribute("data-loading", "false");
-      consoleОшибкаSpy.mockRestore();
+      expect(getSelectElement()).toHaveAttribute("data-loading", "false");
+      consoleErrorSpy.mockRestore();
     });
   });
 
@@ -262,7 +262,7 @@ describe("VectorStoreВыбратьor", () => {
           updated_at: "2024-01-01T00:00:00Z",
         },
       ];
-      mockVectorStoreListCall.mockResolvedЗначениеOnce({
+      mockVectorStoreListCall.mockResolvedValueOnce({
         data: storesWithвыходОписание,
       });
 
@@ -282,7 +282,7 @@ describe("VectorStoreВыбратьor", () => {
     });
 
     it("should handle empty vector stores array", async () => {
-      mockVectorStoreListCall.mockResolvedЗначениеOnce({
+      mockVectorStoreListCall.mockResolvedValueOnce({
         data: [],
       });
 
@@ -293,7 +293,7 @@ describe("VectorStoreВыбратьor", () => {
     });
 
     it("should handle response withвыход data property", async () => {
-      mockVectorStoreListCall.mockResolvedЗначениеOnce({});
+      mockVectorStoreListCall.mockResolvedValueOnce({});
 
       renderComponent();
       await waitForDataFetch();
@@ -307,21 +307,21 @@ describe("VectorStoreВыбратьor", () => {
       renderComponent({ value: ["store-1", "store-2"] });
       await waitForDataFetch();
 
-      expect(getВыбратьElement()).toHaveAttribute("data-value", JSON.stringify(["store-1", "store-2"]));
+      expect(getSelectElement()).toHaveAttribute("data-value", JSON.stringify(["store-1", "store-2"]));
     });
 
     it("should handle empty value array", async () => {
       renderComponent({ value: [] });
       await waitForDataFetch();
 
-      expect(getВыбратьElement()).toHaveAttribute("data-value", JSON.stringify([]));
+      expect(getSelectElement()).toHaveAttribute("data-value", JSON.stringify([]));
     });
 
     it("should handle undefined value", async () => {
       renderComponent({ value: undefined });
       await waitForDataFetch();
 
-      expect(getВыбратьElement()).not.toHaveAttribute("data-value");
+      expect(getSelectElement()).not.toHaveAttribute("data-value");
     });
   });
 
@@ -330,7 +330,7 @@ describe("VectorStoreВыбратьor", () => {
       renderComponent();
       await waitForDataFetch();
 
-      const select = getВыбратьElement();
+      const select = getSelectElement();
       select.setAttribute("data-test-selection", '["store-1"]');
       fireEvent.click(select);
 
@@ -341,7 +341,7 @@ describe("VectorStoreВыбратьor", () => {
       renderComponent();
       await waitForDataFetch();
 
-      const select = getВыбратьElement();
+      const select = getSelectElement();
       select.setAttribute("data-test-selection", '["store-1", "store-2"]');
       fireEvent.click(select);
 
@@ -352,7 +352,7 @@ describe("VectorStoreВыбратьor", () => {
       renderComponent({ value: ["store-1", "store-2"] });
       await waitForDataFetch();
 
-      const select = getВыбратьElement();
+      const select = getSelectElement();
       select.setAttribute("data-test-selection", '["store-2"]');
       fireEvent.click(select);
 
@@ -362,37 +362,37 @@ describe("VectorStoreВыбратьor", () => {
 
   describe("Ошибка handling", () => {
     it("should handle fetch errors gracefully", async () => {
-      const consoleОшибкаSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       const error = new Ошибка("Network error");
-      mockVectorStoreListCall.mockRejectedЗначениеOnce(error);
+      mockVectorStoreListCall.mockRejectedValueOnce(error);
 
       renderComponent();
       await waitForDataFetch();
 
-      expect(consoleОшибкаSpy).toHaveBeenCalledWith("Ошибка fetching vector stores:", error);
-      consoleОшибкаSpy.mockRestore();
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Ошибка fetching vector stores:", error);
+      consoleErrorSpy.mockRestore();
     });
 
     it("should not crash when fetch throws non-Ошибка", async () => {
-      const consoleОшибкаSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      mockVectorStoreListCall.mockRejectedЗначениеOnce("String error");
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      mockVectorStoreListCall.mockRejectedValueOnce("String error");
 
       renderComponent();
       await waitForDataFetch();
 
-      expect(consoleОшибкаSpy).toHaveBeenCalledWith("Ошибка fetching vector stores:", "String error");
-      consoleОшибкаSpy.mockRestore();
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Ошибка fetching vector stores:", "String error");
+      consoleErrorSpy.mockRestore();
     });
 
     it("should continue to work after error", async () => {
-      const consoleОшибкаSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      mockVectorStoreListCall.mockRejectedЗначениеOnce(new Ошибка("Network error"));
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      mockVectorStoreListCall.mockRejectedValueOnce(new Ошибка("Network error"));
 
       renderComponent();
       await waitForDataFetch();
 
-      expect(getВыбратьElement()).toBeInTheDocument();
-      consoleОшибкаSpy.mockRestore();
+      expect(getSelectElement()).toBeInTheDocument();
+      consoleErrorSpy.mockRestore();
     });
   });
 
@@ -406,7 +406,7 @@ describe("VectorStoreВыбратьor", () => {
           updated_at: "2024-01-01T00:00:00Z",
         },
       ];
-      mockVectorStoreListCall.mockResolvedЗначениеOnce({
+      mockVectorStoreListCall.mockResolvedValueOnce({
         data: minimalStores,
       });
 
@@ -427,7 +427,7 @@ describe("VectorStoreВыбратьor", () => {
           updated_at: "2024-01-01T00:00:00Z",
         },
       ];
-      mockVectorStoreListCall.mockResolvedЗначениеOnce({
+      mockVectorStoreListCall.mockResolvedValueOnce({
         data: longNameStores,
       });
 
@@ -447,7 +447,7 @@ describe("VectorStoreВыбратьor", () => {
           updated_at: "2024-01-01T00:00:00Z",
         },
       ];
-      mockVectorStoreListCall.mockResolvedЗначениеOnce({
+      mockVectorStoreListCall.mockResolvedValueOnce({
         data: specialCharStores,
       });
 

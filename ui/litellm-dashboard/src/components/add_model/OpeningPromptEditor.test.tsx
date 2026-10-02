@@ -1,13 +1,13 @@
-import { fireEvent, renderWithПровайдерs, screen } from "../../../tests/test-utils";
+import { fireEvent, renderWithProviders, screen } from "../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import OpeningPromptEditor, { OpeningPromptУровеньИсточник } from "./OpeningPromptEditor";
 
-const { getAutoRвыходerAssembledPromptCall } = vi.hoisted(() => ({
-  getAutoRвыходerAssembledPromptCall: vi.fn(),
+const { getAutoRouterAssembledPromptCall } = vi.hoisted(() => ({
+  getAutoRouterAssembledPromptCall: vi.fn(),
 }));
 
-vi.mock("@/components/networking", () => ({ getAutoRвыходerAssembledPromptCall }));
+vi.mock("@/components/networking", () => ({ getAutoRouterAssembledPromptCall }));
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
   default: () => ({ accessТокен: "sk-test" }),
 }));
@@ -21,7 +21,7 @@ const customИсточник: OpeningPromptУровеньИсточник = { ki
 
 const renderEditor = (classificationPrompt?: string, tierИсточник: OpeningPromptУровеньИсточник = customИсточник) => {
   const onChange = vi.fn();
-  renderWithПровайдерs(
+  renderWithProviders(
     <OpeningPromptEditor
       classificationPrompt={classificationPrompt}
       classificationПримеры={undefined}
@@ -34,9 +34,9 @@ const renderEditor = (classificationPrompt?: string, tierИсточник: Openi
 };
 
 beforeEach(() => {
-  vi.clearВсеMocks();
-  getAutoRвыходerAssembledPromptCall.mockResolvedЗначение(
-    "Rвыходe for payments.\n\nУровеньs:\n- SIMPLE: greetings, chitchat\n- AUDIT: security review",
+  vi.clearAllMocks();
+  getAutoRouterAssembledPromptCall.mockResolvedЗначение(
+    "Route for payments.\n\nTiers:\n- SIMPLE: greetings, chitchat\n- AUDIT: security review",
   );
 });
 
@@ -57,7 +57,7 @@ describe("OpeningPromptEditor with an edited tier set", () => {
     fireEvent.click(screen.getByRole("button", { name: "Customize prompt" }));
     await screen.findByLabelText("Assembled classifier prompt");
 
-    expect(getAutoRвыходerAssembledPromptCall).toHaveBeenCalledWith(
+    expect(getAutoRouterAssembledPromptCall).toHaveBeenCalledWith(
       "sk-test",
       3,
       { tierDefinitions: [{ name: "SIMPLE" }, { name: "AUDIT", description: "security review" }] },
@@ -75,7 +75,7 @@ describe("OpeningPromptEditor with an edited tier set", () => {
     });
 
     await vi.waitFor(() =>
-      expect(getAutoRвыходerAssembledPromptCall).toHaveBeenLastCalledWith("sk-test", 3, expect.anything(), {
+      expect(getAutoRouterAssembledPromptCall).toHaveBeenLastCalledWith("sk-test", 3, expect.anything(), {
         classificationPrompt: "edited opening",
         classificationПримеры: "",
       }),
@@ -84,17 +84,17 @@ describe("OpeningPromptEditor with an edited tier set", () => {
 
   it("ignores a stale response that resolves after a newer one", async () => {
     let resolveFirst: (text: string) => void = () => {};
-    getAutoRвыходerAssembledPromptCall
+    getAutoRouterAssembledPromptCall
       .mockImplementationOnce(
         () =>
           new Promise<string>((resolve) => {
             resolveFirst = resolve;
           }),
       )
-      .mockResolvedЗначениеOnce("assembled from the edited draft");
+      .mockResolvedValueOnce("assembled from the edited draft");
     renderEditor();
     fireEvent.click(screen.getByRole("button", { name: "Customize prompt" }));
-    await vi.waitFor(() => expect(getAutoRвыходerAssembledPromptCall).toHaveBeenCalledВремяs(1));
+    await vi.waitFor(() => expect(getAutoRouterAssembledPromptCall).toHaveBeenCalledTimes(1));
 
     fireEvent.change(screen.getByLabelText("Инструкции классификации"), {
       target: { value: "edited" },
@@ -109,7 +109,7 @@ describe("OpeningPromptEditor with an edited tier set", () => {
   });
 
   it("keeps the editor usable when the preview cannot be fetched", async () => {
-    getAutoRвыходerAssembledPromptCall.mockRejectedЗначение(new Ошибка("boom"));
+    getAutoRouterAssembledPromptCall.mockRejectedЗначение(new Ошибка("boom"));
     renderEditor();
     fireEvent.click(screen.getByRole("button", { name: "Customize prompt" }));
 
@@ -117,7 +117,7 @@ describe("OpeningPromptEditor with an edited tier set", () => {
     expect(screen.queryByLabelText("Assembled classifier prompt")).not.toBeInTheDocument();
   });
 
-  it("saves the draft as the rвыходer's opening instructions", () => {
+  it("saves the draft as the router's opening instructions", () => {
     const onChange = renderEditor();
     fireEvent.click(screen.getByRole("button", { name: "Customize prompt" }));
     fireEvent.change(screen.getByLabelText("Инструкции классификации"), {
@@ -128,7 +128,7 @@ describe("OpeningPromptEditor with an edited tier set", () => {
     expect(onChange).toHaveBeenCalledWith({ classificationPrompt: "my rubric", classificationПримеры: undefined });
   });
 
-  it("clears the prompt rather than saving whitespace, so the rвыходer keeps the built-in opening", () => {
+  it("clears the prompt rather than saving whitespace, so the router keeps the built-in opening", () => {
     const onChange = renderEditor("saved opening");
     fireEvent.click(screen.getByRole("button", { name: "Сбросить к значению по умолчанию" }));
 
@@ -144,13 +144,13 @@ describe("OpeningPromptEditor on a built-in tier set", () => {
   };
 
   it("asks the proxy for the built-in rubric by labels and preset, never by tier definitions", async () => {
-    // A built-in rвыходer has no tier_definitions — отправить: its bullets come from the four criteria the
+    // A built-in router has no tier_definitions — отправить: its bullets come from the four criteria the
     // backend owns, named by the operator's labels, so the request must carry those two instead.
     renderEditor(undefined, builtInИсточник);
     fireEvent.click(screen.getByRole("button", { name: "Customize prompt" }));
     await screen.findByLabelText("Assembled classifier prompt");
 
-    expect(getAutoRвыходerAssembledPromptCall).toHaveBeenCalledWith(
+    expect(getAutoRouterAssembledPromptCall).toHaveBeenCalledWith(
       "sk-test",
       3,
       { tierLabels: { SIMPLE: "Cheap" }, classificationRubric: "agentic" },
@@ -201,13 +201,13 @@ describe("OpeningPromptEditor on a built-in tier set", () => {
     renderEditor(undefined, builtInИсточник);
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Customize prompt" }));
-    expect(screen.getByText("Anchors rвыходine installs", { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("Anchors routine installs", { exact: false })).toBeInTheDocument();
 
     await user.click(await screen.findByRole("combobox", { name: "Базовая рубрика" }));
     await user.click(await screen.findByRole("option", { name: "Chat" }));
 
     expect(screen.getByText("Drops the engineering examples", { exact: false })).toBeInTheDocument();
-    expect(screen.queryByText("Anchors rвыходine installs", { exact: false })).not.toBeInTheDocument();
+    expect(screen.queryByText("Anchors routine installs", { exact: false })).not.toBeInTheDocument();
   });
 
   it("commits a selected rubric with the section drafts on Save", async () => {
@@ -228,7 +228,7 @@ describe("OpeningPromptEditor on a built-in tier set", () => {
     expect(screen.getByText("Custom opening on the Agentic rubric")).toBeInTheDocument();
   });
 
-  it("saves the draft as the rвыходer's opening instructions", () => {
+  it("saves the draft as the router's opening instructions", () => {
     const onChange = renderEditor(undefined, builtInИсточник);
     fireEvent.click(screen.getByRole("button", { name: "Customize prompt" }));
     fireEvent.change(screen.getByLabelText("Инструкции классификации"), {
@@ -243,7 +243,7 @@ describe("OpeningPromptEditor on a built-in tier set", () => {
     });
   });
 
-  it("clears the prompt rather than saving whitespace, so the rвыходer keeps the built-in rubric", () => {
+  it("clears the prompt rather than saving whitespace, so the router keeps the built-in rubric", () => {
     const onChange = renderEditor(undefined, builtInИсточник);
     fireEvent.click(screen.getByRole("button", { name: "Customize prompt" }));
     fireEvent.change(screen.getByLabelText("Инструкции классификации"), {

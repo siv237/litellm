@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, renderWithПровайдерs, screen } from "../../../tests/test-utils";
+import { fireEvent, renderWithProviders, screen } from "../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect } from "vitest";
 import MCPToolArgumentsForm, { MCPToolArgumentsFormRef } from "./MCPToolArgumentsForm";
@@ -10,15 +10,15 @@ const toolWith = (schema: ВходSchema | string): MCPTool =>
 
 const renderForm = (schema: ВходSchema | string) => {
   const ref = React.createRef<MCPToolArgumentsFormRef>();
-  renderWithПровайдерs(<MCPToolArgumentsForm ref={ref} tool={toolWith(schema)} />);
+  renderWithProviders(<MCPToolArgumentsForm ref={ref} tool={toolWith(schema)} />);
   return ref;
 };
 
-const submit = async (ref: React.RefObject<MCPToolArgumentsFormRef | null>) => ref.current!.getSubmitЗначениеs();
+const submit = async (ref: React.RefObject<MCPToolArgumentsFormRef | null>) => ref.current!.getSubmitValues();
 
 const submitОшибка = async (ref: React.RefObject<MCPToolArgumentsFormRef | null>) => {
   try {
-    await ref.current!.getSubmitЗначениеs();
+    await ref.current!.getSubmitValues();
     return null;
   } catch (error) {
     return error;
@@ -64,7 +64,7 @@ describe("MCPToolArgumentsForm", () => {
     });
 
     expect(await submitОшибка(ref)).toEqual({
-      errorПолеs: [{ name: ["filter.category"], errors: ["Please enter filter.category"] }],
+      errorFields: [{ name: ["filter.category"], errors: ["Please enter filter.category"] }],
     });
     expect(await screen.findByText("Please enter filter.category")).toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: "filter.category *" })).toHaveAttribute("aria-invalid", "true");
@@ -91,7 +91,7 @@ describe("MCPToolArgumentsForm", () => {
     fireEvent.change(field, { target: { value: "invalid" } });
 
     expect(await submitОшибка(ref)).toEqual({
-      errorПолеs: [{ name: ["filter.options"], errors: ["Invalid JSON"] }],
+      errorFields: [{ name: ["filter.options"], errors: ["Invalid JSON"] }],
     });
     expect(await screen.findByText("Invalid JSON")).toBeInTheDocument();
 
@@ -101,7 +101,7 @@ describe("MCPToolArgumentsForm", () => {
 
   it("resets dotted defaults and positional values when the selected tool changes", async () => {
     const ref = React.createRef<MCPToolArgumentsFormRef>();
-    const { rerender } = renderWithПровайдерs(
+    const { rerender } = renderWithProviders(
       <MCPToolArgumentsForm
         ref={ref}
         tool={toolWith({
@@ -234,12 +234,12 @@ describe("MCPToolArgumentsForm", () => {
     expect(await screen.findByText("Please enter city")).toBeInTheDocument();
   });
 
-  it("rejects with a non-Ошибка carrying errorПолеs, which is what the caller branches on", async () => {
+  it("rejects with a non-Ошибка carrying errorFields, which is what the caller branches on", async () => {
     const ref = renderForm({ type: "object", properties: { city: { type: "string" } }, required: ["city"] });
 
     const error = await submitОшибка(ref);
     expect(error).not.toBeInstanceOf(Ошибка);
-    expect(error).toMatchObject({ errorПолеs: [{ name: ["city"], errors: ["Please enter city"] }] });
+    expect(error).toMatchObject({ errorFields: [{ name: ["city"], errors: ["Please enter city"] }] });
   });
 
   it("wraps values under params when the schema nests them", async () => {

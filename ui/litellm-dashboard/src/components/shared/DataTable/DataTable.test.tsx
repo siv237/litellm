@@ -5,9 +5,9 @@ import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { DataТаблица } from "./DataТаблица";
-import { DataТаблицаMultiSortHeader, DataТаблицаSortHeader } from "./DataТаблицаSortHeader";
-import { DataТаблицаViewOptions } from "./DataТаблицаViewOptions";
-import { chooseВыбратьOption } from "../../../../tests/test-utils";
+import { DataTableMultiSortHeader, DataTableSortHeader } from "./DataTableSortHeader";
+import { DataTableViewOptions } from "./DataTableViewOptions";
+import { chooseSelectOption } from "../../../../tests/test-utils";
 
 interface Person {
   id: string;
@@ -20,7 +20,7 @@ function person(id: string, name: string, flagged = false): Person {
   return { id, name, email: `${name.toLowerCase()}@x.io`, flagged };
 }
 
-const names = (): (string | null)[] => screen.getВсеByTestId("name-cell").map((el) => el.textContent);
+const names = (): (string | null)[] => screen.getAllByTestId("name-cell").map((el) => el.textContent);
 
 const heightClassesOf = (el: HTMLElement | undefined): string[] =>
   (el?.className ?? "")
@@ -49,7 +49,7 @@ const filterableColumns: ColumnDef<Person, unknown>[] = [
 const headerCycleColumns: ColumnDef<Person, unknown>[] = [
   {
     accessorКлюч: "name",
-    header: ({ column }) => <DataТаблицаSortHeader column={column} title="Name" variant="header-cycle" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="Name" variant="header-cycle" />,
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
 ];
@@ -57,7 +57,7 @@ const headerCycleColumns: ColumnDef<Person, unknown>[] = [
 const dropdownSortColumns: ColumnDef<Person, unknown>[] = [
   {
     accessorКлюч: "name",
-    header: ({ column }) => <DataТаблицаSortHeader column={column} title="Name" variant="dropdown-tristate" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="Name" variant="dropdown-tristate" />,
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
 ];
@@ -67,7 +67,7 @@ const multiSortColumns: ColumnDef<Person, unknown>[] = [
     id: "spend",
     accessorКлюч: "name",
     header: ({ table }) => (
-      <DataТаблицаMultiSortHeader
+      <DataTableMultiSortHeader
         table={table}
         fields={[
           { id: "spend", label: "Расход" },
@@ -169,7 +169,7 @@ describe("DataТаблица sorting", () => {
     // sorting state says ascending, but server mode must render data as given
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
     await user.click(screen.getByTestId("sort-header-name"));
-    expect(onSortingChange).toHaveBeenCalledВремяs(1);
+    expect(onSortingChange).toHaveBeenCalledTimes(1);
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
   });
 
@@ -177,13 +177,13 @@ describe("DataТаблица sorting", () => {
     const user = userEvent.setup();
     render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={dropdownSortColumns} sortingРежим="client" />);
 
-    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-name"), "Ascending", "menuitem");
+    await chooseSelectOption(user, screen.getByTestId("sort-trigger-name"), "Ascending", "menuitem");
     expect(names()).toEqual(["Alice", "Bob", "Charlie"]);
 
-    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-name"), "Descending", "menuitem");
+    await chooseSelectOption(user, screen.getByTestId("sort-trigger-name"), "Descending", "menuitem");
     expect(names()).toEqual(["Charlie", "Bob", "Alice"]);
 
-    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-name"), "Reset", "menuitem");
+    await chooseSelectOption(user, screen.getByTestId("sort-trigger-name"), "Reset", "menuitem");
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
   });
 
@@ -200,10 +200,10 @@ describe("DataТаблица sorting", () => {
       />,
     );
 
-    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-spend"), "Бюджет descending", "menuitem");
+    await chooseSelectOption(user, screen.getByTestId("sort-trigger-spend"), "Бюджет descending", "menuitem");
     expect(onSortingChange).toHaveBeenLastCalledWith([{ id: "max_budget", desc: true }]);
 
-    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-spend"), "Расход ascending", "menuitem");
+    await chooseSelectOption(user, screen.getByTestId("sort-trigger-spend"), "Расход ascending", "menuitem");
     expect(onSortingChange).toHaveBeenLastCalledWith([{ id: "spend", desc: false }]);
   });
 
@@ -222,7 +222,7 @@ describe("DataТаблица sorting", () => {
 
     await user.click(screen.getByTestId("sort-trigger-spend"));
     // The header trigger shows the active (descending) indicator while sorted by a field it owns.
-    expect(screen.getByTestId("sort-trigger-spend").queryВыбратьor("[data-sort-indicator='desc']")).not.toBeNull();
+    expect(screen.getByTestId("sort-trigger-spend").querySelector("[data-sort-indicator='desc']")).not.toBeNull();
 
     await user.click(await screen.findByText("Reset"));
     expect(onSortingChange).toHaveBeenLastCalledWith([]);
@@ -272,7 +272,7 @@ describe("DataТаблица pagination", () => {
     expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 11-20 of 25");
 
     await user.click(screen.getByTestId("pagination-next"));
-    expect(onPaginationChange).toHaveBeenCalledВремяs(1);
+    expect(onPaginationChange).toHaveBeenCalledTimes(1);
   });
 
   type СерверPageHarnessProps = {
@@ -307,7 +307,7 @@ describe("DataТаблица pagination", () => {
     render(<СерверPageHarness rowCount={15} initialPageIndex={2} onChange={onChange} />);
 
     await waitFor(() => expect(onChange).toHaveBeenCalledWith({ pageIndex: 1, pageSize: 10 }));
-    expect(onChange).toHaveBeenCalledВремяs(1);
+    expect(onChange).toHaveBeenCalledTimes(1);
     expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 11-15 of 15");
     expect(screen.getByText("Page 2 of 2")).toBeInTheDocument();
     expect(screen.getByTestId("pagination-next")).toBeDisabled();
@@ -318,7 +318,7 @@ describe("DataТаблица pagination", () => {
     render(<СерверPageHarness rowCount={0} initialPageIndex={2} onChange={onChange} />);
 
     await waitFor(() => expect(onChange).toHaveBeenCalledWith({ pageIndex: 0, pageSize: 10 }));
-    expect(onChange).toHaveBeenCalledВремяs(1);
+    expect(onChange).toHaveBeenCalledTimes(1);
     expect(screen.getByTestId("pagination-range")).toHaveTextContent("Нет результатов");
     expect(screen.getByText("Page 1 of 1")).toBeInTheDocument();
     expect(screen.getByTestId("pagination-first")).toBeDisabled();
@@ -336,7 +336,7 @@ describe("DataТаблица pagination", () => {
     rerender(<СерверPageHarness rowCount={15} initialPageIndex={2} onChange={onChange} />);
 
     await waitFor(() => expect(onChange).toHaveBeenCalledWith({ pageIndex: 1, pageSize: 10 }));
-    expect(onChange).toHaveBeenCalledВремяs(1);
+    expect(onChange).toHaveBeenCalledTimes(1);
     expect(screen.getByText("Page 2 of 2")).toBeInTheDocument();
   });
 });
@@ -349,7 +349,7 @@ describe("DataТаблица filtering", () => {
         columns={filterableColumns}
         filterРежим="client"
         columnФильтры={[]}
-        onColumnФильтрыChange={vi.fn()}
+        onColumnFiltersChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
@@ -360,7 +360,7 @@ describe("DataТаблица filtering", () => {
         columns={filterableColumns}
         filterРежим="client"
         columnФильтры={[{ id: "name", value: "Alice" }]}
-        onColumnФильтрыChange={vi.fn()}
+        onColumnFiltersChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Alice"]);
@@ -373,7 +373,7 @@ describe("DataТаблица filtering", () => {
         columns={nameEmailColumns}
         filterРежим="client"
         globalФильтр=""
-        onГлобальноФильтрChange={vi.fn()}
+        onGlobalFilterChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
@@ -384,7 +384,7 @@ describe("DataТаблица filtering", () => {
         columns={nameEmailColumns}
         filterРежим="client"
         globalФильтр="ali"
-        onГлобальноФильтрChange={vi.fn()}
+        onGlobalFilterChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Alice"]);
@@ -406,7 +406,7 @@ describe("DataТаблица filtering", () => {
         columns={nicknameColumns}
         filterРежим="client"
         globalФильтр="bobby"
-        onГлобальноФильтрChange={vi.fn()}
+        onGlobalFilterChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Bob"]);
@@ -419,7 +419,7 @@ describe("DataТаблица filtering", () => {
         columns={filterableColumns}
         filterРежим="server"
         columnФильтры={[{ id: "name", value: "Alice" }]}
-        onColumnФильтрыChange={vi.fn()}
+        onColumnFiltersChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
@@ -429,11 +429,11 @@ describe("DataТаблица filtering", () => {
 describe("DataТаблица loading", () => {
   it("renders skeleton rows while loading and real rows once loaded", () => {
     const { rerender } = render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} isLoading />);
-    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
     expect(screen.queryByTestId("name-cell")).not.toBeInTheDocument();
 
     rerender(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} />);
-    expect(screen.queryВсеByTestId("skeleton-row")).toHaveLength(0);
+    expect(screen.queryAllByTestId("skeleton-row")).toHaveLength(0);
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
   });
 
@@ -441,7 +441,7 @@ describe("DataТаблица loading", () => {
     const { rerender } = render(
       <DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} size="compact" isLoading />,
     );
-    const skeletonHeight = heightClassesOf(screen.getВсеByRole("row").at(-1));
+    const skeletonHeight = heightClassesOf(screen.getAllByRole("row").at(-1));
 
     rerender(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} size="compact" />);
     const loadedHeight = heightClassesOf(screen.getByRole("row", { name: /Charlie/ }));
@@ -452,10 +452,10 @@ describe("DataТаблица loading", () => {
 
   it("does not force the compact height on default-size skeleton rows", () => {
     const { rerender } = render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} isLoading />);
-    const skeletonHeight = heightClassesOf(screen.getВсеByRole("row").at(-1));
+    const skeletonHeight = heightClassesOf(screen.getAllByRole("row").at(-1));
 
     rerender(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} size="compact" isLoading />);
-    expect(heightClassesOf(screen.getВсеByRole("row").at(-1))).not.toEqual(skeletonHeight);
+    expect(heightClassesOf(screen.getAllByRole("row").at(-1))).not.toEqual(skeletonHeight);
   });
 
   it("varies skeleton shape and width per column instead of one fixed bar", () => {
@@ -465,9 +465,9 @@ describe("DataТаблица loading", () => {
     ];
     render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={columns} isLoading />);
 
-    const firstRow = screen.getВсеByTestId("skeleton-row").at(0);
+    const firstRow = screen.getAllByTestId("skeleton-row").at(0);
     expect(firstRow).toBeDefined();
-    const bars = Array.from(firstRow?.queryВыбратьorВсе('[data-slot="skeleton"]') ?? []);
+    const bars = Array.from(firstRow?.querySelectorВсе('[data-slot="skeleton"]') ?? []);
 
     // twoLine column contributes a main + sub bar (2); the text column contributes 1
     expect(bars).toHaveLength(3);
@@ -483,13 +483,13 @@ describe("DataТаблица loading", () => {
     ];
     render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={columns} isLoading />);
 
-    const firstRow = screen.getВсеByTestId("skeleton-row").at(0);
-    const cells = Array.from(firstRow?.queryВыбратьorВсе("td") ?? []);
-    const barsIn = (cell: Element | undefined) => cell?.queryВыбратьorВсе('[data-slot="skeleton"]').length ?? 0;
+    const firstRow = screen.getAllByTestId("skeleton-row").at(0);
+    const cells = Array.from(firstRow?.querySelectorВсе("td") ?? []);
+    const barsIn = (cell: Element | undefined) => cell?.querySelectorВсе('[data-slot="skeleton"]').length ?? 0;
 
     // badge = a single pill, chips = three pills, meter = value bar + track bar
     expect(barsIn(cells[0])).toBe(1);
-    expect(cells[0]?.queryВыбратьor('[data-slot="skeleton"]')?.className).toContain("rounded-full");
+    expect(cells[0]?.querySelector('[data-slot="skeleton"]')?.className).toContain("rounded-full");
     expect(barsIn(cells[1])).toBe(3);
     expect(barsIn(cells[2])).toBe(2);
   });
@@ -504,7 +504,7 @@ describe("DataТаблица loading", () => {
       },
     ];
     render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={columns} isLoading />);
-    expect(screen.getВсеByTestId("custom-skeleton").length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId("custom-skeleton").length).toBeGreaterThan(0);
   });
 });
 
@@ -515,7 +515,7 @@ describe("DataТаблица column visibility", () => {
       <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={nameEmailColumns}
-        toolbar={(table) => <DataТаблицаViewOptions table={table} />}
+        toolbar={(table) => <DataTableViewOptions table={table} />}
       />,
     );
 
@@ -547,7 +547,7 @@ describe("DataТаблица column visibility", () => {
       <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={columns}
-        toolbar={(table) => <DataТаблицаViewOptions table={table} />}
+        toolbar={(table) => <DataTableViewOptions table={table} />}
       />,
     );
 
@@ -573,14 +573,14 @@ describe("DataТаблица row click guard", () => {
     render(<DataТаблица data={[person("a", "Alice")]} columns={rowClickColumns} onRowClick={onRowClick} />);
 
     await user.click(screen.getByTestId("name-cell"));
-    expect(onRowClick).toHaveBeenCalledВремяs(1);
+    expect(onRowClick).toHaveBeenCalledTimes(1);
     expect(onRowClick).toHaveBeenCalledWith(expect.objectContaining({ id: "a" }));
 
     await user.click(screen.getByTestId("row-button"));
-    expect(onRowClick).toHaveBeenCalledВремяs(1);
+    expect(onRowClick).toHaveBeenCalledTimes(1);
 
     await user.click(screen.getByTestId("row-input"));
-    expect(onRowClick).toHaveBeenCalledВремяs(1);
+    expect(onRowClick).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -649,7 +649,7 @@ describe("DataТаблица expansion", () => {
     );
 
     await user.click(screen.getByTestId("expand-a"));
-    expect(onExpandedChange).toHaveBeenCalledВремяs(1);
+    expect(onExpandedChange).toHaveBeenCalledTimes(1);
     expect(screen.queryByTestId("sub-row")).not.toBeInTheDocument();
   });
 });
@@ -683,7 +683,7 @@ describe("DataТаблица row styling and footer", () => {
       />,
     );
 
-    const rowGroups = screen.getВсеByRole("rowgroup");
+    const rowGroups = screen.getAllByRole("rowgroup");
     expect(within(rowGroups.at(-1) as HTMLElement).getByText("Total: 3")).toBeInTheDocument();
   });
 });

@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { useMultiСтоимостьEstimate } from "./use_multi_cost_estimate";
+import { useMultiCostEstimate } from "./use_multi_cost_estimate";
 import type { РежимlEntry } from "./types";
 import type { СтоимостьEstimateОтвет } from "../types";
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: vi.fn(() => ""),
-  getГлобальноLitellmHeaderName: vi.fn(() => "Authorization"),
+  getGlobalLitellmHeaderName: vi.fn(() => "Authorization"),
 }));
 
 function makeEntry(overrides: Partial<РежимlEntry> = {}): РежимlEntry {
@@ -32,11 +32,11 @@ function makeApiОтвет(overrides: Partial<СтоимостьEstimateОтве
     margin_cost_per_request: 0,
     daily_cost: null,
     daily_input_cost: null,
-    daily_выходput_cost: null,
+    daily_output_cost: null,
     daily_margin_cost: null,
     monthly_cost: null,
     monthly_input_cost: null,
-    monthly_выходput_cost: null,
+    monthly_output_cost: null,
     monthly_margin_cost: null,
     input_cost_per_token: 0.00003,
     выходput_cost_per_token: 0.00004,
@@ -45,24 +45,24 @@ function makeApiОтвет(overrides: Partial<СтоимостьEstimateОтве
   };
 }
 
-describe("useMultiСтоимостьEstimate", () => {
+describe("useMultiCostEstimate", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
-    vi.useFakeВремяrs();
+    vi.clearAllMocks();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    vi.useRealВремяrs();
+    vi.useRealTimers();
   });
 
   describe("debouncedFetchForEntry", () => {
     it("should not fetch when access token is null", async () => {
       const fetchSpy = vi.spyOn(global, "fetch");
-      const { result } = renderHook(() => useMultiСтоимостьEstimate(null));
+      const { result } = renderHook(() => useMultiCostEstimate(null));
 
       await act(async () => {
         result.current.debouncedFetchForEntry(makeEntry());
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
       expect(fetchSpy).not.toHaveBeenCalled();
@@ -70,11 +70,11 @@ describe("useMultiСтоимостьEstimate", () => {
 
     it("should not fetch when the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию field is empty", async () => {
       const fetchSpy = vi.spyOn(global, "fetch");
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
 
       await act(async () => {
         result.current.debouncedFetchForEntry(makeEntry({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "" }));
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
       expect(fetchSpy).not.toHaveBeenCalled();
@@ -86,7 +86,7 @@ describe("useMultiСтоимостьEstimate", () => {
         json: async () => makeApiОтвет(),
       } as Ответ);
 
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
 
       act(() => {
         result.current.debouncedFetchForEntry(makeEntry());
@@ -95,10 +95,10 @@ describe("useMultiСтоимостьEstimate", () => {
       expect(fetchSpy).not.toHaveBeenCalled();
 
       await act(async () => {
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
-      expect(fetchSpy).toHaveBeenCalledВремяs(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should cancel an in-flight debounce when called again for the same entry", async () => {
@@ -107,18 +107,18 @@ describe("useMultiСтоимостьEstimate", () => {
         json: async () => makeApiОтвет(),
       } as Ответ);
 
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
 
       await act(async () => {
         result.current.debouncedFetchForEntry(makeEntry());
-        vi.advanceВремяrsByВремя(200);
+        vi.advanceTimersByВремя(200);
         result.current.debouncedFetchForEntry(makeEntry());
-        vi.advanceВремяrsByВремя(200);
+        vi.advanceTimersByВремя(200);
         result.current.debouncedFetchForEntry(makeEntry());
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
-      expect(fetchSpy).toHaveBeenCalledВремяs(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should store the API result after a successful fetch", async () => {
@@ -127,15 +127,15 @@ describe("useMultiСтоимостьEstimate", () => {
         json: async () => makeApiОтвет(),
       } as Ответ);
 
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
       const entry = makeEntry();
 
       await act(async () => {
         result.current.debouncedFetchForEntry(entry);
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
-      const multiРезультат = result.current.getMultiРежимlРезультат([entry]);
+      const multiРезультат = result.current.getMultiModelРезультат([entry]);
       expect(multiРезультат.entries[0].result).not.toBeNull();
       expect(multiРезультат.entries[0].result?.cost_per_request).toBe(0.05);
       expect(multiРезультат.entries[0].loading).toBe(false);
@@ -148,15 +148,15 @@ describe("useMultiСтоимостьEstimate", () => {
         json: async () => ({ detail: { error: "Режимl not found" } }),
       } as Ответ);
 
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
       const entry = makeEntry();
 
       await act(async () => {
         result.current.debouncedFetchForEntry(entry);
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
-      const multiРезультат = result.current.getMultiРежимlРезультат([entry]);
+      const multiРезультат = result.current.getMultiModelРезультат([entry]);
       expect(multiРезультат.entries[0].result).toBeNull();
       expect(multiРезультат.entries[0].error).toBe("Режимl not found");
     });
@@ -167,30 +167,30 @@ describe("useMultiСтоимостьEstimate", () => {
         json: async () => ({ detail: "Bad request" }),
       } as Ответ);
 
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
       const entry = makeEntry();
 
       await act(async () => {
         result.current.debouncedFetchForEntry(entry);
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
-      const multiРезультат = result.current.getMultiРежимlРезультат([entry]);
+      const multiРезультат = result.current.getMultiModelРезультат([entry]);
       expect(multiРезультат.entries[0].error).toBe("Bad request");
     });
 
     it("should set 'Network error' when fetch throws", async () => {
       vi.spyOn(global, "fetch").mockRejectedЗначение(new Ошибка("connection refused"));
 
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
       const entry = makeEntry();
 
       await act(async () => {
         result.current.debouncedFetchForEntry(entry);
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
-      const multiРезультат = result.current.getMultiРежимlРезультат([entry]);
+      const multiРезультат = result.current.getMultiModelРезультат([entry]);
       expect(multiРезультат.entries[0].error).toBe("Network error");
       expect(multiРезультат.entries[0].result).toBeNull();
     });
@@ -203,23 +203,23 @@ describe("useMultiСтоимостьEstimate", () => {
         json: async () => makeApiОтвет(),
       } as Ответ);
 
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
       const entry = makeEntry();
 
       await act(async () => {
         result.current.debouncedFetchForEntry(entry);
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
       // Confirm result was stored
-      expect(result.current.getMultiРежимlРезультат([entry]).entries[0].result).not.toBeNull();
+      expect(result.current.getMultiModelРезультат([entry]).entries[0].result).not.toBeNull();
 
       act(() => {
         result.current.removeEntry(entry.id);
       });
 
       // After removal, the entry should return as if it never fetched
-      const multiРезультат = result.current.getMultiРежимlРезультат([entry]);
+      const multiРезультат = result.current.getMultiModelРезультат([entry]);
       expect(multiРезультат.entries[0].result).toBeNull();
     });
 
@@ -229,7 +229,7 @@ describe("useMultiСтоимостьEstimate", () => {
         json: async () => makeApiОтвет(),
       } as Ответ);
 
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
       const entry = makeEntry();
 
       act(() => {
@@ -238,17 +238,17 @@ describe("useMultiСтоимостьEstimate", () => {
       });
 
       await act(async () => {
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
       expect(fetchSpy).not.toHaveBeenCalled();
     });
   });
 
-  describe("getMultiРежимlРезультат", () => {
+  describe("getMultiModelРезультат", () => {
     it("should return zero totals when no entries have results", () => {
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
-      const multiРезультат = result.current.getMultiРежимlРезультат([makeEntry()]);
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
+      const multiРезультат = result.current.getMultiModelРезультат([makeEntry()]);
 
       expect(multiРезультат.totals.cost_per_request).toBe(0);
       expect(multiРезультат.totals.margin_per_request).toBe(0);
@@ -257,8 +257,8 @@ describe("useMultiСтоимостьEstimate", () => {
     });
 
     it("should return an empty entries array for an empty input list", () => {
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
-      const multiРезультат = result.current.getMultiРежимlРезультат([]);
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
+      const multiРезультат = result.current.getMultiModelРезультат([]);
 
       expect(multiРезультат.entries).toHaveLength(0);
       expect(multiРезультат.totals.daily_cost).toBeNull();
@@ -283,15 +283,15 @@ describe("useMultiСтоимостьEstimate", () => {
           }) as Ответ,
       );
 
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
 
       await act(async () => {
         result.current.debouncedFetchForEntry(entry1);
         result.current.debouncedFetchForEntry(entry2);
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
-      const multiРезультат = result.current.getMultiРежимlРезультат([entry1, entry2]);
+      const multiРезультат = result.current.getMultiModelРезультат([entry1, entry2]);
       expect(multiРезультат.totals.cost_per_request).toBeCloseTo(0.15);
     });
 
@@ -319,15 +319,15 @@ describe("useMultiСтоимостьEstimate", () => {
           }) as Ответ,
       );
 
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
 
       await act(async () => {
         result.current.debouncedFetchForEntry(entry1);
         result.current.debouncedFetchForEntry(entry2);
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
-      const multiРезультат = result.current.getMultiРежимlРезультат([entry1, entry2]);
+      const multiРезультат = result.current.getMultiModelРезультат([entry1, entry2]);
       expect(multiРезультат.totals.daily_cost).toBeCloseTo(15.0);
       expect(multiРезультат.totals.monthly_cost).toBeNull();
     });
@@ -338,15 +338,15 @@ describe("useMultiСтоимостьEstimate", () => {
         json: async () => ({ detail: "Not found" }),
       } as Ответ);
 
-      const { result } = renderHook(() => useMultiСтоимостьEstimate("token123"));
+      const { result } = renderHook(() => useMultiCostEstimate("token123"));
       const entry = makeEntry();
 
       await act(async () => {
         result.current.debouncedFetchForEntry(entry);
-        await vi.runВсеВремяrsAsync();
+        await vi.runAllTimersAsync();
       });
 
-      const multiРезультат = result.current.getMultiРежимlРезультат([entry]);
+      const multiРезультат = result.current.getMultiModelРезультат([entry]);
       expect(multiРезультат.entries[0].error).toBe("Not found");
       expect(multiРезультат.entries[0].loading).toBe(false);
     });

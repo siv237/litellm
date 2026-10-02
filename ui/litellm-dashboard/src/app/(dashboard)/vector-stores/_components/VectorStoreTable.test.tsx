@@ -7,7 +7,7 @@ import { VectorStore } from "@/components/vector_store_management/types";
 import VectorStoreТаблица from "./VectorStoreТаблица";
 
 vi.mock("@/components/vector_store_providers", () => ({
-  getVectorStoreПровайдерLogoAndName: (provider: string) => {
+  getVectorStoreProviderLogoAndName: (provider: string) => {
     const providerMap: Record<string, { displayName: string; logo: string }> = {
       openai: { displayName: "OpenAI", logo: "/openai-logo.png" },
       azure: { displayName: "Azure", logo: "/azure-logo.png" },
@@ -54,7 +54,7 @@ const defaultProps = {
 
 describe("VectorStoreТаблица", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render every column header", () => {
@@ -71,7 +71,7 @@ describe("VectorStoreТаблица", () => {
 
   it("should sort by created date descending by default", () => {
     render(<VectorStoreТаблица {...defaultProps} />);
-    const rows = screen.getВсеByRole("row").slice(1);
+    const rows = screen.getAllByRole("row").slice(1);
     expect(within(rows[0]).getByText("vs-newer")).toBeInTheDocument();
     expect(within(rows[1]).getByText("vs-older")).toBeInTheDocument();
   });
@@ -92,8 +92,8 @@ describe("VectorStoreТаблица", () => {
   it("should summarize ingested files and fall back to a dash withвыход files", () => {
     render(<VectorStoreТаблица {...defaultProps} />);
     expect(screen.getByText("2 files")).toBeInTheDocument();
-    const olderRow = screen.getВсеByRole("row").slice(1)[1];
-    expect(within(olderRow).getВсеByText("-").length).toBeGreaterThan(0);
+    const olderRow = screen.getAllByRole("row").slice(1)[1];
+    expect(within(olderRow).getAllByText("-").length).toBeGreaterThan(0);
   });
 
   it("should edit a vector store through the actions menu", async () => {

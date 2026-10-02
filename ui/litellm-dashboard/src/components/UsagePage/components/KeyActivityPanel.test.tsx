@@ -5,7 +5,7 @@ import type { РежимlActivityData } from "../types";
 import КлючActivityPanel from "./КлючActivityPanel";
 
 vi.mock("@/components/activity_metrics", () => ({
-  ActivityМетрикаs: ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs }: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs: Record<string, РежимlActivityData> }) => (
+  ActivityMetrics: ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs }: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs: Record<string, РежимlActivityData> }) => (
     <ul data-testid="rendered-keys">
       {Object.keys(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs).map((hash) => (
         <li key={hash}>{hash}</li>
@@ -28,25 +28,25 @@ function activity(label: string, user_email: string | null, user_id: string | nu
     completion_tokens: 5,
     total_spend: 0.01,
     top_api_keys: [],
-    top_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+    top_models: [],
     daily_data: [],
   };
 }
 
-const keyМетрикаs: Record<string, РежимlActivityData> = {
+const keyMetrics: Record<string, РежимlActivityData> = {
   "hash-alice": activity("alice-key", "alice@example.com", "user-alice"),
   "hash-bob": activity("bob-key", "bob@example.com", "user-bob"),
 };
 
 describe("КлючActivityPanel", () => {
   it("renders every key and the full count before searching", () => {
-    render(<КлючActivityPanel keyМетрикаs={keyМетрикаs} />);
+    render(<КлючActivityPanel keyMetrics={keyMetrics} />);
     expect(screen.getByTestId("rendered-keys")).toHaveTextContent("hash-alicehash-bob");
     expect(screen.getByText("Showing 2 of 2 keys")).toBeInTheDocument();
   });
 
   it("narrows the rendered keys to those matching the user email", () => {
-    render(<КлючActivityPanel keyМетрикаs={keyМетрикаs} />);
+    render(<КлючActivityPanel keyMetrics={keyMetrics} />);
     fireEvent.change(screen.getByLabelText("Search keys"), { target: { value: "bob@example.com" } });
     expect(screen.getByTestId("rendered-keys")).toHaveTextContent("hash-bob");
     expect(screen.getByTestId("rendered-keys")).not.toHaveTextContent("hash-alice");
@@ -54,14 +54,14 @@ describe("КлючActivityPanel", () => {
   });
 
   it("shows an empty state instead of zeroed metrics when nothing matches", () => {
-    render(<КлючActivityPanel keyМетрикаs={keyМетрикаs} />);
+    render(<КлючActivityPanel keyMetrics={keyMetrics} />);
     fireEvent.change(screen.getByLabelText("Search keys"), { target: { value: "carol" } });
     expect(screen.queryByTestId("rendered-keys")).not.toBeInTheDocument();
     expect(screen.getByText('No keys match "carol" in this date range')).toBeInTheDocument();
   });
 
   it("clears the search and restores every key", () => {
-    render(<КлючActivityPanel keyМетрикаs={keyМетрикаs} />);
+    render(<КлючActivityPanel keyMetrics={keyMetrics} />);
     fireEvent.change(screen.getByLabelText("Search keys"), { target: { value: "user-alice" } });
     expect(screen.getByTestId("rendered-keys")).toHaveTextContent("hash-alice");
     fireEvent.click(screen.getByLabelText("Clear key search"));

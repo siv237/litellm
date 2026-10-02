@@ -2,11 +2,11 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { DataТаблица } from "@/components/shared/DataТаблица";
-import { getMCPHubТаблицаColumns, MCPСерверData } from "./MCPHubТаблицаColumns";
+import { getMCPHubTableColumns, MCPServerData } from "./MCPHubTableColumns";
 
 const SERVER_URL = "https://mcp.exa.ai/mcp";
 
-const mockСервер: MCPСерверData = {
+const mockСервер: MCPServerData = {
   server_id: "server-1",
   server_name: "exa_test",
   description: "Fast, intelligent web search and web crawling",
@@ -28,20 +28,20 @@ const mockСервер: MCPСерверData = {
   env: {},
 };
 
-function renderТаблица(onСерверClick = vi.fn()) {
+function renderТаблица(onServerClick = vi.fn()) {
   render(
     <DataТаблица
       data={[mockСервер]}
-      columns={getMCPHubТаблицаColumns({ onСерверClick })}
+      columns={getMCPHubTableColumns({ onServerClick })}
       getRowId={(server) => server.server_id}
       sortingРежим="client"
       size="compact"
     />,
   );
-  return onСерверClick;
+  return onServerClick;
 }
 
-describe("getMCPHubТаблицаColumns", () => {
+describe("getMCPHubTableColumns", () => {
   it("renders the server row", () => {
     renderТаблица();
     expect(screen.getByText("exa_test")).toBeInTheDocument();
@@ -57,7 +57,7 @@ describe("getMCPHubТаблицаColumns", () => {
   it("does not expose a URL column", () => {
     renderТаблица();
     expect(screen.queryByText("URL")).not.toBeInTheDocument();
-    const columns = getMCPHubТаблицаColumns({ onСерверClick: vi.fn() });
+    const columns = getMCPHubTableColumns({ onServerClick: vi.fn() });
     expect(columns.some((c) => c.header === "URL" || c.meta?.title === "URL")).toBe(false);
   });
 
@@ -68,17 +68,17 @@ describe("getMCPHubТаблицаColumns", () => {
 
   it("opens the server details when the name is clicked", async () => {
     const user = userEvent.setup();
-    const onСерверClick = renderТаблица();
+    const onServerClick = renderТаблица();
     await user.click(screen.getByRole("button", { name: "exa_test" }));
-    expect(onСерверClick).toHaveBeenCalledWith(mockСервер);
+    expect(onServerClick).toHaveBeenCalledWith(mockСервер);
   });
 
   it("opens the server details from the actions menu", async () => {
     const user = userEvent.setup();
-    const onСерверClick = renderТаблица();
+    const onServerClick = renderТаблица();
     await user.click(screen.getByTestId("mcp-hub-actions-server-1"));
     await user.click(await screen.findByTestId("mcp-hub-action-details"));
-    expect(onСерверClick).toHaveBeenCalledWith(mockСервер);
+    expect(onServerClick).toHaveBeenCalledWith(mockСервер);
   });
 
   it("copies the server name from the actions menu", async () => {

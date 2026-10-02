@@ -11,7 +11,7 @@ vi.mock("@/components/РежимlВыбрать/РежимlВыбрать", () =
     </button>
   ),
 }));
-vi.mock("@/components/vector_store_management/VectorStoreВыбратьor", () => ({
+vi.mock("@/components/vector_store_management/VectorStoreSelector", () => ({
   __esModule: true,
   default: ({ onChange }: { onChange: (values: string[]) => void }) => (
     <button type="button" onClick={() => onChange(["vs-2"])}>
@@ -19,7 +19,7 @@ vi.mock("@/components/vector_store_management/VectorStoreВыбратьor", () =
     </button>
   ),
 }));
-vi.mock("@/components/mcp_server_management/MCPСерверВыбратьor", () => ({
+vi.mock("@/components/mcp_server_management/MCPServerSelector", () => ({
   __esModule: true,
   default: ({
     value,
@@ -101,7 +101,7 @@ describe("OrgSettingsForm", () => {
     fireEvent.change(screen.getByLabelText("Название организации"), { target: { value: "acme-2" } });
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledTimes(1));
     expect(patchОрганизация).toHaveBeenCalledWith("org-1", { organization_alias: "acme-2" });
   });
 
@@ -109,7 +109,7 @@ describe("OrgSettingsForm", () => {
     const user = userEvent.setup();
     const { patchОрганизация } = renderForm();
 
-    const budget: HTMLВходElement = screen.getByLabelText("Макс. бюджет (USD)");
+    const budget: HTMLInElement = screen.getByLabelText("Макс. бюджет (USD)");
     await user.clear(budget);
     fireEvent.change(budget, { target: { value: "0.001" } });
 
@@ -119,7 +119,7 @@ describe("OrgSettingsForm", () => {
 
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledTimes(1));
     expect(patchОрганизация).toHaveBeenCalledWith("org-1", { max_budget: 0.001 });
   });
 
@@ -130,7 +130,7 @@ describe("OrgSettingsForm", () => {
     await user.clear(screen.getByLabelText("Лимит токенов в минуту (TPM)"));
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledTimes(1));
     expect(patchОрганизация).toHaveBeenCalledWith("org-1", { tpm_limit: null });
   });
 
@@ -141,7 +141,7 @@ describe("OrgSettingsForm", () => {
     await user.click(screen.getByRole("button", { name: "clear-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs" }));
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledTimes(1));
     expect(patchОрганизация).toHaveBeenCalledWith("org-1", { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [] });
   });
 
@@ -152,7 +152,7 @@ describe("OrgSettingsForm", () => {
     await user.click(screen.getByRole("button", { name: "set-vector-stores" }));
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledTimes(1));
     expect(patchОрганизация).toHaveBeenCalledWith("org-1", {
       object_permission: { vector_stores: ["vs-2"] },
     });
@@ -165,7 +165,7 @@ describe("OrgSettingsForm", () => {
     await user.click(screen.getByRole("button", { name: "set-mcp" }));
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledTimes(1));
     expect(patchОрганизация).toHaveBeenCalledWith("org-1", {
       object_permission: { mcp_servers: ["srv-2"], mcp_access_groups: [], mcp_toolsets: [] },
     });
@@ -173,16 +173,16 @@ describe("OrgSettingsForm", () => {
 
   it("preserves existing toolsets when only the servers change", async () => {
     const user = userEvent.setup();
-    const orgWithИнструментыets: Организация = {
+    const orgWithToolsets: Организация = {
       ...org,
       object_permission: { ...org.object_permission!, mcp_toolsets: ["ts-1"] },
     };
-    const { patchОрганизация } = renderForm({ org: orgWithИнструментыets });
+    const { patchОрганизация } = renderForm({ org: orgWithToolsets });
 
     await user.click(screen.getByRole("button", { name: "set-mcp" }));
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledTimes(1));
     expect(patchОрганизация).toHaveBeenCalledWith("org-1", {
       object_permission: { mcp_servers: ["srv-2"], mcp_access_groups: [], mcp_toolsets: ["ts-1"] },
     });
@@ -222,7 +222,7 @@ describe("OrgSettingsForm", () => {
     fireEvent.change(screen.getByLabelText("Название организации"), { target: { value: "acme-2" } });
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledTimes(1));
     expect(onSaved).not.toHaveBeenCalled();
   });
 
@@ -235,6 +235,6 @@ describe("OrgSettingsForm", () => {
     fireEvent.change(screen.getByLabelText("Лимит запросов в минуту (RPM)"), { target: { value: "75" } });
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(onSaved).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(onSaved).toHaveBeenCalledTimes(1));
   });
 });

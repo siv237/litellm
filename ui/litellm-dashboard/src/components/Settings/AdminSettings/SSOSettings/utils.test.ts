@@ -1,11 +1,11 @@
 import { detectSSOПровайдер, processSSOSettingsPayload } from "./utils";
 import { describe, it, expect } from "vitest";
-import type { SSOSettingsЗначениеs } from "@/app/(dashboard)/hooks/sso/useSSOSettings";
+import type { SSOSettingsValues } from "@/app/(dashboard)/hooks/sso/useSSOSettings";
 
 describe("processSSOSettingsPayload", () => {
   describe("withвыход role mappings", () => {
     it("should return all fields except role mapping fields when use_role_mappings is false", () => {
-      const formЗначениеs = {
+      const formValues = {
         proxy_admin_teams: "team1, team2",
         admin_viewer_teams: "viewer1",
         internal_user_teams: "user1",
@@ -19,7 +19,7 @@ describe("processSSOSettingsPayload", () => {
         another_field: 123,
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result).toEqual({
         other_field: "value",
@@ -30,7 +30,7 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should return all fields except role mapping fields when use_role_mappings is not present", () => {
-      const formЗначениеs = {
+      const formValues = {
         proxy_admin_teams: "team1",
         admin_viewer_teams: "viewer1",
         internal_user_teams: "user1",
@@ -42,7 +42,7 @@ describe("processSSOSettingsPayload", () => {
         other_field: "value",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result).toEqual({
         other_field: "value",
@@ -54,7 +54,7 @@ describe("processSSOSettingsPayload", () => {
 
   describe("with role mappings enabled", () => {
     it("should create role mappings with all team types populated", () => {
-      const formЗначениеs = {
+      const formValues = {
         proxy_admin_teams: "admin1, admin2",
         admin_viewer_teams: "viewer1, viewer2, viewer3",
         internal_user_teams: "user1",
@@ -66,7 +66,7 @@ describe("processSSOSettingsPayload", () => {
         other_field: "value",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.other_field).toBe("value");
       expect(result.role_mappings).toEqual({
@@ -83,7 +83,7 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should handle empty team strings", () => {
-      const formЗначениеs = {
+      const formValues = {
         proxy_admin_teams: "",
         admin_viewer_teams: "",
         internal_user_teams: "",
@@ -94,7 +94,7 @@ describe("processSSOSettingsPayload", () => {
         sso_provider: "generic",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.role_mappings.roles).toEqual({
         proxy_admin: [],
@@ -105,14 +105,14 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should handle undefined team fields", () => {
-      const formЗначениеs = {
+      const formValues = {
         default_role: "internal_user_viewer",
         group_claim: "groups",
         use_role_mappings: true,
         sso_provider: "generic",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.role_mappings.roles).toEqual({
         proxy_admin: [],
@@ -123,7 +123,7 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should handle whitespace-only team strings", () => {
-      const formЗначениеs = {
+      const formValues = {
         proxy_admin_teams: "   ",
         admin_viewer_teams: ", , ,",
         internal_user_teams: "user1, , user2",
@@ -134,7 +134,7 @@ describe("processSSOSettingsPayload", () => {
         sso_provider: "generic",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.role_mappings.roles).toEqual({
         proxy_admin: [],
@@ -145,7 +145,7 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should trim whitespace from team names", () => {
-      const formЗначениеs = {
+      const formValues = {
         proxy_admin_teams: " admin1 , admin2 ",
         admin_viewer_teams: " viewer1 ",
         internal_user_teams: "  user1  ,  user2  ",
@@ -156,7 +156,7 @@ describe("processSSOSettingsPayload", () => {
         sso_provider: "generic",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.role_mappings.roles).toEqual({
         proxy_admin: ["admin1", "admin2"],
@@ -167,7 +167,7 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should filter выход empty strings after trimming", () => {
-      const formЗначениеs = {
+      const formValues = {
         proxy_admin_teams: "admin1,,admin2, , admin3",
         default_role: "internal_user",
         group_claim: "groups",
@@ -175,7 +175,7 @@ describe("processSSOSettingsPayload", () => {
         sso_provider: "generic",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.role_mappings.roles.proxy_admin).toEqual(["admin1", "admin2", "admin3"]);
     });
@@ -183,78 +183,78 @@ describe("processSSOSettingsPayload", () => {
 
   describe("default role mapping", () => {
     it("should map internal_user_viewer correctly", () => {
-      const formЗначениеs = {
+      const formValues = {
         default_role: "internal_user_viewer",
         group_claim: "groups",
         use_role_mappings: true,
         sso_provider: "generic",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.role_mappings.default_role).toBe("internal_user_viewer");
     });
 
     it("should map internal_user correctly", () => {
-      const formЗначениеs = {
+      const formValues = {
         default_role: "internal_user",
         group_claim: "groups",
         use_role_mappings: true,
         sso_provider: "generic",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.role_mappings.default_role).toBe("internal_user");
     });
 
     it("should map proxy_admin_viewer correctly", () => {
-      const formЗначениеs = {
+      const formValues = {
         default_role: "proxy_admin_viewer",
         group_claim: "groups",
         use_role_mappings: true,
         sso_provider: "generic",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.role_mappings.default_role).toBe("proxy_admin_viewer");
     });
 
     it("should map proxy_admin correctly", () => {
-      const formЗначениеs = {
+      const formValues = {
         default_role: "proxy_admin",
         group_claim: "groups",
         use_role_mappings: true,
         sso_provider: "generic",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.role_mappings.default_role).toBe("proxy_admin");
     });
 
     it("should default to internal_user for unknown roles", () => {
-      const formЗначениеs = {
+      const formValues = {
         default_role: "unknown_role",
         group_claim: "groups",
         use_role_mappings: true,
         sso_provider: "generic",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.role_mappings.default_role).toBe("internal_user");
     });
 
     it("should default to internal_user for undefined default_role", () => {
-      const formЗначениеs = {
+      const formValues = {
         group_claim: "groups",
         use_role_mappings: true,
         sso_provider: "generic",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.role_mappings.default_role).toBe("internal_user");
     });
@@ -262,14 +262,14 @@ describe("processSSOSettingsPayload", () => {
 
   describe("withвыход team mappings", () => {
     it("should return all fields except team mapping fields when use_team_mappings is false", () => {
-      const formЗначениеs = {
+      const formValues = {
         use_team_mappings: false,
         team_ids_jwt_field: "teams",
         sso_provider: "okta",
         other_field: "value",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result).toEqual({
         sso_provider: "okta",
@@ -279,13 +279,13 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should return all fields except team mapping fields when use_team_mappings is not present", () => {
-      const formЗначениеs = {
+      const formValues = {
         team_ids_jwt_field: "teams",
         sso_provider: "generic",
         other_field: "value",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result).toEqual({
         sso_provider: "generic",
@@ -295,14 +295,14 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should not include team mappings for unsupported providers even when use_team_mappings is true", () => {
-      const formЗначениеs = {
+      const formValues = {
         use_team_mappings: true,
         team_ids_jwt_field: "teams",
         sso_provider: "google",
         other_field: "value",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result).toEqual({
         sso_provider: "google",
@@ -312,14 +312,14 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should not include team mappings for microsoft provider even when use_team_mappings is true", () => {
-      const formЗначениеs = {
+      const formValues = {
         use_team_mappings: true,
         team_ids_jwt_field: "teams",
         sso_provider: "microsoft",
         other_field: "value",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result).toEqual({
         sso_provider: "microsoft",
@@ -331,14 +331,14 @@ describe("processSSOSettingsPayload", () => {
 
   describe("with team mappings enabled", () => {
     it("should create team mappings for okta provider when use_team_mappings is true", () => {
-      const formЗначениеs = {
+      const formValues = {
         use_team_mappings: true,
         team_ids_jwt_field: "teams",
         sso_provider: "okta",
         other_field: "value",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.other_field).toBe("value");
       expect(result.team_mappings).toEqual({
@@ -347,14 +347,14 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should create team mappings for generic provider when use_team_mappings is true", () => {
-      const formЗначениеs = {
+      const formValues = {
         use_team_mappings: true,
         team_ids_jwt_field: "custom_teams",
         sso_provider: "generic",
         other_field: "value",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.other_field).toBe("value");
       expect(result.team_mappings).toEqual({
@@ -363,21 +363,21 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should exclude team mapping fields from payload when team mappings are included", () => {
-      const formЗначениеs = {
+      const formValues = {
         use_team_mappings: true,
         team_ids_jwt_field: "teams",
         sso_provider: "okta",
         other_field: "value",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.use_team_mappings).toBeUndefined();
       expect(result.team_ids_jwt_field).toBeUndefined();
     });
 
     it("should handle team mappings and role mappings together", () => {
-      const formЗначениеs = {
+      const formValues = {
         use_team_mappings: true,
         team_ids_jwt_field: "teams",
         use_role_mappings: true,
@@ -387,7 +387,7 @@ describe("processSSOSettingsPayload", () => {
         other_field: "value",
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result.team_mappings).toEqual({
         team_ids_jwt_field: "teams",
@@ -405,7 +405,7 @@ describe("processSSOSettingsPayload", () => {
     });
 
     it("should preserve other fields in the payload", () => {
-      const formЗначениеs = {
+      const formValues = {
         use_role_mappings: false,
         use_team_mappings: false,
         sso_provider: "google",
@@ -416,7 +416,7 @@ describe("processSSOSettingsPayload", () => {
         array_field: [1, 2, 3],
       };
 
-      const result = processSSOSettingsPayload(formЗначениеs);
+      const result = processSSOSettingsPayload(formValues);
 
       expect(result).toEqual({
         sso_provider: "google",
@@ -432,13 +432,13 @@ describe("processSSOSettingsPayload", () => {
 
 describe("detectSSOПровайдер with SAML", () => {
   it("returns saml when a SAML IdP metadata URL is configured", () => {
-    expect(detectSSOПровайдер({ saml_idp_metadata_url: "https://idp.example.com/metadata" } as SSOSettingsЗначениеs)).toBe(
+    expect(detectSSOПровайдер({ saml_idp_metadata_url: "https://idp.example.com/metadata" } as SSOSettingsValues)).toBe(
       "saml",
     );
   });
 
   it("returns saml when only inline SAML metadata XML is configured", () => {
-    expect(detectSSOПровайдер({ saml_idp_metadata_xml: "<EntityDescriptor/>" } as SSOSettingsЗначениеs)).toBe("saml");
+    expect(detectSSOПровайдер({ saml_idp_metadata_xml: "<EntityDescriptor/>" } as SSOSettingsValues)).toBe("saml");
   });
 });
 

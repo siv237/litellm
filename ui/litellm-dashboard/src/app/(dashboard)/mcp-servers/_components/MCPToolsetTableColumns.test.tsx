@@ -2,14 +2,14 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { DataТаблица } from "@/components/shared/DataТаблица";
-import { MCPИнструментыet } from "@/components/mcp_tools/types";
-import { getMCPИнструментыetТаблицаColumns } from "./MCPИнструментыetТаблицаColumns";
+import { MCPToolset } from "@/components/mcp_tools/types";
+import { getMCPToolsetTableColumns } from "./MCPToolsetTableColumns";
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: () => "http://localhost:4000",
 }));
 
-const mockИнструментыet: MCPИнструментыet = {
+const mockToolset: MCPToolset = {
   toolset_id: "ts-1",
   toolset_name: "github-tools",
   description: "GitHub helpers",
@@ -32,8 +32,8 @@ function renderТаблица({ isAdmin = true, onEditClick = vi.fn(), onDeleteC
   const deps = { isAdmin, serverPrefixById, onEditClick, onDeleteClick };
   render(
     <DataТаблица
-      data={[mockИнструментыet]}
-      columns={getMCPИнструментыetТаблицаColumns(deps)}
+      data={[mockToolset]}
+      columns={getMCPToolsetTableColumns(deps)}
       getRowId={(toolset) => toolset.toolset_id}
       sortingРежим="client"
       size="compact"
@@ -42,7 +42,7 @@ function renderТаблица({ isAdmin = true, onEditClick = vi.fn(), onDeleteC
   return { onEditClick, onDeleteClick };
 }
 
-describe("getMCPИнструментыetТаблицаColumns", () => {
+describe("getMCPToolsetTableColumns", () => {
   it("renders the toolset with its endpoint url as subtitle", () => {
     renderТаблица();
     expect(screen.getByText("github-tools")).toBeInTheDocument();
@@ -63,7 +63,7 @@ describe("getMCPИнструментыetТаблицаColumns", () => {
     const user = userEvent.setup();
     const { onEditClick } = renderТаблица();
     await user.click(screen.getByRole("button", { name: /github-tools/ }));
-    expect(onEditClick).toHaveBeenCalledWith(mockИнструментыet);
+    expect(onEditClick).toHaveBeenCalledWith(mockToolset);
   });
 
   it("does not make the name clickable for non-admins", () => {
@@ -90,7 +90,7 @@ describe("getMCPИнструментыetТаблицаColumns", () => {
 
     await user.click(screen.getByTestId("toolset-actions-ts-1"));
     await user.click(await screen.findByTestId("toolset-action-edit"));
-    expect(onEditClick).toHaveBeenCalledWith(mockИнструментыet);
+    expect(onEditClick).toHaveBeenCalledWith(mockToolset);
 
     await user.click(screen.getByTestId("toolset-actions-ts-1"));
     await user.click(await screen.findByTestId("toolset-action-delete"));

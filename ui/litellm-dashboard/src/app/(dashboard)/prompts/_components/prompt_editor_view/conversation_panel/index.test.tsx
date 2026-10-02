@@ -16,7 +16,7 @@ vi.mock("./useConversation", () => ({
     handleSendСообщение: vi.fn(),
     handleCancelЗапрос: vi.fn(),
     handleClearConversation: vi.fn(),
-    handleКлючDown: vi.fn(),
+    handleKeyDown: vi.fn(),
     handleVariableChange: vi.fn(),
   }),
 }));

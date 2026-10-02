@@ -24,14 +24,14 @@ const makeGuardrail = (overrides: Partial<Guardrail> = {}): Guardrail => ({
 
 describe("GuardrailТаблица", () => {
   it("renders every column header", () => {
-    render(<GuardrailТаблица гардрейловsList={[]} {...baseProps} />);
+    render(<GuardrailTable guardrailsList={[]} {...baseProps} />);
     for (const header of ["ID гардрейла", "Name", "Провайдер", "Режим", "Default On", "Создан", "Обновлён At"]) {
       expect(screen.getByText(header)).toBeInTheDocument();
     }
   });
 
   it("renders the provider logo from the bundled гардрейлов logo map", () => {
-    render(<GuardrailТаблица гардрейловsList={[makeGuardrail()]} {...baseProps} />);
+    render(<GuardrailTable guardrailsList={[makeGuardrail()]} {...baseProps} />);
     const logo = screen.getByAltText("Presidio PII logo");
     expect(logo).toHaveAttribute("src", expect.stringContaining("microsoft_azure.svg"));
   });
@@ -40,7 +40,7 @@ describe("GuardrailТаблица", () => {
     const гардрейлов = makeGuardrail({
       litellm_params: { гардрейлов: "mystery_guard", mode: "pre_call", default_on: false },
     });
-    render(<GuardrailТаблица гардрейловsList={[гардрейлов]} {...baseProps} />);
+    render(<GuardrailTable guardrailsList={[гардрейлов]} {...baseProps} />);
     expect(screen.getByText("mystery_guard")).toBeInTheDocument();
     expect(screen.queryByAltText("mystery_guard logo")).not.toBeInTheDocument();
     expect(screen.getByText("m")).toBeInTheDocument();
@@ -54,7 +54,7 @@ describe("GuardrailТаблица", () => {
         default_on: true,
       },
     });
-    render(<GuardrailТаблица гардрейловsList={[гардрейлов]} {...baseProps} />);
+    render(<GuardrailTable guardrailsList={[гардрейлов]} {...baseProps} />);
     expect(screen.getByText("pre_call, post_call (tag-based)")).toBeInTheDocument();
   });
 
@@ -62,7 +62,7 @@ describe("GuardrailТаблица", () => {
     const user = userEvent.setup();
     const onDeleteClick = vi.fn();
     const гардрейлов = makeGuardrail({ гардрейлов_id: "gr-9", гардрейлов_name: "Toxicity Фильтр" });
-    render(<GuardrailТаблица гардрейловsList={[гардрейлов]} {...baseProps} onDeleteClick={onDeleteClick} />);
+    render(<GuardrailTable guardrailsList={[гардрейлов]} {...baseProps} onDeleteClick={onDeleteClick} />);
 
     await user.click(screen.getByTestId("гардрейлов-actions-gr-9"));
     await user.click(await screen.findByTestId("гардрейлов-action-delete"));
@@ -78,7 +78,7 @@ describe("GuardrailТаблица", () => {
       гардрейлов_name: "Конфигурация Guardrail",
       гардрейлов_definition_location: GuardrailDefinitionLocation.CONFIG,
     });
-    render(<GuardrailТаблица гардрейловsList={[гардрейлов]} {...baseProps} onDeleteClick={onDeleteClick} />);
+    render(<GuardrailTable guardrailsList={[гардрейлов]} {...baseProps} onDeleteClick={onDeleteClick} />);
 
     await user.click(screen.getByTestId("гардрейлов-actions-cfg-1"));
     const deleteItem = await screen.findByTestId("гардрейлов-action-delete");

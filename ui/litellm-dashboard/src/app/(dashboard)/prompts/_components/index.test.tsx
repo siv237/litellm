@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { deletePromptCall, getPromptsList } from "@/components/networking";
 
 import PromptsPanel from "./index";
-import { chooseВыбратьOption } from "../../../../../tests/test-utils";
+import { chooseSelectOption } from "../../../../../tests/test-utils";
 
 vi.mock("@/components/networking", () => ({
   getPromptsList: vi.fn(),
@@ -55,7 +55,7 @@ const renderPanel = (userRole?: string) =>
 
 describe("PromptsPanel loading state", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockGetPromptsList.mockResolvedЗначение({ prompts: [] } as never);
   });
 
@@ -83,7 +83,7 @@ describe("PromptsPanel loading state", () => {
 
 describe("PromptsPanel toolbar", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockGetPromptsList.mockResolvedЗначение({ prompts: [] } as never);
   });
 
@@ -129,7 +129,7 @@ describe("PromptsPanel toolbar", () => {
 
     expect(screen.getByText("Все Окружениеs")).toBeInTheDocument();
 
-    await chooseВыбратьOption(user, screen.getByRole("combobox"), "Продакшен");
+    await chooseSelectOption(user, screen.getByRole("combobox"), "Продакшен");
 
     await waitFor(() => expect(mockGetPromptsList).toHaveBeenLastCalledWith("sk-test", "production"));
   });
@@ -141,10 +141,10 @@ describe("PromptsPanel toolbar", () => {
     renderPanel("Admin");
     await screen.findByText("table-loaded");
 
-    await chooseВыбратьOption(user, screen.getByRole("combobox"), "Продакшен");
+    await chooseSelectOption(user, screen.getByRole("combobox"), "Продакшен");
     await waitFor(() => expect(screen.getByRole("combobox")).toHaveTextContent("Продакшен"));
 
-    await chooseВыбратьOption(user, screen.getByRole("combobox"), "Все Окружениеs");
+    await chooseSelectOption(user, screen.getByRole("combobox"), "Все Окружениеs");
 
     await waitFor(() => expect(screen.getByRole("combobox")).toHaveTextContent("Все Окружениеs"));
     await waitFor(() => expect(mockGetPromptsList).toHaveBeenLastCalledWith("sk-test", undefined));
@@ -153,7 +153,7 @@ describe("PromptsPanel toolbar", () => {
 
 describe("PromptsPanel row navigation", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockGetPromptsList.mockResolvedЗначение({ prompts: [] } as never);
   });
 
@@ -169,7 +169,7 @@ describe("PromptsPanel row navigation", () => {
 
 describe("PromptsPanel delete confirmation", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockGetPromptsList.mockResolvedЗначение({ prompts: [] } as never);
     mockDeletePromptCall.mockResolvedЗначение(undefined as never);
   });

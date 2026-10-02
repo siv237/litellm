@@ -30,7 +30,7 @@ const baseProps = {
   isLoading: false,
   userRole: "Admin",
   searchActive: false,
-  onОрганизацияClick: vi.fn(),
+  onOrganizationClick: vi.fn(),
   onEditClick: vi.fn(),
   onDeleteClick: vi.fn(),
 };
@@ -54,18 +54,18 @@ describe("ОрганизацияsТаблица", () => {
 
   it("opens the detail view when the organization ID cell is clicked", async () => {
     const user = userEvent.setup();
-    const onОрганизацияClick = vi.fn();
+    const onOrganizationClick = vi.fn();
     render(
       <ОрганизацияsТаблица
         {...baseProps}
-        onОрганизацияClick={onОрганизацияClick}
+        onOrganizationClick={onOrganizationClick}
         organizations={[makeОрганизация({ organization_id: "org-123" })]}
       />,
     );
 
     await user.click(screen.getByText("org-123"));
 
-    expect(onОрганизацияClick).toHaveBeenCalledWith("org-123");
+    expect(onOrganizationClick).toHaveBeenCalledWith("org-123");
   });
 
   it("edits and deletes an organization through the ⋯ actions menu (admin)", async () => {
@@ -122,7 +122,7 @@ describe("ОрганизацияsТаблица", () => {
       />,
     );
 
-    const rows = screen.getВсеByRole("row");
+    const rows = screen.getAllByRole("row");
     // rows[0] is the header row; the newest organization must lead the body.
     expect(within(rows[1]).getByText("Newer")).toBeInTheDocument();
     expect(within(rows[2]).getByText("Older")).toBeInTheDocument();
@@ -188,7 +188,7 @@ describe("ОрганизацияsТаблица", () => {
       />,
     );
 
-    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
     expect(screen.queryByText("ShouldNotShow")).not.toBeInTheDocument();
   });
 
@@ -199,13 +199,13 @@ describe("ОрганизацияsТаблица", () => {
     );
     render(<ОрганизацияsТаблица {...baseProps} organizations={organizations} />);
 
-    expect(screen.getВсеByRole("row")).toHaveLength(26);
+    expect(screen.getAllByRole("row")).toHaveLength(26);
     expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-25 of 30");
 
     await user.click(screen.getByTestId("pagination-page-size"));
     await user.click(await screen.findByRole("option", { name: "50" }));
 
-    expect(screen.getВсеByRole("row")).toHaveLength(31);
+    expect(screen.getAllByRole("row")).toHaveLength(31);
     expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-30 of 30");
   });
 

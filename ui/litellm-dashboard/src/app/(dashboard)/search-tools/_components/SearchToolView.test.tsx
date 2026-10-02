@@ -31,7 +31,7 @@ describe("SearchToolView", () => {
     created_at: "2024-01-15T10:30:00Z",
   };
 
-  const mockAvailableПровайдерs: AvailableSearchПровайдер[] = [
+  const mockAvailableProviders: AvailableSearchПровайдер[] = [
     {
       provider_name: "perplexity",
       ui_friendly_name: "Perplexity AI",
@@ -47,11 +47,11 @@ describe("SearchToolView", () => {
     onBack: vi.fn(),
     isEditing: false,
     accessТокен: "test-token",
-    availableПровайдерs: mockAvailableПровайдерs,
+    availableProviders: mockAvailableProviders,
   };
 
   beforeEach(async () => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     const { copyToClipboard } = await import("@/utils/dataUtils");
     vi.mocked(copyToClipboard).mockResolvedЗначение(true);
   });
@@ -94,14 +94,14 @@ describe("SearchToolView", () => {
   });
 
   it("should display 'Не задано' when API key is not set", () => {
-    const searchToolWithвыходApiКлюч: SearchTool = {
+    const searchToolWithoutApiКлюч: SearchTool = {
       ...mockSearchTool,
       litellm_params: {
         search_provider: "perplexity",
       },
     };
 
-    render(<SearchToolView {...defaultProps} searchTool={searchToolWithвыходApiКлюч} />);
+    render(<SearchToolView {...defaultProps} searchTool={searchToolWithoutApiКлюч} />);
     expect(screen.getByText("Не задано")).toBeInTheDocument();
   });
 
@@ -112,12 +112,12 @@ describe("SearchToolView", () => {
   });
 
   it("should display 'Unknown' when created_at is not set", () => {
-    const searchToolWithвыходDate: SearchTool = {
+    const searchToolWithoutDate: SearchTool = {
       ...mockSearchTool,
       created_at: undefined,
     };
 
-    render(<SearchToolView {...defaultProps} searchTool={searchToolWithвыходDate} />);
+    render(<SearchToolView {...defaultProps} searchTool={searchToolWithoutDate} />);
     expect(screen.getByText("Unknown")).toBeInTheDocument();
   });
 
@@ -144,7 +144,7 @@ describe("SearchToolView", () => {
     const backButton = screen.getByRole("button", { name: /back to all search tools/i });
     await user.click(backButton);
 
-    expect(onBack).toHaveBeenCalledВремяs(1);
+    expect(onBack).toHaveBeenCalledTimes(1);
   });
 
   it("should copy search tool name to clipboard when copy button is clicked", async () => {
@@ -189,12 +189,12 @@ describe("SearchToolView", () => {
     const toolNameContainer = screen.getByText("Тест инструмента поиска").closest("div");
     const nameCopyButton = within(toolNameContainer!).getByRole("button");
 
-    expect(nameCopyButton.queryВыбратьor(".lucide-copy")).toBeInTheDocument();
+    expect(nameCopyButton.querySelector(".lucide-copy")).toBeInTheDocument();
 
     await user.click(nameCopyButton);
 
     await waitFor(() => {
-      expect(nameCopyButton.queryВыбратьor(".lucide-check")).toBeInTheDocument();
+      expect(nameCopyButton.querySelector(".lucide-check")).toBeInTheDocument();
     });
   });
 
@@ -217,7 +217,7 @@ describe("SearchToolView", () => {
       { timeвыход: 3000 },
     );
 
-    expect(nameCopyButton.queryВыбратьor(".lucide-check")).not.toBeInTheDocument();
+    expect(nameCopyButton.querySelector(".lucide-check")).not.toBeInTheDocument();
   });
 
   it("should render SearchToolTester when accessТокен is provided", () => {

@@ -1,12 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import RвыходerSettingsSummary from "./RвыходerSettingsSummary";
+import RouterSettingsSummary from "./RouterSettingsSummary";
 
-describe("RвыходerSettingsSummary", () => {
+describe("RouterSettingsSummary", () => {
   it("should list each configured fallback mapping", () => {
     render(
-      <RвыходerSettingsSummary
-        rвыходerSettings={{
+      <RouterSettingsSummary
+        routerSettings={{
           fallbacks: [{ "gpt-4": ["gpt-4o", "claude-sonnet"] }, { "gpt-4o": ["gpt-4o-mini"] }],
           num_retries: 3,
         }}
@@ -21,8 +21,8 @@ describe("RвыходerSettingsSummary", () => {
   });
 
   it("should show the empty state when every setting is null", () => {
-    render(<RвыходerSettingsSummary rвыходerSettings={{ fallbacks: null, num_retries: null }} />);
+    render(<RouterSettingsSummary routerSettings={{ fallbacks: null, num_retries: null }} />);
 
-    expect(screen.getByText("No rвыходer settings configured")).toBeInTheDocument();
+    expect(screen.getByText("No router settings configured")).toBeInTheDocument();
   });
 });

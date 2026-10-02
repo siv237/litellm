@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs, screen, waitFor } from "../../../tests/test-utils";
+import { renderWithProviders, screen, waitFor } from "../../../tests/test-utils";
 import { ПерегенерироватьКлючModal } from "./ПерегенерироватьКлючModal";
 import { КлючОтвет } from "../key_team_helpers/key_list";
 
-const mockПерегенерироватьКлючCall = vi.fn();
+const mockRegenerateKeyCall = vi.fn();
 vi.mock("../networking", () => ({
-  regenerateКлючCall: (...args: unknown[]) => mockПерегенерироватьКлючCall(...args),
+  regenerateKeyCall: (...args: unknown[]) => mockRegenerateKeyCall(...args),
 }));
 
 const makeТокен = (overrides: Partial<КлючОтвет> = {}): КлючОтвет =>
@@ -23,9 +23,9 @@ const makeТокен = (overrides: Partial<КлючОтвет> = {}): КлючО
     ...overrides,
   }) as КлючОтвет;
 
-const renderModal = (token: КлючОтвет | null = makeТокен(), onКлючUpdate = vi.fn()) => {
-  renderWithПровайдерs(<ПерегенерироватьКлючModal selectedТокен={token} visible onClose={vi.fn()} onКлючUpdate={onКлючUpdate} />);
-  return { onКлючUpdate };
+const renderModal = (token: КлючОтвет | null = makeТокен(), onKeyUpdate = vi.fn()) => {
+  renderWithProviders(<ПерегенерироватьКлючModal selectedТокен={token} visible onClose={vi.fn()} onKeyUpdate={onKeyUpdate} />);
+  return { onKeyUpdate };
 };
 
 const regenerate = async (user: ReturnType<typeof userEvent.setup>) => {
@@ -33,12 +33,12 @@ const regenerate = async (user: ReturnType<typeof userEvent.setup>) => {
 };
 
 const submittedPayload = (): Record<string, unknown> =>
-  mockПерегенерироватьКлючCall.mock.calls[0][2] as Record<string, unknown>;
+  mockRegenerateKeyCall.mock.calls[0][2] as Record<string, unknown>;
 
 describe("ПерегенерироватьКлючModal submit payload", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({ key: "sk-new-regenerated-key", token: "new-token-hash" });
+    vi.clearAllMocks();
+    mockRegenerateKeyCall.mockResolvedЗначение({ key: "sk-new-regenerated-key", token: "new-token-hash" });
   });
 
   it("sends the seeded key fields untouched, with grace_period blank", async () => {
@@ -47,7 +47,7 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
     expect(submittedPayload()).toStrictEqual({
       key_alias: "my-test-key",
       max_budget: 100,
@@ -64,7 +64,7 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
     expect(JSON.stringify(submittedPayload())).toBe(
       '{"key_alias":"my-test-key","max_budget":100,"tpm_limit":5000,"rpm_limit":500,"duration":"30d","grace_period":""}',
     );
@@ -90,7 +90,7 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
     expect(submittedPayload()).toStrictEqual({
       key_alias: "my-test-key",
       max_budget: 42.57,
@@ -117,7 +117,7 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
     expect(submittedPayload().max_budget).toBe(expected);
   });
 
@@ -134,7 +134,7 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
     expect(submittedPayload()[key]).toBe(12.7);
   });
 
@@ -149,7 +149,7 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
     expect(submittedPayload()).toStrictEqual({
       key_alias: "my-test-key",
       max_budget: null,
@@ -174,7 +174,7 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
     expect(submittedPayload()).toStrictEqual({
       key_alias: undefined,
       max_budget: undefined,
@@ -200,7 +200,7 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
     expect(submittedPayload()).toStrictEqual({
       key_alias: null,
       max_budget: null,
@@ -217,8 +217,8 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
-    expect(mockПерегенерироватьКлючCall.mock.calls[0].slice(0, 2)).toStrictEqual(["123", "token-hash-123"]);
+    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
+    expect(mockRegenerateKeyCall.mock.calls[0].slice(0, 2)).toStrictEqual(["123", "token-hash-123"]);
   });
 
   it("blocks submission and sends nothing when the duration is unparseable", async () => {
@@ -232,7 +232,7 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
     await regenerate(user);
 
     expect(await screen.findByText("Must be a duration like 30s, 30m, 24h, 2d, 1w, or 1mo")).toBeInTheDocument();
-    expect(mockПерегенерироватьКлючCall).not.toHaveBeenCalled();
+    expect(mockRegenerateKeyCall).not.toHaveBeenCalled();
   });
 
   it("blocks submission when an expired key is regenerated withвыход a new duration", async () => {
@@ -243,7 +243,7 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
     await regenerate(user);
 
     expect(await screen.findByText("Expiration is required for expired keys")).toBeInTheDocument();
-    expect(mockПерегенерироватьКлючCall).not.toHaveBeenCalled();
+    expect(mockRegenerateKeyCall).not.toHaveBeenCalled();
   });
 
   it("rejects an unparseable grace period", async () => {
@@ -255,19 +255,19 @@ describe("ПерегенерироватьКлючModal submit payload", () => {
     await regenerate(user);
 
     expect(await screen.findByText("Must be a duration like 30s, 30m, 24h, 2d, 1w, or 1mo")).toBeInTheDocument();
-    expect(mockПерегенерироватьКлючCall).not.toHaveBeenCalled();
+    expect(mockRegenerateKeyCall).not.toHaveBeenCalled();
   });
 
   it("reveals the new key only after the call resolves and hands the parent the submitted limits", async () => {
     const user = userEvent.setup();
-    const { onКлючUpdate } = renderModal();
+    const { onKeyUpdate } = renderModal();
 
     expect(screen.queryByText("sk-new-regenerated-key")).not.toBeInTheDocument();
 
     await regenerate(user);
 
     expect(await screen.findByText("sk-new-regenerated-key")).toBeInTheDocument();
-    expect(onКлючUpdate).toHaveBeenCalledWith({
+    expect(onKeyUpdate).toHaveBeenCalledWith({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
       key_name: "sk-new-regenerated-key",

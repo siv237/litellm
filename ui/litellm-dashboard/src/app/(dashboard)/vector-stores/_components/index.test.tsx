@@ -40,7 +40,7 @@ const openManageTab = async (user: ReturnType<typeof userEvent.setup>) => {
 
 describe("VectorStoreManagement loading state", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should resolve the loading state when accessТокен is null instead of showing the skeleton forever", async () => {
@@ -71,7 +71,7 @@ describe("VectorStoreManagement loading state", () => {
 
 describe("VectorStoreManagement create flow visibility", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockVectorStoreListCall.mockResolvedЗначение({ data: [] });
     mockCredentialListCall.mockResolvedЗначение({ credentials: [] });
   });
@@ -108,7 +108,7 @@ describe("VectorStoreManagement create flow visibility", () => {
 
 describe("VectorStoreManagement Indexes tab", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockVectorStoreListCall.mockResolvedЗначение({ data: [] });
     mockCredentialListCall.mockResolvedЗначение({ credentials: [] });
   });

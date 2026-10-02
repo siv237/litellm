@@ -22,8 +22,8 @@ vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
   default: mockUseАвторизовано,
 }));
 
-vi.mock("@/app/(dashboard)/hooks/organizations/useОрганизацияs", () => ({
-  useОрганизацияs: () => ({ data: [] }),
+vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
+  useOrganizations: () => ({ data: [] }),
 }));
 
 // Networking: wire the hoisted fns so we can assert calls later
@@ -51,8 +51,8 @@ vi.mock("@/utils/dataUtils", () => ({
 }));
 vi.mock("../key_info_utils", () => ({
   extractLoggingSettings: () => ({}),
-  formatМетаданныеForDisplay: (m: any) => JSON.stringify(m, null, 2),
-  stripТегиFromМетаданные: (m: any) => m,
+  formatMetadataForDisplay: (m: any) => JSON.stringify(m, null, 2),
+  stripTagsFromМетаданные: (m: any) => m,
 }));
 vi.mock("../callback_info_helpers", () => ({
   callback_map: {},
@@ -111,9 +111,9 @@ vi.mock("../common_components/AutoRotationView", () => {
   return { __esModule: true, default: AutoRotationView };
 });
 
-// Mock Next.js rвыходer to avoid "invariant expected app rвыходer to be mounted" error
+// Mock Next.js router to avoid "invariant expected app router to be mounted" error
 vi.mock("next/navigation", () => ({
-  useRвыходer: () => ({
+  useRouter: () => ({
     push: vi.fn(),
     replace: vi.fn(),
     refresh: vi.fn(),
@@ -146,8 +146,8 @@ vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCP-серверы", () =
   useMCP-серверы: vi.fn().mockReturnЗначение({ data: [] }),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCPИнструментыets", () => ({
-  useMCPИнструментыets: vi.fn().mockReturnЗначение({ data: [] }),
+vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCPToolsets", () => ({
+  useMCPToolsets: vi.fn().mockReturnЗначение({ data: [] }),
 }));
 
 // Mock useResetКлючРасход hook (requires ЗапросClientПровайдер which is not available in this test)
@@ -158,19 +158,19 @@ vi.mock("@/app/(dashboard)/hooks/keys/useResetКлючРасход", () => ({
   }),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/keys/useSetКлючBlockedState", () => ({
-  useSetКлючBlockedState: vi.fn().mockReturnЗначение({
+vi.mock("@/app/(dashboard)/hooks/keys/useSetKeyBlockedState", () => ({
+  useSetKeyBlockedState: vi.fn().mockReturnЗначение({
     mutate: vi.fn(),
     isPending: false,
   }),
 }));
 
-// useЗапросClient also needs a provider; the delete-path invalidation is covered in key_info_view.test.tsx
+// useRequestClient also needs a provider; the delete-path invalidation is covered in key_info_view.test.tsx
 vi.mock("@tanstack/react-query", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@tanstack/react-query")>();
   return {
     ...actual,
-    useЗапросClient: () => ({ invalidateQueries: vi.fn() }),
+    useRequestClient: () => ({ invalidateQueries: vi.fn() }),
   };
 });
 
@@ -198,7 +198,7 @@ vi.mock("./key_edit_view", async () => {
 import КлючInfoView from "./key_info_view";
 
 // ---- Test data helpers ----
-const baseКлючData = {
+const baseKeyData = {
   token_id: "tok_123",
   token: "tok_123",
   key_alias: "My Виртуальный ключ",
@@ -228,7 +228,7 @@ const renderView = (premiumUser: boolean) => {
     premiumUser,
     token: "token_123",
     userEmail: "test@example.com",
-    disabledЛичнаяКлючCreation: false,
+    disabledPersonalKeyCreation: false,
     showSSOBanner: false,
   });
 
@@ -236,22 +236,22 @@ const renderView = (premiumUser: boolean) => {
     <КлючInfoView
       keyId="tok_123"
       onClose={() => {}}
-      keyData={baseКлючData as any}
-      onКлючDataUpdate={() => {}}
+      keyData={baseKeyData as any}
+      onKeyDataUpdate={() => {}}
       teams={[]}
     />,
   );
 };
 
 beforeEach(() => {
-  vi.clearВсеMocks();
+  vi.clearAllMocks();
   (globalThis as any).__TEST_FORM_VALUES = undefined;
 });
 
 // ---- Tests ----
-describe("КлючInfoView handleКлючUpdate гардрейловs guard", () => {
+describe("КлючInfoView handleKeyUpdate гардрейловs guard", () => {
   it("should remove гардрейловs & prompts for non-premium key owner withвыход write access role", async () => {
-    const keyDataWithOwner = { ...baseКлючData, user_id: "user_1" };
+    const keyDataWithOwner = { ...baseKeyData, user_id: "user_1" };
     mockUseАвторизовано.mockReturnЗначение({
       accessТокен: "access_abc",
       userId: "user_1",
@@ -259,7 +259,7 @@ describe("КлючInfoView handleКлючUpdate гардрейловs guard", ()
       premiumUser: false,
       token: "token_123",
       userEmail: "test@example.com",
-      disabledЛичнаяКлючCreation: false,
+      disabledPersonalKeyCreation: false,
       showSSOBanner: false,
     });
 
@@ -268,7 +268,7 @@ describe("КлючInfoView handleКлючUpdate гардрейловs guard", ()
         keyId="tok_123"
         onClose={() => {}}
         keyData={keyDataWithOwner as any}
-        onКлючDataUpdate={() => {}}
+        onKeyDataUpdate={() => {}}
         teams={[]}
       />,
     );
@@ -291,7 +291,7 @@ describe("КлючInfoView handleКлючUpdate гардрейловs guard", ()
 
     expect("гардрейловs" in sentPayload).toBe(false);
     expect("prompts" in sentPayload).toBe(false);
-    expect(sentPayload.metadata?.гардрейловs).toBeUndefined();
+    expect(sentPayload.metadata?.guardrails).toBeUndefined();
     expect(sentPayload.key).toBe("tok_123");
   });
 
@@ -313,13 +313,13 @@ describe("КлючInfoView handleКлючUpdate гардрейловs guard", ()
 
     const [, sentPayload] = keyUpdateCallMock.mock.calls[0];
 
-    expect(sentPayload.гардрейловs).toEqual(["gr-1"]);
+    expect(sentPayload.guardrails).toEqual(["gr-1"]);
     expect(sentPayload.prompts).toEqual(["fast"]);
-    expect(sentPayload.metadata?.гардрейловs).toEqual(["gr-1"]);
+    expect(sentPayload.metadata?.guardrails).toEqual(["gr-1"]);
     expect(sentPayload.key).toBe("tok_123");
   });
 
-  it("should preserve гардрейловs & prompts for premium users and includes metadata.гардрейловs", async () => {
+  it("should preserve гардрейловs & prompts for premium users and includes metadata.guardrails", async () => {
     renderView(true); // premiumUser = true
 
     fireEvent.click(screen.getByText("Settings"));
@@ -337,14 +337,14 @@ describe("КлючInfoView handleКлючUpdate гардрейловs guard", ()
 
     const [, sentPayload] = keyUpdateCallMock.mock.calls[0];
 
-    expect(sentPayload.гардрейловs).toEqual(["gr-1"]);
+    expect(sentPayload.guardrails).toEqual(["gr-1"]);
     expect(sentPayload.prompts).toEqual(["fast"]);
-    expect(sentPayload.metadata?.гардрейловs).toEqual(["gr-1"]);
+    expect(sentPayload.metadata?.guardrails).toEqual(["gr-1"]);
     expect(sentPayload.key).toBe("tok_123");
   });
 });
 
-describe("КлючInfoView handleКлючUpdate mcp_toolsets", () => {
+describe("КлючInfoView handleKeyUpdate mcp_toolsets", () => {
   it("should forward the toolsets the edit form supplies into object_permission", async () => {
     renderView(true);
 
@@ -366,7 +366,7 @@ describe("КлючInfoView handleКлючUpdate mcp_toolsets", () => {
   });
 });
 
-describe("КлючInfoView handleКлючUpdate skills", () => {
+describe("КлючInfoView handleKeyUpdate skills", () => {
   it("should forward the skills the edit form supplies into object_permission and drop the form key", async () => {
     renderView(true);
 
@@ -405,7 +405,7 @@ describe("КлючInfoView handleКлючUpdate skills", () => {
   });
 });
 
-describe("КлючInfoView handleКлючUpdate budget_duration", () => {
+describe("КлючInfoView handleKeyUpdate budget_duration", () => {
   it("should send a canonical budget_duration through unchanged", async () => {
     renderView(true);
 
@@ -462,8 +462,8 @@ describe("КлючInfoView handleКлючUpdate budget_duration", () => {
   });
 
   it("should render the cleared budget as never resetting instead of snapping back to the old interval", async () => {
-    keyUpdateCallMock.mockResolvedЗначениеOnce({
-      ...baseКлючData,
+    keyUpdateCallMock.mockResolvedValueOnce({
+      ...baseKeyData,
       budget_duration: null,
       budget_reset_at: null,
     });
@@ -474,7 +474,7 @@ describe("КлючInfoView handleКлючUpdate budget_duration", () => {
       premiumUser: true,
       token: "token_123",
       userEmail: "test@example.com",
-      disabledЛичнаяКлючCreation: false,
+      disabledPersonalKeyCreation: false,
       showSSOBanner: false,
     });
 
@@ -482,8 +482,8 @@ describe("КлючInfoView handleКлючUpdate budget_duration", () => {
       <КлючInfoView
         keyId="tok_123"
         onClose={() => {}}
-        keyData={{ ...baseКлючData, budget_duration: "30d", budget_reset_at: "2026-09-01T00:00:00Z" } as any}
-        onКлючDataUpdate={() => {}}
+        keyData={{ ...baseKeyData, budget_duration: "30d", budget_reset_at: "2026-09-01T00:00:00Z" } as any}
+        onKeyDataUpdate={() => {}}
         teams={[]}
       />,
     );
@@ -505,7 +505,7 @@ describe("КлючInfoView handleКлючUpdate budget_duration", () => {
   });
 });
 
-describe("КлючInfoView handleКлючUpdate empty strings", () => {
+describe("КлючInfoView handleKeyUpdate empty strings", () => {
   ["tpm_limit", "rpm_limit", "max_parallel_requests", "max_budget"].forEach((limit) => {
     it(`maps empty strings to null for ${limit}`, async () => {
       renderView(true); // premiumUser = true
@@ -528,7 +528,7 @@ describe("КлючInfoView handleКлючUpdate empty strings", () => {
   });
 });
 
-describe("КлючInfoView handleКлючUpdate soft_budget", () => {
+describe("КлючInfoView handleKeyUpdate soft_budget", () => {
   const premiumAdminAuth = {
     accessТокен: "access_abc",
     userId: "user_1",
@@ -536,7 +536,7 @@ describe("КлючInfoView handleКлючUpdate soft_budget", () => {
     premiumUser: true,
     token: "token_123",
     userEmail: "test@example.com",
-    disabledЛичнаяКлючCreation: false,
+    disabledPersonalKeyCreation: false,
     showSSOBanner: false,
   };
 
@@ -548,9 +548,9 @@ describe("КлючInfoView handleКлючUpdate soft_budget", () => {
         keyId="tok_123"
         onClose={() => {}}
         keyData={
-          { ...baseКлючData, litellm_budget_table: softБюджет === null ? null : { soft_budget: softБюджет } } as any
+          { ...baseKeyData, litellm_budget_table: softБюджет === null ? null : { soft_budget: softБюджет } } as any
         }
-        onКлючDataUpdate={() => {}}
+        onKeyDataUpdate={() => {}}
         teams={[]}
       />,
     );

@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { DataТаблица } from "@/components/shared/DataТаблица";
-import { getAgentHubТаблицаColumns, AgentHubData } from "./AgentHubТаблицаColumns";
+import { getAgentHubTableColumns, AgentHubData } from "./AgentHubTableColumns";
 
 const mockAgent: AgentHubData = {
   agent_id: "agent-1",
@@ -12,8 +12,8 @@ const mockAgent: AgentHubData = {
   url: "https://agent.example.com",
   version: "2.0",
   capabilities: { streaming: true, caching: false },
-  defaultВходРежимs: ["text"],
-  defaultВыходРежимs: ["text", "image"],
+  defaultInputModes: ["text"],
+  defaultOutputModes: ["text", "image"],
   skills: [
     { id: "s1", name: "Skill One", description: "First skill" },
     { id: "s2", name: "Skill Two", description: "Second skill" },
@@ -26,7 +26,7 @@ function renderТаблица(data: AgentHubData[], onAgentClick = vi.fn()) {
   render(
     <DataТаблица
       data={data}
-      columns={getAgentHubТаблицаColumns({ onAgentClick })}
+      columns={getAgentHubTableColumns({ onAgentClick })}
       getRowId={(agent, index) => agent.agent_id || String(index)}
       sortingРежим="client"
       size="compact"
@@ -35,7 +35,7 @@ function renderТаблица(data: AgentHubData[], onAgentClick = vi.fn()) {
   return onAgentClick;
 }
 
-describe("getAgentHubТаблицаColumns", () => {
+describe("getAgentHubTableColumns", () => {
   it("should render", () => {
     renderТаблица([mockAgent]);
     expect(screen.getByText("Test Agent")).toBeInTheDocument();
@@ -117,7 +117,7 @@ describe("getAgentHubТаблицаColumns", () => {
 
   it("should show '-' when agent has no capabilities", () => {
     renderТаблица([{ ...mockAgent, capabilities: {} }]);
-    expect(screen.getВсеByText("-").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("-").length).toBeGreaterThanOrEqual(1);
   });
 
   it("should show singular 'skill' for one skill", () => {

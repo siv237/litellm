@@ -4,8 +4,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import CompareUI from "./CompareUI";
 import { makeOpenAIChatCompletionЗапрос } from "@/components/llm_calls/chat_completion";
 
-vi.mock("@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => ({
-  fetchAvailableРежимls: vi.fn().mockResolvedЗначение([{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4" }, { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo" }]),
+vi.mock("@/components/llm_calls/fetch_models", () => ({
+  fetchAvailableModels: vi.fn().mockResolvedЗначение([{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4" }, { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo" }]),
 }));
 
 vi.mock("@/components/llm_calls/chat_completion", () => ({
@@ -36,7 +36,7 @@ vi.mock("../chat_ui/ChatImageUtils", () => ({
   createChatDisplayСообщение: vi.fn().mockReturnЗначение({
     role: "user",
     content: "test message [Image attached]",
-    image-предпросмотрUrl: "blob:test-url",
+    imagePreviewUrl: "blob:test-url",
   }),
 }));
 
@@ -85,12 +85,12 @@ beforeEach(() => {
   global.URL.createObjectURL = vi.fn().mockReturnЗначение("blob:test-url");
   global.URL.revokeObjectURL = vi.fn();
   capturedOnImageUpload = null;
-  vi.clearВсеMocks();
+  vi.clearAllMocks();
 });
 
 describe("CompareUI", () => {
   it("should render", () => {
-    render(<CompareUI accessТокен="test-token" disabledЛичнаяКлючCreation={false} />);
+    render(<CompareUI accessТокен="test-token" disabledPersonalKeyCreation={false} />);
     expect(screen.getByTestId("comparison-panel-1")).toBeInTheDocument();
     expect(screen.getByTestId("comparison-panel-2")).toBeInTheDocument();
     expect(screen.getByTestId("message-input")).toBeInTheDocument();
@@ -98,19 +98,19 @@ describe("CompareUI", () => {
 
   it("adds a comparison when Добавить сравнение button is clicked", async () => {
     const user = userEvent.setup();
-    const { container } = render(<CompareUI accessТокен="test-token" disabledЛичнаяКлючCreation={false} />);
+    const { container } = render(<CompareUI accessТокен="test-token" disabledPersonalKeyCreation={false} />);
 
     // Verify initial state: 2 comparison panels
     expect(screen.getByTestId("comparison-panel-1")).toBeInTheDocument();
     expect(screen.getByTestId("comparison-panel-2")).toBeInTheDocument();
-    let comparisonPanels = container.queryВыбратьorВсе('[data-testid^="comparison-panel-"]');
+    let comparisonPanels = container.querySelectorВсе('[data-testid^="comparison-panel-"]');
     expect(comparisonPanels).toHaveLength(2);
 
     await user.click(screen.getByRole("button", { name: /Добавить сравнение/i }));
 
     // Wait for the new comparison panel to be added (should have 3 total now)
     await waitFor(() => {
-      comparisonPanels = container.queryВыбратьorВсе('[data-testid^="comparison-panel-"]');
+      comparisonPanels = container.querySelectorВсе('[data-testid^="comparison-panel-"]');
       expect(comparisonPanels).toHaveLength(3);
     });
 
@@ -121,7 +121,7 @@ describe("CompareUI", () => {
 
   it("should handle image upload and send message with attachment", async () => {
     const user = userEvent.setup();
-    render(<CompareUI accessТокен="test-token" disabledЛичнаяКлючCreation={false} />);
+    render(<CompareUI accessТокен="test-token" disabledPersonalKeyCreation={false} />);
 
     const file = new File(["test content"], "test-image.png", { type: "image/png" });
 

@@ -1,12 +1,12 @@
 import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { renderWithПровайдерs } from "../../../../../tests/test-utils";
+import { renderWithProviders } from "../../../../../tests/test-utils";
 import type { Политика } from "@/components/policies/types";
-import AddПолитикаForm from "./add_policy_form";
+import AddPolicyForm from "./add_policy_form";
 
 vi.mock("@/components/networking", () => ({
-  getResolvedГардрейлы: vi.fn().mockResolvedЗначение({ resolved_гардрейловs: [] }),
+  getResolvedГардрейлы: vi.fn().mockResolvedЗначение({ resolved_guardrails: [] }),
   Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAvailableCall: vi.fn().mockResolvedЗначение({ data: [{ id: "gpt-4" }] }),
 }));
 
@@ -38,7 +38,7 @@ const PARENT_POLICY: Политика = {
   condition: null,
 };
 
-describe("AddПолитикаForm", () => {
+describe("AddPolicyForm", () => {
   const createПолитика = vi.fn().mockResolvedЗначение({});
   const updateПолитика = vi.fn().mockResolvedЗначение({});
 
@@ -59,7 +59,7 @@ describe("AddПолитикаForm", () => {
   };
 
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
@@ -72,7 +72,7 @@ describe("AddПолитикаForm", () => {
 
   it("should send exactly six keys with empty-to-undefined and empty-to-array defaults on create", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<AddПолитикаForm {...defaultProps} />);
+    renderWithProviders(<AddPolicyForm {...defaultProps} />);
     await enterSimpleForm(user);
 
     fireEvent.change(await screen.findByLabelText("Название политики"), { target: { value: "brand-new-policy" } });
@@ -102,7 +102,7 @@ describe("AddПолитикаForm", () => {
 
   it("should collapse a blank description to undefined rather than an empty string", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<AddПолитикаForm {...defaultProps} />);
+    renderWithProviders(<AddPolicyForm {...defaultProps} />);
     await enterSimpleForm(user);
 
     const description = await screen.findByLabelText("Описание");
@@ -119,7 +119,7 @@ describe("AddПолитикаForm", () => {
 
   it("should send the seeded policy through updateПолитика with condition wrapped in a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию object", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<AddПолитикаForm {...defaultProps} editingПолитика={EXISTING_POLICY} />);
+    renderWithProviders(<AddPolicyForm {...defaultProps} editingПолитика={EXISTING_POLICY} />);
 
     await user.click(await screen.findByRole("button", { name: "Update Политика" }));
 
@@ -140,14 +140,14 @@ describe("AddПолитикаForm", () => {
   });
 
   it("should keep the policy name field disabled while editing", async () => {
-    renderWithПровайдерs(<AddПолитикаForm {...defaultProps} editingПолитика={EXISTING_POLICY} />);
+    renderWithProviders(<AddPolicyForm {...defaultProps} editingПолитика={EXISTING_POLICY} />);
 
     expect(await screen.findByLabelText("Название политики")).toBeDisabled();
   });
 
   it("should block submission and call neither api when the policy name is missing", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<AddПолитикаForm {...defaultProps} />);
+    renderWithProviders(<AddPolicyForm {...defaultProps} />);
     await enterSimpleForm(user);
 
     await user.click(await screen.findByRole("button", { name: "Create Политика" }));
@@ -159,7 +159,7 @@ describe("AddПолитикаForm", () => {
 
   it("should block submission when the policy name has characters выходside the allowed set", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<AddПолитикаForm {...defaultProps} />);
+    renderWithProviders(<AddPolicyForm {...defaultProps} />);
     await enterSimpleForm(user);
 
     fireEvent.change(await screen.findByLabelText("Название политики"), { target: { value: "not a valid name!" } });
@@ -173,7 +173,7 @@ describe("AddПолитикаForm", () => {
 
   it("should swap the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию condition label and clear the value when the condition type changes", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<AddПолитикаForm {...defaultProps} editingПолитика={EXISTING_POLICY} />);
+    renderWithProviders(<AddPolicyForm {...defaultProps} editingПолитика={EXISTING_POLICY} />);
 
     expect(await screen.findByLabelText("Модель (необязательно)")).toBeInTheDocument();
 
@@ -195,7 +195,7 @@ describe("AddПолитикаForm", () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
     const onOpenFlowBuilder = vi.fn();
-    renderWithПровайдерs(<AddПолитикаForm {...defaultProps} onClose={onClose} onOpenFlowBuilder={onOpenFlowBuilder} />);
+    renderWithProviders(<AddPolicyForm {...defaultProps} onClose={onClose} onOpenFlowBuilder={onOpenFlowBuilder} />);
 
     await user.click(await screen.findByText("Конструктор потока"));
 
@@ -206,8 +206,8 @@ describe("AddПолитикаForm", () => {
 
     await user.click(screen.getByRole("button", { name: "Continue to Builder" }));
 
-    expect(onOpenFlowBuilder).toHaveBeenCalledВремяs(1);
-    expect(onClose).toHaveBeenCalledВремяs(1);
+    expect(onOpenFlowBuilder).toHaveBeenCalledTimes(1);
+    expect(onClose).toHaveBeenCalledTimes(1);
     expect(createПолитика).not.toHaveBeenCalled();
   });
 });

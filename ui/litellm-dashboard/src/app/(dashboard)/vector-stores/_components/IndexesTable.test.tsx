@@ -7,7 +7,7 @@ import IndexesТаблица from "./IndexesТаблица";
 
 vi.mock("next/navigation", async () => ({
   ...(await vi.importActual("next/navigation")),
-  useRвыходer: () => ({ push: vi.fn() }),
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 const newerIndex: VectorStoreIndex = {
@@ -52,14 +52,14 @@ describe("IndexesТаблица", () => {
     expect(screen.getByText("admin@example.com")).toBeInTheDocument();
     const undatedRow = screen.getByText("undated-index").closest("tr");
     expect(undatedRow).not.toBeNull();
-    expect(within(undatedRow as HTMLElement).getВсеByText("-")).toHaveLength(2);
+    expect(within(undatedRow as HTMLElement).getAllByText("-")).toHaveLength(2);
   });
 
   it("should sort by created_at descending by default", () => {
     render(
       <IndexesТаблица data={[olderIndex, newerIndex]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />,
     );
-    const rows = screen.getВсеByRole("row").slice(1);
+    const rows = screen.getAllByRole("row").slice(1);
     expect(within(rows[0]).getByText("newer-index")).toBeInTheDocument();
     expect(within(rows[1]).getByText("older-index")).toBeInTheDocument();
   });
@@ -95,6 +95,6 @@ describe("IndexesТаблица", () => {
     const row = screen.getByText("undated-index").closest("tr");
     expect(row).not.toBeNull();
     expect(within(row as HTMLElement).queryByRole("link")).not.toBeInTheDocument();
-    expect(within(row as HTMLElement).getВсеByText("-").length).toBeGreaterThan(0);
+    expect(within(row as HTMLElement).getAllByText("-").length).toBeGreaterThan(0);
   });
 });

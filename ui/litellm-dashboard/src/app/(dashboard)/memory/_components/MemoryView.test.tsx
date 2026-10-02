@@ -9,7 +9,7 @@ import { ПамятьRow } from "@/components/networking";
 
 import { ПамятьView } from "./ПамятьView";
 
-interface CapturedТаблицаProps {
+interface CapturedTableProps {
   isLoading: boolean;
   rowCount: number;
   data: ПамятьRow[];
@@ -19,11 +19,11 @@ interface CapturedТаблицаProps {
   onViewClick: (row: ПамятьRow) => void;
 }
 
-const captured = vi.hoisted(() => ({ current: null as CapturedТаблицаProps | null }));
-const fetchПамятьListMock = vi.hoisted(() => vi.fn());
+const captured = vi.hoisted(() => ({ current: null as CapturedTableProps | null }));
+const fetchMemoryListMock = vi.hoisted(() => vi.fn());
 
 vi.mock("./ПамятьТаблица", () => ({
-  ПамятьТаблица: function ПамятьТаблицаMock(props: CapturedТаблицаProps) {
+  ПамятьТаблица: function ПамятьТаблицаMock(props: CapturedTableProps) {
     captured.current = props;
     return <div data-testid="memory-table-mock" />;
   },
@@ -31,7 +31,7 @@ vi.mock("./ПамятьТаблица", () => ({
 
 vi.mock("@/components/networking", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/components/networking")>()),
-  fetchПамятьList: fetchПамятьListMock,
+  fetchMemoryList: fetchMemoryListMock,
 }));
 
 vi.mock("@tanstack/react-pacer/debouncer", () => ({
@@ -49,23 +49,23 @@ const renderView = (accessТокен: string | null) => {
 
 describe("ПамятьView", () => {
   beforeEach(() => {
-    fetchПамятьListMock.mockReset();
-    fetchПамятьListMock.mockResolvedЗначение({ memories: [], total: 0 });
+    fetchMemoryListMock.mockReset();
+    fetchMemoryListMock.mockResolvedЗначение({ memories: [], total: 0 });
   });
 
   it("queries the server with the search box value as `search` and resets to page 1", async () => {
     renderView("token");
-    await waitFor(() => expect(fetchПамятьListMock).toHaveBeenCalled());
+    await waitFor(() => expect(fetchMemoryListMock).toHaveBeenCalled());
 
     act(() => captured.current?.onPaginationChange({ pageIndex: 2, pageSize: 50 }));
     await waitFor(() =>
-      expect(fetchПамятьListMock).toHaveBeenLastCalledWith("token", expect.objectContaining({ page: 3 })),
+      expect(fetchMemoryListMock).toHaveBeenLastCalledWith("token", expect.objectContaining({ page: 3 })),
     );
 
     act(() => captured.current?.onSearchChange("mem-abc123"));
 
     await waitFor(() =>
-      expect(fetchПамятьListMock).toHaveBeenLastCalledWith("token", { search: "mem-abc123", page: 1, pageSize: 50 }),
+      expect(fetchMemoryListMock).toHaveBeenLastCalledWith("token", { search: "mem-abc123", page: 1, pageSize: 50 }),
     );
     expect(captured.current?.hasActiveSearch).toBe(true);
   });

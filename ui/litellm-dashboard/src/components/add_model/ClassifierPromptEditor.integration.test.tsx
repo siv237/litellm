@@ -1,11 +1,11 @@
-import { fireEvent, renderWithПровайдерs, screen } from "../../../tests/test-utils";
+import { fireEvent, renderWithProviders, screen } from "../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import { vi, type Mock } from "vitest";
 import ClassifierPromptEditor from "./ClassifierPromptEditor";
-import { ClassificationRubric } from "./— сложностьRвыходerКонфигурация";
+import { ClassificationRubric } from "./— сложностьRouterКонфигурация";
 vi.mock(
-  "@/app/(dashboard)/hooks/autoRвыходer/use— сложностьОценкаrDefaults",
-  async () => await import("../../../tests/mocks/complexityОценкаrDefaults"),
+  "@/app/(dashboard)/hooks/autoRouter/useComplexityScorerDefaults",
+  async () => await import("../../../tests/mocks/complexityWeightrDefaults"),
 );
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
@@ -14,7 +14,7 @@ vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
 
 const getDefaultPrompt = vi.hoisted(() => vi.fn());
 vi.mock("@/components/networking", () => ({
-  getAutoRвыходerClassifierDefaultPromptCall: getDefaultPrompt,
+  getAutoRouterClassifierDefaultPromptCall: getDefaultPrompt,
 }));
 
 const DEFAULT_PROMPT = "Classify the complexity of a user request into exactly one tier. Уровеньs: SIMPLE ...";
@@ -39,7 +39,7 @@ const openEditor = async ({
   tierLabels,
   classificationRubric = "agentic",
 }: OpenEditorOptions = {}) => {
-  renderWithПровайдерs(
+  renderWithProviders(
     <ClassifierPromptEditor
       systemPrompt={systemPrompt}
       onChange={onChange}
@@ -62,16 +62,16 @@ describe("ClassifierPromptEditor", () => {
     expect(screen.getByLabelText("Classifier system prompt")).toHaveЗначение(DEFAULT_PROMPT);
   });
 
-  it("prefills the preset the rвыходer is on, not always the default one", async () => {
+  it("prefills the preset the router is on, not always the default one", async () => {
     // The editor is how an operator inspects the rubric before replacing it. Prefilling the agentic
-    // text for a rвыходer on chat would show them examples their classifier never receives.
+    // text for a router on chat would show them examples their classifier never receives.
     await openEditor({ contextWindowSize: 7, classificationRubric: "chat" });
     expect(getDefaultPrompt).toHaveBeenCalledWith("sk-test", 7, undefined, "chat");
   });
 
   it("prefills the rubric named by the operator's renamed tiers", async () => {
-    // A renamed rвыходer sends a rubric using its own labels, and its classifier must return them,
-    // so prefilling the canonical names would hand back a prompt that rвыходer rejects.
+    // A renamed router sends a rubric using its own labels, and its classifier must return them,
+    // so prefilling the canonical names would hand back a prompt that router rejects.
     const tierLabels = { SIMPLE: "Cheap", REASONING: "Deep" };
     await openEditor({ contextWindowSize: 7, tierLabels });
     expect(getDefaultPrompt).toHaveBeenCalledWith("sk-test", 7, tierLabels, "agentic");
@@ -108,7 +108,7 @@ describe("ClassifierPromptEditor", () => {
 
   it("offers a reset that clears a stored override", async () => {
     const onChange = vi.fn();
-    renderWithПровайдерs(
+    renderWithProviders(
       <ClassifierPromptEditor
         systemPrompt="Grade data sensitivity"
         onChange={onChange}

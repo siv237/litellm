@@ -32,7 +32,7 @@ describe("DocumentsТаблица", () => {
   ];
 
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render every document row", () => {

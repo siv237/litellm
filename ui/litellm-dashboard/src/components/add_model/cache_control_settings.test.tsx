@@ -67,8 +67,8 @@ describe("CacheControlInjectionPoints field hints", () => {
       <CacheControlInjectionPoints value={[{ location: "message" }, { location: "message" }]} onChange={vi.fn()} />,
     );
 
-    expect(screen.getВсеByRole("button", { name: "Role help" })).toHaveLength(2);
-    expect(screen.getВсеByRole("button", { name: "Index help" })).toHaveLength(2);
+    expect(screen.getAllByRole("button", { name: "Role help" })).toHaveLength(2);
+    expect(screen.getAllByRole("button", { name: "Index help" })).toHaveLength(2);
   });
 
   it("still reports a typed index as a string through onChange", async () => {

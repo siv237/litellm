@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { StatusBadge, type StatusTone } from "./status_badge";
 
 const push = vi.fn();
-vi.mock("next/navigation", () => ({ useRвыходer: () => ({ push }) }));
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
 
 describe("StatusBadge", () => {
   const toneClasses: Record<StatusTone, string[]> = {
@@ -28,7 +28,7 @@ describe("StatusBadge", () => {
     render(<StatusBadge tone="success" label="Active" />);
     const badge = screen.getByText("Active");
     expect(badge.dataset.variant).toBe("выходline");
-    expect(badge.queryВыбратьor("[aria-hidden]")).toBeNull();
+    expect(badge.querySelector("[aria-hidden]")).toBeNull();
   });
 
   it("passes dataTestId through", () => {

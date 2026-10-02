@@ -4,14 +4,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import PluginSettings from "./PluginSettings";
 
-const { getКонфигурацияПолеSettingMock, updateКонфигурацияПолеSettingMock } = vi.hoisted(() => ({
-  getКонфигурацияПолеSettingMock: vi.fn(),
-  updateКонфигурацияПолеSettingMock: vi.fn(),
+const { getConfigFieldSettingMock, updateConfigFieldSettingMock } = vi.hoisted(() => ({
+  getConfigFieldSettingMock: vi.fn(),
+  updateConfigFieldSettingMock: vi.fn(),
 }));
 
 vi.mock("@/components/networking", () => ({
-  getКонфигурацияПолеSetting: getКонфигурацияПолеSettingMock,
-  updateКонфигурацияПолеSetting: updateКонфигурацияПолеSettingMock,
+  getConfigFieldSetting: getConfigFieldSettingMock,
+  updateConfigFieldSetting: updateConfigFieldSettingMock,
 }));
 
 const REDACTED_PLUGIN = {
@@ -21,17 +21,17 @@ const REDACTED_PLUGIN = {
   plugin_key: "***",
 };
 
-const savedPayload = () => updateКонфигурацияПолеSettingMock.mock.calls[0];
+const savedPayload = () => updateConfigFieldSettingMock.mock.calls[0];
 
 describe("PluginSettings config payload", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
-    updateКонфигурацияПолеSettingMock.mockResolvedЗначение({});
+    vi.clearAllMocks();
+    updateConfigFieldSettingMock.mockResolvedЗначение({});
   });
 
   it("sends a new plugin with no plugin_key when the key field is left blank", async () => {
     const user = userEvent.setup();
-    getКонфигурацияПолеSettingMock.mockResolvedЗначение({ field_value: [] });
+    getConfigFieldSettingMock.mockResolvedЗначение({ field_value: [] });
     render(<PluginSettings />);
     expect(await screen.findByText("No data", { ignore: "title" })).toBeInTheDocument();
 
@@ -41,7 +41,7 @@ describe("PluginSettings config payload", () => {
     fireEvent.change(screen.getByLabelText(/^URL/), { target: { value: "https://beta.example.com" } });
     await user.click(screen.getByRole("button", { name: "Save" }));
 
-    await waitFor(() => expect(updateКонфигурацияПолеSettingMock).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateConfigFieldSettingMock).toHaveBeenCalledTimes(1));
     expect(savedPayload()).toStrictEqual([
       "123",
       "plugins",
@@ -58,7 +58,7 @@ describe("PluginSettings config payload", () => {
 
   it("seeds the key field blank on edit and sends a blank key when it is left untouched", async () => {
     const user = userEvent.setup();
-    getКонфигурацияПолеSettingMock.mockResolvedЗначение({ field_value: [REDACTED_PLUGIN] });
+    getConfigFieldSettingMock.mockResolvedЗначение({ field_value: [REDACTED_PLUGIN] });
     render(<PluginSettings />);
     expect(await screen.findByText("Alpha")).toBeInTheDocument();
 
@@ -67,7 +67,7 @@ describe("PluginSettings config payload", () => {
 
     await user.click(screen.getByRole("button", { name: "Save" }));
 
-    await waitFor(() => expect(updateКонфигурацияПолеSettingMock).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateConfigFieldSettingMock).toHaveBeenCalledTimes(1));
     expect(savedPayload()).toStrictEqual([
       "123",
       "plugins",
@@ -84,7 +84,7 @@ describe("PluginSettings config payload", () => {
 
   it("sends the typed key on edit when the key field is filled in", async () => {
     const user = userEvent.setup();
-    getКонфигурацияПолеSettingMock.mockResolvedЗначение({ field_value: [REDACTED_PLUGIN] });
+    getConfigFieldSettingMock.mockResolvedЗначение({ field_value: [REDACTED_PLUGIN] });
     render(<PluginSettings />);
     expect(await screen.findByText("Alpha")).toBeInTheDocument();
 
@@ -92,7 +92,7 @@ describe("PluginSettings config payload", () => {
     fireEvent.change(await screen.findByLabelText(/Plugin Ключ/), { target: { value: "sk-brand-new" } });
     await user.click(screen.getByRole("button", { name: "Save" }));
 
-    await waitFor(() => expect(updateКонфигурацияПолеSettingMock).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateConfigFieldSettingMock).toHaveBeenCalledTimes(1));
     expect(savedPayload()).toStrictEqual([
       "123",
       "plugins",
@@ -110,8 +110,8 @@ describe("PluginSettings config payload", () => {
 
 describe("PluginSettings plugin key reveal (post-migration shadcn affordance)", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
-    getКонфигурацияПолеSettingMock.mockResolvedЗначение({ field_value: [REDACTED_PLUGIN] });
+    vi.clearAllMocks();
+    getConfigFieldSettingMock.mockResolvedЗначение({ field_value: [REDACTED_PLUGIN] });
   });
 
   it("flips the key field between hidden and revealed and relabels the toggle", async () => {

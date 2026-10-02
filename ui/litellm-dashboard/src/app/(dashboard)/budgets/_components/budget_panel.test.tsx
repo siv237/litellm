@@ -81,7 +81,7 @@ const openФильтры = async (user: ReturnType<typeof userEvent.setup>) => {
 
 describe("Бюджет Panel", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     respondWith(DEFAULT_ROWS, 1);
   });
 
@@ -90,7 +90,7 @@ describe("Бюджет Panel", () => {
 
     expect(await screen.findByRole("heading", { level: 1, name: "Бюджеты" })).toBeInTheDocument();
     expect(screen.getByText("Расход, TPM and RPM limits you can assign to customers.")).toBeInTheDocument();
-    expect(container.queryВыбратьor(".lucide-wallet")).not.toBeNull();
+    expect(container.querySelector(".lucide-wallet")).not.toBeNull();
   });
 
   it("loads the first page of budgets, newest first", async () => {
@@ -218,7 +218,7 @@ describe("Бюджет Panel", () => {
     await waitFor(() => expect(lastЗапрос().page_size).toBe(25));
   });
 
-  it("renders an access-denied state when the rвыходe rejects the caller", async () => {
+  it("renders an access-denied state when the route rejects the caller", async () => {
     getMock.mockRejectedЗначение(new ApiОшибка("Only proxy admins can view budgets", 403, FORBIDDEN_PROBLEM));
     renderPanel();
     expect(await screen.findByText("You do not have access to budgets")).toBeInTheDocument();

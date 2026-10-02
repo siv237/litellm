@@ -9,7 +9,7 @@ import type { AgentCreateInfo } from "@/components/networking";
 vi.mock("@/components/networking", () => ({
   createAgentCall: vi.fn(),
   getAgentCreateМетаданные: vi.fn(),
-  getАгентыList: vi.fn(),
+  getAgentsList: vi.fn(),
   keyCreateForAgentCall: vi.fn(),
   keyListCall: vi.fn(),
   keyUpdateCall: vi.fn(),
@@ -24,7 +24,7 @@ vi.mock("./agent_form_fields", () => ({
   default: () => <div data-testid="agent-form-fields" />,
 }));
 
-vi.mock("@/components/mcp_server_management/MCPСерверВыбратьor", () => ({
+vi.mock("@/components/mcp_server_management/MCPServerSelector", () => ({
   default: ({
     onChange,
   }: {
@@ -63,9 +63,9 @@ const renderForm = () =>
 describe("AddAgentForm logos", () => {
   beforeEach(() => {
     vi.mocked(networking.getAgentCreateМетаданные).mockReset().mockResolvedЗначение([a2aInfo]);
-    vi.mocked(networking.getАгентыList).mockReset().mockResolvedЗначение({ agents: [] });
+    vi.mocked(networking.getAgentsList).mockReset().mockResolvedЗначение({ agents: [] });
     vi.mocked(networking.keyListCall).mockReset().mockResolvedЗначение({ keys: [] });
-    vi.mocked(networking.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAvailableCall).mockReset().mockResolvedЗначение({ data: [] });
+    vi.mocked(networking.modelAvailableCall).mockReset().mockResolvedЗначение({ data: [] });
   });
 
   it("renders the modal title and agent type selection logos as images from logo_url", async () => {
@@ -96,7 +96,7 @@ describe("AddAgentForm logos", () => {
     await within(trigger).findByAltText("A2A Agent logo");
     await user.click(trigger);
 
-    const optionLogos = await screen.findВсеByAltText("A2A Agent logo");
+    const optionLogos = await screen.findAllByAltText("A2A Agent logo");
     expect(optionLogos.length).toBeGreaterThanOrEqual(2);
     optionLogos.forEach((img) => {
       expect(img).toHaveAttribute("src", expect.stringContaining("assets/logos/a2a_agent.png"));
@@ -118,7 +118,7 @@ describe("AddAgentForm logos", () => {
     const trigger = screen.getByRole("combobox");
     fireEvent.error(within(trigger).getByAltText("A2A Agent logo"));
     expect(within(trigger).queryByAltText("A2A Agent logo")).not.toBeInTheDocument();
-    expect(warnSpy).toHaveBeenCalledВремяs(2);
+    expect(warnSpy).toHaveBeenCalledTimes(2);
     warnSpy.mockRestore();
   });
 

@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs, screen, waitFor } from "../../../tests/test-utils";
+import { renderWithProviders, screen, waitFor } from "../../../tests/test-utils";
 import { ПерегенерироватьКлючModal } from "./ПерегенерироватьКлючModal";
 import { КлючОтвет } from "../key_team_helpers/key_list";
 import { toast } from "@/lib/toast";
 
 // Mock the networking call
-const mockПерегенерироватьКлючCall = vi.fn();
+const mockRegenerateKeyCall = vi.fn();
 vi.mock("../networking", () => ({
-  regenerateКлючCall: (...args: unknown[]) => mockПерегенерироватьКлючCall(...args),
+  regenerateKeyCall: (...args: unknown[]) => mockRegenerateKeyCall(...args),
 }));
 
 const mockNotificationFromBackend = vi.mocked(toast.fromОшибка);
@@ -29,56 +29,56 @@ const makeТокен = (overrides: Partial<КлючОтвет> = {}): КлючО
 
 describe("ПерегенерироватьКлючModal", () => {
   const mockOnClose = vi.fn();
-  const mockOnКлючUpdate = vi.fn();
+  const mockOnKeyUpdate = vi.fn();
 
   const defaultProps = {
     selectedТокен: makeТокен(),
     visible: true,
     onClose: mockOnClose,
-    onКлючUpdate: mockOnКлючUpdate,
+    onKeyUpdate: mockOnKeyUpdate,
   };
 
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render the modal with correct title", () => {
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     expect(screen.getByText("Перегенерировать виртуальный ключ")).toBeInTheDocument();
   });
 
   it("should not render the modal when visible is false", () => {
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} visible={false} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} visible={false} />);
     expect(screen.queryByText("Перегенерировать виртуальный ключ")).not.toBeInTheDocument();
   });
 
   it("should display the form with pre-filled values", () => {
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
 
-    const keyAliasВход = screen.getByLabelText("Псевдоним ключа") as HTMLВходElement;
+    const keyAliasВход = screen.getByLabelText("Псевдоним ключа") as HTMLInElement;
     expect(keyAliasВход).toBeDisabled();
     expect(keyAliasВход).toHaveЗначение("my-test-key");
   });
 
   it("should display the current expiry when token has expires", () => {
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     expect(screen.getByText(/Текущий срок:/)).toBeInTheDocument();
   });
 
   it("should display 'Never' when token has no expires", () => {
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} selectedТокен={makeТокен({ expires: undefined })} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} selectedТокен={makeТокен({ expires: undefined })} />);
     expect(screen.getByText("Текущий срок: Never")).toBeInTheDocument();
   });
 
   it("should show Cancel and Перегенерировать buttons in form view", () => {
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Перегенерировать/ })).toBeInTheDocument();
   });
 
   it("should call onClose when Cancel is clicked", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
 
     await user.click(screen.getByRole("button", { name: "Cancel" }));
     expect(mockOnClose).toHaveBeenCalledOnce();
@@ -86,14 +86,14 @@ describe("ПерегенерироватьКлючModal", () => {
 
   it("should call onClose when the X close button is clicked", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
 
     await user.click(screen.getByRole("button", { name: "Close" }));
     expect(mockOnClose).toHaveBeenCalledOnce();
   });
 
   it("should render form fields for budget and rate limits", () => {
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
 
     expect(screen.getByText("Макс. бюджет (USD)")).toBeInTheDocument();
     expect(screen.getByText("Лимит TPM")).toBeInTheDocument();
@@ -101,30 +101,30 @@ describe("ПерегенерироватьКлючModal", () => {
   });
 
   it("should render duration and grace period fields", () => {
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
 
     expect(screen.getByText("Истекает")).toBeInTheDocument();
     expect(screen.getByText("Grace Period")).toBeInTheDocument();
   });
 
   it("should display grace period recommendation text", () => {
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     expect(screen.getByText("Рекомендуется: 24–72 ч для продуктовых ключей")).toBeInTheDocument();
   });
 
-  it("should call regenerateКлючCall and show success view on successful regeneration", async () => {
+  it("should call regenerateKeyCall and show success view on successful regeneration", async () => {
     const user = userEvent.setup();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
     });
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
 
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
-      expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce();
+      expect(mockRegenerateKeyCall).toHaveBeenCalledOnce();
     });
 
     await waitFor(() => {
@@ -136,12 +136,12 @@ describe("ПерегенерироватьКлючModal", () => {
 
   it("should show Close button after successful regeneration", async () => {
     const user = userEvent.setup();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
     });
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
@@ -149,7 +149,7 @@ describe("ПерегенерироватьКлючModal", () => {
     });
 
     // Should show Close buttons (footer + modal X), not Cancel/Перегенерировать
-    const closeButtons = screen.getВсеByRole("button", { name: "Close" });
+    const closeButtons = screen.getAllByRole("button", { name: "Close" });
     expect(closeButtons.length).toBeGreaterThanOrEqual(1);
     expect(screen.queryByRole("button", { name: "Cancel" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Перегенерировать/ })).not.toBeInTheDocument();
@@ -157,12 +157,12 @@ describe("ПерегенерироватьКлючModal", () => {
 
   it("should show Copy Ключ button after successful regeneration", async () => {
     const user = userEvent.setup();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
     });
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
@@ -172,12 +172,12 @@ describe("ПерегенерироватьКлючModal", () => {
 
   it("should swap the Copy Ключ button to 'Copied' after clicking it", async () => {
     const user = userEvent.setup();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
     });
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     const copyButton = await screen.findByRole("button", { name: /Copy Ключ/ });
@@ -191,12 +191,12 @@ describe("ПерегенерироватьКлючModal", () => {
 
   it("should display the 'Виртуальный ключ' label above the key in the success view", async () => {
     const user = userEvent.setup();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
     });
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
@@ -204,21 +204,21 @@ describe("ПерегенерироватьКлючModal", () => {
     });
   });
 
-  it("should call onКлючUpdate with updated data after successful regeneration", async () => {
+  it("should call onKeyUpdate with updated data after successful regeneration", async () => {
     const user = userEvent.setup();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
     });
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
-      expect(mockOnКлючUpdate).toHaveBeenCalledOnce();
+      expect(mockOnKeyUpdate).toHaveBeenCalledOnce();
     });
 
-    const updateCall = mockOnКлючUpdate.mock.calls[0][0];
+    const updateCall = mockOnKeyUpdate.mock.calls[0][0];
     expect(updateCall.key_name).toBe("sk-new-regenerated-key");
   });
 
@@ -231,7 +231,7 @@ describe("ПерегенерироватьКлючModal", () => {
     ["1mo", /Новый срок:/],
   ])("should compute a new expiry preview for duration '%s'", async (durationВход, expected) => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
 
     const durationПоле = screen.getByPlaceholderText("e.g. 30s, 30h, 30d");
     await user.clear(durationПоле);
@@ -245,50 +245,50 @@ describe("ПерегенерироватьКлючModal", () => {
   it("should use the API response's ISO expires for the optimistic update", async () => {
     const user = userEvent.setup();
     const apiExpires = "2026-06-13T11:08:16.783000Z";
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
       expires: apiExpires,
     });
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <ПерегенерироватьКлючModal {...defaultProps} selectedТокен={makeТокен({ expires: "2026-12-31T00:00:00Z" })} />,
     );
 
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
-      expect(mockOnКлючUpdate).toHaveBeenCalledOnce();
+      expect(mockOnKeyUpdate).toHaveBeenCalledOnce();
     });
 
-    expect(mockOnКлючUpdate.mock.calls[0][0].expires).toBe(apiExpires);
+    expect(mockOnKeyUpdate.mock.calls[0][0].expires).toBe(apiExpires);
   });
 
   it("should fall back to the previous expiry when the API response omits expires", async () => {
     const user = userEvent.setup();
     const previousExpires = "2026-12-31T00:00:00Z";
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
     });
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <ПерегенерироватьКлючModal {...defaultProps} selectedТокен={makeТокен({ expires: previousExpires })} />,
     );
 
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
-      expect(mockOnКлючUpdate).toHaveBeenCalledOnce();
+      expect(mockOnKeyUpdate).toHaveBeenCalledOnce();
     });
 
-    expect(mockOnКлючUpdate.mock.calls[0][0].expires).toBe(previousExpires);
+    expect(mockOnKeyUpdate.mock.calls[0][0].expires).toBe(previousExpires);
   });
 
   it("should reject unparseable duration values before calling regenerate", async () => {
     const user = userEvent.setup();
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
 
     const durationПоле = screen.getByPlaceholderText("e.g. 30s, 30h, 30d");
     await user.clear(durationПоле);
@@ -299,16 +299,16 @@ describe("ПерегенерироватьКлючModal", () => {
     await waitFor(() => {
       expect(screen.getByText("Must be a duration like 30s, 30m, 24h, 2d, 1w, or 1mo")).toBeInTheDocument();
     });
-    expect(mockПерегенерироватьКлючCall).not.toHaveBeenCalled();
+    expect(mockRegenerateKeyCall).not.toHaveBeenCalled();
     expect(mockNotificationFromBackend).not.toHaveBeenCalled();
   });
 
-  it("should pass form values to onКлючUpdate even when the API echoes back different limits", async () => {
+  it("should pass form values to onKeyUpdate even when the API echoes back different limits", async () => {
     // Regression: when the regenerate endpoint returns GenerateКлючОтвет, it echoes
     // back the existing max_budget / tpm_limit / rpm_limit. The modal must prefer the
     // values the user just submitted, not whatever the server echoes.
     const user = userEvent.setup();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
       // stale values echoed from the server
@@ -317,14 +317,14 @@ describe("ПерегенерироватьКлючModal", () => {
       rpm_limit: 9999,
     });
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
-      expect(mockOnКлючUpdate).toHaveBeenCalledOnce();
+      expect(mockOnKeyUpdate).toHaveBeenCalledOnce();
     });
 
-    const updateCall = mockOnКлючUpdate.mock.calls[0][0];
+    const updateCall = mockOnKeyUpdate.mock.calls[0][0];
     // The form's pre-filled values (from makeТокен) must win over the API echo.
     expect(updateCall.max_budget).toBe(100);
     expect(updateCall.tpm_limit).toBe(5000);
@@ -333,12 +333,12 @@ describe("ПерегенерироватьКлючModal", () => {
 
   it("should display key alias in success view", async () => {
     const user = userEvent.setup();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
     });
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
@@ -348,12 +348,12 @@ describe("ПерегенерироватьКлючModal", () => {
 
   it("should display 'No alias set' when key has no alias", async () => {
     const user = userEvent.setup();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
     });
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} selectedТокен={makeТокен({ key_alias: undefined })} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} selectedТокен={makeТокен({ key_alias: undefined })} />);
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
@@ -361,9 +361,9 @@ describe("ПерегенерироватьКлючModal", () => {
     });
   });
 
-  it("should not call regenerateКлючCall when selectedТокен is null", async () => {
+  it("should not call regenerateKeyCall when selectedТокен is null", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} selectedТокен={null} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} selectedТокен={null} />);
 
     // The form shouldn't even be populated, but we check the button doesn't trigger a call
     const regenerateBtn = screen.queryByRole("button", { name: /Перегенерировать/ });
@@ -371,13 +371,13 @@ describe("ПерегенерироватьКлючModal", () => {
       await user.click(regenerateBtn);
     }
 
-    expect(mockПерегенерироватьКлючCall).not.toHaveBeenCalled();
+    expect(mockRegenerateKeyCall).not.toHaveBeenCalled();
   });
 
   it("should mark expiry as expired withвыход pre-filling a duration", async () => {
     vi.spyOn(Date, "now").mockReturnЗначение(Date.parse("2026-06-06T12:00:00Z"));
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <ПерегенерироватьКлючModal
         {...defaultProps}
         selectedТокен={makeТокен({ expires: "2026-06-01T12:00:00Z", duration: "" })}
@@ -392,7 +392,7 @@ describe("ПерегенерироватьКлючModal", () => {
     vi.spyOn(Date, "now").mockReturnЗначение(Date.parse("2026-06-06T12:00:00Z"));
     const user = userEvent.setup();
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <ПерегенерироватьКлючModal
         {...defaultProps}
         selectedТокен={makeТокен({ expires: "2026-06-01T12:00:00Z", duration: "" })}
@@ -404,23 +404,23 @@ describe("ПерегенерироватьКлючModal", () => {
     await waitFor(() => {
       expect(screen.getByText("Expiration is required for expired keys")).toBeInTheDocument();
     });
-    expect(mockПерегенерироватьКлючCall).not.toHaveBeenCalled();
+    expect(mockRegenerateKeyCall).not.toHaveBeenCalled();
     // Form validation rejections must not surface a backend-style toast.
     expect(mockNotificationFromBackend).not.toHaveBeenCalled();
   });
 
-  it("should pass the correct token identifier to regenerateКлючCall", async () => {
+  it("should pass the correct token identifier to regenerateKeyCall", async () => {
     const user = userEvent.setup();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-key",
       token: "new-hash",
     });
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
-      expect(mockПерегенерироватьКлючCall).toHaveBeenCalledWith(
+      expect(mockRegenerateKeyCall).toHaveBeenCalledWith(
         "123", // accessТокен from mocked useАвторизовано
         "token-hash-123", // selectedТокен.token
         expect.any(Object),
@@ -430,18 +430,18 @@ describe("ПерегенерироватьКлючModal", () => {
 
   it("should report the rotated hash from token_id when the API leaves token null", async () => {
     const user = userEvent.setup();
-    mockПерегенерироватьКлючCall.mockResolvedЗначение({
+    mockRegenerateKeyCall.mockResolvedЗначение({
       key: "sk-new-regenerated-key",
       token: null,
       token_id: "rotated-hash-456",
     });
 
-    renderWithПровайдерs(<ПерегенерироватьКлючModal {...defaultProps} />);
+    renderWithProviders(<ПерегенерироватьКлючModal {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 
     await waitFor(() => {
-      expect(mockOnКлючUpdate).toHaveBeenCalledOnce();
+      expect(mockOnKeyUpdate).toHaveBeenCalledOnce();
     });
-    expect(mockOnКлючUpdate.mock.calls[0][0].token).toBe("rotated-hash-456");
+    expect(mockOnKeyUpdate.mock.calls[0][0].token).toBe("rotated-hash-456");
   });
 });

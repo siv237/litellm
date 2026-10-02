@@ -53,19 +53,19 @@ const renderForm = (
     settings?: Setting[];
     premiumUser?: boolean;
     handleSubmit?: (values: Record<string, unknown>) => void;
-    handleВходChange?: (fieldName: string, newЗначение: unknown) => void;
+    handleInChange?: (fieldName: string, newЗначение: unknown) => void;
     handleResetПоле?: (fieldName: string, index: number) => void;
   } = {},
 ) => {
   const handleSubmit = overrides.handleSubmit ?? vi.fn();
-  const handleВходChange = overrides.handleВходChange ?? vi.fn();
+  const handleInChange = overrides.handleInChange ?? vi.fn();
   const handleResetПоле = overrides.handleResetПоле ?? vi.fn();
   render(
     <table>
       <tbody>
         <DynamicForm
           alertingSettings={overrides.settings ?? SETTINGS}
-          handleВходChange={handleВходChange}
+          handleInChange={handleInChange}
           handleResetПоле={handleResetПоле}
           handleSubmit={handleSubmit}
           premiumUser={overrides.premiumUser ?? false}
@@ -73,7 +73,7 @@ const renderForm = (
       </tbody>
     </table>,
   );
-  return { handleSubmit, handleВходChange, handleResetПоле };
+  return { handleSubmit, handleInChange, handleResetПоле };
 };
 
 const submit = async (user: ReturnType<typeof userEvent.setup>) =>
@@ -96,7 +96,7 @@ describe("DynamicForm submit payload", () => {
     await user.type(screen.getByDisplayЗначение("us-east"), "Z");
     await submit(user);
 
-    expect(handleSubmit).toHaveBeenCalledВремяs(1);
+    expect(handleSubmit).toHaveBeenCalledTimes(1);
     expect(handleSubmit).toHaveBeenCalledWith({ region_name: "us-eastZ" });
   });
 
@@ -162,25 +162,25 @@ describe("DynamicForm submit payload", () => {
 describe("DynamicForm change notifications", () => {
   it("reports a Boolean change to the parent as a boolean", async () => {
     const user = userEvent.setup();
-    const { handleВходChange } = renderForm();
+    const { handleInChange } = renderForm();
 
     await user.click(screen.getByRole("switch"));
 
-    expect(handleВходChange).toHaveBeenCalledWith("slack_alerting", true);
+    expect(handleInChange).toHaveBeenCalledWith("slack_alerting", true);
   });
 
   it("reports an Integer change to the parent as a number", async () => {
     const user = userEvent.setup();
-    const { handleВходChange } = renderForm();
+    const { handleInChange } = renderForm();
 
     await user.type(screen.getByDisplayЗначение("12"), "8");
 
-    expect(handleВходChange).toHaveBeenCalledWith("daily_report_frequency", 128);
+    expect(handleInChange).toHaveBeenCalledWith("daily_report_frequency", 128);
   });
 
   it("renders a Float field as a decimal-friendly number input and reports changes as numbers", async () => {
     const user = userEvent.setup();
-    const { handleВходChange } = renderForm();
+    const { handleInChange } = renderForm();
 
     const input = screen.getByDisplayЗначение("5.5");
     expect(input).toHaveAttribute("type", "number");
@@ -188,7 +188,7 @@ describe("DynamicForm change notifications", () => {
 
     await user.type(input, "1");
 
-    expect(handleВходChange).toHaveBeenCalledWith("daily_spend_per_user_threshold", 5.51);
+    expect(handleInChange).toHaveBeenCalledWith("daily_spend_per_user_threshold", 5.51);
   });
 
   it("reports a reset with the field name and its row index", async () => {
@@ -237,7 +237,7 @@ describe("DynamicForm presentation", () => {
 
     expect(screen.getByText("daily_report_frequency")).toBeInTheDocument();
     expect(screen.getByText("How often the report runs")).toBeInTheDocument();
-    expect(screen.getВсеByText("In DB")).toHaveLength(2);
+    expect(screen.getAllByText("In DB")).toHaveLength(2);
     expect(screen.getByText("In Конфигурация")).toBeInTheDocument();
     expect(screen.getByText("Not Set")).toBeInTheDocument();
   });

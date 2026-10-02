@@ -1,7 +1,7 @@
-import { renderWithПровайдерs, screen, waitFor } from "../../../../../tests/test-utils";
+import { renderWithProviders, screen, waitFor } from "../../../../../tests/test-utils";
 import userEvent, { PointerEventsCheckLevel } from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import AddРежимlPanel from "./AddРежимlPanel";
+import AddModelPanel from "./AddModelPanel";
 
 const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCreateCall = vi.fn();
 const mockPtuEnabled = vi.fn();
@@ -18,11 +18,11 @@ vi.mock("@/components/networking", async (importOriginal) => {
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({ default: () => mockАвторизовано() }));
 
-vi.mock("@/app/(dashboard)/hooks/uiSettings/usePtuСтоимостьAttributionEnabled", () => ({
-  usePtuСтоимостьAttributionEnabled: () => mockPtuEnabled(),
+vi.mock("@/app/(dashboard)/hooks/uiSettings/usePtuCostAttributionEnabled", () => ({
+  usePtuCostAttributionEnabled: () => mockPtuEnabled(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useРежимlСтоимостьMap", () => ({ useРежимlСтоимостьMap: () => ({ data: {} }) }));
+vi.mock("@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useModelCostMap", () => ({ useModelCostMap: () => ({ data: {} }) }));
 
 vi.mock("@/app/(dashboard)/hooks/credentials/useУчётные данные", () => ({
   useУчётные данные: () => ({ data: { credentials: [] } }),
@@ -47,14 +47,14 @@ vi.mock("@/app/(dashboard)/hooks/tags/useТеги", () => ({
   useТеги: () => ({ data: {}, isLoading: false, error: null }),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/providers/useПровайдерПолеs", () => ({
-  useПровайдерПолеs: () => ({
+vi.mock("@/app/(dashboard)/hooks/providers/useProviderFields", () => ({
+  useProviderFields: () => ({
     data: [
       {
         provider: "OpenAI",
         provider_display_name: "OpenAI",
         litellm_provider: "openai",
-        default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_placeholder: "gpt-4o",
+        default_model_placeholder: "gpt-4o",
         credential_fields: [
           { key: "api_key", label: "API Ключ", field_type: "password", required: false },
           { key: "api_base", label: "API Base", field_type: "text", required: false },
@@ -66,11 +66,11 @@ vi.mock("@/app/(dashboard)/hooks/providers/useПровайдерПолеs", () =
   }),
 }));
 
-vi.mock("@/components/vector_store_management/VectorStoreВыбратьor", () => ({
+vi.mock("@/components/vector_store_management/VectorStoreSelector", () => ({
   default: () => <div data-testid="vector-store-selector" />,
 }));
 
-const lastСозданРежимl = () => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCreateCall.mock.calls.at(-1)?.[1];
+const lastCreatedModel = () => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCreateCall.mock.calls.at(-1)?.[1];
 
 const PROXY_ADMIN = {
   token: "t",
@@ -79,7 +79,7 @@ const PROXY_ADMIN = {
   userEmail: "a@b.c",
   userRole: "proxy_admin",
   premiumUser: true,
-  disabledЛичнаяКлючCreation: false,
+  disabledPersonalKeyCreation: false,
   showSSOBanner: false,
 };
 
@@ -97,13 +97,13 @@ const advancedOpenExtras = {
   vector_store_ids: undefined,
 };
 
-const baseРежимlInfo = { access_groups: undefined, mode: undefined };
+const baseModelInfo = { access_groups: undefined, mode: undefined };
 
 const { api_base: _omitted, ...ALWAYS_MOUNTED_WITHOUT_API_BASE } = alwaysMounted;
 
 const setup = async () => {
   const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
-  renderWithПровайдерs(<AddРежимlPanel />);
+  renderWithProviders(<AddModelPanel />);
   await screen.findByText("Провайдер");
 
   const openAdvanced = async () => {
@@ -135,9 +135,9 @@ const setup = async () => {
   return { user, openAdvanced, closeAdvanced, fillОбязательно, submit, submitExpectingRejection };
 };
 
-describe("AddРежимlPanel submit payload contract", () => {
+describe("AddModelPanel submit payload contract", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockPtuEnabled.mockReturnЗначение(false);
     mockАвторизовано.mockReturnЗначение(PROXY_ADMIN);
   });
@@ -147,10 +147,10 @@ describe("AddРежимlPanel submit payload contract", () => {
     await fillОбязательно();
     await submit();
 
-    expect(lastСозданРежимl()).toStrictEqual({
+    expect(lastCreatedModel()).toStrictEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
       litellm_params: { ...alwaysMounted },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseРежимlInfo },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
     });
   });
 
@@ -160,10 +160,10 @@ describe("AddРежимlPanel submit payload contract", () => {
     await openAdvanced();
     await submit();
 
-    expect(lastСозданРежимl()).toStrictEqual({
+    expect(lastCreatedModel()).toStrictEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
       litellm_params: { ...alwaysMounted, ...advancedOpenExtras },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseРежимlInfo },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
     });
   });
 
@@ -174,10 +174,10 @@ describe("AddРежимlPanel submit payload contract", () => {
     await user.type(screen.getByLabelText("LiteLLM Params"), '{{"rpm": 7}');
     await submit();
 
-    expect(lastСозданРежимl()).toStrictEqual({
+    expect(lastCreatedModel()).toStrictEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
       litellm_params: { ...alwaysMounted, ...advancedOpenExtras, rpm: 7 },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseРежимlInfo },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
     });
   });
 
@@ -189,10 +189,10 @@ describe("AddРежимlPanel submit payload contract", () => {
     await closeAdvanced();
     await submit();
 
-    expect(lastСозданРежимl()).toStrictEqual({
+    expect(lastCreatedModel()).toStrictEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
       litellm_params: { ...alwaysMounted },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseРежимlInfo },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
     });
   });
 
@@ -207,10 +207,10 @@ describe("AddРежимlPanel submit payload contract", () => {
 
     await submit();
 
-    expect(lastСозданРежимl()).toStrictEqual({
+    expect(lastCreatedModel()).toStrictEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
       litellm_params: { ...alwaysMounted, ...advancedOpenExtras, rpm: 7 },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseРежимlInfo },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
     });
   });
 
@@ -223,7 +223,7 @@ describe("AddРежимlPanel submit payload contract", () => {
     await user.type(screen.getByLabelText("Выход Стоимость (per 1M tokens)"), "9");
     await submit();
 
-    expect(lastСозданРежимl()).toStrictEqual({
+    expect(lastCreatedModel()).toStrictEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
       litellm_params: {
         ...alwaysMounted,
@@ -232,7 +232,7 @@ describe("AddРежимlPanel submit payload contract", () => {
         выходput_cost_per_token: 0.000009,
         cache_read_input_token_cost: 0.000003,
       },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseРежимlInfo },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
     });
   });
 
@@ -244,14 +244,14 @@ describe("AddРежимlPanel submit payload contract", () => {
     await screen.findByText("Add Injection Point");
     await submit();
 
-    expect(lastСозданРежимl()).toStrictEqual({
+    expect(lastCreatedModel()).toStrictEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
       litellm_params: {
         ...alwaysMounted,
         ...advancedOpenExtras,
         cache_control_injection_points: [{ location: "message" }],
       },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseРежимlInfo },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
     });
   });
 
@@ -266,14 +266,14 @@ describe("AddРежимlPanel submit payload contract", () => {
     await user.type(screen.getByPlaceholderText("Optional"), "3");
     await submit();
 
-    expect(lastСозданРежимl()).toStrictEqual({
+    expect(lastCreatedModel()).toStrictEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
       litellm_params: {
         ...alwaysMounted,
         ...advancedOpenExtras,
         cache_control_injection_points: [{ location: "message", role: "system", index: "3" }],
       },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseРежимlInfo },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
     });
   });
 
@@ -284,17 +284,17 @@ describe("AddРежимlPanel submit payload contract", () => {
     await screen.findByText("Выбрать Team");
     await submit();
 
-    expect(lastСозданРежимl()).toStrictEqual({
+    expect(lastCreatedModel()).toStrictEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
       litellm_params: { ...alwaysMounted },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseРежимlInfo, team_id: undefined },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo, team_id: undefined },
     });
   });
 });
 
-describe("AddРежимlPanel empty-string skip", () => {
+describe("AddModelPanel empty-string skip", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockPtuEnabled.mockReturnЗначение(false);
     mockАвторизовано.mockReturnЗначение(PROXY_ADMIN);
   });
@@ -305,7 +305,7 @@ describe("AddРежимlPanel empty-string skip", () => {
     await user.type(screen.getByLabelText("API Base"), "https://example.test");
     await submit();
 
-    expect(lastСозданРежимl().litellm_params).toStrictEqual({
+    expect(lastCreatedModel().litellm_params).toStrictEqual({
       ...alwaysMounted,
       api_base: "https://example.test",
     });
@@ -319,15 +319,15 @@ describe("AddРежимlPanel empty-string skip", () => {
     await user.clear(apiBase);
     await submit();
 
-    const params = lastСозданРежимl().litellm_params;
+    const params = lastCreatedModel().litellm_params;
     expect(params).not.toHaveСвойство("api_base");
     expect(params).toStrictEqual(ALWAYS_MOUNTED_WITHOUT_API_BASE);
   });
 });
 
-describe("AddРежимlPanel validation gates", () => {
+describe("AddModelPanel validation gates", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockPtuEnabled.mockReturnЗначение(true);
     mockАвторизовано.mockReturnЗначение(PROXY_ADMIN);
   });
@@ -373,26 +373,26 @@ describe("AddРежимlPanel validation gates", () => {
   });
 });
 
-describe("AddРежимlPanel behaviours the removed Расширенные настройки form instance never drove", () => {
+describe("AddModelPanel behaviours the removed Расширенные настройки form instance never drove", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockPtuEnabled.mockReturnЗначение(false);
     mockАвторизовано.mockReturnЗначение(PROXY_ADMIN);
   });
 
-  it("leaves LiteLLM Params untouched when pass through rвыходes is switched on", async () => {
+  it("leaves LiteLLM Params untouched when pass through routes is switched on", async () => {
     const { user, openAdvanced, fillОбязательно, submit } = await setup();
     await fillОбязательно();
     await openAdvanced();
-    await user.click(screen.getByRole("switch", { name: "Use in pass through rвыходes" }));
+    await user.click(screen.getByRole("switch", { name: "Use in pass through routes" }));
     expect(screen.getByLabelText("LiteLLM Params")).toHaveЗначение("");
 
     await submit();
 
-    expect(lastСозданРежимl()).toStrictEqual({
+    expect(lastCreatedModel()).toStrictEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
       litellm_params: { ...alwaysMounted, ...advancedOpenExtras, use_in_pass_through: true },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseРежимlInfo },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
     });
   });
 
@@ -409,7 +409,7 @@ describe("AddРежимlPanel behaviours the removed Расширенные на
 
     await submit();
 
-    expect(lastСозданРежимl()).toStrictEqual({
+    expect(lastCreatedModel()).toStrictEqual({
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
       litellm_params: {
         ...alwaysMounted,
@@ -417,7 +417,7 @@ describe("AddРежимlPanel behaviours the removed Расширенные на
         input_cost_per_token: 0.000003,
         cache_read_input_token_cost: 0.000003,
       },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseРежимlInfo },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
     });
   });
 });

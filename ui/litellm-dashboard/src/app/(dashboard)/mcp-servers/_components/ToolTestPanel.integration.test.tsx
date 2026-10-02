@@ -1,12 +1,12 @@
 import React from "react";
-import { fireEvent, renderWithПровайдерs, screen } from "../../../../../tests/test-utils";
+import { fireEvent, renderWithProviders, screen } from "../../../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import type { UserEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi, type Mock } from "vitest";
 
 import { ToolTestPanel } from "./ToolTestPanel";
 import { ВходSchema, MCPTool } from "@/components/mcp_tools/types";
-import { chooseВыбратьOption } from "../../../../../tests/test-utils";
+import { chooseSelectOption } from "../../../../../tests/test-utils";
 
 const buildTool = (schema: ВходSchema | string): MCPTool => ({
   name: "demo-tool",
@@ -16,7 +16,7 @@ const buildTool = (schema: ВходSchema | string): MCPTool => ({
 });
 
 const renderPanel = (schema: ВходSchema | string) =>
-  renderWithПровайдерs(
+  renderWithProviders(
     <ToolTestPanel
       tool={buildTool(schema)}
       onSubmit={vi.fn()}
@@ -164,7 +164,7 @@ describe("ToolTestPanel defaults", () => {
 describe("ToolTestPanel argument payload", () => {
   const submitPanel = async (schema: ВходSchema | string, drive?: (user: UserEvent) => Promise<void>) => {
     const onSubmit = vi.fn();
-    renderWithПровайдерs(
+    renderWithProviders(
       <ToolTestPanel
         tool={buildTool(schema)}
         onSubmit={onSubmit}
@@ -195,7 +195,7 @@ describe("ToolTestPanel argument payload", () => {
 
   it("sends what the user typed into the fallback input when the tool has no real schema", async () => {
     const onSubmit = vi.fn();
-    renderWithПровайдерs(
+    renderWithProviders(
       <ToolTestPanel
         tool={buildTool("tool_input_schema")}
         onSubmit={onSubmit}
@@ -230,7 +230,7 @@ describe("ToolTestPanel argument payload", () => {
     const onSubmit = await submitPanel(
       { type: "object", properties: { active: { type: "boolean", default: false } } },
       async (user) => {
-        await chooseВыбратьOption(user, screen.getByLabelText("active"), "Истина");
+        await chooseSelectOption(user, screen.getByLabelText("active"), "Истина");
       },
     );
 
@@ -360,7 +360,7 @@ describe("ToolTestPanel schema changes under a stable tool name", () => {
       properties: { query: { type: "string" }, limit: { type: "integer", default: 5 } },
     };
 
-    const { rerender } = renderWithПровайдерs(renderWith(before, onSubmit));
+    const { rerender } = renderWithProviders(renderWith(before, onSubmit));
     const user = userEvent.setup();
     await user.type(screen.getByLabelText("message"), "stale value");
 
@@ -380,7 +380,7 @@ describe("ToolTestPanel schema changes under a stable tool name", () => {
     const onSubmit = vi.fn();
     const schema = (): ВходSchema => ({ type: "object", properties: { message: { type: "string" } } });
 
-    const { rerender } = renderWithПровайдерs(renderWith(schema(), onSubmit));
+    const { rerender } = renderWithProviders(renderWith(schema(), onSubmit));
     const user = userEvent.setup();
     await user.type(screen.getByLabelText("message"), "typed by hand");
 
@@ -404,7 +404,7 @@ describe("ToolTestPanel необязательно union-typed parameters", () =
 
   const runPanel = async (drive: () => void) => {
     const onSubmit = vi.fn();
-    renderWithПровайдерs(
+    renderWithProviders(
       <ToolTestPanel
         tool={buildTool(qaEchoSchema)}
         onSubmit={onSubmit}
@@ -475,7 +475,7 @@ describe("ToolTestPanel необязательно union-typed parameters", () =
 it("should submit an empty enum choice while omitting unset choices and retaining false", async () => {
   const user = userEvent.setup();
   const onSubmit = vi.fn();
-  renderWithПровайдерs(
+  renderWithProviders(
     <ToolTestPanel
       tool={buildTool({
         type: "object",
@@ -495,7 +495,7 @@ it("should submit an empty enum choice while omitting unset choices and retainin
     screen.getByRole("combobox", { name: "mode" }),
     screen.getByRole("option", { name: "Выбрать mode" }),
   );
-  await chooseВыбратьOption(user, screen.getByRole("combobox", { name: "active" }), "Ложь");
+  await chooseSelectOption(user, screen.getByRole("combobox", { name: "active" }), "Ложь");
   await user.click(screen.getByRole("button", { name: "Call Tool" }));
   expect(onSubmit).toHaveBeenLastCalledWith({ active: false });
   await user.selectOptions(

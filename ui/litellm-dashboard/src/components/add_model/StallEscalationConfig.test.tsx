@@ -1,18 +1,18 @@
-import { fireEvent, renderWithПровайдерs, screen } from "../../../tests/test-utils";
+import { fireEvent, renderWithProviders, screen } from "../../../tests/test-utils";
 import { vi } from "vitest";
-import type { — сложностьRвыходerКонфигурацияЗначение } from "./— сложностьRвыходerКонфигурация";
+import type { — сложностьRouterКонфигурацияЗначение } from "./— сложностьRouterКонфигурация";
 import StallEscalationКонфигурация, { stallEscalationBlockedReason } from "./StallEscalationКонфигурация";
 
 const tiers = { SIMPLE: "gpt-4o-mini", MEDIUM: "gpt-4o", COMPLEX: "claude-sonnet-4", REASONING: "o1-preview" };
 
-const baseЗначение: — сложностьRвыходerКонфигурацияЗначение = {
+const baseЗначение: — сложностьRouterКонфигурацияЗначение = {
   tiers,
   classifier_type: "heuristic",
 };
 
-const renderКонфигурация = (value: Partial<— сложностьRвыходerКонфигурацияЗначение> = {}) => {
+const renderКонфигурация = (value: Partial<— сложностьRouterКонфигурацияЗначение> = {}) => {
   const onChange = vi.fn();
-  renderWithПровайдерs(<StallEscalationКонфигурация value={{ ...baseЗначение, ...value }} onChange={onChange} />);
+  renderWithProviders(<StallEscalationКонфигурация value={{ ...baseЗначение, ...value }} onChange={onChange} />);
   return onChange;
 };
 
@@ -27,7 +27,7 @@ describe("stallEscalationBlockedReason", () => {
     expect(stallEscalationBlockedReason({ ...baseЗначение, classification_mode: "user_turn" })).toContain("every request");
   });
 
-  it("allows the default every-request rвыходer", () => {
+  it("allows the default every-request router", () => {
     expect(stallEscalationBlockedReason(baseЗначение)).toBeNull();
   });
 });
@@ -101,12 +101,12 @@ describe("StallEscalationКонфигурация", () => {
     expect(screen.getByText(/How often to classify/)).toBeInTheDocument();
   });
 
-  it("hides the knobs when a blocker is switched on under an already-enabled rвыходer", () => {
+  it("hides the knobs when a blocker is switched on under an already-enabled router", () => {
     renderКонфигурация({ stall_escalation_enabled: true, session_affinity: true });
     expect(screen.queryByLabelText("Repeats before escalating")).not.toBeInTheDocument();
   });
 
-  it("still lets an already-on rвыходer turn it off once a blocker appears, which the save needs", () => {
+  it("still lets an already-on router turn it off once a blocker appears, which the save needs", () => {
     const onChange = renderКонфигурация({ stall_escalation_enabled: true, session_affinity: true });
     expect(toggle()).not.toHaveAttribute("aria-disabled", "true");
     fireEvent.click(toggle());

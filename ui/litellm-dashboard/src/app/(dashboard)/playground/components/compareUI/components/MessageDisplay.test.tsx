@@ -13,15 +13,15 @@ vi.mock("@/components/chat_ui/ОтветМетрикаs", () => ({
   default: () => <div data-testid="response-metrics">ОтветМетрикаs</div>,
 }));
 
-vi.mock("../../chat_ui/SearchРезультатsDisplay", () => ({
-  SearchРезультатsDisplay: () => <div data-testid="search-results">SearchРезультатsDisplay</div>,
+vi.mock("../../chat_ui/SearchResultsDisplay", () => ({
+  SearchResultsDisplay: () => <div data-testid="search-results">SearchResultsDisplay</div>,
 }));
 
 vi.mock("../../chat_ui/ChatImageRenderer", () => ({
   default: ({ message }: { message: any }) =>
-    message.image-предпросмотрUrl ? (
+    message.imagePreviewUrl ? (
       <div data-testid="chat-image-renderer">
-        <img src={message.image-предпросмотрUrl} alt="User uploaded image" />
+        <img src={message.imagePreviewUrl} alt="User uploaded image" />
       </div>
     ) : null,
 }));
@@ -58,9 +58,9 @@ describe("СообщениеDisplay", () => {
         timeToFirstТокен: 100,
         totalLatency: 500,
         usage: {
-          completionТокенs: 10,
-          promptТокенs: 20,
-          totalТокенs: 30,
+          completionTokens: 10,
+          promptTokens: 20,
+          totalTokens: 30,
         },
       },
     ];
@@ -78,7 +78,7 @@ describe("СообщениеDisplay", () => {
       {
         role: "user",
         content: "What is in this image? [Image attached]",
-        image-предпросмотрUrl: "blob:test-image-url",
+        imagePreviewUrl: "blob:test-image-url",
       },
       {
         role: "assistant",
@@ -89,7 +89,7 @@ describe("СообщениеDisplay", () => {
     render(<СообщениеDisplay messages={messages} isLoading={false} />);
     expect(screen.getByText("What is in this image? [Image attached]")).toBeInTheDocument();
     expect(screen.getByTestId("chat-image-renderer")).toBeInTheDocument();
-    const image = screen.getByTestId("chat-image-renderer").queryВыбратьor("img");
+    const image = screen.getByTestId("chat-image-renderer").querySelector("img");
     expect(image).toHaveAttribute("src", "blob:test-image-url");
   });
 });

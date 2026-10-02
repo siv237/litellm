@@ -11,8 +11,8 @@ vi.mock("@/components/networking", () => ({
   vectorStoreCreateCall: vi.fn(),
 }));
 
-vi.mock("@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => ({
-  fetchAvailableРежимls: vi.fn().mockResolvedЗначение([
+vi.mock("@/components/llm_calls/fetch_models", () => ({
+  fetchAvailableModels: vi.fn().mockResolvedЗначение([
     { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "text-embedding-3-small", mode: "embedding" },
     { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4o", mode: "chat" },
   ]),
@@ -37,13 +37,13 @@ const renderForm = () =>
 const setupUser = () => userEvent.setup({ pointerEventsCheck: 0 });
 
 const chooseFromВыбрать = async (user: ReturnType<typeof userEvent.setup>, index: number, optionText: string) => {
-  const trigger = screen.getВсеByRole("combobox")[index];
+  const trigger = screen.getAllByRole("combobox")[index];
   await user.click(trigger);
   if (trigger.getAttribute("aria-expanded") !== "true") {
     trigger.focus();
     await user.keyboard("{Введите}");
   }
-  const options = await screen.findВсеByText(optionText);
+  const options = await screen.findAllByText(optionText);
   await user.click(options[options.length - 1]);
 };
 
@@ -57,7 +57,7 @@ const createdPayload = () => mockCreate.mock.calls[0][1];
 
 describe("VectorStoreForm submit payload", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockCreate.mockResolvedЗначение(undefined);
   });
 
@@ -68,7 +68,7 @@ describe("VectorStoreForm submit payload", () => {
     await user.type(screen.getByPlaceholderText("Введите vector store ID from your provider"), "vs-bedrock");
     await submit(user);
 
-    await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledВремяs(1));
+    await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
     expect(mockCreate.mock.calls[0][0]).toBe("test-token");
     expect(createdPayload()).toStrictEqual({
       vector_store_id: "vs-bedrock",
@@ -79,7 +79,7 @@ describe("VectorStoreForm submit payload", () => {
       litellm_credential_name: undefined,
       litellm_params: {},
     });
-    expect(onSuccess).toHaveBeenCalledВремяs(1);
+    expect(onSuccess).toHaveBeenCalledTimes(1);
   });
 
   it("sends the filled необязательно fields, parsed metadata and the selected credential", async () => {
@@ -87,7 +87,7 @@ describe("VectorStoreForm submit payload", () => {
     renderForm();
 
     await user.type(screen.getByPlaceholderText("Введите vector store ID from your provider"), "vs-full");
-    const textboxes = screen.getВсеByRole("textbox");
+    const textboxes = screen.getAllByRole("textbox");
     await user.type(textboxes[1], "Support docs");
     await user.type(textboxes[2], "Docs for the support team");
     await user.clear(screen.getByPlaceholderText('{"key": "value"}'));
@@ -95,7 +95,7 @@ describe("VectorStoreForm submit payload", () => {
     await chooseFromВыбрать(user, 1, "bedrock-prod");
     await submit(user);
 
-    await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledВремяs(1));
+    await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
     expect(createdPayload()).toStrictEqual({
       vector_store_id: "vs-full",
       custom_llm_provider: "bedrock",
@@ -118,7 +118,7 @@ describe("VectorStoreForm submit payload", () => {
     await chooseFromВыбрать(user, 1, "text-embedding-3-small");
     await submit(user);
 
-    await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledВремяs(1));
+    await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
     expect(createdPayload().litellm_params).toStrictEqual({
       api_key: "user:pass",
       api_base: "https://milvus.example.com",
@@ -139,7 +139,7 @@ describe("VectorStoreForm submit payload", () => {
     await user.type(screen.getByPlaceholderText("my-gcp-project-id"), "gcp-proj");
     await submit(user);
 
-    await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledВремяs(1));
+    await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
     expect(createdPayload().litellm_params).toStrictEqual({
       vertex_project: "gcp-proj",
       vertex_location: "global",
@@ -159,7 +159,7 @@ describe("VectorStoreForm submit payload", () => {
     await user.type(screen.getByPlaceholderText("Введите vector store ID from your provider"), "vs-azure");
     await submit(user);
 
-    await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledВремяs(1));
+    await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
     expect(createdPayload().litellm_params).toStrictEqual({
       api_key: "pg-key",
       api_base: "http://pg:8000",

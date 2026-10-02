@@ -20,7 +20,7 @@ describe("PromptEditorHeader", () => {
         isSaving={false}
         accessТокен="token"
         environment="development"
-        onОкружениеChange={vi.fn()}
+        onEnvironmentChange={vi.fn()}
       />,
     );
     fireEvent.change(screen.getByDisplayЗначение("welcome"), { target: { value: "greeting" } });
@@ -45,7 +45,7 @@ describe("PromptEditorHeader", () => {
         isSaving={false}
         accessТокен="token"
         environment={environment}
-        onОкружениеChange={vi.fn()}
+        onEnvironmentChange={vi.fn()}
       />,
     );
 

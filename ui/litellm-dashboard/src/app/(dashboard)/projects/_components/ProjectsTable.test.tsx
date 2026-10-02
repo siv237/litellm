@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { OnUrlUpdateFunction } from "nuqs/adapters/testing";
-import { renderWithПровайдерs, screen, waitFor, within } from "../../../../../tests/test-utils";
+import { renderWithProviders, screen, waitFor, within } from "../../../../../tests/test-utils";
 import { ProjectsТаблица } from "./ProjectsТаблица";
 import { ProjectОтвет } from "@/app/(dashboard)/hooks/projects/useProjects";
 
@@ -31,7 +31,7 @@ const allProjects = Array.from({ length: 14 }, (_, index) => makeProject(index +
 interface RenderOptions {
   projects?: ProjectОтвет[];
   isLoading?: boolean;
-  isФильтрed?: boolean;
+  isFiltered?: boolean;
   searchParams?: string;
   onUrlUpdate?: OnUrlUpdateFunction;
 }
@@ -39,29 +39,29 @@ interface RenderOptions {
 const renderТаблица = ({
   projects = allProjects,
   isLoading = false,
-  isФильтрed = false,
+  isFiltered = false,
   ...providers
 }: RenderOptions) => {
   const table = (projectList: ProjectОтвет[], loading: boolean, filtered: boolean) => (
     <ProjectsТаблица
       projects={projectList}
       isLoading={loading}
-      isФильтрed={filtered}
+      isFiltered={filtered}
       onProjectClick={vi.fn()}
       teamAliasMap={new Map()}
-      isКомандыLoading={false}
+      isTeamsLoading={false}
     />
   );
-  const view = renderWithПровайдерs(table(projects, isLoading, isФильтрed), providers);
+  const view = renderWithProviders(table(projects, isLoading, isFiltered), providers);
   return {
     ...view,
     rerenderWith: (next: ProjectОтвет[], filtered = false) => view.rerender(table(next, false, filtered)),
   };
 };
 
-const firstDataRow = () => within(screen.getВсеByRole("row")[1]);
+const firstDataRow = () => within(screen.getAllByRole("row")[1]);
 
-const dataRowCount = () => screen.getВсеByRole("row").length - 1;
+const dataRowCount = () => screen.getAllByRole("row").length - 1;
 
 describe("ProjectsТаблица pagination URL state", () => {
   it("should render the second page of projects for a ?page=2 deep link", () => {
@@ -104,7 +104,7 @@ describe("ProjectsТаблица pagination URL state", () => {
     const onUrlUpdate = vi.fn();
     const stillLoading: RenderOptions = { projects: [], isLoading: true, searchParams: "?page=2", onUrlUpdate };
     const { rerenderWith } = renderТаблица(stillLoading);
-    await waitFor(() => expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0));
+    await waitFor(() => expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0));
 
     rerenderWith(allProjects);
 
@@ -143,7 +143,7 @@ describe("ProjectsТаблица pagination URL state", () => {
 
     await waitFor(() => expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-14 of 14"));
     expect(firstDataRow().getByText("Project 01")).toBeInTheDocument();
-    expect(onUrlUpdate).toHaveBeenCalledВремяs(1);
+    expect(onUrlUpdate).toHaveBeenCalledTimes(1);
     const lastUpdate = onUrlUpdate.mock.calls.at(-1)?.[0];
     expect(lastUpdate.searchParams.get("page")).toBeNull();
     expect(lastUpdate.searchParams.get("page_size")).toBe("25");

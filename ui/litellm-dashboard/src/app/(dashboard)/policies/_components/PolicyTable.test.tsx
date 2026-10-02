@@ -1,7 +1,7 @@
 import React from "react";
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs } from "@/../tests/test-utils";
+import { renderWithProviders } from "@/../tests/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import ПолитикаТаблица from "./ПолитикаТаблица";
 import { Политика } from "@/components/policies/types";
@@ -28,11 +28,11 @@ const defaultProps = {
 
 describe("ПолитикаТаблица", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render column headers", () => {
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} />);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} />);
     expect(screen.getByText("Name")).toBeInTheDocument();
     expect(screen.getByText("Описание")).toBeInTheDocument();
     expect(screen.getByText("Гардрейлы (добавить)")).toBeInTheDocument();
@@ -40,12 +40,12 @@ describe("ПолитикаТаблица", () => {
   });
 
   it("should show skeleton rows when isLoading is true", () => {
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} isLoading />);
-    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} isLoading />);
+    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
   });
 
   it("should show the empty state when there are no policies", () => {
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} />);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} />);
     expect(screen.getByText("No policies found")).toBeInTheDocument();
   });
 
@@ -54,7 +54,7 @@ describe("ПолитикаТаблица", () => {
       makeПолитика({ policy_name: "alpha-policy", policy_id: "id-1" }),
       makeПолитика({ policy_name: "beta-policy", policy_id: "id-2" }),
     ];
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={policies} />);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={policies} />);
     expect(screen.getByRole("button", { name: "alpha-policy" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "beta-policy" })).toBeInTheDocument();
   });
@@ -64,8 +64,8 @@ describe("ПолитикаТаблица", () => {
       makeПолитика({ policy_name: "zeta-policy", policy_id: "id-z" }),
       makeПолитика({ policy_name: "alpha-policy", policy_id: "id-a" }),
     ];
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={policies} />);
-    const rows = screen.getВсеByRole("row").slice(1);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={policies} />);
+    const rows = screen.getAllByRole("row").slice(1);
     expect(within(rows[0]).getByText("alpha-policy")).toBeInTheDocument();
     expect(within(rows[1]).getByText("zeta-policy")).toBeInTheDocument();
   });
@@ -73,7 +73,7 @@ describe("ПолитикаТаблица", () => {
   it("should call onViewClick with the policy_id when the policy name is clicked", async () => {
     const user = userEvent.setup();
     const policy = makeПолитика({ policy_name: "my-policy", policy_id: "view-id-1" });
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={[policy]} />);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={[policy]} />);
     await user.click(screen.getByRole("button", { name: "my-policy" }));
     expect(defaultProps.onViewClick).toHaveBeenCalledWith("view-id-1");
   });
@@ -81,7 +81,7 @@ describe("ПолитикаТаблица", () => {
   it("should call onDeleteClick with policy_id and policy_name from the actions menu", async () => {
     const user = userEvent.setup();
     const policy = makeПолитика({ policy_name: "del-policy", policy_id: "del-id-1" });
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={[policy]} />);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={[policy]} />);
     await user.click(screen.getByTestId("policy-actions-del-id-1"));
     await user.click(await screen.findByTestId("policy-action-delete"));
     expect(defaultProps.onDeleteClick).toHaveBeenCalledWith("del-id-1", "del-policy");
@@ -90,7 +90,7 @@ describe("ПолитикаТаблица", () => {
   it("should call onEditClick with the policy from the actions menu", async () => {
     const user = userEvent.setup();
     const policy = makeПолитика({ policy_name: "edit-policy", policy_id: "edit-id-1" });
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={[policy]} />);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={[policy]} />);
     await user.click(screen.getByTestId("policy-actions-edit-id-1"));
     await user.click(await screen.findByTestId("policy-action-edit"));
     expect(defaultProps.onEditClick).toHaveBeenCalledWith(policy);
@@ -98,7 +98,7 @@ describe("ПолитикаТаблица", () => {
 
   it("should not show the actions menu for non-admins", () => {
     const policy = makeПолитика();
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={[policy]} isAdmin={false} />);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={[policy]} isAdmin={false} />);
     expect(screen.queryByTestId(`policy-actions-${policy.policy_id}`)).not.toBeInTheDocument();
   });
 
@@ -116,7 +116,7 @@ describe("ПолитикаТаблица", () => {
       version_number: 2,
     };
     const policies = [makeПолитика(publishedВерсия), makeПолитика(productionВерсия)];
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={policies} />);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={policies} />);
     expect(screen.getByText("2 versions")).toBeInTheDocument();
   });
 
@@ -125,13 +125,13 @@ describe("ПолитикаТаблица", () => {
       makeПолитика({ policy_name: "shared", policy_id: "s1", version_status: "published" }),
       makeПолитика({ policy_name: "shared", policy_id: "s2", version_status: "production" }),
     ];
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={policies} />);
-    expect(screen.getВсеByText("shared")).toHaveLength(1);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={policies} />);
+    expect(screen.getAllByText("shared")).toHaveLength(1);
   });
 
   it("should show an overflow badge when more than 2 гардрейловs_add exist", () => {
     const policy = makeПолитика({ гардрейловs_add: ["g1", "g2", "g3", "g4"] });
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={[policy]} />);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={[policy]} />);
     expect(screen.getByText("+2")).toBeInTheDocument();
   });
 
@@ -141,7 +141,7 @@ describe("ПолитикаТаблица", () => {
       makeПолитика({ policy_name: "grouped", policy_id: "published-id", version_status: "published" }),
       makeПолитика({ policy_name: "grouped", policy_id: "prod-id", version_status: "production" }),
     ];
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={policies} />);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={policies} />);
     await user.click(screen.getByRole("button", { name: /grouped/ }));
     expect(defaultProps.onViewClick).toHaveBeenCalledWith("prod-id");
   });
@@ -161,15 +161,15 @@ describe("ПолитикаТаблица", () => {
 
   it("should render a config policy and a same-named DB draft as separate rows", () => {
     const policies = [makeПолитика(sameNamedDbЧерновик), makeПолитика(configTwin)];
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={policies} />);
-    expect(screen.getВсеByText("config-policy")).toHaveLength(2);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={policies} />);
+    expect(screen.getAllByText("config-policy")).toHaveLength(2);
     expect(screen.getByText("Конфигурация")).toBeInTheDocument();
   });
 
   it("should keep a same-named DB draft reachable next to a config policy", async () => {
     const user = userEvent.setup();
     const policies = [makeПолитика(sameNamedDbЧерновик), makeПолитика(configTwin)];
-    renderWithПровайдерs(<ПолитикаТаблица {...defaultProps} policies={policies} />);
+    renderWithProviders(<ПолитикаТаблица {...defaultProps} policies={policies} />);
     await user.click(screen.getByRole("button", { name: "config-policy" }));
     expect(defaultProps.onViewClick).toHaveBeenCalledWith("db-draft-id");
     await user.click(screen.getByTestId("policy-actions-db-draft-id"));

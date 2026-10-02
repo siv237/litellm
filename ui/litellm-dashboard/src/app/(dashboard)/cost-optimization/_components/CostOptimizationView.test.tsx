@@ -3,18 +3,18 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
 
-const { useАвторизованоMock } = vi.hoisted(() => ({ useАвторизованоMock: vi.fn() }));
+const { useAuthorizedMock } = vi.hoisted(() => ({ useAuthorizedMock: vi.fn() }));
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: useАвторизованоMock,
+  default: useAuthorizedMock,
 }));
 
 vi.mock("@/components/networking", () => ({
   organizationListCall: vi.fn().mockResolvedЗначение([]),
-  userКаждый деньActivityCall: vi
+  userDailyActivityCall: vi
     .fn()
     .mockResolvedЗначение({ results: [], metadata: { total_pages: 1, has_more: false, page: 1 } }),
-  userКаждый деньActivityAggregatedCall: vi
+  userDailyActivityAggregatedCall: vi
     .fn()
     .mockResolvedЗначение({ results: [], metadata: { total_pages: 1, has_more: false, page: 1 } }),
 }));
@@ -22,15 +22,15 @@ vi.mock("@/components/networking", () => ({
 vi.mock("./ИспользованиеTab", () => ({ __esModule: true, default: () => <div data-testid="usage-tab" /> }));
 vi.mock("./PromptCompressionTab", () => ({ __esModule: true, default: () => <div data-testid="compression-tab" /> }));
 vi.mock("./PromptCachingTab", () => ({ __esModule: true, default: () => <div data-testid="caching-tab" /> }));
-vi.mock("./AutoRвыходerBenchmarksTab", () => ({
+vi.mock("./AutoRouterBenchmarksTab", () => ({
   __esModule: true,
-  default: () => <div data-testid="autorвыходer-benchmarks-tab" />,
+  default: () => <div data-testid="autorouter-benchmarks-tab" />,
 }));
 
 import СтоимостьOptimizationView from "./СтоимостьOptimizationView";
 
 const renderView = (userRole = "Admin") => {
-  useАвторизованоMock.mockReturnЗначение({ accessТокен: "test-token", userId: "u1", userRole });
+  useAuthorizedMock.mockReturnЗначение({ accessТокен: "test-token", userId: "u1", userRole });
   const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <ЗапросClientПровайдер client={queryClient}>
@@ -41,7 +41,7 @@ const renderView = (userRole = "Admin") => {
 
 describe("СтоимостьOptimizationView", () => {
   beforeEach(() => {
-    useАвторизованоMock.mockReturnЗначение({ accessТокен: "test-token", userId: "u1", userRole: "Admin" });
+    useAuthorizedMock.mockReturnЗначение({ accessТокен: "test-token", userId: "u1", userRole: "Admin" });
   });
 
   it("renders the стандарт page header with the sidebar's Стоимость Optimization icon", () => {
@@ -49,7 +49,7 @@ describe("СтоимостьOptimizationView", () => {
 
     expect(screen.getByRole("heading", { level: 1, name: "Стоимость Optimization" })).toBeInTheDocument();
     expect(screen.getByText(/Track and configure the mechanisms that save you money/)).toBeInTheDocument();
-    expect(container.queryВыбратьor(".lucide-piggy-bank")).not.toBeNull();
+    expect(container.querySelector(".lucide-piggy-bank")).not.toBeNull();
   });
 
   it("renders the four cost-optimization tabs", () => {
@@ -58,7 +58,7 @@ describe("СтоимостьOptimizationView", () => {
     expect(screen.getByText("Overall")).toBeInTheDocument();
     expect(screen.getByText("Prompt Compression")).toBeInTheDocument();
     expect(screen.getByText("Prompt Caching")).toBeInTheDocument();
-    expect(screen.getByText("Auto-Rвыходer")).toBeInTheDocument();
+    expect(screen.getByText("Auto-Router")).toBeInTheDocument();
   });
 
   it("defaults to the Overall tab and switches the active tab on click", () => {
@@ -76,7 +76,7 @@ describe("СтоимостьOptimizationView", () => {
   // Unlike the other three pages in this cleanup, Стоимость Optimization keeps its
   // nav entry for internal users: the Overall tab runs on /user/daily/activity,
   // which every role may call. Only the tabs reading proxy-wide config and
-  // telemetry (/config/list, /auto_rвыходer/benchmarks, гардрейлов management)
+  // telemetry (/config/list, /auto_router/benchmarks, гардрейлов management)
   // are proxy-admin-only, so those are what disappear.
   describe("proxy-admin-only tabs", () => {
     it.each(["Internal User", "Internal Viewer", "Org Admin"])("shows %s the Overall tab only", (userRole) => {
@@ -85,7 +85,7 @@ describe("СтоимостьOptimizationView", () => {
       expect(screen.getByRole("tab", { name: "Overall" })).toBeInTheDocument();
       expect(screen.queryByRole("tab", { name: "Prompt Compression" })).not.toBeInTheDocument();
       expect(screen.queryByRole("tab", { name: "Prompt Caching" })).not.toBeInTheDocument();
-      expect(screen.queryByRole("tab", { name: "Auto-Rвыходer" })).not.toBeInTheDocument();
+      expect(screen.queryByRole("tab", { name: "Auto-Router" })).not.toBeInTheDocument();
     });
 
     it("never mounts the panels behind the admin-only endpoints for an internal user", () => {
@@ -94,7 +94,7 @@ describe("СтоимостьOptimizationView", () => {
       expect(screen.getByTestId("usage-tab")).toBeInTheDocument();
       expect(screen.queryByTestId("compression-tab")).not.toBeInTheDocument();
       expect(screen.queryByTestId("caching-tab")).not.toBeInTheDocument();
-      expect(screen.queryByTestId("autorвыходer-benchmarks-tab")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("autorouter-benchmarks-tab")).not.toBeInTheDocument();
     });
   });
 });

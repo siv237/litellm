@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getMajorAirlines } from "@/components/networking";
 
-import CompetitorIntentКонфигурацияuration, { type CompetitorIntentКонфигурация } from "./CompetitorIntentКонфигурацияuration";
+import CompetitorIntentConfiguration, { type CompetitorIntentКонфигурация } from "./CompetitorIntentConfiguration";
 
 vi.mock("@/components/networking", () => ({ getMajorAirlines: vi.fn() }));
 
@@ -34,20 +34,20 @@ const Harness = ({ initialEnabled = true }: { initialEnabled?: boolean }) => {
     setКонфигурация(nextКонфигурация);
   };
   return (
-    <CompetitorIntentКонфигурацияuration enabled={enabled} config={config} accessТокен="sk-test" onChange={handleChange} />
+    <CompetitorIntentConfiguration enabled={enabled} config={config} accessТокен="sk-test" onChange={handleChange} />
   );
 };
 
 const lastКонфигурация = (): CompetitorIntentКонфигурация => onChange.mock.calls[onChange.mock.calls.length - 1][1];
 
 const chooseOption = async (user: ReturnType<typeof userEvent.setup>, index: number, optionText: string) => {
-  await user.click(screen.getВсеByRole("combobox")[index]);
+  await user.click(screen.getAllByRole("combobox")[index]);
   await user.click(await screen.findByRole("option", { name: optionText }));
 };
 
-describe("CompetitorIntentКонфигурацияuration reported config", () => {
+describe("CompetitorIntentConfiguration reported config", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockAirlines.mockResolvedЗначение({ airlines: [] });
   });
 
@@ -89,7 +89,7 @@ describe("CompetitorIntentКонфигурацияuration reported config", () =
     const user = userEvent.setup();
     render(<Harness />);
 
-    const brandSelf = screen.getВсеByRole("combobox")[1];
+    const brandSelf = screen.getAllByRole("combobox")[1];
     await user.click(brandSelf);
     await user.type(brandSelf, "acme,globex,");
 
@@ -100,7 +100,7 @@ describe("CompetitorIntentКонфигурацияuration reported config", () =
     const user = userEvent.setup();
     render(<Harness />);
 
-    const brandSelf = screen.getВсеByRole("combobox")[1];
+    const brandSelf = screen.getAllByRole("combobox")[1];
     await user.click(brandSelf);
     await user.type(brandSelf, "acme");
     await user.tab();
@@ -113,8 +113,8 @@ describe("CompetitorIntentКонфигурацияuration reported config", () =
     const user = userEvent.setup();
     render(<Harness />);
 
-    await user.click(screen.getВсеByRole("combobox")[1]);
-    const options = await screen.findВсеByText(/Qatar Airways/);
+    await user.click(screen.getAllByRole("combobox")[1]);
+    const options = await screen.findAllByText(/Qatar Airways/);
     await user.click(options[options.length - 1]);
 
     expect(lastКонфигурация().brand_self).toStrictEqual(["qatar airways", "qatar", "qr"]);
@@ -124,7 +124,7 @@ describe("CompetitorIntentКонфигурацияuration reported config", () =
     const user = userEvent.setup();
     render(<Harness />);
 
-    const locations = screen.getВсеByRole("combobox")[2];
+    const locations = screen.getAllByRole("combobox")[2];
     await user.click(locations);
     await user.type(locations, "doha,");
 
@@ -135,7 +135,7 @@ describe("CompetitorIntentКонфигурацияuration reported config", () =
     const user = userEvent.setup();
     render(<Harness />);
 
-    const thresholds = screen.getВсеByRole("spinbutton");
+    const thresholds = screen.getAllByRole("spinbutton");
     await user.clear(thresholds[0]);
     await user.type(thresholds[0], "0.55");
 
@@ -146,7 +146,7 @@ describe("CompetitorIntentКонфигурацияuration reported config", () =
     const user = userEvent.setup();
     render(<Harness />);
 
-    await user.clear(screen.getВсеByRole("spinbutton")[1]);
+    await user.clear(screen.getAllByRole("spinbutton")[1]);
 
     expect(lastКонфигурация()).toStrictEqual(DEFAULT_CONFIG);
   });
@@ -155,7 +155,7 @@ describe("CompetitorIntentКонфигурацияuration reported config", () =
     const user = userEvent.setup();
     render(<Harness />);
 
-    const thresholds = screen.getВсеByRole("spinbutton");
+    const thresholds = screen.getAllByRole("spinbutton");
     await user.clear(thresholds[2]);
     await user.type(thresholds[2], "5");
     await user.tab();
@@ -171,8 +171,8 @@ describe("CompetitorIntentКонфигурацияuration reported config", () =
         "Block or reframe competitor comparison questions. When enabled, airline type auto-loads competitors from IATA; generic type requires manual competitor list.",
       ),
     ).toBeInTheDocument();
-    expect(screen.queryВсеByRole("combobox")).toHaveLength(0);
-    expect(screen.queryВсеByRole("spinbutton")).toHaveLength(0);
+    expect(screen.queryAllByRole("combobox")).toHaveLength(0);
+    expect(screen.queryAllByRole("spinbutton")).toHaveLength(0);
   });
 
   it.each([

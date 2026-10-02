@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import type { MountedПолеControlProps } from "@/components/common_components/MountedFormПоле";
-import { tagsControl } from "./mcpПолеRules";
+import type { MountedFieldControlProps } from "@/components/common_components/MountedFormПоле";
+import { tagsControl } from "./mcpFieldRules";
 
-const controlWith = (value: unknown, onChange = vi.fn()): MountedПолеControlProps =>
-  ({ id: "field", name: "field", value, onChange, onBlur: vi.fn() }) as unknown as MountedПолеControlProps;
+const controlWith = (value: unknown, onChange = vi.fn()): MountedFieldControlProps =>
+  ({ id: "field", name: "field", value, onChange, onBlur: vi.fn() }) as unknown as MountedFieldControlProps;
 
 // These fields were antd Выбратьs with tokenSeparators={[","]}, so a comma commits a tag as an admin
 // types. MultiВыбрать owns that rule now, which leaves this adapter one job: hand the stored value to
@@ -24,7 +24,7 @@ describe("tagsControl", () => {
 
   it("stores the edited tags exactly as the input committed them", () => {
     const onChange = vi.fn();
-    tagsControl(controlWith(["npx"], onChange)).onЗначениеChange(["npx", "--header=X-Trace: on"]);
+    tagsControl(controlWith(["npx"], onChange)).onValueChange(["npx", "--header=X-Trace: on"]);
 
     expect(onChange).toHaveBeenCalledWith(["npx", "--header=X-Trace: on"]);
   });

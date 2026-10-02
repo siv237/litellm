@@ -1,10 +1,10 @@
-import { renderWithПровайдерs, screen } from "../../../tests/test-utils";
+import { renderWithProviders, screen } from "../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import ИспользованиеExportHeader from "./ИспользованиеExportHeader";
-import type { EntityРасходData } from "./types";
+import type { EntitySpendData } from "./types";
 
-vi.mock("./EntityИспользованиеExportModal", () => ({
+vi.mock("./EntityUsageExportModal", () => ({
   default: ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) =>
     isOpen ? (
       <div data-testid="export-modal">
@@ -25,37 +25,37 @@ const defaultProps = {
       total_failed_requests: 0,
       total_tokens: 0,
     },
-  } satisfies EntityРасходData,
+  } satisfies EntitySpendData,
 };
 
 describe("ИспользованиеExportHeader", () => {
   it("should render", () => {
-    renderWithПровайдерs(<ИспользованиеExportHeader {...defaultProps} />);
+    renderWithProviders(<ИспользованиеExportHeader {...defaultProps} />);
     expect(screen.getByRole("button", { name: /export data/i })).toBeInTheDocument();
   });
 
   it("should open the export modal when the export button is clicked", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<ИспользованиеExportHeader {...defaultProps} />);
+    renderWithProviders(<ИспользованиеExportHeader {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /export data/i }));
     expect(screen.getByTestId("export-modal")).toBeInTheDocument();
   });
 
   it("should close the export modal when onClose is called", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<ИспользованиеExportHeader {...defaultProps} />);
+    renderWithProviders(<ИспользованиеExportHeader {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /export data/i }));
     await user.click(screen.getByRole("button", { name: /close/i }));
     expect(screen.queryByTestId("export-modal")).not.toBeInTheDocument();
   });
 
   it("should not show filter dropdown when showФильтры is false", () => {
-    renderWithПровайдерs(<ИспользованиеExportHeader {...defaultProps} showФильтры={false} />);
+    renderWithProviders(<ИспользованиеExportHeader {...defaultProps} showФильтры={false} />);
     expect(screen.queryByText(/filter/i)).not.toBeInTheDocument();
   });
 
   it("should show filter dropdown when showФильтры is true and options provided", () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <ИспользованиеExportHeader
         {...defaultProps}
         showФильтры
@@ -65,14 +65,14 @@ describe("ИспользованиеExportHeader", () => {
           { label: "Team A", value: "team-a" },
           { label: "Team B", value: "team-b" },
         ]}
-        onФильтрыChange={vi.fn()}
+        onFiltersChange={vi.fn()}
       />,
     );
     expect(screen.getByText("Team")).toBeInTheDocument();
   });
 
   it("should render a caller-supplied filter and its label withвыход any built-in options", () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <ИспользованиеExportHeader
         {...defaultProps}
         filterLabel="Фильтр by user"
@@ -86,7 +86,7 @@ describe("ИспользованиеExportHeader", () => {
   });
 
   it("should keep the filter visible and disabled with an explanation when the caller has no options", () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <ИспользованиеExportHeader
         {...defaultProps}
         entityType="tag"
@@ -94,7 +94,7 @@ describe("ИспользованиеExportHeader", () => {
         filterLabel="Фильтр by tag"
         filterPlaceholder="Выбрать tag to filter..."
         filterOptions={[]}
-        onФильтрыChange={vi.fn()}
+        onFiltersChange={vi.fn()}
       />,
     );
 
@@ -106,8 +106,8 @@ describe("ИспользованиеExportHeader", () => {
 
   it("should stay usable when a carried-over selection выходlives its options", async () => {
     const user = userEvent.setup();
-    const onФильтрыChange = vi.fn();
-    renderWithПровайдерs(
+    const onFiltersChange = vi.fn();
+    renderWithProviders(
       <ИспользованиеExportHeader
         {...defaultProps}
         entityType="tag"
@@ -116,18 +116,18 @@ describe("ИспользованиеExportHeader", () => {
         filterPlaceholder="Выбрать tag to filter..."
         filterOptions={[]}
         selectedФильтры={["prod"]}
-        onФильтрыChange={onФильтрыChange}
+        onFiltersChange={onFiltersChange}
       />,
     );
 
     expect(screen.getByPlaceholderText("No tags with usage in this range")).toBeEnabled();
 
     await user.click(screen.getByRole("button", { name: "Clear Фильтр by tag" }));
-    expect(onФильтрыChange).toHaveBeenCalledWith([]);
+    expect(onFiltersChange).toHaveBeenCalledWith([]);
   });
 
   it("should leave the filter enabled with its normal placeholder when options exist", () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <ИспользованиеExportHeader
         {...defaultProps}
         entityType="tag"
@@ -135,7 +135,7 @@ describe("ИспользованиеExportHeader", () => {
         filterLabel="Фильтр by tag"
         filterPlaceholder="Выбрать tag to filter..."
         filterOptions={[{ label: "prod", value: "prod" }]}
-        onФильтрыChange={vi.fn()}
+        onFiltersChange={vi.fn()}
       />,
     );
 

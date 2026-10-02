@@ -4,9 +4,9 @@ import { describe, it, expect } from "vitest";
 import { МаршрутизацияDecisionCard, type МаршрутизацияDecision } from "./МаршрутизацияDecisionCard";
 
 const heuristic: МаршрутизацияDecision = {
-  rвыходer_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "smart-rвыходer",
-  rвыходer_type: "complexity",
-  rвыходed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-sonnet",
+  router_model_name: "smart-router",
+  router_type: "complexity",
+  routed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-sonnet",
   cause: "heuristic_scorer",
   tier: "REASONING",
   score: 0.82,
@@ -15,15 +15,15 @@ const heuristic: МаршрутизацияDecision = {
 };
 
 describe("МаршрутизацияDecisionCard", () => {
-  it("renders nothing when the request carried no rвыходing decision", () => {
+  it("renders nothing when the request carried no routing decision", () => {
     const { container } = render(<МаршрутизацияDecisionCard decision={undefined} />);
     expect(container).toBeEmptyDOMElement();
   });
 
   it("explains a heuristic score against the boundaries that were in effect", () => {
     render(<МаршрутизацияDecisionCard decision={heuristic} />);
-    expect(screen.getByText("smart-rвыходer")).toBeInTheDocument();
-    expect(screen.getByText("(Auto-Rвыходer v2)")).toBeInTheDocument();
+    expect(screen.getByText("smart-router")).toBeInTheDocument();
+    expect(screen.getByText("(Auto-Router v2)")).toBeInTheDocument();
     expect(screen.getByText("REASONING")).toBeInTheDocument();
     expect(screen.getByText("Heuristic scorer")).toBeInTheDocument();
     expect(screen.getByText("0.82")).toBeInTheDocument();
@@ -75,9 +75,9 @@ describe("МаршрутизацияDecisionCard", () => {
     render(
       <МаршрутизацияDecisionCard
         decision={{
-          rвыходer_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "llm-rвыходer",
-          rвыходer_type: "complexity",
-          rвыходed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-sonnet",
+          router_model_name: "llm-router",
+          router_type: "complexity",
+          routed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-sonnet",
           cause: "llm_classifier",
           tier: "REASONING",
           classifier_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-haiku",
@@ -89,16 +89,16 @@ describe("МаршрутизацияDecisionCard", () => {
     expect(screen.queryByText("Оценка")).not.toBeInTheDocument();
   });
 
-  it("explains a rвыходe that fell back to the default Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию after the classifier failed", () => {
+  it("explains a route that fell back to the default Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию after the classifier failed", () => {
     // No tier is recorded on this path, so the card must not show a Уровень row: nothing
     // abвыход the request produced one, the classifier never answered.
     render(
       <МаршрутизацияDecisionCard
         decision={{
-          rвыходer_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "llm-rвыходer",
-          rвыходer_type: "complexity",
-          rвыходed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o",
-          cause: "default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_fallback",
+          router_model_name: "llm-router",
+          router_type: "complexity",
+          routed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o",
+          cause: "default_model_fallback",
           signals: ["classifier-failed:default-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию"],
         }}
       />,
@@ -107,13 +107,13 @@ describe("МаршрутизацияDecisionCard", () => {
     expect(screen.queryByText("Уровень")).not.toBeInTheDocument();
   });
 
-  it("explains a rвыходe that fell back to the configured fallback tier after the classifier failed", () => {
+  it("explains a route that fell back to the configured fallback tier after the classifier failed", () => {
     render(
       <МаршрутизацияDecisionCard
         decision={{
-          rвыходer_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "custom-tier-rвыходer",
-          rвыходer_type: "complexity",
-          rвыходed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-sonnet",
+          router_model_name: "custom-tier-router",
+          router_type: "complexity",
+          routed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-sonnet",
           cause: "classifier_fallback",
           tier: "SECURITY_REVIEW",
           signals: ["classifier-fallback:SECURITY_REVIEW"],
@@ -243,12 +243,12 @@ describe("МаршрутизацияDecisionCard", () => {
     expect(screen.queryByText("REASONING")).not.toBeInTheDocument();
   });
 
-  it("keeps the canonical tier name when the rвыходer did not rename it", () => {
+  it("keeps the canonical tier name when the router did not rename it", () => {
     render(<МаршрутизацияDecisionCard decision={heuristic} />);
     expect(screen.getByText("REASONING")).toBeInTheDocument();
   });
 
-  it("drops the tier name from the score band on a renamed rвыходer", () => {
+  it("drops the tier name from the score band on a renamed router", () => {
     render(<МаршрутизацияDecisionCard decision={{ ...heuristic, tier_label: "Deep" }} />);
     expect(screen.getByText("(at or above 0.6)")).toBeInTheDocument();
     expect(screen.queryByText(/at or above 0\.6, REASONING/)).not.toBeInTheDocument();
@@ -295,7 +295,7 @@ describe("МаршрутизацияDecisionCard", () => {
   });
 
   it("falls back to the raw cause for a value this build does not know", () => {
-    render(<МаршрутизацияDecisionCard decision={{ cause: "some_future_cause", rвыходed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "m" }} />);
+    render(<МаршрутизацияDecisionCard decision={{ cause: "some_future_cause", routed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "m" }} />);
     expect(screen.getByText("some_future_cause")).toBeInTheDocument();
   });
 });

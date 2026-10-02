@@ -8,12 +8,12 @@ import GuardrailInfoView from "./гардрейлов_info";
 vi.mock("@/components/networking", () => ({
   getGuardrailInfo: vi.fn(),
   getGuardrailUISettings: vi.fn(),
-  getGuardrailПровайдерSpecificParams: vi.fn(),
+  getGuardrailProviderSpecificParams: vi.fn(),
   updateGuardrailCall: vi.fn(),
 }));
 
-// Mock ContentФильтрManager
-vi.mock("./content_filter/ContentФильтрManager", () => ({
+// Mock ContentFilterManager
+vi.mock("./content_filter/ContentFilterManager", () => ({
   __esModule: true,
   default: ({ onUnsavedChanges, onDataChange, isEditing }: any) => (
     <div data-testid="mock-content-filter-manager">
@@ -29,7 +29,7 @@ vi.mock("./content_filter/ContentФильтрManager", () => ({
       )}
     </div>
   ),
-  formatContentФильтрDataForAPI: (patterns: any[], blockedWords: any[], categories?: any[]) => ({
+  formatContentFilterDataForAPI: (patterns: any[], blockedWords: any[], categories?: any[]) => ({
     patterns,
     blocked_words: blockedWords,
     categories: categories ?? [],
@@ -38,7 +38,7 @@ vi.mock("./content_filter/ContentФильтрManager", () => ({
 
 describe("Guardrail Info", () => {
   afterEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render the гардрейлов info after loading", async () => {
@@ -63,14 +63,14 @@ describe("Guardrail Info", () => {
       supported_modes: ["pre_call", "post_call"],
     });
 
-    vi.mocked(networking.getGuardrailПровайдерSpecificParams).mockResolvedЗначение({});
+    vi.mocked(networking.getGuardrailProviderSpecificParams).mockResolvedЗначение({});
 
     render(<GuardrailInfoView гардрейловId="123" onClose={() => {}} accessТокен="123" isAdmin={true} />);
 
     // Wait for the loading to complete and data to be rendered
     await waitFor(() => {
       // The гардрейлов name appears in multiple places (title and settings tab)
-      const elements = screen.getВсеByText("Test Guardrail");
+      const elements = screen.getAllByText("Test Guardrail");
       expect(elements.length).toBeGreaterThan(0);
     });
 
@@ -101,11 +101,11 @@ describe("Guardrail Info", () => {
       supported_modes: ["pre_call", "post_call"],
     });
 
-    vi.mocked(networking.getGuardrailПровайдерSpecificParams).mockResolvedЗначение({});
+    vi.mocked(networking.getGuardrailProviderSpecificParams).mockResolvedЗначение({});
 
     render(<GuardrailInfoView гардрейловId="123" onClose={() => {}} accessТокен="123" isAdmin={true} />);
 
-    expect(await screen.findВсеByText("pre_call, post_call (tag-based)")).not.toHaveLength(0);
+    expect(await screen.findAllByText("pre_call, post_call (tag-based)")).not.toHaveLength(0);
   });
 
   it("should render the provider logo from the bundled гардрейлов logo map", async () => {
@@ -129,7 +129,7 @@ describe("Guardrail Info", () => {
       supported_modes: ["pre_call", "post_call"],
     });
 
-    vi.mocked(networking.getGuardrailПровайдерSpecificParams).mockResolvedЗначение({});
+    vi.mocked(networking.getGuardrailProviderSpecificParams).mockResolvedЗначение({});
 
     render(<GuardrailInfoView гардрейловId="123" onClose={() => {}} accessТокен="123" isAdmin={true} />);
 
@@ -159,7 +159,7 @@ describe("Guardrail Info", () => {
       supported_modes: ["pre_call", "post_call"],
     });
 
-    vi.mocked(networking.getGuardrailПровайдерSpecificParams).mockResolvedЗначение({});
+    vi.mocked(networking.getGuardrailProviderSpecificParams).mockResolvedЗначение({});
 
     const { container } = render(
       <GuardrailInfoView гардрейловId="123" onClose={() => {}} accessТокен="123" isAdmin={true} />,
@@ -210,7 +210,7 @@ describe("Guardrail Info", () => {
       supported_modes: ["pre_call", "post_call"],
     });
 
-    vi.mocked(networking.getGuardrailПровайдерSpecificParams).mockResolvedЗначение({});
+    vi.mocked(networking.getGuardrailProviderSpecificParams).mockResolvedЗначение({});
 
     render(<GuardrailInfoView гардрейловId="123" onClose={() => {}} accessТокен="123" isAdmin={true} />);
 
@@ -242,7 +242,7 @@ describe("Guardrail Info", () => {
       supported_modes: ["pre_call", "post_call"],
     });
 
-    vi.mocked(networking.getGuardrailПровайдерSpecificParams).mockResolvedЗначение({});
+    vi.mocked(networking.getGuardrailProviderSpecificParams).mockResolvedЗначение({});
     vi.mocked(networking.updateGuardrailCall).mockResolvedЗначение({ status: "success" });
 
     render(<GuardrailInfoView гардрейловId="123" onClose={() => {}} accessТокен="123" isAdmin={true} />);
@@ -278,7 +278,7 @@ describe("Guardrail Info", () => {
     const firstCallArgs: any = vi.mocked(networking.updateGuardrailCall).mock.calls[0][2];
 
     // Verify attributes that definitely changed
-    expect(firstCallArgs.гардрейлов_name).toBe("Обновлён Name");
+    expect(firstCallArgs.guardrail_name).toBe("Обновлён Name");
 
     // litellm_params might be undefined if empty, which is correct.
     // If it exists, ensure patterns/blocked_words are not in it.
@@ -288,7 +288,7 @@ describe("Guardrail Info", () => {
     }
 
     // Clear mocks to reset call count
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
 
     // Введите Edit Режим again to make changes
     await waitFor(() => {
@@ -329,7 +329,7 @@ describe("Guardrail Info", () => {
       pii_entity_categories: [],
       supported_modes: ["pre_call"],
     });
-    vi.mocked(networking.getGuardrailПровайдерSpecificParams).mockResolvedЗначение({});
+    vi.mocked(networking.getGuardrailProviderSpecificParams).mockResolvedЗначение({});
 
     render(<GuardrailInfoView гардрейловId="123" onClose={() => {}} accessТокен="123" isAdmin={true} />);
 
@@ -341,7 +341,7 @@ describe("Guardrail Info", () => {
 
 describe("Guardrail Info when the гардрейлов cannot be loaded", () => {
   afterEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should keep Back to Гардрейлы reachable so a stale ?гардрейлов= link is not a dead end", async () => {
@@ -352,13 +352,13 @@ describe("Guardrail Info when the гардрейлов cannot be loaded", () => 
       pii_entity_categories: [],
       supported_modes: [],
     });
-    vi.mocked(networking.getGuardrailПровайдерSpecificParams).mockResolvedЗначение({});
+    vi.mocked(networking.getGuardrailProviderSpecificParams).mockResolvedЗначение({});
     const onClose = vi.fn();
 
     render(<GuardrailInfoView гардрейловId="stale-id" onClose={onClose} accessТокен="123" isAdmin={true} />);
 
     expect(await screen.findByText("Guardrail not found")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /back to гардрейловs/i }));
-    expect(onClose).toHaveBeenCalledВремяs(1);
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 });

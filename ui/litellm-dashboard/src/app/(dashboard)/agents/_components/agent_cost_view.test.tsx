@@ -1,8 +1,8 @@
 import React from "react";
 import { describe, it, expect } from "vitest";
 import { screen } from "@testing-library/react";
-import { renderWithПровайдерs } from "@/../tests/test-utils";
-import AgentСтоимостьView from "./agent_cost_view";
+import { renderWithProviders } from "@/../tests/test-utils";
+import AgentCostView from "./agent_cost_view";
 import type { Agent } from "@/components/agents/types";
 
 const makeAgent = (litellmParams: Agent["litellm_params"]): Agent => ({
@@ -11,9 +11,9 @@ const makeAgent = (litellmParams: Agent["litellm_params"]): Agent => ({
   litellm_params: litellmParams,
 });
 
-describe("AgentСтоимостьView", () => {
+describe("AgentCostView", () => {
   it("renders nothing when the agent has no cost configuration at all", () => {
-    const { container } = renderWithПровайдерs(<AgentСтоимостьView agent={makeAgent({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" })} />);
+    const { container } = renderWithProviders(<AgentCostView agent={makeAgent({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" })} />);
     expect(container).toBeEmptyDOMElement();
   });
 
@@ -24,7 +24,7 @@ describe("AgentСтоимостьView", () => {
       input_cost_per_token: 0.000012,
       выходput_cost_per_token: 0.000034,
     };
-    renderWithПровайдерs(<AgentСтоимостьView agent={makeAgent(fullyPricedParams)} />);
+    renderWithProviders(<AgentCostView agent={makeAgent(fullyPricedParams)} />);
 
     expect(screen.getByText("Стоимость Конфигурацияuration")).toBeInTheDocument();
     expect(screen.getByText("Стоимость Per Запрос")).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe("AgentСтоимостьView", () => {
   });
 
   it("omits the rows whose cost is not configured", () => {
-    renderWithПровайдерs(<AgentСтоимостьView agent={makeAgent({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", cost_per_query: 0.25 })} />);
+    renderWithProviders(<AgentCostView agent={makeAgent({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", cost_per_query: 0.25 })} />);
 
     expect(screen.getByText("Стоимость Per Запрос")).toBeInTheDocument();
     expect(screen.getByText("$0.25")).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe("AgentСтоимостьView", () => {
   });
 
   it("still renders a zero cost rather than treating it as unset", () => {
-    renderWithПровайдерs(<AgentСтоимостьView agent={makeAgent({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", cost_per_query: 0 })} />);
+    renderWithProviders(<AgentCostView agent={makeAgent({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", cost_per_query: 0 })} />);
 
     expect(screen.getByText("Стоимость Конфигурацияuration")).toBeInTheDocument();
     expect(screen.getByText("Стоимость Per Запрос")).toBeInTheDocument();

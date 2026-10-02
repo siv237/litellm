@@ -2,19 +2,19 @@ import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import РасходЖурналыТаблица from "./index";
-import { renderWithПровайдерs, testЗапросClient } from "../../../tests/test-utils";
+import { renderWithProviders, testRequestClient } from "../../../tests/test-utils";
 
-const { useАвторизованоMock, useОрганизацияsMock } = vi.hoisted(() => ({
-  useАвторизованоMock: vi.fn(),
-  useОрганизацияsMock: vi.fn(),
+const { useAuthorizedMock, useOrganizationsMock } = vi.hoisted(() => ({
+  useAuthorizedMock: vi.fn(),
+  useOrganizationsMock: vi.fn(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: useАвторизованоMock,
+  default: useAuthorizedMock,
 }));
 
-vi.mock("@/app/(dashboard)/hooks/organizations/useОрганизацияs", () => ({
-  useОрганизацияs: useОрганизацияsMock,
+vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
+  useOrganizations: useOrganizationsMock,
 }));
 
 vi.mock("./ЗапросЖурналыPanel", () => ({
@@ -47,21 +47,21 @@ const defaultProps = {
 const ORG_ADMIN_MEMBERSHIPS = [{ organization_id: "org-1", members: [{ user_id: "user-1", user_role: "org_admin" }] }];
 
 const renderAs = (sessionRole: string, organizations: unknown[] = []) => {
-  useАвторизованоMock.mockReturnЗначение({
+  useAuthorizedMock.mockReturnЗначение({
     accessТокен: "sk-test",
     userId: "user-1",
     userRole: sessionRole,
     premiumUser: true,
   });
-  useОрганизацияsMock.mockReturnЗначение({ data: organizations });
-  return renderWithПровайдерs(<РасходЖурналыТаблица {...defaultProps} userRole={sessionRole} />);
+  useOrganizationsMock.mockReturnЗначение({ data: organizations });
+  return renderWithProviders(<РасходЖурналыТаблица {...defaultProps} userRole={sessionRole} />);
 };
 
 describe("РасходЖурналыТаблица network access by role", () => {
   beforeEach(() => {
-    testЗапросClient.clear();
-    vi.clearВсеMocks();
-    useОрганизацияsMock.mockReturnЗначение({ data: [] });
+    testRequestClient.clear();
+    vi.clearAllMocks();
+    useOrganizationsMock.mockReturnЗначение({ data: [] });
     fetchMock.mockImplementation(async (url: string) => {
       if (String(url).includes("/audit")) {
         return jsonОтвет(emptyAuditЖурналы);

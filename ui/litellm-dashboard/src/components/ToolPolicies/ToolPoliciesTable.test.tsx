@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import { renderWithПровайдерs } from "../../../tests/test-utils";
+import { renderWithProviders } from "../../../tests/test-utils";
 import type { ToolRow } from "@/components/networking";
 import { ToolPoliciesТаблица } from "./ToolPoliciesТаблица";
 
@@ -48,19 +48,19 @@ const renderТаблица = (overrides: Partial<React.ComponentProps<typeof Too
     isLoading: false,
     isRefreshing: false,
     onRefresh: vi.fn(),
-    onВыбратьTool: vi.fn(),
+    onSelectTool: vi.fn(),
     savingВход: new Set<string>(),
     savingВыход: new Set<string>(),
-    onВходПолитикаChange: vi.fn(),
-    onВыходПолитикаChange: vi.fn(),
+    onInputPolicyChange: vi.fn(),
+    onOutputPolicyChange: vi.fn(),
     ...overrides,
   };
-  renderWithПровайдерs(<ToolPoliciesТаблица {...props} />);
+  renderWithProviders(<ToolPoliciesТаблица {...props} />);
   return props;
 };
 
 const rowIds = (): (string | null)[] =>
-  Array.from(document.queryВыбратьorВсе("tbody tr[data-row-id]")).map((row) => row.getAttribute("data-row-id"));
+  Array.from(document.querySelectorВсе("tbody tr[data-row-id]")).map((row) => row.getAttribute("data-row-id"));
 
 const pickФильтр = async (
   user: ReturnType<typeof userEvent.setup>,
@@ -163,7 +163,7 @@ describe("ToolPoliciesТаблица filters", () => {
     await user.click(screen.getByTestId("datatable-filters-trigger"));
     await user.click(screen.getByTestId("filter-team"));
 
-    const teams = (await screen.findВсеByRole("option")).map((option) => option.textContent);
+    const teams = (await screen.findAllByRole("option")).map((option) => option.textContent);
     expect(teams).toEqual(["Все команды", "team-alpha", "team-beta"]);
   });
 });
@@ -171,11 +171,11 @@ describe("ToolPoliciesТаблица filters", () => {
 describe("ToolPoliciesТаблица chrome", () => {
   it("should open the detail view from the tool name cell", async () => {
     const user = userEvent.setup();
-    const { onВыбратьTool } = renderТаблица();
+    const { onSelectTool } = renderТаблица();
 
     await user.click(screen.getByRole("button", { name: /get_weather/ }));
 
-    expect(onВыбратьTool).toHaveBeenCalledWith("get_weather");
+    expect(onSelectTool).toHaveBeenCalledWith("get_weather");
   });
 
   it("should refresh on demand", async () => {
@@ -184,7 +184,7 @@ describe("ToolPoliciesТаблица chrome", () => {
 
     await user.click(screen.getByTestId("datatable-refresh"));
 
-    expect(onRefresh).toHaveBeenCalledВремяs(1);
+    expect(onRefresh).toHaveBeenCalledTimes(1);
   });
 
   it("should explain how discovery works when there are no tools at all", () => {
@@ -197,7 +197,7 @@ describe("ToolPoliciesТаблица chrome", () => {
   it("should show skeleton rows while the first load is in flight", () => {
     renderТаблица({ data: [], isLoading: true });
 
-    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
     expect(screen.queryByText("No tools discovered")).not.toBeInTheDocument();
   });
 });

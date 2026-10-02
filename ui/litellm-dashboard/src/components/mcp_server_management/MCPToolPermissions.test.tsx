@@ -2,23 +2,23 @@ import { useState } from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs, testЗапросClient } from "../../../tests/test-utils";
+import { renderWithProviders, testRequestClient } from "../../../tests/test-utils";
 import MCPToolPermissions from "./MCPToolPermissions";
 import * as networking from "../networking";
 import { NO_MCP_SERVERS_SENTINEL } from "../mcp_tools/constants";
-import type { MCPИнструментыet } from "../mcp_tools/types";
+import type { MCPToolset } from "../mcp_tools/types";
 
 vi.mock("../networking");
 
 describe("MCPToolPermissions", () => {
   const mockAccessТокен = "test-token";
-  const mockСерверId = "server-123";
-  const mockСерверName = "Test MCP Сервер";
+  const mockServerId = "server-123";
+  const mockServerName = "Test MCP Сервер";
 
   beforeEach(() => {
-    vi.clearВсеMocks();
-    testЗапросClient.clear();
-    vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+    vi.clearAllMocks();
+    testRequestClient.clear();
+    vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
     vi.mocked(networking.fetchMCPAccessGroups).mockResolvedЗначение([]);
   });
 
@@ -38,9 +38,9 @@ describe("MCPToolPermissions", () => {
     // Mock fetchMCP-серверы to return server details
     vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([
       {
-        server_id: mockСерверId,
-        server_name: mockСерверName,
-        alias: mockСерверName,
+        server_id: mockServerId,
+        server_name: mockServerName,
+        alias: mockServerName,
       },
     ]);
 
@@ -51,18 +51,18 @@ describe("MCPToolPermissions", () => {
     });
 
     // Pre-populate with all tools selected so auto-populate doesn't fire
-    renderWithПровайдерs(
+    renderWithProviders(
       <MCPToolPermissions
         accessТокен={mockAccessТокен}
-        selected-серверы={[mockСерверId]}
-        toolPermissions={{ [mockСерверId]: ["read_wiki_structure", "read_wiki_contents", "ask_question"] }}
+        selected-серверы={[mockServerId]}
+        toolPermissions={{ [mockServerId]: ["read_wiki_structure", "read_wiki_contents", "ask_question"] }}
         onChange={mockOnChange}
       />,
     );
 
     // Wait for server and tools to load
     await waitFor(() => {
-      expect(screen.getByText(mockСерверName)).toBeInTheDocument();
+      expect(screen.getByText(mockServerName)).toBeInTheDocument();
     });
 
     await waitFor(() => {
@@ -77,7 +77,7 @@ describe("MCPToolPermissions", () => {
 
     // Verify onChange was called with read_wiki_structure removed
     const expectedToolPermissions = {
-      [mockСерверId]: ["read_wiki_contents", "ask_question"],
+      [mockServerId]: ["read_wiki_contents", "ask_question"],
     };
     expect(mockOnChange).toHaveBeenCalledWith(expectedToolPermissions);
 
@@ -85,7 +85,7 @@ describe("MCPToolPermissions", () => {
     // Note: useMCP-серверы uses useАвторизовано() internally, which returns "123" from global mock
     expect(networking.fetchMCP-серверы).toHaveBeenCalledWith("123", undefined);
     // listMCPИнструменты uses the accessТокен prop directly
-    expect(networking.listMCPИнструменты).toHaveBeenCalledWith(mockAccessТокен, mockСерверId);
+    expect(networking.listMCPИнструменты).toHaveBeenCalledWith(mockAccessТокен, mockServerId);
   });
 
   it("should select all tools when Снять выделение button is clicked", async () => {
@@ -99,9 +99,9 @@ describe("MCPToolPermissions", () => {
     // Mock fetchMCP-серверы to return server details
     vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([
       {
-        server_id: mockСерверId,
-        server_name: mockСерверName,
-        alias: mockСерверName,
+        server_id: mockServerId,
+        server_name: mockServerName,
+        alias: mockServerName,
       },
     ]);
 
@@ -111,10 +111,10 @@ describe("MCPToolPermissions", () => {
       error: false,
     });
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <MCPToolPermissions
         accessТокен={mockAccessТокен}
-        selected-серверы={[mockСерверId]}
+        selected-серверы={[mockServerId]}
         toolPermissions={{}}
         onChange={mockOnChange}
       />,
@@ -122,7 +122,7 @@ describe("MCPToolPermissions", () => {
 
     // Wait for server and tools to load
     await waitFor(() => {
-      expect(screen.getByText(mockСерверName)).toBeInTheDocument();
+      expect(screen.getByText(mockServerName)).toBeInTheDocument();
     });
 
     await waitFor(() => {
@@ -130,12 +130,12 @@ describe("MCPToolPermissions", () => {
     });
 
     // Click the Снять выделение button
-    const selectВсеButton = screen.getByRole("button", { name: "Снять выделение" });
-    await userEvent.click(selectВсеButton);
+    const selectAllButton = screen.getByRole("button", { name: "Снять выделение" });
+    await userEvent.click(selectAllButton);
 
     // Verify onChange was called with all tools selected
     expect(mockOnChange).toHaveBeenCalledWith({
-      [mockСерверId]: ["read_wiki_structure", "read_wiki_contents", "ask_question"],
+      [mockServerId]: ["read_wiki_structure", "read_wiki_contents", "ask_question"],
     });
   });
 
@@ -150,9 +150,9 @@ describe("MCPToolPermissions", () => {
     // Mock fetchMCP-серверы to return server details
     vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([
       {
-        server_id: mockСерверId,
-        server_name: mockСерверName,
-        alias: mockСерверName,
+        server_id: mockServerId,
+        server_name: mockServerName,
+        alias: mockServerName,
       },
     ]);
 
@@ -162,18 +162,18 @@ describe("MCPToolPermissions", () => {
       error: false,
     });
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <MCPToolPermissions
         accessТокен={mockAccessТокен}
-        selected-серверы={[mockСерверId]}
-        toolPermissions={{ [mockСерверId]: ["read_wiki_structure", "read_wiki_contents"] }}
+        selected-серверы={[mockServerId]}
+        toolPermissions={{ [mockServerId]: ["read_wiki_structure", "read_wiki_contents"] }}
         onChange={mockOnChange}
       />,
     );
 
     // Wait for server and tools to load
     await waitFor(() => {
-      expect(screen.getByText(mockСерверName)).toBeInTheDocument();
+      expect(screen.getByText(mockServerName)).toBeInTheDocument();
     });
 
     await waitFor(() => {
@@ -181,12 +181,12 @@ describe("MCPToolPermissions", () => {
     });
 
     // Click the Снять выделение button
-    const deselectВсеButton = screen.getByRole("button", { name: "Снять выделение" });
-    await userEvent.click(deselectВсеButton);
+    const deselectAllButton = screen.getByRole("button", { name: "Снять выделение" });
+    await userEvent.click(deselectAllButton);
 
     // Verify onChange was called with no tools selected
     expect(mockOnChange).toHaveBeenCalledWith({
-      [mockСерверId]: [],
+      [mockServerId]: [],
     });
   });
 
@@ -204,11 +204,11 @@ describe("MCPToolPermissions", () => {
 
     it("renders the tool matrix for a server granted only through an access group", async () => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([groupСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
@@ -226,11 +226,11 @@ describe("MCPToolPermissions", () => {
 
     it("shows every tool selected in flat view for an unrestricted access-group server", async () => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([groupСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
@@ -243,7 +243,7 @@ describe("MCPToolPermissions", () => {
       await screen.findByText("Group Сервер");
       await userEvent.click(screen.getByText("Выбрать всё"));
 
-      const [listIssues, deleteIssue] = screen.getВсеByRole("checkbox");
+      const [listIssues, deleteIssue] = screen.getAllByRole("checkbox");
       expect(listIssues).toBeChecked();
       expect(deleteIssue).toBeChecked();
 
@@ -254,10 +254,10 @@ describe("MCPToolPermissions", () => {
     it("marks an access-group server as inherited and leaves a directly selected one unmarked", async () => {
       const directСервер = { server_id: "srv-direct-1", server_name: "Direct Сервер", alias: "Direct Сервер" };
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([directСервер, groupСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[directСервер.server_id]}
@@ -270,13 +270,13 @@ describe("MCPToolPermissions", () => {
       expect(await screen.findByText("Direct Сервер")).toBeInTheDocument();
       expect(await screen.findByText("Group Сервер")).toBeInTheDocument();
       expect(screen.getByText("Via access group: production-group")).toBeInTheDocument();
-      expect(screen.queryВсеByText(/^Via /)).toHaveLength(1);
+      expect(screen.queryAllByText(/^Via /)).toHaveLength(1);
     });
 
     it("renders a toolset server as inherited from that toolset", async () => {
       const toolsetСервер = { server_id: "srv-toolset-1", server_name: "Инструментыet Сервер", alias: "Инструментыet Сервер" };
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([toolsetСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([
         {
           toolset_id: "ts-1",
           toolset_name: "Support Инструментыet",
@@ -285,11 +285,11 @@ describe("MCPToolPermissions", () => {
       ]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
-          selectedИнструментыets={["ts-1"]}
+          selectedToolsets={["ts-1"]}
           toolPermissions={{}}
           onChange={vi.fn()}
         />,
@@ -304,7 +304,7 @@ describe("MCPToolPermissions", () => {
     it("shows a toolset's own tools as the allowed set and locks them", async () => {
       const toolsetСервер = { server_id: "srv-toolset-1", server_name: "Инструментыet Сервер", alias: "Инструментыet Сервер" };
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([toolsetСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([
         {
           toolset_id: "ts-1",
           toolset_name: "Support Инструментыet",
@@ -314,11 +314,11 @@ describe("MCPToolPermissions", () => {
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
-          selectedИнструментыets={["ts-1"]}
+          selectedToolsets={["ts-1"]}
           toolPermissions={{}}
           onChange={mockOnChange}
         />,
@@ -332,7 +332,7 @@ describe("MCPToolPermissions", () => {
       ).toBeInTheDocument();
 
       await userEvent.click(screen.getByText("Выбрать всё"));
-      const [listIssues, deleteIssue] = screen.getВсеByRole("checkbox");
+      const [listIssues, deleteIssue] = screen.getAllByRole("checkbox");
       expect(listIssues).toBeChecked();
       expect(listIssues).toBeDisabled();
       expect(deleteIssue).not.toBeChecked();
@@ -344,7 +344,7 @@ describe("MCPToolPermissions", () => {
     it("ignores a click on a locked tool in the risk-group view", async () => {
       const toolsetСервер = { server_id: "srv-toolset-1", server_name: "Инструментыet Сервер", alias: "Инструментыet Сервер" };
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([toolsetСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([
         {
           toolset_id: "ts-1",
           toolset_name: "Support Инструментыet",
@@ -354,11 +354,11 @@ describe("MCPToolPermissions", () => {
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
-          selectedИнструментыets={["ts-1"]}
+          selectedToolsets={["ts-1"]}
           toolPermissions={{}}
           onChange={mockOnChange}
         />,
@@ -373,7 +373,7 @@ describe("MCPToolPermissions", () => {
     it("keeps a locked tool the entry also grants when its risk group is turned off", async () => {
       const toolsetСервер = { server_id: "srv-toolset-1", server_name: "Инструментыet Сервер", alias: "Инструментыet Сервер" };
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([toolsetСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([
         {
           toolset_id: "ts-1",
           toolset_name: "Support Инструментыet",
@@ -383,11 +383,11 @@ describe("MCPToolPermissions", () => {
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
-          selectedИнструментыets={["ts-1"]}
+          selectedToolsets={["ts-1"]}
           toolPermissions={{ [toolsetСервер.server_id]: ["list_issues"] }}
           onChange={mockOnChange}
         />,
@@ -395,7 +395,7 @@ describe("MCPToolPermissions", () => {
 
       expect(await screen.findByText("list_issues")).toBeInTheDocument();
       // First checkbox is the header toggle of the group holding list_issues.
-      await userEvent.click(screen.getВсеByRole("checkbox")[0]);
+      await userEvent.click(screen.getAllByRole("checkbox")[0]);
 
       expect(mockOnChange).toHaveBeenCalledWith({ [toolsetСервер.server_id]: ["list_issues"] });
     });
@@ -405,7 +405,7 @@ describe("MCPToolPermissions", () => {
     it("leaves a toolset's tools выход of the entry a Снять выделение writes", async () => {
       const toolsetСервер = { server_id: "srv-toolset-1", server_name: "Инструментыet Сервер", alias: "Инструментыet Сервер" };
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([toolsetСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([
         {
           toolset_id: "ts-1",
           toolset_name: "Support Инструментыet",
@@ -415,11 +415,11 @@ describe("MCPToolPermissions", () => {
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
-          selectedИнструментыets={["ts-1"]}
+          selectedToolsets={["ts-1"]}
           toolPermissions={{}}
           onChange={mockOnChange}
         />,
@@ -436,7 +436,7 @@ describe("MCPToolPermissions", () => {
     it("does not write the delete-blocked default for a directly selected server a toolset restricts", async () => {
       const directСервер = { server_id: "srv-direct-1", server_name: "Direct Сервер", alias: "Direct Сервер" };
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([directСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([
         {
           toolset_id: "ts-1",
           toolset_name: "Support Инструментыet",
@@ -446,11 +446,11 @@ describe("MCPToolPermissions", () => {
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[directСервер.server_id]}
-          selectedИнструментыets={["ts-1"]}
+          selectedToolsets={["ts-1"]}
           toolPermissions={{}}
           onChange={mockOnChange}
         />,
@@ -462,20 +462,20 @@ describe("MCPToolPermissions", () => {
 
     it("waits for toolsets before writing the delete-blocked default", async () => {
       const directСервер = { server_id: "srv-direct-1", server_name: "Direct Сервер", alias: "Direct Сервер" };
-      let resolveИнструментыets: (toolsets: MCPИнструментыet[]) => void = () => {};
-      const pendingИнструментыets = new Promise<MCPИнструментыet[]>((resolve) => {
-        resolveИнструментыets = resolve;
+      let resolveToolsets: (toolsets: MCPToolset[]) => void = () => {};
+      const pendingToolsets = new Promise<MCPToolset[]>((resolve) => {
+        resolveToolsets = resolve;
       });
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([directСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockReturnЗначение(pendingИнструментыets);
+      vi.mocked(networking.fetchMCPToolsets).mockReturnЗначение(pendingToolsets);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[directСервер.server_id]}
-          selectedИнструментыets={["ts-1"]}
+          selectedToolsets={["ts-1"]}
           toolPermissions={{}}
           onChange={mockOnChange}
         />,
@@ -484,7 +484,7 @@ describe("MCPToolPermissions", () => {
       await screen.findByText("Direct Сервер");
       expect(mockOnChange).not.toHaveBeenCalled();
 
-      resolveИнструментыets([
+      resolveToolsets([
         {
           toolset_id: "ts-1",
           toolset_name: "Support Инструментыet",
@@ -507,11 +507,11 @@ describe("MCPToolPermissions", () => {
       const idOwner = { server_id: "srv-collide", server_name: "Payments", alias: "Payments" };
       const nameTwin = { server_id: "srv-twin", server_name: "srv-collide", alias: "srv-collide" };
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение(idOwnerFirst ? [idOwner, nameTwin] : [nameTwin, idOwner]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={["srv-collide"]}
@@ -531,11 +531,11 @@ describe("MCPToolPermissions", () => {
 
     it("does not write a default allowlist for an inherited server", async () => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([groupСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
@@ -552,11 +552,11 @@ describe("MCPToolPermissions", () => {
     it("keeps blocking delete tools by default for a directly selected server", async () => {
       const directСервер = { server_id: "srv-direct-1", server_name: "Direct Сервер", alias: "Direct Сервер" };
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([directСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[directСервер.server_id]}
@@ -572,10 +572,10 @@ describe("MCPToolPermissions", () => {
 
     it("shows a server that only a stale tool-permission entry still entitles", async () => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([groupСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
@@ -591,10 +591,10 @@ describe("MCPToolPermissions", () => {
 
     it("shows nothing for a principal blocked from every MCP server", async () => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([groupСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
-      const { container } = renderWithПровайдерs(
+      const { container } = renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[NO_MCP_SERVERS_SENTINEL]}
@@ -609,9 +609,9 @@ describe("MCPToolPermissions", () => {
 
     it("warns instead of showing no inherited servers when the server list cannot be loaded", async () => {
       vi.mocked(networking.fetchMCP-серверы).mockRejectedЗначение(new Ошибка("boom"));
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
@@ -627,10 +627,10 @@ describe("MCPToolPermissions", () => {
 
     it("tells the admin when a loaded access group has no member servers", async () => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([groupСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: groupИнструменты, error: false });
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
@@ -649,7 +649,7 @@ describe("MCPToolPermissions", () => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([]);
       vi.mocked(networking.fetchMCPAccessGroups).mockResolvedЗначение(["production-group"]);
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
@@ -665,13 +665,13 @@ describe("MCPToolPermissions", () => {
 
     it("warns when the selected toolsets cannot be resolved to servers", async () => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockRejectedЗначение(new Ошибка("boom"));
+      vi.mocked(networking.fetchMCPToolsets).mockRejectedЗначение(new Ошибка("boom"));
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
-          selectedИнструментыets={["ts-1"]}
+          selectedToolsets={["ts-1"]}
           toolPermissions={{}}
           onChange={vi.fn()}
         />,
@@ -694,10 +694,10 @@ describe("MCPToolPermissions", () => {
 
     it("renders the tool matrix for a grant that names the server instead of its id", async () => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([namedСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: namedИнструменты, error: false });
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={["github_mcp"]}
@@ -714,11 +714,11 @@ describe("MCPToolPermissions", () => {
 
     it("writes an edit back to the name key instead of adding a second id-keyed entry", async () => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([namedСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: namedИнструменты, error: false });
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={["github_mcp"]}
@@ -748,7 +748,7 @@ describe("MCPToolPermissions", () => {
     ];
 
     const renderWithBothКлючи = (onChange: () => void) =>
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[namedСервер.server_id]}
@@ -759,7 +759,7 @@ describe("MCPToolPermissions", () => {
 
     beforeEach(() => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([namedСервер]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: namedИнструменты, error: false });
     });
 
@@ -767,12 +767,12 @@ describe("MCPToolPermissions", () => {
       renderWithBothКлючи(vi.fn());
 
       expect(await screen.findByText("github_mcp")).toBeInTheDocument();
-      expect(screen.getВсеByText("github_mcp")).toHaveLength(1);
+      expect(screen.getAllByText("github_mcp")).toHaveLength(1);
       expect(await screen.findByText("list_issues")).toBeInTheDocument();
 
       // Flat view keeps checkbox order identical to the fetched tool order.
       await userEvent.click(screen.getByText("Выбрать всё"));
-      const [listIssues, createIssue, deleteIssue] = screen.getВсеByRole("checkbox");
+      const [listIssues, createIssue, deleteIssue] = screen.getAllByRole("checkbox");
       expect(listIssues).toBeChecked();
       expect(createIssue).toBeChecked();
       expect(deleteIssue).not.toBeChecked();
@@ -784,7 +784,7 @@ describe("MCPToolPermissions", () => {
 
       expect(await screen.findByText("list_issues")).toBeInTheDocument();
       await userEvent.click(screen.getByText("Выбрать всё"));
-      await userEvent.click(screen.getВсеByRole("checkbox")[0]);
+      await userEvent.click(screen.getAllByRole("checkbox")[0]);
 
       const written = mockOnChange.mock.calls.at(-1)?.[0] as Record<string, string[]>;
       expect(Object.keys(written)).toEqual([namedСервер.server_id]);
@@ -805,7 +805,7 @@ describe("MCPToolPermissions", () => {
           editedFirst ? [namedСервер, twin] : [twin, namedСервер],
         );
 
-        renderWithПровайдерs(
+        renderWithProviders(
           <MCPToolPermissions
             accessТокен={mockAccessТокен}
             selected-серверы={[namedСервер.server_id]}
@@ -817,7 +817,7 @@ describe("MCPToolPermissions", () => {
         // Both cards say it: the shared key grants on either server and neither card can revoke it,
         // so an admin looking at either one has to be told the same thing.
         expect(
-          await screen.findВсеByText(
+          await screen.findAllByText(
             'Also granted by "github_mcp", which names another server too. Those tools stay allowed here until the servers no longer share that name',
           ),
         ).toHaveLength(2);
@@ -834,7 +834,7 @@ describe("MCPToolPermissions", () => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение(editedFirst ? [namedСервер, twin] : [twin, namedСервер]);
 
       const mockOnChange = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[twin.server_id]}
@@ -844,8 +844,8 @@ describe("MCPToolPermissions", () => {
       );
 
       // The directly selected twin is the first card; both share the display name "github_mcp".
-      expect(await screen.findВсеByText("list_issues")).toHaveLength(2);
-      await userEvent.click(screen.getВсеByText("Снять выделение")[0]);
+      expect(await screen.findAllByText("list_issues")).toHaveLength(2);
+      await userEvent.click(screen.getAllByText("Снять выделение")[0]);
 
       const written = mockOnChange.mock.calls.at(-1)?.[0] as Record<string, string[]>;
       expect(written["github_mcp"]).toEqual(["list_issues"]);
@@ -860,7 +860,7 @@ describe("MCPToolPermissions", () => {
     });
 
     it("badges the server once, by its strongest grant, when a key and a group both name it", async () => {
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
           selected-серверы={[]}
@@ -873,7 +873,7 @@ describe("MCPToolPermissions", () => {
       expect(await screen.findByText("github_mcp")).toBeInTheDocument();
       expect(screen.getByText("Via access group: production-group")).toBeInTheDocument();
       expect(screen.queryByText("Через права инструментов")).not.toBeInTheDocument();
-      expect(screen.queryВсеByText(/^Via /)).toHaveLength(1);
+      expect(screen.queryAllByText(/^Via /)).toHaveLength(1);
     });
   });
 
@@ -887,14 +887,14 @@ describe("MCPToolPermissions", () => {
 
     const renderCrudView = (toolPermissions: Record<string, string[]>, onChange: () => void) => {
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([
-        { server_id: mockСерверId, server_name: mockСерверName, alias: mockСерверName },
+        { server_id: mockServerId, server_name: mockServerName, alias: mockServerName },
       ]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: crudИнструменты, error: false });
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <MCPToolPermissions
           accessТокен={mockAccessТокен}
-          selected-серверы={[mockСерверId]}
+          selected-серверы={[mockServerId]}
           toolPermissions={toolPermissions}
           onChange={onChange}
         />,
@@ -903,71 +903,71 @@ describe("MCPToolPermissions", () => {
 
     it("removes a whole risk group from the saved payload when its group toggle is cleared", async () => {
       const mockOnChange = vi.fn();
-      renderCrudView({ [mockСерверId]: allCrudToolNames }, mockOnChange);
+      renderCrudView({ [mockServerId]: allCrudToolNames }, mockOnChange);
 
       const readGroupToggle = await screen.findByRole("checkbox", { name: "Всеow all Read tools" });
       expect(readGroupToggle).toBeChecked();
 
       await userEvent.click(readGroupToggle);
 
-      expect(mockOnChange).toHaveBeenCalledWith({ [mockСерверId]: ["delete_document"] });
+      expect(mockOnChange).toHaveBeenCalledWith({ [mockServerId]: ["delete_document"] });
     });
 
     it("adds the rest of a partially-allowed risk group when its mixed toggle is clicked", async () => {
       const mockOnChange = vi.fn();
-      renderCrudView({ [mockСерверId]: ["list_documents"] }, mockOnChange);
+      renderCrudView({ [mockServerId]: ["list_documents"] }, mockOnChange);
 
       const readGroupToggle = await screen.findByRole("checkbox", { name: "Всеow all Read tools" });
       expect(readGroupToggle).toBePartiallyChecked();
 
       await userEvent.click(readGroupToggle);
 
-      expect(mockOnChange).toHaveBeenCalledWith({ [mockСерверId]: ["list_documents", "get_document"] });
+      expect(mockOnChange).toHaveBeenCalledWith({ [mockServerId]: ["list_documents", "get_document"] });
     });
 
     it("toggles a single tool exactly once when its checkbox is clicked inside the clickable row", async () => {
       const mockOnChange = vi.fn();
-      renderCrudView({ [mockСерверId]: allCrudToolNames }, mockOnChange);
+      renderCrudView({ [mockServerId]: allCrudToolNames }, mockOnChange);
 
       await userEvent.click(await screen.findByRole("checkbox", { name: "delete_document" }));
 
-      expect(mockOnChange).toHaveBeenCalledВремяs(1);
-      expect(mockOnChange).toHaveBeenCalledWith({ [mockСерверId]: ["list_documents", "get_document"] });
+      expect(mockOnChange).toHaveBeenCalledTimes(1);
+      expect(mockOnChange).toHaveBeenCalledWith({ [mockServerId]: ["list_documents", "get_document"] });
     });
 
     it("toggles a single tool when the row around its checkbox is clicked", async () => {
       const mockOnChange = vi.fn();
-      renderCrudView({ [mockСерверId]: allCrudToolNames }, mockOnChange);
+      renderCrudView({ [mockServerId]: allCrudToolNames }, mockOnChange);
 
       await userEvent.click(await screen.findByText("Destroy a document"));
 
-      expect(mockOnChange).toHaveBeenCalledВремяs(1);
-      expect(mockOnChange).toHaveBeenCalledWith({ [mockСерверId]: ["list_documents", "get_document"] });
+      expect(mockOnChange).toHaveBeenCalledTimes(1);
+      expect(mockOnChange).toHaveBeenCalledWith({ [mockServerId]: ["list_documents", "get_document"] });
     });
 
     it("re-renders each checkbox from the permissions it emitted", async () => {
       const Harness = () => {
         const [permissions, setPermissions] = useState<Record<string, string[]>>({
-          [mockСерверId]: allCrudToolNames,
+          [mockServerId]: allCrudToolNames,
         });
         return (
           <>
             <MCPToolPermissions
               accessТокен={mockAccessТокен}
-              selected-серверы={[mockСерверId]}
+              selected-серверы={[mockServerId]}
               toolPermissions={permissions}
               onChange={setPermissions}
             />
-            <выходput>{(permissions[mockСерверId] ?? []).join(",")}</выходput>
+            <выходput>{(permissions[mockServerId] ?? []).join(",")}</выходput>
           </>
         );
       };
 
       vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([
-        { server_id: mockСерверId, server_name: mockСерверName, alias: mockСерверName },
+        { server_id: mockServerId, server_name: mockServerName, alias: mockServerName },
       ]);
       vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({ tools: crudИнструменты, error: false });
-      renderWithПровайдерs(<Harness />);
+      renderWithProviders(<Harness />);
 
       const deleteTool = await screen.findByRole("checkbox", { name: "delete_document" });
       const readGroupToggle = screen.getByRole("checkbox", { name: "Всеow all Read tools" });

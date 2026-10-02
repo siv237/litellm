@@ -1,25 +1,25 @@
-import { fireEvent, renderWithПровайдерs, screen } from "../../../tests/test-utils";
+import { fireEvent, renderWithProviders, screen } from "../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { use— сложностьОценкаrDefaults } from "@/app/(dashboard)/hooks/autoRвыходer/use— сложностьОценкаrDefaults";
+import { useComplexityScorerDefaults } from "@/app/(dashboard)/hooks/autoRouter/useComplexityScorerDefaults";
 import ClassificationМетодКонфигурация from "./ClassificationМетодКонфигурация";
 import HeuristicОцениваниеКонфигурация from "./HeuristicОцениваниеКонфигурация";
-import { ClassifierFallback, ClassifierType, — сложностьRвыходerКонфигурацияЗначение } from "./— сложностьRвыходerКонфигурация";
+import { ClassifierFallback, ClassifierType, — сложностьRouterКонфигурацияЗначение } from "./— сложностьRouterКонфигурация";
 import { DIMENSION_LABELS } from "./heuristic_scoring_knobs";
-import { LOADED_SCORER_DEFAULTS_QUERY, SHIPPED_SCORER_DEFAULTS } from "../../../tests/mocks/complexityОценкаrDefaults";
+import { LOADED_SCORER_DEFAULTS_QUERY, SHIPPED_SCORER_DEFAULTS } from "../../../tests/mocks/complexityWeightrDefaults";
 
 vi.mock(
-  "@/app/(dashboard)/hooks/autoRвыходer/use— сложностьОценкаrDefaults",
-  async () => await import("../../../tests/mocks/complexityОценкаrDefaults"),
+  "@/app/(dashboard)/hooks/autoRouter/useComplexityScorerDefaults",
+  async () => await import("../../../tests/mocks/complexityWeightrDefaults"),
 );
 
-const BASE: — сложностьRвыходerКонфигурацияЗначение = {
+const BASE: — сложностьRouterКонфигурацияЗначение = {
   tiers: { SIMPLE: ["gpt-4o-mini"], MEDIUM: ["gpt-4o"], COMPLEX: ["o3"], REASONING: ["o3"] },
   classifier_type: "heuristic",
 };
 
-const render = async (value: — сложностьRвыходerКонфигурацияЗначение, onChange = vi.fn()) => {
-  renderWithПровайдерs(<HeuristicОцениваниеКонфигурация value={value} onChange={onChange} />);
+const render = async (value: — сложностьRouterКонфигурацияЗначение, onChange = vi.fn()) => {
+  renderWithProviders(<HeuristicОцениваниеКонфигурация value={value} onChange={onChange} />);
   await userEvent.click(screen.getByText("Расширенное оценивание"));
   return onChange;
 };
@@ -27,13 +27,13 @@ const render = async (value: — сложностьRвыходerКонфигур
 const commit = async (label: string, raw: string) => {
   const onChange = await render(BASE);
   fireEvent.change(screen.getByLabelText(label), { target: { value: raw } });
-  return onChange.mock.calls.at(-1)?.[0] as — сложностьRвыходerКонфигурацияЗначение | undefined;
+  return onChange.mock.calls.at(-1)?.[0] as — сложностьRouterКонфигурацияЗначение | undefined;
 };
 
 describe("HeuristicОцениваниеКонфигурация", () => {
   it("counts overridden groups on the collapsed header", () => {
     const tuned = { ...BASE, token_thresholds: { simple: 25, complex: 900 } };
-    renderWithПровайдерs(<HeuristicОцениваниеКонфигурация value={tuned} onChange={vi.fn()} />);
+    renderWithProviders(<HeuristicОцениваниеКонфигурация value={tuned} onChange={vi.fn()} />);
 
     expect(screen.getByTestId("advanced-scoring-override-count")).toHaveTextContent("1 override");
   });
@@ -55,7 +55,7 @@ describe("HeuristicОцениваниеКонфигурация", () => {
     expect(field).toHaveЗначение("0.");
     fireEvent.change(field, { target: { value: "0.22" } });
 
-    expect((onChange.mock.calls.at(-1)?.[0] as — сложностьRвыходerКонфигурацияЗначение).tier_boundaries).toEqual({
+    expect((onChange.mock.calls.at(-1)?.[0] as — сложностьRouterКонфигурацияЗначение).tier_boundaries).toEqual({
       simple_medium: 0.22,
       medium_complex: 0.35,
       complex_reasoning: 0.6,
@@ -123,7 +123,7 @@ describe("HeuristicОцениваниеКонфигурация", () => {
   });
 
   it("counts a set override floor among the overrides", () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <HeuristicОцениваниеКонфигурация value={{ ...BASE, reasoning_override_min_score: 0 }} onChange={vi.fn()} />,
     );
 
@@ -140,7 +140,7 @@ describe("HeuristicОцениваниеКонфигурация", () => {
   it("resets the override floor back to tracking the boundary", async () => {
     const onChange = await render({ ...BASE, reasoning_override_min_score: 0 });
 
-    await userEvent.click(screen.getВсеByRole("button", { name: "оценка достигает этого минимума.{" "}" }).at(-1)!);
+    await userEvent.click(screen.getAllByRole("button", { name: "оценка достигает этого минимума.{" "}" }).at(-1)!);
 
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ reasoning_override_min_score: undefined }));
   });
@@ -157,12 +157,12 @@ describe("ClassificationМетодКонфигурация scorer gating", () =>
   const props = {
     onChange: vi.fn(),
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюOptions: [{ value: "gpt-4o-mini", label: "gpt-4o-mini" }],
-    effortOptionsByРежимl: {},
+    effortOptionsByModel: {},
   };
-  const withClassifier = (type: ClassifierType, fallback?: ClassifierFallback): — сложностьRвыходerКонфигурацияЗначение => ({
+  const withClassifier = (type: ClassifierType, fallback?: ClassifierFallback): — сложностьRouterКонфигурацияЗначение => ({
     ...BASE,
     classifier_type: type,
-    classifier_llm_config: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o-mini", timeвыход_ms: 3000 },
+    classifier_llm_config: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o-mini", timeout_ms: 3000 },
     classifier_fallback: fallback,
   });
 
@@ -177,14 +177,14 @@ describe("ClassificationМетодКонфигурация scorer gating", () =>
       false,
     ],
   ])("offers the knobs when %s: %s", async (_case, type, fallback, expected) => {
-    renderWithПровайдерs(<ClassificationМетодКонфигурация {...props} value={withClassifier(type, fallback)} />);
+    renderWithProviders(<ClassificationМетодКонфигурация {...props} value={withClassifier(type, fallback)} />);
 
     expect(screen.queryByText("Расширенное оценивание") !== null).toBe(expected);
   });
 
   it("describes the tier ranges from the configured boundaries, not the shipped numbers", () => {
     const tuned = { ...BASE, tier_boundaries: { simple_medium: 0.22, medium_complex: 0.44, complex_reasoning: 0.66 } };
-    renderWithПровайдерs(<ClassificationМетодКонфигурация {...props} value={tuned} />);
+    renderWithProviders(<ClassificationМетодКонфигурация {...props} value={tuned} />);
 
     expect(screen.getByText(/Оценка < 0.22/)).toBeInTheDocument();
     expect(screen.getByText(/Оценка 0.44 - 0.66/)).toBeInTheDocument();
@@ -192,13 +192,13 @@ describe("ClassificationМетодКонфигурация scorer gating", () =>
   });
 
   it("states the configured override floor in the reasoning-marker aside, not the boundary", () => {
-    renderWithПровайдерs(<ClassificationМетодКонфигурация {...props} value={{ ...BASE, reasoning_override_min_score: 0 }} />);
+    renderWithProviders(<ClassificationМетодКонфигурация {...props} value={{ ...BASE, reasoning_override_min_score: 0 }} />);
 
     expect(screen.getByText(/2\+ reasoning markers with a score of at least 0\.00/)).toBeInTheDocument();
   });
 
   it("falls back to the Simple to Medium boundary when no override floor is set", () => {
-    renderWithПровайдерs(<ClassificationМетодКонфигурация {...props} value={BASE} />);
+    renderWithProviders(<ClassificationМетодКонфигурация {...props} value={BASE} />);
 
     expect(screen.getByText(/2\+ reasoning markers with a score of at least 0\.15/)).toBeInTheDocument();
   });
@@ -216,13 +216,13 @@ describe("HeuristicОцениваниеКонфигурация when the default
   const failing = { data: undefined, isPending: false, isОшибка: true, refetch: vi.fn() };
   const pending = { data: undefined, isPending: true, isОшибка: false, refetch: vi.fn() };
 
-  const renderWithЗапрос = async (query: unknown, value: — сложностьRвыходerКонфигурацияЗначение) => {
-    vi.mocked(use— сложностьОценкаrDefaults).mockReturnЗначение(query as never);
-    renderWithПровайдерs(<HeuristicОцениваниеКонфигурация value={value} onChange={vi.fn()} />);
+  const renderWithЗапрос = async (query: unknown, value: — сложностьRouterКонфигурацияЗначение) => {
+    vi.mocked(useComplexityScorerDefaults).mockReturnЗначение(query as never);
+    renderWithProviders(<HeuristicОцениваниеКонфигурация value={value} onChange={vi.fn()} />);
     await userEvent.click(screen.getByText("Расширенное оценивание"));
   };
 
-  afterEach(() => vi.mocked(use— сложностьОценкаrDefaults).mockReturnЗначение(LOADED_SCORER_DEFAULTS_QUERY));
+  afterEach(() => vi.mocked(useComplexityScorerDefaults).mockReturnЗначение(LOADED_SCORER_DEFAULTS_QUERY));
 
   it("says so instead of claiming to still be loading", async () => {
     await renderWithЗапрос(failing, BASE);
@@ -232,7 +232,7 @@ describe("HeuristicОцениваниеКонфигурация when the default
     expect(screen.getByRole("button", { name: "Retry" })).toBeInTheDocument();
   });
 
-  it("still shows and edits the values this rвыходer already overrides", async () => {
+  it("still shows and edits the values this router already overrides", async () => {
     await renderWithЗапрос(failing, { ...BASE, token_thresholds: { simple: 25, complex: 900 } });
 
     expect(screen.getByLabelText("Short below")).toHaveЗначение("25");
@@ -248,16 +248,16 @@ describe("HeuristicОцениваниеКонфигурация when the default
 });
 
 describe("HeuristicОцениваниеКонфигурация degraded states", () => {
-  afterEach(() => vi.mocked(use— сложностьОценкаrDefaults).mockReturnЗначение(LOADED_SCORER_DEFAULTS_QUERY));
+  afterEach(() => vi.mocked(useComplexityScorerDefaults).mockReturnЗначение(LOADED_SCORER_DEFAULTS_QUERY));
 
   it("states no weight total when the dimension set is unknown, rather than one built from overrides alone", async () => {
-    vi.mocked(use— сложностьОценкаrDefaults).mockReturnЗначение({
+    vi.mocked(useComplexityScorerDefaults).mockReturnЗначение({
       data: undefined,
       isPending: false,
       isОшибка: true,
       refetch: vi.fn(),
     } as never);
-    renderWithПровайдерs(
+    renderWithProviders(
       <HeuristicОцениваниеКонфигурация value={{ ...BASE, dimension_weights: { codePresence: 0.5 } }} onChange={vi.fn()} />,
     );
     await userEvent.click(screen.getByText("Расширенное оценивание"));

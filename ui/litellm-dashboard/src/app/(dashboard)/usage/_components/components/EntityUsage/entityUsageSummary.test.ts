@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildСтоимостьBreakdownTiles, buildSummaryTiles, hasFlatСтоимость } from "./entityИспользованиеSummary";
+import { buildCostBreakdownTiles, buildSummaryTiles, hasFlatСтоимость } from "./entityUsageSummary";
 
 const metadata = {
   total_spend: 100,
@@ -55,28 +55,28 @@ describe("buildSummaryTiles", () => {
   });
 });
 
-describe("buildСтоимостьBreakdownTiles", () => {
+describe("buildCostBreakdownTiles", () => {
   it("splits the total into request cost and flat cost", () => {
-    const byTitle = Object.fromEntries(buildСтоимостьBreakdownTiles(metadata).map((t) => [t.title, t.value]));
+    const byTitle = Object.fromEntries(buildCostBreakdownTiles(metadata).map((t) => [t.title, t.value]));
     expect(byTitle["Стоимость запроса"]).toBe("$100.00");
     expect(byTitle["Фиксированная стоимость"]).toBe("$40.00");
   });
 
   it("adds up to the Общая стоимость tile so the expanded view reconciles", () => {
     const parse = (v: string) => Number(v.replace(/[$,]/g, ""));
-    const parts = buildСтоимостьBreakdownTiles(metadata).map((t) => parse(t.value));
+    const parts = buildCostBreakdownTiles(metadata).map((t) => parse(t.value));
     expect(parts[0] + parts[1]).toBe(parse(buildSummaryTiles(metadata, true)[0].value));
   });
 
   it("explains each part, including that flat cost is выходside budgets", () => {
-    const byTitle = Object.fromEntries(buildСтоимостьBreakdownTiles(metadata).map((t) => [t.title, t.tooltip]));
+    const byTitle = Object.fromEntries(buildCostBreakdownTiles(metadata).map((t) => [t.title, t.tooltip]));
     expect(byTitle["Стоимость запроса"]).toBeTruthy();
     expect(byTitle["Фиксированная стоимость"]).toContain("budget");
   });
 
   it("treats a missing flat cost as zero", () => {
     const { total_flat_cost, ...noFlat } = metadata;
-    const byTitle = Object.fromEntries(buildСтоимостьBreakdownTiles(noFlat).map((t) => [t.title, t.value]));
+    const byTitle = Object.fromEntries(buildCostBreakdownTiles(noFlat).map((t) => [t.title, t.value]));
     expect(byTitle["Фиксированная стоимость"]).toBe("$0.00");
   });
 });

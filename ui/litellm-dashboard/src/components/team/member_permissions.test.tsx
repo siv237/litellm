@@ -1,6 +1,6 @@
 import * as networking from "@/components/networking";
 import { act, fireEvent, screen, waitFor, within } from "@testing-library/react";
-import { renderWithПровайдерs } from "../../../tests/test-utils";
+import { renderWithProviders } from "../../../tests/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import MemberPermissions from "./member_permissions";
 
@@ -14,7 +14,7 @@ const checkboxFor = (endpoint: string) =>
 
 describe("MemberPermissions", () => {
   afterEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render", async () => {
@@ -23,7 +23,7 @@ describe("MemberPermissions", () => {
       team_member_permissions: ["/key/generate"],
     });
 
-    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
+    renderWithProviders(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
       expect(screen.getByText("Права участника")).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe("MemberPermissions", () => {
       team_member_permissions: ["/key/generate"],
     });
 
-    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
+    renderWithProviders(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
       expect(screen.getByText("Метод")).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe("MemberPermissions", () => {
       team_member_permissions: [],
     });
 
-    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
+    renderWithProviders(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
       expect(screen.getByText("Нет доступных прав")).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe("MemberPermissions", () => {
     });
     vi.mocked(networking.teamPermissionsUpdateCall).mockResolvedЗначение({});
 
-    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
+    renderWithProviders(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
       expect(screen.getByText("Права участника")).toBeInTheDocument();
@@ -101,7 +101,7 @@ describe("MemberPermissions", () => {
       team_member_permissions: [],
     });
 
-    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
+    renderWithProviders(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
       expect(screen.getByText("/team/daily/activity")).toBeInTheDocument();
@@ -115,7 +115,7 @@ describe("MemberPermissions", () => {
       team_member_permissions: ["/key/generate"],
     });
 
-    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={false} />);
+    renderWithProviders(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={false} />);
 
     await waitFor(() => {
       expect(screen.getByText("Права участника")).toBeInTheDocument();
@@ -137,7 +137,7 @@ describe("MemberPermissions", () => {
       team_member_permissions: ["/key/generate"],
     });
 
-    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
+    renderWithProviders(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
       expect(screen.getByText("Права участника")).toBeInTheDocument();
@@ -149,7 +149,7 @@ describe("MemberPermissions", () => {
 
     expect(checkboxFor("/key/list")).toBeChecked();
 
-    vi.mocked(networking.getTeamPermissionsCall).mockResolvedЗначениеOnce({
+    vi.mocked(networking.getTeamPermissionsCall).mockResolvedValueOnce({
       all_available_permissions: ["/key/generate", "/key/list"],
       team_member_permissions: ["/key/generate"],
     });
@@ -160,7 +160,7 @@ describe("MemberPermissions", () => {
     });
 
     await waitFor(() => {
-      expect(networking.getTeamPermissionsCall).toHaveBeenCalledВремяs(2);
+      expect(networking.getTeamPermissionsCall).toHaveBeenCalledTimes(2);
     });
 
     expect(checkboxFor("/key/list")).not.toBeChecked();

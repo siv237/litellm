@@ -3,9 +3,9 @@ import { PromptType } from "./types";
 import {
   convertToDotPrompt,
   extractVariables,
-  getВерсияNumber,
+  getVersionNumber,
   parseExistingPrompt,
-  stripВерсияFromPromptId,
+  stripVersionFromPromptId,
 } from "./utils";
 
 describe("extractVariables", () => {
@@ -395,66 +395,66 @@ input:
   });
 });
 
-describe("getВерсияNumber", () => {
+describe("getVersionNumber", () => {
   it("should return '1' for undefined promptId", () => {
-    const result = getВерсияNumber(undefined);
+    const result = getVersionNumber(undefined);
     expect(result).toBe("1");
   });
 
   it("should return '1' for promptId withвыход version", () => {
-    const result = getВерсияNumber("test-prompt");
+    const result = getVersionNumber("test-prompt");
     expect(result).toBe("1");
   });
 
   it("should extract version with dot separator", () => {
-    const result = getВерсияNumber("test-prompt.v2");
+    const result = getVersionNumber("test-prompt.v2");
     expect(result).toBe("2");
   });
 
   it("should extract version with underscore separator", () => {
-    const result = getВерсияNumber("test-prompt_v3");
+    const result = getVersionNumber("test-prompt_v3");
     expect(result).toBe("3");
   });
 
   it("should extract version with hyphen separator", () => {
-    const result = getВерсияNumber("test-prompt-v4");
+    const result = getVersionNumber("test-prompt-v4");
     expect(result).toBe("4");
   });
 
   it("should extract multi-digit version", () => {
-    const result = getВерсияNumber("test-prompt.v123");
+    const result = getVersionNumber("test-prompt.v123");
     expect(result).toBe("123");
   });
 });
 
-describe("stripВерсияFromPromptId", () => {
+describe("stripVersionFromPromptId", () => {
   it("should return empty string for undefined promptId", () => {
-    const result = stripВерсияFromPromptId(undefined);
+    const result = stripVersionFromPromptId(undefined);
     expect(result).toBe("");
   });
 
   it("should return promptId unchanged when no version present", () => {
-    const result = stripВерсияFromPromptId("test-prompt");
+    const result = stripVersionFromPromptId("test-prompt");
     expect(result).toBe("test-prompt");
   });
 
   it("should strip version with dot separator", () => {
-    const result = stripВерсияFromPromptId("test-prompt.v2");
+    const result = stripVersionFromPromptId("test-prompt.v2");
     expect(result).toBe("test-prompt");
   });
 
   it("should strip version with underscore separator", () => {
-    const result = stripВерсияFromPromptId("test-prompt_v3");
+    const result = stripVersionFromPromptId("test-prompt_v3");
     expect(result).toBe("test-prompt");
   });
 
   it("should strip version with hyphen separator", () => {
-    const result = stripВерсияFromPromptId("test-prompt-v4");
+    const result = stripVersionFromPromptId("test-prompt-v4");
     expect(result).toBe("test-prompt");
   });
 
   it("should strip multi-digit version", () => {
-    const result = stripВерсияFromPromptId("test-prompt.v123");
+    const result = stripVersionFromPromptId("test-prompt.v123");
     expect(result).toBe("test-prompt");
   });
 });

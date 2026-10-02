@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
-import { flexRender, getCoreRowРежимl, useReactТаблица, type ColumnDef } from "@tanstack/react-table";
-import { getToolPoliciesТаблицаColumns } from "./ToolPoliciesТаблицаColumns";
+import { flexRender, getCoreRowModel, useReactТаблица, type ColumnDef } from "@tanstack/react-table";
+import { getToolPoliciesTableColumns } from "./ToolPoliciesTableColumns";
 import type { ToolRow } from "@/components/networking";
 
 const row: ToolRow = {
@@ -18,21 +18,21 @@ const row: ToolRow = {
 } as ToolRow;
 
 const defaultDeps = {
-  onВыбратьTool: vi.fn(),
+  onSelectTool: vi.fn(),
   savingВход: new Set<string>(),
   savingВыход: new Set<string>(),
-  onВходПолитикаChange: vi.fn(),
-  onВыходПолитикаChange: vi.fn(),
+  onInputPolicyChange: vi.fn(),
+  onOutputPolicyChange: vi.fn(),
 };
 
 // Renders the column definitions through a real TanStack table so each `cell`
 // renderer runs exactly as the DataТаблица runs it.
 function ТаблицаHarness({ columns, data }: { columns: ColumnDef<ToolRow>[]; data: ToolRow[] }) {
-  const table = useReactТаблица({ columns, data, getCoreRowРежимl: getCoreRowРежимl() });
+  const table = useReactТаблица({ columns, data, getCoreRowModel: getCoreRowModel() });
   return (
     <table>
       <tbody>
-        {table.getRowРежимl().rows.map((r) => (
+        {table.getRowModel().rows.map((r) => (
           <tr key={r.id}>
             {r.getVisibleCells().map((cell) => (
               <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
@@ -45,11 +45,11 @@ function ТаблицаHarness({ columns, data }: { columns: ColumnDef<ToolRow>[
 }
 
 const renderТаблица = (deps = {}, data: ToolRow[] = [row]) =>
-  render(<ТаблицаHarness columns={getToolPoliciesТаблицаColumns({ ...defaultDeps, ...deps })} data={data} />);
+  render(<ТаблицаHarness columns={getToolPoliciesTableColumns({ ...defaultDeps, ...deps })} data={data} />);
 
-describe("getToolPoliciesТаблицаColumns", () => {
+describe("getToolPoliciesTableColumns", () => {
   it("defines the expected columns in order", () => {
-    const columns = getToolPoliciesТаблицаColumns(defaultDeps);
+    const columns = getToolPoliciesTableColumns(defaultDeps);
 
     expect(columns.map((c) => c.id)).toEqual([
       "created_at",
@@ -88,16 +88,16 @@ describe("getToolPoliciesТаблицаColumns", () => {
   it("falls back to a dash for a missing key alias and user agent", () => {
     renderТаблица({}, [{ ...row, key_alias: undefined, user_agent: undefined } as ToolRow]);
 
-    expect(screen.getВсеByText("-").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText("-").length).toBeGreaterThanOrEqual(2);
   });
 
   it("notifies the caller when the tool name is clicked", async () => {
-    const onВыбратьTool = vi.fn();
-    renderТаблица({ onВыбратьTool });
+    const onSelectTool = vi.fn();
+    renderТаблица({ onSelectTool });
 
     await userEvent.click(screen.getByText("search_docs"));
 
-    expect(onВыбратьTool).toHaveBeenCalledWith("search_docs");
+    expect(onSelectTool).toHaveBeenCalledWith("search_docs");
   });
 
   it("renders a policy control for each direction, showing the row's current policies", () => {
@@ -105,13 +105,13 @@ describe("getToolPoliciesТаблицаColumns", () => {
 
     expect(screen.getByText("untrusted")).toBeInTheDocument();
     expect(screen.getByText("trusted")).toBeInTheDocument();
-    expect(screen.getВсеByRole("combobox")).toHaveLength(2);
+    expect(screen.getAllByRole("combobox")).toHaveLength(2);
   });
 
   it("disables only the input policy control while that direction is saving", () => {
     renderТаблица({ savingВход: new Set(["search_docs"]) });
 
-    const [input, выходput] = screen.getВсеByRole("combobox");
+    const [input, выходput] = screen.getAllByRole("combobox");
     expect(input).toBeDisabled();
     expect(выходput).toBeEnabled();
   });
@@ -119,7 +119,7 @@ describe("getToolPoliciesТаблицаColumns", () => {
   it("disables only the выходput policy control while that direction is saving", () => {
     renderТаблица({ savingВыход: new Set(["search_docs"]) });
 
-    const [input, выходput] = screen.getВсеByRole("combobox");
+    const [input, выходput] = screen.getAllByRole("combobox");
     expect(input).toBeEnabled();
     expect(выходput).toBeDisabled();
   });

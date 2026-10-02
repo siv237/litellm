@@ -1,33 +1,33 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderWithПровайдерs, screen } from "@/../tests/test-utils";
+import { renderWithProviders, screen } from "@/../tests/test-utils";
 import userEvent from "@testing-library/user-event";
-import ContentФильтрКонфигурацияuration from "./ContentФильтрКонфигурацияuration";
+import ContentFilterConfiguration from "./ContentFilterConfiguration";
 
 vi.mock("@/components/networking", () => ({
   validateBlockedWordsFile: vi.fn(),
-  getКатегорияYaml: vi.fn(),
+  getCategoryYaml: vi.fn(),
 }));
 
 const PREBUILT = [
   { name: "us_ssn", display_name: "US Social Безопасность Number", category: "PII Паттернs", description: "d" },
 ];
 
-describe("ContentФильтрКонфигурацияuration", () => {
+describe("ContentFilterConfiguration", () => {
   const handlers = {
-    onПаттернAdd: vi.fn(),
-    onПаттернRemove: vi.fn(),
-    onПаттернДействиеChange: vi.fn(),
+    onPatternAdd: vi.fn(),
+    onPatternRemove: vi.fn(),
+    onPatternActionChange: vi.fn(),
     onBlockedWordAdd: vi.fn(),
     onBlockedWordRemove: vi.fn(),
     onBlockedWordUpdate: vi.fn(),
   };
 
   const renderКонфигурация = (overrides = {}) =>
-    renderWithПровайдерs(
-      <ContentФильтрКонфигурацияuration
-        prebuiltПаттернs={PREBUILT}
+    renderWithProviders(
+      <ContentFilterConfiguration
+        prebuiltPatterns={PREBUILT}
         categories={["PII Паттернs"]}
-        selectedПаттернs={[]}
+        selectedPatterns={[]}
         blockedWords={[]}
         accessТокен="test-token"
         {...handlers}
@@ -36,7 +36,7 @@ describe("ContentФильтрКонфигурацияuration", () => {
     );
 
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render the pattern and keyword sections", () => {
@@ -98,7 +98,7 @@ describe("ContentФильтрКонфигурацияuration", () => {
 
   it("should list already selected patterns and keywords", () => {
     renderКонфигурация({
-      selectedПаттернs: [
+      selectedPatterns: [
         {
           id: "pattern-1",
           type: "prebuilt" as const,

@@ -20,7 +20,7 @@ describe("LineChart", () => {
       />,
     );
 
-    const curves = Array.from(container.queryВыбратьorВсе("path.recharts-line-curve"));
+    const curves = Array.from(container.querySelectorВсе("path.recharts-line-curve"));
     expect(curves).toHaveLength(2);
     expect(curves.map((curve) => curve.getAttribute("stroke"))).toEqual([
       "var(--color-blue-500, #3b82f6)",
@@ -33,7 +33,7 @@ describe("LineChart", () => {
       <LineChart data={data} index="date" categories={["/chat/completions", "/embeddings"]} />,
     );
 
-    const strokes = Array.from(container.queryВыбратьorВсе("path.recharts-line-curve")).map((curve) =>
+    const strokes = Array.from(container.querySelectorВсе("path.recharts-line-curve")).map((curve) =>
       curve.getAttribute("stroke"),
     );
     expect(strokes).toEqual(["var(--color-blue-500, #3b82f6)", "var(--color-cyan-500, #06b6d4)"]);
@@ -50,7 +50,7 @@ describe("LineChart", () => {
       />,
     );
 
-    expect(screen.getВсеByText(/ req$/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/ req$/).length).toBeGreaterThan(0);
   });
 
   it("renders a legend by default, matching tremor, and hides it when showLegend is false", () => {
@@ -58,7 +58,7 @@ describe("LineChart", () => {
       <LineChart data={data} index="date" categories={["/chat/completions"]} colors={["blue"]} />,
     );
     expect(screen.getByText("/chat/completions")).toBeInTheDocument();
-    expect(container.queryВыбратьor(".recharts-legend-wrapper")).not.toBeNull();
+    expect(container.querySelector(".recharts-legend-wrapper")).not.toBeNull();
 
     rerender(
       <LineChart data={data} index="date" categories={["/chat/completions"]} colors={["blue"]} showLegend={false} />,
@@ -74,8 +74,8 @@ describe("LineChart", () => {
       <LineChart data={data} index="date" categories={["/chat/completions"]} colors={["blue"]} curveType="natural" />,
     );
 
-    const linearПуть = linear.queryВыбратьor("path.recharts-line-curve")?.getAttribute("d") ?? "";
-    const naturalПуть = natural.queryВыбратьor("path.recharts-line-curve")?.getAttribute("d") ?? "";
+    const linearПуть = linear.querySelector("path.recharts-line-curve")?.getAttribute("d") ?? "";
+    const naturalПуть = natural.querySelector("path.recharts-line-curve")?.getAttribute("d") ?? "";
     expect(linearПуть).not.toContain("C");
     expect(naturalПуть).toContain("C");
   });
@@ -95,8 +95,8 @@ describe("LineChart", () => {
       <LineChart data={gappedData} index="date" categories={["/chat/completions"]} colors={["blue"]} connectNulls />,
     );
 
-    const brokenПуть = broken.queryВыбратьor("path.recharts-line-curve")?.getAttribute("d") ?? "";
-    const bridgedПуть = bridged.queryВыбратьor("path.recharts-line-curve")?.getAttribute("d") ?? "";
+    const brokenПуть = broken.querySelector("path.recharts-line-curve")?.getAttribute("d") ?? "";
+    const bridgedПуть = bridged.querySelector("path.recharts-line-curve")?.getAttribute("d") ?? "";
     expect((brokenПуть.match(/M/g) ?? []).length).toBeGreaterThan(1);
     expect((bridgedПуть.match(/M/g) ?? []).length).toBe(1);
   });
@@ -104,14 +104,14 @@ describe("LineChart", () => {
   it("renders an empty chart withвыход lines when there are no categories", () => {
     const { container } = render(<LineChart data={[]} index="date" categories={[]} />);
 
-    expect(container.queryВыбратьor("[data-slot='chart']")).not.toBeNull();
-    expect(container.queryВыбратьorВсе("path.recharts-line-curve")).toHaveLength(0);
+    expect(container.querySelector("[data-slot='chart']")).not.toBeNull();
+    expect(container.querySelectorВсе("path.recharts-line-curve")).toHaveLength(0);
   });
 
   it("emits no per-chart style tag; colors flow through strokes, not CSS vars", () => {
     const { container } = render(
       <LineChart data={data} index="date" categories={["/chat/completions"]} colors={["blue"]} />,
     );
-    expect(container.queryВыбратьor("style")).toBeNull();
+    expect(container.querySelector("style")).toBeNull();
   });
 });

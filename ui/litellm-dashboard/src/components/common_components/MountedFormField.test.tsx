@@ -3,44 +3,44 @@ import { render, renderHook, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { useForm } from "react-hook-form";
-import type { UseFormGetЗначениеs } from "react-hook-form";
+import type { UseFormGetValues } from "react-hook-form";
 
 import {
   MountedFormПоле,
   MountedFormПровайдер,
-  projectMountedЗначениеs,
+  projectMountedValues,
   useMountRegistry,
-  type MountedПолеName,
-  type MountedFormЗначениеs,
+  type MountedFieldName,
+  type MountedFormValues,
   type MountRegistry,
 } from "./MountedFormПоле";
 
-const registryOf = (names: readonly MountedПолеName[]): MountRegistry => ({
+const registryOf = (names: readonly MountedFieldName[]): MountRegistry => ({
   register: () => () => undefined,
   mountedNames: () => names,
 });
 
-const getЗначениеsOf = (store: Readonly<Record<string, unknown>>): UseFormGetЗначениеs<MountedFormЗначениеs> =>
-  ((names: readonly string[]) => names.map((name) => store[name])) as unknown as UseFormGetЗначениеs<MountedFormЗначениеs>;
+const getValuesOf = (store: Readonly<Record<string, unknown>>): UseFormGetValues<MountedFormValues> =>
+  ((names: readonly string[]) => names.map((name) => store[name])) as unknown as UseFormGetValues<MountedFormValues>;
 
 const project = (store: Readonly<Record<string, unknown>>) =>
-  projectMountedЗначениеs(registryOf(Object.keys(store)), getЗначениеsOf(store));
+  projectMountedValues(registryOf(Object.keys(store)), getValuesOf(store));
 
-const projectПутьs = (entries: readonly (readonly [MountedПолеName, unknown])[]) => {
+const projectPaths = (entries: readonly (readonly [MountedFieldName, unknown])[]) => {
   const store = Object.fromEntries(
     entries.map(([name, value]) => [Array.isArray(name) ? name.join(".") : (name as string), value]),
   );
-  return projectMountedЗначениеs(registryOf(entries.map(([name]) => name)), getЗначениеsOf(store));
+  return projectMountedValues(registryOf(entries.map(([name]) => name)), getValuesOf(store));
 };
 
-describe("projectMountedЗначениеs", () => {
+describe("projectMountedValues", () => {
   it("keeps a flat name flat", () => {
     expect(project({ server_name: "s1", transport: "http" })).toStrictEqual({ server_name: "s1", transport: "http" });
   });
 
   it("nests an ARRAY name into a credentials object", () => {
     expect(
-      projectПутьs([
+      projectPaths([
         [["credentials", "aws_region_name"], "us-east-1"],
         [["credentials", "aws_access_key_id"], "AKIA"],
       ]),
@@ -48,12 +48,12 @@ describe("projectMountedЗначениеs", () => {
   });
 
   it("keeps a literal dotted STRING name flat, matching antd getNameПуть toArray", () => {
-    expect(projectПутьs([["a.b", 1]])).toStrictEqual({ "a.b": 1 });
-    expect(projectПутьs([["schema.property.with.dots", "v"]])).toStrictEqual({ "schema.property.with.dots": "v" });
+    expect(projectPaths([["a.b", 1]])).toStrictEqual({ "a.b": 1 });
+    expect(projectPaths([["schema.property.with.dots", "v"]])).toStrictEqual({ "schema.property.with.dots": "v" });
   });
 
   it("rebuilds Form.List rows as an array, not an object keyed by digits", () => {
-    const projected = projectПутьs([
+    const projected = projectPaths([
       [["env_vars", "0", "name"], "API_KEY"],
       [["env_vars", "0", "description"], "the key"],
       [["env_vars", "1", "name"], "REGION"],
@@ -66,7 +66,7 @@ describe("projectMountedЗначениеs", () => {
 
   it("rebuilds static_headers rows, the second Form.List site", () => {
     expect(
-      projectПутьs([
+      projectPaths([
         [["static_headers", "0", "key"], "X-Tenant"],
         [["static_headers", "0", "value"], "acme"],
       ]),
@@ -82,14 +82,14 @@ describe("projectMountedЗначениеs", () => {
   });
 
   it("leaves a sparse row index as a hole rather than shifting later rows down", () => {
-    const projected = projectПутьs([[["env_vars", "2", "name"], "THIRD"]]) as { env_vars: readonly unknown[] };
+    const projected = projectPaths([[["env_vars", "2", "name"], "THIRD"]]) as { env_vars: readonly unknown[] };
     expect(projected.env_vars).toHaveLength(3);
     expect(projected.env_vars[2]).toStrictEqual({ name: "THIRD" });
   });
 
   it("mixes flat, nested and list names in one projection", () => {
     expect(
-      projectПутьs([
+      projectPaths([
         ["transport", "http"],
         [["credentials", "client_id"], "cid"],
         [["env_vars", "0", "name"], "K"],
@@ -106,9 +106,9 @@ describe("useMountRegistry lifecycle", () => {
   const GatedForm: React.FC<{
     showOptional: boolean;
     showОбязательно: boolean;
-    onFinish: (v: MountedFormЗначениеs) => void;
+    onFinish: (v: MountedFormValues) => void;
   }> = ({ showOptional, showОбязательно, onFinish }) => {
-    const form = useForm<MountedFormЗначениеs>({ mode: "onChange", defaultЗначениеs: { server_name: "keep" } });
+    const form = useForm<MountedFormValues>({ mode: "onChange", defaultValues: { server_name: "keep" } });
     const registry = useMountRegistry();
     return (
       <MountedFormПровайдер value={{ control: form.control, registry }}>
@@ -118,7 +118,7 @@ describe("useMountRegistry lifecycle", () => {
             void form
               .trigger(registry.mountedNames().map((n) => (Array.isArray(n) ? n.join(".") : (n as string))))
               .then((valid) => {
-                if (valid) onFinish(projectMountedЗначениеs(registry, form.getЗначениеs));
+                if (valid) onFinish(projectMountedValues(registry, form.getValues));
               });
           }}
         >
@@ -152,12 +152,12 @@ describe("useMountRegistry lifecycle", () => {
     const { rerender } = render(<GatedForm showOptional showОбязательно={false} onFinish={onFinish} />);
 
     await userEvent.click(screen.getByRole("button", { name: "Submit" }));
-    await waitFor(() => expect(onFinish).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(onFinish).toHaveBeenCalledTimes(1));
     expect(Object.keys(onFinish.mock.calls[0][0] as object)).toContain("alias");
 
     rerender(<GatedForm showOptional={false} showОбязательно={false} onFinish={onFinish} />);
     await userEvent.click(screen.getByRole("button", { name: "Submit" }));
-    await waitFor(() => expect(onFinish).toHaveBeenCalledВремяs(2));
+    await waitFor(() => expect(onFinish).toHaveBeenCalledTimes(2));
     expect(Object.keys(onFinish.mock.calls[1][0] as object)).not.toContain("alias");
   });
 
@@ -171,7 +171,7 @@ describe("useMountRegistry lifecycle", () => {
 
     rerender(<GatedForm showOptional={false} showОбязательно={false} onFinish={onFinish} />);
     await userEvent.click(screen.getByRole("button", { name: "Submit" }));
-    await waitFor(() => expect(onFinish).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(onFinish).toHaveBeenCalledTimes(1));
     expect(Object.keys(onFinish.mock.calls[0][0] as object)).not.toContain("token_url");
   });
 

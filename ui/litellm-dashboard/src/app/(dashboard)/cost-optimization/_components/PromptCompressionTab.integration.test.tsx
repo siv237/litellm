@@ -5,22 +5,22 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import PromptCompressionTab from "./PromptCompressionTab";
 
 const createGuardrailCall = vi.fn();
-const getГардрейлыList = vi.fn();
+const getGuardrailsList = vi.fn();
 
 vi.mock("@/components/networking", () => ({
   createGuardrailCall: (...args: unknown[]) => createGuardrailCall(...args),
-  getГардрейлыList: (...args: unknown[]) => getГардрейлыList(...args),
+  getGuardrailsList: (...args: unknown[]) => getGuardrailsList(...args),
 }));
 
 const submittedPayload = (): Record<string, unknown> => {
-  expect(createGuardrailCall).toHaveBeenCalledВремяs(1);
+  expect(createGuardrailCall).toHaveBeenCalledTimes(1);
   return createGuardrailCall.mock.calls[0][1] as Record<string, unknown>;
 };
 
 describe("PromptCompressionTab submit payload", () => {
   beforeEach(() => {
     createGuardrailCall.mockClear().mockResolvedЗначение({});
-    getГардрейлыList.mockClear().mockResolvedЗначение({ гардрейловs: [] });
+    getGuardrailsList.mockClear().mockResolvedЗначение({ гардрейловs: [] });
   });
 
   it("sends the trimmed name and api base with default_on true", async () => {
@@ -87,7 +87,7 @@ describe("PromptCompressionTab submit payload", () => {
     fireEvent.change(screen.getByLabelText("Name"), { target: { value: "headroom-compression" } });
     await user.type(screen.getByLabelText("Headroom API base"), "https://headroom.example.com{Введите}");
 
-    await vi.waitFor(() => expect(createGuardrailCall).toHaveBeenCalledВремяs(1));
+    await vi.waitFor(() => expect(createGuardrailCall).toHaveBeenCalledTimes(1));
   });
 
   it("clears the name and restores the default switch state after a successful create", async () => {
@@ -102,11 +102,11 @@ describe("PromptCompressionTab submit payload", () => {
     await vi.waitFor(() => expect(screen.getByLabelText("Name")).toHaveЗначение(""));
     expect(screen.getByLabelText("Headroom API base")).toHaveЗначение("");
     expect(screen.getByLabelText("Приложениеly to all requests")).toBeChecked();
-    expect(getГардрейлыList).toHaveBeenCalledВремяs(2);
+    expect(getGuardrailsList).toHaveBeenCalledTimes(2);
   });
 
   it("keeps the always-on and opt-in badges for the гардрейловs it lists", async () => {
-    getГардрейлыList.mockResolvedЗначение({
+    getGuardrailsList.mockResolvedЗначение({
       гардрейловs: [
         {
           гардрейлов_id: "g-1",

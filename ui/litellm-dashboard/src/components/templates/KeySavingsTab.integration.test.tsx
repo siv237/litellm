@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import КлючSavingsTab from "./КлючSavingsTab";
 import { Каждый деньData, РасходМетрикаs } from "@/components/ИспользованиеPage/types";
-import * as useОбластьdКаждый деньActivityRangeModule from "@/app/(dashboard)/cost-optimization/_components/useКаждый деньActivityRange";
+import * as useScopedDailyActivityRangeModule from "@/app/(dashboard)/cost-optimization/_components/useDailyActivityRange";
 
 const metrics = (overrides: Partial<РасходМетрикаs>): РасходМетрикаs => ({
   spend: 0,
@@ -31,8 +31,8 @@ const day = (date: string, overrides: Partial<РасходМетрикаs>): К�
 });
 
 const mockActivity = (
-  overrides: Partial<useОбластьdКаждый деньActivityRangeModule.Каждый деньActivityRange> = {},
-): useОбластьdКаждый деньActivityRangeModule.Каждый деньActivityRange => ({
+  overrides: Partial<useScopedDailyActivityRangeModule.DailyActivityRange> = {},
+): useScopedDailyActivityRangeModule.DailyActivityRange => ({
   dateЗначение: { from: new Date("2025-01-01"), to: new Date("2025-01-31") },
   onDateChange: vi.fn(),
   results: [] as Каждый деньData[],
@@ -44,7 +44,7 @@ const mockActivity = (
   ...overrides,
 });
 
-const scopedRange = () => vi.spyOn(useОбластьdКаждый деньActivityRangeModule, "useОбластьdКаждый деньActivityRange");
+const scopedRange = () => vi.spyOn(useScopedDailyActivityRangeModule, "useScopedDailyActivityRange");
 
 const activity = {
   dateЗначение: { from: new Date(2025, 0, 1), to: new Date(2025, 0, 31) },
@@ -65,7 +65,7 @@ const renderTab = (props: Partial<React.ComponentProps<typeof КлючSavingsTab
 
 describe("КлючSavingsTab", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("totals each savings driver across the days in range", () => {
@@ -73,7 +73,7 @@ describe("КлючSavingsTab", () => {
       compression_savings_spend: 1.5,
       prompt_caching_savings_spend: 0.25,
       gateway_injected_caching_savings_spend: 0.1,
-      autorвыходer_savings_spend: 2,
+      autorouter_savings_spend: 2,
       compression_saved_tokens: 400,
       cache_read_input_tokens: 300,
       prompt_tokens: 1000,
@@ -82,7 +82,7 @@ describe("КлючSavingsTab", () => {
       compression_savings_spend: 0.5,
       prompt_caching_savings_spend: 0.75,
       gateway_injected_caching_savings_spend: 0.3,
-      autorвыходer_savings_spend: 1,
+      autorouter_savings_spend: 1,
       compression_saved_tokens: 600,
       cache_read_input_tokens: 200,
       prompt_tokens: 1000,
@@ -100,7 +100,7 @@ describe("КлючSavingsTab", () => {
     // so a key whose caching came mostly from its own cache_control does not read as gateway-earned
     expect(screen.getByTestId("summary-card-prompt-caching-savings")).toHaveTextContent("$0.40");
     expect(screen.getByTestId("summary-card-prompt-caching-savings")).toHaveTextContent("$1.00Total");
-    expect(screen.getByTestId("summary-card-auto-rвыходer-savings")).toHaveTextContent("$3.00");
+    expect(screen.getByTestId("summary-card-auto-router-savings")).toHaveTextContent("$3.00");
   });
 
   it("separates a key with no traffic from one still loading", () => {

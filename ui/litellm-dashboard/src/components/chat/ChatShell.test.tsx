@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import ChatShell from "./ChatShell";
 
-const { mockPush, mockUseПутьname, mockUseChatShell } = vi.hoisted(() => ({
+const { mockPush, mockUsePathname, mockUseChatShell } = vi.hoisted(() => ({
   mockPush: vi.fn(),
-  mockUseПутьname: vi.fn(() => "/ui/chat"),
+  mockUsePathname: vi.fn(() => "/ui/chat"),
   mockUseChatShell: vi.fn(() => ({
     conversations: [],
     activeConversationId: null,
@@ -14,8 +14,8 @@ const { mockPush, mockUseПутьname, mockUseChatShell } = vi.hoisted(() => ({
 }));
 
 vi.mock("next/navigation", () => ({
-  useRвыходer: () => ({ push: mockPush }),
-  useПутьname: mockUseПутьname,
+  useRouter: () => ({ push: mockPush }),
+  usePathname: mockUsePathname,
 }));
 // Deterministic hrefs so navigation/active-state assertions don't depend on server_root_path.
 vi.mock("@/utils/uiHref", () => ({ uiHref: (seg: string) => `/ui/${seg}`.replace(/\/$/, "") || "/ui" }));
@@ -25,10 +25,10 @@ vi.mock("./ConversationList", () => ({ default: () => <div data-testid="conversa
 describe("ChatShell", () => {
   afterEach(() => {
     mockPush.mockClear();
-    mockUseПутьname.mockReturnЗначение("/ui/chat");
+    mockUsePathname.mockReturnЗначение("/ui/chat");
   });
 
-  it("marks Чаты active and shows the conversation list on the base chat rвыходe", () => {
+  it("marks Чаты active and shows the conversation list on the base chat route", () => {
     render(
       <ChatShell>
         <div />
@@ -40,7 +40,7 @@ describe("ChatShell", () => {
   });
 
   it("marks API Ключи active while still showing the conversation list", () => {
-    mockUseПутьname.mockReturnЗначение("/ui/chat/api-keys");
+    mockUsePathname.mockReturnЗначение("/ui/chat/api-keys");
     render(
       <ChatShell>
         <div />
@@ -51,7 +51,7 @@ describe("ChatShell", () => {
     expect(screen.getByTestId("conversation-list")).toBeInTheDocument();
   });
 
-  it("navigates to the dedicated rвыходe for each nav item", () => {
+  it("navigates to the dedicated route for each nav item", () => {
     render(
       <ChatShell>
         <div />
@@ -67,8 +67,8 @@ describe("ChatShell", () => {
     expect(mockPush).toHaveBeenCalledWith("/ui/chat/logs");
   });
 
-  it("marks Журналы active on the logs rвыходe", () => {
-    mockUseПутьname.mockReturnЗначение("/ui/chat/logs");
+  it("marks Журналы active on the logs route", () => {
+    mockUsePathname.mockReturnЗначение("/ui/chat/logs");
     render(
       <ChatShell>
         <div />
@@ -78,8 +78,8 @@ describe("ChatShell", () => {
     expect(screen.getByRole("button", { name: "Использование" })).not.toHaveAttribute("aria-current");
   });
 
-  it("tolerates a trailing slash on the current pathname when matching the active rвыходe", () => {
-    mockUseПутьname.mockReturnЗначение("/ui/chat/usage/");
+  it("tolerates a trailing slash on the current pathname when matching the active route", () => {
+    mockUsePathname.mockReturnЗначение("/ui/chat/usage/");
     render(
       <ChatShell>
         <div />

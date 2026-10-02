@@ -7,18 +7,18 @@ import * as networking from "@/components/networking";
 import { toast } from "@/lib/toast";
 
 vi.mock("@/components/networking", () => ({
-  getКоординационныйRedisSettingsCall: vi.fn(),
-  testКоординационныйRedisПодключениеCall: vi.fn(),
-  updateКоординационныйRedisSettingsCall: vi.fn(),
+  getCoordinationRedisSettingsCall: vi.fn(),
+  testCoordinationRedisConnectionCall: vi.fn(),
+  updateCoordinationRedisSettingsCall: vi.fn(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
   default: () => ({ accessТокен: "sk-test" }),
 }));
 
-const getSettings = vi.mocked(networking.getКоординационныйRedisSettingsCall);
-const updateSettings = vi.mocked(networking.updateКоординационныйRedisSettingsCall);
-const testПодключение = vi.mocked(networking.testКоординационныйRedisПодключениеCall);
+const getSettings = vi.mocked(networking.getCoordinationRedisSettingsCall);
+const updateSettings = vi.mocked(networking.updateCoordinationRedisSettingsCall);
+const testПодключение = vi.mocked(networking.testCoordinationRedisConnectionCall);
 const notifications = vi.mocked(toast);
 
 const settingsОтвет = (
@@ -37,13 +37,13 @@ const clickSave = async (user: ReturnType<typeof userEvent.setup>) =>
   user.click(screen.getByRole("button", { name: /save changes/i }));
 describe("КоординационныйRedisSettings value retention across redis types", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     getSettings.mockResolvedЗначение(settingsОтвет({}));
     updateSettings.mockResolvedЗначение(undefined);
   });
 
   const pickRedisType = async (user: ReturnType<typeof userEvent.setup>, name: RegExp) => {
-    await user.click(screen.getВсеByRole("combobox")[0]);
+    await user.click(screen.getAllByRole("combobox")[0]);
     await user.click(await screen.findByRole("option", { name }));
   };
 

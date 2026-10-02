@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import GuardrailDetailView from "./гардрейлов_garden_detail";
 import type { GuardrailCardInfo } from "./гардрейлов_garden_data";
 
-vi.mock("./add_гардрейлов_form", () => ({ default: () => null }));
+vi.mock("./add_guardrail_form", () => ({ default: () => null }));
 
 const makeCard = (overrides: Partial<GuardrailCardInfo> = {}): GuardrailCardInfo => ({
   id: "bedrock",

@@ -26,7 +26,7 @@ const { mockUseАвторизовано, mockUseUISettings, mockReplace, mockUiH
 });
 
 vi.mock("next/navigation", () => ({
-  useRвыходer: () => ({ replace: mockReplace }),
+  useRouter: () => ({ replace: mockReplace }),
 }));
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({ default: mockUseАвторизовано }));
 vi.mock("@/app/(dashboard)/hooks/uiSettings/useUISettings", () => ({ useUISettings: mockUseUISettings }));

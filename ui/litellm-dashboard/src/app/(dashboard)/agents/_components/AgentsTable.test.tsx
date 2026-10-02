@@ -36,7 +36,7 @@ describe("АгентыТаблица", () => {
   it("renders the agent's Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию and opens the detail view when the ID cell is clicked", async () => {
     const user = userEvent.setup();
     const onAgentClick = vi.fn();
-    const agent = makeAgent({ agent_id: "agent-xyz", agent_name: "Rвыходer", litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-3-5" } });
+    const agent = makeAgent({ agent_id: "agent-xyz", agent_name: "Router", litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-3-5" } });
     render(<АгентыТаблица agents={[agent]} {...baseProps} onAgentClick={onAgentClick} />);
 
     expect(screen.getByText("claude-3-5")).toBeInTheDocument();
@@ -79,7 +79,7 @@ describe("АгентыТаблица", () => {
     render(
       <АгентыТаблица
         agents={[
-          makeAgent({ agent_id: "a1", agent_name: "Billing Rвыходer" }),
+          makeAgent({ agent_id: "a1", agent_name: "Billing Router" }),
           makeAgent({
             agent_id: "a2",
             agent_name: "Second Agent",
@@ -92,13 +92,13 @@ describe("АгентыТаблица", () => {
 
     const search = screen.getByPlaceholderText("Search agents by name, ID, or description...");
     await user.type(search, "billing");
-    expect(screen.getByText("Billing Rвыходer")).toBeInTheDocument();
+    expect(screen.getByText("Billing Router")).toBeInTheDocument();
     expect(screen.queryByText("Second Agent")).not.toBeInTheDocument();
 
     await user.clear(search);
     await user.type(search, "support tickets");
     expect(screen.getByText("Second Agent")).toBeInTheDocument();
-    expect(screen.queryByText("Billing Rвыходer")).not.toBeInTheDocument();
+    expect(screen.queryByText("Billing Router")).not.toBeInTheDocument();
   });
 
   it("filters agents by a pasted agent_id so only that agent's row survives", async () => {
@@ -106,7 +106,7 @@ describe("АгентыТаблица", () => {
     render(
       <АгентыТаблица
         agents={[
-          makeAgent({ agent_id: "5f3c2a1b-9d8e-4f7a-b6c5-d4e3f2a1b0c9", agent_name: "Billing Rвыходer" }),
+          makeAgent({ agent_id: "5f3c2a1b-9d8e-4f7a-b6c5-d4e3f2a1b0c9", agent_name: "Billing Router" }),
           makeAgent({ agent_id: "0a9b8c7d-6e5f-4a3b-8c2d-1e0f9a8b7c6d", agent_name: "Second Agent" }),
         ]}
         {...baseProps}
@@ -116,12 +116,12 @@ describe("АгентыТаблица", () => {
     const search = screen.getByPlaceholderText("Search agents by name, ID, or description...");
     await user.click(search);
     await user.paste("5f3c2a1b-9d8e-4f7a-b6c5-d4e3f2a1b0c9");
-    expect(screen.getByText("Billing Rвыходer")).toBeInTheDocument();
+    expect(screen.getByText("Billing Router")).toBeInTheDocument();
     expect(screen.queryByText("Second Agent")).not.toBeInTheDocument();
 
     await user.clear(search);
     await user.paste("ffffffff-0000-4000-8000-000000000000");
-    expect(screen.queryByText("Billing Rвыходer")).not.toBeInTheDocument();
+    expect(screen.queryByText("Billing Router")).not.toBeInTheDocument();
     expect(screen.queryByText("Second Agent")).not.toBeInTheDocument();
     expect(screen.getByText("No matching agents")).toBeInTheDocument();
   });
@@ -161,7 +161,7 @@ describe("АгентыТаблица", () => {
       />,
     );
 
-    const bodyRows = screen.getВсеByRole("row").slice(1);
+    const bodyRows = screen.getAllByRole("row").slice(1);
     expect(bodyRows[0]).toHaveTextContent(/Бета Agent/);
     expect(bodyRows[1]).toHaveTextContent(/Alpha Agent/);
   });
@@ -178,7 +178,7 @@ describe("АгентыТаблица", () => {
       />,
     );
 
-    const bodyRows = screen.getВсеByRole("row").slice(1);
+    const bodyRows = screen.getAllByRole("row").slice(1);
     expect(bodyRows[0]).toHaveTextContent(/Бета Agent/);
     expect(bodyRows[1]).toHaveTextContent(/Alpha Agent/);
     expect(bodyRows[2]).toHaveTextContent(/Undated Agent/);
@@ -192,7 +192,7 @@ describe("АгентыТаблица", () => {
 
   it("renders loading skeleton rows on initial load instead of the empty state", () => {
     render(<АгентыТаблица agents={[]} {...baseProps} isLoading />);
-    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
     expect(screen.queryByText("No agents yet")).not.toBeInTheDocument();
   });
 

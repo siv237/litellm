@@ -1,6 +1,6 @@
 import React from "react";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs, screen, waitFor } from "@/../tests/test-utils";
+import { renderWithProviders, screen, waitFor } from "@/../tests/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as networking from "@/components/networking";
 import ImpactPopover from "./impact_popover";
@@ -27,12 +27,12 @@ const makeAttachment = (overrides: Partial<ПолитикаAttachment> = {}): П
 
 describe("ImpactPopover", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   it("should render", () => {
-    renderWithПровайдерs(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
+    renderWithProviders(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
     expect(screen.getByRole("button", { name: /view blast radius/i })).toBeInTheDocument();
   });
 
@@ -45,7 +45,7 @@ describe("ImpactPopover", () => {
       sample_teams: [],
     });
     const attachment = makeAttachment({ policy_name: "rate-limit", teams: ["team-a"] });
-    renderWithПровайдерs(<ImpactPopover attachment={attachment} accessТокен="my-token" />);
+    renderWithProviders(<ImpactPopover attachment={attachment} accessТокен="my-token" />);
     await user.click(screen.getByRole("button", { name: /view blast radius/i }));
     await waitFor(() => {
       expect(networking.estimateAttachmentImpactCall).toHaveBeenCalledWith("my-token", {
@@ -61,7 +61,7 @@ describe("ImpactPopover", () => {
 
   it("should not call the API when accessТокен is null", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<ImpactPopover attachment={makeAttachment()} accessТокен={null} />);
+    renderWithProviders(<ImpactPopover attachment={makeAttachment()} accessТокен={null} />);
     await user.click(screen.getByRole("button", { name: /view blast radius/i }));
     expect(networking.estimateAttachmentImpactCall).not.toHaveBeenCalled();
     expect(screen.getByText(/click to load/i)).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe("ImpactPopover", () => {
   it("should show a loading indicator while the impact is being fetched", async () => {
     const user = userEvent.setup();
     vi.mocked(networking.estimateAttachmentImpactCall).mockReturnЗначение(new Promise(() => {}));
-    renderWithПровайдерs(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
+    renderWithProviders(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
     await user.click(screen.getByRole("button", { name: /view blast radius/i }));
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });
@@ -83,7 +83,7 @@ describe("ImpactPopover", () => {
       sample_keys: [],
       sample_teams: [],
     });
-    renderWithПровайдерs(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
+    renderWithProviders(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
     await user.click(screen.getByRole("button", { name: /view blast radius/i }));
     expect(await screen.findByText(/global scope.*affects all keys and teams/i)).toBeInTheDocument();
   });
@@ -96,7 +96,7 @@ describe("ImpactPopover", () => {
       sample_keys: ["sk-abc"],
       sample_teams: ["team-x"],
     });
-    renderWithПровайдерs(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
+    renderWithProviders(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
     await user.click(screen.getByRole("button", { name: /view blast radius/i }));
     expect(
       await screen.findByText((_, element) => element?.textContent === "1 key, 1 team affected"),
@@ -111,7 +111,7 @@ describe("ImpactPopover", () => {
       sample_keys: ["sk-key-one", "sk-key-two"],
       sample_teams: ["team-one"],
     });
-    renderWithПровайдерs(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
+    renderWithProviders(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
     await user.click(screen.getByRole("button", { name: /view blast radius/i }));
     expect(await screen.findByText("sk-key-one")).toBeInTheDocument();
     expect(screen.getByText("sk-key-two")).toBeInTheDocument();
@@ -126,7 +126,7 @@ describe("ImpactPopover", () => {
       sample_keys: [],
       sample_teams: [],
     });
-    renderWithПровайдерs(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
+    renderWithProviders(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
     await user.click(screen.getByRole("button", { name: /view blast radius/i }));
     expect(await screen.findByText(/no keys or teams currently affected/i)).toBeInTheDocument();
   });
@@ -139,26 +139,26 @@ describe("ImpactPopover", () => {
       sample_keys: ["sk-abc"],
       sample_teams: [],
     });
-    renderWithПровайдерs(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
+    renderWithProviders(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
     const trigger = screen.getByRole("button", { name: /view blast radius/i });
     await user.click(trigger);
     await screen.findByText("sk-abc");
     await user.click(trigger);
     await user.click(trigger);
-    expect(networking.estimateAttachmentImpactCall).toHaveBeenCalledВремяs(1);
+    expect(networking.estimateAttachmentImpactCall).toHaveBeenCalledTimes(1);
   });
 
   it("should retry loading after a failed request", async () => {
     const user = userEvent.setup();
     vi.mocked(networking.estimateAttachmentImpactCall)
-      .mockRejectedЗначениеOnce(new Ошибка("network unavailable"))
-      .mockResolvedЗначениеOnce({
+      .mockRejectedValueOnce(new Ошибка("network unavailable"))
+      .mockResolvedValueOnce({
         affected_keys_count: 1,
         affected_teams_count: 0,
         sample_keys: ["sk-recovered"],
         sample_teams: [],
       });
-    renderWithПровайдерs(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
+    renderWithProviders(<ImpactPopover attachment={makeAttachment()} accessТокен="tok" />);
 
     const trigger = screen.getByRole("button", { name: /view blast radius/i });
     await user.click(trigger);

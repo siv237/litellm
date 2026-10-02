@@ -1,12 +1,12 @@
-import type { ColumnDef, ColumnФильтрыState } from "@tanstack/react-table";
+import type { ColumnDef, ColumnFiltersState } from "@tanstack/react-table";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
 
 import { DataТаблица } from "./DataТаблица";
-import { DataТаблицаФильтрDrawer } from "./DataТаблицаФильтрDrawer";
-import { DataТаблицаToolbar } from "./DataТаблицаToolbar";
+import { DataTableFilterDrawer } from "./DataTableFilterDrawer";
+import { DataTableToolbar } from "./DataTableToolbar";
 
 interface Person {
   id: string;
@@ -29,9 +29,9 @@ const columns: ColumnDef<Person, unknown>[] = [
   },
 ];
 
-const names = (): (string | null)[] => screen.getВсеByTestId("name-cell").map((el) => el.textContent);
+const names = (): (string | null)[] => screen.getAllByTestId("name-cell").map((el) => el.textContent);
 
-function Harness({ initialФильтры }: { initialФильтры?: ColumnФильтрыState }) {
+function Harness({ initialФильтры }: { initialФильтры?: ColumnFiltersState }) {
   const [open, setOpen] = useState(false);
   return (
     <DataТаблица
@@ -41,8 +41,8 @@ function Harness({ initialФильтры }: { initialФильтры?: ColumnФи
       defaultColumnФильтры={initialФильтры}
       toolbar={(table) => (
         <>
-          <DataТаблицаToolbar table={table} onOpenФильтры={() => setOpen(true)} />
-          <DataТаблицаФильтрDrawer table={table} open={open} onOpenChange={setOpen} title="Фильтры">
+          <DataTableToolbar table={table} onOpenФильтры={() => setOpen(true)} />
+          <DataTableFilterDrawer table={table} open={open} onOpenChange={setOpen} title="Фильтры">
             {({ get, set }) => (
               <input
                 aria-label="name filter"
@@ -51,14 +51,14 @@ function Harness({ initialФильтры }: { initialФильтры?: ColumnФи
                 onChange={(event) => set("name", event.target.value)}
               />
             )}
-          </DataТаблицаФильтрDrawer>
+          </DataTableFilterDrawer>
         </>
       )}
     />
   );
 }
 
-describe("DataТаблицаФильтрDrawer", () => {
+describe("DataTableFilterDrawer", () => {
   it("stages edits and only commits them to the table on Приложениеly", async () => {
     const user = userEvent.setup();
     render(<Harness />);

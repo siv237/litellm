@@ -3,12 +3,12 @@ import { ЗапросClient, ЗапросClientПровайдер } from "@tanst
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import РежимlsAndЭндпоинтsPage from "./page";
+import РежимlsAndEndpointsPage from "./page";
 
 vi.mock("./panels/ВсеРежимlsPanel", () => ({ default: () => <div data-testid="panel-all-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs" /> }));
-vi.mock("./panels/AddРежимlPanel", () => ({ default: () => <div data-testid="panel-add" /> }));
-vi.mock("./panels/AutoRвыходersTabPanel", () => ({ default: () => <div data-testid="panel-auto-rвыходers" /> }));
-vi.mock("./panels/LlmУчётные данныеPanel", () => ({ default: () => <div data-testid="panel-credentials" /> }));
+vi.mock("./panels/AddModelPanel", () => ({ default: () => <div data-testid="panel-add" /> }));
+vi.mock("./panels/AutoRoutersTabPanel", () => ({ default: () => <div data-testid="panel-auto-routers" /> }));
+vi.mock("./panels/LlmCredentialsPanel", () => ({ default: () => <div data-testid="panel-credentials" /> }));
 vi.mock("./panels/PassThroughPanel", () => ({ default: () => <div data-testid="panel-pass-through" /> }));
 vi.mock("./panels/HealthStatusPanel", () => ({ default: () => <div data-testid="panel-health" /> }));
 vi.mock("./panels/РежимlRetrySettingsPanel", () => ({ default: () => <div data-testid="panel-retry" /> }));
@@ -17,7 +17,7 @@ vi.mock("./panels/PriceDataPanel", () => ({ default: () => <div data-testid="pan
 
 const detailState = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId: null as string | null, teamId: null as string | null };
 vi.mock("./detailNavigation", () => ({
-  useРежимlDetailМаршрутизация: () => ({ ...detailState, close: vi.fn(), openРежимl: vi.fn(), openTeam: vi.fn() }),
+  useModelDetailМаршрутизация: () => ({ ...detailState, close: vi.fn(), openModel: vi.fn(), openTeam: vi.fn() }),
 }));
 
 vi.mock("@/components/molecules/cost_optimization_feedback_banner", () => ({ default: () => null }));
@@ -34,8 +34,8 @@ vi.mock("@/app/(dashboard)/hooks/teams/useКоманды", () => ({ useКома�
 vi.mock("@/app/(dashboard)/hooks/uiSettings/useUISettings", () => ({
   useUISettings: () => ({ data: { values: {} } }),
 }));
-vi.mock("./useРежимlDashboardData", () => ({
-  useРежимlDashboardData: () => ({ availableРежимlAccessGroups: [], allРежимlsOnProxy: [], availableРежимlGroups: [] }),
+vi.mock("./useModelDashboardData", () => ({
+  useModelDashboardData: () => ({ availableModelAccessGroups: [], allModelsOnProxy: [], availableModelGroups: [] }),
 }));
 
 const ADMIN = { accessТокен: "at", token: "t", userRole: "Admin", userId: "u1", premiumUser: false, isViewOnly: false };
@@ -47,21 +47,21 @@ const NON_ADMIN = {
   premiumUser: false,
   isViewOnly: false,
 };
-// A proxy_admin_viewer session: effectiveСессияRole masquerades the role as "Admin".
+// A proxy_admin_viewer session: effectiveSessionRole masquerades the role as "Admin".
 const VIEW_ONLY_ADMIN = { ...ADMIN, isViewOnly: true };
 
 const renderPage = () => {
   const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false, gcВремя: 0 } } });
   return render(
     <ЗапросClientПровайдер client={queryClient}>
-      <РежимlsAndЭндпоинтsPage />
+      <РежимlsAndEndpointsPage />
     </ЗапросClientПровайдер>,
   );
 };
 
-describe("РежимlsAndЭндпоинтsPage", () => {
+describe("РежимlsAndEndpointsPage", () => {
   beforeEach(() => {
-    detailState.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId = null;
+    detailState.modelId = null;
     detailState.teamId = null;
     mockUseАвторизовано.mockReturnЗначение(ADMIN);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,7 +89,7 @@ describe("РежимlsAndЭндпоинтsPage", () => {
   });
 
   it("renders the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию detail overlay from the ?Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию drill-in and hides the tabs", () => {
-    detailState.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId = "abc-123";
+    detailState.modelId = "abc-123";
     renderPage();
     expect(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-info")).toHaveTextContent("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию:abc-123");
     expect(screen.queryByRole("tab", { name: "Все Режимls" })).not.toBeInTheDocument();
@@ -116,24 +116,24 @@ describe("РежимlsAndЭндпоинтsPage", () => {
     expect(screen.getByRole("tab", { name: "Все Режимls" })).toBeInTheDocument();
   });
 
-  // Read parity: the Auto-Rвыходers list stays reachable for a view-only admin; only the
-  // create affordance inside it is withheld, which AutoRвыходersTabPanel decides.
-  it("keeps the Auto-Rвыходers tab for a view-only admin session", () => {
+  // Read parity: the Auto-Routers list stays reachable for a view-only admin; only the
+  // create affordance inside it is withheld, which AutoRoutersTabPanel decides.
+  it("keeps the Auto-Routers tab for a view-only admin session", () => {
     mockUseАвторизовано.mockReturnЗначение(VIEW_ONLY_ADMIN);
     renderPage();
-    expect(screen.getByRole("tab", { name: /Auto-Rвыходers/ })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Auto-Routers/ })).toBeInTheDocument();
   });
 
-  // Auto-rвыходers are excluded from the Все Режимls table, so this tab is their home: the only
+  // Auto-routers are excluded from the All Models table, so this tab is their home: the only
   // place in the product to list, create, edit or delete one.
-  describe("Auto-Rвыходers tab", () => {
+  describe("Auto-Routers tab", () => {
     it("sits third, after Все Режимls and Add Режимl", () => {
       renderPage();
 
-      const tabs = screen.getВсеByRole("tab").map((tab) => tab.textContent);
+      const tabs = screen.getAllByRole("tab").map((tab) => tab.textContent);
       expect(tabs[0]).toContain("Все Режимls");
       expect(tabs[1]).toBe("Add Режимl");
-      expect(tabs[2]).toContain("Auto-Rвыходers");
+      expect(tabs[2]).toContain("Auto-Routers");
       // Badged Бета while the tab settles; БетаBadge renders the label text.
       expect(tabs[2]).toContain("Бета");
     });
@@ -142,15 +142,15 @@ describe("РежимlsAndЭндпоинтsPage", () => {
       const user = userEvent.setup();
       renderPage();
 
-      await user.click(screen.getByRole("tab", { name: /Auto-Rвыходers/ }));
-      expect(screen.getByTestId("panel-auto-rвыходers")).toBeInTheDocument();
+      await user.click(screen.getByRole("tab", { name: /Auto-Routers/ }));
+      expect(screen.getByTestId("panel-auto-routers")).toBeInTheDocument();
     });
 
     it("is hidden from non-admins, who cannot write Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => {
       mockUseАвторизовано.mockReturnЗначение(NON_ADMIN);
       renderPage();
 
-      expect(screen.queryByRole("tab", { name: /Auto-Rвыходers/ })).not.toBeInTheDocument();
+      expect(screen.queryByRole("tab", { name: /Auto-Routers/ })).not.toBeInTheDocument();
     });
   });
 });

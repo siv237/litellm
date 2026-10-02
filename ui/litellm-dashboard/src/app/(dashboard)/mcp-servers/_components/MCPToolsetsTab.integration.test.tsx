@@ -3,34 +3,34 @@ import { fireEvent, render, screen, waitFor, within } from "@testing-library/rea
 import userEvent, { PointerEventsCheckLevel } from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
-import { MCPИнструментыetsTab } from "./MCPИнструментыetsTab";
+import { MCPToolsetsTab } from "./MCPToolsetsTab";
 import * as networking from "@/components/networking";
-import { useMCPИнструментыets } from "@/app/(dashboard)/hooks/mcp-серверы/useMCPИнструментыets";
+import { useMCPToolsets } from "@/app/(dashboard)/hooks/mcp-серверы/useMCPToolsets";
 import { useMCP-серверы } from "@/app/(dashboard)/hooks/mcp-серверы/useMCP-серверы";
-import { MCPИнструментыet } from "@/components/mcp_tools/types";
+import { MCPToolset } from "@/components/mcp_tools/types";
 
 vi.mock("@/components/networking", () => ({
-  createMCPИнструментыet: vi.fn(),
-  updateMCPИнструментыet: vi.fn(),
-  deleteMCPИнструментыet: vi.fn(),
+  createMCPToolset: vi.fn(),
+  updateMCPToolset: vi.fn(),
+  deleteMCPToolset: vi.fn(),
   listMCPИнструменты: vi.fn(),
   getProxyBaseUrl: vi.fn().mockReturnЗначение("http://localhost:4000"),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCPИнструментыets", () => ({ useMCPИнструментыets: vi.fn() }));
+vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCPToolsets", () => ({ useMCPToolsets: vi.fn() }));
 vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCP-серверы", () => ({ useMCP-серверы: vi.fn() }));
 
 const setup = () => userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
 
-const renderTab = (toolsets: MCPИнструментыet[] = []) => {
-  vi.mocked(useMCPИнструментыets).mockReturnЗначение({
+const renderTab = (toolsets: MCPToolset[] = []) => {
+  vi.mocked(useMCPToolsets).mockReturnЗначение({
     data: toolsets,
     isLoading: false,
-  } as unknown as ReturnType<typeof useMCPИнструментыets>);
+  } as unknown as ReturnType<typeof useMCPToolsets>);
   vi.mocked(useMCP-серверы).mockReturnЗначение({ data: [] } as unknown as ReturnType<typeof useMCP-серверы>);
   render(
     <ЗапросClientПровайдер client={new ЗапросClient({ defaultOptions: { queries: { retry: false, gcВремя: 0 } } })}>
-      <MCPИнструментыetsTab accessТокен="sk-test" userRole="Admin" />
+      <MCPToolsetsTab accessТокен="sk-test" userRole="Admin" />
     </ЗапросClientПровайдер>,
   );
 };
@@ -55,15 +55,15 @@ const openCreate = async (user: ReturnType<typeof setup>) => {
   return dialogWithButton(/создать набор/i);
 };
 
-describe("MCPИнструментыetsTab create/edit toolset form", () => {
+describe("MCPToolsetsTab create/edit toolset form", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("creates a toolset with the typed name, description and no tools", async () => {
     const user = setup();
-    vi.mocked(networking.createMCPИнструментыet).mockResolvedЗначение(
-      {} as Awaited<ReturnType<typeof networking.createMCPИнструментыet>>,
+    vi.mocked(networking.createMCPToolset).mockResolvedЗначение(
+      {} as Awaited<ReturnType<typeof networking.createMCPToolset>>,
     );
     renderTab();
 
@@ -75,19 +75,19 @@ describe("MCPИнструментыetsTab create/edit toolset form", () => {
     await user.click(dialog.getByRole("button", { name: /создать набор/i }));
 
     await waitFor(() => {
-      expect(networking.createMCPИнструментыet).toHaveBeenCalledWith("sk-test", {
+      expect(networking.createMCPToolset).toHaveBeenCalledWith("sk-test", {
         toolset_name: "github-linear-tools",
         description: "tools for triage",
         tools: [],
       });
     });
-    expect(networking.createMCPИнструментыet).toHaveBeenCalledВремяs(1);
+    expect(networking.createMCPToolset).toHaveBeenCalledTimes(1);
   });
 
   it("sends an empty string when the description is left untouched", async () => {
     const user = setup();
-    vi.mocked(networking.createMCPИнструментыet).mockResolvedЗначение(
-      {} as Awaited<ReturnType<typeof networking.createMCPИнструментыet>>,
+    vi.mocked(networking.createMCPToolset).mockResolvedЗначение(
+      {} as Awaited<ReturnType<typeof networking.createMCPToolset>>,
     );
     renderTab();
 
@@ -96,7 +96,7 @@ describe("MCPИнструментыetsTab create/edit toolset form", () => {
     await user.click(dialog.getByRole("button", { name: /создать набор/i }));
 
     await waitFor(() => {
-      expect(networking.createMCPИнструментыet).toHaveBeenCalledWith("sk-test", {
+      expect(networking.createMCPToolset).toHaveBeenCalledWith("sk-test", {
         toolset_name: "solo",
         description: "",
         tools: [],
@@ -112,13 +112,13 @@ describe("MCPИнструментыetsTab create/edit toolset form", () => {
     await user.click(dialog.getByRole("button", { name: /создать набор/i }));
 
     expect(await dialog.findByText("Введите название набора")).toBeInTheDocument();
-    expect(networking.createMCPИнструментыet).not.toHaveBeenCalled();
+    expect(networking.createMCPToolset).not.toHaveBeenCalled();
   });
 
   it("does not treat a whitespace-only description as absent", async () => {
     const user = setup();
-    vi.mocked(networking.createMCPИнструментыet).mockResolvedЗначение(
-      {} as Awaited<ReturnType<typeof networking.createMCPИнструментыet>>,
+    vi.mocked(networking.createMCPToolset).mockResolvedЗначение(
+      {} as Awaited<ReturnType<typeof networking.createMCPToolset>>,
     );
     renderTab();
 
@@ -128,7 +128,7 @@ describe("MCPИнструментыetsTab create/edit toolset form", () => {
     await user.click(dialog.getByRole("button", { name: /создать набор/i }));
 
     await waitFor(() => {
-      expect(networking.createMCPИнструментыet).toHaveBeenCalledWith("sk-test", {
+      expect(networking.createMCPToolset).toHaveBeenCalledWith("sk-test", {
         toolset_name: "spaced",
         description: "  ",
         tools: [],
@@ -138,15 +138,15 @@ describe("MCPИнструментыetsTab create/edit toolset form", () => {
 
   it("seeds the edit form from the toolset and updates it by id", async () => {
     const user = setup();
-    vi.mocked(networking.updateMCPИнструментыet).mockResolvedЗначение(
-      {} as Awaited<ReturnType<typeof networking.updateMCPИнструментыet>>,
+    vi.mocked(networking.updateMCPToolset).mockResolvedЗначение(
+      {} as Awaited<ReturnType<typeof networking.updateMCPToolset>>,
     );
     const toolset = {
       toolset_id: "ts-1",
       toolset_name: "existing",
       description: "old description",
       tools: [{ server_id: "srv-1", tool_name: "search" }],
-    } as MCPИнструментыet;
+    } as MCPToolset;
     renderTab([toolset]);
 
     const dialog = await openEditFor(user);
@@ -166,21 +166,21 @@ describe("MCPИнструментыetsTab create/edit toolset form", () => {
       tools: [{ server_id: "srv-1", tool_name: "search" }],
     };
     await waitFor(() => {
-      expect(networking.updateMCPИнструментыet).toHaveBeenCalledWith("sk-test", expectedUpdate);
+      expect(networking.updateMCPToolset).toHaveBeenCalledWith("sk-test", expectedUpdate);
     });
   });
 
   it("seeds an absent description as an empty string rather than failing", async () => {
     const user = setup();
-    vi.mocked(networking.updateMCPИнструментыet).mockResolvedЗначение(
-      {} as Awaited<ReturnType<typeof networking.updateMCPИнструментыet>>,
+    vi.mocked(networking.updateMCPToolset).mockResolvedЗначение(
+      {} as Awaited<ReturnType<typeof networking.updateMCPToolset>>,
     );
     const toolset = {
       toolset_id: "ts-2",
       toolset_name: "no-desc",
       description: null,
       tools: [],
-    } as unknown as MCPИнструментыet;
+    } as unknown as MCPToolset;
     renderTab([toolset]);
 
     const dialog = await openEditFor(user);
@@ -191,7 +191,7 @@ describe("MCPИнструментыetsTab create/edit toolset form", () => {
 
     const expectedUpdate = { toolset_id: "ts-2", toolset_name: "no-desc", description: "", tools: [] };
     await waitFor(() => {
-      expect(networking.updateMCPИнструментыet).toHaveBeenCalledWith("sk-test", expectedUpdate);
+      expect(networking.updateMCPToolset).toHaveBeenCalledWith("sk-test", expectedUpdate);
     });
   });
 });

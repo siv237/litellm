@@ -11,7 +11,7 @@ vi.mock("@/components/networking", () => ({
   fetchSearchИнструменты: vi.fn(),
   updateSearchTool: vi.fn(),
   deleteSearchTool: vi.fn(),
-  fetchAvailableSearchПровайдерs: vi.fn(),
+  fetchAvailableSearchProviders: vi.fn(),
 }));
 
 vi.mock("@/utils/roles", () => ({
@@ -89,7 +89,7 @@ const mockSearchИнструменты: SearchTool[] = [
   },
 ];
 
-const mockAvailableПровайдерs: AvailableSearchПровайдер[] = [
+const mockAvailableProviders: AvailableSearchПровайдер[] = [
   {
     provider_name: "perplexity",
     ui_friendly_name: "Perplexity AI",
@@ -123,9 +123,9 @@ describe("SearchИнструменты", () => {
   };
 
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     vi.mocked(networking.fetchSearchИнструменты).mockResolvedЗначение({ search_tools: mockSearchИнструменты });
-    vi.mocked(networking.fetchAvailableSearchПровайдерs).mockResolvedЗначение({ providers: mockAvailableПровайдерs });
+    vi.mocked(networking.fetchAvailableSearchProviders).mockResolvedЗначение({ providers: mockAvailableProviders });
     vi.mocked(roles.isAdminRole).mockReturnЗначение(true);
   });
 
@@ -156,7 +156,7 @@ describe("SearchИнструменты", () => {
     await waitFor(() => {
       expect(screen.getByText("Perplexity Search")).toBeInTheDocument();
     });
-    expect(screen.getВсеByText("Tavily Search").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Tavily Search").length).toBeGreaterThan(0);
   });
 
   it("should display empty state when no search tools are available", async () => {

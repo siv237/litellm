@@ -1,16 +1,16 @@
-import { renderWithПровайдерs, screen } from "../../tests/test-utils";
+import { renderWithProviders, screen } from "../../tests/test-utils";
 import { describe, expect, it } from "vitest";
 import GuardrailSettingsView from "./GuardrailSettingsView";
 
 describe("GuardrailSettingsView", () => {
   it("should render", () => {
-    renderWithПровайдерs(<GuardrailSettingsView globalGuardrailNames={new Set()} />);
+    renderWithProviders(<GuardrailSettingsView globalGuardrailNames={new Set()} />);
 
     expect(screen.getByText("Настройки гардрейлов")).toBeInTheDocument();
   });
 
   it("should separate active global and team-specific гардрейловs", () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <GuardrailSettingsView
         globalGuardrailNames={new Set(["global-one", "global-two"])}
         teamГардрейлы={["global-one", "team-one"]}
@@ -24,7 +24,7 @@ describe("GuardrailSettingsView", () => {
   });
 
   it("should show when global гардрейловs are bypassed", () => {
-    renderWithПровайдерs(<GuardrailSettingsView globalGuardrailNames={new Set(["global-one"])} killSwitchOn />);
+    renderWithProviders(<GuardrailSettingsView globalGuardrailNames={new Set(["global-one"])} killSwitchOn />);
 
     expect(screen.getByText("Обход для этой команды")).toBeInTheDocument();
   });

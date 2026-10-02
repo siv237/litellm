@@ -11,7 +11,7 @@ vi.mock("@/components/networking", () => ({
   fetchSearchИнструменты: vi.fn(),
   updateSearchTool: vi.fn(),
   deleteSearchTool: vi.fn(),
-  fetchAvailableSearchПровайдерs: vi.fn(),
+  fetchAvailableSearchProviders: vi.fn(),
 }));
 
 vi.mock("@/utils/roles", () => ({ isAdminRole: vi.fn() }));
@@ -24,7 +24,7 @@ vi.mock("./SearchToolView", () => ({ SearchToolView: () => <div data-testid="sea
 vi.mock("./CreateSearchИнструменты", () => ({ default: () => null }));
 vi.mock("@/components/common_components/DeleteResourceModal", () => ({ default: () => null }));
 
-const toolWithСерверOnlyParams: SearchTool = {
+const toolWithServerOnlyParams: SearchTool = {
   search_tool_id: "tool-1",
   search_tool_name: "Perplexity Search",
   litellm_params: {
@@ -38,7 +38,7 @@ const toolWithСерверOnlyParams: SearchTool = {
   created_at: "2024-01-15T10:30:00Z",
 };
 
-const toolWithNullСерверПолеs: SearchTool = {
+const toolWithNullServerFields: SearchTool = {
   search_tool_id: "tool-1",
   search_tool_name: "Perplexity Search",
   litellm_params: {
@@ -72,9 +72,9 @@ const openEditModal = async (user: ReturnType<typeof userEvent.setup>) => {
 
 describe("SearchИнструменты edit payload", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
-    vi.mocked(networking.fetchSearchИнструменты).mockResolvedЗначение({ search_tools: [toolWithСерверOnlyParams] });
-    vi.mocked(networking.fetchAvailableSearchПровайдерs).mockResolvedЗначение({ providers });
+    vi.clearAllMocks();
+    vi.mocked(networking.fetchSearchИнструменты).mockResolvedЗначение({ search_tools: [toolWithServerOnlyParams] });
+    vi.mocked(networking.fetchAvailableSearchProviders).mockResolvedЗначение({ providers });
     vi.mocked(networking.updateSearchTool).mockResolvedЗначение({});
     vi.mocked(roles.isAdminRole).mockReturnЗначение(true);
   });
@@ -86,7 +86,7 @@ describe("SearchИнструменты edit payload", () => {
 
     await user.click(screen.getByRole("button", { name: "OK" }));
 
-    await waitFor(() => expect(networking.updateSearchTool).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(networking.updateSearchTool).toHaveBeenCalledTimes(1));
     const [token, toolId, payload] = vi.mocked(networking.updateSearchTool).mock.calls[0];
     expect(token).toBe("test-token");
     expect(toolId).toBe("tool-1");
@@ -112,7 +112,7 @@ describe("SearchИнструменты edit payload", () => {
     fireEvent.change(screen.getByLabelText("Описание"), { target: { value: "updated copy" } });
     await user.click(screen.getByRole("button", { name: "OK" }));
 
-    await waitFor(() => expect(networking.updateSearchTool).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(networking.updateSearchTool).toHaveBeenCalledTimes(1));
     expect(vi.mocked(networking.updateSearchTool).mock.calls[0][2]).toMatchObject({
       search_tool_info: { description: "updated copy" },
     });
@@ -126,7 +126,7 @@ describe("SearchИнструменты edit payload", () => {
     await user.clear(screen.getByLabelText("Описание"));
     await user.click(screen.getByRole("button", { name: "OK" }));
 
-    await waitFor(() => expect(networking.updateSearchTool).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(networking.updateSearchTool).toHaveBeenCalledTimes(1));
     const payload = vi.mocked(networking.updateSearchTool).mock.calls[0][2];
     expect(payload).toStrictEqual({
       search_tool_name: "Perplexity Search",
@@ -161,14 +161,14 @@ describe("SearchИнструменты edit payload", () => {
     expect(networking.updateSearchTool).not.toHaveBeenCalled();
   });
   it("still edits a tool whose api_key and search_tool_info came back null", async () => {
-    vi.mocked(networking.fetchSearchИнструменты).mockResolvedЗначение({ search_tools: [toolWithNullСерверПолеs] });
+    vi.mocked(networking.fetchSearchИнструменты).mockResolvedЗначение({ search_tools: [toolWithNullServerFields] });
     const user = userEvent.setup();
     renderPage();
     await openEditModal(user);
 
     await user.click(screen.getByRole("button", { name: "OK" }));
 
-    await waitFor(() => expect(networking.updateSearchTool).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(networking.updateSearchTool).toHaveBeenCalledTimes(1));
     const payload = vi.mocked(networking.updateSearchTool).mock.calls[0][2];
     expect(payload).toStrictEqual({
       search_tool_name: "Perplexity Search",

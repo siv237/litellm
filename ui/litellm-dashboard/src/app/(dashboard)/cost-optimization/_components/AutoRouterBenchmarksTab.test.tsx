@@ -3,48 +3,48 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { AutoRвыходerDeployment } from "@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useРежимls";
+import type { AutoRouterDeployment } from "@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useModels";
 import { ApiОшибка } from "@/lib/http/client";
 
-vi.mock("./useAutoRвыходerBenchmarks", () => ({ useAutoRвыходerBenchmarks: vi.fn() }));
-vi.mock("@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useРежимls", () => ({ useAutoRвыходers: vi.fn() }));
+vi.mock("./useAutoRouterBenchmarks", () => ({ useAutoRouterBenchmarks: vi.fn() }));
+vi.mock("@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useModels", () => ({ useAutoRouters: vi.fn() }));
 vi.mock("./ShadowEvalSection", () => ({ default: () => <div data-testid="shadow-eval-section" /> }));
 vi.mock("@/components/shared/advanced_date_picker", () => ({
   __esModule: true,
-  default: ({ onЗначениеChange }: { onЗначениеChange: (value: { from?: Date; to?: Date }) => void }) => (
+  default: ({ onValueChange }: { onValueChange: (value: { from?: Date; to?: Date }) => void }) => (
     <button
       type="button"
       data-testid="date-picker"
-      onClick={() => onЗначениеChange({ from: new Date(2026, 7, 1), to: new Date(2026, 7, 5) })}
+      onClick={() => onValueChange({ from: new Date(2026, 7, 1), to: new Date(2026, 7, 5) })}
     />
   ),
 }));
 
-import { useAutoRвыходers } from "@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useРежимls";
+import { useAutoRouters } from "@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useModels";
 
-import AutoRвыходerBenchmarksTab, { AutoRвыходerИспользованиеView } from "./AutoRвыходerBenchmarksTab";
+import AutoRouterBenchmarksTab, { AutoRouterUsageView } from "./AutoRouterBenchmarksTab";
 import type {
-  AutoRвыходerBenchmarkGroup,
-  AutoRвыходerBenchmarksОтвет,
-  AutoRвыходerCacheStats,
-} from "./autoRвыходerBenchmarks";
-import { useAutoRвыходerBenchmarks } from "./useAutoRвыходerBenchmarks";
+  AutoRouterBenchmarkGroup,
+  AutoRouterBenchmarksОтвет,
+  AutoRouterCacheStats,
+} from "./autoRouterBenchmarks";
+import { useAutoRouterBenchmarks } from "./useAutoRouterBenchmarks";
 
-type HookРезультат = ReturnType<typeof useAutoRвыходerBenchmarks>;
+type HookРезультат = ReturnType<typeof useAutoRouterBenchmarks>;
 
-const mockAutoRвыходers = (deployments: AutoRвыходerDeployment[] = []) => {
-  vi.mocked(useAutoRвыходers).mockReturnЗначение({ data: deployments } as unknown as ReturnType<typeof useAutoRвыходers>);
+const mockAutoRouters = (deployments: AutoRouterDeployment[] = []) => {
+  vi.mocked(useAutoRouters).mockReturnЗначение({ data: deployments } as unknown as ReturnType<typeof useAutoRouters>);
 };
 
-const mockHook = (result: { data?: AutoRвыходerBenchmarksОтвет; isPending?: boolean; error?: Ошибка }) => {
-  vi.mocked(useAutoRвыходerBenchmarks).mockReturnЗначение({
+const mockHook = (result: { data?: AutoRouterBenchmarksОтвет; isPending?: boolean; error?: Ошибка }) => {
+  vi.mocked(useAutoRouterBenchmarks).mockReturnЗначение({
     data: result.data,
     isPending: result.isPending ?? false,
     error: result.error ?? null,
   } as unknown as HookРезультат);
 };
 
-const cache = (overrides: Partial<AutoRвыходerCacheStats> = {}): AutoRвыходerCacheStats => ({
+const cache = (overrides: Partial<AutoRouterCacheStats> = {}): AutoRouterCacheStats => ({
   coverage_pct: 99.6,
   hit_rate_pct: 93.3,
   same_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: { turns: 400, hits: 391, hit_rate_pct: 97.7 },
@@ -59,7 +59,7 @@ const cache = (overrides: Partial<AutoRвыходerCacheStats> = {}): AutoRвы�
   ...overrides,
 });
 
-type Totals = AutoRвыходerBenchmarksОтвет["totals"];
+type Totals = AutoRouterBenchmarksОтвет["totals"];
 
 const totals = (overrides: Partial<Totals> = {}): Totals => ({
   sessions: 94,
@@ -79,7 +79,7 @@ const totals = (overrides: Partial<Totals> = {}): Totals => ({
 
 const zeroBucket = { turns: 0, hits: 0, hit_rate_pct: 0 };
 
-const zeroCache: AutoRвыходerCacheStats = {
+const zeroCache: AutoRouterCacheStats = {
   coverage_pct: 0,
   hit_rate_pct: 0,
   same_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: zeroBucket,
@@ -108,17 +108,17 @@ const zeroTotals: Totals = {
   cache: zeroCache,
 };
 
-const group = (overrides: Partial<AutoRвыходerBenchmarkGroup> = {}): AutoRвыходerBenchmarkGroup => ({
-  rвыходer_name: "claude-auto",
-  rвыходer_type: "complexity",
+const group = (overrides: Partial<AutoRouterBenchmarkGroup> = {}): AutoRouterBenchmarkGroup => ({
+  router_name: "claude-auto",
+  router_type: "complexity",
   ...totals(),
   ...overrides,
 });
 
-const response = (groups: AutoRвыходerBenchmarkGroup[], shared: Totals = totals()): AutoRвыходerBenchmarksОтвет => ({
+const response = (groups: AutoRouterBenchmarkGroup[], shared: Totals = totals()): AutoRouterBenchmarksОтвет => ({
   start_date: "2026-07-06",
   end_date: "2026-08-05",
-  rвыходers_in_scope: groups.length,
+  routers_in_scope: groups.length,
   totals: shared,
   groups,
 });
@@ -142,23 +142,23 @@ const renderTab = () => {
     onDateChange,
     ...render(
       <ЗапросClientПровайдер client={queryClient}>
-        <AutoRвыходerBenchmarksTab accessТокен="sk-test" activity={activity} />
+        <AutoRouterBenchmarksTab accessТокен="sk-test" activity={activity} />
       </ЗапросClientПровайдер>,
     ),
   };
 };
 
-describe("AutoRвыходerBenchmarksTab", () => {
+describe("AutoRouterBenchmarksTab", () => {
   beforeEach(() => {
-    mockAutoRвыходers();
+    mockAutoRouters();
   });
 
   it("leads with total estimated savings, before the four session-shape metrics", () => {
-    mockHook({ data: response([group(), group({ rвыходer_name: "gpt-auto" })]) });
+    mockHook({ data: response([group(), group({ router_name: "gpt-auto" })]) });
     renderTab();
 
     const labels = screen
-      .getВсеByText(
+      .getAllByText(
         /Total estimated savings|Avg saved per session|Avg turns per session|Avg session length|Avg tokens per session/,
       )
       .map((node) => node.textContent);
@@ -172,12 +172,12 @@ describe("AutoRвыходerBenchmarksTab", () => {
   });
 
   it("renders the headline numbers the tiles exist for", () => {
-    mockHook({ data: response([group(), group({ rвыходer_name: "gpt-auto" })]) });
+    mockHook({ data: response([group(), group({ router_name: "gpt-auto" })]) });
     renderTab();
 
     expect(screen.getByText("$2,174.59")).toBeInTheDocument();
     expect(screen.getByText("-86%")).toBeInTheDocument();
-    expect(screen.getByText("Actual auto-rвыходer spend")).toBeInTheDocument();
+    expect(screen.getByText("Actual auto-router spend")).toBeInTheDocument();
     expect(screen.getByText("$359.86")).toBeInTheDocument();
     expect(screen.getByText("Estimated spend at highest-tier Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию")).toBeInTheDocument();
     expect(screen.getByText("$2,534.45")).toBeInTheDocument();
@@ -197,12 +197,12 @@ describe("AutoRвыходerBenchmarksTab", () => {
 
     expect(
       screen
-        .getВсеByRole("definition")
+        .getAllByRole("definition")
         .map((node) => node.textContent)
         .slice(1, 3),
     ).toEqual([llm, cost]);
     expect(screen.getByText(`(${rate} / 1K turns)`)).toBeInTheDocument();
-    expect(screen.getВсеByText("$10,126.28").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("$10,126.28").length).toBeGreaterThan(0);
   });
 
   it.each([null, undefined])("keeps totals when the classification breakdown is %s", (classifier_cost) => {
@@ -210,7 +210,7 @@ describe("AutoRвыходerBenchmarksTab", () => {
     mockHook({ data: response([group(stats)], stats) });
     renderTab();
 
-    expect(screen.getВсеByText("Unavailable")).toHaveLength(2);
+    expect(screen.getAllByText("Unavailable")).toHaveLength(2);
     expect(screen.queryByText(/\/ 1K turns/)).not.toBeInTheDocument();
     expect(screen.getByText("$359.86")).toBeInTheDocument();
     expect(screen.getByText("$2,174.59")).toBeInTheDocument();
@@ -218,7 +218,7 @@ describe("AutoRвыходerBenchmarksTab", () => {
   });
 
   it("pairs the savings with the session count it was earned over, in its own tile", () => {
-    mockHook({ data: response([group(), group({ rвыходer_name: "gpt-auto" })]) });
+    mockHook({ data: response([group(), group({ router_name: "gpt-auto" })]) });
     renderTab();
 
     const tile = screen.getByText("Avg saved per session").closest('[data-slot="card"]');
@@ -232,10 +232,10 @@ describe("AutoRвыходerBenchmarksTab", () => {
     mockHook({ data: response([group()]) });
     renderTab();
 
-    const terms = screen.getВсеByRole("term").map((node) => node.textContent);
-    const values = screen.getВсеByRole("definition").map((node) => node.textContent);
+    const terms = screen.getAllByRole("term").map((node) => node.textContent);
+    const values = screen.getAllByRole("definition").map((node) => node.textContent);
     expect(terms).toEqual([
-      "Actual auto-rвыходer spend",
+      "Actual auto-router spend",
       "LLM spend",
       "Classification cost($2.00 / 1K turns)",
       "Estimated spend at highest-tier Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
@@ -347,7 +347,7 @@ describe("AutoRвыходerBenchmarksTab", () => {
     mockHook({ data: response([group()]) });
     renderTab();
 
-    expect(screen.getByText("Все auto-rвыходers")).toBeInTheDocument();
+    expect(screen.getByText("Все auto-routers")).toBeInTheDocument();
     expect(screen.queryByText("__all__")).not.toBeInTheDocument();
   });
 
@@ -355,21 +355,21 @@ describe("AutoRвыходerBenchmarksTab", () => {
     mockHook({ isPending: true });
     renderTab();
 
-    expect(screen.getByText("Loading auto-rвыходer usage...")).toBeInTheDocument();
+    expect(screen.getByText("Loading auto-router usage...")).toBeInTheDocument();
   });
 
   it("names the admin requirement when the proxy answers 403", () => {
     mockHook({ error: new ApiОшибка("forbidden", 403, {}) });
     renderTab();
 
-    expect(screen.getByText("Auto-rвыходer usage is visible to proxy admin roles only")).toBeInTheDocument();
+    expect(screen.getByText("Auto-router usage is visible to proxy admin roles only")).toBeInTheDocument();
   });
 
   it("degrades to a message when the endpoint is unavailable", () => {
     mockHook({ error: new ApiОшибка("boom", 500, {}) });
     renderTab();
 
-    expect(screen.getByText("Auto-rвыходer usage is unavailable right now")).toBeInTheDocument();
+    expect(screen.getByText("Auto-router usage is unavailable right now")).toBeInTheDocument();
   });
 
   it("renders the full dashboard with zeroed stats when the window has no sessions", () => {
@@ -377,11 +377,11 @@ describe("AutoRвыходerBenchmarksTab", () => {
     renderTab();
 
     expect(screen.getByText("Total estimated savings")).toBeInTheDocument();
-    expect(screen.getВсеByText("$0.00")).toHaveLength(6);
+    expect(screen.getAllByText("$0.00")).toHaveLength(6);
     expect(screen.getByText("· 0 sessions")).toBeInTheDocument();
     expect(screen.getByText("0s")).toBeInTheDocument();
     expect(screen.getByText(/turns measured/)).toBeInTheDocument();
-    expect(screen.getВсеByText("0.0%").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("0.0%").length).toBeGreaterThan(0);
     expect(screen.getByRole("img", { name: "Share of turns by bucket" })).toHaveClass("bg-muted");
   });
 
@@ -397,7 +397,7 @@ describe("AutoRвыходerBenchmarksTab", () => {
     mockHook({ data: response([group()]) });
     const { dateЗначение, onDateChange } = renderTab();
 
-    expect(vi.mocked(useAutoRвыходerBenchmarks)).toHaveBeenCalledWith("sk-test", dateЗначение, undefined);
+    expect(vi.mocked(useAutoRouterBenchmarks)).toHaveBeenCalledWith("sk-test", dateЗначение, undefined);
     expect(screen.getByText("Jul 6 – Aug 5 (UTC)")).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId("date-picker"));
@@ -419,11 +419,11 @@ describe("AutoRвыходerBenchmarksTab", () => {
     };
     render(
       <ЗапросClientПровайдер client={new ЗапросClient()}>
-        <AutoRвыходerИспользованиеView accessТокен="sk-test" activity={activity} apiКлюч="key-hash-1" />
+        <AutoRouterUsageView accessТокен="sk-test" activity={activity} apiКлюч="key-hash-1" />
       </ЗапросClientПровайдер>,
     );
 
-    expect(vi.mocked(useAutoRвыходerBenchmarks)).toHaveBeenCalledWith("sk-test", dateЗначение, "key-hash-1");
+    expect(vi.mocked(useAutoRouterBenchmarks)).toHaveBeenCalledWith("sk-test", dateЗначение, "key-hash-1");
     expect(screen.getByText("Total estimated savings")).toBeInTheDocument();
     expect(screen.queryByRole("tab", { name: "Shadow Evals" })).not.toBeInTheDocument();
   });
@@ -449,7 +449,7 @@ describe("AutoRвыходerBenchmarksTab", () => {
     mockHook({ error: new ApiОшибка("boom", 500, {}) });
     renderTab();
 
-    expect(screen.getByText("Auto-rвыходer usage is unavailable right now")).toBeInTheDocument();
+    expect(screen.getByText("Auto-router usage is unavailable right now")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Shadow Evals" }));
     expect(screen.getByTestId("shadow-eval-section")).toBeInTheDocument();
@@ -460,6 +460,6 @@ describe("AutoRвыходerBenchmarksTab", () => {
     renderTab();
 
     expect(screen.getByTestId("date-picker")).toBeInTheDocument();
-    expect(screen.getByText("Все auto-rвыходers")).toBeInTheDocument();
+    expect(screen.getByText("Все auto-routers")).toBeInTheDocument();
   });
 });

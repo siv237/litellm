@@ -10,10 +10,10 @@ vi.mock("@/components/networking", () => ({
   fetchOpenAPIRegistry: vi.fn().mockResolvedЗначение({ apis: [] }),
   registerMCPСервер: vi.fn(),
   storeMCPOAuthUserCredential: vi.fn().mockResolvedЗначение({}),
-  testMCPИнструментыListЗапрос: vi.fn().mockResolvedЗначение({ tools: [], error: null }),
+  testMCPToolsListЗапрос: vi.fn().mockResolvedЗначение({ tools: [], error: null }),
 }));
 
-vi.mock("@/utils/mcpТокенStore", () => ({
+vi.mock("@/utils/mcpTokenStore", () => ({
   setТокен: vi.fn(),
 }));
 
@@ -43,7 +43,7 @@ vi.mock("./mcp_connection_status", () => ({
   default: () => <div data-testid="mcp-connection-status" />,
 }));
 
-vi.mock("./StdioКонфигурацияuration", () => ({
+vi.mock("./StdioConfiguration", () => ({
   default: () => <div data-testid="stdio-config" />,
 }));
 
@@ -56,7 +56,7 @@ const defaultProps = {
   availableAccessGroups: ["group-a", "group-b"],
 };
 
-const getСерверNameВход = () => document.getElementById("server_name") as HTMLВходElement;
+const getServerNameВход = () => document.getElementById("server_name") as HTMLInElement;
 
 // The switches live behind a collapsed panel, so they only reach the accessibility tree once an
 // operator expands it.
@@ -72,13 +72,13 @@ const switchFor = async (labelText: string): Promise<HTMLElement> => {
   return screen.getByRole("switch", { name: labelText });
 };
 
-const fillМин.imalHttpСервер = async (name: string) => {
+const fillMinimalHttpСервер = async (name: string) => {
   await selectOption("Транспорт Type", "Streamable HTTP");
   await waitFor(() => {
     expect(screen.getByPlaceholderText("https://your-mcp-server.com")).toBeInTheDocument();
   });
   const user = userEvent.setup({ delay: null });
-  await user.type(getСерверNameВход(), name);
+  await user.type(getServerNameВход(), name);
   await user.type(screen.getByPlaceholderText("https://your-mcp-server.com"), "https://example.com/mcp");
   await selectOption("Аутентификация", "None");
 };
@@ -87,7 +87,7 @@ const submitAndReadPayload = async () => {
   await act(async () => {
     fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
   });
-  await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+  await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
   return vi.mocked(networking.createMCPСервер).mock.calls[0][1];
 };
 
@@ -106,13 +106,13 @@ const createdСервер = {
 
 describe("CreateMCPСервер permission toggles reaching the payload", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     vi.mocked(networking.createMCPСервер).mockResolvedЗначение(createdСервер);
   });
 
   it("sends the panel's untouched defaults rather than dropping the keys the panel owns", async () => {
     render(<CreateMCPСервер {...defaultProps} />);
-    await fillМин.imalHttpСервер("Perm_Сервер");
+    await fillMinimalHttpСервер("Perm_Сервер");
 
     const payload = await submitAndReadPayload();
 
@@ -122,7 +122,7 @@ describe("CreateMCPСервер permission toggles reaching the payload", () => 
 
   it("sends allow_all_keys true once the operator turns the public-to-all-keys switch on", async () => {
     render(<CreateMCPСервер {...defaultProps} />);
-    await fillМин.imalHttpСервер("Perm_Сервер");
+    await fillMinimalHttpСервер("Perm_Сервер");
 
     const allowВсеКлючи = await switchFor("Разрешить Все LiteLLM ключей");
     await act(async () => {
@@ -136,7 +136,7 @@ describe("CreateMCPСервер permission toggles reaching the payload", () => 
 
   it("sends available_on_public_internet false when the operator restricts the server to the internal network", async () => {
     render(<CreateMCPСервер {...defaultProps} />);
-    await fillМин.imalHttpСервер("Perm_Сервер");
+    await fillMinimalHttpСервер("Perm_Сервер");
 
     const internalOnly = await switchFor("Internal network only");
     expect(internalOnly).toHaveAttribute("aria-checked", "false");
@@ -153,7 +153,7 @@ describe("CreateMCPСервер permission toggles reaching the payload", () => 
 
   it("omits delegate_auth_to_upstream's true value on a none-auth server, whose gate never mounts that switch", async () => {
     render(<CreateMCPСервер {...defaultProps} />);
-    await fillМин.imalHttpСервер("Perm_Сервер");
+    await fillMinimalHttpСервер("Perm_Сервер");
 
     expect(screen.getByText("Разрешить Все LiteLLM ключей")).toBeInTheDocument();
     expect(screen.queryByText("Delegate auth to upstream (PKCE passthrough)")).not.toBeInTheDocument();

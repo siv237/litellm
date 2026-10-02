@@ -1,4 +1,4 @@
-import { renderWithПровайдерs, screen } from "../../../../../tests/test-utils";
+import { renderWithProviders, screen } from "../../../../../tests/test-utils";
 import { fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import UserBannerSettings from "./UserBannerSettings";
@@ -34,26 +34,26 @@ const mockHooks = (banner: UserBanner | undefined, mutate = vi.fn()) => {
 
 describe("UserBannerSettings", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("seeds the form from the persisted banner", () => {
     mockHooks(publishedBanner);
-    renderWithПровайдерs(<UserBannerSettings />);
+    renderWithProviders(<UserBannerSettings />);
     expect(screen.getByLabelText("Сообщение")).toHaveЗначение(publishedBanner.message);
     expect(screen.getByRole("switch", { name: "Показывать баннер пользователям" })).toHaveAttribute("data-checked");
   });
 
   it("shows a live markdown preview with the selected severity icon", () => {
     mockHooks(publishedBanner);
-    const { container } = renderWithПровайдерs(<UserBannerSettings />);
+    const { container } = renderWithProviders(<UserBannerSettings />);
     expect(screen.getByText("Maintenance")).toBeInTheDocument();
-    expect(container.queryВыбратьor(".lucide-triangle-alert")).toBeInTheDocument();
+    expect(container.querySelector(".lucide-triangle-alert")).toBeInTheDocument();
   });
 
   it("saves the edited draft", () => {
     const mutate = mockHooks(publishedBanner);
-    renderWithПровайдерs(<UserBannerSettings />);
+    renderWithProviders(<UserBannerSettings />);
     fireEvent.change(screen.getByLabelText("Сообщение"), { target: { value: "New announcement" } });
     fireEvent.click(screen.getByRole("button", { name: "Save banner" }));
     expect(mutate).toHaveBeenCalledWith(
@@ -64,7 +64,7 @@ describe("UserBannerSettings", () => {
 
   it("blocks saving a published banner with an empty message", () => {
     const mutate = mockHooks(publishedBanner);
-    renderWithПровайдерs(<UserBannerSettings />);
+    renderWithProviders(<UserBannerSettings />);
     fireEvent.change(screen.getByLabelText("Сообщение"), { target: { value: "   " } });
     expect(screen.getByText("Добавьте сообщение перед публикацией.")).toBeInTheDocument();
     const saveButton = screen.getByRole("button", { name: "Save banner" });
@@ -74,7 +74,7 @@ describe("UserBannerSettings", () => {
 
   it("allows unpublishing withвыход a message", () => {
     const mutate = mockHooks({ enabled: false, message: "", severity: "info", revision: "" });
-    renderWithПровайдерs(<UserBannerSettings />);
+    renderWithProviders(<UserBannerSettings />);
     fireEvent.click(screen.getByRole("button", { name: "Save banner" }));
     expect(mutate).toHaveBeenCalledWith({ enabled: false, message: "", severity: "info" }, expect.anything());
   });
@@ -85,7 +85,7 @@ describe("UserBannerSettings", () => {
     ["error", "Ошибка"],
   ])("shows the %s severity by its human label", (severity, label) => {
     mockHooks({ ...publishedBanner, severity: severity as UserBanner["severity"] });
-    renderWithПровайдерs(<UserBannerSettings />);
+    renderWithProviders(<UserBannerSettings />);
 
     expect(screen.getByRole("combobox", { name: "Критичность баннера" })).toHaveTextContent(label);
   });

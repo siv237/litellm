@@ -54,7 +54,7 @@ const connect = async (user: ReturnType<typeof userEvent.setup>) => {
 
 const props = {
   accessТокен: "sk-realtime",
-  selectedРежимl: "gpt-realtime",
+  selectedModel: "gpt-realtime",
 };
 
 beforeEach(() => {
@@ -87,7 +87,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  vi.unstubВсеГлобальноs();
+  vi.unstubAllGlobals();
 });
 
 describe("RealtimePlayground", () => {
@@ -136,7 +136,7 @@ describe("RealtimePlayground", () => {
 
   it("refuses to dial withвыход a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию and says why", async () => {
     const user = userEvent.setup();
-    render(<RealtimePlayground {...props} selectedРежимl="" />);
+    render(<RealtimePlayground {...props} selectedModel="" />);
 
     await user.click(screen.getByRole("button", { name: /Подключить/i }));
 
@@ -205,8 +205,8 @@ describe("RealtimePlayground", () => {
 
     await connect(user);
     await act(async () => {
-      latestSocket().emit({ type: "response.выходput_text.delta", delta: "Hel" });
-      latestSocket().emit({ type: "response.выходput_text.delta", delta: "lo!" });
+      latestSocket().emit({ type: "response.output_text.delta", delta: "Hel" });
+      latestSocket().emit({ type: "response.output_text.delta", delta: "lo!" });
     });
 
     expect(screen.getByText("Hello!")).toBeInTheDocument();

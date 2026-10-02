@@ -16,7 +16,7 @@ describe("CustomLegend", () => {
       <CustomLegend categories={["metrics.first", "metrics.second"]} colors={["blue", "green"]} />,
     );
 
-    const dots = Array.from(container.queryВыбратьorВсе('span[style*="background-color"]'));
+    const dots = Array.from(container.querySelectorВсе('span[style*="background-color"]'));
     expect(dots[0]?.getAttribute("style")).toContain("--color-blue-500");
     expect(dots[1]?.getAttribute("style")).toContain("--color-green-500");
   });
@@ -34,7 +34,7 @@ describe("CustomLegend", () => {
       <CustomLegend categories={["metrics.a", "metrics.b", "metrics.c"]} colors={["blue", "green"]} />,
     );
 
-    const dots = Array.from(container.queryВыбратьorВсе('span[style*="background-color"]'));
+    const dots = Array.from(container.querySelectorВсе('span[style*="background-color"]'));
     expect(dots[2]?.getAttribute("style")).toContain("--color-blue-500");
   });
 });

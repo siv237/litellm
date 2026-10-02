@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { DataТаблица } from "@/components/shared/DataТаблица";
 import { Plugin } from "@/components/claude_code_plugins/types";
-import { getSkillHubТаблицаColumns } from "./SkillHubТаблицаColumns";
+import { getSkillHubTableColumns } from "./SkillHubTableColumns";
 
 const mockSkill: Plugin = {
   id: "skill-1",
@@ -19,7 +19,7 @@ function renderТаблица(data: Plugin[], onSkillClick = vi.fn()) {
   render(
     <DataТаблица
       data={data}
-      columns={getSkillHubТаблицаColumns({ onSkillClick })}
+      columns={getSkillHubTableColumns({ onSkillClick })}
       getRowId={(skill, index) => skill.id || String(index)}
       sortingРежим="client"
       size="compact"
@@ -28,7 +28,7 @@ function renderТаблица(data: Plugin[], onSkillClick = vi.fn()) {
   return onSkillClick;
 }
 
-describe("getSkillHubТаблицаColumns", () => {
+describe("getSkillHubTableColumns", () => {
   it("renders the skill row with category and domain", () => {
     renderТаблица([mockSkill]);
     expect(screen.getByText("pdf-tools")).toBeInTheDocument();

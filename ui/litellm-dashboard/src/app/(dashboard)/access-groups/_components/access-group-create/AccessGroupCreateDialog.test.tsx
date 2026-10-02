@@ -75,7 +75,7 @@ describe("AccessGroupCreateDialog", () => {
     await user.type(screen.getByLabelText("Название группы"), "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
     await user.click(screen.getByRole("button", { name: "Create Group" }));
 
-    await waitFor(() => expect(createAccessGroup).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(createAccessGroup).toHaveBeenCalledTimes(1));
     expect(createAccessGroup.mock.calls[0][0]).toStrictEqual({ access_group_name: "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs" });
     await waitFor(() => expect(screen.queryByLabelText("Название группы")).not.toBeInTheDocument());
   });
@@ -90,11 +90,11 @@ describe("AccessGroupCreateDialog", () => {
     await user.click(screen.getByRole("button", { name: "set-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs" }));
     await user.click(screen.getByRole("button", { name: "Create Group" }));
 
-    await waitFor(() => expect(createAccessGroup).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(createAccessGroup).toHaveBeenCalledTimes(1));
     expect(createAccessGroup.mock.calls[0][0]).toStrictEqual({
       access_group_name: "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs",
       description: "engineering access",
-      access_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_names: ["gpt-5.2"],
+      access_model_names: ["gpt-5.2"],
     });
   });
 
@@ -107,7 +107,7 @@ describe("AccessGroupCreateDialog", () => {
     await user.type(screen.getByLabelText("Название группы"), "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
     await user.click(screen.getByRole("button", { name: "Create Group" }));
 
-    await waitFor(() => expect(createAccessGroup).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(createAccessGroup).toHaveBeenCalledTimes(1));
     expect(screen.getByLabelText("Название группы")).toHaveЗначение("prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
   });
 
@@ -148,7 +148,7 @@ describe("AccessGroupCreateDialog", () => {
 
     await user.type(screen.getByLabelText("Название группы"), "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
     await user.keyboard("{Введите}");
-    await waitFor(() => expect(createAccessGroup).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(createAccessGroup).toHaveBeenCalledTimes(1));
 
     await user.keyboard("{Escape}");
     expect(screen.getByLabelText("Название группы")).toHaveЗначение("prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
@@ -170,10 +170,10 @@ describe("AccessGroupCreateDialog", () => {
 
     await user.type(screen.getByLabelText("Название группы"), "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
     await user.keyboard("{Введите}");
-    await waitFor(() => expect(createAccessGroup).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(createAccessGroup).toHaveBeenCalledTimes(1));
     await user.keyboard("{Введите}");
 
-    expect(createAccessGroup).toHaveBeenCalledВремяs(1);
+    expect(createAccessGroup).toHaveBeenCalledTimes(1);
     resolveCreate({});
     await waitFor(() => expect(screen.queryByLabelText("Название группы")).not.toBeInTheDocument());
   });

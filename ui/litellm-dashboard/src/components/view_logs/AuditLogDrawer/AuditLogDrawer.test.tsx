@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import moment from "moment";
 import { AuditLogDrawer } from "./AuditLogDrawer";
-import { AuditLogEntry } from "../AuditЖурналыТаблицаColumns";
+import { AuditLogEntry } from "../AuditLogsTableColumns";
 
 vi.mock("../../common_components/DefaultProxyAdminTag", () => ({
   default: ({ userId }: { userId: string }) => <span>{userId}</span>,
@@ -32,7 +32,7 @@ function blockNamed(label: string) {
 
 describe("AuditLogDrawer", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render nothing when there is no log", () => {
@@ -89,7 +89,7 @@ describe("AuditLogDrawer", () => {
 
   it("should note when an update has no differing fields", () => {
     render(<AuditLogDrawer {...defaultProps} log={{ ...baseLog, before_value: { a: 1 }, updated_values: { a: 1 } }} />);
-    expect(screen.getВсеByText(/No differing fields detected/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/No differing fields detected/).length).toBeGreaterThan(0);
   });
 
   it("should show N/A for a side with no values on a create", () => {

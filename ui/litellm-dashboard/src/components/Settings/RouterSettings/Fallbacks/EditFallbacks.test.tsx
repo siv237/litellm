@@ -3,13 +3,13 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import EditРезервные модели, { Резервные модели } from "./EditРезервные модели";
-import * as fetchРежимlsModule from "@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs";
+import * as fetchModelsModule from "@/components/llm_calls/fetch_models";
 
-vi.mock("@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => ({
-  fetchAvailableРежимls: vi.fn(),
+vi.mock("@/components/llm_calls/fetch_models", () => ({
+  fetchAvailableModels: vi.fn(),
 }));
 
-const renderWithЗапросClient = (ui: React.ReactElement) => {
+const renderWithRequestClient = (ui: React.ReactElement) => {
   const queryClient = new ЗапросClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -24,7 +24,7 @@ describe("EditРезервные модели", () => {
   const setup = (overrides: Partial<React.ComponentProps<typeof EditРезервные модели>> = {}) => {
     const onChange = overrides.onChange ?? vi.fn().mockResolvedЗначение(undefined);
     const onClose = overrides.onClose ?? vi.fn();
-    renderWithЗапросClient(
+    renderWithRequestClient(
       <EditРезервные модели
         accessТокен={accessТокен}
         fallbackEntry={fallbackEntry}
@@ -38,8 +38,8 @@ describe("EditРезервные модели", () => {
   };
 
   beforeEach(() => {
-    vi.clearВсеMocks();
-    vi.mocked(fetchРежимlsModule.fetchAvailableРежимls).mockResolvedЗначение([
+    vi.clearAllMocks();
+    vi.mocked(fetchModelsModule.fetchAvailableModels).mockResolvedЗначение([
       { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4", mode: "chat" },
       { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo", mode: "chat" },
       { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "claude-3-opus", mode: "chat" },

@@ -1,14 +1,14 @@
 import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { renderWithПровайдерs, testЗапросClient } from "../../../../../tests/test-utils";
+import { renderWithProviders, testRequestClient } from "../../../../../tests/test-utils";
 import { UserEditView } from "./user_edit_view";
 import * as networking from "@/components/networking";
 
 vi.mock("@/components/networking");
 
-vi.mock("@/components/key_team_helpers/fetch_available_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs_team_key", () => ({
-  getРежимlDisplayName: vi.fn((Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: string) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию),
+vi.mock("@/components/key_team_helpers/fetch_available_models_team_key", () => ({
+  getModelDisplayName: vi.fn((Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: string) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию),
 }));
 
 vi.mock("@/utils/roles", () => ({
@@ -55,17 +55,17 @@ describe("UserEditView", () => {
     accessТокен: "test-token",
     userID: "current-user-1",
     userRole: "Admin",
-    userРежимls: ["gpt-4", "gpt-3.5-turbo", "claude-3"],
+    userModels: ["gpt-4", "gpt-3.5-turbo", "claude-3"],
     possibleUIRoles: MOCK_POSSIBLE_UI_ROLES,
     isBulkEdit: false,
   };
 
   beforeEach(() => {
-    vi.clearВсеMocks();
-    testЗапросClient.clear();
+    vi.clearAllMocks();
+    testRequestClient.clear();
     vi.mocked(networking.fetchMCP-серверы).mockResolvedЗначение([]);
     vi.mocked(networking.fetchMCPAccessGroups).mockResolvedЗначение([]);
-    vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([]);
+    vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([]);
   });
 
   afterEach(() => {
@@ -73,7 +73,7 @@ describe("UserEditView", () => {
   });
 
   it("should render", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
@@ -81,7 +81,7 @@ describe("UserEditView", () => {
   });
 
   it("should display user ID field when not in bulk edit mode", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("ID пользователя")).toBeInTheDocument();
@@ -93,7 +93,7 @@ describe("UserEditView", () => {
   });
 
   it("should not display user ID field when in bulk edit mode", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} isBulkEdit={true} />);
+    renderWithProviders(<UserEditView {...defaultProps} isBulkEdit={true} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
@@ -103,7 +103,7 @@ describe("UserEditView", () => {
   });
 
   it("should display email field when not in bulk edit mode", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("Email")).toBeInTheDocument();
@@ -114,7 +114,7 @@ describe("UserEditView", () => {
   });
 
   it("should not display email field when in bulk edit mode", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} isBulkEdit={true} />);
+    renderWithProviders(<UserEditView {...defaultProps} isBulkEdit={true} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
@@ -124,7 +124,7 @@ describe("UserEditView", () => {
   });
 
   it("should display user alias field with initial value", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("User Alias")).toBeInTheDocument();
@@ -135,7 +135,7 @@ describe("UserEditView", () => {
   });
 
   it("should display personal Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs select with available Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("Личная Режимls")).toBeInTheDocument();
@@ -146,7 +146,7 @@ describe("UserEditView", () => {
   });
 
   it("should disable Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs select when user role is not admin", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} userRole="user" />);
+    renderWithProviders(<UserEditView {...defaultProps} userRole="user" />);
 
     await waitFor(() => {
       const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsВыбрать = screen.getByRole("combobox", { name: /select Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/i });
@@ -155,7 +155,7 @@ describe("UserEditView", () => {
   });
 
   it("should enable Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs select when user role is admin", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} userRole="Admin" />);
+    renderWithProviders(<UserEditView {...defaultProps} userRole="Admin" />);
 
     await waitFor(() => {
       const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsВыбрать = screen.getByRole("combobox", { name: /select Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/i });
@@ -164,7 +164,7 @@ describe("UserEditView", () => {
   });
 
   it("should display max budget input field", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("Макс. бюджет (USD)")).toBeInTheDocument();
@@ -172,7 +172,7 @@ describe("UserEditView", () => {
   });
 
   it("should display unlimited budget checkbox", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("checkbox", { name: "Без ограничений Бюджет" })).toBeInTheDocument();
@@ -180,7 +180,7 @@ describe("UserEditView", () => {
   });
 
   it("should check unlimited budget when clicking its visible text", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("spinbutton", { name: /max budget/i })).toBeEnabled();
@@ -203,7 +203,7 @@ describe("UserEditView", () => {
       },
     };
 
-    renderWithПровайдерs(<UserEditView {...defaultProps} userData={userDataWithNullБюджет} />);
+    renderWithProviders(<UserEditView {...defaultProps} userData={userDataWithNullБюджет} />);
 
     await waitFor(() => {
       const checkbox = screen.getByRole("checkbox", { name: "Без ограничений Бюджет" });
@@ -220,7 +220,7 @@ describe("UserEditView", () => {
       },
     };
 
-    renderWithПровайдерs(<UserEditView {...defaultProps} userData={userDataWithNullБюджет} />);
+    renderWithProviders(<UserEditView {...defaultProps} userData={userDataWithNullБюджет} />);
 
     await waitFor(() => {
       const budgetВход = screen.getByRole("spinbutton", { name: /max budget/i });
@@ -229,7 +229,7 @@ describe("UserEditView", () => {
   });
 
   it("should enable budget input when unlimited budget is unchecked", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       const budgetВход = screen.getByRole("spinbutton", { name: /max budget/i });
@@ -238,7 +238,7 @@ describe("UserEditView", () => {
   });
 
   it("should clear budget value when unlimited budget is checked", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("checkbox", { name: "Без ограничений Бюджет" })).toBeInTheDocument();
@@ -254,7 +254,7 @@ describe("UserEditView", () => {
   });
 
   it("should display metadata textarea with formatted JSON", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("Метаданные")).toBeInTheDocument();
@@ -274,7 +274,7 @@ describe("UserEditView", () => {
       },
     };
 
-    renderWithПровайдерs(<UserEditView {...defaultProps} userData={userDataWithвыходМетаданные} />);
+    renderWithProviders(<UserEditView {...defaultProps} userData={userDataWithвыходМетаданные} />);
 
     await waitFor(() => {
       const metadataTextarea = screen.getByLabelText("Метаданные");
@@ -284,7 +284,7 @@ describe("UserEditView", () => {
 
   it("should call onCancel when cancel button is clicked", async () => {
     const onCancelMock = vi.fn();
-    renderWithПровайдерs(<UserEditView {...defaultProps} onCancel={onCancelMock} />);
+    renderWithProviders(<UserEditView {...defaultProps} onCancel={onCancelMock} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /cancel/i })).toBeInTheDocument();
@@ -293,12 +293,12 @@ describe("UserEditView", () => {
     const cancelButton = screen.getByRole("button", { name: /cancel/i });
     await userEvent.click(cancelButton);
 
-    expect(onCancelMock).toHaveBeenCalledВремяs(1);
+    expect(onCancelMock).toHaveBeenCalledTimes(1);
   });
 
   it("should call onSubmit with form values when form is submitted", async () => {
     const onSubmitMock = vi.fn();
-    renderWithПровайдерs(<UserEditView {...defaultProps} onSubmit={onSubmitMock} />);
+    renderWithProviders(<UserEditView {...defaultProps} onSubmit={onSubmitMock} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
@@ -316,7 +316,7 @@ describe("UserEditView", () => {
     expect(callArgs.user_email).toBe("test@example.com");
     expect(callArgs.user_alias).toBe("Test User");
     expect(callArgs.user_role).toBe("proxy_admin");
-    expect(callArgs.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs).toEqual(["gpt-4", "gpt-3.5-turbo"]);
+    expect(callArgs.models).toEqual(["gpt-4", "gpt-3.5-turbo"]);
     expect(callArgs.max_budget).toBe(100.5);
     expect(callArgs.budget_duration).toBe("30d");
     expect(callArgs.metadata).toEqual(MOCK_USER_DATA.user_info.metadata);
@@ -332,7 +332,7 @@ describe("UserEditView", () => {
       },
     };
 
-    renderWithПровайдерs(<UserEditView {...defaultProps} userData={userDataWithNullБюджет} onSubmit={onSubmitMock} />);
+    renderWithProviders(<UserEditView {...defaultProps} userData={userDataWithNullБюджет} onSubmit={onSubmitMock} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
@@ -350,7 +350,7 @@ describe("UserEditView", () => {
   });
 
   it("should require budget when unlimited budget is not checked", async () => {
-    renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("Макс. бюджет (USD)")).toBeInTheDocument();
@@ -372,7 +372,7 @@ describe("UserEditView", () => {
 
   it("should allow submission when unlimited budget is checked even if budget is empty", async () => {
     const onSubmitMock = vi.fn();
-    renderWithПровайдерs(<UserEditView {...defaultProps} onSubmit={onSubmitMock} />);
+    renderWithProviders(<UserEditView {...defaultProps} onSubmit={onSubmitMock} />);
 
     await waitFor(() => {
       expect(screen.getByRole("checkbox", { name: "Без ограничений Бюджет" })).toBeInTheDocument();
@@ -394,7 +394,7 @@ describe("UserEditView", () => {
   });
 
   it("should update form values when userData changes", async () => {
-    const { rerender } = renderWithПровайдерs(<UserEditView {...defaultProps} />);
+    const { rerender } = renderWithProviders(<UserEditView {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByLabelText("User Alias")).toHaveЗначение("Test User");
@@ -416,7 +416,7 @@ describe("UserEditView", () => {
   });
 
   it("should handle user data with empty Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs array", async () => {
-    const userDataWithEmptyРежимls = {
+    const userDataWithEmptyModels = {
       ...MOCK_USER_DATA,
       user_info: {
         ...MOCK_USER_DATA.user_info,
@@ -424,7 +424,7 @@ describe("UserEditView", () => {
       },
     };
 
-    renderWithПровайдерs(<UserEditView {...defaultProps} userData={userDataWithEmptyРежимls} />);
+    renderWithProviders(<UserEditView {...defaultProps} userData={userDataWithEmptyModels} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
@@ -438,7 +438,7 @@ describe("UserEditView", () => {
     });
 
     const callArgs = defaultProps.onSubmit.mock.calls[0][0];
-    expect(callArgs.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs).toEqual([]);
+    expect(callArgs.models).toEqual([]);
   });
 
   it("should handle user data with undefined max_budget", async () => {
@@ -450,7 +450,7 @@ describe("UserEditView", () => {
       },
     };
 
-    renderWithПровайдерs(<UserEditView {...defaultProps} userData={userDataWithUndefinedБюджет} />);
+    renderWithProviders(<UserEditView {...defaultProps} userData={userDataWithUndefinedБюджет} />);
 
     await waitFor(() => {
       const checkbox = screen.getByRole("checkbox", { name: "Без ограничений Бюджет" });
@@ -460,7 +460,7 @@ describe("UserEditView", () => {
   describe("submit payload parity", () => {
     const submittedPayload = async (props: Partial<Parameters<typeof UserEditView>[0]> = {}) => {
       const onSubmit = vi.fn();
-      renderWithПровайдерs(<UserEditView {...defaultProps} {...props} onSubmit={onSubmit} />);
+      renderWithProviders(<UserEditView {...defaultProps} {...props} onSubmit={onSubmit} />);
       await userEvent.click(await screen.findByRole("button", { name: /save changes/i }));
       await waitFor(() => {
         expect(onSubmit).toHaveBeenCalled();
@@ -528,7 +528,7 @@ describe("UserEditView", () => {
 
     it("should send a typed budget as a string, not a number", async () => {
       const onSubmit = vi.fn();
-      renderWithПровайдерs(<UserEditView {...defaultProps} onSubmit={onSubmit} />);
+      renderWithProviders(<UserEditView {...defaultProps} onSubmit={onSubmit} />);
 
       const budgetВход = await screen.findByRole("spinbutton", { name: /max budget/i });
       await userEvent.clear(budgetВход);
@@ -543,7 +543,7 @@ describe("UserEditView", () => {
 
     it("should still submit when the loaded user has null instead of missing необязательно fields", async () => {
       const onSubmit = vi.fn();
-      renderWithПровайдерs(
+      renderWithProviders(
         <UserEditView
           {...defaultProps}
           onSubmit={onSubmit}
@@ -578,7 +578,7 @@ describe("UserEditView", () => {
     });
 
     it("should keep the budget input's native step constraint armed", async () => {
-      renderWithПровайдерs(<UserEditView {...defaultProps} />);
+      renderWithProviders(<UserEditView {...defaultProps} />);
 
       const budgetВход = await screen.findByRole("spinbutton", { name: /max budget/i });
       expect(budgetВход).toHaveAttribute("step", "0.01");
@@ -592,7 +592,7 @@ describe("UserEditView", () => {
         { server_id: "srv-toolset", server_name: "Инструментыet Сервер", alias: "Инструментыet Сервер" },
       ]);
       vi.mocked(networking.fetchMCPAccessGroups).mockResolvedЗначение(["group-a"]);
-      vi.mocked(networking.fetchMCPИнструментыets).mockResolvedЗначение([
+      vi.mocked(networking.fetchMCPToolsets).mockResolvedЗначение([
         {
           toolset_id: "toolset-a",
           toolset_name: "Инструментыet A",
@@ -604,7 +604,7 @@ describe("UserEditView", () => {
         error: false,
       });
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <UserEditView
           {...defaultProps}
           objectPermission={
@@ -644,7 +644,7 @@ describe("UserEditView", () => {
 
     it("should not submit at all when metadata is not valid JSON", async () => {
       const onSubmit = vi.fn();
-      renderWithПровайдерs(<UserEditView {...defaultProps} onSubmit={onSubmit} />);
+      renderWithProviders(<UserEditView {...defaultProps} onSubmit={onSubmit} />);
 
       const metadata = await screen.findByLabelText("Метаданные");
       await userEvent.clear(metadata);
@@ -682,7 +682,7 @@ describe("UserEditView", () => {
       // Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию's budget silently deletes another's.
       it("should keep a row stored under the БюджетКонфигурация aliases when a sibling row is edited", async () => {
         const onSubmit = vi.fn();
-        renderWithПровайдерs(
+        renderWithProviders(
           <UserEditView
             {...defaultProps}
             premiumUser={true}
@@ -700,7 +700,7 @@ describe("UserEditView", () => {
           />,
         );
 
-        const [aliasRow, canonicalRow] = await screen.findВсеByPlaceholderText("Макс. расход ($)");
+        const [aliasRow, canonicalRow] = await screen.findAllByPlaceholderText("Макс. расход ($)");
         expect(aliasRow).toHaveЗначение(5);
 
         fireEvent.change(canonicalRow, { target: { value: "3" } });
@@ -709,7 +709,7 @@ describe("UserEditView", () => {
         await waitFor(() => {
           expect(onSubmit).toHaveBeenCalled();
         });
-        expect(onSubmit.mock.calls[0][0].Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget).toEqual({
+        expect(onSubmit.mock.calls[0][0].model_max_budget).toEqual({
           "gpt-4": { budget_limit: 5, time_period: "30d" },
           "gpt-3.5-turbo": { budget_limit: 3, time_period: "1h" },
         });
@@ -729,7 +729,7 @@ describe("UserEditView", () => {
           },
         });
 
-        const { rerender } = renderWithПровайдерs(
+        const { rerender } = renderWithProviders(
           <UserEditView {...defaultProps} premiumUser={true} userData={withБюджет(5, "user-a")} />,
         );
         expect(await screen.findByPlaceholderText("Макс. расход ($)")).toHaveЗначение(5);
@@ -744,7 +744,7 @@ describe("UserEditView", () => {
       // it away. It also has no single stored budget to diff against, since its
       // userData stands in for every selected user.
       it("does not offer the editor in bulk edit, where the value would be discarded", async () => {
-        renderWithПровайдерs(
+        renderWithProviders(
           <UserEditView
             {...defaultProps}
             isBulkEdit={true}
@@ -764,13 +764,13 @@ describe("UserEditView", () => {
       });
 
       it("should lock the editor when the proxy has no enterprise license", async () => {
-        renderWithПровайдерs(<UserEditView {...defaultProps} userData={withStoredБюджеты} />);
+        renderWithProviders(<UserEditView {...defaultProps} userData={withStoredБюджеты} />);
 
         expect(await screen.findByPlaceholderText("Макс. расход ($)")).toBeDisabled();
       });
 
       it("should leave the editor usable when the proxy has one", async () => {
-        renderWithПровайдерs(<UserEditView {...defaultProps} userData={withStoredБюджеты} premiumUser={true} />);
+        renderWithProviders(<UserEditView {...defaultProps} userData={withStoredБюджеты} premiumUser={true} />);
 
         expect(await screen.findByPlaceholderText("Макс. расход ($)")).toBeEnabled();
       });
@@ -778,7 +778,7 @@ describe("UserEditView", () => {
 
     it("should send an empty-string metadata through untouched rather than as an object", async () => {
       const onSubmit = vi.fn();
-      renderWithПровайдерs(<UserEditView {...defaultProps} onSubmit={onSubmit} />);
+      renderWithProviders(<UserEditView {...defaultProps} onSubmit={onSubmit} />);
 
       await userEvent.clear(await screen.findByLabelText("Метаданные"));
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));

@@ -1,8 +1,8 @@
 import {
   type ColumnDef,
   flexRender,
-  getCoreRowРежимl,
-  getSortedRowРежимl,
+  getCoreRowModel,
+  getSortedRowModel,
   type OnChangeFn,
   type SortingState,
   useReactТаблица,
@@ -12,15 +12,15 @@ import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-import { DataТаблицаSortHeader, type DataТаблицаSortVariant } from "./DataТаблицаSortHeader";
-import { chooseВыбратьOption } from "../../../../tests/test-utils";
+import { DataTableSortHeader, type DataTableSortVariant } from "./DataTableSortHeader";
+import { chooseSelectOption } from "../../../../tests/test-utils";
 
 interface Item {
   name: string;
 }
 
 interface HarnessProps {
-  variant: DataТаблицаSortVariant;
+  variant: DataTableSortVariant;
   canSort?: boolean;
   onSortingChange?: OnChangeFn<SortingState>;
 }
@@ -31,7 +31,7 @@ function SortHeaderHarness({ variant, canSort = true, onSortingChange }: Harness
     {
       accessorКлюч: "name",
       enableSorting: canSort,
-      header: ({ column }) => <DataТаблицаSortHeader column={column} title="Name" variant={variant} />,
+      header: ({ column }) => <DataTableSortHeader column={column} title="Name" variant={variant} />,
     },
   ];
   const options = {
@@ -42,8 +42,8 @@ function SortHeaderHarness({ variant, canSort = true, onSortingChange }: Harness
       setSorting(updater);
       onSortingChange?.(updater);
     },
-    getCoreRowРежимl: getCoreRowРежимl(),
-    getSortedRowРежимl: getSortedRowРежимl(),
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   };
   const table = useReactТаблица(options);
 
@@ -62,7 +62,7 @@ function SortHeaderHarness({ variant, canSort = true, onSortingChange }: Harness
   );
 }
 
-describe("DataТаблицаSortHeader", () => {
+describe("DataTableSortHeader", () => {
   it("renders a plain label and no button when the column cannot sort", () => {
     render(<SortHeaderHarness variant="header-cycle" canSort={false} />);
     expect(screen.queryByTestId("sort-header-name")).not.toBeInTheDocument();
@@ -72,7 +72,7 @@ describe("DataТаблицаSortHeader", () => {
   it("header-cycle indicator advances none -> asc -> desc on click", async () => {
     const user = userEvent.setup();
     render(<SortHeaderHarness variant="header-cycle" />);
-    const indicator = () => screen.getByTestId("sort-header-name").queryВыбратьor("[data-sort-indicator]");
+    const indicator = () => screen.getByTestId("sort-header-name").querySelector("[data-sort-indicator]");
 
     expect(indicator()).toHaveAttribute("data-sort-indicator", "none");
     await user.click(screen.getByTestId("sort-header-name"));
@@ -85,26 +85,26 @@ describe("DataТаблицаSortHeader", () => {
     const user = userEvent.setup();
     render(<SortHeaderHarness variant="dropdown-tristate" />);
 
-    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-name"), "Descending", "menuitem");
-    expect(screen.getByTestId("sort-trigger-name").queryВыбратьor('[data-sort-indicator="desc"]')).not.toBeNull();
+    await chooseSelectOption(user, screen.getByTestId("sort-trigger-name"), "Descending", "menuitem");
+    expect(screen.getByTestId("sort-trigger-name").querySelector('[data-sort-indicator="desc"]')).not.toBeNull();
 
-    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-name"), "Ascending", "menuitem");
-    expect(screen.getByTestId("sort-trigger-name").queryВыбратьor('[data-sort-indicator="asc"]')).not.toBeNull();
+    await chooseSelectOption(user, screen.getByTestId("sort-trigger-name"), "Ascending", "menuitem");
+    expect(screen.getByTestId("sort-trigger-name").querySelector('[data-sort-indicator="asc"]')).not.toBeNull();
 
-    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-name"), "Reset", "menuitem");
-    expect(screen.getByTestId("sort-trigger-name").queryВыбратьor('[data-sort-indicator="none"]')).not.toBeNull();
+    await chooseSelectOption(user, screen.getByTestId("sort-trigger-name"), "Reset", "menuitem");
+    expect(screen.getByTestId("sort-trigger-name").querySelector('[data-sort-indicator="none"]')).not.toBeNull();
   });
 
   it("dropdown-tristate trigger stops the click from reaching an выходer handler", async () => {
     const user = userEvent.setup();
-    const onВыходerClick = vi.fn();
+    const onOutputerClick = vi.fn();
     render(
-      <div onClick={onВыходerClick}>
+      <div onClick={onOutputerClick}>
         <SortHeaderHarness variant="dropdown-tristate" />
       </div>,
     );
 
     await user.click(screen.getByTestId("sort-trigger-name"));
-    expect(onВыходerClick).not.toHaveBeenCalled();
+    expect(onOutputerClick).not.toHaveBeenCalled();
   });
 });

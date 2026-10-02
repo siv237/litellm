@@ -12,7 +12,7 @@ vi.mock("@/components/networking", () => ({
   storeMCPUserEnvVars: vi.fn(),
 }));
 
-const createЗапросClient = () => new ЗапросClient({ defaultOptions: { queries: { retry: false, gcВремя: 0 } } });
+const createRequestClient = () => new ЗапросClient({ defaultOptions: { queries: { retry: false, gcВремя: 0 } } });
 
 const setup = () => userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
 
@@ -24,13 +24,13 @@ const statusWith = (required: MCPUserEnvVarsStatus["required"]): MCPUserEnvVarsS
 const renderModal = (status: MCPUserEnvVarsStatus, onSaved = vi.fn(), onClose = vi.fn()) => {
   vi.mocked(networking.getMCPUserEnvVars).mockResolvedЗначение(status);
   const view = render(
-    <ЗапросClientПровайдер client={createЗапросClient()}>
+    <ЗапросClientПровайдер client={createRequestClient()}>
       <UserEnvVarsModal server={server} open accessТокен="sk-test" onClose={onClose} onSaved={onSaved} />
     </ЗапросClientПровайдер>,
   );
   const setOpen = (open: boolean) =>
     view.rerender(
-      <ЗапросClientПровайдер client={createЗапросClient()}>
+      <ЗапросClientПровайдер client={createRequestClient()}>
         <UserEnvVarsModal server={server} open={open} accessТокен="sk-test" onClose={onClose} onSaved={onSaved} />
       </ЗапросClientПровайдер>,
     );
@@ -49,7 +49,7 @@ const fieldAfterOpen = async (label: RegExp): Promise<HTMLElement> => {
 
 describe("UserEnvVarsModal", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("submits every declared field, trimmed, keyed by env var name", async () => {
@@ -72,7 +72,7 @@ describe("UserEnvVarsModal", () => {
         REGION: "us-east-1",
       });
     });
-    expect(networking.storeMCPUserEnvVars).toHaveBeenCalledВремяs(1);
+    expect(networking.storeMCPUserEnvVars).toHaveBeenCalledTimes(1);
   });
 
   it("sends an empty string for an already-set field left blank", async () => {
@@ -225,7 +225,7 @@ describe("UserEnvVarsModal", () => {
     await save(user);
 
     await waitFor(() => {
-      expect(networking.storeMCPUserEnvVars).toHaveBeenCalledВремяs(1);
+      expect(networking.storeMCPUserEnvVars).toHaveBeenCalledTimes(1);
     });
     expect(onSaved).not.toHaveBeenCalled();
     expect(onClose).not.toHaveBeenCalled();

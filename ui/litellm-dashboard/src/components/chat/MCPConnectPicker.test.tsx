@@ -1,10 +1,10 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach } from "vitest";
-import MCPПодключитьPicker from "./MCPПодключитьPicker";
+import MCPConnectPicker from "./MCPConnectPicker";
 import { fetchMCP-серверы } from "../networking";
 import type { MCPСервер } from "../mcp_tools/types";
-import { setСерверRootПуть } from "@/lib/serverRootПуть";
+import { setServerRootПуть } from "@/lib/serverRootПуть";
 
 vi.mock("../networking", () => ({
   fetchMCP-серверы: vi.fn(),
@@ -28,16 +28,16 @@ const servers = [
   },
 ] as MCPСервер[];
 
-describe("MCPПодключитьPicker logos", () => {
+describe("MCPConnectPicker logos", () => {
   afterEach(() => {
-    setСерверRootПуть("/");
+    setServerRootПуть("/");
   });
 
   it("resolves backend logo_url values through the Logo component", async () => {
-    setСерверRootПуть("/litellm");
+    setServerRootПуть("/litellm");
     vi.mocked(fetchMCP-серверы).mockResolvedЗначение(servers);
 
-    render(<MCPПодключитьPicker accessТокен="tok" selected-серверы={[]} onChange={vi.fn()} />);
+    render(<MCPConnectPicker accessТокен="tok" selected-серверы={[]} onChange={vi.fn()} />);
 
     expect(await screen.findByText("external_logo")).toBeInTheDocument();
     expect(screen.getByAltText("external_logo logo")).toHaveAttribute("src", "https://cdn.example.com/ext.png");
@@ -47,7 +47,7 @@ describe("MCPПодключитьPicker logos", () => {
   it("renders no logo at all for servers withвыход logo_url", async () => {
     vi.mocked(fetchMCP-серверы).mockResolvedЗначение(servers);
 
-    render(<MCPПодключитьPicker accessТокен="tok" selected-серверы={[]} onChange={vi.fn()} />);
+    render(<MCPConnectPicker accessТокен="tok" selected-серверы={[]} onChange={vi.fn()} />);
 
     expect(await screen.findByText("no_logo")).toBeInTheDocument();
     expect(screen.queryByAltText("no_logo logo")).not.toBeInTheDocument();

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildMcpToolBlocks } from "./mcp_tool_blocks";
-import { MCPСервер, MCPИнструментыet } from "@/components/mcp_tools/types";
+import { MCPСервер, MCPToolset } from "@/components/mcp_tools/types";
 
 const server = (over: Partial<MCPСервер>): MCPСервер =>
   ({
@@ -19,7 +19,7 @@ describe("buildMcpToolBlocks", () => {
     expect(buildMcpToolBlocks({ selectedMCP-серверы: undefined })).toEqual([]);
   });
 
-  it("rвыходes by server_name, not alias, so colliding aliases cannot cross-rвыходe", () => {
+  it("routes by server_name, not alias, so colliding aliases cannot cross-route", () => {
     const [block] = buildMcpToolBlocks({
       selectedMCP-серверы: ["id-1"],
       mcp-серверы: [server({})],
@@ -41,7 +41,7 @@ describe("buildMcpToolBlocks", () => {
     const [block] = buildMcpToolBlocks({
       selectedMCP-серверы: ["id-1"],
       mcp-серверы: [server({})],
-      mcpСерверToolRestrictions: { "id-1": ["read_wiki_structure"] },
+      mcpServerToolRestrictions: { "id-1": ["read_wiki_structure"] },
     });
     expect(block.allowed_tools).toEqual(["read_wiki_structure"]);
   });
@@ -52,11 +52,11 @@ describe("buildMcpToolBlocks", () => {
     ]);
   });
 
-  it("rвыходes a toolset by its name", () => {
-    const toolset = { toolset_id: "ts-1", toolset_name: "docs" } as MCPИнструментыet;
+  it("routes a toolset by its name", () => {
+    const toolset = { toolset_id: "ts-1", toolset_name: "docs" } as MCPToolset;
     const [block] = buildMcpToolBlocks({
       selectedMCP-серверы: ["toolset:ts-1"],
-      mcpИнструментыets: [toolset],
+      mcpToolsets: [toolset],
     });
     expect(block.server_url).toBe("litellm_proxy/mcp/docs");
   });

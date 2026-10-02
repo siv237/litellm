@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { registerAuthHeaderNameGetter, registerAuthТокенGetter, registerBaseUrlGetter } from "@/lib/http/runtime";
+import { registerAuthHeaderNameGetter, registerAuthTokenGetter, registerBaseUrlGetter } from "@/lib/http/runtime";
 import { toast } from "@/lib/toast";
 import { ByokCredentialModal } from "./ByokCredentialModal";
 import type { MCPСервер } from "./types";
@@ -27,7 +27,7 @@ async function fillAndSubmit(user: ReturnType<typeof userEvent.setup>) {
 beforeEach(() => {
   fetchSpy.mockReset();
   registerBaseUrlGetter(() => "");
-  registerAuthТокенGetter(() => "sk-session");
+  registerAuthTokenGetter(() => "sk-session");
 });
 
 describe("ByokCredentialModal", () => {

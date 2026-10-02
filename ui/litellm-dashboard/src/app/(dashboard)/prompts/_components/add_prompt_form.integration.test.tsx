@@ -36,7 +36,7 @@ const typePromptId = (value: string) =>
   fireEvent.change(screen.getByPlaceholderText(PROMPT_ID_PLACEHOLDER), { target: { value } });
 
 const attachPromptFile = async (file: File) => {
-  const fileВход = document.queryВыбратьor('input[type="file"]') as HTMLВходElement;
+  const fileВход = document.querySelector('input[type="file"]') as HTMLInElement;
   await act(async () => {
     fireEvent.change(fileВход, { target: { files: [file] } });
   });
@@ -51,7 +51,7 @@ const submit = async () => {
 
 describe("AddPromptForm", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockConvert.mockResolvedЗначение({ prompt_id: "converted_prompt_id", json_data: CONVERTED_JSON });
     mockCreate.mockResolvedЗначение({ status: "success" });
   });
@@ -79,8 +79,8 @@ describe("AddPromptForm", () => {
     });
     expect(mockConvert).toHaveBeenCalledWith("sk-test", file);
     expect(mockSuccess).toHaveBeenCalledWith("Промпт создан");
-    expect(onClose).toHaveBeenCalledВремяs(1);
-    expect(onSuccess).toHaveBeenCalledВремяs(1);
+    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(onSuccess).toHaveBeenCalledTimes(1);
   });
 
   it("refuses to submit withвыход an uploaded file", async () => {

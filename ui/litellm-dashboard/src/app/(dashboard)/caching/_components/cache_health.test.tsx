@@ -2,7 +2,7 @@ import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs } from "@/../tests/test-utils";
+import { renderWithProviders } from "@/../tests/test-utils";
 import { CacheHealthTab } from "./cache_health";
 
 const healthyОтвет = {
@@ -27,7 +27,7 @@ const errorPayload = {
 const errorОтвет = { error: { message: JSON.stringify(errorPayload) } };
 
 const renderTab = (overrides: Partial<React.ComponentProps<typeof CacheHealthTab>> = {}) =>
-  renderWithПровайдерs(
+  renderWithProviders(
     <CacheHealthTab
       {...{ accessТокен: "sk-test", healthCheckОтвет: "", runCachingHealthCheck: vi.fn(), ...overrides }}
     />,
@@ -35,7 +35,7 @@ const renderTab = (overrides: Partial<React.ComponentProps<typeof CacheHealthTab
 
 describe("CacheHealthTab", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("offers a health check button and no results before one is run", () => {
@@ -52,7 +52,7 @@ describe("CacheHealthTab", () => {
 
     await user.click(screen.getByRole("button", { name: "Run Health Check" }));
 
-    expect(runCachingHealthCheck).toHaveBeenCalledВремяs(1);
+    expect(runCachingHealthCheck).toHaveBeenCalledTimes(1);
   });
 
   it("shows an in-flight label and disables the button while the check runs", async () => {
@@ -132,7 +132,7 @@ describe("CacheHealthTab", () => {
     expect(screen.getByText(`${"M".repeat(50)}...`)).toBeInTheDocument();
     expect(screen.queryByText(longСообщение)).not.toBeInTheDocument();
 
-    await user.click(screen.getВсеByRole("button", { name: "▶" })[0]);
+    await user.click(screen.getAllByRole("button", { name: "▶" })[0]);
 
     await waitFor(() => {
       expect(screen.getByText(longСообщение)).toBeInTheDocument();

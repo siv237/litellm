@@ -3,21 +3,21 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
 import React, { ReactNode } from "react";
 import { useCloudZeroSettings, useCloudZeroUpdateSettings, useCloudZeroDeleteSettings } from "./useCloudZeroSettings";
-import { CloudZeroSettings } from "@/components/CloudZeroСтоимостьTracking/types";
+import { CloudZeroSettings } from "@/components/CloudZeroCostTracking/types";
 
 const {
   mockProxyBaseUrl,
   mockAccessТокен,
   mockHeaderName,
   mockGetProxyBaseUrl,
-  mockGetГлобальноLitellmHeaderName,
+  mockGetGlobalLitellmHeaderName,
   mockCreateЗапросКлючи,
 } = vi.hoisted(() => {
   const mockProxyBaseUrl = "https://proxy.example.com";
   const mockAccessТокен = "test-access-token";
   const mockHeaderName = "X-LiteLLM-API-Ключ";
   const mockGetProxyBaseUrl = vi.fn(() => mockProxyBaseUrl);
-  const mockGetГлобальноLitellmHeaderName = vi.fn(() => mockHeaderName);
+  const mockGetGlobalLitellmHeaderName = vi.fn(() => mockHeaderName);
   const mockCreateЗапросКлючи = vi.fn((resource: string) => ({
     all: [resource],
     lists: () => [resource, "list"],
@@ -31,17 +31,17 @@ const {
     mockAccessТокен,
     mockHeaderName,
     mockGetProxyBaseUrl,
-    mockGetГлобальноLitellmHeaderName,
+    mockGetGlobalLitellmHeaderName,
     mockCreateЗапросКлючи,
   };
 });
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: mockGetProxyBaseUrl,
-  getГлобальноLitellmHeaderName: mockGetГлобальноLitellmHeaderName,
+  getGlobalLitellmHeaderName: mockGetGlobalLitellmHeaderName,
 }));
 
-vi.mock("../common/queryКлючиFactory", () => ({
+vi.mock("../common/queryKeysFactory", () => ({
   createЗапросКлючи: mockCreateЗапросКлючи,
 }));
 
@@ -68,7 +68,7 @@ describe("useCloudZeroSettings", () => {
       },
     });
 
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockGetProxyBaseUrl.mockReset();
 
     fetchSpy = vi.fn();
@@ -76,7 +76,7 @@ describe("useCloudZeroSettings", () => {
   });
 
   afterEach(() => {
-    vi.restoreВсеMocks();
+    vi.restoreAllMocks();
   });
 
   const wrapper = ({ children }: { children: ReactNode }) =>
@@ -126,10 +126,10 @@ describe("useCloudZeroSettings", () => {
   });
 
   it("should return settings when at least one required field is present", async () => {
-    const settingsWithПодключениеId = { connection_id: "test-connection-id" };
+    const settingsWithConnectionId = { connection_id: "test-connection-id" };
     (fetchSpy as any).mockResolvedЗначение({
       ok: true,
-      json: async () => settingsWithПодключениеId,
+      json: async () => settingsWithConnectionId,
     });
 
     const { result } = renderHook(() => useCloudZeroSettings(mockAccessТокен), { wrapper });
@@ -139,7 +139,7 @@ describe("useCloudZeroSettings", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.data).toEqual(settingsWithПодключениеId);
+    expect(result.current.data).toEqual(settingsWithConnectionId);
   });
 
   it("should handle error responses", async () => {
@@ -151,7 +151,7 @@ describe("useCloudZeroSettings", () => {
     ];
 
     for (const errorОтвет of errorCases) {
-      vi.clearВсеMocks();
+      vi.clearAllMocks();
       (fetchSpy as any).mockResolvedЗначение({
         ok: false,
         json: async () => errorОтвет,
@@ -255,7 +255,7 @@ describe("useCloudZeroUpdateSettings", () => {
       },
     });
 
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockGetProxyBaseUrl.mockReset();
 
     fetchSpy = vi.fn();
@@ -263,7 +263,7 @@ describe("useCloudZeroUpdateSettings", () => {
   });
 
   afterEach(() => {
-    vi.restoreВсеMocks();
+    vi.restoreAllMocks();
   });
 
   const wrapper = ({ children }: { children: ReactNode }) =>
@@ -333,7 +333,7 @@ describe("useCloudZeroUpdateSettings", () => {
       json: async () => mockОтвет,
     });
 
-    queryClient.setЗапросData(["cloudZeroSettings", "list", { params: {} }], mockCloudZeroSettings);
+    queryClient.setRequestData(["cloudZeroSettings", "list", { params: {} }], mockCloudZeroSettings);
 
     const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessТокен), { wrapper });
 
@@ -345,7 +345,7 @@ describe("useCloudZeroUpdateSettings", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    const queryCache = queryClient.getЗапросCache();
+    const queryCache = queryClient.getRequestCache();
     const queries = queryCache.findВсе();
     const settingsЗапрос = queries.find((q) => q.queryКлюч[0] === "cloudZeroSettings");
 
@@ -361,7 +361,7 @@ describe("useCloudZeroUpdateSettings", () => {
     ];
 
     for (const errorОтвет of errorCases) {
-      vi.clearВсеMocks();
+      vi.clearAllMocks();
       (fetchSpy as any).mockResolvedЗначение({
         ok: false,
         json: async () => errorОтвет,
@@ -443,7 +443,7 @@ describe("useCloudZeroUpdateSettings", () => {
     const testCases = ["", null as any];
 
     for (const accessТокен of testCases) {
-      vi.clearВсеMocks();
+      vi.clearAllMocks();
       const { result } = renderHook(() => useCloudZeroUpdateSettings(accessТокен), { wrapper });
 
       result.current.mutate({
@@ -497,7 +497,7 @@ describe("useCloudZeroDeleteSettings", () => {
       },
     });
 
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockGetProxyBaseUrl.mockReset();
 
     fetchSpy = vi.fn();
@@ -505,7 +505,7 @@ describe("useCloudZeroDeleteSettings", () => {
   });
 
   afterEach(() => {
-    vi.restoreВсеMocks();
+    vi.restoreAllMocks();
   });
 
   const wrapper = ({ children }: { children: ReactNode }) =>
@@ -543,7 +543,7 @@ describe("useCloudZeroDeleteSettings", () => {
       json: async () => mockОтвет,
     });
 
-    queryClient.setЗапросData(["cloudZeroSettings", "list", { params: {} }], mockCloudZeroSettings);
+    queryClient.setRequestData(["cloudZeroSettings", "list", { params: {} }], mockCloudZeroSettings);
 
     const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessТокен), { wrapper });
 
@@ -553,7 +553,7 @@ describe("useCloudZeroDeleteSettings", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    const queryCache = queryClient.getЗапросCache();
+    const queryCache = queryClient.getRequestCache();
     const queries = queryCache.findВсе();
     const settingsЗапрос = queries.find((q) => q.queryКлюч[0] === "cloudZeroSettings");
 
@@ -569,7 +569,7 @@ describe("useCloudZeroDeleteSettings", () => {
     ];
 
     for (const errorОтвет of errorCases) {
-      vi.clearВсеMocks();
+      vi.clearAllMocks();
       (fetchSpy as any).mockResolvedЗначение({
         ok: false,
         json: async () => errorОтвет,
@@ -643,7 +643,7 @@ describe("useCloudZeroDeleteSettings", () => {
     const testCases = ["", null as any];
 
     for (const accessТокен of testCases) {
-      vi.clearВсеMocks();
+      vi.clearAllMocks();
       const { result } = renderHook(() => useCloudZeroDeleteSettings(accessТокен), { wrapper });
 
       result.current.mutate();

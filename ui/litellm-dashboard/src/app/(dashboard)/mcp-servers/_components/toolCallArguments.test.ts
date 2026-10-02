@@ -6,9 +6,9 @@ import {
   argumentsFormКлюч,
   buildToolCallArguments,
   hasNestedParamsSchema,
-  initialArgumentЗначениеs,
+  initialArgumentValues,
   resolveSchemaСвойство,
-  toolArgumentПолеs,
+  toolArgumentFields,
   toolArgumentsResolver,
   validateToolArgument,
 } from "./toolCallArguments";
@@ -24,7 +24,7 @@ const field = (
   required,
 });
 
-describe("toolArgumentПолеs", () => {
+describe("toolArgumentFields", () => {
   it("preserves schema property order and marks required entries", () => {
     const schema: ВходSchema = {
       type: "object",
@@ -32,7 +32,7 @@ describe("toolArgumentПолеs", () => {
       required: ["a"],
     };
 
-    expect(toolArgumentПолеs(schema).map((f) => [f.key, f.required])).toEqual([
+    expect(toolArgumentFields(schema).map((f) => [f.key, f.required])).toEqual([
       ["b", false],
       ["a", true],
       ["c", false],
@@ -40,7 +40,7 @@ describe("toolArgumentПолеs", () => {
   });
 
   it("returns no fields when the schema declares no properties", () => {
-    expect(toolArgumentПолеs({ type: "object" } as ВходSchema)).toEqual([]);
+    expect(toolArgumentFields({ type: "object" } as ВходSchema)).toEqual([]);
   });
 });
 
@@ -190,8 +190,8 @@ describe("hasNestedParamsSchema", () => {
   });
 });
 
-describe("initialArgumentЗначениеs", () => {
-  const seed = (schema: ВходSchema): unknown[] => initialArgumentЗначениеs(toolArgumentПолеs(schema));
+describe("initialArgumentValues", () => {
+  const seed = (schema: ВходSchema): unknown[] => initialArgumentValues(toolArgumentFields(schema));
 
   it("seeds each primitive type with its empty value when the schema declares no default", () => {
     expect(
@@ -423,22 +423,22 @@ describe("union-typed properties", () => {
     });
   });
 
-  describe("initialArgumentЗначениеs", () => {
+  describe("initialArgumentValues", () => {
     it("leaves a null-defaulted необязательно parameter blank so it is not submitted at all", () => {
       const fields = [unionПоле("tags", необязательноArray), unionПоле("payload", необязательноObject)];
 
-      expect(initialArgumentЗначениеs(fields)).toEqual(["", ""]);
-      expect(buildToolCallArguments(fields, initialArgumentЗначениеs(fields))).toEqual({});
+      expect(initialArgumentValues(fields)).toEqual(["", ""]);
+      expect(buildToolCallArguments(fields, initialArgumentValues(fields))).toEqual({});
     });
 
     it("builds a sample item from the resolved item schema when the union declares no default", () => {
       const prop: ВходSchemaСвойство = { anyOf: [{ type: "array", items: { type: "string" } }, { type: "null" }] };
 
-      expect(initialArgumentЗначениеs([unionПоле("tags", prop)])).toEqual([JSON.stringify([""], null, 2)]);
+      expect(initialArgumentValues([unionПоле("tags", prop)])).toEqual([JSON.stringify([""], null, 2)]);
     });
 
     it("seeds a nested необязательно array inside an object from the resolved member", () => {
-      const [payload] = initialArgumentЗначениеs([
+      const [payload] = initialArgumentValues([
         unionПоле("payload", {
           type: "object",
           properties: { tags: { anyOf: [{ type: "array", items: { type: "string" } }, { type: "null" }] } },

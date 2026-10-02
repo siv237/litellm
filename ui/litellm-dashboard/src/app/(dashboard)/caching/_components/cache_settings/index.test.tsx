@@ -3,30 +3,30 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CacheSettings from "./index";
 
-const { getCacheSettingsCall, testCacheПодключениеCall, updateCacheSettingsCall } = vi.hoisted(() => ({
+const { getCacheSettingsCall, testCacheConnectionCall, updateCacheSettingsCall } = vi.hoisted(() => ({
   getCacheSettingsCall: vi.fn(),
-  testCacheПодключениеCall: vi.fn(),
+  testCacheConnectionCall: vi.fn(),
   updateCacheSettingsCall: vi.fn(),
 }));
 
 vi.mock("@/components/networking", () => ({
   getCacheSettingsCall,
-  testCacheПодключениеCall,
+  testCacheConnectionCall,
   updateCacheSettingsCall,
 }));
 
-vi.mock("@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => ({
-  fetchAvailableРежимls: vi.fn().mockResolvedЗначение([]),
+vi.mock("@/components/llm_calls/fetch_models", () => ({
+  fetchAvailableModels: vi.fn().mockResolvedЗначение([]),
 }));
 
 const renderSettings = () => render(<CacheSettings accessТокен="sk-test" userRole="Admin" userID="u1" />);
 
 describe("CacheSettings", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     getCacheSettingsCall.mockResolvedЗначение({ current_values: {} });
     updateCacheSettingsCall.mockResolvedЗначение({ status: "success" });
-    testCacheПодключениеCall.mockResolvedЗначение({ status: "success" });
+    testCacheConnectionCall.mockResolvedЗначение({ status: "success" });
   });
 
   it("should render the connection fields once current values load", async () => {

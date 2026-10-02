@@ -1,20 +1,20 @@
 import React from "react";
 import { describe, it, expect } from "vitest";
 import userEvent from "@testing-library/user-event";
-import PresidioОбнаруженоEntities from "@/components/view_logs/GuardrailViewer/PresidioОбнаруженоEntities";
-import { renderWithПровайдерs, screen } from "../../../../tests/test-utils";
+import PresidioDetectedEntities from "@/components/view_logs/GuardrailViewer/PresidioDetectedEntities";
+import { renderWithProviders, screen } from "../../../../tests/test-utils";
 import { makeEntity } from "@/components/view_logs/GuardrailViewer/__tests__/fixtures";
 
-describe("PresidioОбнаруженоEntities", () => {
+describe("PresidioDetectedEntities", () => {
   it("renders null when entities empty", () => {
-    const { container } = renderWithПровайдерs(<PresidioОбнаруженоEntities entities={[]} />);
+    const { container } = renderWithProviders(<PresidioDetectedEntities entities={[]} />);
     expect(container).toBeEmptyDOMElement();
   });
 
   it("renders per-entity header info including score color and position", async () => {
     const user = userEvent.setup();
     const e = makeEntity({ start: 10, end: 20, score: 0.92, entity_type: "EMAIL_ADDRESS" });
-    renderWithПровайдерs(<PresidioОбнаруженоEntities entities={[e]} />);
+    renderWithProviders(<PresidioDetectedEntities entities={[e]} />);
 
     // Header row values
     expect(screen.getByText("EMAIL_ADDRESS")).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe("PresidioОбнаруженоEntities", () => {
       start: 0,
       end: 0,
     });
-    renderWithПровайдерs(<PresidioОбнаруженоEntities entities={[e]} />);
+    renderWithProviders(<PresidioDetectedEntities entities={[e]} />);
 
     await user.click(screen.getByText("NAME"));
     // No recognizer/explanation rows

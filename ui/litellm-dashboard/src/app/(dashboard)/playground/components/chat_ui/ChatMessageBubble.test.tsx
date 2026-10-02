@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import ChatСообщениеBubble from "./ChatСообщениеBubble";
+import ChatMessageBubble from "./ChatMessageBubble";
 import { ЭндпоинтType } from "@/components/chat_ui/mode_endpoint_mapping";
 import { СообщениеType } from "@/components/chat_ui/types";
 
@@ -30,9 +30,9 @@ vi.mock("@/components/chat_ui/MCPEventsDisplay", () => ({
   default: ({ events }: { events: unknown[] }) => <div data-testid="mcp-events-display">{events.length} events</div>,
 }));
 
-vi.mock("./SearchРезультатsDisplay", () => ({
-  SearchРезультатsDisplay: ({ searchРезультатs }: { searchРезультатs: unknown[] }) => (
-    <div data-testid="search-results-display">{searchРезультатs.length} results</div>
+vi.mock("./SearchResultsDisplay", () => ({
+  SearchResultsDisplay: ({ searchResults }: { searchResults: unknown[] }) => (
+    <div data-testid="search-results-display">{searchResults.length} results</div>
   ),
 }));
 
@@ -42,7 +42,7 @@ vi.mock("@/components/chat_ui/ОтветМетрикаs", () => ({
   ),
 }));
 
-vi.mock("./A2AМетрикаs", () => ({
+vi.mock("./A2AMetrics", () => ({
   default: ({ a2aМетаданные }: { a2aМетаданные: unknown }) => <div data-testid="a2a-metrics">A2A</div>,
 }));
 
@@ -72,16 +72,16 @@ const defaultProps = {
   accessТокен: "test-token",
 };
 
-describe("ChatСообщениеBubble", () => {
+describe("ChatMessageBubble", () => {
   it("should render a user message with right-aligned text", () => {
-    render(<ChatСообщениеBubble {...defaultProps} message={{ role: "user", content: "Hello" }} />);
+    render(<ChatMessageBubble {...defaultProps} message={{ role: "user", content: "Hello" }} />);
 
     expect(screen.getByText("user")).toBeInTheDocument();
     expect(screen.getByText("Hello")).toBeInTheDocument();
   });
 
   it("should render an assistant message with left-aligned text", () => {
-    render(<ChatСообщениеBubble {...defaultProps} message={{ role: "assistant", content: "Hi there" }} />);
+    render(<ChatMessageBubble {...defaultProps} message={{ role: "assistant", content: "Hi there" }} />);
 
     expect(screen.getByText("assistant")).toBeInTheDocument();
     expect(screen.getByText("Hi there")).toBeInTheDocument();
@@ -91,7 +91,7 @@ describe("ChatСообщениеBubble", () => {
     { role: "user" as const, bubble: ["bg-info/10", "border-info/20"], avatar: "bg-info/20" },
     { role: "assistant" as const, bubble: ["bg-card", "border-border"], avatar: "bg-muted" },
   ])("should paint the $role surface from theme tokens, not fixed colours", ({ role, bubble, avatar }) => {
-    render(<ChatСообщениеBubble {...defaultProps} message={{ role, content: "Hello" }} />);
+    render(<ChatMessageBubble {...defaultProps} message={{ role, content: "Hello" }} />);
 
     const surface = screen.getByTestId("message-surface");
     const avatarEl = screen.getByTestId("message-avatar");
@@ -103,26 +103,26 @@ describe("ChatСообщениеBubble", () => {
   });
 
   it("should show Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию badge for assistant messages when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is provided", () => {
-    render(<ChatСообщениеBubble {...defaultProps} message={{ role: "assistant", content: "Reply", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }} />);
+    render(<ChatMessageBubble {...defaultProps} message={{ role: "assistant", content: "Reply", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }} />);
 
     expect(screen.getByText("gpt-4")).toBeInTheDocument();
   });
 
   it("should not show Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию badge for user messages even when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is set", () => {
-    render(<ChatСообщениеBubble {...defaultProps} message={{ role: "user", content: "Hello", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }} />);
+    render(<ChatMessageBubble {...defaultProps} message={{ role: "user", content: "Hello", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }} />);
 
     expect(screen.queryByText("gpt-4")).not.toBeInTheDocument();
   });
 
   it("should render markdown content via ReactMarkdown", () => {
-    render(<ChatСообщениеBubble {...defaultProps} message={{ role: "assistant", content: "**bold text**" }} />);
+    render(<ChatMessageBubble {...defaultProps} message={{ role: "assistant", content: "**bold text**" }} />);
 
     expect(screen.getByTestId("react-markdown")).toHaveTextContent("**bold text**");
   });
 
   it("should render an image when isImage is true", () => {
     render(
-      <ChatСообщениеBubble
+      <ChatMessageBubble
         {...defaultProps}
         message={{ role: "assistant", content: "https://example.com/img.png", isImage: true }}
       />,
@@ -133,7 +133,7 @@ describe("ChatСообщениеBubble", () => {
 
   it("should render AudioRenderer when isAudio is true", () => {
     render(
-      <ChatСообщениеBubble {...defaultProps} message={{ role: "assistant", content: "audio-url", isAudio: true }} />,
+      <ChatMessageBubble {...defaultProps} message={{ role: "assistant", content: "audio-url", isAudio: true }} />,
     );
 
     expect(screen.getByTestId("audio-renderer")).toBeInTheDocument();
@@ -141,7 +141,7 @@ describe("ChatСообщениеBubble", () => {
 
   it("should show ReasoningContent when reasoningContent is present", () => {
     render(
-      <ChatСообщениеBubble
+      <ChatMessageBubble
         {...defaultProps}
         message={{ role: "assistant", content: "answer", reasoningContent: "thinking..." }}
       />,
@@ -154,7 +154,7 @@ describe("ChatСообщениеBubble", () => {
     const mcpEvents = [{ type: "tool_call", item_id: "1" }];
 
     render(
-      <ChatСообщениеBubble
+      <ChatMessageBubble
         {...defaultProps}
         isLastСообщение={true}
         endpointType={ЭндпоинтType.RESPONSES}
@@ -170,7 +170,7 @@ describe("ChatСообщениеBubble", () => {
     const mcpEvents = [{ type: "tool_call", item_id: "1" }];
 
     render(
-      <ChatСообщениеBubble
+      <ChatMessageBubble
         {...defaultProps}
         isLastСообщение={true}
         endpointType={ЭндпоинтType.CHAT}
@@ -186,7 +186,7 @@ describe("ChatСообщениеBubble", () => {
     const mcpEvents = [{ type: "tool_call", item_id: "1" }];
 
     render(
-      <ChatСообщениеBubble
+      <ChatMessageBubble
         {...defaultProps}
         isLastСообщение={false}
         endpointType={ЭндпоинтType.RESPONSES}
@@ -198,14 +198,14 @@ describe("ChatСообщениеBubble", () => {
     expect(screen.queryByTestId("mcp-events-display")).not.toBeInTheDocument();
   });
 
-  it("should show SearchРезультатsDisplay when searchРезультатs are present", () => {
+  it("should show SearchResultsDisplay when searchResults are present", () => {
     render(
-      <ChatСообщениеBubble
+      <ChatMessageBubble
         {...defaultProps}
         message={{
           role: "assistant",
           content: "found results",
-          searchРезультатs: [{ object: "search", search_query: "q", data: [] }],
+          searchResults: [{ object: "search", search_query: "q", data: [] }],
         }}
       />,
     );
@@ -215,13 +215,13 @@ describe("ChatСообщениеBubble", () => {
 
   it("should show ОтветМетрикаs when usage data is present and no a2aМетаданные", () => {
     render(
-      <ChatСообщениеBubble
+      <ChatMessageBubble
         {...defaultProps}
         message={{
           role: "assistant",
           content: "response",
           timeToFirstТокен: 150,
-          usage: { completionТокенs: 10, promptТокенs: 5, totalТокенs: 15 },
+          usage: { completionTokens: 10, promptTokens: 5, totalTokens: 15 },
         }}
       />,
     );
@@ -229,9 +229,9 @@ describe("ChatСообщениеBubble", () => {
     expect(screen.getByTestId("response-metrics")).toBeInTheDocument();
   });
 
-  it("should show A2AМетрикаs when a2aМетаданные is present instead of ОтветМетрикаs", () => {
+  it("should show A2AMetrics when a2aМетаданные is present instead of ОтветМетрикаs", () => {
     render(
-      <ChatСообщениеBubble
+      <ChatMessageBubble
         {...defaultProps}
         message={{
           role: "assistant",
@@ -248,7 +248,7 @@ describe("ChatСообщениеBubble", () => {
 
   it("should show CodeInterpreterВыход on the last assistant message for RESPONSES endpoint", () => {
     render(
-      <ChatСообщениеBubble
+      <ChatMessageBubble
         {...defaultProps}
         isLastСообщение={true}
         endpointType={ЭндпоинтType.RESPONSES}
@@ -266,7 +266,7 @@ describe("ChatСообщениеBubble", () => {
 
   it("should render generated image from chat completions via message.image", () => {
     render(
-      <ChatСообщениеBubble
+      <ChatMessageBubble
         {...defaultProps}
         message={{
           role: "assistant",
@@ -276,7 +276,7 @@ describe("ChatСообщениеBubble", () => {
       />,
     );
 
-    const images = screen.getВсеByAltText("Generated image");
+    const images = screen.getAllByAltText("Generated image");
     expect(images.some((img) => img.getAttribute("src") === "https://example.com/generated.png")).toBe(true);
   });
 });

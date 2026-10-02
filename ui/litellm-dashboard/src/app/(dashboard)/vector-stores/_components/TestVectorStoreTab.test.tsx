@@ -78,7 +78,7 @@ describe("TestVectorStoreTab", () => {
     await user.click(screen.getByRole("combobox"));
 
     // The selected store's name may also render in the trigger, so only require at least one match.
-    expect((await screen.findВсеByText("Test Store 1")).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText("Test Store 1")).length).toBeGreaterThan(0);
     expect(screen.getByText("Test Store 2")).toBeInTheDocument();
   });
 });

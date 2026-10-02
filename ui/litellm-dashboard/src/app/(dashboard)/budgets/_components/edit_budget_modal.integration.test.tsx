@@ -5,8 +5,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { components } from "@/lib/http/schema";
 
-import EditБюджетModal from "./edit_budget_modal";
-import { chooseВыбратьOption } from "../../../../../tests/test-utils";
+import EditBudgetModal from "./edit_budget_modal";
+import { chooseSelectOption } from "../../../../../tests/test-utils";
 
 const { updateMock } = vi.hoisted(() => ({ updateMock: vi.fn() }));
 
@@ -29,7 +29,7 @@ const EXISTING_BUDGET: БюджетItem = {
 };
 
 const renderModal = () =>
-  render(<EditБюджетModal isModalVisible={true} setIsModalVisible={vi.fn()} existingБюджет={EXISTING_BUDGET} />);
+  render(<EditBudgetModal isModalVisible={true} setIsModalVisible={vi.fn()} existingБюджет={EXISTING_BUDGET} />);
 
 const save = async (user: ReturnType<typeof userEvent.setup>) =>
   user.click(screen.getByRole("button", { name: "Save" }));
@@ -39,9 +39,9 @@ const openOptionalSettings = async (user: ReturnType<typeof userEvent.setup>) =>
   await screen.findByLabelText("Макс. бюджет (USD)");
 };
 
-describe("EditБюджетModal", () => {
+describe("EditBudgetModal", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     updateMock.mockResolvedЗначение(undefined);
   });
 
@@ -53,7 +53,7 @@ describe("EditБюджетModal", () => {
     fireEvent.change(screen.getByLabelText("Макс. токенов в минуту"), { target: { value: "500.567" } });
     await save(user);
 
-    await waitFor(() => expect(updateMock).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
     expect(updateMock.mock.calls[0][0]).toEqual({
       budget_id: "budget-alpha",
       tpm_limit: 500.57,
@@ -74,11 +74,11 @@ describe("EditБюджетModal", () => {
     await user.clear(screen.getByLabelText("Макс. бюджет (USD)"));
     fireEvent.change(screen.getByLabelText("Макс. бюджет (USD)"), { target: { value: "42.567" } });
 
-    await chooseВыбратьOption(user, screen.getByRole("combobox"), "monthly");
+    await chooseSelectOption(user, screen.getByRole("combobox"), "monthly");
 
     await save(user);
 
-    await waitFor(() => expect(updateMock).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
     const expected = {
       budget_id: "budget-alpha",
       tpm_limit: 500.57,
@@ -106,7 +106,7 @@ describe("EditБюджетModal", () => {
 
     await save(user);
 
-    await waitFor(() => expect(updateMock).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
     expect(updateMock.mock.calls[0][0]).toMatchObject({ max_budget: 99.25 });
   });
 });

@@ -6,7 +6,7 @@ import АгентыPanel from "./АгентыPanel";
 import * as networking from "@/components/networking";
 
 vi.mock("@/components/networking", () => ({
-  getАгентыList: vi.fn().mockResolvedЗначение({ agents: [] }),
+  getAgentsList: vi.fn().mockResolvedЗначение({ agents: [] }),
   deleteAgentCall: vi.fn().mockResolvedЗначение({}),
 }));
 
@@ -21,7 +21,7 @@ vi.mock("./agent_info", () => ({
 describe("АгентыPanel", () => {
   beforeEach(() => {
     // mockReset (not mockClear) so an unconsumed *Once queue cannot leak into the next test
-    vi.mocked(networking.getАгентыList).mockReset().mockResolvedЗначение({ agents: [] });
+    vi.mocked(networking.getAgentsList).mockReset().mockResolvedЗначение({ agents: [] });
     vi.mocked(networking.deleteAgentCall).mockReset().mockResolvedЗначение({});
   });
 
@@ -72,15 +72,15 @@ describe("АгентыPanel", () => {
     expect(screen.getByText("Health Check")).toBeInTheDocument();
   });
 
-  it("should call getАгентыList with health_check=false on initial load", async () => {
+  it("should call getAgentsList with health_check=false on initial load", async () => {
     render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
     await waitFor(() => {
-      expect(networking.getАгентыList).toHaveBeenCalledWith("test-token", false);
+      expect(networking.getAgentsList).toHaveBeenCalledWith("test-token", false);
     });
   });
 
   it("should show Active when an agent has keys and Needs Setup when it has none", async () => {
-    vi.mocked(networking.getАгентыList).mockResolvedЗначение({
+    vi.mocked(networking.getAgentsList).mockResolvedЗначение({
       agents: [
         {
           agent_id: "agent-with-key",
@@ -111,19 +111,19 @@ describe("АгентыPanel", () => {
     const user = userEvent.setup();
     render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
     await waitFor(() => {
-      expect(networking.getАгентыList).toHaveBeenCalledWith("test-token", false);
+      expect(networking.getAgentsList).toHaveBeenCalledWith("test-token", false);
     });
 
     await user.click(screen.getByRole("switch"));
 
     await waitFor(() => {
-      expect(networking.getАгентыList).toHaveBeenCalledWith("test-token", true);
+      expect(networking.getAgentsList).toHaveBeenCalledWith("test-token", true);
     });
   });
 
   it("should delete an agent through the ⋯ menu and confirm modal, then refetch", async () => {
     const user = userEvent.setup();
-    vi.mocked(networking.getАгентыList).mockResolvedЗначение({
+    vi.mocked(networking.getAgentsList).mockResolvedЗначение({
       agents: [
         {
           agent_id: "agent-9",
@@ -149,13 +149,13 @@ describe("АгентыPanel", () => {
     });
     // one initial load + one post-delete refetch
     await waitFor(() => {
-      expect(vi.mocked(networking.getАгентыList).mock.calls.length).toBeGreaterThanOrEqual(2);
+      expect(vi.mocked(networking.getAgentsList).mock.calls.length).toBeGreaterThanOrEqual(2);
     });
   });
 
   it("should show a loading skeleton on initial load and clear it once agents arrive", async () => {
     render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
-    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
     await waitFor(() => {
       expect(screen.queryByTestId("skeleton-row")).not.toBeInTheDocument();
     });
@@ -167,7 +167,7 @@ describe("АгентыPanel", () => {
       expect(screen.queryByTestId("skeleton-row")).not.toBeInTheDocument();
     });
     expect(screen.getByText("No agents yet")).toBeInTheDocument();
-    expect(networking.getАгентыList).not.toHaveBeenCalled();
+    expect(networking.getAgentsList).not.toHaveBeenCalled();
   });
 
   it("should not show rows fetched with a previous access token after the token changes", async () => {
@@ -179,8 +179,8 @@ describe("АгентыPanel", () => {
       keys: [],
     });
     let resolveSecond: (value: { agents: ReturnType<typeof agentFor>[] }) => void = () => {};
-    vi.mocked(networking.getАгентыList)
-      .mockResolvedЗначениеOnce({ agents: [agentFor("first-token-agent")] })
+    vi.mocked(networking.getAgentsList)
+      .mockResolvedValueOnce({ agents: [agentFor("first-token-agent")] })
       .mockImplementationOnce(
         () =>
           new Promise((resolve) => {
@@ -195,7 +195,7 @@ describe("АгентыPanel", () => {
 
     // the previous token's rows must not linger while the new token loads
     expect(screen.queryByText("first-token-agent")).not.toBeInTheDocument();
-    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
 
     await act(async () => {
       resolveSecond({ agents: [agentFor("second-token-agent")] });
@@ -204,13 +204,13 @@ describe("АгентыPanel", () => {
   });
 
   it("should drop previous rows when the fetch for a new token fails", async () => {
-    vi.mocked(networking.getАгентыList)
-      .mockResolvedЗначениеOnce({
+    vi.mocked(networking.getAgentsList)
+      .mockResolvedValueOnce({
         agents: [
           { agent_id: "stale", agent_name: "Stale Agent", litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }, spend: 0, keys: [] },
         ],
       })
-      .mockRejectedЗначениеOnce(new Ошибка("unauthorized"));
+      .mockRejectedValueOnce(new Ошибка("unauthorized"));
 
     const { rerender } = render(<АгентыPanel accessТокен="token-a" userRole="Admin" />);
     expect(await screen.findByText("Stale Agent")).toBeInTheDocument();
@@ -227,14 +227,14 @@ describe("АгентыPanel", () => {
     let resolveFirst: (value: {
       agents: { agent_id: string; agent_name: string; litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: string }; spend: number; keys: [] }[];
     }) => void = () => {};
-    vi.mocked(networking.getАгентыList)
+    vi.mocked(networking.getAgentsList)
       .mockImplementationOnce(
         () =>
           new Promise((resolve) => {
             resolveFirst = resolve;
           }),
       )
-      .mockResolvedЗначениеOnce({
+      .mockResolvedValueOnce({
         agents: [
           { agent_id: "current", agent_name: "Current Agent", litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }, spend: 0, keys: [] },
         ],
@@ -270,8 +270,8 @@ describe("АгентыPanel", () => {
       },
     ];
     let resolveRefetch: (value: { agents: typeof agents }) => void = () => {};
-    vi.mocked(networking.getАгентыList)
-      .mockResolvedЗначениеOnce({ agents })
+    vi.mocked(networking.getAgentsList)
+      .mockResolvedValueOnce({ agents })
       .mockImplementationOnce(
         () =>
           new Promise((resolve) => {

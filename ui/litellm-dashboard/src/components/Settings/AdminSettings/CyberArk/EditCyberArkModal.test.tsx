@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { renderWithПровайдерs } from "../../../../../tests/test-utils";
+import { renderWithProviders } from "../../../../../tests/test-utils";
 import EditCyberArkModal from "./EditCyberArkModal";
 import { useCyberArkКонфигурация } from "@/app/(dashboard)/hooks/configOverrides/useCyberArkКонфигурация";
 import { useUpdateCyberArkКонфигурация } from "@/app/(dashboard)/hooks/configOverrides/useUpdateCyberArkКонфигурация";
@@ -54,14 +54,14 @@ const setup = (options?: { values?: Record<string, unknown>; fields?: readonly s
 };
 
 const renderModal = (onSuccess = vi.fn(), onCancel = vi.fn()) =>
-  renderWithПровайдерs(<EditCyberArkModal isVisible={true} onCancel={onCancel} onSuccess={onSuccess} />);
+  renderWithProviders(<EditCyberArkModal isVisible={true} onCancel={onCancel} onSuccess={onSuccess} />);
 
 const save = async (user: ReturnType<typeof userEvent.setup>) =>
   user.click(screen.getByRole("button", { name: "Save" }));
 
 describe("EditCyberArkModal", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("clears untouched non-sensitive fields and omits untouched sensitive fields", async () => {
@@ -79,7 +79,7 @@ describe("EditCyberArkModal", () => {
     await save(user);
 
     await waitFor(() => {
-      expect(mutate).toHaveBeenCalledВремяs(1);
+      expect(mutate).toHaveBeenCalledTimes(1);
     });
     const expectedPayload = {
       cyberark_api_base: "https://conjur.example.com",
@@ -101,7 +101,7 @@ describe("EditCyberArkModal", () => {
     await save(user);
 
     await waitFor(() => {
-      expect(mutate).toHaveBeenCalledВремяs(1);
+      expect(mutate).toHaveBeenCalledTimes(1);
     });
     expect(mutate.mock.calls[0][0]).toMatchObject({ cyberark_api_key: "rotated-key" });
   });
@@ -128,7 +128,7 @@ describe("EditCyberArkModal", () => {
     await save(user);
 
     await waitFor(() => {
-      expect(mutate).toHaveBeenCalledВремяs(1);
+      expect(mutate).toHaveBeenCalledTimes(1);
     });
     expect(mutate.mock.calls[0][0]).toEqual({ cyberark_api_base: "https://conjur.example.com" });
   });
@@ -170,7 +170,7 @@ describe("EditCyberArkModal", () => {
 
     await user.click(screen.getByRole("button", { name: "Cancel" }));
 
-    expect(onCancel).toHaveBeenCalledВремяs(1);
+    expect(onCancel).toHaveBeenCalledTimes(1);
     expect(mutate).not.toHaveBeenCalled();
   });
 });

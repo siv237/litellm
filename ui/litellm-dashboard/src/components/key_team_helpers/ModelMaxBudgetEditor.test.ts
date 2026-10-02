@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { entriesToРежимlМакс.Бюджет, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries, type РежимlМакс.Бюджет } from "./РежимlМакс.БюджетEditor";
+import { entriesToModelМакс.Бюджет, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries, type РежимlМакс.Бюджет } from "./РежимlМакс.BudgetEditor";
 
-describe("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries", () => {
+describe("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries", () => {
   it("hydrates an existing budget withвыход losing its period", () => {
     const budget: РежимlМакс.Бюджет = {
       "claude-opus-4-8": { budget_limit: 200, time_period: "1mo" },
       "gpt-4o": { budget_limit: 0.5, time_period: "7d" },
     };
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries(budget)).toEqual([
+    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(budget)).toEqual([
       { id: "existing-0", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-opus-4-8", budgetLimit: 200, timePeriod: "1mo", extra: {} },
       { id: "existing-1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o", budgetLimit: 0.5, timePeriod: "7d", extra: {} },
     ]);
@@ -18,7 +18,7 @@ describe("Эвристический резерв по-прежнему оцен
     ["undefined", undefined],
     ["empty", {} as РежимlМакс.Бюджет],
   ])("treats %s as no rows", (_label, budget) => {
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries(budget)).toEqual([]);
+    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(budget)).toEqual([]);
   });
 });
 
@@ -26,12 +26,12 @@ describe("Эвристический резерв по-прежнему оцен
 // as the client sent it, and БюджетКонфигурация documents the max_budget/budget_duration
 // spelling. Reading only one spelling mounts the row blank, and emitting then drops
 // it, so opening a form and saving it untouched would wipe the stored budget.
-describe("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries reads either БюджетКонфигурация spelling", () => {
+describe("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries reads either БюджетКонфигурация spelling", () => {
   it.each([
     ["budget_limit/time_period", { budget_limit: 200, time_period: "1mo" }],
     ["max_budget/budget_duration", { max_budget: 200, budget_duration: "1mo" }],
   ])("hydrates a row stored as %s", (_label, config) => {
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries({ "claude-opus-4-8": config })).toEqual([
+    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries({ "claude-opus-4-8": config })).toEqual([
       { id: "existing-0", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-opus-4-8", budgetLimit: 200, timePeriod: "1mo", extra: {} },
     ]);
   });
@@ -44,19 +44,19 @@ describe("Эвристический резерв по-прежнему оцен
     ["exponent notation", "5e-1", 0.5],
     ["zero, which is a real cap", 0, 0],
   ])("reads %s as the cap", (_label, stored, expected) => {
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries({ "gpt-4o": { budget_limit: stored, time_period: "1h" } })[0].budgetLimit).toBe(
+    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries({ "gpt-4o": { budget_limit: stored, time_period: "1h" } })[0].budgetLimit).toBe(
       expected,
     );
   });
 
   it("leaves the cap empty rather than NaN when the stored value is not a number", () => {
     expect(
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries({ "gpt-4o": { budget_limit: "not a number", time_period: "1h" } })[0].budgetLimit,
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries({ "gpt-4o": { budget_limit: "not a number", time_period: "1h" } })[0].budgetLimit,
     ).toBeNull();
   });
 
   it("falls back to the default period rather than an empty one", () => {
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries({ "gpt-4o": { budget_limit: 1, time_period: "" } })[0].timePeriod).toBe("30d");
+    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries({ "gpt-4o": { budget_limit: 1, time_period: "" } })[0].timePeriod).toBe("30d");
   });
 });
 
@@ -69,13 +69,13 @@ describe("fields the editor does not Эвристический резерв п�
   };
 
   it("keeps them on the entry when hydrating", () => {
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries(WITH_RATE_LIMITS)[0].extra).toEqual({ tpm_limit: 1000, rpm_limit: 60 });
+    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(WITH_RATE_LIMITS)[0].extra).toEqual({ tpm_limit: 1000, rpm_limit: 60 });
   });
 
   it("puts them back when the cap is edited", () => {
-    const edited = Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries(WITH_RATE_LIMITS).map((entry) => ({ ...entry, budgetLimit: 9 }));
+    const edited = Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(WITH_RATE_LIMITS).map((entry) => ({ ...entry, budgetLimit: 9 }));
 
-    expect(entriesToРежимlМакс.Бюджет(edited)).toEqual({
+    expect(entriesToModelМакс.Бюджет(edited)).toEqual({
       "gpt-4o": { budget_limit: 9, time_period: "1h", tpm_limit: 1000, rpm_limit: 60 },
     });
   });
@@ -84,13 +84,13 @@ describe("fields the editor does not Эвристический резерв п�
   it("does not re-emit the alias spelling alongside the canonical one", () => {
     const stored: РежимlМакс.Бюджет = { "gpt-4o": { max_budget: 5, budget_duration: "1h", tpm_limit: 1000 } };
 
-    expect(entriesToРежимlМакс.Бюджет(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries(stored))).toEqual({
+    expect(entriesToModelМакс.Бюджет(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(stored))).toEqual({
       "gpt-4o": { budget_limit: 5, time_period: "1h", tpm_limit: 1000 },
     });
   });
 });
 
-describe("entriesToРежимlМакс.Бюджет", () => {
+describe("entriesToModelМакс.Бюджет", () => {
   // Two Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs are two independent budgets, so neither row order nor a
   // half-filled row may change which budgets are submitted.
   it.each([
@@ -104,14 +104,14 @@ describe("entriesToРежимlМакс.Бюджет", () => {
       timePeriod: "30d",
       extra: {},
     }));
-    expect(entriesToРежимlМакс.Бюджет(entries)).toEqual({
+    expect(entriesToModelМакс.Бюджет(entries)).toEqual({
       "gpt-4o": { budget_limit: 1.25, time_period: "30d" },
     });
   });
 
   it("drops a row whose budget was never typed", () => {
     expect(
-      entriesToРежимlМакс.Бюджет([
+      entriesToModelМакс.Бюджет([
         { id: "1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o", budgetLimit: null, timePeriod: "30d", extra: {} },
         { id: "2", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-opus-4-8", budgetLimit: 3, timePeriod: "1h", extra: {} },
       ]),
@@ -120,7 +120,7 @@ describe("entriesToРежимlМакс.Бюджет", () => {
 
   it("keeps a zero budget, which is a real cap and not an empty field", () => {
     expect(
-      entriesToРежимlМакс.Бюджет([{ id: "1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o", budgetLimit: 0, timePeriod: "30d", extra: {} }]),
+      entriesToModelМакс.Бюджет([{ id: "1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o", budgetLimit: 0, timePeriod: "30d", extra: {} }]),
     ).toEqual({
       "gpt-4o": { budget_limit: 0, time_period: "30d" },
     });
@@ -131,10 +131,10 @@ describe("entriesToРежимlМакс.Бюджет", () => {
       "claude-opus-4-8": { budget_limit: 200, time_period: "1mo" },
       "gpt-4o": { budget_limit: 0.5, time_period: "7d" },
     };
-    expect(entriesToРежимlМакс.Бюджет(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.БюджетToEntries(budget))).toEqual(budget);
+    expect(entriesToModelМакс.Бюджет(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(budget))).toEqual(budget);
   });
 
   it("submits nothing once the last row is removed", () => {
-    expect(entriesToРежимlМакс.Бюджет([])).toEqual({});
+    expect(entriesToModelМакс.Бюджет([])).toEqual({});
   });
 });

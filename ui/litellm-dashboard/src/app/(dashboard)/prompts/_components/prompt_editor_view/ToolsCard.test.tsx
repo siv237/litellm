@@ -51,32 +51,32 @@ describe("ИнструментыCard", () => {
       fireEvent.click(screen.getByRole("button", { name: /add/i }));
     });
 
-    expect(mockOnAddTool).toHaveBeenCalledВремяs(1);
+    expect(mockOnAddTool).toHaveBeenCalledTimes(1);
   });
 
   it("should call onEditTool with correct index when Edit button is clicked", () => {
     const mockOnEditTool = vi.fn();
     render(<ИнструментыCard {...defaultProps} tools={mockИнструменты} onEditTool={mockOnEditTool} />);
 
-    const editButtons = screen.getВсеByText("Edit");
+    const editButtons = screen.getAllByText("Edit");
     act(() => {
       fireEvent.click(editButtons[0]);
     });
 
     expect(mockOnEditTool).toHaveBeenCalledWith(0);
-    expect(mockOnEditTool).toHaveBeenCalledВремяs(1);
+    expect(mockOnEditTool).toHaveBeenCalledTimes(1);
   });
 
   it("should call onRemoveTool with correct index when remove button is clicked", () => {
     const mockOnRemoveTool = vi.fn();
     render(<ИнструментыCard {...defaultProps} tools={mockИнструменты} onRemoveTool={mockOnRemoveTool} />);
 
-    const removeButtons = screen.getВсеByRole("button", { name: /remove/i });
+    const removeButtons = screen.getAllByRole("button", { name: /remove/i });
     act(() => {
       fireEvent.click(removeButtons[0]);
     });
 
     expect(mockOnRemoveTool).toHaveBeenCalledWith(0);
-    expect(mockOnRemoveTool).toHaveBeenCalledВремяs(1);
+    expect(mockOnRemoveTool).toHaveBeenCalledTimes(1);
   });
 });

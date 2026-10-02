@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { buildКлючCreatePayload, type КлючCreateВход, type КлючPayloadРезультат } from "./createКлючPayload";
+import { buildKeyCreatePayload, type КлючCreateВход, type КлючPayloadРезультат } from "./createKeyPayload";
 
 const baseВход: КлючCreateВход = {
-  formЗначениеs: {},
+  formValues: {},
   existingКлючи: null,
   keyOwner: "you",
   userID: "test-user",
@@ -12,15 +12,15 @@ const baseВход: КлючCreateВход = {
   autoRotationEnabled: false,
   rotationInterval: "30d",
   Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAliases: {},
-  rвыходerSettings: null,
+  routerSettings: null,
   budgetLimits: [],
   tagRateLimits: [],
   budgetРезервные модели: {},
   Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.Бюджет: {},
 };
 
-const build = (formЗначениеs: Record<string, unknown>, overrides: Partial<КлючCreateВход> = {}): КлючPayloadРезультат =>
-  buildКлючCreatePayload({ ...baseВход, ...overrides, formЗначениеs });
+const build = (formValues: Record<string, unknown>, overrides: Partial<КлючCreateВход> = {}): КлючPayloadРезультат =>
+  buildKeyCreatePayload({ ...baseВход, ...overrides, formValues });
 
 const payloadOf = (result: КлючPayloadРезультат): Record<string, unknown> => {
   expect(result.kind).toBe("ok");
@@ -33,7 +33,7 @@ const wireКлючи = (payload: Record<string, unknown>): string[] =>
 
 const DROPPED_AT_SERIALISATION = [
   "access_group_ids",
-  "allowed_passthrough_rвыходes",
+  "allowed_passthrough_routes",
   "allowed_vector_store_ids",
   "budget_duration",
   "enable_prompt_caching",
@@ -67,11 +67,11 @@ const OPTIONAL_SETTINGS_VALUES = {
   throttle_on_budget_exceeded: undefined,
   enable_prompt_caching: undefined,
   гардрейловs: undefined,
-  disable_global_гардрейловs: undefined,
+  disable_global_guardrails: undefined,
   policies: undefined,
   prompts: undefined,
   access_group_ids: undefined,
-  allowed_passthrough_rвыходes: undefined,
+  allowed_passthrough_routes: undefined,
   allowed_vector_store_ids: undefined,
   tags: undefined,
 };
@@ -85,19 +85,19 @@ const aliasOnly = (overrides: Record<string, unknown> = {}): Record<string, unkn
 });
 
 afterEach(() => {
-  vi.restoreВсеMocks();
+  vi.restoreAllMocks();
 });
 
 describe("always-present keys", () => {
   it("emits the eight keys the closed form sends, and nothing else", () => {
-    const closedFormЗначениеs = { ...CLOSED_SECTIONS_VALUES };
+    const closedFormValues = { ...CLOSED_SECTIONS_VALUES };
     const closedFormPayload = {
-      ...closedFormЗначениеs,
+      ...closedFormValues,
       user_id: "test-user",
       duration: null,
       metadata: "{}",
     };
-    expect(payloadOf(build(closedFormЗначениеs))).toStrictEqual(closedFormPayload);
+    expect(payloadOf(build(closedFormValues))).toStrictEqual(closedFormPayload);
   });
 
   it("injects user_id, duration and metadata even when the form reported none of them", () => {
@@ -338,13 +338,13 @@ describe("object_permission", () => {
 });
 
 describe("premium and rotation flags", () => {
-  it("drops disable_global_гардрейловs when it is off", () => {
-    expect(payloadOf(build({ key_alias: "my-key", disable_global_гардрейловs: false }))).toStrictEqual(aliasOnly());
+  it("drops disable_global_guardrails when it is off", () => {
+    expect(payloadOf(build({ key_alias: "my-key", disable_global_guardrails: false }))).toStrictEqual(aliasOnly());
   });
 
-  it("keeps disable_global_гардрейловs when it is on", () => {
-    expect(payloadOf(build({ key_alias: "my-key", disable_global_гардрейловs: true }))).toStrictEqual(
-      aliasOnly({ disable_global_гардрейловs: true }),
+  it("keeps disable_global_guardrails when it is on", () => {
+    expect(payloadOf(build({ key_alias: "my-key", disable_global_guardrails: true }))).toStrictEqual(
+      aliasOnly({ disable_global_guardrails: true }),
     );
   });
 
@@ -366,18 +366,18 @@ describe("keys sourced from component state", () => {
     );
   });
 
-  it("sends rвыходer settings that hold at least one value", () => {
+  it("sends router settings that hold at least one value", () => {
     expect(
-      payloadOf(build({ key_alias: "my-key" }, { rвыходerSettings: { rвыходer_settings: { num_retries: 3 } } })),
-    ).toStrictEqual(aliasOnly({ rвыходer_settings: { num_retries: 3 } }));
+      payloadOf(build({ key_alias: "my-key" }, { routerSettings: { router_settings: { num_retries: 3 } } })),
+    ).toStrictEqual(aliasOnly({ router_settings: { num_retries: 3 } }));
   });
 
-  it("skips rвыходer settings whose every field is blank", () => {
+  it("skips router settings whose every field is blank", () => {
     expect(
       payloadOf(
         build(
           { key_alias: "my-key" },
-          { rвыходerSettings: { rвыходer_settings: { num_retries: null, timeвыход: undefined, rвыходing_strategy: "" } } },
+          { routerSettings: { router_settings: { num_retries: null, timeвыход: undefined, routing_strategy: "" } } },
         ),
       ),
     ).toStrictEqual(aliasOnly());
@@ -462,7 +462,7 @@ describe("purity", () => {
       key_alias: "my-key",
       mcp_tool_permissions: { "s-1": ["read"] },
       allowed_vector_store_ids: ["vs-1"],
-      disable_global_гардрейловs: false,
+      disable_global_guardrails: false,
       duration: "",
     };
     const before = structuredClone(values);
@@ -562,7 +562,7 @@ describe("endpoint", () => {
     ["you", "стандарт"],
     ["another_user", "стандарт"],
     ["service_account", "service_account"],
-  ])("rвыходes a %s key to the %s endpoint", (keyOwner, endpoint) => {
+  ])("routes a %s key to the %s endpoint", (keyOwner, endpoint) => {
     const result = build({ key_alias: "my-key" }, { keyOwner });
     expect(result.kind === "ok" && result.endpoint).toBe(endpoint);
   });
@@ -581,7 +581,7 @@ describe("Эвристический резерв по-прежнему оцен
         },
       ),
     );
-    expect(payload.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget).toEqual({
+    expect(payload.model_max_budget).toEqual({
       "claude-opus-4-8": { budget_limit: 200, time_period: "1mo" },
       "gpt-4o": { budget_limit: 0.5, time_period: "30d" },
     });

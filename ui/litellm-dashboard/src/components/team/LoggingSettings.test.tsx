@@ -3,7 +3,7 @@ import { resolve } from "path";
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs, screen, fireEvent } from "../../../tests/test-utils";
+import { renderWithProviders, screen, fireEvent } from "../../../tests/test-utils";
 import LoggingSettings from "./LoggingSettings";
 
 const SOURCE_PATH = resolve(process.cwd(), "src/components/team/LoggingSettings.tsx");
@@ -16,7 +16,7 @@ const SEMANTIC_TOKEN =
 
 describe("LoggingSettings", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("passes a number to updateCallbackVar when user inputs a number in NumericalВход", async () => {
@@ -31,7 +31,7 @@ describe("LoggingSettings", () => {
       },
     ];
 
-    renderWithПровайдерs(<LoggingSettings value={initialЗначение} onChange={mockOnChange} />);
+    renderWithProviders(<LoggingSettings value={initialЗначение} onChange={mockOnChange} />);
 
     // Find the numerical input for langsmith_sampling_rate
     const numericalВход = screen.getByPlaceholderText("os.environ/LANGSMITH_SAMPLING_RATE");
@@ -61,7 +61,7 @@ describe("LoggingSettings", () => {
       },
     ];
 
-    renderWithПровайдерs(<LoggingSettings value={initialЗначение} onChange={vi.fn()} />);
+    renderWithProviders(<LoggingSettings value={initialЗначение} onChange={vi.fn()} />);
 
     // Check for the "Number" badge
     expect(screen.getByText("Number")).toBeInTheDocument();
@@ -89,7 +89,7 @@ describe("LoggingSettings", () => {
       },
     ];
 
-    renderWithПровайдерs(<LoggingSettings value={initialЗначение} onChange={mockOnChange} />);
+    renderWithProviders(<LoggingSettings value={initialЗначение} onChange={mockOnChange} />);
 
     // Find both number and text inputs
     const numericalВход = screen.getByPlaceholderText("os.environ/LANGSMITH_SAMPLING_RATE");
@@ -130,7 +130,7 @@ describe("LoggingSettings", () => {
       },
     ];
 
-    renderWithПровайдерs(<LoggingSettings value={initialЗначение} onChange={vi.fn()} />);
+    renderWithProviders(<LoggingSettings value={initialЗначение} onChange={vi.fn()} />);
 
     const apiКлючВход = screen.getByPlaceholderText("os.environ/LANGSMITH_API_KEY");
     expect(apiКлючВход).toHaveAttribute("type", "password");
@@ -152,7 +152,7 @@ describe("LoggingSettings", () => {
       },
     ];
 
-    renderWithПровайдерs(<LoggingSettings value={initialЗначение} onChange={vi.fn()} />);
+    renderWithProviders(<LoggingSettings value={initialЗначение} onChange={vi.fn()} />);
 
     expect(screen.getByAltText("LangSmith logo")).toHaveAttribute("src", "/_next/static/media/langsmith.png");
   });
@@ -166,7 +166,7 @@ describe("LoggingSettings", () => {
       },
     ];
 
-    renderWithПровайдерs(<LoggingSettings value={initialЗначение} onChange={vi.fn()} />);
+    renderWithProviders(<LoggingSettings value={initialЗначение} onChange={vi.fn()} />);
 
     expect(screen.getByText("Custom Callback API Конфигурацияuration")).toBeInTheDocument();
     expect(screen.queryByAltText("Custom Callback API logo")).not.toBeInTheDocument();
@@ -190,7 +190,7 @@ describe("LoggingSettings", () => {
       },
     ];
 
-    renderWithПровайдерs(<LoggingSettings value={initialЗначение} onChange={vi.fn()} />);
+    renderWithProviders(<LoggingSettings value={initialЗначение} onChange={vi.fn()} />);
 
     const remove = screen.getByRole("button", { name: "Remove" });
     expect(remove).toHaveClass("hover:text-destructive/80");
@@ -208,7 +208,7 @@ describe("LoggingSettings", () => {
       },
     ];
 
-    renderWithПровайдерs(<LoggingSettings value={initialЗначение} onChange={mockOnChange} />);
+    renderWithProviders(<LoggingSettings value={initialЗначение} onChange={mockOnChange} />);
 
     await user.click(screen.getByRole("combobox", { name: "Event Type" }));
     await user.click(await screen.findByRole("option", { name: "Failure Only" }));
@@ -227,14 +227,14 @@ describe("LoggingSettings", () => {
       },
     ];
 
-    renderWithПровайдерs(<LoggingSettings value={initialЗначение} onChange={mockOnChange} />);
+    renderWithProviders(<LoggingSettings value={initialЗначение} onChange={mockOnChange} />);
 
     const numericalВход = screen.getByPlaceholderText("os.environ/LANGSMITH_SAMPLING_RATE");
 
     // Test various decimal values
-    const testЗначениеs = ["0.1", "0.25", "0.5", "0.75", "1.0"];
+    const testValues = ["0.1", "0.25", "0.5", "0.75", "1.0"];
 
-    testЗначениеs.forEach((value) => {
+    testValues.forEach((value) => {
       fireEvent.change(numericalВход, { target: { value } });
 
       const lastCall = mockOnChange.mock.calls[mockOnChange.mock.calls.length - 1];

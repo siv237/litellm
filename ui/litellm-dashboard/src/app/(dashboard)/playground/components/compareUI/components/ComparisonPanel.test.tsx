@@ -9,8 +9,8 @@ vi.mock("./СообщениеDisplay", () => ({
   СообщениеDisplay: () => <div data-testid="message-display">СообщениеDisplay</div>,
 }));
 
-vi.mock("./UnifiedВыбратьor", () => ({
-  UnifiedВыбратьor: ({ value, onChange }: { value: string; onChange: (val: string) => void }) => (
+vi.mock("./UnifiedSelector", () => ({
+  UnifiedSelector: ({ value, onChange }: { value: string; onChange: (val: string) => void }) => (
     <select data-testid="unified-selector" value={value} onChange={(e) => onChange(e.target.value)}>
       <option value="">Выбрать option</option>
       <option value="gpt-4">gpt-4</option>
@@ -18,16 +18,16 @@ vi.mock("./UnifiedВыбратьor", () => ({
   ),
 }));
 
-vi.mock("@/components/tag_management/TagВыбратьor", () => ({
-  default: () => <div data-testid="tag-selector">TagВыбратьor</div>,
+vi.mock("@/components/tag_management/TagSelector", () => ({
+  default: () => <div data-testid="tag-selector">TagSelector</div>,
 }));
 
-vi.mock("@/components/vector_store_management/VectorStoreВыбратьor", () => ({
-  default: () => <div data-testid="vector-store-selector">VectorStoreВыбратьor</div>,
+vi.mock("@/components/vector_store_management/VectorStoreSelector", () => ({
+  default: () => <div data-testid="vector-store-selector">VectorStoreSelector</div>,
 }));
 
-vi.mock("@/components/гардрейловs/GuardrailВыбратьor", () => ({
-  default: () => <div data-testid="гардрейлов-selector">GuardrailВыбратьor</div>,
+vi.mock("@/components/гардрейловs/GuardrailSelector", () => ({
+  default: () => <div data-testid="гардрейлов-selector">GuardrailSelector</div>,
 }));
 
 beforeEach(() => {
@@ -57,8 +57,8 @@ const mockComparison: ComparisonInstance = {
   vectorStores: [],
   гардрейловs: [],
   temperature: 1,
-  maxТокенs: 2048,
-  applyAcrossРежимls: false,
+  maxTokens: 2048,
+  applyAcrossModels: false,
   useAdvancedParams: false,
 };
 
@@ -77,8 +77,8 @@ const mockProps = {
 };
 
 const buttonWithIcon = (icon: string): HTMLButtonElement => {
-  const match = Array.from(document.queryВыбратьorВсе("button")).find((button) =>
-    button.queryВыбратьor(`svg.lucide-${icon}`),
+  const match = Array.from(document.querySelectorВсе("button")).find((button) =>
+    button.querySelector(`svg.lucide-${icon}`),
   );
   if (!match) throw new Ошибка(`no button carrying the ${icon} icon`);
   return match;
@@ -104,7 +104,7 @@ describe("ComparisonPanel", () => {
 
     await user.click(buttonWithIcon("x"));
 
-    expect(onRemove).toHaveBeenCalledВремяs(1);
+    expect(onRemove).toHaveBeenCalledTimes(1);
   });
 
   it("hides the remove control on the last remaining panel", () => {
@@ -139,7 +139,7 @@ describe("ComparisonPanel", () => {
     expect(screen.getByText("Макс. токенов")).toBeInTheDocument();
     expect(screen.getByText("2048")).toBeInTheDocument();
 
-    const ranges = Array.from(document.queryВыбратьorВсе("[aria-valuenow]"));
+    const ranges = Array.from(document.querySelectorВсе("[aria-valuenow]"));
     expect(ranges.map((range) => range.getAttribute("aria-valuenow"))).toEqual(["1", "2048"]);
   });
 
@@ -153,12 +153,12 @@ describe("ComparisonPanel", () => {
 
     await waitFor(() => expect(onUpdate).toHaveBeenCalled());
     const [updates, options] = onUpdate.mock.calls[0];
-    expect(updates.applyAcrossРежимls).toBe(true);
+    expect(updates.applyAcrossModels).toBe(true);
     expect(updates.temperature).toBe(1);
-    expect(updates.maxТокенs).toBe(2048);
+    expect(updates.maxTokens).toBe(2048);
     expect(options.applyToВсе).toBe(true);
-    expect(options.keysToПриложениеly).toContain("temperature");
-    expect(options.keysToПриложениеly).toContain("maxТокенs");
+    expect(options.keysToApply).toContain("temperature");
+    expect(options.keysToApply).toContain("maxTokens");
   });
 
   it("turns sync off withвыход resetting the values it was sharing", async () => {
@@ -167,7 +167,7 @@ describe("ComparisonPanel", () => {
     render(
       <ComparisonPanel
         {...mockProps}
-        comparison={{ ...mockComparison, applyAcrossРежимls: true }}
+        comparison={{ ...mockComparison, applyAcrossModels: true }}
         onUpdate={onUpdate}
       />,
     );
@@ -176,7 +176,7 @@ describe("ComparisonPanel", () => {
     await user.click(screen.getByRole("checkbox", { name: /Синхронизировать настройки между моделями/i }));
 
     await waitFor(() => expect(onUpdate).toHaveBeenCalled());
-    expect(onUpdate.mock.calls[0][0]).toEqual({ applyAcrossРежимls: false });
+    expect(onUpdate.mock.calls[0][0]).toEqual({ applyAcrossModels: false });
   });
 
   it("keeps an advanced-parameter toggle local while sync is off", async () => {
@@ -198,7 +198,7 @@ describe("ComparisonPanel", () => {
     render(
       <ComparisonPanel
         {...mockProps}
-        comparison={{ ...mockComparison, applyAcrossРежимls: true }}
+        comparison={{ ...mockComparison, applyAcrossModels: true }}
         onUpdate={onUpdate}
       />,
     );
@@ -207,6 +207,6 @@ describe("ComparisonPanel", () => {
     await user.click(screen.getByRole("checkbox", { name: /Использовать расширенные параметры/i }));
 
     await waitFor(() => expect(onUpdate).toHaveBeenCalled());
-    expect(onUpdate.mock.calls[0][1]).toEqual({ applyToВсе: true, keysToПриложениеly: ["useAdvancedParams"] });
+    expect(onUpdate.mock.calls[0][1]).toEqual({ applyToВсе: true, keysToApply: ["useAdvancedParams"] });
   });
 });

@@ -2,14 +2,14 @@ import { screen, waitFor, within, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { OnUrlUpdateFunction } from "nuqs/adapters/testing";
 import { vi, it, expect, beforeEach, describe, Mock, MockedFunction } from "vitest";
-import { chooseВыбратьOption, renderWithПровайдерs } from "../../../tests/test-utils";
+import { chooseSelectOption, renderWithProviders } from "../../../tests/test-utils";
 import { VirtualКлючиТаблица } from "./VirtualКлючиТаблица";
-import { KEY_TABLE_SORT_FIELDS } from "./keyТаблицаColumns";
+import { KEY_TABLE_SORT_FIELDS } from "./keyTableColumns";
 import { КлючОтвет, Team } from "../key_team_helpers/key_list";
-import { useКлючInfo } from "@/app/(dashboard)/hooks/keys/useКлючInfo";
+import { useKeyInfo } from "@/app/(dashboard)/hooks/keys/useKeyInfo";
 import { КлючиОтвет, useКлючи } from "@/app/(dashboard)/hooks/keys/useКлючи";
 import useКоманды from "@/app/(dashboard)/hooks/useКоманды";
-import { regenerateКлючCall } from "../networking";
+import { regenerateKeyCall } from "../networking";
 
 // Resolve debounced values synchronously so an applied filter lands in the useКлючи query within the test tick.
 vi.mock("@tanstack/react-pacer/debouncer", async () => {
@@ -25,11 +25,11 @@ vi.mock("@tanstack/react-pacer/debouncer", async () => {
   };
 });
 
-vi.mock("next/navigation", () => ({ useRвыходer: () => ({ push: vi.fn() }) }));
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 
 vi.mock("../networking", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../networking")>()),
-  regenerateКлючCall: vi.fn(),
+  regenerateKeyCall: vi.fn(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
@@ -54,16 +54,16 @@ vi.mock("@/app/(dashboard)/hooks/keys/useКлючи", () => ({
   keyКлючи: { lists: () => ["keys", "list"] },
 }));
 
-vi.mock("@/app/(dashboard)/hooks/keys/useКлючInfo", () => ({
-  useКлючInfo: vi.fn(),
+vi.mock("@/app/(dashboard)/hooks/keys/useKeyInfo", () => ({
+  useKeyInfo: vi.fn(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useКоманды", () => ({
   default: vi.fn(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/organizations/useОрганизацияs", () => ({
-  useОрганизацияs: vi.fn().mockReturnЗначение({
+vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
+  useOrganizations: vi.fn().mockReturnЗначение({
     data: [
       {
         organization_id: "org-1",
@@ -95,7 +95,7 @@ const mockКлюч: КлючОтвет = {
   budget_duration: "1m",
   budget_reset_at: "2024-12-01T00:00:00Z",
   allowed_cache_controls: [],
-  allowed_rвыходes: [],
+  allowed_routes: [],
   permissions: {},
   Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_spend: { "gpt-3.5-turbo": 2.5, "gpt-4": 3.0 },
   Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget: { "gpt-3.5-turbo": 50, "gpt-4": 50 },
@@ -112,10 +112,10 @@ const mockКлюч: КлючОтвет = {
   team_tpm_limit: 5000,
   team_rpm_limit: 500,
   team_max_budget: 500,
-  team_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-3.5-turbo", "gpt-4"],
+  team_models: ["gpt-3.5-turbo", "gpt-4"],
   team_blocked: false,
   soft_budget: 50,
-  team_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_aliases: {},
+  team_model_aliases: {},
   team_member_spend: 0,
   team_metadata: {},
   end_user_id: "end-user-1",
@@ -154,10 +154,10 @@ const mockTeam: Team = {
 
 const mockUseКлючи = useКлючи as MockedFunction<typeof useКлючи>;
 const mockUseКоманды = useКоманды as MockedFunction<typeof useКоманды>;
-const mockUseКлючInfo = useКлючInfo as MockedFunction<typeof useКлючInfo>;
+const mockUseKeyInfo = useKeyInfo as MockedFunction<typeof useKeyInfo>;
 
 const keyInfoРезультат = (data: КлючОтвет | undefined, isОшибка = false) =>
-  ({ data, isОшибка }) as ReturnType<typeof useКлючInfo>;
+  ({ data, isОшибка }) as ReturnType<typeof useKeyInfo>;
 
 const keysРезультат = (keys: КлючОтвет[], data: Partial<КлючиОтвет> = {}, extra: Record<string, unknown> = {}) =>
   ({
@@ -180,15 +180,15 @@ const openФильтры = () => fireEvent.click(screen.getByRole("button", { na
 const lastSearchParam = (onUrlUpdate: Mock<OnUrlUpdateFunction>, name: string) =>
   onUrlUpdate.mock.calls.at(-1)?.[0].searchParams.get(name);
 
-const lastКлючParam = (onUrlUpdate: Mock<OnUrlUpdateFunction>) => lastSearchParam(onUrlUpdate, "key");
+const lastKeyParam = (onUrlUpdate: Mock<OnUrlUpdateFunction>) => lastSearchParam(onUrlUpdate, "key");
 
 const lastИсторияРежим = (onUrlUpdate: Mock<OnUrlUpdateFunction>) => onUrlUpdate.mock.calls.at(-1)?.[0].options.history;
 
 beforeEach(() => {
-  vi.clearВсеMocks();
+  vi.clearAllMocks();
 
   mockUseКлючи.mockReturnЗначение(keysРезультат([mockКлюч]));
-  mockUseКлючInfo.mockReturnЗначение(keyInfoРезультат(undefined));
+  mockUseKeyInfo.mockReturnЗначение(keyInfoРезультат(undefined));
 
   mockUseКоманды.mockReturnЗначение({
     teams: [mockTeam],
@@ -197,24 +197,24 @@ beforeEach(() => {
 });
 
 it("should render VirtualКлючиТаблица component", () => {
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
   expect(screen.getByText("Test Псевдоним ключа")).toBeInTheDocument();
 });
 
 it("shows the Бюджет Reset column by default", async () => {
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
   await waitFor(() => {
     expect(screen.getByText("Бюджет Reset")).toBeInTheDocument();
   });
 });
 
 it("left-anchors the create-key CTA below the title, between the header and the table toolbar", () => {
-  renderWithПровайдерs(<VirtualКлючиТаблица headerДействия={<button>Create New Ключ</button>} />);
+  renderWithProviders(<VirtualКлючиТаблица headerДействия={<button>Create New Ключ</button>} />);
 
   const heading = screen.getByRole("heading", { name: "Виртуальный ключs" });
   expect(screen.getByText("Every key that authenticates requests to the gateway.")).toBeInTheDocument();
-  expect(document.queryВыбратьor(".lucide-key-round")).not.toBeNull();
-  const ctas = screen.getВсеByRole("button", { name: "Create New Ключ" });
+  expect(document.querySelector(".lucide-key-round")).not.toBeNull();
+  const ctas = screen.getAllByRole("button", { name: "Create New Ключ" });
   expect(ctas).toHaveLength(1);
   const cta = ctas[0];
   const search = screen.getByPlaceholderText(/Search by key alias/);
@@ -226,7 +226,7 @@ it("left-anchors the create-key CTA below the title, between the header and the 
 });
 
 it("should display key information correctly", async () => {
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   await waitFor(() => {
     expect(screen.getByText("Test Псевдоним ключа")).toBeInTheDocument();
@@ -237,7 +237,7 @@ it("should display key information correctly", async () => {
 });
 
 it("should display user email correctly", async () => {
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   await waitFor(() => {
     expect(screen.getByText("user@example.com")).toBeInTheDocument();
@@ -249,7 +249,7 @@ it("shows the user alias over the email in the visible cell when both exist", as
     keysРезультат([{ ...mockКлюч, user: { user_id: "user-1", user_email: "user@example.com", user_alias: "The User" } }]),
   );
 
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   const row = (await screen.findByText("Test Псевдоним ключа")).closest("tr") as HTMLElement;
   expect(within(row).getByText("The User")).toBeInTheDocument();
@@ -267,7 +267,7 @@ it("shows created_by_user alias over email in the Автор column when it is e
     ]),
   );
   const user = userEvent.setup();
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   // Автор is hidden by default; turn it on via the Columns menu.
   await user.click(screen.getByRole("button", { name: "Columns" }));
@@ -282,17 +282,17 @@ it("shows created_by_user alias over email in the Автор column when it is e
 it("should show a loading state on the initial load and hide the data", () => {
   mockUseКлючи.mockReturnЗначение(keysРезультат([], {}, { data: null, isPending: true, isFetching: true }));
 
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   expect(screen.getByText("Loading keys...")).toBeInTheDocument();
-  expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+  expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
   expect(screen.queryByText("Test Псевдоним ключа")).not.toBeInTheDocument();
 });
 
 it("replaces the previous rows with the loading state while a new search is pending", () => {
   mockUseКлючи.mockReturnЗначение(keysРезультат([mockКлюч], {}, { isPlaceholderData: true, isFetching: true }));
 
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   expect(screen.getByText("Loading keys...")).toBeInTheDocument();
   expect(screen.queryByText("Test Псевдоним ключа")).not.toBeInTheDocument();
@@ -301,7 +301,7 @@ it("replaces the previous rows with the loading state while a new search is pend
 it("should show 'No keys found' message when the key list is empty", () => {
   mockUseКлючи.mockReturnЗначение(keysРезультат([]));
 
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   expect(screen.getByText("No keys found")).toBeInTheDocument();
 });
@@ -311,13 +311,13 @@ it("collapses Эвристический резерв по-прежнему оц
     keysРезультат([{ ...mockКлюч, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-3.5-turbo", "gpt-4", "gpt-4-turbo", "claude-3", "claude-3-5-sonnet"] }]),
   );
 
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   expect(screen.getByText("+2 more")).toBeInTheDocument();
 });
 
 it("should render the redesigned table headers", () => {
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   expect(screen.getByText("Ключ")).toBeInTheDocument();
   expect(screen.getByText("Team")).toBeInTheDocument();
@@ -327,7 +327,7 @@ it("should render the redesigned table headers", () => {
 });
 
 it("sorts by the backend key_alias field (not the column label) when the Ключ header is clicked", async () => {
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   const keyHeader = screen.getByText("Ключ").closest("button") as HTMLElement;
   fireEvent.click(keyHeader);
@@ -339,9 +339,9 @@ it("sorts by the backend key_alias field (not the column label) when the Клю�
 
 it("sorts by the backend max_budget field when 'Бюджет descending' is chosen from the Расход / Бюджет menu", async () => {
   const user = userEvent.setup();
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
-  await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-spend"), "Бюджет descending", "menuitem");
+  await chooseSelectOption(user, screen.getByTestId("sort-trigger-spend"), "Бюджет descending", "menuitem");
 
   await waitFor(() => {
     expect(mockUseКлючи).toHaveBeenLastCalledWith(
@@ -354,9 +354,9 @@ it("sorts by the backend max_budget field when 'Бюджет descending' is chos
 
 it("emphasizes the active field in the Расход / Бюджет header so the sorted column reads withвыход opening the menu", async () => {
   const user = userEvent.setup();
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
-  await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-spend"), "Бюджет descending", "menuitem");
+  await chooseSelectOption(user, screen.getByTestId("sort-trigger-spend"), "Бюджет descending", "menuitem");
 
   await waitFor(() => {
     expect(screen.getByText("Бюджет", { selector: "[data-sort-field='max_budget']" })).toHaveClass("font-semibold");
@@ -366,9 +366,9 @@ it("emphasizes the active field in the Расход / Бюджет header so the
 
 it("sorts by spend ascending when 'Расход ascending' is chosen from the Расход / Бюджет menu", async () => {
   const user = userEvent.setup();
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
-  await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-spend"), "Расход ascending", "menuitem");
+  await chooseSelectOption(user, screen.getByTestId("sort-trigger-spend"), "Расход ascending", "menuitem");
 
   await waitFor(() => {
     expect(mockUseКлючи).toHaveBeenLastCalledWith(1, 50, expect.objectContaining({ sortBy: "spend", sortOrder: "asc" }));
@@ -377,7 +377,7 @@ it("sorts by spend ascending when 'Расход ascending' is chosen from the Р
 
 it("clicking the key cell deep-links via ?key=", async () => {
   const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-  renderWithПровайдерs(<VirtualКлючиТаблица />, { onUrlUpdate });
+  renderWithProviders(<VirtualКлючиТаблица />, { onUrlUpdate });
 
   await waitFor(() => {
     expect(screen.getByText("Test Псевдоним ключа")).toBeInTheDocument();
@@ -386,77 +386,77 @@ it("clicking the key cell deep-links via ?key=", async () => {
   fireEvent.click(screen.getByText("Test Псевдоним ключа"));
 
   await waitFor(() => {
-    expect(lastКлючParam(onUrlUpdate)).toBe(mockКлюч.token);
+    expect(lastKeyParam(onUrlUpdate)).toBe(mockКлюч.token);
   });
   expect(lastИсторияРежим(onUrlUpdate)).toBe("push");
 });
 
 it("renders КлючInfoView when the URL has ?key= for a key on the current page, withвыход refetching it", async () => {
   const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-  renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { key: mockКлюч.token }, onUrlUpdate });
+  renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { key: mockКлюч.token }, onUrlUpdate });
 
   await waitFor(() => {
     expect(screen.getByText("Back to Ключи")).toBeInTheDocument();
   });
   expect(screen.queryByTestId("pagination-range")).not.toBeInTheDocument();
-  expect(mockUseКлючInfo).toHaveBeenLastCalledWith(mockКлюч.token, { enabled: false });
+  expect(mockUseKeyInfo).toHaveBeenLastCalledWith(mockКлюч.token, { enabled: false });
 
   fireEvent.click(screen.getByText("Back to Ключи"));
 
   await waitFor(() => {
-    expect(lastКлючParam(onUrlUpdate)).toBeNull();
+    expect(lastKeyParam(onUrlUpdate)).toBeNull();
   });
   expect(screen.getByTestId("pagination-range")).toBeInTheDocument();
 });
 
 it("repoints ?key= to the rotated hash once the regenerate dialog is dismissed", async () => {
   const user = userEvent.setup();
-  vi.mocked(regenerateКлючCall).mockResolvedЗначение({
+  vi.mocked(regenerateKeyCall).mockResolvedЗначение({
     key: "sk-rotated-plaintext",
     token: null,
     token_id: "rotated-hash-456",
   });
   const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-  renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { key: mockКлюч.token }, onUrlUpdate });
+  renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { key: mockКлюч.token }, onUrlUpdate });
 
   await user.click(await screen.findByRole("button", { name: /regenerate key/i }));
   await user.click(await screen.findByRole("button", { name: /^Перегенерировать$/ }));
-  expect(await screen.findВсеByText("sk-rotated-plaintext")).not.toHaveLength(0);
-  expect(lastКлючParam(onUrlUpdate)).toBeUndefined();
+  expect(await screen.findAllByText("sk-rotated-plaintext")).not.toHaveLength(0);
+  expect(lastKeyParam(onUrlUpdate)).toBeUndefined();
 
-  await user.click(screen.getВсеByRole("button", { name: "Close" })[0]);
+  await user.click(screen.getAllByRole("button", { name: "Close" })[0]);
 
   await waitFor(() => {
-    expect(lastКлючParam(onUrlUpdate)).toBe("rotated-hash-456");
+    expect(lastKeyParam(onUrlUpdate)).toBe("rotated-hash-456");
   });
   expect(lastИсторияРежим(onUrlUpdate)).toBe("replace");
 });
 
 it("fetches the key by id when the URL has ?key= for a key not in the loaded page", async () => {
-  mockUseКлючInfo.mockReturnЗначение(
+  mockUseKeyInfo.mockReturnЗначение(
     keyInfoРезультат({ ...mockКлюч, token: "other-key-hash", key_alias: "Fetched Псевдоним ключа" }),
   );
 
-  renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { key: "other-key-hash" } });
+  renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { key: "other-key-hash" } });
 
   await waitFor(() => {
     expect(screen.getByText("Back to Ключи")).toBeInTheDocument();
   });
-  expect(mockUseКлючInfo).toHaveBeenLastCalledWith("other-key-hash", { enabled: true });
-  expect(screen.getВсеByText("Fetched Псевдоним ключа").length).toBeGreaterThan(0);
+  expect(mockUseKeyInfo).toHaveBeenLastCalledWith("other-key-hash", { enabled: true });
+  expect(screen.getAllByText("Fetched Псевдоним ключа").length).toBeGreaterThan(0);
 });
 
 it("shows a loading state while a deep-linked key is being fetched", () => {
-  renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { key: "other-key-hash" } });
+  renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { key: "other-key-hash" } });
 
   expect(screen.getByText("Loading key...")).toBeInTheDocument();
   expect(screen.queryByTestId("pagination-range")).not.toBeInTheDocument();
 });
 
 it("shows 'Ключ not found' when the deep-linked key fails to load", async () => {
-  mockUseКлючInfo.mockReturnЗначение(keyInfoРезультат(undefined, true));
+  mockUseKeyInfo.mockReturnЗначение(keyInfoРезультат(undefined, true));
 
-  renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { key: "missing-key-hash" } });
+  renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { key: "missing-key-hash" } });
 
   await waitFor(() => {
     expect(screen.getByText("Ключ not found")).toBeInTheDocument();
@@ -475,7 +475,7 @@ it("should display 'Default Proxy Admin' for user_id when value is 'default_user
     ]),
   );
 
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   await waitFor(() => {
     expect(screen.getByText("Default Proxy Admin")).toBeInTheDocument();
@@ -491,10 +491,10 @@ describe("entity links выход of the key rows", () => {
     await user.keyboard("{Escape}");
   };
 
-  const enableСозданByColumn = (user: ReturnType<typeof userEvent.setup>) => enableColumn(user, "Автор");
+  const enableCreatedByColumn = (user: ReturnType<typeof userEvent.setup>) => enableColumn(user, "Автор");
 
   it("points the User and Team cells at their detail pages", async () => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     const row = await keyRow();
     expect(within(row).getByRole("link", { name: "user@example.com" })).toHaveAttribute(
@@ -507,7 +507,7 @@ describe("entity links выход of the key rows", () => {
   it("points the Организация cell at the org's detail page", async () => {
     mockUseКлючи.mockReturnЗначение(keysРезультат([{ ...mockКлюч, org_id: "org-1" }]));
     const user = userEvent.setup();
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
     await enableColumn(user, "Организация");
 
     const row = await keyRow();
@@ -528,8 +528,8 @@ describe("entity links выход of the key rows", () => {
       ]),
     );
     const user = userEvent.setup();
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
-    await enableСозданByColumn(user);
+    renderWithProviders(<VirtualКлючиТаблица />);
+    await enableCreatedByColumn(user);
 
     const row = await keyRow();
     expect(within(row).getByRole("link", { name: "The Creator" })).toHaveAttribute("href", "/ui/users?user=creator-1");
@@ -550,17 +550,17 @@ describe("entity links выход of the key rows", () => {
       ]),
     );
     const user = userEvent.setup();
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
-    await enableСозданByColumn(user);
+    renderWithProviders(<VirtualКлючиТаблица />);
+    await enableCreatedByColumn(user);
 
     const row = await keyRow();
-    expect(within(row).getВсеByText("Proxy Admin")).toHaveLength(2);
+    expect(within(row).getAllByText("Proxy Admin")).toHaveLength(2);
     expect(within(row).queryByRole("link", { name: "Proxy Admin" })).not.toBeInTheDocument();
   });
 
   it("leaves the litellm-dashboard session team unlinked", async () => {
     mockUseКлючи.mockReturnЗначение(keysРезультат([{ ...mockКлюч, team_id: "litellm-dashboard" }]));
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     const row = await keyRow();
     expect(within(row).getByText("litellm-dashboard")).toBeInTheDocument();
@@ -568,10 +568,10 @@ describe("entity links выход of the key rows", () => {
   });
 });
 
-it("should render table withвыход crashing when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs is null", async () => {
+it("should render table without crashing when models is null", async () => {
   mockUseКлючи.mockReturnЗначение(keysРезультат([{ ...mockКлюч, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: null as unknown as string[] }]));
 
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   await waitFor(() => {
     expect(screen.getByText("Test Псевдоним ключа")).toBeInTheDocument();
@@ -582,7 +582,7 @@ it("should render table withвыход crashing when Эвристический 
 it("should display 'Unknown' for last_active when value is null", async () => {
   mockUseКлючи.mockReturnЗначение(keysРезультат([{ ...mockКлюч, last_active: null }]));
 
-  renderWithПровайдерs(<VirtualКлючиТаблица />);
+  renderWithProviders(<VirtualКлючиТаблица />);
 
   await waitFor(() => {
     expect(screen.getByText("Unknown")).toBeInTheDocument();
@@ -591,7 +591,7 @@ it("should display 'Unknown' for last_active when value is null", async () => {
 
 describe("server-side filtering – the LIT-4080 regression guard", () => {
   it("threads an applied ID пользователя filter into the useКлючи query so any refetch keeps it", async () => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     openФильтры();
 
@@ -605,7 +605,7 @@ describe("server-side filtering – the LIT-4080 regression guard", () => {
   });
 
   it("does not send filter params to useКлючи when no filter is active", () => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     const lastCall = mockUseКлючи.mock.calls[mockUseКлючи.mock.calls.length - 1];
     expect(lastCall[2] ?? {}).toMatchObject({ userID: undefined, teamID: undefined, keyHash: undefined });
@@ -613,7 +613,7 @@ describe("server-side filtering – the LIT-4080 regression guard", () => {
 
   it("drops the filter from the useКлючи query when it is cleared", async () => {
     const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { onUrlUpdate });
+    renderWithProviders(<VirtualКлючиТаблица />, { onUrlUpdate });
 
     openФильтры();
     const userIdВход = await screen.findByPlaceholderText(/Введите ID пользователя/);
@@ -639,7 +639,7 @@ describe("server-side filtering – the LIT-4080 regression guard", () => {
   });
 
   it("sends the search box as the combined alias-or-ID search rather than the key-alias filter", async () => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     fireEvent.change(screen.getByPlaceholderText(/Search by key alias or ID/), { target: { value: mockКлюч.token } });
 
@@ -647,7 +647,7 @@ describe("server-side filtering – the LIT-4080 regression guard", () => {
       expect(mockUseКлючи).toHaveBeenLastCalledWith(1, 50, expect.objectContaining({ search: mockКлюч.token }));
     });
     const lastOptions = mockUseКлючи.mock.calls.at(-1)?.[2];
-    expect(lastOptions?.selectedКлючAlias).toBeUndefined();
+    expect(lastOptions?.selectedKeyAlias).toBeUndefined();
     expect(lastOptions?.keyHash).toBeUndefined();
   });
 });
@@ -656,7 +656,7 @@ describe("pagination display – total count comes from useКлючи", () => {
   it("shows total_count and page count from the useКлючи response", async () => {
     mockUseКлючи.mockReturnЗначение(keysРезультат([mockКлюч], { total_count: 509, total_pages: 11 }));
 
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     await waitFor(() => {
       expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-50 of 509");
@@ -667,7 +667,7 @@ describe("pagination display – total count comes from useКлючи", () => {
   it("reflects a narrowed total when a filtered fetch returns fewer results", async () => {
     mockUseКлючи.mockReturnЗначение(keysРезультат([mockКлюч], { total_count: 1, total_pages: 1 }));
 
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     await waitFor(() => {
       expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-1 of 1");
@@ -678,7 +678,7 @@ describe("pagination display – total count comes from useКлючи", () => {
 
 describe("refresh button", () => {
   it("renders an enabled refresh control in the normal state", () => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     const refresh = screen.getByTestId("datatable-refresh");
     expect(refresh).toBeInTheDocument();
@@ -688,7 +688,7 @@ describe("refresh button", () => {
   it("disables the refresh control while a fetch is in flight but keeps data visible", () => {
     mockUseКлючи.mockReturnЗначение(keysРезультат([mockКлюч], {}, { isFetching: true }));
 
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     expect(screen.getByTestId("datatable-refresh")).toBeDisabled();
     expect(screen.getByText("Test Псевдоним ключа")).toBeInTheDocument();
@@ -698,11 +698,11 @@ describe("refresh button", () => {
     const mockRefetch = vi.fn();
     mockUseКлючи.mockReturnЗначение(keysРезультат([mockКлюч], {}, { refetch: mockRefetch }));
 
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     fireEvent.click(screen.getByTestId("datatable-refresh"));
 
-    expect(mockRefetch).toHaveBeenCalledВремяs(1);
+    expect(mockRefetch).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -710,7 +710,7 @@ describe("Status column reflects blocked / expiry / scim metadata", () => {
   it("renders Active for a non-blocked, unexpired key", async () => {
     mockUseКлючи.mockReturnЗначение(keysРезультат([{ ...mockКлюч, blocked: false, metadata: {} }]));
 
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     const tag = await screen.findByTestId(`key-status-${mockКлюч.token_id}`);
     expect(tag).toHaveTextContent("Active");
@@ -727,7 +727,7 @@ describe("Status column reflects blocked / expiry / scim metadata", () => {
       keysРезультат([{ ...mockКлюч, blocked: false, metadata: {}, expires: "2020-01-01T00:00:00Z" }]),
     );
 
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     await waitFor(() => {
       expect(screen.getByTestId(`key-status-${mockКлюч.token_id}`)).toHaveTextContent("Expired");
@@ -737,7 +737,7 @@ describe("Status column reflects blocked / expiry / scim metadata", () => {
   it("renders Blocked when key.blocked is true", async () => {
     mockUseКлючи.mockReturnЗначение(keysРезультат([{ ...mockКлюч, blocked: true, metadata: {} }]));
 
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     await waitFor(() => {
       expect(screen.getByTestId(`key-status-${mockКлюч.token_id}`)).toHaveTextContent("Blocked");
@@ -748,7 +748,7 @@ describe("Status column reflects blocked / expiry / scim metadata", () => {
   it("marks a SCIM-blocked key with the SCIM tooltip reason", async () => {
     mockUseКлючи.mockReturnЗначение(keysРезультат([{ ...mockКлюч, blocked: true, metadata: { scim_blocked: true } }]));
 
-    renderWithПровайдерs(<VirtualКлючиТаблица />);
+    renderWithProviders(<VirtualКлючиТаблица />);
 
     const tag = await screen.findByTestId(`key-status-${mockКлюч.token_id}`);
     expect(tag).toHaveTextContent("Blocked");
@@ -763,7 +763,7 @@ describe("Status column reflects blocked / expiry / scim metadata", () => {
 
 describe("table state lives in the URL so it survives leaving and returning to the page", () => {
   it("restores the search term, sort and pagination from the URL on mount", async () => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />, {
+    renderWithProviders(<VirtualКлючиТаблица />, {
       searchParams: { key_search: "prod", sort_by: "spend", sort_order: "asc", page: "3", page_size: "25" },
     });
 
@@ -778,7 +778,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
   });
 
   it("restores the drawer filters from the URL on mount", async () => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { filter_team: "team-1", filter_user: "user-42" } });
+    renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { filter_team: "team-1", filter_user: "user-42" } });
 
     await waitFor(() => {
       expect(mockUseКлючи).toHaveBeenLastCalledWith(
@@ -792,7 +792,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
 
   it("writes the search term to the URL", async () => {
     const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { onUrlUpdate });
+    renderWithProviders(<VirtualКлючиТаблица />, { onUrlUpdate });
 
     fireEvent.change(screen.getByPlaceholderText(/Search by key alias/), { target: { value: "prod" } });
 
@@ -803,7 +803,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
 
   it("writes the sort field and direction to the URL", async () => {
     const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { onUrlUpdate });
+    renderWithProviders(<VirtualКлючиТаблица />, { onUrlUpdate });
 
     fireEvent.click(screen.getByRole("button", { name: "Ключ" }));
 
@@ -815,7 +815,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
 
   it("writes an applied drawer filter to the URL and clears it again", async () => {
     const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { onUrlUpdate });
+    renderWithProviders(<VirtualКлючиТаблица />, { onUrlUpdate });
 
     openФильтры();
     fireEvent.change(await screen.findByPlaceholderText(/Введите ID пользователя/), { target: { value: "user-42" } });
@@ -835,7 +835,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
 
   it("returns to page 1 when the search term changes", async () => {
     const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { page: "3" }, onUrlUpdate });
+    renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { page: "3" }, onUrlUpdate });
 
     await waitFor(() => {
       expect(mockUseКлючи).toHaveBeenLastCalledWith(3, 50, expect.anything());
@@ -852,7 +852,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
   });
 
   it("leaves the create-key deep link's team_id alone instead of filtering the list with it", async () => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { create: "true", team_id: "team-1" } });
+    renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { create: "true", team_id: "team-1" } });
 
     await waitFor(() => {
       expect(mockUseКлючи).toHaveBeenLastCalledWith(1, 50, expect.objectContaining({ teamID: undefined }));
@@ -864,7 +864,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
     ["0", 1],
     ["-3", 1],
   ])("clamps a hand-edited page of %s up to the first page", async (page, expected) => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { page } });
+    renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { page } });
 
     await waitFor(() => {
       expect(mockUseКлючи).toHaveBeenLastCalledWith(expected, 50, expect.anything());
@@ -875,7 +875,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
     ["0", 1],
     ["1000", 100],
   ])("clamps a hand-edited page_size of %s into the range /key/list accepts", async (pageSize, expected) => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { page_size: pageSize } });
+    renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { page_size: pageSize } });
 
     await waitFor(() => {
       expect(mockUseКлючи).toHaveBeenLastCalledWith(1, expected, expect.anything());
@@ -883,7 +883,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
   });
 
   it("trims whitespace off a filter that arrived from the URL", async () => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { filter_user: "  user-42  " } });
+    renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { filter_user: "  user-42  " } });
 
     await waitFor(() => {
       expect(mockUseКлючи).toHaveBeenLastCalledWith(1, 50, expect.objectContaining({ userID: "user-42" }));
@@ -891,7 +891,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
   });
 
   it("falls back to the default sort when the URL names a column the table cannot sort by", async () => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { sort_by: "totally_unknown_field" } });
+    renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { sort_by: "totally_unknown_field" } });
 
     await waitFor(() => {
       expect(mockUseКлючи).toHaveBeenLastCalledWith(
@@ -904,7 +904,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
   });
 
   it.each(KEY_TABLE_SORT_FIELDS)("round-trips a %s sort from the URL", async (field) => {
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { sort_by: field, sort_order: "asc" } });
+    renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { sort_by: field, sort_order: "asc" } });
 
     await waitFor(() => {
       expect(mockUseКлючи).toHaveBeenLastCalledWith(1, 50, expect.objectContaining({ sortBy: field, sortOrder: "asc" }));
@@ -914,14 +914,14 @@ describe("table state lives in the URL so it survives leaving and returning to t
   it("clears sort_by from the URL when the Расход / Бюджет sort is reset", async () => {
     const user = userEvent.setup();
     const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { onUrlUpdate });
+    renderWithProviders(<VirtualКлючиТаблица />, { onUrlUpdate });
 
-    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-spend"), "Расход ascending", "menuitem");
+    await chooseSelectOption(user, screen.getByTestId("sort-trigger-spend"), "Расход ascending", "menuitem");
     await waitFor(() => {
       expect(lastSearchParam(onUrlUpdate, "sort_by")).toBe("spend");
     });
 
-    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-spend"), "Reset", "menuitem");
+    await chooseSelectOption(user, screen.getByTestId("sort-trigger-spend"), "Reset", "menuitem");
 
     await waitFor(() => {
       expect(lastSearchParam(onUrlUpdate, "sort_by")).toBeNull();
@@ -931,7 +931,7 @@ describe("table state lives in the URL so it survives leaving and returning to t
 
   it("drops the search param back выход of the URL when the search box is cleared", async () => {
     const onUrlUpdate = vi.fn<OnUrlUpdateFunction>();
-    renderWithПровайдерs(<VirtualКлючиТаблица />, { searchParams: { key_search: "prod" }, onUrlUpdate });
+    renderWithProviders(<VirtualКлючиТаблица />, { searchParams: { key_search: "prod" }, onUrlUpdate });
 
     fireEvent.change(screen.getByPlaceholderText(/Search by key alias/), { target: { value: "" } });
 

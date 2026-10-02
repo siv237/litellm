@@ -20,8 +20,8 @@ describe("FIELD_GROUPS", () => {
 
 describe("MCP_REQUIRED_FIELD_DEFS", () => {
   it("should flatten all fields from groups", () => {
-    const totalПолеs = FIELD_GROUPS.reduce((sum, g) => sum + g.fields.length, 0);
-    expect(MCP_REQUIRED_FIELD_DEFS).toHaveLength(totalПолеs);
+    const totalFields = FIELD_GROUPS.reduce((sum, g) => sum + g.fields.length, 0);
+    expect(MCP_REQUIRED_FIELD_DEFS).toHaveLength(totalFields);
   });
 });
 

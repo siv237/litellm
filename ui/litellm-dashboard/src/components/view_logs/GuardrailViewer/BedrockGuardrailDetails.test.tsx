@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 import BedrockGuardrailDetails, {
   BedrockGuardrailОтвет,
 } from "@/components/view_logs/GuardrailViewer/BedrockGuardrailDetails";
-import { renderWithПровайдерs, screen } from "../../../../tests/test-utils";
+import { renderWithProviders, screen } from "../../../../tests/test-utils";
 import {
   makeAssessment,
   makeBedrockCoverage,
@@ -14,7 +14,7 @@ import {
 describe("BedrockGuardrailDetails", () => {
   it("returns null when response is falsy", () => {
     // @ts-expect-error testing nullish handling
-    const { container } = renderWithПровайдерs(<BedrockGuardrailDetails response={undefined} />);
+    const { container } = renderWithProviders(<BedrockGuardrailDetails response={undefined} />);
     expect(container).toBeEmptyDOMElement();
   });
 
@@ -24,7 +24,7 @@ describe("BedrockGuardrailDetails", () => {
       actionReason: "Политика violation",
       blockedОтвет: "[blocked]",
     });
-    renderWithПровайдерs(<BedrockGuardrailDetails response={resp} />);
+    renderWithProviders(<BedrockGuardrailDetails response={resp} />);
 
     expect(screen.getByText("Действие:")).toBeInTheDocument();
     expect(screen.getByText("Политика violation")).toBeInTheDocument();
@@ -34,20 +34,20 @@ describe("BedrockGuardrailDetails", () => {
   it("renders coverage and usage pills", () => {
     const resp = makeBedrockОтвет({
       гардрейловCoverage: makeBedrockCoverage(),
-      usage: makeBedrockИспользование({ contentПолитикаUnits: 7, wordПолитикаUnits: 1 }),
+      usage: makeBedrockИспользование({ contentPolicyUnits: 7, wordPolicyUnits: 1 }),
     });
-    renderWithПровайдерs(<BedrockGuardrailDetails response={resp} />);
+    renderWithProviders(<BedrockGuardrailDetails response={resp} />);
 
     expect(screen.getByText(/text guarded 27\/100/)).toBeInTheDocument();
     expect(screen.getByText(/images guarded 1\/3/)).toBeInTheDocument();
-    expect(screen.getByText(/contentПолитикаUnits: 7/)).toBeInTheDocument();
-    expect(screen.getByText(/wordПолитикаUnits: 1/)).toBeInTheDocument();
+    expect(screen.getByText(/contentPolicyUnits: 7/)).toBeInTheDocument();
+    expect(screen.getByText(/wordPolicyUnits: 1/)).toBeInTheDocument();
   });
 
   it("renders выходputs when present (prefers `выходputs`, falls back to `выходput`)", () => {
     // Использование выходputs
     let resp = makeBedrockОтвет({ выходputs: [{ text: "hello" }] });
-    const { rerender } = renderWithПровайдерs(<BedrockGuardrailDetails response={resp} />);
+    const { rerender } = renderWithProviders(<BedrockGuardrailDetails response={resp} />);
     expect(screen.getByText("Результаты")).toBeInTheDocument();
     expect(screen.getByText("hello")).toBeInTheDocument();
 
@@ -61,7 +61,7 @@ describe("BedrockGuardrailDetails", () => {
     const resp = makeBedrockОтвет({
       assessments: [makeAssessment()],
     });
-    renderWithПровайдерs(<BedrockGuardrailDetails response={resp} />);
+    renderWithProviders(<BedrockGuardrailDetails response={resp} />);
 
     // Assessment section present
     expect(screen.getByText("Assessment #1")).toBeInTheDocument();
@@ -73,8 +73,8 @@ describe("BedrockGuardrailDetails", () => {
 
     // Contextual grounding table headers
     expect(screen.getByText("Контекстная обоснованность")).toBeInTheDocument();
-    expect(screen.getВсеByText("Оценка").length).toBeGreaterThan(0);
-    expect(screen.getВсеByText("Порог").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Оценка").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Порог").length).toBeGreaterThan(0);
 
     // Sensitive Info sections
     expect(screen.getByText("Конфиденциальная информация")).toBeInTheDocument();
@@ -94,7 +94,7 @@ describe("BedrockGuardrailDetails", () => {
 
   it("handles non-text выходputs gracefully", () => {
     const resp = makeBedrockОтвет({ выходputs: [{}, { text: "texty" }] });
-    renderWithПровайдерs(<BedrockGuardrailDetails response={resp} />);
+    renderWithProviders(<BedrockGuardrailDetails response={resp} />);
     expect(screen.getByText("(не текстовый вывод)")).toBeInTheDocument();
     expect(screen.getByText("texty")).toBeInTheDocument();
   });
@@ -104,14 +104,14 @@ describe("BedrockGuardrailDetails", () => {
       assessments: [
         {
           // only include minimal fields; others omitted
-          invocationМетрикаs: { гардрейловProcessingLatency: 5 },
+          invocationMetrics: { гардрейловProcessingLatency: 5 },
         } as any,
       ],
       usage: undefined,
       гардрейловCoverage: undefined,
       выходputs: [],
     });
-    renderWithПровайдерs(<BedrockGuardrailDetails response={resp} />);
+    renderWithProviders(<BedrockGuardrailDetails response={resp} />);
     // No crash, minimal render: Assessment + Invocation Метрикаs present, but no usage/coverage chips at top
     expect(screen.getByText("Assessment #1")).toBeInTheDocument();
   });

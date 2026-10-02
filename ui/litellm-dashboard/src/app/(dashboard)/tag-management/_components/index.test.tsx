@@ -40,7 +40,7 @@ const mockTagDeleteCall = vi.mocked(tagDeleteCall);
 
 describe("TagManagement loading state", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should resolve the loading state when accessТокен is null instead of showing the skeleton forever", async () => {
@@ -67,7 +67,7 @@ describe("TagManagement loading state", () => {
 
 describe("TagManagement delete flow", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockTagListCall.mockResolvedЗначение({});
   });
 

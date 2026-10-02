@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import React from "react";
 import { describe, it, expect, vi } from "vitest";
-import { renderWithПровайдерs, screen } from "../../../tests/test-utils";
+import { renderWithProviders, screen } from "../../../tests/test-utils";
 import PremiumLoggingSettings from "./PremiumLoggingSettings";
 
 const SOURCE_PATH = resolve(process.cwd(), "src/components/common_components/PremiumLoggingSettings.tsx");
@@ -23,7 +23,7 @@ describe("PremiumLoggingSettings", () => {
   });
 
   it("shows the enterprise notice and withholds the editor from a free user", () => {
-    renderWithПровайдерs(<PremiumLoggingSettings value={[]} onChange={vi.fn()} />);
+    renderWithProviders(<PremiumLoggingSettings value={[]} onChange={vi.fn()} />);
 
     expect(screen.getByText(/LiteLLM Введитеprise feature/)).toBeInTheDocument();
     expect(screen.getByText("✨ langfuse-logging")).toBeInTheDocument();
@@ -31,7 +31,7 @@ describe("PremiumLoggingSettings", () => {
   });
 
   it("renders the editor for a premium user", () => {
-    renderWithПровайдерs(<PremiumLoggingSettings value={[]} onChange={vi.fn()} premiumUser />);
+    renderWithProviders(<PremiumLoggingSettings value={[]} onChange={vi.fn()} premiumUser />);
 
     expect(screen.getByText("Logging Интеграции")).toBeInTheDocument();
     expect(screen.queryByText(/LiteLLM Введитеprise feature/)).not.toBeInTheDocument();

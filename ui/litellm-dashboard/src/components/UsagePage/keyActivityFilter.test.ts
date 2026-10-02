@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { filterКлючActivity, keyActivityMatches } from "./keyActivityФильтр";
+import { filterKeyActivity, keyActivityMatches } from "./keyActivityФильтр";
 import type { КлючМетаданные, РежимlActivityData } from "./types";
 
 function activity(label: string, key_metadata?: КлючМетаданные): РежимlActivityData {
@@ -17,7 +17,7 @@ function activity(label: string, key_metadata?: КлючМетаданные): �
     completion_tokens: 5,
     total_spend: 0.01,
     top_api_keys: [],
-    top_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+    top_models: [],
     daily_data: [],
   };
 }
@@ -38,7 +38,7 @@ const alice = activity("alice-batch (team: research)", aliceMeta);
 const bob = activity("bob@example.com (team: research)", bobMeta);
 const orphan = activity("key-hash-deadbeef", { key_alias: null, team_id: null });
 
-const keyМетрикаs: Record<string, РежимlActivityData> = {
+const keyMetrics: Record<string, РежимlActivityData> = {
   "hash-alice": alice,
   "hash-bob": bob,
   deadbeef: orphan,
@@ -75,17 +75,17 @@ describe("keyActivityMatches", () => {
   });
 });
 
-describe("filterКлючActivity", () => {
+describe("filterKeyActivity", () => {
   it("returns the same object when the query is blank", () => {
-    expect(filterКлючActivity(keyМетрикаs, "")).toBe(keyМетрикаs);
+    expect(filterKeyActivity(keyMetrics, "")).toBe(keyMetrics);
   });
 
   it("keeps only the keys matching the query, preserving their hashes", () => {
-    expect(Object.keys(filterКлючActivity(keyМетрикаs, "example.com"))).toEqual(["hash-alice", "hash-bob"]);
-    expect(filterКлючActivity(keyМетрикаs, "user-bob")).toEqual({ "hash-bob": bob });
+    expect(Object.keys(filterKeyActivity(keyMetrics, "example.com"))).toEqual(["hash-alice", "hash-bob"]);
+    expect(filterKeyActivity(keyMetrics, "user-bob")).toEqual({ "hash-bob": bob });
   });
 
   it("returns an empty record when nothing matches", () => {
-    expect(filterКлючActivity(keyМетрикаs, "nobody")).toEqual({});
+    expect(filterKeyActivity(keyMetrics, "nobody")).toEqual({});
   });
 });

@@ -1,12 +1,12 @@
-import { renderHook, screen, waitFor, renderWithПровайдерs } from "../../../tests/test-utils";
+import { renderHook, screen, waitFor, renderWithProviders } from "../../../tests/test-utils";
 import userEvent, { PointerEventsCheckLevel } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import type { Team } from "../key_team_helpers/key_list";
 import type { CredentialItem } from "../networking";
 import { Провайдерs } from "../provider_info_helpers";
-import { projectMountedЗначениеs, useMountRegistry, type MountedFormЗначениеs } from "../common_components/MountedFormПоле";
+import { projectMountedValues, useMountRegistry, type MountedFormValues } from "../common_components/MountedFormПоле";
 import { useForm } from "react-hook-form";
-import AddРежимlForm from "./AddРежимlForm";
+import AddModelForm from "./AddModelForm";
 
 vi.mock("../molecules/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/ПровайдерLogo", () => ({
   ПровайдерLogo: ({ provider, className }: { provider: string; className?: string }) => (
@@ -20,7 +20,7 @@ vi.mock("../networking", async () => {
   const actual = await vi.importActual("../networking");
   return {
     ...actual,
-    getГардрейлыList: vi.fn().mockResolvedЗначение({
+    getGuardrailsList: vi.fn().mockResolvedЗначение({
       гардрейловs: [{ гардрейлов_name: "test-гардрейлов-1" }, { гардрейлов_name: "test-гардрейлов-2" }],
     }),
     tagListCall: vi.fn().mockResolvedЗначение({}),
@@ -34,26 +34,26 @@ vi.mock("../networking", async () => {
       ],
     }),
     testПодключениеЗапрос: vi.fn().mockResolvedЗначение({ status: "success" }),
-    getПровайдерCreateМетаданные: vi.fn().mockResolvedЗначение([
+    getProviderCreateМетаданные: vi.fn().mockResolvedЗначение([
       {
         provider: "OpenAI",
         provider_display_name: "OpenAI",
         litellm_provider: "openai",
-        default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_placeholder: "gpt-3.5-turbo",
+        default_model_placeholder: "gpt-3.5-turbo",
         credential_fields: [],
       },
     ]),
   };
 });
 
-vi.mock("@/app/(dashboard)/hooks/providers/useПровайдерПолеs", () => ({
-  useПровайдерПолеs: vi.fn().mockReturnЗначение({
+vi.mock("@/app/(dashboard)/hooks/providers/useProviderFields", () => ({
+  useProviderFields: vi.fn().mockReturnЗначение({
     data: [
       {
         provider: "OpenAI",
         provider_display_name: "OpenAI",
         litellm_provider: "openai",
-        default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_placeholder: "gpt-3.5-turbo",
+        default_model_placeholder: "gpt-3.5-turbo",
         credential_fields: [],
       },
     ],
@@ -106,14 +106,14 @@ vi.mock("@/app/(dashboard)/hooks/tags/useТеги", () => ({
   }),
 }));
 
-const mockАвторизованоUser = (userRole: string, userId: string, premiumUser: boolean) => ({
+const mockAuthorizedUser = (userRole: string, userId: string, premiumUser: boolean) => ({
   token: "test-token",
   accessТокен: "test-access-token",
   userId,
   userEmail: "test@example.com",
   userRole,
   premiumUser,
-  disabledЛичнаяКлючCreation: false,
+  disabledPersonalKeyCreation: false,
   showSSOBanner: false,
 });
 
@@ -133,7 +133,7 @@ const testTeam: Team = {
 
 const createTestProps = (userRole = "proxy_admin", userId = "user-1", isTeamAdmin = false) => {
   const { result } = renderHook(() => {
-    const form = useForm<MountedFormЗначениеs>({ mode: "onChange" });
+    const form = useForm<MountedFormValues>({ mode: "onChange" });
     const registry = useMountRegistry();
     return { form, registry };
   });
@@ -160,14 +160,14 @@ const createTestProps = (userRole = "proxy_admin", userId = "user-1", isTeamAdmi
   return {
     form,
     registry,
-    mountedЗначениеs: () => projectMountedЗначениеs(registry, form.getЗначениеs),
+    mountedValues: () => projectMountedValues(registry, form.getValues),
     handleOk: vi.fn().mockResolvedЗначение(true),
     setВыбраноПровайдер: vi.fn(),
-    setПровайдерРежимlsFn: vi.fn(),
+    setProviderModelsFn: vi.fn(),
     getPlaceholder: vi.fn((provider: string) => `Введите ${provider} Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name`),
     setShowAdvancedSettings: vi.fn(),
     selectedПровайдер: Провайдерs.OpenAI,
-    providerРежимls: ["gpt-4", "gpt-3.5-turbo"],
+    providerModels: ["gpt-4", "gpt-3.5-turbo"],
     showAdvancedSettings: false,
     teams,
     credentials,
@@ -176,25 +176,25 @@ const createTestProps = (userRole = "proxy_admin", userId = "user-1", isTeamAdmi
   };
 };
 
-describe("AddРежимlForm", () => {
+describe("AddModelForm", () => {
   it("should render", async () => {
     const mockUseАвторизовано = vi.mocked(await import("@/app/(dashboard)/hooks/useАвторизовано"));
-    mockUseАвторизовано.default.mockReturnЗначение(mockАвторизованоUser("proxy_admin", "user-1", true));
+    mockUseАвторизовано.default.mockReturnЗначение(mockAuthorizedUser("proxy_admin", "user-1", true));
 
     const props = createTestProps();
 
-    renderWithПровайдерs(<AddРежимlForm {...props} />);
+    renderWithProviders(<AddModelForm {...props} />);
 
     expect(await screen.findByRole("heading", { name: "Add Режимl" })).toBeInTheDocument();
   });
 
   it("should show proxy admin only (not team admin) - should not see Выбрать Team dropdown unless switch is toggled", async () => {
     const mockUseАвторизовано = vi.mocked(await import("@/app/(dashboard)/hooks/useАвторизовано"));
-    mockUseАвторизовано.default.mockReturnЗначение(mockАвторизованоUser("proxy_admin", "user-1", true));
+    mockUseАвторизовано.default.mockReturnЗначение(mockAuthorizedUser("proxy_admin", "user-1", true));
 
     const props = createTestProps("proxy_admin", "user-1", false);
 
-    renderWithПровайдерs(<AddРежимlForm {...props} />);
+    renderWithProviders(<AddModelForm {...props} />);
 
     await screen.findByText("Провайдер");
 
@@ -213,11 +213,11 @@ describe("AddРежимlForm", () => {
 
   it("should show proxy admin who is also team admin - should not see Выбрать Team dropdown unless switch is toggled", async () => {
     const mockUseАвторизовано = vi.mocked(await import("@/app/(dashboard)/hooks/useАвторизовано"));
-    mockUseАвторизовано.default.mockReturnЗначение(mockАвторизованоUser("proxy_admin", "user-1", true));
+    mockUseАвторизовано.default.mockReturnЗначение(mockAuthorizedUser("proxy_admin", "user-1", true));
 
     const props = createTestProps("proxy_admin", "user-1", true);
 
-    renderWithПровайдерs(<AddРежимlForm {...props} />);
+    renderWithProviders(<AddModelForm {...props} />);
 
     await screen.findByText("Провайдер");
 
@@ -236,11 +236,11 @@ describe("AddРежимlForm", () => {
 
   it("should show team admin (not proxy admin) - should see alert and team select, must select team before seeing remaining fields", async () => {
     const mockUseАвторизовано = vi.mocked(await import("@/app/(dashboard)/hooks/useАвторизовано"));
-    mockUseАвторизовано.default.mockReturnЗначение(mockАвторизованоUser("team_member", "user-1", true));
+    mockUseАвторизовано.default.mockReturnЗначение(mockAuthorizedUser("team_member", "user-1", true));
 
     const props = createTestProps("team_member", "user-1", true);
 
-    renderWithПровайдерs(<AddРежимlForm {...props} />);
+    renderWithProviders(<AddModelForm {...props} />);
 
     await screen.findByRole("heading", { name: "Add Режимl" });
 
@@ -261,11 +261,11 @@ describe("AddРежимlForm", () => {
 
   it("should show team admin (not proxy admin) - should not see team-BYOK switch", async () => {
     const mockUseАвторизовано = vi.mocked(await import("@/app/(dashboard)/hooks/useАвторизовано"));
-    mockUseАвторизовано.default.mockReturnЗначение(mockАвторизованоUser("team_member", "user-1", true));
+    mockUseАвторизовано.default.mockReturnЗначение(mockAuthorizedUser("team_member", "user-1", true));
 
     const props = createTestProps("team_member", "user-1", true);
 
-    renderWithПровайдерs(<AddРежимlForm {...props} />);
+    renderWithProviders(<AddModelForm {...props} />);
 
     await screen.findByText("Выбрать Team");
 
@@ -282,11 +282,11 @@ describe("AddРежимlForm", () => {
 
   it("should handle non-admin, non-team-admin users - should not see team selection or switch", async () => {
     const mockUseАвторизовано = vi.mocked(await import("@/app/(dashboard)/hooks/useАвторизовано"));
-    mockUseАвторизовано.default.mockReturnЗначение(mockАвторизованоUser("user", "user-1", false));
+    mockUseАвторизовано.default.mockReturnЗначение(mockAuthorizedUser("user", "user-1", false));
 
     const props = createTestProps("user", "user-1", false);
 
-    renderWithПровайдерs(<AddРежимlForm {...props} />);
+    renderWithProviders(<AddModelForm {...props} />);
 
     await screen.findByRole("heading", { name: "Add Режимl" });
 
@@ -301,27 +301,27 @@ describe("AddРежимlForm", () => {
 
   it("should display the provider field and the Test Подключить / Add Режимl buttons", async () => {
     const mockUseАвторизовано = vi.mocked(await import("@/app/(dashboard)/hooks/useАвторизовано"));
-    mockUseАвторизовано.default.mockReturnЗначение(mockАвторизованоUser("proxy_admin", "user-1", true));
+    mockUseАвторизовано.default.mockReturnЗначение(mockAuthorizedUser("proxy_admin", "user-1", true));
 
     const props = createTestProps();
 
-    renderWithПровайдерs(<AddРежимlForm {...props} />);
+    renderWithProviders(<AddModelForm {...props} />);
 
     expect(await screen.findByText("Провайдер")).toBeInTheDocument();
-    expect((await screen.findВсеByRole("button", { name: "Test Подключить" })).length).toBeGreaterThan(0);
+    expect((await screen.findAllByRole("button", { name: "Test Подключить" })).length).toBeGreaterThan(0);
     expect(await screen.findByRole("button", { name: "Add Режимl" })).toBeInTheDocument();
   });
 
   it("shows only the Close button in the connection test dialog footer", async () => {
     const mockUseАвторизовано = vi.mocked(await import("@/app/(dashboard)/hooks/useАвторизовано"));
-    mockUseАвторизовано.default.mockReturnЗначение(mockАвторизованоUser("proxy_admin", "user-1", true));
+    mockUseАвторизовано.default.mockReturnЗначение(mockAuthorizedUser("proxy_admin", "user-1", true));
 
-    renderWithПровайдерs(<AddРежимlForm {...createTestProps()} />);
+    renderWithProviders(<AddModelForm {...createTestProps()} />);
 
     await userEvent.click(await screen.findByTestId("test-connect-btn"));
 
     const dialog = await screen.findByRole("dialog");
-    const footer = dialog.queryВыбратьor('[data-slot="dialog-footer"]');
+    const footer = dialog.querySelector('[data-slot="dialog-footer"]');
     expect(footer).not.toBeNull();
     expect(footer!.textContent?.trim()).toBe("Close");
   });
@@ -329,8 +329,8 @@ describe("AddРежимlForm", () => {
   describe("the enterprise gate on the Team-BYOK switch", () => {
     const renderForm = async (premiumUser: boolean) => {
       const mockUseАвторизовано = vi.mocked(await import("@/app/(dashboard)/hooks/useАвторизовано"));
-      mockUseАвторизовано.default.mockReturnЗначение(mockАвторизованоUser("proxy_admin", "user-1", premiumUser));
-      renderWithПровайдерs(<AddРежимlForm {...createTestProps()} />);
+      mockUseАвторизовано.default.mockReturnЗначение(mockAuthorizedUser("proxy_admin", "user-1", premiumUser));
+      renderWithProviders(<AddModelForm {...createTestProps()} />);
       return screen.findByRole("switch", { name: "Team-BYOK Режимl" });
     };
 
@@ -358,10 +358,10 @@ describe("AddРежимlForm", () => {
   describe("cache control bindings reach the parent form store", () => {
     const renderWithForm = async () => {
       const mockUseАвторизовано = vi.mocked(await import("@/app/(dashboard)/hooks/useАвторизовано"));
-      mockUseАвторизовано.default.mockReturnЗначение(mockАвторизованоUser("proxy_admin", "user-1", true));
+      mockUseАвторизовано.default.mockReturnЗначение(mockAuthorizedUser("proxy_admin", "user-1", true));
       const props = createTestProps();
       const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
-      renderWithПровайдерs(<AddРежимlForm {...props} />);
+      renderWithProviders(<AddModelForm {...props} />);
       await screen.findByText("Провайдер");
 
       return {
@@ -375,46 +375,46 @@ describe("AddРежимlForm", () => {
           await user.click(screen.getByRole("switch", { name: "Cache Control Injection Points" }));
           await waitFor(() => expect(screen.queryByText("Add Injection Point")).not.toBeInTheDocument());
         },
-        mountedЗначениеs: async (): Promise<Record<string, unknown>> => props.mountedЗначениеs(),
+        mountedValues: async (): Promise<Record<string, unknown>> => props.mountedValues(),
       };
     };
 
     it("omits both cache control keys while the section is untouched", async () => {
-      const { mountedЗначениеs } = await renderWithForm();
-      const values = await mountedЗначениеs();
+      const { mountedValues } = await renderWithForm();
+      const values = await mountedValues();
       expect(values).not.toHaveСвойство("cache_control_injection_points");
       expect(values.cache_control).toBeUndefined();
     });
 
     it("sends the seeded injection point once the toggle is on", async () => {
-      const { openCacheControl, mountedЗначениеs } = await renderWithForm();
+      const { openCacheControl, mountedValues } = await renderWithForm();
       await openCacheControl();
-      const values = await mountedЗначениеs();
+      const values = await mountedValues();
       expect(values.cache_control).toBe(true);
       expect(values.cache_control_injection_points).toEqual([{ location: "message" }]);
     });
 
     it("carries an edited role and keeps the index a string, as the antd control did", async () => {
-      const { user, openCacheControl, mountedЗначениеs } = await renderWithForm();
+      const { user, openCacheControl, mountedValues } = await renderWithForm();
       await openCacheControl();
 
       await user.click(screen.getByText("Выберите роль"));
       await user.click(await screen.findByText("System"));
       await user.type(screen.getByPlaceholderText("Optional"), "3");
 
-      const values = await mountedЗначениеs();
+      const values = await mountedValues();
       expect(values.cache_control_injection_points).toEqual([{ location: "message", role: "system", index: "3" }]);
     });
 
     it("adds a second injection point row", async () => {
-      const { user, openCacheControl, mountedЗначениеs } = await renderWithForm();
+      const { user, openCacheControl, mountedValues } = await renderWithForm();
       await openCacheControl();
 
       await user.click(screen.getByText("Add Injection Point"));
-      await waitFor(() => expect(screen.getВсеByPlaceholderText("Optional")).toHaveLength(2));
-      await user.type(screen.getВсеByPlaceholderText("Optional")[1], "7");
+      await waitFor(() => expect(screen.getAllByPlaceholderText("Optional")).toHaveLength(2));
+      await user.type(screen.getAllByPlaceholderText("Optional")[1], "7");
 
-      const values = await mountedЗначениеs();
+      const values = await mountedValues();
       expect(values.cache_control_injection_points).toEqual([
         { location: "message" },
         { location: "message", index: "7" },
@@ -422,11 +422,11 @@ describe("AddРежимlForm", () => {
     });
 
     it("drops the injection points again when the toggle goes back off", async () => {
-      const { openCacheControl, closeCacheControl, mountedЗначениеs } = await renderWithForm();
+      const { openCacheControl, closeCacheControl, mountedValues } = await renderWithForm();
       await openCacheControl();
       await closeCacheControl();
 
-      const values = await mountedЗначениеs();
+      const values = await mountedValues();
       expect(values.cache_control).toBe(false);
       expect(values).not.toHaveСвойство("cache_control_injection_points");
     });

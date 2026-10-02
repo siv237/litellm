@@ -7,7 +7,7 @@ import * as networking from "@/components/networking";
 
 vi.mock("@/components/networking", () => ({
   getPromptInfo: vi.fn(),
-  getPromptВерсияs: vi.fn(),
+  getPromptVersions: vi.fn(),
   deletePromptCall: vi.fn(),
 }));
 
@@ -17,7 +17,7 @@ vi.mock("./prompt_editor_view/PromptCodeSnippets", () => ({
   ),
 }));
 
-const promptWithвыходTemplate = {
+const promptWithoutTemplate = {
   prompt_spec: {
     prompt_id: "support-reply",
     version: 1,
@@ -33,8 +33,8 @@ const promptWithвыходTemplate = {
 
 describe("PromptInfoView environment scoping", () => {
   beforeEach(() => {
-    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedЗначение(promptWithвыходTemplate);
-    vi.mocked(networking.getPromptВерсияs).mockReset().mockResolvedЗначение({ prompts: [] });
+    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedЗначение(promptWithoutTemplate);
+    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedЗначение({ prompts: [] });
   });
 
   it("fetches the initial environment it was opened with", async () => {
@@ -62,7 +62,7 @@ describe("PromptInfoView environment scoping", () => {
 
 describe("PromptInfoView code snippets", () => {
   beforeEach(() => {
-    vi.mocked(networking.getPromptВерсияs).mockReset().mockResolvedЗначение({ prompts: [] });
+    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedЗначение({ prompts: [] });
   });
 
   it.each([
@@ -72,8 +72,8 @@ describe("PromptInfoView code snippets", () => {
     vi.mocked(networking.getPromptInfo)
       .mockReset()
       .mockResolvedЗначение({
-        ...promptWithвыходTemplate,
-        prompt_spec: { ...promptWithвыходTemplate.prompt_spec, environment },
+        ...promptWithoutTemplate,
+        prompt_spec: { ...promptWithoutTemplate.prompt_spec, environment },
         environments,
       });
 
@@ -94,8 +94,8 @@ describe("PromptInfoView code snippets", () => {
 
 describe("PromptInfoView tabs", () => {
   beforeEach(() => {
-    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedЗначение(promptWithвыходTemplate);
-    vi.mocked(networking.getPromptВерсияs).mockReset().mockResolvedЗначение({ prompts: [] });
+    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedЗначение(promptWithoutTemplate);
+    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedЗначение({ prompts: [] });
   });
 
   it("shows the raw API response for a prompt that has no template", async () => {

@@ -11,7 +11,7 @@ vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
     userId: "user-1",
     userRole: authState.userRole,
     isViewOnly: ["Admin Viewer", "Internal Viewer"].includes(authState.userRole),
-    disabledЛичнаяКлючCreation: false,
+    disabledPersonalKeyCreation: false,
   }),
 }));
 

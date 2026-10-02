@@ -1,10 +1,10 @@
-import type { ColumnDef, RowВыбратьionState } from "@tanstack/react-table";
+import type { ColumnDef, RowSelectionState } from "@tanstack/react-table";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
 
-import { createВыбратьionColumn, DataТаблица } from "./index";
+import { createSelectionColumn, DataТаблица } from "./index";
 
 interface Режимl {
   id: string;
@@ -18,7 +18,7 @@ const data: Режимl[] = [
 ];
 
 const columns: ColumnDef<Режимl, unknown>[] = [
-  createВыбратьionColumn<Режимl>({ rowAriaLabel: (row) => `Выбрать ${row.original.name}` }),
+  createSelectionColumn<Режимl>({ rowAriaLabel: (row) => `Выбрать ${row.original.name}` }),
   { id: "name", accessorКлюч: "name", header: "Name", enableSorting: false },
 ];
 
@@ -27,25 +27,25 @@ const rowBox = (id: string) => screen.getByTestId(`datatable-select-row-${id}`);
 const selectedCount = () => screen.getByTestId("count");
 
 function ControlledHarness() {
-  const [rowВыбратьion, setRowВыбратьion] = useState<RowВыбратьionState>({});
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   return (
     <>
       <span data-testid="keys">
-        {Object.keys(rowВыбратьion)
-          .filter((key) => rowВыбратьion[key])
+        {Object.keys(rowSelection)
+          .filter((key) => rowSelection[key])
           .sort()
           .join(",")}
       </span>
-      <button type="button" data-testid="clear" onClick={() => setRowВыбратьion({})}>
+      <button type="button" data-testid="clear" onClick={() => setRowSelection({})}>
         clear
       </button>
       <DataТаблица
         data={data}
         columns={columns}
         getRowId={(row) => row.id}
-        rowВыбратьion={rowВыбратьion}
-        onRowВыбратьionChange={setRowВыбратьion}
+        rowSelection={rowSelection}
+        onRowSelectionChange={setRowSelection}
       />
     </>
   );
@@ -60,7 +60,7 @@ describe("DataТаблица row selection", () => {
         data={data}
         columns={columns}
         getRowId={(row) => row.id}
-        toolbar={(table) => <span data-testid="count">{table.getВыбраноRowРежимl().rows.length}</span>}
+        toolbar={(table) => <span data-testid="count">{table.getSelectedRowModel().rows.length}</span>}
       />,
     );
 
@@ -101,7 +101,7 @@ describe("DataТаблица row selection", () => {
     expect(rowBox("m1")).toHaveAttribute("aria-checked", "false");
   });
 
-  it("respects an enableRowВыбратьion predicate", async () => {
+  it("respects an enableRowSelection predicate", async () => {
     const user = userEvent.setup();
 
     render(
@@ -109,8 +109,8 @@ describe("DataТаблица row selection", () => {
         data={data}
         columns={columns}
         getRowId={(row) => row.id}
-        enableRowВыбратьion={(row) => row.original.id !== "m2"}
-        toolbar={(table) => <span data-testid="count">{table.getВыбраноRowРежимl().rows.length}</span>}
+        enableRowSelection={(row) => row.original.id !== "m2"}
+        toolbar={(table) => <span data-testid="count">{table.getSelectedRowModel().rows.length}</span>}
       />,
     );
 

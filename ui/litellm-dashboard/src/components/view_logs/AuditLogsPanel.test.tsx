@@ -3,12 +3,12 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { chooseВыбратьOption } from "../../../tests/test-utils";
-import AuditЖурналыPanel from "./AuditЖурналыPanel";
+import { chooseSelectOption } from "../../../tests/test-utils";
+import AuditLogsPanel from "./AuditLogsPanel";
 
 vi.mock("../networking", async (importOriginal) => {
   const actual = await importOriginal<typeof import("../networking")>();
-  return { ...actual, uiAuditЖурналыCall: vi.fn() };
+  return { ...actual, uiAuditLogsCall: vi.fn() };
 });
 
 // Resolve the debounced search synchronously so typed input reaches the query within the test tick.
@@ -16,9 +16,9 @@ vi.mock("@tanstack/react-pacer/debouncer", () => ({
   useDebouncedЗначение: (value: unknown) => [value, { cancel: vi.fn(), flush: vi.fn() }],
 }));
 
-import { uiAuditЖурналыCall } from "../networking";
+import { uiAuditLogsCall } from "../networking";
 
-type AuditЖурналыParams = NonNullable<Parameters<typeof uiAuditЖурналыCall>[0]["params"]>;
+type AuditLogsParams = NonNullable<Parameters<typeof uiAuditLogsCall>[0]["params"]>;
 
 const PAGE_SIZE = 50;
 
@@ -30,14 +30,14 @@ const ID_PARAM_KEYS = [
   "object_key_hash",
   "action",
   "table_name",
-] as const satisfies readonly (keyof AuditЖурналыParams)[];
+] as const satisfies readonly (keyof AuditLogsParams)[];
 
 const respondWith = (total: number) => {
   const response = { audit_logs: [], total, page: 1, page_size: PAGE_SIZE, total_pages: Math.ceil(total / PAGE_SIZE) };
-  return vi.mocked(uiAuditЖурналыCall).mockResolvedЗначение(response);
+  return vi.mocked(uiAuditLogsCall).mockResolvedЗначение(response);
 };
 
-const lastCall = () => vi.mocked(uiAuditЖурналыCall).mock.calls.at(-1)?.[0];
+const lastCall = () => vi.mocked(uiAuditLogsCall).mock.calls.at(-1)?.[0];
 const sentIdParams = () => ID_PARAM_KEYS.filter((key) => lastCall()?.params?.[key] !== undefined);
 
 const defaultProps = {
@@ -53,12 +53,12 @@ const renderPanel = () => {
   const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <ЗапросClientПровайдер client={queryClient}>
-      <AuditЖурналыPanel {...defaultProps} />
+      <AuditLogsPanel {...defaultProps} />
     </ЗапросClientПровайдер>,
   );
 };
 
-const TEXT_FILTERS: { filterId: string; placeholder: string; paramКлюч: keyof AuditЖурналыParams }[] = [
+const TEXT_FILTERS: { filterId: string; placeholder: string; paramКлюч: keyof AuditLogsParams }[] = [
   { filterId: "object_id", placeholder: "Введите object ID…", paramКлюч: "object_id" },
   { filterId: "changed_by", placeholder: "Введите ID пользователя…", paramКлюч: "changed_by" },
   { filterId: "team_id", placeholder: "Введите team ID…", paramКлюч: "object_team_id" },
@@ -69,16 +69,16 @@ const SELECT_FILTERS: {
   label: string;
   comboboxIndex: number;
   option: string;
-  paramКлюч: keyof AuditЖурналыParams;
+  paramКлюч: keyof AuditLogsParams;
   value: string;
 }[] = [
   { label: "Действие", comboboxIndex: 0, option: "Создан", paramКлюч: "action", value: "created" },
   { label: "Таблица", comboboxIndex: 1, option: "Команды", paramКлюч: "table_name", value: "LiteLLM_TeamТаблица" },
 ];
 
-describe("AuditЖурналыPanel", () => {
+describe("AuditLogsPanel", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     respondWith(0);
   });
 
@@ -86,7 +86,7 @@ describe("AuditЖурналыPanel", () => {
     const user = userEvent.setup();
     respondWith(120);
     renderPanel();
-    await waitFor(() => expect(uiAuditЖурналыCall).toHaveBeenCalled());
+    await waitFor(() => expect(uiAuditLogsCall).toHaveBeenCalled());
     expect(lastCall()?.params?.search).toBeUndefined();
 
     await user.click(screen.getByTestId("pagination-next"));
@@ -116,7 +116,7 @@ describe("AuditЖурналыPanel", () => {
   it.each(TEXT_FILTERS)("maps the $filterId drawer filter to params.$paramКлюч", async ({ placeholder, paramКлюч }) => {
     const user = userEvent.setup();
     renderPanel();
-    await waitFor(() => expect(uiAuditЖурналыCall).toHaveBeenCalled());
+    await waitFor(() => expect(uiAuditLogsCall).toHaveBeenCalled());
 
     await user.click(screen.getByTestId("datatable-filters-trigger"));
     fireEvent.change(await screen.findByPlaceholderText(placeholder), { target: { value: "val-1" } });
@@ -131,11 +131,11 @@ describe("AuditЖурналыPanel", () => {
     async ({ comboboxIndex, option, paramКлюч, value }) => {
       const user = userEvent.setup();
       renderPanel();
-      await waitFor(() => expect(uiAuditЖурналыCall).toHaveBeenCalled());
+      await waitFor(() => expect(uiAuditLogsCall).toHaveBeenCalled());
 
       await user.click(screen.getByTestId("datatable-filters-trigger"));
-      const triggers = await screen.findВсеByRole("combobox");
-      await chooseВыбратьOption(user, triggers[comboboxIndex], option);
+      const triggers = await screen.findAllByRole("combobox");
+      await chooseSelectOption(user, triggers[comboboxIndex], option);
       await user.click(screen.getByTestId("filter-drawer-apply"));
 
       await waitFor(() => expect(lastCall()?.params?.[paramКлюч]).toBe(value));

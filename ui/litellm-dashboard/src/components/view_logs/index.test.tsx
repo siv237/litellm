@@ -2,19 +2,19 @@ import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import РасходЖурналыТаблица from "./index";
-import { renderWithПровайдерs } from "../../../tests/test-utils";
+import { renderWithProviders } from "../../../tests/test-utils";
 
-const { useАвторизованоMock, useОрганизацияsMock } = vi.hoisted(() => ({
-  useАвторизованоMock: vi.fn(),
-  useОрганизацияsMock: vi.fn(),
+const { useAuthorizedMock, useOrganizationsMock } = vi.hoisted(() => ({
+  useAuthorizedMock: vi.fn(),
+  useOrganizationsMock: vi.fn(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: useАвторизованоMock,
+  default: useAuthorizedMock,
 }));
 
-vi.mock("@/app/(dashboard)/hooks/organizations/useОрганизацияs", () => ({
-  useОрганизацияs: useОрганизацияsMock,
+vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
+  useOrganizations: useOrganizationsMock,
 }));
 
 vi.mock("./ЗапросЖурналыPanel", () => ({
@@ -23,20 +23,20 @@ vi.mock("./ЗапросЖурналыPanel", () => ({
   },
 }));
 
-vi.mock("./AuditЖурналыPanel", () => ({
-  default: function AuditЖурналыPanelMock({ isActive }: { isActive: boolean }) {
+vi.mock("./AuditLogsPanel", () => ({
+  default: function AuditLogsPanelMock({ isActive }: { isActive: boolean }) {
     return <div data-testid="audit-logs-panel">{isActive ? "active" : "inactive"}</div>;
   },
 }));
 
-vi.mock("../DeletedКлючиPage/DeletedКлючиPage", () => ({
-  default: function DeletedКлючиPageMock() {
+vi.mock("../DeletedKeysPage/DeletedKeysPage", () => ({
+  default: function DeletedKeysPageMock() {
     return <div data-testid="deleted-keys-page" />;
   },
 }));
 
-vi.mock("../DeletedКомандыPage/DeletedКомандыPage", () => ({
-  default: function DeletedКомандыPageMock() {
+vi.mock("../DeletedTeamsPage/DeletedTeamsPage", () => ({
+  default: function DeletedTeamsPageMock() {
     return <div data-testid="deleted-teams-page" />;
   },
 }));
@@ -52,17 +52,17 @@ const defaultProps = {
 const ORG_ADMIN_MEMBERSHIPS = [{ organization_id: "org-1", members: [{ user_id: "user-1", user_role: "org_admin" }] }];
 
 const renderAs = (sessionRole: string, organizations: unknown[] = []) => {
-  useАвторизованоMock.mockReturnЗначение({ userId: "user-1", userRole: sessionRole });
-  useОрганизацияsMock.mockReturnЗначение({ data: organizations });
-  return renderWithПровайдерs(<РасходЖурналыТаблица {...defaultProps} userRole={sessionRole} />);
+  useAuthorizedMock.mockReturnЗначение({ userId: "user-1", userRole: sessionRole });
+  useOrganizationsMock.mockReturnЗначение({ data: organizations });
+  return renderWithProviders(<РасходЖурналыТаблица {...defaultProps} userRole={sessionRole} />);
 };
 
-const tabNames = () => screen.getВсеByRole("tab").map((tab) => tab.textContent);
+const tabNames = () => screen.getAllByRole("tab").map((tab) => tab.textContent);
 
 describe("РасходЖурналыТаблица", () => {
   beforeEach(() => {
-    useАвторизованоMock.mockReturnЗначение({ userId: "user-1", userRole: "Admin" });
-    useОрганизацияsMock.mockReturnЗначение({ data: [] });
+    useAuthorizedMock.mockReturnЗначение({ userId: "user-1", userRole: "Admin" });
+    useOrganizationsMock.mockReturnЗначение({ data: [] });
   });
 
   it("renders the four log tabs", () => {
@@ -180,17 +180,17 @@ describe("РасходЖурналыТаблица", () => {
 
   describe("auth-not-ready guard", () => {
     it("shows a loading spinner when credentials are not yet resolved", () => {
-      useАвторизованоMock.mockReturnЗначение({ userRole: "Admin" });
-      renderWithПровайдерs(<РасходЖурналыТаблица {...defaultProps} accessТокен={null} />);
+      useAuthorizedMock.mockReturnЗначение({ userRole: "Admin" });
+      renderWithProviders(<РасходЖурналыТаблица {...defaultProps} accessТокен={null} />);
 
-      expect(document.queryВыбратьor('[aria-busy="true"]')).toBeInTheDocument();
+      expect(document.querySelector('[aria-busy="true"]')).toBeInTheDocument();
       expect(screen.queryByRole("tab", { name: "Запрос Журналы" })).not.toBeInTheDocument();
     });
 
     it("renders the tabs (no spinner) once all credentials are present", () => {
       renderAs("Admin");
 
-      expect(document.queryВыбратьor('[aria-busy="true"]')).not.toBeInTheDocument();
+      expect(document.querySelector('[aria-busy="true"]')).not.toBeInTheDocument();
       expect(screen.getByRole("tab", { name: "Запрос Журналы" })).toBeInTheDocument();
     });
   });

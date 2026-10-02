@@ -2,7 +2,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { exportMultiToPDF, exportMultiToCSV } from "./multi_export_utils";
-import type { MultiРежимlРезультат } from "./types";
+import type { MultiModelРезультат } from "./types";
 import type { СтоимостьEstimateОтвет } from "../types";
 
 vi.mock("@/utils/dataUtils", () => ({
@@ -22,11 +22,11 @@ function makeСтоимостьОтвет(overrides: Partial<СтоимостьE
     margin_cost_per_request: 0,
     daily_cost: 5.0,
     daily_input_cost: 3.0,
-    daily_выходput_cost: 2.0,
+    daily_output_cost: 2.0,
     daily_margin_cost: 0,
     monthly_cost: 150.0,
     monthly_input_cost: 90.0,
-    monthly_выходput_cost: 60.0,
+    monthly_output_cost: 60.0,
     monthly_margin_cost: 0,
     input_cost_per_token: 0.00003,
     выходput_cost_per_token: 0.00004,
@@ -35,7 +35,7 @@ function makeСтоимостьОтвет(overrides: Partial<СтоимостьE
   };
 }
 
-function makeMultiРезультат(overrides: Partial<MultiРежимlРезультат> = {}): MultiРежимlРезультат {
+function makeMultiРезультат(overrides: Partial<MultiModelРезультат> = {}): MultiModelРезультат {
   return {
     entries: [
       {
@@ -74,7 +74,7 @@ describe("exportMultiToPDF", () => {
   });
 
   afterEach(() => {
-    vi.restoreВсеMocks();
+    vi.restoreAllMocks();
   });
 
   it("should open a new popup window", () => {
@@ -97,14 +97,14 @@ describe("exportMultiToPDF", () => {
 
   it("should close the document after writing", () => {
     exportMultiToPDF(makeMultiРезультат());
-    expect(mockPrintWindow.document.close).toHaveBeenCalledВремяs(1);
+    expect(mockPrintWindow.document.close).toHaveBeenCalledTimes(1);
   });
 
   it("should call print after the window finishes loading", () => {
     exportMultiToPDF(makeMultiРезультат());
     expect(mockPrintWindow.print).not.toHaveBeenCalled();
     mockPrintWindow.onload!();
-    expect(mockPrintWindow.print).toHaveBeenCalledВремяs(1);
+    expect(mockPrintWindow.print).toHaveBeenCalledTimes(1);
   });
 
   it("should show the margin section when margin per request is greater than zero", () => {
@@ -137,7 +137,7 @@ describe("exportMultiToPDF", () => {
   });
 
   it("should only include entries that have a result", () => {
-    const multiРезультат: MultiРежимlРезультат = {
+    const multiРезультат: MultiModelРезультат = {
       entries: [
         {
           entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
@@ -168,7 +168,7 @@ describe("exportMultiToPDF", () => {
   });
 
   it("should show plural 'Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs' when multiple results are present", () => {
-    const multiРезультат: MultiРежимlРезультат = {
+    const multiРезультат: MultiModelРезультат = {
       entries: [
         {
           entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
@@ -206,12 +206,12 @@ describe("exportMultiToCSV", () => {
   });
 
   afterEach(() => {
-    vi.restoreВсеMocks();
+    vi.restoreAllMocks();
   });
 
   it("should create an object URL and revoke it after download", () => {
     exportMultiToCSV(makeMultiРезультат());
-    expect(window.URL.createObjectURL).toHaveBeenCalledВремяs(1);
+    expect(window.URL.createObjectURL).toHaveBeenCalledTimes(1);
     expect(window.URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-url");
   });
 
@@ -227,14 +227,14 @@ describe("exportMultiToCSV", () => {
     const today = new Date().toISOString().split("T")[0];
     exportMultiToCSV(makeMultiРезультат());
 
-    expect(createdAnchors[0].download).toBe(`cost_estimate_multi_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_${today}.csv`);
+    expect(createdAnchors[0].download).toBe(`cost_estimate_multi_model_${today}.csv`);
   });
 
   it("should generate CSV content containing a header row and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию data", () => {
     let csvContent = "";
     const OriginalBlob = globalThis.Blob;
     globalThis.Blob = class extends OriginalBlob {
-      constructor(parts?: BlobPart[], options?: BlobСвойствоBag) {
+      constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
         super(parts, options);
         if (typeof parts?.[0] === "string") csvContent = parts[0];
       }
@@ -253,7 +253,7 @@ describe("exportMultiToCSV", () => {
     let csvContent = "";
     const OriginalBlob = globalThis.Blob;
     globalThis.Blob = class extends OriginalBlob {
-      constructor(parts?: BlobPart[], options?: BlobСвойствоBag) {
+      constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
         super(parts, options);
         if (typeof parts?.[0] === "string") csvContent = parts[0];
       }
@@ -269,7 +269,7 @@ describe("exportMultiToCSV", () => {
     let capturedType = "";
     const OriginalBlob = globalThis.Blob;
     globalThis.Blob = class extends OriginalBlob {
-      constructor(parts?: BlobPart[], options?: BlobСвойствоBag) {
+      constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
         super(parts, options);
         if (options?.type) capturedType = options.type;
       }
@@ -282,7 +282,7 @@ describe("exportMultiToCSV", () => {
   });
 
   it("should skip entries with null results", () => {
-    const multiРезультат: MultiРежимlРезультат = {
+    const multiРезультат: MultiModelРезультат = {
       entries: [
         {
           entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
@@ -304,7 +304,7 @@ describe("exportMultiToCSV", () => {
     let csvContent = "";
     const OriginalBlob = globalThis.Blob;
     globalThis.Blob = class extends OriginalBlob {
-      constructor(parts?: BlobPart[], options?: BlobСвойствоBag) {
+      constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
         super(parts, options);
         if (typeof parts?.[0] === "string") csvContent = parts[0];
       }

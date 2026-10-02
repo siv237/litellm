@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { detectAgentType, extractРежимlTemplateЗначениеs, parseDynamicAgentForForm } from "./agent_type_utils";
+import { detectAgentType, extractModelTemplateValues, parseDynamicAgentForForm } from "./agent_type_utils";
 import type { AgentCreateInfo } from "@/components/networking";
 import type { Agent } from "@/components/agents/types";
 
@@ -19,9 +19,9 @@ const bedrockAgentcoreInfo: AgentCreateInfo = {
   ],
 };
 
-describe("extractРежимlTemplateЗначениеs", () => {
+describe("extractModelTemplateValues", () => {
   it("recovers a placeholder value that itself contains '/' (an AWS ARN resource path)", () => {
-    const values = extractРежимlTemplateЗначениеs(
+    const values = extractModelTemplateValues(
       "bedrock/agentcore/{agent_runtime_arn}",
       `bedrock/agentcore/${FULL_RUNTIME_ARN}`,
     );
@@ -30,13 +30,13 @@ describe("extractРежимlTemplateЗначениеs", () => {
   });
 
   it("recovers a placeholder value with no '/' (single path segment)", () => {
-    const values = extractРежимlTemplateЗначениеs("langgraph/{assistant_id}", "langgraph/asst_1");
+    const values = extractModelTemplateValues("langgraph/{assistant_id}", "langgraph/asst_1");
 
     expect(values.assistant_id).toBe("asst_1");
   });
 
   it("returns no match when the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию does not fit the template", () => {
-    const values = extractРежимlTemplateЗначениеs("langgraph/{assistant_id}", "azure_ai/agents/asst_1");
+    const values = extractModelTemplateValues("langgraph/{assistant_id}", "azure_ai/agents/asst_1");
 
     expect(values).toEqual({});
   });

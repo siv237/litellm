@@ -1,7 +1,7 @@
 import React from "react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { renderWithПровайдерs, screen, testЗапросClient, waitFor, within } from "../../tests/test-utils";
+import { renderWithProviders, screen, testRequestClient, waitFor, within } from "../../tests/test-utils";
 import TeamSSOSettings from "./TeamSSOSettings";
 import * as networking from "./networking";
 import { toast } from "@/lib/toast";
@@ -16,7 +16,7 @@ vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
     userEmail: "test-user@example.com",
     userRole: "Admin",
     premiumUser: true,
-    disabledЛичнаяКлючCreation: null,
+    disabledPersonalKeyCreation: null,
     showSSOBanner: false,
   }),
 }));
@@ -38,15 +38,15 @@ vi.mock("./common_components/budget_duration_dropdown", () => {
   БюджетДлительностьDropdown.displayName = "БюджетДлительностьDropdown";
   return {
     default: БюджетДлительностьDropdown,
-    getБюджетДлительностьLabel: vi.fn((value: string) => {
+    getBudgetDurationLabel: vi.fn((value: string) => {
       const map: Record<string, string> = { "24h": "daily", "7d": "weekly", "30d": "monthly" };
       return map[value] || value;
     }),
   };
 });
 
-vi.mock("./key_team_helpers/fetch_available_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs_team_key", () => ({
-  getРежимlDisplayName: vi.fn((Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: string) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию),
+vi.mock("./key_team_helpers/fetch_available_models_team_key", () => ({
+  getModelDisplayName: vi.fn((Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: string) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию),
 }));
 
 vi.mock("./common_components/ОрганизацияDropdown", () => ({
@@ -96,8 +96,8 @@ vi.mock("./РежимlВыбрать/РежимlВыбрать", () => {
       multiple
       value={value || []}
       onChange={(e) => {
-        const selectedЗначениеs = Array.from(e.target.selectedOptions, (option) => option.value);
-        onChange(selectedЗначениеs);
+        const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
+        onChange(selectedValues);
       }}
       aria-label="Режимls"
     >
@@ -111,7 +111,7 @@ vi.mock("./РежимlВыбрать/РежимlВыбрать", () => {
 
 const mockGetDefaultTeamSettings = vi.mocked(networking.getDefaultTeamSettings);
 const mockUpdateDefaultTeamSettings = vi.mocked(networking.updateDefaultTeamSettings);
-const mockОрганизацияListCall = vi.mocked(networking.organizationListCall);
+const mockOrganizationListCall = vi.mocked(networking.organizationListCall);
 const mockToast = vi.mocked(toast);
 
 const MOCK_ORGANIZATIONS = [
@@ -138,9 +138,9 @@ describe("TeamSSOSettings", () => {
   };
 
   beforeEach(() => {
-    vi.clearВсеMocks();
-    testЗапросClient.clear();
-    mockОрганизацияListCall.mockResolvedЗначение(MOCK_ORGANIZATIONS);
+    vi.clearAllMocks();
+    testRequestClient.clear();
+    mockOrganizationListCall.mockResolvedЗначение(MOCK_ORGANIZATIONS);
   });
 
   // --- Loading & Ошибка States ---
@@ -148,16 +148,16 @@ describe("TeamSSOSettings", () => {
   it("should show an accessible loading state while fetching settings", () => {
     mockGetDefaultTeamSettings.mockImplementation(() => new Promise(() => {}));
 
-    const { container } = renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    const { container } = renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
-    expect(container.queryВыбратьor('[aria-busy="true"]')).toBeInTheDocument();
+    expect(container.querySelector('[aria-busy="true"]')).toBeInTheDocument();
     expect(screen.queryByText("Настройки команд по умолчанию")).not.toBeInTheDocument();
   });
 
   it("should display error message when fetch fails", async () => {
     mockGetDefaultTeamSettings.mockRejectedЗначение(new Ошибка("Fetch failed"));
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(
@@ -168,7 +168,7 @@ describe("TeamSSOSettings", () => {
   });
 
   it("should not fetch settings when access token is null", async () => {
-    renderWithПровайдерs(<TeamSSOSettings accessТокен={null} userID="test-user" userRole="admin" />);
+    renderWithProviders(<TeamSSOSettings accessТокен={null} userID="test-user" userRole="admin" />);
 
     await waitFor(() => {
       expect(mockGetDefaultTeamSettings).not.toHaveBeenCalled();
@@ -180,7 +180,7 @@ describe("TeamSSOSettings", () => {
   it("should render title and subtitle", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("Настройки команд по умолчанию")).toBeInTheDocument();
@@ -193,7 +193,7 @@ describe("TeamSSOSettings", () => {
   it("should render section headers", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("Бюджет и лимиты запросов")).toBeInTheDocument();
@@ -204,7 +204,7 @@ describe("TeamSSOSettings", () => {
   it("should display all field labels and descriptions", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("Макс. бюджет")).toBeInTheDocument();
@@ -223,12 +223,12 @@ describe("TeamSSOSettings", () => {
   it("should display formatted values in view mode", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       // max_budget displayed with $
       expect(screen.getByText("$1,000")).toBeInTheDocument();
-      // budget_duration through getБюджетДлительностьLabel
+      // budget_duration through getBudgetDurationLabel
       expect(screen.getByText("monthly")).toBeInTheDocument();
       // tpm_limit formatted
       expect(screen.getByText("500")).toBeInTheDocument();
@@ -240,7 +240,7 @@ describe("TeamSSOSettings", () => {
   it("should display Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs as tags in view mode", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("gpt-4")).toBeInTheDocument();
@@ -250,7 +250,7 @@ describe("TeamSSOSettings", () => {
   it("should display permissions as tags in view mode", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("/key/generate")).toBeInTheDocument();
@@ -270,10 +270,10 @@ describe("TeamSSOSettings", () => {
       },
     });
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
-      const notSetElements = screen.getВсеByText("Не задано");
+      const notSetElements = screen.getAllByText("Не задано");
       // max_budget, budget_duration, tpm_limit, rpm_limit, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs (empty), permissions (empty)
       expect(notSetElements.length).toBeGreaterThanOrEqual(4);
     });
@@ -284,7 +284,7 @@ describe("TeamSSOSettings", () => {
   it("should toggle to edit mode when Edit Settings is clicked", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
@@ -300,7 +300,7 @@ describe("TeamSSOSettings", () => {
   it("should cancel edit mode and reset values", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
@@ -318,7 +318,7 @@ describe("TeamSSOSettings", () => {
   it("should show budget duration dropdown in edit mode", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
@@ -334,7 +334,7 @@ describe("TeamSSOSettings", () => {
   it("should show РежимlВыбрать in edit mode", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
@@ -350,7 +350,7 @@ describe("TeamSSOSettings", () => {
   it("should show number inputs for budget and rate limits in edit mode", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
@@ -359,7 +359,7 @@ describe("TeamSSOSettings", () => {
     await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
 
     await waitFor(() => {
-      expect(screen.getВсеByRole("spinbutton")).toHaveLength(3);
+      expect(screen.getAllByRole("spinbutton")).toHaveLength(3);
     });
   });
 
@@ -372,18 +372,18 @@ describe("TeamSSOSettings", () => {
       },
     });
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
     });
 
     await userEvent.click(screen.getByRole("button", { name: /Изменить настройки/i }));
-    const permissionComboboxes = screen.getВсеByRole("combobox");
+    const permissionComboboxes = screen.getAllByRole("combobox");
     const permissionCombobox = permissionComboboxes[permissionComboboxes.length - 1];
     expect(permissionCombobox).toBeInTheDocument();
     await userEvent.click(permissionCombobox!);
-    const deletePermissionOptions = await screen.findВсеByText("/key/delete");
+    const deletePermissionOptions = await screen.findAllByText("/key/delete");
     await userEvent.click(deletePermissionOptions[deletePermissionOptions.length - 1]);
     await userEvent.keyboard("{Escape}");
 
@@ -407,7 +407,7 @@ describe("TeamSSOSettings", () => {
       settings: mockSettingsОтвет.values,
     });
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
@@ -435,7 +435,7 @@ describe("TeamSSOSettings", () => {
       values: { ...mockSettingsОтвет.values, organization_id: "org-2" },
     });
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("Sales (org-2)")).toBeInTheDocument();
@@ -450,7 +450,7 @@ describe("TeamSSOSettings", () => {
       values: { ...mockSettingsОтвет.values, organization_id: "org-deleted" },
     });
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("org-deleted")).toBeInTheDocument();
@@ -460,7 +460,7 @@ describe("TeamSSOSettings", () => {
   it("should display 'Не задано' when the settings payload has no organization_id", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("Не задано")).toBeInTheDocument();
@@ -470,7 +470,7 @@ describe("TeamSSOSettings", () => {
   it("should populate the organization dropdown with the fetched organizations in edit mode", async () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
@@ -491,7 +491,7 @@ describe("TeamSSOSettings", () => {
       settings: { ...mockSettingsОтвет.values, organization_id: "org-2" },
     });
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
@@ -524,7 +524,7 @@ describe("TeamSSOSettings", () => {
       settings: { ...mockSettingsОтвет.values, organization_id: null },
     });
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
@@ -550,7 +550,7 @@ describe("TeamSSOSettings", () => {
     mockGetDefaultTeamSettings.mockResolvedЗначение(mockSettingsОтвет);
     mockUpdateDefaultTeamSettings.mockRejectedЗначение(new Ошибка("Save failed"));
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();
@@ -570,7 +570,7 @@ describe("TeamSSOSettings", () => {
       () => new Promise((resolve) => setВремявыход(() => resolve({ settings: mockSettingsОтвет.values }), 100)),
     );
 
-    renderWithПровайдерs(<TeamSSOSettings {...defaultProps} />);
+    renderWithProviders(<TeamSSOSettings {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /Изменить настройки/i })).toBeInTheDocument();

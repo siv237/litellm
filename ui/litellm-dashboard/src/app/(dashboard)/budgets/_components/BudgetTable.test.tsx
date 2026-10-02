@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { renderWithПровайдерs, testЗапросClient } from "@/../tests/test-utils";
+import { renderWithProviders, testRequestClient } from "@/../tests/test-utils";
 import БюджетТаблица from "./БюджетТаблица";
 import type { budgetItem } from "@/app/(dashboard)/hooks/budgets/useБюджеты";
 import type { ResourceListРезультат } from "@/app/(dashboard)/hooks/common/useResourceList";
@@ -39,7 +39,7 @@ const makeList = (overrides: Partial<ResourceListРезультат<budgetItem>>
   pagination: { pageIndex: 0, pageSize: 50 },
   onPaginationChange: vi.fn(),
   columnФильтры: [],
-  onColumnФильтрыChange: vi.fn(),
+  onColumnFiltersChange: vi.fn(),
   searchЗначение: "",
   onSearchChange: vi.fn(),
   ...overrides,
@@ -65,12 +65,12 @@ const defaultProps = {
 
 describe("БюджетТаблица", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
-    testЗапросClient.clear();
+    vi.clearAllMocks();
+    testRequestClient.clear();
   });
 
   it("should display budget information", () => {
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={makeList()} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={makeList()} />);
     expect(screen.getByText("budget-1")).toBeInTheDocument();
     expect(screen.getByText("$100.00")).toBeInTheDocument();
     expect(screen.getByText("1000")).toBeInTheDocument();
@@ -78,8 +78,8 @@ describe("БюджетТаблица", () => {
   });
 
   it("should open on the four columns the page has always shown, with reset and created off", () => {
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={makeList()} />);
-    const headers = screen.getВсеByRole("columnheader").map((header) => header.textContent);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={makeList()} />);
+    const headers = screen.getAllByRole("columnheader").map((header) => header.textContent);
     expect(headers).toEqual(expect.arrayContaining(["ID бюджета", "Макс. бюджет", "TPM", "RPM"]));
     expect(headers).not.toContain("Reset");
     expect(headers).not.toContain("Создан");
@@ -87,7 +87,7 @@ describe("БюджетТаблица", () => {
 
   it("should render the reset column with the friendly duration label once it is turned on", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={makeList()} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={makeList()} />);
     await showColumn(user, "budget_duration");
     expect(screen.getByText("monthly")).toBeInTheDocument();
   });
@@ -95,7 +95,7 @@ describe("БюджетТаблица", () => {
   it("should render 'Не задано' when a budget has no reset duration", async () => {
     const user = userEvent.setup();
     const list = makeList({ rows: [makeБюджет({ budget_duration: null })] });
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={list} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={list} />);
     await showColumn(user, "budget_duration");
     expect(screen.getByText("Не задано")).toBeInTheDocument();
   });
@@ -103,7 +103,7 @@ describe("БюджетТаблица", () => {
   it("should render the budget id in full, with no truncation", () => {
     const budgetId = "ecc1869c-6231-4380-a56d-1a0be457477d";
     const list = makeList({ rows: [makeБюджет({ budget_id: budgetId })] });
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={list} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={list} />);
     const idCell = screen.getByText(budgetId);
     expect(idCell).not.toHaveClass("truncate");
     expect(idCell.className).not.toMatch(/max-w-\[\d+(ch|rem|px)\]/);
@@ -112,7 +112,7 @@ describe("БюджетТаблица", () => {
   it("should keep the budget id on a single line", () => {
     const budgetId = "ecc1869c-6231-4380-a56d-1a0be457477d";
     const list = makeList({ rows: [makeБюджет({ budget_id: budgetId })] });
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={list} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={list} />);
     expect(screen.getByText(budgetId)).toHaveClass("whitespace-nowrap");
   });
 
@@ -120,14 +120,14 @@ describe("БюджетТаблица", () => {
     const user = userEvent.setup();
     const budgetId = "ecc1869c-6231-4380-a56d-1a0be457477d";
     const list = makeList({ rows: [makeБюджет({ budget_id: budgetId })] });
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={list} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={list} />);
     await user.click(screen.getByRole("button", { name: "Copy ID" }));
     expect(copyToClipboardMock).toHaveBeenCalledWith(budgetId);
   });
 
   it("should offer sorting on every backend-sortable column", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={makeList()} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={makeList()} />);
     await showColumn(user, "created_at");
     for (const field of ["budget_id", "max_budget", "tpm_limit", "rpm_limit", "created_at"]) {
       expect(screen.getByTestId(`sort-header-${field}`)).toBeInTheDocument();
@@ -136,9 +136,9 @@ describe("БюджетТаблица", () => {
 
   it("should not make the reset column sortable", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={makeList()} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={makeList()} />);
     await showColumn(user, "budget_duration");
-    const headers = screen.getВсеByRole("columnheader").map((header) => header.textContent);
+    const headers = screen.getAllByRole("columnheader").map((header) => header.textContent);
     expect(headers).toContain("Reset");
     expect(screen.queryByTestId("sort-header-budget_duration")).not.toBeInTheDocument();
   });
@@ -146,22 +146,22 @@ describe("БюджетТаблица", () => {
   it("should ask the list for a new sort when a sortable header is clicked", async () => {
     const user = userEvent.setup();
     const onSortingChange = vi.fn();
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={makeList({ onSortingChange })} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={makeList({ onSortingChange })} />);
     await user.click(screen.getByTestId("sort-header-max_budget"));
     expect(onSortingChange).toHaveBeenCalled();
   });
 
   it("should show n/a for missing rate limits and Без ограничений for a missing max budget", () => {
     const list = makeList({ rows: [makeБюджет({ max_budget: null, tpm_limit: null, rpm_limit: null })] });
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={list} />);
-    expect(screen.getВсеByText("n/a")).toHaveLength(2);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={list} />);
+    expect(screen.getAllByText("n/a")).toHaveLength(2);
     expect(screen.getByText("Без ограничений")).toBeInTheDocument();
   });
 
   it("should call onEditClick from the actions menu", async () => {
     const user = userEvent.setup();
     const list = makeList();
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={list} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={list} />);
     await user.click(screen.getByTestId("budget-actions-budget-1"));
     await user.click(await screen.findByTestId("budget-action-edit"));
     expect(defaultProps.onEditClick).toHaveBeenCalledWith(list.rows[0]);
@@ -170,46 +170,46 @@ describe("БюджетТаблица", () => {
   it("should call onDeleteClick from the actions menu", async () => {
     const user = userEvent.setup();
     const list = makeList();
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={list} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={list} />);
     await user.click(screen.getByTestId("budget-actions-budget-1"));
     await user.click(await screen.findByTestId("budget-action-delete"));
     expect(defaultProps.onDeleteClick).toHaveBeenCalledWith(list.rows[0]);
   });
 
   it("should not render the actions menu when the user cannot modify budgets", () => {
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} canModify={false} list={makeList()} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} canModify={false} list={makeList()} />);
     expect(screen.queryByTestId("budget-actions-budget-1")).not.toBeInTheDocument();
   });
 
   it("should show skeleton rows when loading", () => {
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={makeList({ rows: [], isLoading: true })} />);
-    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={makeList({ rows: [], isLoading: true })} />);
+    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
   });
 
   it("should show the empty state when there are no budgets", () => {
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={makeList({ rows: [], rowCount: 0 })} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={makeList({ rows: [], rowCount: 0 })} />);
     expect(screen.getByText("No budgets yet")).toBeInTheDocument();
   });
 
   it("should tell the user their search matched nothing rather than that no budgets exist", () => {
     const list = makeList({ rows: [], rowCount: 0, searchЗначение: "nope" });
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={list} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={list} />);
     expect(screen.getByText("No matching budgets")).toBeInTheDocument();
   });
 
   it("should render an access-denied state for a 403 instead of an empty table", () => {
     const error = new ApiОшибка("Only proxy admins can view budgets", 403, FORBIDDEN_PROBLEM);
     const list = makeList({ rows: [], rowCount: 0, error });
-    const { container } = renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={list} />);
+    const { container } = renderWithProviders(<БюджетТаблица {...defaultProps} list={list} />);
     expect(screen.getByText("You do not have access to budgets")).toBeInTheDocument();
     expect(screen.queryByText("No budgets yet")).not.toBeInTheDocument();
-    expect(container.queryВыбратьor(".lucide-shield-alert")).not.toBeNull();
+    expect(container.querySelector(".lucide-shield-alert")).not.toBeNull();
   });
 
   it("should surface the problem detail for a non-403 failure", () => {
     const error = new ApiОшибка("budget store unavailable", 500, null);
     const list = makeList({ rows: [], rowCount: 0, error });
-    renderWithПровайдерs(<БюджетТаблица {...defaultProps} list={list} />);
+    renderWithProviders(<БюджетТаблица {...defaultProps} list={list} />);
     expect(screen.getByText("Could not load budgets")).toBeInTheDocument();
     expect(screen.getByText("budget store unavailable")).toBeInTheDocument();
   });

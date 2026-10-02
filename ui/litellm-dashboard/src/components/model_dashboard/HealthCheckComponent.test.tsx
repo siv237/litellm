@@ -7,31 +7,31 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import HealthCheckComponent from "./HealthCheckComponent";
 
-const mockIndividualРежимlHealthCheckCall = vi.fn();
+const mockIndividualModelHealthCheckCall = vi.fn();
 const mockLatestHealthChecksCall = vi.fn();
 
 vi.mock("../networking", () => ({
-  individualРежимlHealthCheckCall: (...args: unknown[]) => mockIndividualРежимlHealthCheckCall(...args),
+  individualModelHealthCheckCall: (...args: unknown[]) => mockIndividualModelHealthCheckCall(...args),
   latestHealthChecksCall: (...args: unknown[]) => mockLatestHealthChecksCall(...args),
 }));
 
-const getDisplayРежимlName = (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name?: string }) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name ?? "";
+const getDisplayModelName = (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name?: string }) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию.model_name ?? "";
 
-const makeРежимl = (id: string, name = "gpt-4") => ({
+const makeModel = (id: string, name = "gpt-4") => ({
   Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: name,
   Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { id },
-  litellm_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: name,
+  litellm_model_name: name,
 });
 
 interface HarnessProps {
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: ReturnType<typeof makeРежимl>[] };
-  allРежимlsOnProxy: string[];
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: ReturnType<typeof makeModel>[] };
+  allModelsOnProxy: string[];
   rowCount?: number;
   onPageIndexChange?: (pageIndex: number) => void;
 }
 
 /** Holds pagination state so page changes exercise the real controlled wiring. */
-function Harness({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData, allРежимlsOnProxy, rowCount = 1, onPageIndexChange }: HarnessProps) {
+function Harness({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData, allModelsOnProxy, rowCount = 1, onPageIndexChange }: HarnessProps) {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 50 });
 
   return (
@@ -40,8 +40,8 @@ function Harness({ Эвристический резерв по-прежнему
       <HealthCheckComponent
         accessТокен="token"
         Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData}
-        all_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs_on_proxy={allРежимlsOnProxy}
-        getDisplayРежимlName={getDisplayРежимlName}
+        all_models_on_proxy={allModelsOnProxy}
+        getDisplayModelName={getDisplayModelName}
         pagination={pagination}
         onPaginationChange={(updater) => {
           setPagination((previous) => {
@@ -67,9 +67,9 @@ const renderHealthCheck = async (props: HarnessProps) => {
 
 describe("HealthCheckComponent", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockLatestHealthChecksCall.mockResolvedЗначение({ latest_health_checks: {} });
-    mockIndividualРежимlHealthCheckCall.mockResolvedЗначение({
+    mockIndividualModelHealthCheckCall.mockResolvedЗначение({
       healthy_count: 1,
       unhealthy_count: 0,
       healthy_endpoints: [],
@@ -78,7 +78,7 @@ describe("HealthCheckComponent", () => {
   });
 
   it("should render the health check section", async () => {
-    await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeРежимl("deployment-1")] }, allРежимlsOnProxy: ["deployment-1"] });
+    await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeModel("deployment-1")] }, allModelsOnProxy: ["deployment-1"] });
 
     expect(screen.getByText("Режимl Состояние")).toBeInTheDocument();
     expect(
@@ -86,12 +86,12 @@ describe("HealthCheckComponent", () => {
     ).toBeInTheDocument();
   });
 
-  it("should call individualРежимlHealthCheckCall with Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию id when run health check is triggered", async () => {
+  it("should call individualModelHealthCheckCall with Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию id when run health check is triggered", async () => {
     render(
-      <Harness Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData={{ data: [makeРежимl("deployment-abc-123")] }} allРежимlsOnProxy={["deployment-abc-123"]} />,
+      <Harness Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData={{ data: [makeModel("deployment-abc-123")] }} allModelsOnProxy={["deployment-abc-123"]} />,
     );
 
-    const runButtons = screen.getВсеByTestId("run-health-check-btn");
+    const runButtons = screen.getAllByTestId("run-health-check-btn");
     expect(runButtons.length).toBeGreaterThanOrEqual(1);
 
     await act(async () => {
@@ -101,15 +101,15 @@ describe("HealthCheckComponent", () => {
       await new Promise((r) => setВремявыход(r, 50));
     });
 
-    expect(mockIndividualРежимlHealthCheckCall).toHaveBeenCalledWith("token", "deployment-abc-123");
-    expect(mockIndividualРежимlHealthCheckCall).not.toHaveBeenCalledWith("token", "gpt-4");
+    expect(mockIndividualModelHealthCheckCall).toHaveBeenCalledWith("token", "deployment-abc-123");
+    expect(mockIndividualModelHealthCheckCall).not.toHaveBeenCalledWith("token", "gpt-4");
   });
 
   it("should page through results with the shared pagination footer", async () => {
     const onPageIndexChange = vi.fn();
     await renderHealthCheck({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeРежимl("deployment-1")] },
-      allРежимlsOnProxy: ["deployment-1"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeModel("deployment-1")] },
+      allModelsOnProxy: ["deployment-1"],
       rowCount: 75,
       onPageIndexChange,
     });
@@ -124,11 +124,11 @@ describe("HealthCheckComponent", () => {
   });
 
   describe("row selection drives the bulk run", () => {
-    const twoРежимls = { data: [makeРежимl("id-alpha", "alpha"), makeРежимl("id-beta", "beta")] };
+    const twoModels = { data: [makeModel("id-alpha", "alpha"), makeModel("id-beta", "beta")] };
     const bothIds = ["id-alpha", "id-beta"];
 
     it("runs only the selected Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs and labels the button accordingly", async () => {
-      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoРежимls, allРежимlsOnProxy: bothIds, rowCount: 2 });
+      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
       const user = userEvent.setup();
 
       expect(screen.getByTestId("run-health-checks")).toHaveTextContent("Run Все Checks");
@@ -143,12 +143,12 @@ describe("HealthCheckComponent", () => {
         await new Promise((r) => setВремявыход(r, 50));
       });
 
-      expect(mockIndividualРежимlHealthCheckCall).toHaveBeenCalledWith("token", "id-beta");
-      expect(mockIndividualРежимlHealthCheckCall).not.toHaveBeenCalledWith("token", "id-alpha");
+      expect(mockIndividualModelHealthCheckCall).toHaveBeenCalledWith("token", "id-beta");
+      expect(mockIndividualModelHealthCheckCall).not.toHaveBeenCalledWith("token", "id-alpha");
     });
 
     it("falls back to every Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию on the page when nothing is selected", async () => {
-      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoРежимls, allРежимlsOnProxy: bothIds, rowCount: 2 });
+      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
 
       await act(async () => {
         screen.getByTestId("run-health-checks").click();
@@ -157,12 +157,12 @@ describe("HealthCheckComponent", () => {
         await new Promise((r) => setВремявыход(r, 50));
       });
 
-      expect(mockIndividualРежимlHealthCheckCall).toHaveBeenCalledWith("token", "id-alpha");
-      expect(mockIndividualРежимlHealthCheckCall).toHaveBeenCalledWith("token", "id-beta");
+      expect(mockIndividualModelHealthCheckCall).toHaveBeenCalledWith("token", "id-alpha");
+      expect(mockIndividualModelHealthCheckCall).toHaveBeenCalledWith("token", "id-beta");
     });
 
     it("treats a full page selection as running everything", async () => {
-      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoРежимls, allРежимlsOnProxy: bothIds, rowCount: 2 });
+      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
       const user = userEvent.setup();
 
       await user.click(screen.getByTestId("datatable-select-all"));
@@ -171,7 +171,7 @@ describe("HealthCheckComponent", () => {
     });
 
     it("clears the selection from the Clear Выбратьion button", async () => {
-      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoРежимls, allРежимlsOnProxy: bothIds, rowCount: 2 });
+      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
       const user = userEvent.setup();
 
       expect(screen.queryByTestId("clear-health-selection")).not.toBeInTheDocument();
@@ -186,7 +186,7 @@ describe("HealthCheckComponent", () => {
     // The pager swaps the underlying rows, so a carried-over selection would target
     // Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs that are no longer on screen.
     it("wipes the selection when the page changes", async () => {
-      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoРежимls, allРежимlsOnProxy: bothIds, rowCount: 120 });
+      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoModels, allModelsOnProxy: bothIds, rowCount: 120 });
       const user = userEvent.setup();
 
       await user.click(screen.getByTestId("datatable-select-row-id-alpha"));
@@ -209,14 +209,14 @@ describe("HealthCheckComponent", () => {
       });
 
       await renderHealthCheck({
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeРежимl("id-alpha"), makeРежимl("id-beta")] },
-        allРежимlsOnProxy: ["id-alpha", "id-beta"],
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeModel("id-alpha"), makeModel("id-beta")] },
+        allModelsOnProxy: ["id-alpha", "id-beta"],
         rowCount: 2,
       });
 
       expect(mockLatestHealthChecksCall).toHaveBeenCalledWith("token");
-      expect(screen.getВсеByText("healthy").length).toBeGreaterThanOrEqual(1);
-      expect(screen.getВсеByText("unhealthy").length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText("healthy").length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText("unhealthy").length).toBeGreaterThanOrEqual(1);
     });
 
     it("should skip latest_health_checks entries whose key is not a known Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию id", async () => {
@@ -228,8 +228,8 @@ describe("HealthCheckComponent", () => {
       });
 
       await renderHealthCheck({
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeРежимl("current-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id")] },
-        allРежимlsOnProxy: ["current-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id"],
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeModel("current-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id")] },
+        allModelsOnProxy: ["current-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id"],
       });
 
       expect(screen.getByText("healthy")).toBeInTheDocument();
@@ -244,8 +244,8 @@ describe("HealthCheckComponent", () => {
       });
 
       await renderHealthCheck({
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeРежимl("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id-123")] },
-        allРежимlsOnProxy: ["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id-123"],
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeModel("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id-123")] },
+        allModelsOnProxy: ["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id-123"],
       });
 
       expect(screen.queryByText("healthy")).not.toBeInTheDocument();

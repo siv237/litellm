@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { MCPСерверView } from "./mcp_server_view";
+import { MCPServerView } from "./mcp_server_view";
 import type { MCPСервер } from "@/components/mcp_tools/types";
 
 vi.mock(".", () => ({
-  MCPИнструментыViewer: () => <div>tools viewer</div>,
+  MCPToolsViewer: () => <div>tools viewer</div>,
 }));
 
 vi.mock("./mcp_server_edit", () => ({
@@ -25,7 +25,7 @@ const baseСервер = {
 
 const renderView = (overrides: Partial<MCPСервер> = {}, props: Record<string, unknown> = {}) =>
   render(
-    <MCPСерверView
+    <MCPServerView
       mcpСервер={{ ...baseСервер, ...overrides } as MCPСервер}
       onBack={vi.fn()}
       isProxyAdmin
@@ -38,9 +38,9 @@ const renderView = (overrides: Partial<MCPСервер> = {}, props: Record<stri
     />,
   );
 
-describe("MCPСерверView", () => {
+describe("MCPServerView", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   // Name, alias and description each label the header and a Settings row, so
@@ -49,9 +49,9 @@ describe("MCPСерверView", () => {
     renderView();
 
     expect(screen.getByText("srv-1")).toBeInTheDocument();
-    expect(screen.getВсеByText("demo server").length).toBeGreaterThan(0);
-    expect(screen.getВсеByText("A demo MCP server").length).toBeGreaterThan(0);
-    expect(screen.getВсеByText("demo_alias").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("demo server").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("A demo MCP server").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("demo_alias").length).toBeGreaterThan(0);
   });
 
   it("falls back to a placeholder name when the server has neither name nor alias", () => {
@@ -67,8 +67,8 @@ describe("MCPСерверView", () => {
 
     expect(screen.getByText("Хост URL")).toBeInTheDocument();
     expect(screen.getByText("Стоимость Конфигурацияuration")).toBeInTheDocument();
-    expect(screen.getВсеByText("HTTP").length).toBeGreaterThan(0);
-    expect(screen.getВсеByText("https://example.com/mcp").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("HTTP").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("https://example.com/mcp").length).toBeGreaterThan(0);
   });
 
   it("offers a Settings tab to proxy admins only", () => {

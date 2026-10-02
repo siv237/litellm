@@ -1,11 +1,11 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { chooseВыбратьOption, renderWithПровайдерs, testЗапросClient } from "../../../tests/test-utils";
+import { chooseSelectOption, renderWithProviders, testRequestClient } from "../../../tests/test-utils";
 import { КлючОтвет } from "../key_team_helpers/key_list";
-import { MODEL_MAX_BUDGET_PREMIUM_HINT } from "../key_team_helpers/РежимlМакс.БюджетEditor";
+import { MODEL_MAX_BUDGET_PREMIUM_HINT } from "../key_team_helpers/РежимlМакс.BudgetEditor";
 import {
-  getPassThroughЭндпоинтsCall,
+  getPassThroughEndpointsCall,
   getPoliciesList,
   getUiSettings,
   getPromptsList,
@@ -34,13 +34,13 @@ vi.mock("../networking", async () => {
       tag1: { name: "tag1", description: "Test tag 1" },
       tag2: { name: "tag2", description: "Test tag 2" },
     }),
-    getГардрейлыList: vi.fn().mockResolvedЗначение({
+    getGuardrailsList: vi.fn().mockResolvedЗначение({
       гардрейловs: [{ гардрейлов_name: "гардрейлов-1" }],
     }),
     getPoliciesList: vi.fn().mockResolvedЗначение({
       policies: [{ policy_name: "policy-1" }],
     }),
-    getPassThroughЭндпоинтsCall: vi.fn().mockResolvedЗначение({
+    getPassThroughEndpointsCall: vi.fn().mockResolvedЗначение({
       endpoints: [],
     }),
     vectorStoreListCall: vi.fn().mockResolvedЗначение({
@@ -57,38 +57,38 @@ vi.mock("../networking", async () => {
       message: null,
       stack_trace: null,
     }),
-    getАгентыList: vi.fn().mockResolvedЗначение({
+    getAgentsList: vi.fn().mockResolvedЗначение({
       agents: [],
     }),
     getAgentAccessGroups: vi.fn().mockResolvedЗначение([]),
-    getClaudeCodeПлагиныList: vi.fn().mockResolvedЗначение({ plugins: [], count: 0 }),
+    getClaudeCodePluginsList: vi.fn().mockResolvedЗначение({ plugins: [], count: 0 }),
   };
 });
 
 vi.mock("../organisms/create_key_button", () => ({
-  fetchTeamРежимls: vi.fn().mockResolvedЗначение(["team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1", "team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-2"]),
+  fetchTeamModels: vi.fn().mockResolvedЗначение(["team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1", "team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-2"]),
 }));
 
-const rвыходerSettingsMocks = vi.hoisted(() => ({
-  receivedЗначение: undefined as { rвыходer_settings: Record<string, unknown> } | undefined,
+const routerSettingsMocks = vi.hoisted(() => ({
+  receivedЗначение: undefined as { router_settings: Record<string, unknown> } | undefined,
   editedЗначение: null as Record<string, unknown> | null,
 }));
 
-vi.mock("../common_components/RвыходerSettingsAccordion", async () => {
+vi.mock("../common_components/RouterSettingsAccordion", async () => {
   const { forwardRef, useImperativeHandle } = await import("react");
   return {
-    default: forwardRef(({ value }: { value?: { rвыходer_settings: Record<string, unknown> } }, ref) => {
-      rвыходerSettingsMocks.receivedЗначение = value;
+    default: forwardRef(({ value }: { value?: { router_settings: Record<string, unknown> } }, ref) => {
+      routerSettingsMocks.receivedЗначение = value;
       useImperativeHandle(ref, () => ({
-        getЗначение: () => ({ rвыходer_settings: rвыходerSettingsMocks.editedЗначение ?? value?.rвыходer_settings ?? {} }),
+        getЗначение: () => ({ router_settings: routerSettingsMocks.editedЗначение ?? value?.router_settings ?? {} }),
       }));
-      return <div data-testid="rвыходer-settings-accordion" />;
+      return <div data-testid="router-settings-accordion" />;
     }),
   };
 });
 
-vi.mock("@/app/(dashboard)/hooks/organizations/useОрганизацияs", () => ({
-  useОрганизацияs: vi.fn().mockReturnЗначение({
+vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
+  useOrganizations: vi.fn().mockReturnЗначение({
     data: [
       {
         organization_id: "org-1",
@@ -112,7 +112,7 @@ vi.mock("@/app/(dashboard)/hooks/accessGroups/useAccessGroups", () => ({
   }),
 }));
 
-vi.mock("../mcp_server_management/MCPСерверВыбратьor", () => ({
+vi.mock("../mcp_server_management/MCPServerSelector", () => ({
   default: ({
     value,
     onChange,
@@ -130,7 +130,7 @@ vi.mock("../mcp_server_management/MCPСерверВыбратьor", () => ({
   ),
 }));
 
-vi.mock("../agent_management/AgentВыбратьor", () => ({
+vi.mock("../agent_management/AgentSelector", () => ({
   default: ({ onChange }: { onChange?: (v: { agents: string[]; accessGroups: string[] }) => void }) => (
     <button
       type="button"
@@ -142,7 +142,7 @@ vi.mock("../agent_management/AgentВыбратьor", () => ({
   ),
 }));
 
-vi.mock("../skills/SkillВыбратьor", () => ({
+vi.mock("../skills/SkillSelector", () => ({
   default: ({ onChange }: { onChange: (selected: string[]) => void }) => (
     <button type="button" data-testid="skill-selector" onClick={() => onChange(["private-skill"])}>
       pick skill
@@ -150,7 +150,7 @@ vi.mock("../skills/SkillВыбратьor", () => ({
   ),
 }));
 
-vi.mock("../common_components/AccessGroupВыбратьor", () => ({
+vi.mock("../common_components/AccessGroupSelector", () => ({
   default: ({ value = [], onChange }: { value?: string[]; onChange?: (v: string[]) => void }) => (
     <input
       data-testid="access-group-selector"
@@ -160,7 +160,7 @@ vi.mock("../common_components/AccessGroupВыбратьor", () => ({
   ),
 }));
 
-const visibleOptions = (): HTMLElement[] => screen.queryВсеByRole("option");
+const visibleOptions = (): HTMLElement[] => screen.queryAllByRole("option");
 
 const isOptionDisabled = (option: HTMLElement): boolean => option.getAttribute("aria-disabled") === "true";
 
@@ -192,7 +192,7 @@ describe("КлючEditView", () => {
     budget_duration: "30d",
     budget_reset_at: "never",
     allowed_cache_controls: [],
-    allowed_rвыходes: [],
+    allowed_routes: [],
     permissions: {},
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_spend: {},
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget: {},
@@ -207,10 +207,10 @@ describe("КлючEditView", () => {
     team_tpm_limit: 100,
     team_rpm_limit: 100,
     team_max_budget: 100,
-    team_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+    team_models: [],
     team_blocked: false,
     soft_budget: 200,
-    team_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_aliases: {},
+    team_model_aliases: {},
     team_member_spend: 0,
     team_metadata: {},
     end_user_id: "default_user_id",
@@ -237,18 +237,18 @@ describe("КлючEditView", () => {
     last_rotation_at: undefined,
     key_rotation_at: undefined,
   };
-  describe("rвыходer settings", () => {
-    const UNSUPPORTED_STORED_FIELD = { tag_rвыходing_prefix: "team-" };
+  describe("router settings", () => {
+    const UNSUPPORTED_STORED_FIELD = { tag_routing_prefix: "team-" };
     const STORED_ROUTER_SETTINGS = {
       num_retries: 2,
       fallbacks: [{ "gpt-4": ["gpt-4o"] }],
       ...UNSUPPORTED_STORED_FIELD,
     };
 
-    const renderWithRвыходerSettings = (onSubmit: (values: Record<string, unknown>) => Promise<void>) =>
-      renderWithПровайдерs(
+    const renderWithRouterSettings = (onSubmit: (values: Record<string, unknown>) => Promise<void>) =>
+      renderWithProviders(
         <КлючEditView
-          keyData={{ ...MOCK_KEY_DATA, rвыходer_settings: STORED_ROUTER_SETTINGS }}
+          keyData={{ ...MOCK_KEY_DATA, router_settings: STORED_ROUTER_SETTINGS }}
           onCancel={() => {}}
           onSubmit={onSubmit}
           accessТокен="test-token"
@@ -259,31 +259,31 @@ describe("КлючEditView", () => {
       );
 
     beforeEach(() => {
-      rвыходerSettingsMocks.receivedЗначение = undefined;
-      rвыходerSettingsMocks.editedЗначение = null;
+      routerSettingsMocks.receivedЗначение = undefined;
+      routerSettingsMocks.editedЗначение = null;
     });
 
     it("should load the fields it renders into the editor and withhold the ones it does not", async () => {
-      renderWithRвыходerSettings(async () => {});
+      renderWithRouterSettings(async () => {});
 
       await waitFor(() => {
-        expect(rвыходerSettingsMocks.receivedЗначение).toStrictEqual({
-          rвыходer_settings: { num_retries: 2, fallbacks: [{ "gpt-4": ["gpt-4o"] }] },
+        expect(routerSettingsMocks.receivedЗначение).toStrictEqual({
+          router_settings: { num_retries: 2, fallbacks: [{ "gpt-4": ["gpt-4o"] }] },
         });
       });
     });
 
-    it("should submit edited fallbacks alongside rвыходing fields the editor cannot show", async () => {
+    it("should submit edited fallbacks alongside routing fields the editor cannot show", async () => {
       const onSubmit = vi.fn().mockResolvedЗначение(undefined);
-      renderWithRвыходerSettings(onSubmit);
-      rвыходerSettingsMocks.editedЗначение = { num_retries: 2, fallbacks: [{ "gpt-4": ["gpt-4o", "gpt-4o-mini"] }] };
+      renderWithRouterSettings(onSubmit);
+      routerSettingsMocks.editedЗначение = { num_retries: 2, fallbacks: [{ "gpt-4": ["gpt-4o", "gpt-4o-mini"] }] };
 
       fireEvent.click(screen.getByText("Save Changes"));
 
       await waitFor(() => {
         expect(onSubmit).toHaveBeenCalledWith(
           expect.objectContaining({
-            rвыходer_settings: expect.objectContaining({
+            router_settings: expect.objectContaining({
               ...UNSUPPORTED_STORED_FIELD,
               num_retries: 2,
               fallbacks: [{ "gpt-4": ["gpt-4o", "gpt-4o-mini"] }],
@@ -293,17 +293,17 @@ describe("КлючEditView", () => {
       });
     });
 
-    it("should submit cleared rвыходer settings so removing every fallback is persisted", async () => {
+    it("should submit cleared router settings so removing every fallback is persisted", async () => {
       const onSubmit = vi.fn().mockResolvedЗначение(undefined);
-      renderWithRвыходerSettings(onSubmit);
-      rвыходerSettingsMocks.editedЗначение = { num_retries: null, fallbacks: null };
+      renderWithRouterSettings(onSubmit);
+      routerSettingsMocks.editedЗначение = { num_retries: null, fallbacks: null };
 
       fireEvent.click(screen.getByText("Save Changes"));
 
       await waitFor(() => {
         expect(onSubmit).toHaveBeenCalledWith(
           expect.objectContaining({
-            rвыходer_settings: expect.objectContaining({
+            router_settings: expect.objectContaining({
               ...UNSUPPORTED_STORED_FIELD,
               num_retries: null,
               fallbacks: null,
@@ -315,7 +315,7 @@ describe("КлючEditView", () => {
   });
 
   it("should render", async () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -333,7 +333,7 @@ describe("КлючEditView", () => {
   });
 
   it("should render tags", async () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -351,7 +351,7 @@ describe("КлючEditView", () => {
   });
 
   it("should not render tags in metadata textarea", async () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -370,15 +370,15 @@ describe("КлючEditView", () => {
   });
 
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     can.mockReturnЗначение(true);
     vi.mocked(getUiSettings).mockResolvedЗначение({ values: { enable_projects_ui: false } });
-    testЗапросClient.removeQueries({ queryКлюч: ["uiSettings"] });
+    testRequestClient.removeQueries({ queryКлюч: ["uiSettings"] });
   });
 
   describe("policy and prompt fields", () => {
     const renderAs = (userRole: string) =>
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           onCancel={() => {}}
@@ -391,7 +391,7 @@ describe("КлючEditView", () => {
       );
 
     it("locks the prompts control for a non-premium admin so an unsavable value cannot be entered", async () => {
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           onCancel={() => {}}
@@ -412,7 +412,7 @@ describe("КлючEditView", () => {
     });
 
     it("leaves the prompts control usable for a premium admin", async () => {
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           onCancel={() => {}}
@@ -443,7 +443,7 @@ describe("КлючEditView", () => {
     });
 
     it("lists a prompt existing in several environments once in the dropdown", async () => {
-      vi.mocked(getPromptsList).mockResolvedЗначениеOnce({
+      vi.mocked(getPromptsList).mockResolvedValueOnce({
         prompts: [
           { prompt_id: "envgreet", litellm_params: {}, prompt_info: { prompt_type: "db" }, environment: "development" },
           { prompt_id: "envgreet", litellm_params: {}, prompt_info: { prompt_type: "db" }, environment: "production" },
@@ -455,7 +455,7 @@ describe("КлючEditView", () => {
       const prompts = await screen.findByLabelText(/Prompts/);
       await userEvent.type(prompts, "envgreet");
 
-      expect(await screen.findВсеByRole("option", { name: "envgreet" })).toHaveLength(1);
+      expect(await screen.findAllByRole("option", { name: "envgreet" })).toHaveLength(1);
     });
 
     it("should omit both fields and fire neither admin-only request for an internal user", async () => {
@@ -475,7 +475,7 @@ describe("КлючEditView", () => {
   it("should call onCancel withвыход submitting the form when cancel button is clicked", async () => {
     const onCancelMock = vi.fn();
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={onCancelMock}
@@ -490,12 +490,12 @@ describe("КлючEditView", () => {
     const cancelButton = await screen.findByRole("button", { name: /отмена/i });
     await userEvent.click(cancelButton);
 
-    expect(onCancelMock).toHaveBeenCalledВремяs(1);
+    expect(onCancelMock).toHaveBeenCalledTimes(1);
     expect(onSubmitMock).not.toHaveBeenCalled();
   });
 
   it("should display key alias input field", async () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -513,7 +513,7 @@ describe("КлючEditView", () => {
   });
 
   it("should display Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs select field", async () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -531,7 +531,7 @@ describe("КлючEditView", () => {
   });
 
   it("should display max budget input field", async () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -548,8 +548,8 @@ describe("КлючEditView", () => {
     });
   });
 
-  it("should display allowed rвыходes input field", async () => {
-    renderWithПровайдерs(
+  it("should display allowed routes input field", async () => {
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -562,13 +562,13 @@ describe("КлючEditView", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/allowed rвыходes/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/allowed routes/i)).toBeInTheDocument();
     });
   });
 
   it("should call onSubmit with form values when form is submitted", async () => {
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -599,7 +599,7 @@ describe("КлючEditView", () => {
       metadata: { ...MOCK_KEY_DATA.metadata, throttle_on_budget_exceeded: true },
     };
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={keyDataWithThrottle}
         onCancel={() => {}}
@@ -629,7 +629,7 @@ describe("КлючEditView", () => {
       metadata: { ...MOCK_KEY_DATA.metadata, enable_prompt_caching: true },
     };
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={keyDataWithPromptCaching}
         onCancel={() => {}}
@@ -652,15 +652,15 @@ describe("КлючEditView", () => {
     });
   });
 
-  it("should disable Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs field when management rвыходes are selected", async () => {
-    const keyDataWithManagementRвыходes = {
+  it("should disable Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs field when management routes are selected", async () => {
+    const keyDataWithManagementRoutes = {
       ...MOCK_KEY_DATA,
-      allowed_rвыходes: ["management_rвыходes"],
+      allowed_routes: ["management_routes"],
     };
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
-        keyData={keyDataWithManagementRвыходes}
+        keyData={keyDataWithManagementRoutes}
         onCancel={() => {}}
         onSubmit={async () => {}}
         accessТокен={""}
@@ -675,15 +675,15 @@ describe("КлючEditView", () => {
     });
   });
 
-  it("should disable Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs field when info rвыходes are selected", async () => {
-    const keyDataWithInfoRвыходes = {
+  it("should disable Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs field when info routes are selected", async () => {
+    const keyDataWithInfoRoutes = {
       ...MOCK_KEY_DATA,
-      allowed_rвыходes: ["info_rвыходes"],
+      allowed_routes: ["info_routes"],
     };
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
-        keyData={keyDataWithInfoRвыходes}
+        keyData={keyDataWithInfoRoutes}
         onCancel={() => {}}
         onSubmit={async () => {}}
         accessТокен={""}
@@ -699,7 +699,7 @@ describe("КлючEditView", () => {
   });
 
   it("should disable гардрейловs selector when user is not premium and has no write access role", async () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -716,9 +716,9 @@ describe("КлючEditView", () => {
     });
   });
 
-  it("should parse comma-separated allowed rвыходes on submit", async () => {
+  it("should parse comma-separated allowed routes on submit", async () => {
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -731,12 +731,12 @@ describe("КлючEditView", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/allowed rвыходes/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/allowed routes/i)).toBeInTheDocument();
     });
 
-    const allowedRвыходesВход = screen.getByLabelText(/allowed rвыходes/i);
-    await userEvent.clear(allowedRвыходesВход);
-    await userEvent.type(allowedRвыходesВход, "rвыходe1, rвыходe2, rвыходe3");
+    const allowedRoutesВход = screen.getByLabelText(/allowed routes/i);
+    await userEvent.clear(allowedRoutesВход);
+    await userEvent.type(allowedRoutesВход, "route1, route2, route3");
 
     const submitButton = screen.getByRole("button", { name: /save changes/i });
     await userEvent.click(submitButton);
@@ -744,20 +744,20 @@ describe("КлючEditView", () => {
     await waitFor(() => {
       expect(onSubmitMock).toHaveBeenCalled();
       const callArgs = onSubmitMock.mock.calls[0][0];
-      expect(Array.isArray(callArgs.allowed_rвыходes)).toBe(true);
-      expect(callArgs.allowed_rвыходes).toEqual(["rвыходe1", "rвыходe2", "rвыходe3"]);
+      expect(Array.isArray(callArgs.allowed_routes)).toBe(true);
+      expect(callArgs.allowed_routes).toEqual(["route1", "route2", "route3"]);
     });
   });
 
-  it("should handle empty allowed rвыходes string on submit", async () => {
+  it("should handle empty allowed routes string on submit", async () => {
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    const keyDataWithRвыходes = {
+    const keyDataWithRoutes = {
       ...MOCK_KEY_DATA,
-      allowed_rвыходes: ["llm_api_rвыходes"],
+      allowed_routes: ["llm_api_routes"],
     };
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
-        keyData={keyDataWithRвыходes}
+        keyData={keyDataWithRoutes}
         onCancel={() => {}}
         onSubmit={onSubmitMock}
         accessТокен={"test-token"}
@@ -768,11 +768,11 @@ describe("КлючEditView", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/allowed rвыходes/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/allowed routes/i)).toBeInTheDocument();
     });
 
-    const allowedRвыходesВход = screen.getByLabelText(/allowed rвыходes/i);
-    await userEvent.clear(allowedRвыходesВход);
+    const allowedRoutesВход = screen.getByLabelText(/allowed routes/i);
+    await userEvent.clear(allowedRoutesВход);
 
     const submitButton = screen.getByRole("button", { name: /save changes/i });
     await userEvent.click(submitButton);
@@ -780,51 +780,19 @@ describe("КлючEditView", () => {
     await waitFor(() => {
       expect(onSubmitMock).toHaveBeenCalled();
       const callArgs = onSubmitMock.mock.calls[0][0];
-      expect(callArgs.allowed_rвыходes).toEqual([]);
+      expect(callArgs.allowed_routes).toEqual([]);
     });
   });
 
-  it("should omit allowed_rвыходes from submit when value is unchanged", async () => {
+  it("should omit allowed_routes from submit when value is unchanged", async () => {
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    const aiApisКлючData = {
+    const aiApisKeyData = {
       ...MOCK_KEY_DATA,
-      allowed_rвыходes: ["llm_api_rвыходes"],
+      allowed_routes: ["llm_api_routes"],
     };
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
-        keyData={aiApisКлючData}
-        onCancel={() => {}}
-        onSubmit={onSubmitMock}
-        accessТокен={"test-token"}
-        userID={"test-user"}
-        userRole={"admin"}
-        premiumUser={false}
-      />,
-    );
-
-    await waitFor(() => {
-      expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
-    });
-
-    const submitButton = screen.getByRole("button", { name: /save changes/i });
-    await userEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(onSubmitMock).toHaveBeenCalled();
-      const callArgs = onSubmitMock.mock.calls[0][0];
-      expect("allowed_rвыходes" in callArgs).toBe(false);
-    });
-  });
-
-  it("should omit allowed_rвыходes from submit when keyData.allowed_rвыходes is null and form is untouched", async () => {
-    const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    const keyDataNullRвыходes = {
-      ...MOCK_KEY_DATA,
-      allowed_rвыходes: null as unknown as string[],
-    };
-    renderWithПровайдерs(
-      <КлючEditView
-        keyData={keyDataNullRвыходes}
+        keyData={aiApisKeyData}
         onCancel={() => {}}
         onSubmit={onSubmitMock}
         accessТокен={"test-token"}
@@ -844,17 +812,49 @@ describe("КлючEditView", () => {
     await waitFor(() => {
       expect(onSubmitMock).toHaveBeenCalled();
       const callArgs = onSubmitMock.mock.calls[0][0];
-      expect("allowed_rвыходes" in callArgs).toBe(false);
+      expect("allowed_routes" in callArgs).toBe(false);
     });
   });
 
-  it("should omit allowed_rвыходes from submit when server returned rвыходes in a different order", async () => {
+  it("should omit allowed_routes from submit when keyData.allowed_routes is null and form is untouched", async () => {
+    const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
+    const keyDataNullRoutes = {
+      ...MOCK_KEY_DATA,
+      allowed_routes: null as unknown as string[],
+    };
+    renderWithProviders(
+      <КлючEditView
+        keyData={keyDataNullRoutes}
+        onCancel={() => {}}
+        onSubmit={onSubmitMock}
+        accessТокен={"test-token"}
+        userID={"test-user"}
+        userRole={"admin"}
+        premiumUser={false}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /save changes/i })).toBeInTheDocument();
+    });
+
+    const submitButton = screen.getByRole("button", { name: /save changes/i });
+    await userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(onSubmitMock).toHaveBeenCalled();
+      const callArgs = onSubmitMock.mock.calls[0][0];
+      expect("allowed_routes" in callArgs).toBe(false);
+    });
+  });
+
+  it("should omit allowed_routes from submit when server returned routes in a different order", async () => {
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
     const keyDataReordered = {
       ...MOCK_KEY_DATA,
-      allowed_rвыходes: ["beta_rвыходes", "alpha_rвыходes"],
+      allowed_routes: ["beta_routes", "alpha_routes"],
     };
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={keyDataReordered}
         onCancel={() => {}}
@@ -876,7 +876,7 @@ describe("КлючEditView", () => {
     await waitFor(() => {
       expect(onSubmitMock).toHaveBeenCalled();
       const callArgs = onSubmitMock.mock.calls[0][0];
-      expect("allowed_rвыходes" in callArgs).toBe(false);
+      expect("allowed_routes" in callArgs).toBe(false);
     });
   });
 
@@ -887,7 +887,7 @@ describe("КлючEditView", () => {
       access_group_ids: ["ag-1"],
     };
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={keyDataWithAccessGroups}
         onCancel={() => {}}
@@ -919,7 +919,7 @@ describe("КлючEditView", () => {
 
   it("should keep mcp_toolsets when saving an edit that does not touch the MCP selector", async () => {
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    const keyDataWithИнструментыet = {
+    const keyDataWithToolset = {
       ...MOCK_KEY_DATA,
       object_permission: {
         ...MOCK_KEY_DATA.object_permission!,
@@ -927,9 +927,9 @@ describe("КлючEditView", () => {
       },
     };
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
-        keyData={keyDataWithИнструментыet}
+        keyData={keyDataWithToolset}
         onCancel={() => {}}
         onSubmit={onSubmitMock}
         accessТокен="test-token"
@@ -957,7 +957,7 @@ describe("КлючEditView", () => {
       ...MOCK_KEY_DATA,
       budget_limits: [{ budget_duration: "30d", max_budget: 100 }],
     };
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={keyDataWithWindow}
         onCancel={() => {}}
@@ -984,7 +984,7 @@ describe("КлючEditView", () => {
 
   it("should persist a canonical budget_duration value, not a word-form the backend cannot parse", async () => {
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -996,7 +996,7 @@ describe("КлючEditView", () => {
       />,
     );
 
-    await chooseВыбратьOption(userEvent, await screen.findByLabelText("Сброс бюджета"), "weekly");
+    await chooseSelectOption(userEvent, await screen.findByLabelText("Сброс бюджета"), "weekly");
 
     const submitButton = screen.getByRole("button", { name: /save changes/i });
     await userEvent.click(submitButton);
@@ -1010,7 +1010,7 @@ describe("КлючEditView", () => {
 
   it("should keep an existing canonical budget_duration canonical when saved untouched", async () => {
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -1034,10 +1034,10 @@ describe("КлючEditView", () => {
 
   it("should heal a legacy word-form budget_duration to canonical when saved untouched", async () => {
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    const legacyКлючData = { ...MOCK_KEY_DATA, budget_duration: "monthly" };
-    renderWithПровайдерs(
+    const legacyKeyData = { ...MOCK_KEY_DATA, budget_duration: "monthly" };
+    renderWithProviders(
       <КлючEditView
-        keyData={legacyКлючData}
+        keyData={legacyKeyData}
         onCancel={() => {}}
         onSubmit={onSubmitMock}
         accessТокен={"test-token"}
@@ -1059,7 +1059,7 @@ describe("КлючEditView", () => {
 
   it("should send an explicit null budget_duration when a previously-set Сбросить бюджет is cleared", async () => {
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -1072,7 +1072,7 @@ describe("КлючEditView", () => {
     );
 
     const resetБюджет = await screen.findByLabelText("Сброс бюджета");
-    await chooseВыбратьOption(userEvent, resetБюджет, "Никогда не сбрасывать");
+    await chooseSelectOption(userEvent, resetБюджет, "Никогда не сбрасывать");
 
     await waitFor(() => {
       expect(resetБюджет).toHaveTextContent("Никогда не сбрасывать");
@@ -1090,10 +1090,10 @@ describe("КлючEditView", () => {
 
   it("should send an explicit null budget_duration when a legacy word-form Сбросить бюджет is cleared", async () => {
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    const legacyКлючData = { ...MOCK_KEY_DATA, budget_duration: "monthly" };
-    renderWithПровайдерs(
+    const legacyKeyData = { ...MOCK_KEY_DATA, budget_duration: "monthly" };
+    renderWithProviders(
       <КлючEditView
-        keyData={legacyКлючData}
+        keyData={legacyKeyData}
         onCancel={() => {}}
         onSubmit={onSubmitMock}
         accessТокен={"test-token"}
@@ -1103,7 +1103,7 @@ describe("КлючEditView", () => {
       />,
     );
 
-    await chooseВыбратьOption(userEvent, await screen.findByLabelText("Сброс бюджета"), "Никогда не сбрасывать");
+    await chooseSelectOption(userEvent, await screen.findByLabelText("Сброс бюджета"), "Никогда не сбрасывать");
 
     await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
@@ -1122,7 +1122,7 @@ describe("КлючEditView", () => {
       ...MOCK_KEY_DATA,
       budget_limits: [{ budget_duration: "30d", max_budget: 100, reset_at: "2026-08-01T00:00:00" }],
     };
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={keyDataWithWindow}
         onCancel={() => {}}
@@ -1149,7 +1149,7 @@ describe("КлючEditView", () => {
     // budget windows. The form previously always sent budget_limits: [], which
     // the backend read as a budget change and rejected.
     const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA} // no budget_limits
         onCancel={() => {}}
@@ -1177,7 +1177,7 @@ describe("КлючEditView", () => {
       ...MOCK_KEY_DATA,
       budget_limits: [{ budget_duration: "30d", max_budget: 100 }],
     };
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={keyDataWithWindow}
         onCancel={() => {}}
@@ -1209,7 +1209,7 @@ describe("КлючEditView", () => {
       ...MOCK_KEY_DATA,
       budget_limits: [{ budget_duration: "30d", max_budget: 100 }],
     };
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={keyDataWithWindow}
         onCancel={() => {}}
@@ -1242,7 +1242,7 @@ describe("КлючEditView", () => {
 
     const renderWith = (premiumUser: boolean) => {
       const onSubmit = vi.fn().mockResolvedЗначение(undefined);
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={keyDataWithБюджеты}
           onCancel={() => {}}
@@ -1266,7 +1266,7 @@ describe("КлючEditView", () => {
         Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget: { "gpt-4": { budget_limit: limit, time_period: "1h" } },
       });
 
-      const { rerender } = renderWithПровайдерs(
+      const { rerender } = renderWithProviders(
         <КлючEditView
           keyData={withБюджет(5, "tok-a")}
           onCancel={() => {}}
@@ -1323,14 +1323,14 @@ describe("КлючEditView", () => {
   });
 
   it("should display 'AI APIs' label for the llm_api key type option", async () => {
-    const keyDataWithLlmApiRвыходes = {
+    const keyDataWithLlmApiRoutes = {
       ...MOCK_KEY_DATA,
-      allowed_rвыходes: ["llm_api_rвыходes"],
+      allowed_routes: ["llm_api_routes"],
     };
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
-        keyData={keyDataWithLlmApiRвыходes}
+        keyData={keyDataWithLlmApiRoutes}
         onCancel={() => {}}
         onSubmit={async () => {}}
         accessТокен={""}
@@ -1366,7 +1366,7 @@ describe("КлючEditView", () => {
     });
     const onSubmitMock = vi.fn(() => submitPromise);
 
-    renderWithПровайдерs(
+    renderWithProviders(
       <КлючEditView
         keyData={MOCK_KEY_DATA}
         onCancel={() => {}}
@@ -1385,7 +1385,7 @@ describe("КлючEditView", () => {
     const submitButton = screen.getByRole("button", { name: /save changes/i });
     await userEvent.click(submitButton);
 
-    // Wait for onSubmit to be called, which means handleSubmit has started and isКлючSaving should be true
+    // Wait for onSubmit to be called, which means handleSubmit has started and isKeySaving should be true
     await waitFor(() => {
       expect(onSubmitMock).toHaveBeenCalled();
     });
@@ -1407,7 +1407,7 @@ describe("КлючEditView", () => {
 
   describe("organization dropdown", () => {
     it("should render the organization dropdown", async () => {
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           onCancel={() => {}}
@@ -1425,7 +1425,7 @@ describe("КлючEditView", () => {
     });
 
     it("should disable the organization dropdown for non-admin users", async () => {
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           onCancel={() => {}}
@@ -1447,7 +1447,7 @@ describe("КлючEditView", () => {
     });
 
     it("should not disable the organization dropdown for admin users", async () => {
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           onCancel={() => {}}
@@ -1474,7 +1474,7 @@ describe("КлючEditView", () => {
         organization_id: "org-1",
       };
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={keyWithOrg}
           onCancel={() => {}}
@@ -1493,7 +1493,7 @@ describe("КлючEditView", () => {
 
     it("clears the organization and its dependent team in the update payload", async () => {
       const onSubmit = vi.fn().mockResolvedЗначение(undefined);
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={{ ...MOCK_KEY_DATA, organization_id: "org-1", team_id: "group-maple" }}
           onCancel={() => {}}
@@ -1543,7 +1543,7 @@ describe("КлючEditView", () => {
           premiumUser={false}
         />
       );
-      const view = renderWithПровайдерs(renderEditor());
+      const view = renderWithProviders(renderEditor());
       await userEvent.click(await screen.findByRole("button", { name: "Detach from project" }));
       expect(screen.getByRole("combobox", { name: "Организация" })).toBeDisabled();
       expect(screen.getByRole("combobox", { name: "ID команды" })).toBeDisabled();
@@ -1553,7 +1553,7 @@ describe("КлючEditView", () => {
       view.rerender(renderEditor({ ...key }));
       await userEvent.click(await screen.findByRole("button", { name: "Detach from project" }));
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
-      const expectedDetach = { project_id: null, organization_id: "org-1", team_id: "group-maple", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: key.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs };
+      const expectedDetach = { project_id: null, organization_id: "org-1", team_id: "group-maple", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: key.models };
       await waitFor(() => expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining(expectedDetach)));
       expect(screen.getByRole("combobox", { name: "ID команды" })).toBeDisabled();
       view.rerender(renderEditor({ ...key, project_id: null }));
@@ -1576,7 +1576,7 @@ describe("КлючEditView", () => {
 
     it("keeps project key relationships locked and omits project updates when the project UI is disabled", async () => {
       const onSubmit = vi.fn().mockResolvedЗначение(undefined);
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={{ ...MOCK_KEY_DATA, organization_id: "org-1", team_id: "group-maple", project_id: "project-orbit" }}
           onCancel={() => {}}
@@ -1590,19 +1590,19 @@ describe("КлючEditView", () => {
       expect(await screen.findByRole("combobox", { name: "Организация" })).toBeDisabled();
       expect(screen.getByRole("combobox", { name: "ID команды" })).toBeDisabled();
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
-      await waitFor(() => expect(onSubmit).toHaveBeenCalledВремяs(1));
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
       expect(onSubmit.mock.calls[0][0]).toMatchObject({ organization_id: "org-1", team_id: "group-maple" });
       expect(onSubmit.mock.calls[0][0]).not.toHaveСвойство("project_id");
     });
   });
 
   describe("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs dropdown team gating", () => {
-    const openРежимlsDropdown = async () => {
+    const openModelsDropdown = async () => {
       await userEvent.click(screen.getByLabelText("Модели"));
     };
 
     it("should offer all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs but not all-team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs for a teamless key", async () => {
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           onCancel={() => {}}
@@ -1618,23 +1618,23 @@ describe("КлючEditView", () => {
         expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
-      await openРежимlsDropdown();
+      await openModelsDropdown();
 
       await waitFor(() => {
-        expect(screen.getВсеByText("gpt-4").length).toBeGreaterThan(0);
+        expect(screen.getAllByText("gpt-4").length).toBeGreaterThan(0);
       });
 
-      expect(screen.getВсеByText("Все модели прокси").length).toBeGreaterThan(0);
-      expect(screen.queryВсеByText("Все модели команды")).toHaveLength(0);
+      expect(screen.getAllByText("Все модели прокси").length).toBeGreaterThan(0);
+      expect(screen.queryAllByText("Все модели команды")).toHaveLength(0);
     });
 
     it("should offer all-team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs but hide all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs for a team key", async () => {
-      const teamКлючData = { ...MOCK_KEY_DATA, team_id: "team-1" };
+      const teamKeyData = { ...MOCK_KEY_DATA, team_id: "team-1" };
       const teams = [{ team_id: "team-1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", "team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1"] }];
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
-          keyData={teamКлючData}
+          keyData={teamKeyData}
           teams={teams}
           onCancel={() => {}}
           onSubmit={async () => {}}
@@ -1649,23 +1649,23 @@ describe("КлючEditView", () => {
         expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
-      await openРежимlsDropdown();
+      await openModelsDropdown();
 
       await waitFor(() => {
-        expect(screen.getВсеByText("team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1").length).toBeGreaterThan(0);
+        expect(screen.getAllByText("team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1").length).toBeGreaterThan(0);
       });
 
-      expect(screen.getВсеByText("Все модели команды").length).toBeGreaterThan(0);
-      expect(screen.queryВсеByText("Все модели прокси")).toHaveLength(0);
-      expect(screen.queryВсеByText("all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs")).toHaveLength(0);
+      expect(screen.getAllByText("Все модели команды").length).toBeGreaterThan(0);
+      expect(screen.queryAllByText("Все модели прокси")).toHaveLength(0);
+      expect(screen.queryAllByText("all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs")).toHaveLength(0);
     });
 
     it("should not offer all-team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs for a team key whose team has not loaded yet", async () => {
-      const teamКлючData = { ...MOCK_KEY_DATA, team_id: "team-1" };
+      const teamKeyData = { ...MOCK_KEY_DATA, team_id: "team-1" };
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
-          keyData={teamКлючData}
+          keyData={teamKeyData}
           teams={[]}
           onCancel={() => {}}
           onSubmit={async () => {}}
@@ -1680,18 +1680,18 @@ describe("КлючEditView", () => {
         expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
-      await openРежимlsDropdown();
+      await openModelsDropdown();
 
-      expect(screen.queryВсеByText("Все модели команды")).toHaveLength(0);
-      expect(screen.queryВсеByText("Все модели прокси")).toHaveLength(0);
+      expect(screen.queryAllByText("Все модели команды")).toHaveLength(0);
+      expect(screen.queryAllByText("Все модели прокси")).toHaveLength(0);
     });
 
     it("should not duplicate the all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs option when the teamless Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию list already carries the sentinel", async () => {
-      vi.mocked(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAvailableCall).mockResolvedЗначениеOnce({
+      vi.mocked(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAvailableCall).mockResolvedValueOnce({
         data: [{ id: "all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs" }, { id: "gpt-4" }],
       });
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           onCancel={() => {}}
@@ -1707,7 +1707,7 @@ describe("КлючEditView", () => {
         expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
-      await openРежимlsDropdown();
+      await openModelsDropdown();
 
       const proxyOptionLabels = () => visibleOptions().map((option) => option.textContent);
 
@@ -1723,7 +1723,7 @@ describe("КлючEditView", () => {
     it("should collapse the selection to all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs when the sentinel is picked alongside a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
       const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
 
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           onCancel={() => {}}
@@ -1739,7 +1739,7 @@ describe("КлючEditView", () => {
         expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
-      await openРежимlsDropdown();
+      await openModelsDropdown();
 
       const clickOption = async (label: string) => {
         const option = await waitFor(() => {
@@ -1759,11 +1759,11 @@ describe("КлючEditView", () => {
       await waitFor(() => {
         expect(onSubmitMock).toHaveBeenCalled();
       });
-      expect(onSubmitMock.mock.calls[0][0].Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs).toEqual(["all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs"]);
+      expect(onSubmitMock.mock.calls[0][0].models).toEqual(["all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs"]);
     });
 
     it("should disable the individual Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию options once all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs is selected", async () => {
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           onCancel={() => {}}
@@ -1779,7 +1779,7 @@ describe("КлючEditView", () => {
         expect(screen.getByText("Модели", { selector: "label" })).toBeInTheDocument();
       });
 
-      await openРежимlsDropdown();
+      await openModelsDropdown();
 
       const findOption = (label: string) => optionByContent(label);
 
@@ -1810,7 +1810,7 @@ describe("КлючEditView", () => {
       onSubmit: (values: any) => Promise<void>,
       userRole: string = "Admin",
     ) =>
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={keyData}
           onCancel={() => {}}
@@ -1826,15 +1826,15 @@ describe("КлючEditView", () => {
       const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
       renderEditView(MOCK_KEY_DATA, onSubmitMock);
       await screen.findByRole("button", { name: /save changes/i });
-      const perРежимl = screen.getByLabelText("Estimated Выход Токенs Per Режимl");
+      const perModel = screen.getByLabelText("Estimated Выход Токенs Per Режимl");
 
-      fireEvent.change(perРежимl, { target: { value: "not json" } });
+      fireEvent.change(perModel, { target: { value: "not json" } });
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
       expect(await screen.findByText(/JSON object of positive integers/)).toBeInTheDocument();
       expect(onSubmitMock).not.toHaveBeenCalled();
 
-      fireEvent.change(perРежимl, { target: { value: '{"gpt-4": 4096}' } });
+      fireEvent.change(perModel, { target: { value: '{"gpt-4": 4096}' } });
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
       await waitFor(() => {
@@ -1870,8 +1870,8 @@ describe("КлючEditView", () => {
           ...MOCK_KEY_DATA,
           metadata: {
             ...MOCK_KEY_DATA.metadata,
-            default_estimated_выходput_tokens: 512,
-            default_estimated_выходput_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: { "gpt-4": 4096 },
+            default_estimated_output_tokens: 512,
+            default_estimated_output_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: { "gpt-4": 4096 },
           },
         },
         onSubmitMock,
@@ -1888,8 +1888,8 @@ describe("КлючEditView", () => {
         expect(onSubmitMock).toHaveBeenCalled();
       });
       const callArgs = onSubmitMock.mock.calls[0][0];
-      expect(callArgs.default_estimated_выходput_tokens).toBe(512);
-      expect(callArgs.default_estimated_выходput_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию).toEqual({ "gpt-4": 4096 });
+      expect(callArgs.default_estimated_output_tokens).toBe(512);
+      expect(callArgs.default_estimated_output_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию).toEqual({ "gpt-4": 4096 });
     });
 
     it("submits edited estimates as a number and a parsed object", async () => {
@@ -1911,8 +1911,8 @@ describe("КлючEditView", () => {
         expect(onSubmitMock).toHaveBeenCalled();
       });
       const callArgs = onSubmitMock.mock.calls[0][0];
-      expect(callArgs.default_estimated_выходput_tokens).toBe(2048);
-      expect(callArgs.default_estimated_выходput_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию).toEqual({ "gpt-5": 8192 });
+      expect(callArgs.default_estimated_output_tokens).toBe(2048);
+      expect(callArgs.default_estimated_output_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию).toEqual({ "gpt-5": 8192 });
     });
 
     it("omits both estimates from the payload when the controls are blank", async () => {
@@ -1929,8 +1929,8 @@ describe("КлючEditView", () => {
         expect(onSubmitMock).toHaveBeenCalled();
       });
       const callArgs = onSubmitMock.mock.calls[0][0];
-      expect(callArgs).not.toHaveСвойство("default_estimated_выходput_tokens");
-      expect(callArgs).not.toHaveСвойство("default_estimated_выходput_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
+      expect(callArgs).not.toHaveСвойство("default_estimated_output_tokens");
+      expect(callArgs).not.toHaveСвойство("default_estimated_output_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
     });
 
     it.each(["Internal User", "Admin Viewer", "org_admin"])(
@@ -1942,8 +1942,8 @@ describe("КлючEditView", () => {
             ...MOCK_KEY_DATA,
             metadata: {
               ...MOCK_KEY_DATA.metadata,
-              default_estimated_выходput_tokens: 512,
-              default_estimated_выходput_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: { "gpt-4": 4096 },
+              default_estimated_output_tokens: 512,
+              default_estimated_output_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: { "gpt-4": 4096 },
             },
           },
           onSubmitMock,
@@ -1961,8 +1961,8 @@ describe("КлючEditView", () => {
           expect(onSubmitMock).toHaveBeenCalled();
         });
         const callArgs = onSubmitMock.mock.calls[0][0];
-        expect(callArgs.default_estimated_выходput_tokens).toBe(512);
-        expect(callArgs.default_estimated_выходput_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию).toEqual({ "gpt-4": 4096 });
+        expect(callArgs.default_estimated_output_tokens).toBe(512);
+        expect(callArgs.default_estimated_output_tokens_per_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию).toEqual({ "gpt-4": 4096 });
       },
     );
 
@@ -1992,12 +1992,12 @@ describe("КлючEditView", () => {
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_tpm_limit: undefined,
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_rpm_limit: undefined,
     гардрейловs: undefined,
-    disable_global_гардрейловs: false,
+    disable_global_guardrails: false,
     policies: undefined,
     tags: ["test-tag"],
     prompts: undefined,
     access_group_ids: [],
-    allowed_passthrough_rвыходes: undefined,
+    allowed_passthrough_routes: undefined,
     vector_stores: [],
     mcp_servers_and_groups: { servers: [], accessGroups: [], toolsets: [] },
     mcp_tool_permissions: {},
@@ -2020,7 +2020,7 @@ describe("КлючEditView", () => {
       onSubmit: (values: Record<string, unknown>) => Promise<void>,
       keyData: КлючОтвет = MOCK_KEY_DATA,
     ) =>
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={keyData}
           onCancel={() => {}}
@@ -2047,7 +2047,7 @@ describe("КлючEditView", () => {
 
     it("drops the policy and prompt keys entirely for a role that cannot see those fields", async () => {
       const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           onCancel={() => {}}
@@ -2071,7 +2071,7 @@ describe("КлючEditView", () => {
       expect(payload).toHaveСвойство("гардрейловs");
     });
 
-    it("rвыходes the shared lifecycle and rate-limit-type controls into their own payload keys", async () => {
+    it("routes the shared lifecycle and rate-limit-type controls into their own payload keys", async () => {
       const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
       renderForPayload(onSubmitMock);
       await screen.findByRole("button", { name: /save changes/i });
@@ -2080,7 +2080,7 @@ describe("КлючEditView", () => {
       await userEvent.clear(duration);
       await userEvent.type(duration, "45d");
 
-      await chooseВыбратьOption(userEvent, screen.getByLabelText(/TPM Rate Limit Type/), /^Guaranteed throughput/);
+      await chooseSelectOption(userEvent, screen.getByLabelText(/TPM Rate Limit Type/), /^Guaranteed throughput/);
 
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
@@ -2161,7 +2161,7 @@ describe("КлючEditView", () => {
       expect(onSubmitMock.mock.calls[0][0]).toMatchObject({
         throttle_on_budget_exceeded: true,
         enable_prompt_caching: true,
-        disable_global_гардрейловs: true,
+        disable_global_guardrails: true,
       });
     });
 
@@ -2197,11 +2197,11 @@ describe("КлючEditView", () => {
       await waitFor(() => {
         expect(onSubmitMock).toHaveBeenCalled();
       });
-      expect(onSubmitMock.mock.calls[0][0].гардрейловs).toEqual(["гардрейлов-1"]);
+      expect(onSubmitMock.mock.calls[0][0].guardrails).toEqual(["гардрейлов-1"]);
     });
 
     it("carries a picked policy into the payload", async () => {
-      vi.mocked(getPoliciesList).mockResolvedЗначениеOnce({
+      vi.mocked(getPoliciesList).mockResolvedValueOnce({
         policies: [{ policy_name: "policy-1", version_number: 1, version_status: "production" }],
       });
       const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
@@ -2236,7 +2236,7 @@ describe("КлючEditView", () => {
       renderForPayload(onSubmitMock);
       await screen.findByRole("button", { name: /save changes/i });
 
-      await chooseВыбратьOption(userEvent, screen.getByLabelText(/RPM Rate Limit Type/), /^Guaranteed throughput/);
+      await chooseSelectOption(userEvent, screen.getByLabelText(/RPM Rate Limit Type/), /^Guaranteed throughput/);
 
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
@@ -2249,7 +2249,7 @@ describe("КлючEditView", () => {
     });
 
     it("carries a picked vector store into the payload", async () => {
-      vi.mocked(vectorStoreListCall).mockResolvedЗначениеOnce({
+      vi.mocked(vectorStoreListCall).mockResolvedValueOnce({
         data: [{ vector_store_id: "vs-1", vector_store_name: "VS One" }],
       });
       const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
@@ -2265,26 +2265,26 @@ describe("КлючEditView", () => {
       expect(onSubmitMock.mock.calls[0][0].vector_stores).toEqual(["vs-1"]);
     });
 
-    it("carries a picked pass through rвыходe into the payload", async () => {
-      vi.mocked(getPassThroughЭндпоинтsCall).mockResolvedЗначениеOnce({
+    it("carries a picked pass through route into the payload", async () => {
+      vi.mocked(getPassThroughEndpointsCall).mockResolvedValueOnce({
         endpoints: [{ path: "/bria", methods: ["POST"] }],
       });
       const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
       renderForPayload(onSubmitMock);
       await screen.findByRole("button", { name: /save changes/i });
 
-      await pickFromCombobox(/allowed pass through rвыходes/, /\/bria/);
+      await pickFromCombobox(/allowed pass through routes/, /\/bria/);
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
       await waitFor(() => {
         expect(onSubmitMock).toHaveBeenCalled();
       });
-      expect(onSubmitMock.mock.calls[0][0].allowed_passthrough_rвыходes).toEqual(["/bria"]);
+      expect(onSubmitMock.mock.calls[0][0].allowed_passthrough_routes).toEqual(["/bria"]);
     });
 
     it("carries a picked team into the payload", async () => {
       const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
-      renderWithПровайдерs(
+      renderWithProviders(
         <КлючEditView
           keyData={MOCK_KEY_DATA}
           teams={[{ team_id: "team-9", team_alias: "Team Nine" }]}
@@ -2441,13 +2441,13 @@ describe("КлючEditView", () => {
       await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
       await waitFor(() => {
-        expect(onSubmitMock).toHaveBeenCalledВремяs(1);
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
       });
       expect(onSubmitMock.mock.calls[0][0]).toMatchObject({ token: "test-token-123", rpm_limit: "25" });
     });
 
     it.fails(
-      "sends max_budget as an explicit null when the field is cleared (expected to fail until the forms revamp, tri-state PATCH tracker: today the view hands КлючInfoView an empty string and handleКлючUpdate maps it to null)",
+      "sends max_budget as an explicit null when the field is cleared (expected to fail until the forms revamp, tri-state PATCH tracker: today the view hands КлючInfoView an empty string and handleKeyUpdate maps it to null)",
       async () => {
         const onSubmitMock = vi.fn().mockResolvedЗначение(undefined);
         renderForPayload(onSubmitMock);
@@ -2457,7 +2457,7 @@ describe("КлючEditView", () => {
         await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
         await waitFor(() => {
-          expect(onSubmitMock).toHaveBeenCalledВремяs(1);
+          expect(onSubmitMock).toHaveBeenCalledTimes(1);
         });
         expect(onSubmitMock.mock.calls[0][0]).toHaveСвойство("max_budget", null);
       },
@@ -2474,7 +2474,7 @@ describe("КлючEditView", () => {
         await userEvent.click(screen.getByRole("button", { name: /save changes/i }));
 
         await waitFor(() => {
-          expect(onSubmitMock).toHaveBeenCalledВремяs(1);
+          expect(onSubmitMock).toHaveBeenCalledTimes(1);
         });
         expect(onSubmitMock.mock.calls[0][0]).toStrictEqual({ token: "test-token-123", rpm_limit: "25" });
       },

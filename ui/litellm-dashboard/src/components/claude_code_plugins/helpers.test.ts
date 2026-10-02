@@ -3,13 +3,13 @@ import {
   formatInstallCommand,
   extractКатегории,
   validatePluginName,
-  getИсточникDisplayText,
-  getИсточникLink,
-  getКатегорияBadgeColor,
+  getSourceDisplayText,
+  getSourceLink,
+  getCategoryBadgeColor,
   formatDateString,
   truncateText,
-  filterПлагиныBySearch,
-  filterПлагиныByКатегория,
+  filterPluginsBySearch,
+  filterPluginsByКатегория,
   isValidSemanticВерсия,
   isValidEmail,
   isValidUrl,
@@ -94,104 +94,104 @@ describe("validatePluginName", () => {
   });
 });
 
-describe("getИсточникDisplayText", () => {
+describe("getSourceDisplayText", () => {
   it("shows github repo", () => {
-    expect(getИсточникDisplayText({ source: "github", repo: "org/repo" })).toBe("GitHub: org/repo");
+    expect(getSourceDisplayText({ source: "github", repo: "org/repo" })).toBe("GitHub: org/repo");
   });
 
   it("shows url", () => {
-    expect(getИсточникDisplayText({ source: "url", url: "https://example.com" })).toBe("https://example.com");
+    expect(getSourceDisplayText({ source: "url", url: "https://example.com" })).toBe("https://example.com");
   });
 
   it("shows git-subdir as url @ path for a github subdir", () => {
-    expect(getИсточникDisplayText({ source: "git-subdir", url: "https://github.com/org/repo", path: "plugins/x" })).toBe(
+    expect(getSourceDisplayText({ source: "git-subdir", url: "https://github.com/org/repo", path: "plugins/x" })).toBe(
       "https://github.com/org/repo @ plugins/x",
     );
   });
 
   it("shows git-subdir as url @ path for a gitlab subdir", () => {
-    expect(getИсточникDisplayText({ source: "git-subdir", url: "https://gitlab.com/org/repo", path: "sub/dir" })).toBe(
+    expect(getSourceDisplayText({ source: "git-subdir", url: "https://gitlab.com/org/repo", path: "sub/dir" })).toBe(
       "https://gitlab.com/org/repo @ sub/dir",
     );
   });
 
   it("shows the archive url for an archive source", () => {
-    expect(getИсточникDisplayText({ source: "archive", url: "https://bucket.s3.amazonaws.com/skill.zip" })).toBe(
+    expect(getSourceDisplayText({ source: "archive", url: "https://bucket.s3.amazonaws.com/skill.zip" })).toBe(
       "https://bucket.s3.amazonaws.com/skill.zip",
     );
   });
 
   it("returns unknown for missing data", () => {
-    expect(getИсточникDisplayText({ source: "github" })).toBe("Unknown source");
+    expect(getSourceDisplayText({ source: "github" })).toBe("Unknown source");
   });
 });
 
-describe("getИсточникLink", () => {
+describe("getSourceLink", () => {
   it("returns github link for github source", () => {
-    expect(getИсточникLink({ source: "github", repo: "org/repo" })).toBe("https://github.com/org/repo");
+    expect(getSourceLink({ source: "github", repo: "org/repo" })).toBe("https://github.com/org/repo");
   });
 
   it("returns url for url source", () => {
-    expect(getИсточникLink({ source: "url", url: "https://example.com" })).toBe("https://example.com");
+    expect(getSourceLink({ source: "url", url: "https://example.com" })).toBe("https://example.com");
   });
 
   it("returns the repo url for a github git-subdir source", () => {
-    expect(getИсточникLink({ source: "git-subdir", url: "https://github.com/org/repo", path: "plugins/x" })).toBe(
+    expect(getSourceLink({ source: "git-subdir", url: "https://github.com/org/repo", path: "plugins/x" })).toBe(
       "https://github.com/org/repo",
     );
   });
 
   it("returns the repo url for a gitlab git-subdir source", () => {
-    expect(getИсточникLink({ source: "git-subdir", url: "https://gitlab.com/org/repo", path: "sub/dir" })).toBe(
+    expect(getSourceLink({ source: "git-subdir", url: "https://gitlab.com/org/repo", path: "sub/dir" })).toBe(
       "https://gitlab.com/org/repo",
     );
   });
 
   it("returns the archive url for an archive source", () => {
-    expect(getИсточникLink({ source: "archive", url: "https://bucket.s3.amazonaws.com/skill.zip" })).toBe(
+    expect(getSourceLink({ source: "archive", url: "https://bucket.s3.amazonaws.com/skill.zip" })).toBe(
       "https://bucket.s3.amazonaws.com/skill.zip",
     );
   });
 
   it("returns null when no repo or url", () => {
-    expect(getИсточникLink({ source: "github" })).toBeNull();
+    expect(getSourceLink({ source: "github" })).toBeNull();
   });
 });
 
-describe("getКатегорияBadgeColor", () => {
+describe("getCategoryBadgeColor", () => {
   it("returns blue for development categories", () => {
-    expect(getКатегорияBadgeColor("Разработка")).toBe("blue");
-    expect(getКатегорияBadgeColor("dev-tools")).toBe("blue");
+    expect(getCategoryBadgeColor("Разработка")).toBe("blue");
+    expect(getCategoryBadgeColor("dev-tools")).toBe("blue");
   });
 
   it("returns green for productivity categories", () => {
-    expect(getКатегорияBadgeColor("Продуктивность")).toBe("green");
-    expect(getКатегорияBadgeColor("Workflow")).toBe("green");
+    expect(getCategoryBadgeColor("Продуктивность")).toBe("green");
+    expect(getCategoryBadgeColor("Workflow")).toBe("green");
   });
 
   it("returns purple for learning categories", () => {
-    expect(getКатегорияBadgeColor("Learning")).toBe("purple");
-    expect(getКатегорияBadgeColor("Education")).toBe("purple");
+    expect(getCategoryBadgeColor("Learning")).toBe("purple");
+    expect(getCategoryBadgeColor("Education")).toBe("purple");
   });
 
   it("returns red for security categories", () => {
-    expect(getКатегорияBadgeColor("Безопасность")).toBe("red");
-    expect(getКатегорияBadgeColor("Safety")).toBe("red");
+    expect(getCategoryBadgeColor("Безопасность")).toBe("red");
+    expect(getCategoryBadgeColor("Safety")).toBe("red");
   });
 
   it("returns orange for data categories", () => {
-    expect(getКатегорияBadgeColor("Data")).toBe("orange");
-    expect(getКатегорияBadgeColor("Analytics")).toBe("orange");
+    expect(getCategoryBadgeColor("Data")).toBe("orange");
+    expect(getCategoryBadgeColor("Analytics")).toBe("orange");
   });
 
   it("returns yellow for integration categories", () => {
-    expect(getКатегорияBadgeColor("Integration")).toBe("yellow");
-    expect(getКатегорияBadgeColor("API")).toBe("yellow");
+    expect(getCategoryBadgeColor("Integration")).toBe("yellow");
+    expect(getCategoryBadgeColor("API")).toBe("yellow");
   });
 
   it("returns gray for unknown or undefined categories", () => {
-    expect(getКатегорияBadgeColor("Unknown")).toBe("gray");
-    expect(getКатегорияBadgeColor(undefined)).toBe("gray");
+    expect(getCategoryBadgeColor("Unknown")).toBe("gray");
+    expect(getCategoryBadgeColor(undefined)).toBe("gray");
   });
 });
 
@@ -230,7 +230,7 @@ describe("truncateText", () => {
   });
 });
 
-describe("filterПлагиныBySearch", () => {
+describe("filterPluginsBySearch", () => {
   const plugins: MarketplacePluginEntry[] = [
     {
       name: "code-formatter",
@@ -247,30 +247,30 @@ describe("filterПлагиныBySearch", () => {
   ];
 
   it("returns all plugins for empty search", () => {
-    expect(filterПлагиныBySearch(plugins, "")).toEqual(plugins);
-    expect(filterПлагиныBySearch(plugins, "  ")).toEqual(plugins);
+    expect(filterPluginsBySearch(plugins, "")).toEqual(plugins);
+    expect(filterPluginsBySearch(plugins, "  ")).toEqual(plugins);
   });
 
   it("matches by name", () => {
-    expect(filterПлагиныBySearch(plugins, "formatter")).toHaveLength(1);
-    expect(filterПлагиныBySearch(plugins, "formatter")[0].name).toBe("code-formatter");
+    expect(filterPluginsBySearch(plugins, "formatter")).toHaveLength(1);
+    expect(filterPluginsBySearch(plugins, "formatter")[0].name).toBe("code-formatter");
   });
 
   it("matches by description", () => {
-    expect(filterПлагиныBySearch(plugins, "nicely")).toHaveLength(1);
+    expect(filterPluginsBySearch(plugins, "nicely")).toHaveLength(1);
   });
 
   it("matches by keyword", () => {
-    expect(filterПлагиныBySearch(plugins, "analytics")).toHaveLength(1);
-    expect(filterПлагиныBySearch(plugins, "analytics")[0].name).toBe("data-viewer");
+    expect(filterPluginsBySearch(plugins, "analytics")).toHaveLength(1);
+    expect(filterPluginsBySearch(plugins, "analytics")[0].name).toBe("data-viewer");
   });
 
   it("is case insensitive", () => {
-    expect(filterПлагиныBySearch(plugins, "FORMATTER")).toHaveLength(1);
+    expect(filterPluginsBySearch(plugins, "FORMATTER")).toHaveLength(1);
   });
 });
 
-describe("filterПлагиныByКатегория", () => {
+describe("filterPluginsByКатегория", () => {
   const plugins: MarketplacePluginEntry[] = [
     { name: "a", source: { source: "github" }, category: "Dev" },
     { name: "b", source: { source: "github" }, category: "Безопасность" },
@@ -279,17 +279,17 @@ describe("filterПлагиныByКатегория", () => {
   ];
 
   it("returns all plugins for 'Все'", () => {
-    expect(filterПлагиныByКатегория(plugins, "Все")).toEqual(plugins);
+    expect(filterPluginsByКатегория(plugins, "Все")).toEqual(plugins);
   });
 
   it("returns uncategorized plugins for 'Other'", () => {
-    const result = filterПлагиныByКатегория(plugins, "Other");
+    const result = filterPluginsByКатегория(plugins, "Other");
     expect(result).toHaveLength(2);
     expect(result.map((p) => p.name)).toEqual(["c", "d"]);
   });
 
   it("filters by specific category", () => {
-    const result = filterПлагиныByКатегория(plugins, "Dev");
+    const result = filterPluginsByКатегория(plugins, "Dev");
     expect(result).toHaveLength(1);
     expect(result[0].name).toBe("a");
   });
@@ -534,7 +534,7 @@ describe("parseSkillИсточник", () => {
     expect(parseSkillИсточник("github.com/org/repo/tree/main/a%20b")).toBeNull();
   });
 
-  it("rвыходes uppercase and www github hosts through the github shorthand", () => {
+  it("routes uppercase and www github hosts through the github shorthand", () => {
     expect(parseSkillИсточник("GitHub.com/org/repo/tree/main/x")?.parsed).toEqual({
       source: "git-subdir",
       url: "https://github.com/org/repo",

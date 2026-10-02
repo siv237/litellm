@@ -1,20 +1,20 @@
 import { describe, expect, it } from "vitest";
 
 import type { Каждый деньData, РасходМетрикаs } from "@/components/ИспользованиеPage/types";
-import type { ToolРасходКаждый деньEntry, ToolРасходEntry } from "@/components/networking";
+import type { ToolSpendDailyEntry, ToolSpendEntry } from "@/components/networking";
 import {
   SAVINGS_COLORS,
   SAVINGS_DRIVERS,
   SAVINGS_SERIES,
-  buildКаждый деньToolSeries,
+  buildDailyToolSeries,
   classificationRatePer1kTurns,
   computeCacheLeakage,
   formatRangeLabel,
-  isAnthropicРежимl,
+  isAnthropicModel,
   localIsoDay,
   savingsSeriesOf,
   toCumulative,
-  topИнструментыByРасход,
+  topToolsByРасход,
   usd,
   withStartAnchor,
 } from "./costOptimizationUtils";
@@ -75,7 +75,7 @@ describe("savingsSeriesOf", () => {
     const sharedSavings: Partial<РасходМетрикаs> = {
       compression_savings_spend: 0.1,
       prompt_caching_savings_spend: 0.5,
-      autorвыходer_savings_spend: 0.05,
+      autorouter_savings_spend: 0.05,
     };
     const newestFirst = [day("2026-07-02", {}), day("2026-07-01", {})].map((d, i) => ({
       ...d,
@@ -85,8 +85,8 @@ describe("savingsSeriesOf", () => {
     const series = savingsSeriesOf(newestFirst);
 
     expect(series.map((p) => p.date)).toEqual(["Jul 1", "Jul 2"]);
-    expect(series[0]).toMatchObject({ Compression: 0.1, "Prompt caching": 0.3, "Auto-rвыходer": 0.05 });
-    expect(series[1]).toMatchObject({ Compression: 0.1, "Prompt caching": 0.2, "Auto-rвыходer": 0.05 });
+    expect(series[0]).toMatchObject({ Compression: 0.1, "Prompt caching": 0.3, "Auto-router": 0.05 });
+    expect(series[1]).toMatchObject({ Compression: 0.1, "Prompt caching": 0.2, "Auto-router": 0.05 });
   });
 });
 
@@ -98,7 +98,7 @@ describe("computeCacheLeakage", () => {
     ];
     const { rows } = computeCacheLeakage(results);
     expect(rows).toHaveLength(1);
-    expect(rows[0].uncachedPromptТокенs).toBe(1500);
+    expect(rows[0].uncachedPromptTokens).toBe(1500);
   });
 
   it("subtracts cache reads and writes from prompt tokens instead of double-counting them", () => {
@@ -112,7 +112,7 @@ describe("computeCacheLeakage", () => {
     ];
     const { rows } = computeCacheLeakage(results);
     expect(rows).toHaveLength(1);
-    expect(rows[0].uncachedPromptТокенs).toBe(500);
+    expect(rows[0].uncachedPromptTokens).toBe(500);
     expect(rows[0].cacheHitRatio).toBeCloseTo(0.4, 6);
   });
 
@@ -196,7 +196,7 @@ describe("computeCacheLeakage", () => {
     const { rows } = computeCacheLeakage(results);
     expect(rows.map((r) => r.label)).toEqual(["mixed"]);
     expect(rows[0].cacheHitRatio).toBeCloseTo(0.75, 6);
-    expect(rows[0].uncachedPromptТокенs).toBe(250);
+    expect(rows[0].uncachedPromptTokens).toBe(250);
   });
 
   it("respects the row limit", () => {
@@ -246,7 +246,7 @@ describe("computeCacheLeakage by Эвристический резерв по-п
   });
 });
 
-describe("isAnthropicРежимl", () => {
+describe("isAnthropicModel", () => {
   it("matches Claude-family Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs across providers and rejects others", () => {
     const anthropic = [
       "claude-sonnet-5",
@@ -255,13 +255,13 @@ describe("isAnthropicРежимl", () => {
       "vertex_ai/claude-opus-4-8",
     ];
     const others = ["gpt-4o", "deepseek-chat", "gemini-2.5-pro", "mistral-large"];
-    expect(anthropic.every(isAnthropicРежимl)).toBe(true);
-    expect(others.some(isAnthropicРежимl)).toBe(false);
+    expect(anthropic.every(isAnthropicModel)).toBe(true);
+    expect(others.some(isAnthropicModel)).toBe(false);
   });
 });
 
-describe("buildКаждый деньToolSeries", () => {
-  const daily: ToolРасходКаждый деньEntry[] = [
+describe("buildDailyToolSeries", () => {
+  const daily: ToolSpendDailyEntry[] = [
     { date: "2026-07-01", tool_name: "search", spend: 1.0, call_count: 1 },
     { date: "2026-07-01", tool_name: "read", spend: 0.5, call_count: 1 },
     { date: "2026-07-02", tool_name: "search", spend: 2.0, call_count: 1 },
@@ -269,7 +269,7 @@ describe("buildКаждый деньToolSeries", () => {
   ];
 
   it("pivots to per-date points keyed by the selected tools, dropping others", () => {
-    const series = buildКаждый деньToolSeries(daily, ["search", "read"]);
+    const series = buildDailyToolSeries(daily, ["search", "read"]);
     expect(series).toEqual([
       { date: "2026-07-01", search: 1.0, read: 0.5 },
       { date: "2026-07-02", search: 2.0, read: 0 },
@@ -277,7 +277,7 @@ describe("buildКаждый деньToolSeries", () => {
   });
 
   it("sums repeated (date, tool) rows", () => {
-    const series = buildКаждый деньToolSeries(
+    const series = buildDailyToolSeries(
       [
         { date: "2026-07-01", tool_name: "search", spend: 1.0, call_count: 1 },
         { date: "2026-07-01", tool_name: "search", spend: 2.5, call_count: 1 },
@@ -288,15 +288,15 @@ describe("buildКаждый деньToolSeries", () => {
   });
 });
 
-describe("topИнструментыByРасход", () => {
-  const byTool: ToolРасходEntry[] = [
+describe("topToolsByРасход", () => {
+  const byTool: ToolSpendEntry[] = [
     { tool_name: "a", spend: 1, call_count: 1, total_tokens: 1 },
     { tool_name: "b", spend: 5, call_count: 1, total_tokens: 1 },
     { tool_name: "c", spend: 3, call_count: 1, total_tokens: 1 },
   ];
 
   it("sorts by spend descending and truncates to the limit", () => {
-    expect(topИнструментыByРасход(byTool, 2).map((t) => t.tool_name)).toEqual(["b", "c"]);
+    expect(topToolsByРасход(byTool, 2).map((t) => t.tool_name)).toEqual(["b", "c"]);
   });
 });
 
@@ -308,25 +308,25 @@ describe("localIsoDay", () => {
 });
 
 describe("toCumulative", () => {
-  const point = (date: string, compression: number, caching: number, autorвыходer: number = 0) => ({
+  const point = (date: string, compression: number, caching: number, autorouter: number = 0) => ({
     date,
     Compression: compression,
     "Prompt caching": caching,
-    "Auto-rвыходer": autorвыходer,
+    "Auto-router": autorouter,
   });
 
   it("turns each reading into everything saved up to that point", () => {
     const running = toCumulative([point("Jul 1", 1, 10), point("Jul 2", 2, 20), point("Jul 3", 3, 30)]);
     expect(running.map((p) => p.Compression)).toEqual([1, 3, 6]);
     expect(running.map((p) => p["Prompt caching"])).toEqual([10, 30, 60]);
-    expect(running.map((p) => p["Auto-rвыходer"])).toEqual([0, 0, 0]);
+    expect(running.map((p) => p["Auto-router"])).toEqual([0, 0, 0]);
   });
 
   it("accumulates each driver on its own, so one flat series cannot lift the other", () => {
     const running = toCumulative([point("Jul 1", 0, 5), point("Jul 2", 0, 5)]);
     expect(running.map((p) => p.Compression)).toEqual([0, 0]);
     expect(running.map((p) => p["Prompt caching"])).toEqual([5, 10]);
-    expect(running.map((p) => p["Auto-rвыходer"])).toEqual([0, 0]);
+    expect(running.map((p) => p["Auto-router"])).toEqual([0, 0]);
   });
 
   it("never falls, even across a quiet interval", () => {
@@ -340,18 +340,18 @@ describe("toCumulative", () => {
     expect(toCumulative([])).toEqual([]);
   });
 
-  it("accumulates auto-rвыходer savings like other drivers", () => {
+  it("accumulates auto-router savings like other drivers", () => {
     const running = toCumulative([point("Jul 1", 1, 1, 5), point("Jul 2", 1, 1, 10)]);
-    expect(running.map((p) => p["Auto-rвыходer"])).toEqual([5, 15]);
+    expect(running.map((p) => p["Auto-router"])).toEqual([5, 15]);
   });
 });
 
 describe("withStartAnchor", () => {
-  const point = (date: string, compression: number, caching: number, autorвыходer: number = 0) => ({
+  const point = (date: string, compression: number, caching: number, autorouter: number = 0) => ({
     date,
     Compression: compression,
     "Prompt caching": caching,
-    "Auto-rвыходer": autorвыходer,
+    "Auto-router": autorouter,
   });
 
   it("lifts a single-day cumulative off a floating dot by prepending a $0 origin", () => {
@@ -363,7 +363,7 @@ describe("withStartAnchor", () => {
     const anchored = withStartAnchor([point("Jul 16", 5, 1), point("Jul 17", 9, 4)], "Jul 16");
     expect(anchored.map((p) => p.Compression)).toEqual([0, 5, 9]);
     expect(anchored.map((p) => p["Prompt caching"])).toEqual([0, 1, 4]);
-    expect(anchored.map((p) => p["Auto-rвыходer"])).toEqual([0, 0, 0]);
+    expect(anchored.map((p) => p["Auto-router"])).toEqual([0, 0, 0]);
   });
 
   it("leaves an empty series alone so the chart's own no-data state can show", () => {
@@ -425,14 +425,14 @@ describe("savings driver colours", () => {
     // only drivers that saved something. Compression is zero on any deployment not
     // running the compression гардрейлов, so the survivors must not slide onto the
     // colours of the drivers dropped above them.
-    const totals = { Compression: 0, "Prompt caching": 4, "Auto-rвыходer": 7 } as const;
+    const totals = { Compression: 0, "Prompt caching": 4, "Auto-router": 7 } as const;
     const plotted = SAVINGS_DRIVERS.map(({ name, color }) => ({ name, color, usd: totals[name] })).filter(
       (d) => d.usd > 0,
     );
 
     expect(plotted.map((d) => [d.name, d.color])).toEqual([
       ["Prompt caching", "blue"],
-      ["Auto-rвыходer", "amber"],
+      ["Auto-router", "amber"],
     ]);
   });
 

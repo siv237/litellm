@@ -4,7 +4,7 @@ import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import БюджетModal from "./budget_modal";
-import { chooseВыбратьOption } from "../../../../../tests/test-utils";
+import { chooseSelectOption } from "../../../../../tests/test-utils";
 
 const { createMock } = vi.hoisted(() => ({ createMock: vi.fn() }));
 
@@ -32,7 +32,7 @@ const openOptionalSettings = async (user: ReturnType<typeof userEvent.setup>) =>
 
 describe("БюджетModal", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     createMock.mockResolvedЗначение(undefined);
   });
 
@@ -45,7 +45,7 @@ describe("БюджетModal", () => {
     fireEvent.change(screen.getByLabelText("Макс. запросов в минуту"), { target: { value: "7" } });
     await create(user);
 
-    await waitFor(() => expect(createMock).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(createMock).toHaveBeenCalledTimes(1));
     expect(createMock.mock.calls[0][0]).toEqual({
       budget_id: "budget-alpha",
       tpm_limit: 500.57,
@@ -64,11 +64,11 @@ describe("БюджетModal", () => {
     await openOptionalSettings(user);
     fireEvent.change(screen.getByLabelText("Макс. бюджет (USD)"), { target: { value: "42.567" } });
 
-    await chooseВыбратьOption(user, screen.getByRole("combobox"), "monthly");
+    await chooseSelectOption(user, screen.getByRole("combobox"), "monthly");
 
     await create(user);
 
-    await waitFor(() => expect(createMock).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(createMock).toHaveBeenCalledTimes(1));
     expect(createMock.mock.calls[0][0]).toEqual(FULL_PAYLOAD);
   });
 
@@ -80,13 +80,13 @@ describe("БюджетModal", () => {
 
     await openOptionalSettings(user);
     fireEvent.change(screen.getByLabelText("Макс. бюджет (USD)"), { target: { value: "42.567" } });
-    await chooseВыбратьOption(user, screen.getByRole("combobox"), "monthly");
+    await chooseSelectOption(user, screen.getByRole("combobox"), "monthly");
 
     await user.click(screen.getByText("Дополнительные параметры"));
     await waitFor(() => expect(screen.queryByLabelText("Макс. бюджет (USD)")).not.toBeInTheDocument());
     await create(user);
 
-    await waitFor(() => expect(createMock).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(createMock).toHaveBeenCalledTimes(1));
     expect(createMock.mock.calls[0][0]).toEqual({ budget_id: "budget-alpha" });
   });
 
@@ -99,7 +99,7 @@ describe("БюджетModal", () => {
     await user.clear(screen.getByLabelText("Макс. токенов в минуту"));
     await create(user);
 
-    await waitFor(() => expect(createMock).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(createMock).toHaveBeenCalledTimes(1));
     expect(createMock.mock.calls[0][0]).toEqual({
       budget_id: "budget-alpha",
       tpm_limit: null,
@@ -132,7 +132,7 @@ describe("БюджетModal", () => {
 
     await create(user);
 
-    await waitFor(() => expect(createMock).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(createMock).toHaveBeenCalledTimes(1));
     expect(createMock.mock.calls[0][0]).toMatchObject({ budget_id: "probe-budget", max_budget: 42.5 });
   });
 });

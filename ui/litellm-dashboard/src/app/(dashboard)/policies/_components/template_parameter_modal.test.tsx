@@ -2,15 +2,15 @@ import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs } from "@/../tests/test-utils";
+import { renderWithProviders } from "@/../tests/test-utils";
 import TemplateParameterModal from "./template_parameter_modal";
 
-const { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall, enrichПолитикаTemplateStream } = vi.hoisted(() => ({
+const { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall, enrichPolicyTemplateStream } = vi.hoisted(() => ({
   Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall: vi.fn(),
-  enrichПолитикаTemplateStream: vi.fn(),
+  enrichPolicyTemplateStream: vi.fn(),
 }));
 
-vi.mock("@/components/networking", () => ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall, enrichПолитикаTemplateStream }));
+vi.mock("@/components/networking", () => ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall, enrichPolicyTemplateStream }));
 
 type StreamРезультат = { competitors: string[]; competitor_variations?: Record<string, string[]> };
 type StreamArgs = [
@@ -54,11 +54,11 @@ const defaultProps = {
 };
 
 const renderModal = (props: Partial<typeof defaultProps> = {}) =>
-  renderWithПровайдерs(<TemplateParameterModal {...defaultProps} {...props} />);
+  renderWithProviders(<TemplateParameterModal {...defaultProps} {...props} />);
 
 describe("TemplateParameterModal", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall.mockResolvedЗначение({ data: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-5.1" }] });
   });
 
@@ -82,8 +82,8 @@ describe("TemplateParameterModal", () => {
     // the shared list and again from a duplicate no-enrichment branch.
     expect(await screen.findByText("Название организации")).toBeInTheDocument();
     expect(screen.getByText("Note")).toBeInTheDocument();
-    expect(screen.getВсеByPlaceholderText("e.g. Contoso")).toHaveLength(1);
-    expect(screen.getВсеByPlaceholderText("необязательно note")).toHaveLength(1);
+    expect(screen.getAllByPlaceholderText("e.g. Contoso")).toHaveLength(1);
+    expect(screen.getAllByPlaceholderText("необязательно note")).toHaveLength(1);
   });
 
   it("keeps Continue disabled until every required parameter is filled", async () => {
@@ -107,7 +107,7 @@ describe("TemplateParameterModal", () => {
     fireEvent.change(screen.getByPlaceholderText("e.g. Contoso"), { target: { value: "Contoso" } });
     await user.click(screen.getByRole("button", { name: "Continue" }));
 
-    expect(onConfirm).toHaveBeenCalledВремяs(1);
+    expect(onConfirm).toHaveBeenCalledTimes(1);
     expect(onConfirm.mock.calls[0][0]).toEqual({ org_name: "Contoso", note: "" });
   });
 
@@ -119,7 +119,7 @@ describe("TemplateParameterModal", () => {
     await screen.findByText("Базовый Redaction");
     await user.click(screen.getByRole("button", { name: "Cancel" }));
 
-    expect(onCancel).toHaveBeenCalledВремяs(1);
+    expect(onCancel).toHaveBeenCalledTimes(1);
   });
 
   it("offers AI discovery controls for an enrichment template", async () => {
@@ -163,7 +163,7 @@ describe("TemplateParameterModal", () => {
   });
 
   it("streams discovered competitor names and enables Continue once they arrive", async () => {
-    enrichПолитикаTemplateStream.mockImplementation(async (...args: StreamArgs) => {
+    enrichPolicyTemplateStream.mockImplementation(async (...args: StreamArgs) => {
       const [, , , , onName, onDone] = args;
       onName("Northwind");
       onDone({ competitors: ["Northwind", "Fabrikam"], competitor_variations: {} });
@@ -173,8 +173,8 @@ describe("TemplateParameterModal", () => {
 
     await screen.findByText("Поиск конкурентов");
     fireEvent.change(screen.getByPlaceholderText("e.g. Acme Airlines"), { target: { value: "Contoso" } });
-    await user.click(screen.getВсеByRole("combobox")[0]);
-    const options = await screen.findВсеByText("gpt-5.1");
+    await user.click(screen.getAllByRole("combobox")[0]);
+    const options = await screen.findAllByText("gpt-5.1");
     await user.click(options[options.length - 1]);
     await user.click(screen.getByRole("button", { name: /Generate Competitor Names/ }));
 
@@ -186,7 +186,7 @@ describe("TemplateParameterModal", () => {
   });
 
   it("passes the discovered competitors to the caller on confirm", async () => {
-    enrichПолитикаTemplateStream.mockImplementation(async (...args: StreamArgs) => {
+    enrichPolicyTemplateStream.mockImplementation(async (...args: StreamArgs) => {
       const [, , , , , onDone] = args;
       onDone({ competitors: ["Northwind"] });
     });
@@ -196,8 +196,8 @@ describe("TemplateParameterModal", () => {
 
     await screen.findByText("Поиск конкурентов");
     fireEvent.change(screen.getByPlaceholderText("e.g. Acme Airlines"), { target: { value: "Contoso" } });
-    await user.click(screen.getВсеByRole("combobox")[0]);
-    const options = await screen.findВсеByText("gpt-5.1");
+    await user.click(screen.getAllByRole("combobox")[0]);
+    const options = await screen.findAllByText("gpt-5.1");
     await user.click(options[options.length - 1]);
     await user.click(screen.getByRole("button", { name: /Generate Competitor Names/ }));
     await screen.findByText("Northwind");

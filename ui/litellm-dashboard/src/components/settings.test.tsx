@@ -2,12 +2,12 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import userEvent from "@testing-library/user-event";
 import { FormПровайдер, useForm } from "react-hook-form";
 import { beforeВсе, beforeEach, describe, expect, it, vi } from "vitest";
-import { alertingSettingsCall, getCallbackКонфигурацияsCall, getCallbacksCall, setCallbacksCall } from "./networking";
-import Settings, { backendCallbackLogoSrc, CallbackВыбратьor } from "./settings";
+import { alertingSettingsCall, getCallbackConfigsCall, getCallbacksCall, setCallbacksCall } from "./networking";
+import Settings, { backendCallbackLogoSrc, CallbackSelector } from "./settings";
 
 vi.mock("./networking", () => ({
   getCallbacksCall: vi.fn(),
-  getCallbackКонфигурацияsCall: vi.fn(),
+  getCallbackConfigsCall: vi.fn(),
   setCallbacksCall: vi.fn(),
   serviceHealthCheck: vi.fn(),
   deleteCallback: vi.fn(),
@@ -24,7 +24,7 @@ vi.mock("./email_settings", () => ({
   default: () => <div>Mock Email Settings</div>,
 }));
 
-vi.mock("./CloudZeroСтоимостьTracking/CloudZeroСтоимостьTracking", () => ({
+vi.mock("./CloudZeroCostTracking/CloudZeroCostTracking", () => ({
   __esModule: true,
   default: () => <div>Mock CloudZero Стоимость Tracking</div>,
 }));
@@ -62,17 +62,17 @@ describe("Settings", () => {
     premiumUser: false,
   };
   const mockGetCallbacksCall = vi.mocked(getCallbacksCall);
-  const mockGetCallbackКонфигурацияsCall = vi.mocked(getCallbackКонфигурацияsCall);
+  const mockGetCallbackConfigsCall = vi.mocked(getCallbackConfigsCall);
   const mockAlertingSettingsCall = vi.mocked(alertingSettingsCall);
 
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockGetCallbacksCall.mockResolvedЗначение({
       callbacks: [],
       available_callbacks: [],
       alerts: [],
     });
-    mockGetCallbackКонфигурацияsCall.mockResolvedЗначение([]);
+    mockGetCallbackConfigsCall.mockResolvedЗначение([]);
     mockAlertingSettingsCall.mockResolvedЗначение([]);
   });
 
@@ -99,7 +99,7 @@ describe("Settings", () => {
     render(<Settings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockGetCallbackКонфигурацияsCall).toHaveBeenCalledWith(defaultProps.accessТокен);
+      expect(mockGetCallbackConfigsCall).toHaveBeenCalledWith(defaultProps.accessТокен);
     });
   });
 
@@ -127,7 +127,7 @@ describe("Settings", () => {
       alerts: [],
     });
 
-    mockGetCallbackКонфигурацияsCall.mockResolvedЗначение([
+    mockGetCallbackConfigsCall.mockResolvedЗначение([
       {
         id: "langfuse",
         displayName: "Langfuse",
@@ -175,7 +175,7 @@ describe("Settings", () => {
     expect(screen.getByLabelText("Secret Ключ")).toHaveЗначение("test-secret-key");
     expect(screen.getByLabelText("Хост")).toHaveЗначение("https://test.langfuse.com");
 
-    const danglingLabels = [...document.queryВыбратьorВсе("label[for]")].filter(
+    const danglingLabels = [...document.querySelectorВсе("label[for]")].filter(
       (label) => document.getElementById(label.getAttribute("for") as string) === null,
     );
     expect(danglingLabels).toEqual([]);
@@ -231,7 +231,7 @@ describe("Settings", () => {
       },
       alerts: [],
     });
-    mockGetCallbackКонфигурацияsCall.mockResolvedЗначение([
+    mockGetCallbackConfigsCall.mockResolvedЗначение([
       {
         id: "otel",
         displayName: "Open Telemetry",
@@ -308,7 +308,7 @@ describe("Settings", () => {
 
     await user.click(await screen.findByRole("tab", { name: "Типы оповещений" }));
 
-    const webhookВход = document.queryВыбратьor('input[name="llm_exceptions"]') as HTMLВходElement;
+    const webhookВход = document.querySelector('input[name="llm_exceptions"]') as HTMLInElement;
     expect(webhookВход).not.toBeNull();
     fireEvent.change(webhookВход, { target: { value: "https://hooks.example.com/llm-exceptions" } });
 
@@ -339,7 +339,7 @@ describe("Settings", () => {
 
     render(<Settings {...defaultProps} />);
 
-    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
 
     await act(async () => {
       resolveCallbacks({ callbacks: [], available_callbacks: [], alerts: [] });
@@ -390,28 +390,28 @@ describe("backendCallbackLogoSrc", () => {
   });
 });
 
-const CallbackВыбратьorHarness = ({
-  callbackКонфигурацияs,
+const CallbackSelectorHarness = ({
+  callbackConfigs,
 }: {
-  callbackКонфигурацияs: { id: string; displayName: string; logo?: string }[];
+  callbackConfigs: { id: string; displayName: string; logo?: string }[];
 }) => {
   const form = useForm<Record<string, string>>();
   return (
     <FormПровайдер {...form}>
-      <CallbackВыбратьor callbackКонфигурацияs={callbackКонфигурацияs} selectedCallback={null} onCallbackChange={vi.fn()} />
+      <CallbackSelector callbackConfigs={callbackConfigs} selectedCallback={null} onCallbackChange={vi.fn()} />
     </FormПровайдер>
   );
 };
 
-describe("CallbackВыбратьor logos", () => {
+describe("CallbackSelector logos", () => {
   it("resolves backend logos per entry: bare filename, external url, and missing logo", async () => {
-    const callbackКонфигурацияs = [
+    const callbackConfigs = [
       { id: "langfuse", displayName: "Langfuse", logo: "langfuse.png" },
       { id: "hosted", displayName: "Хостed", logo: "https://logos.example.com/hosted.png" },
       { id: "nologo", displayName: "NoLogo" },
     ];
 
-    render(<CallbackВыбратьorHarness callbackКонфигурацияs={callbackКонфигурацияs} />);
+    render(<CallbackSelectorHarness callbackConfigs={callbackConfigs} />);
 
     await userEvent.click(screen.getByRole("combobox"));
 

@@ -19,13 +19,13 @@ type UserRow = {
   spend: number;
 };
 
-const userRow = (userId: string, userAgent: string | null, successfulЗапросs: number): UserRow => ({
+const userRow = (userId: string, userAgent: string | null, successfulRequests: number): UserRow => ({
   user_id: userId,
   user_email: null,
   user_agent: userAgent,
-  successful_requests: successfulЗапросs,
+  successful_requests: successfulRequests,
   failed_requests: 0,
-  total_requests: successfulЗапросs,
+  total_requests: successfulRequests,
   total_tokens: 100,
   spend: 1,
 });
@@ -33,7 +33,7 @@ const userRow = (userId: string, userAgent: string | null, successfulЗапро�
 // The distribution panel owns the only chart in this component, so resolving it by slot keeps
 // the assertions independent of how many wrappers the tab library puts around a panel.
 const distributionChart = (): HTMLElement => {
-  const chart = document.queryВыбратьor('[data-slot="chart"]');
+  const chart = document.querySelector('[data-slot="chart"]');
   expect(chart).not.toBeNull();
   return chart as HTMLElement;
 };
@@ -125,7 +125,7 @@ describe("PerUserИспользование", () => {
 
       expect(await screen.findByText("user-50")).toBeInTheDocument();
       expect(screen.getByText("user-1")).toBeInTheDocument();
-      expect(screen.getВсеByRole("row")).toHaveLength(51);
+      expect(screen.getAllByRole("row")).toHaveLength(51);
       expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-50 of 120");
       expect(screen.getByTestId("pagination-prev")).toBeDisabled();
       expect(screen.getByTestId("pagination-next")).toBeEnabled();
@@ -173,7 +173,7 @@ describe("PerUserИспользование", () => {
         ["test-token", 3, 50, undefined],
         ["test-token", 2, 50, undefined],
       ]);
-      expect(screen.getВсеByRole("row")).toHaveLength(11);
+      expect(screen.getAllByRole("row")).toHaveLength(11);
       expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 51-60 of 60");
       expect(screen.getByTestId("pagination-next")).toBeDisabled();
     });
@@ -214,7 +214,7 @@ describe("PerUserИспользование", () => {
 
       expect(await screen.findByText("user-100")).toBeInTheDocument();
       expect(lastCall()).toEqual(["test-token", 1, 100, undefined]);
-      expect(screen.getВсеByRole("row")).toHaveLength(101);
+      expect(screen.getAllByRole("row")).toHaveLength(101);
       expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-100 of 120");
     });
 
@@ -256,18 +256,18 @@ describe("PerUserИспользование", () => {
     fireEvent.click(screen.getByText("Использование Distribution"));
 
     await waitFor(() => {
-      expect(distributionChart().queryВыбратьorВсе("path.recharts-rectangle")).toHaveLength(4);
+      expect(distributionChart().querySelectorВсе("path.recharts-rectangle")).toHaveLength(4);
     });
 
     const chart = distributionChart();
-    expect(chart.queryВыбратьorВсе(".recharts-bar")).toHaveLength(2);
+    expect(chart.querySelectorВсе(".recharts-bar")).toHaveLength(2);
 
-    const rectangles = Array.from(chart.queryВыбратьorВсе("path.recharts-rectangle"));
+    const rectangles = Array.from(chart.querySelectorВсе("path.recharts-rectangle"));
     const fills = new Set(rectangles.map((rect) => rect.getAttribute("fill")));
     expect(fills).toEqual(new Set(["var(--color-blue-500, #3b82f6)", "var(--color-green-500, #22c55e)"]));
 
-    const xПозицияs = new Set(rectangles.map((rect) => rect.getAttribute("d")?.match(/^M\s*([\d.]+)/)?.[1]));
-    expect(xПозицияs.size).toBe(3);
+    const xPositions = new Set(rectangles.map((rect) => rect.getAttribute("d")?.match(/^M\s*([\d.]+)/)?.[1]));
+    expect(xPositions.size).toBe(3);
 
     expect(chart).toHaveTextContent("curl/8.0");
     expect(chart).toHaveTextContent("Unknown");
@@ -282,7 +282,7 @@ describe("PerUserИспользование", () => {
       expect(chart).toHaveTextContent(bucket);
     }
 
-    const tickTexts = Array.from(chart.queryВыбратьorВсе(".recharts-cartesian-axis-tick-value")).map(
+    const tickTexts = Array.from(chart.querySelectorВсе(".recharts-cartesian-axis-tick-value")).map(
       (tick) => tick.textContent ?? "",
     );
     expect(tickTexts.some((tick) => / users$/.test(tick))).toBe(true);

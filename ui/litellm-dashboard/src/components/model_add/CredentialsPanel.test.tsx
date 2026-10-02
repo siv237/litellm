@@ -69,7 +69,7 @@ const credentials: CredentialItem[] = [
   },
 ];
 
-const createЗапросClient = () =>
+const createRequestClient = () =>
   new ЗапросClient({
     defaultOptions: {
       queries: {
@@ -81,14 +81,14 @@ const createЗапросClient = () =>
 
 const renderPanel = () =>
   render(
-    <ЗапросClientПровайдер client={createЗапросClient()}>
+    <ЗапросClientПровайдер client={createRequestClient()}>
       <Учётные данныеPanel />
     </ЗапросClientПровайдер>,
   );
 
 describe("Учётные данныеPanel", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("renders the Добавить учётные данные button for an admin", () => {
@@ -145,7 +145,7 @@ describe("Учётные данныеPanel", () => {
     const refetch = vi.fn();
     mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin" });
     mockUseУчётные данные.mockReturnЗначение({ data: { credentials: [] }, isLoading: false, refetch });
-    vi.mocked(credentialCreateCall).mockResolvedЗначениеOnce(undefined as never);
+    vi.mocked(credentialCreateCall).mockResolvedValueOnce(undefined as never);
 
     renderPanel();
 
@@ -163,7 +163,7 @@ describe("Учётные данныеPanel", () => {
     const user = userEvent.setup();
     mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin" });
     mockUseУчётные данные.mockReturnЗначение({ data: { credentials: [] }, isLoading: false, refetch: vi.fn() });
-    vi.mocked(credentialCreateCall).mockRejectedЗначениеOnce(new Ошибка("network down"));
+    vi.mocked(credentialCreateCall).mockRejectedValueOnce(new Ошибка("network down"));
 
     renderPanel();
 
@@ -182,7 +182,7 @@ describe("Учётные данныеPanel", () => {
     const user = userEvent.setup();
     mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin" });
     mockUseУчётные данные.mockReturnЗначение({ data: { credentials }, isLoading: false, refetch: vi.fn() });
-    vi.mocked(credentialUpdateCall).mockResolvedЗначениеOnce(undefined as never);
+    vi.mocked(credentialUpdateCall).mockResolvedValueOnce(undefined as never);
 
     renderPanel();
 

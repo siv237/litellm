@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { renderWithПровайдерs } from "../../tests/test-utils";
+import { renderWithProviders } from "../../tests/test-utils";
 import SCIMКонфигурация from "./SCIM";
 import { keyCreateCall } from "./networking";
 import { toast } from "@/lib/toast";
@@ -19,7 +19,7 @@ const ACCESS_TOKEN = "sk-access-token";
 const USER_ID = "user-1234";
 
 const renderSCIM = (props?: { accessТокен?: string | null; userID?: string | null }) =>
-  renderWithПровайдерs(
+  renderWithProviders(
     <SCIMКонфигурация
       accessТокен={props?.accessТокен === undefined ? ACCESS_TOKEN : props.accessТокен}
       userID={props?.userID === undefined ? USER_ID : props.userID}
@@ -29,7 +29,7 @@ const renderSCIM = (props?: { accessТокен?: string | null; userID?: string 
 
 describe("SCIMКонфигурация", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("sends exactly the SCIM key payload when a token name is submitted", async () => {
@@ -45,7 +45,7 @@ describe("SCIMКонфигурация", () => {
         key_alias: "My SCIM Токен",
         team_id: null,
         Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
-        allowed_rвыходes: ["/scim/*"],
+        allowed_routes: ["/scim/*"],
       });
     });
   });
@@ -72,7 +72,7 @@ describe("SCIMКонфигурация", () => {
         key_alias: "Введитеed With Return",
         team_id: null,
         Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
-        allowed_rвыходes: ["/scim/*"],
+        allowed_routes: ["/scim/*"],
       });
     });
   });

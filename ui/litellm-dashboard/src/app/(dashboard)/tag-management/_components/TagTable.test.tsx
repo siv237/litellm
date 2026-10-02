@@ -10,7 +10,7 @@ import TagТаблица from "./TagТаблица";
 describe("TagТаблица", () => {
   const mockOnEdit = vi.fn();
   const mockOnDelete = vi.fn();
-  const mockOnВыбратьTag = vi.fn();
+  const mockOnSelectTag = vi.fn();
 
   const mockTag: Tag = {
     name: "test-tag",
@@ -24,7 +24,7 @@ describe("TagТаблица", () => {
     updated_at: "2024-01-01T00:00:00Z",
   };
 
-  const mockDynamicРасходTag: Tag = {
+  const mockDynamicSpendTag: Tag = {
     name: "dynamic-spend-tag",
     description:
       "This is just a spend tag that was passed dynamically in a request. It does not control any LLM Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs.",
@@ -37,11 +37,11 @@ describe("TagТаблица", () => {
     data: [],
     onEdit: mockOnEdit,
     onDelete: mockOnDelete,
-    onВыбратьTag: mockOnВыбратьTag,
+    onSelectTag: mockOnSelectTag,
   };
 
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render every column header", () => {
@@ -69,11 +69,11 @@ describe("TagТаблица", () => {
   });
 
   it("should display Все Режимls badge when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs array is empty", () => {
-    const tagWithNoРежимls: Tag = {
+    const tagWithNoModels: Tag = {
       ...mockTag,
       Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
     };
-    render(<TagТаблица {...defaultProps} data={[tagWithNoРежимls]} />);
+    render(<TagТаблица {...defaultProps} data={[tagWithNoModels]} />);
     expect(screen.getByText("Все Режимls")).toBeInTheDocument();
   });
 
@@ -87,23 +87,23 @@ describe("TagТаблица", () => {
     const olderTag: Tag = { ...mockTag, name: "older-tag", created_at: "2023-01-01T00:00:00Z" };
     const newerTag: Tag = { ...mockTag, name: "newer-tag", created_at: "2025-01-01T00:00:00Z" };
     render(<TagТаблица {...defaultProps} data={[olderTag, newerTag]} />);
-    const rows = screen.getВсеByRole("row").slice(1);
+    const rows = screen.getAllByRole("row").slice(1);
     expect(within(rows[0]).getByText("newer-tag")).toBeInTheDocument();
     expect(within(rows[1]).getByText("older-tag")).toBeInTheDocument();
   });
 
-  it("should call onВыбратьTag when tag name is clicked", async () => {
+  it("should call onSelectTag when tag name is clicked", async () => {
     const user = userEvent.setup();
     render(<TagТаблица {...defaultProps} data={[mockTag]} />);
     await user.click(screen.getByRole("button", { name: "test-tag" }));
-    expect(mockOnВыбратьTag).toHaveBeenCalledWith("test-tag");
+    expect(mockOnSelectTag).toHaveBeenCalledWith("test-tag");
   });
 
   it("should render tag name as non-clickable and muted for dynamic spend tags", () => {
-    render(<TagТаблица {...defaultProps} data={[mockDynamicРасходTag]} />);
+    render(<TagТаблица {...defaultProps} data={[mockDynamicSpendTag]} />);
     expect(screen.queryByRole("button", { name: "dynamic-spend-tag" })).not.toBeInTheDocument();
     expect(screen.getByText("dynamic-spend-tag")).toHaveClass("text-muted-foreground");
-    expect(mockOnВыбратьTag).not.toHaveBeenCalled();
+    expect(mockOnSelectTag).not.toHaveBeenCalled();
   });
 
   it("should truncate long tag names and descriptions", () => {
@@ -135,7 +135,7 @@ describe("TagТаблица", () => {
 
   it("should disable edit and delete for dynamic spend tags", async () => {
     const user = userEvent.setup();
-    render(<TagТаблица {...defaultProps} data={[mockDynamicРасходTag]} />);
+    render(<TagТаблица {...defaultProps} data={[mockDynamicSpendTag]} />);
     await user.click(screen.getByTestId("tag-actions-dynamic-spend-tag"));
 
     const editItem = await screen.findByTestId("tag-action-edit");

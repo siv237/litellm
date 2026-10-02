@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { renderWithПровайдерs } from "../../../../../tests/test-utils";
+import { renderWithProviders } from "../../../../../tests/test-utils";
 import CyberArk from "./CyberArk";
 
 const mockUseАвторизовано = vi.hoisted(() => vi.fn());
@@ -33,7 +33,7 @@ vi.mock("@/components/common_components/DeleteResourceModal", () => ({
 
 describe("CyberArk", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token" });
     const emptyКонфигурацияРезультат = {
       data: { values: {} },
@@ -45,14 +45,14 @@ describe("CyberArk", () => {
   });
 
   it("should render", () => {
-    renderWithПровайдерs(<CyberArk />);
+    renderWithProviders(<CyberArk />);
 
     expect(screen.getByRole("heading", { name: "CyberArk Conjur" })).toBeInTheDocument();
   });
 
   it("should open the configuration editor from the empty state", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<CyberArk />);
+    renderWithProviders(<CyberArk />);
 
     await user.click(screen.getByRole("button", { name: /configure cyberark/i }));
 
@@ -68,11 +68,11 @@ describe("CyberArk", () => {
     };
     mockUseCyberArkКонфигурация.mockReturnЗначение(configuredРезультат);
 
-    renderWithПровайдерs(<CyberArk />);
+    renderWithProviders(<CyberArk />);
 
     expect(screen.getByText("https://conjur.example.com")).toBeInTheDocument();
     expect(screen.getByText("Метод авторизации")).toBeInTheDocument();
-    expect(screen.getВсеByText("API Ключ")).toHaveLength(2);
+    expect(screen.getAllByText("API Ключ")).toHaveLength(2);
     expect(screen.getByRole("button", { name: /test connection/i })).toBeInTheDocument();
   });
 });

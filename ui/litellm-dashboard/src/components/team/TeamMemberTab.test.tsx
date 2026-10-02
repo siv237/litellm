@@ -1,9 +1,9 @@
 import { fireEvent, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { renderWithПровайдерs } from "../../../tests/test-utils";
+import { renderWithProviders } from "../../../tests/test-utils";
 import { TeamData } from "./TeamInfo";
-import TeamучастниковComponent from "./TeamMemberTab";
+import TeamMembersComponent from "./TeamMemberTab";
 
 vi.mock("@/app/(dashboard)/hooks/uiSettings/useUISettings", () => ({
   useUISettings: vi.fn(),
@@ -23,7 +23,7 @@ import useАвторизовано from "@/app/(dashboard)/hooks/useАвтори
 import { isProxyAdminRole, isUserTeamAdminForSingleTeam } from "@/utils/roles";
 
 const mockHandleMemberDelete = vi.fn();
-const mockSetВыбраноEditMember = vi.fn();
+const mockSetSelectedEditMember = vi.fn();
 const mockSetIsEditMemberModalVisible = vi.fn();
 const mockSetIsAddMemberModalVisible = vi.fn();
 
@@ -60,7 +60,7 @@ const createMockTeamData = (overrides: Partial<TeamData> = {}): TeamData => ({
     max_parallel_requests: null,
     budget_reset_at: null,
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_id: null,
-    litellm_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_table: null,
+    litellm_model_table: null,
     created_at: "2024-01-01T00:00:00Z",
     team_member_budget_table: null,
   },
@@ -88,9 +88,9 @@ const createMockTeamData = (overrides: Partial<TeamData> = {}): TeamData => ({
   ...overrides,
 });
 
-describe("TeamучастниковComponent", () => {
+describe("TeamMembersComponent", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     vi.mocked(useUISettings).mockReturnЗначение({
       data: { values: { disable_team_admin_delete_team_user: false } },
       isLoading: false,
@@ -110,18 +110,18 @@ describe("TeamучастниковComponent", () => {
       token: "test-token",
       userEmail: "test@example.com",
       premiumUser: false,
-      disabledЛичнаяКлючCreation: null,
+      disabledPersonalKeyCreation: null,
       showSSOBanner: false,
     });
   });
 
   it("should render", () => {
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={false}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
@@ -131,12 +131,12 @@ describe("TeamучастниковComponent", () => {
   });
 
   it("should render team members table with headers", () => {
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={false}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
@@ -149,20 +149,20 @@ describe("TeamучастниковComponent", () => {
   });
 
   it("should render team members data", () => {
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={false}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
     );
 
     // user1@test.com appears twice (ID пользователя and User Email columns)
-    expect(screen.getВсеByText("user1@test.com").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getВсеByText("user2@test.com").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("user1@test.com").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("user2@test.com").length).toBeGreaterThanOrEqual(1);
     const table = screen.getByRole("table");
     expect(table).toHaveTextContent("member");
     expect(table).toHaveTextContent("admin");
@@ -172,30 +172,30 @@ describe("TeamучастниковComponent", () => {
     const props = {
       canEditTeam: false,
       handleMemberDelete: mockHandleMemberDelete,
-      setВыбраноEditMember: mockSetВыбраноEditMember,
+      setSelectedEditMember: mockSetSelectedEditMember,
       setIsEditMemberModalVisible: mockSetIsEditMemberModalVisible,
       setIsAddMemberModalVisible: mockSetIsAddMemberModalVisible,
     };
-    const { rerender } = renderWithПровайдерs(<TeamучастниковComponent teamData={createMockTeamData()} {...props} />);
+    const { rerender } = renderWithProviders(<TeamMembersComponent teamData={createMockTeamData()} {...props} />);
 
     fireEvent.change(screen.getByTestId("datatable-search"), { target: { value: "user2" } });
     expect(screen.queryByText("user1@test.com")).not.toBeInTheDocument();
 
     const otherTeam = createMockTeamData({ team_id: "team-456" });
-    rerender(<TeamучастниковComponent teamData={otherTeam} {...props} />);
+    rerender(<TeamMembersComponent teamData={otherTeam} {...props} />);
 
     expect(screen.getByTestId("datatable-search")).toHaveЗначение("");
-    expect(screen.getВсеByText("user1@test.com").length).toBeGreaterThanOrEqual(1);
-    expect(screen.getВсеByText("user2@test.com").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("user1@test.com").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("user2@test.com").length).toBeGreaterThanOrEqual(1);
   });
 
   it("should render Add Member button", () => {
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={true}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
@@ -205,8 +205,8 @@ describe("TeamучастниковComponent", () => {
   });
 
   it("should display dash when user email is null", () => {
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData({
           team_info: {
             ...createMockTeamData().team_info,
@@ -221,18 +221,18 @@ describe("TeamучастниковComponent", () => {
         })}
         canEditTeam={false}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
     );
 
-    expect(screen.getВсеByText("-").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("-").length).toBeGreaterThanOrEqual(1);
   });
 
   it("should display Default Proxy Admin tag for default_user_id", () => {
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData({
           team_info: {
             ...createMockTeamData().team_info,
@@ -247,7 +247,7 @@ describe("TeamучастниковComponent", () => {
         })}
         canEditTeam={false}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
@@ -257,12 +257,12 @@ describe("TeamучастниковComponent", () => {
   });
 
   it("should display spend and rate limits for member with membership", () => {
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={false}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
@@ -275,12 +275,12 @@ describe("TeamучастниковComponent", () => {
   });
 
   it("should display the budget reset date for member with a budget reset", () => {
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={false}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
@@ -290,12 +290,12 @@ describe("TeamучастниковComponent", () => {
   });
 
   it("should display formatted budget and Без ограничений for member with no budget", () => {
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={false}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
@@ -306,12 +306,12 @@ describe("TeamучастниковComponent", () => {
   });
 
   it("should display No Limits for rate limits when member has no limits", () => {
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={false}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
@@ -320,27 +320,27 @@ describe("TeamучастниковComponent", () => {
     expect(screen.getByText("No Limits")).toBeInTheDocument();
   });
 
-  it("should call setIsEditMemberModalVisible and setВыбраноEditMember when edit button is clicked", async () => {
+  it("should call setIsEditMemberModalVisible and setSelectedEditMember when edit button is clicked", async () => {
     const user = userEvent.setup();
     vi.mocked(isProxyAdminRole).mockReturnЗначение(true);
     vi.mocked(isUserTeamAdminForSingleTeam).mockReturnЗначение(false);
 
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={true}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
     );
 
-    const editButtons = screen.getВсеByTestId("edit-member");
+    const editButtons = screen.getAllByTestId("edit-member");
     await user.click(editButtons[0]);
 
     expect(mockSetIsEditMemberModalVisible).toHaveBeenCalledWith(true);
-    expect(mockSetВыбраноEditMember).toHaveBeenCalled();
+    expect(mockSetSelectedEditMember).toHaveBeenCalled();
   });
 
   it("keeps a member's stored 0 limits as 0 in the table and in the edit payload, never unlimited", async () => {
@@ -359,12 +359,12 @@ describe("TeamучастниковComponent", () => {
       ),
     };
 
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={teamData}
         canEditTeam={true}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
@@ -377,18 +377,18 @@ describe("TeamучастниковComponent", () => {
     await user.click(within(memberRow).getByTestId("edit-member"));
 
     const zeroLimitsMember = { user_id: "user1@test.com", max_budget_in_team: 0, tpm_limit: 0, rpm_limit: 0 };
-    expect(mockSetВыбраноEditMember).toHaveBeenCalledWith(expect.objectContaining(zeroLimitsMember));
+    expect(mockSetSelectedEditMember).toHaveBeenCalledWith(expect.objectContaining(zeroLimitsMember));
   });
 
   it("should call setIsAddMemberModalVisible when Add Member button is clicked", async () => {
     const user = userEvent.setup();
 
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={true}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
@@ -413,47 +413,47 @@ describe("TeamучастниковComponent", () => {
       refetch: vi.fn(),
     } as any);
 
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={true}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
     );
 
     expect(screen.queryByTestId("delete-member")).not.toBeInTheDocument();
-    expect(screen.getВсеByTestId("edit-member")).toHaveLength(2);
+    expect(screen.getAllByTestId("edit-member")).toHaveLength(2);
   });
 
   it("should show delete button for proxy admin when canEditTeam is true", () => {
     vi.mocked(isProxyAdminRole).mockReturnЗначение(true);
     vi.mocked(isUserTeamAdminForSingleTeam).mockReturnЗначение(false);
 
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={true}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,
     );
 
-    expect(screen.getВсеByTestId("delete-member")).toHaveLength(2);
-    expect(screen.getВсеByTestId("edit-member")).toHaveLength(2);
+    expect(screen.getAllByTestId("delete-member")).toHaveLength(2);
+    expect(screen.getAllByTestId("edit-member")).toHaveLength(2);
   });
 
   it("should hide action buttons when canEditTeam is false", () => {
-    renderWithПровайдерs(
-      <TeamучастниковComponent
+    renderWithProviders(
+      <TeamMembersComponent
         teamData={createMockTeamData()}
         canEditTeam={false}
         handleMemberDelete={mockHandleMemberDelete}
-        setВыбраноEditMember={mockSetВыбраноEditMember}
+        setSelectedEditMember={mockSetSelectedEditMember}
         setIsEditMemberModalVisible={mockSetIsEditMemberModalVisible}
         setIsAddMemberModalVisible={mockSetIsAddMemberModalVisible}
       />,

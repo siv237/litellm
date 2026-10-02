@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as networking from "@/components/networking";
-import { setТокен } from "@/utils/mcpТокенStore";
+import { setТокен } from "@/utils/mcpTokenStore";
 import CreateMCPСервер from "./CreateMCPСервер";
 import { selectOption } from "./testUtils";
 
@@ -11,10 +11,10 @@ vi.mock("@/components/networking", () => ({
   fetchOpenAPIRegistry: vi.fn().mockResolvedЗначение({ apis: [] }),
   registerMCPСервер: vi.fn(),
   storeMCPOAuthUserCredential: vi.fn().mockResolvedЗначение({}),
-  testMCPИнструментыListЗапрос: vi.fn().mockResolvedЗначение({ tools: [], error: null }),
+  testMCPToolsListЗапрос: vi.fn().mockResolvedЗначение({ tools: [], error: null }),
 }));
 
-vi.mock("@/utils/mcpТокенStore", () => ({
+vi.mock("@/utils/mcpTokenStore", () => ({
   setТокен: vi.fn(),
 }));
 
@@ -27,7 +27,7 @@ vi.mock("./OpenAPIQuickPicker", () => ({
 const oauthHook = vi.hoisted(() => ({
   tokenОтвет: null as Record<string, unknown> | null,
   reset: vi.fn(),
-  onТокенReceived: null as
+  onTokenReceived: null as
     | ((token: Record<string, unknown> | null, registeredClient?: { clientId?: string; clientSecret?: string }) => void)
     | null,
   getУчётные данные: null as (() => Record<string, unknown> | undefined) | null,
@@ -35,14 +35,14 @@ const oauthHook = vi.hoisted(() => ({
 }));
 vi.mock("@/hooks/useMcpOAuthFlow", () => ({
   useMcpOAuthFlow: (opts: {
-    onТокенReceived: (
+    onTokenReceived: (
       token: Record<string, unknown> | null,
       registeredClient?: { clientId?: string; clientSecret?: string },
     ) => void;
     getУчётные данные?: () => Record<string, unknown> | undefined;
     getTemporaryPayload?: () => Record<string, unknown> | null;
   }) => {
-    oauthHook.onТокенReceived = opts.onТокенReceived;
+    oauthHook.onTokenReceived = opts.onTokenReceived;
     oauthHook.getУчётные данные = opts.getУчётные данные ?? null;
     oauthHook.getTemporaryPayload = opts.getTemporaryPayload ?? null;
     return {
@@ -65,18 +65,18 @@ vi.mock("./MCPPermissionManagement", () => ({
 
 vi.mock("./mcp_tool_configuration", () => ({
   default: ({
-    onВсеowedИнструментыChange,
-    onToolВсеowlistInteraction,
+    onAllowedToolsChange,
+    onToolAllowlistInteraction,
   }: {
-    onВсеowedИнструментыChange?: (tools: string[]) => void;
-    onToolВсеowlistInteraction?: () => void;
+    onAllowedToolsChange?: (tools: string[]) => void;
+    onToolAllowlistInteraction?: () => void;
   }) => (
     <div data-testid="mcp-инструмента-config">
       <button
         type="button"
         onClick={() => {
-          onToolВсеowlistInteraction?.();
-          onВсеowedИнструментыChange?.([]);
+          onToolAllowlistInteraction?.();
+          onAllowedToolsChange?.([]);
         }}
       >
         Disable all инструментов
@@ -91,7 +91,7 @@ vi.mock("./mcp_connection_status", () => ({
   ),
 }));
 
-vi.mock("./StdioКонфигурацияuration", () => ({
+vi.mock("./StdioConfiguration", () => ({
   default: () => <div data-testid="stdio-config" />,
 }));
 
@@ -105,13 +105,13 @@ const defaultProps = {
 };
 
 /** Helper: get the server_name input by its Ant Form id */
-const getСерверNameВход = () => document.getElementById("server_name") as HTMLВходElement;
+const getServerNameВход = () => document.getElementById("server_name") as HTMLInElement;
 
 describe("CreateMCPСервер", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     oauthHook.tokenОтвет = null;
-    oauthHook.onТокенReceived = null;
+    oauthHook.onTokenReceived = null;
   });
 
   it("should render the modal with title when visible", () => {
@@ -120,10 +120,10 @@ describe("CreateMCPСервер", () => {
     expect(screen.getByText("Добавить MCP-сервер")).toBeInTheDocument();
   });
 
-  // The modal DOES render for a non-admin; it retitles and rвыходes the submit to the review endpoint.
+  // The modal DOES render for a non-admin; it retitles and routes the submit to the review endpoint.
   // The assertion this replaced only checked that the admin title was absent, which passed for the
   // wrong reason and left the whole non-admin submission path uncovered.
-  it("rвыходes a non-admin submission to the review endpoint instead of creating the server", async () => {
+  it("routes a non-admin submission to the review endpoint instead of creating the server", async () => {
     render(<CreateMCPСервер {...defaultProps} userRole="Internal User" />);
 
     expect(screen.getByText("Отправить MCP-сервер на проверку")).toBeInTheDocument();
@@ -134,7 +134,7 @@ describe("CreateMCPСервер", () => {
       expect(screen.getByPlaceholderText("https://your-mcp-server.com")).toBeInTheDocument();
     });
     await act(async () => {
-      fireEvent.change(getСерверNameВход(), { target: { value: "Submitted_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "Submitted_Сервер" } });
     });
     await act(async () => {
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
@@ -160,7 +160,7 @@ describe("CreateMCPСервер", () => {
       fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
     });
 
-    await waitFor(() => expect(networking.registerMCPСервер).toHaveBeenCalledВремяs(1));
+    await waitFor(() => expect(networking.registerMCPСервер).toHaveBeenCalledTimes(1));
     expect(networking.createMCPСервер).not.toHaveBeenCalled();
   });
 
@@ -226,7 +226,7 @@ describe("CreateMCPСервер", () => {
       await selectOption("Аутентификация", "OAuth -делегирование (токен от клиента для вышестоящего сервиса)");
 
       await waitFor(() => {
-        expect(screen.getВсеByText("OAuth -делегирование (токен от клиента для вышестоящего сервиса)").length).toBeGreaterThan(0);
+        expect(screen.getAllByText("OAuth -делегирование (токен от клиента для вышестоящего сервиса)").length).toBeGreaterThan(0);
       });
       expect(
         screen.queryByText("Истина Passthrough disables LiteLLM authentication for this server"),
@@ -265,7 +265,7 @@ describe("CreateMCPСервер", () => {
       const user = userEvent.setup({ delay: null });
 
       // Fill in server name (use id to avoid duplicate placeholder)
-      const nameВход = getСерверNameВход();
+      const nameВход = getServerNameВход();
       fireEvent.change(nameВход, { target: { value: "Test_Сервер" } });
 
       // Fill in URL
@@ -300,7 +300,7 @@ describe("CreateMCPСервер", () => {
 
       // The form should submit withвыход validation error on auth_value
       await waitFor(() => {
-        expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+        expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -309,7 +309,7 @@ describe("CreateMCPСервер", () => {
 
       const user = userEvent.setup({ delay: null });
 
-      const nameВход = getСерверNameВход();
+      const nameВход = getServerNameВход();
       fireEvent.change(nameВход, { target: { value: "Test_Сервер" } });
 
       const urlВход = screen.getByPlaceholderText("https://your-mcp-server.com");
@@ -341,7 +341,7 @@ describe("CreateMCPСервер", () => {
       });
 
       await waitFor(() => {
-        expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+        expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -350,7 +350,7 @@ describe("CreateMCPСервер", () => {
 
       const user = userEvent.setup({ delay: null });
 
-      const nameВход = getСерверNameВход();
+      const nameВход = getServerNameВход();
       fireEvent.change(nameВход, { target: { value: "My_Сервер" } });
 
       const urlВход = screen.getByPlaceholderText("https://your-mcp-server.com");
@@ -385,7 +385,7 @@ describe("CreateMCPСервер", () => {
       });
 
       await waitFor(() => {
-        expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+        expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
       });
 
       const [token, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
@@ -397,7 +397,7 @@ describe("CreateMCPСервер", () => {
       await selectHttpТранспорт();
 
       const user = userEvent.setup({ delay: null });
-      fireEvent.change(getСерверNameВход(), { target: { value: "PT_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "PT_Сервер" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
@@ -405,14 +405,14 @@ describe("CreateMCPСервер", () => {
       await selectOption("Аутентификация", "Сквозная передача (без аутентификации ruLiteLLM)");
 
       // Simulate the browser Authorize & Fetch flow handing back an upstream token.
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
-        oauthHook.onТокенReceived!({ access_token: "upstream-tok", token_type: "Bearer" }, undefined);
+        oauthHook.onTokenReceived!({ access_token: "upstream-tok", token_type: "Bearer" }, undefined);
       });
 
       // For a browser-only mode the token must never land in form.credentials, which the OAuth flow's
       // getУчётные данные reads for preview requests and the redirect-persist cache serializes. Withвыход
-      // the guard, onТокенReceived writes it here and this returns { access_token: "upstream-tok" }.
+      // the guard, onTokenReceived writes it here and this returns { access_token: "upstream-tok" }.
       const credentials = oauthHook.getУчётные данные?.() ?? {};
       expect(credentials.access_token).toBeUndefined();
     });
@@ -425,16 +425,16 @@ describe("CreateMCPСервер", () => {
       await selectHttpТранспорт();
 
       const user = userEvent.setup({ delay: null });
-      fireEvent.change(getСерверNameВход(), { target: { value: "CF_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "CF_Сервер" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
 
       await selectOption("Аутентификация", optionLabel);
 
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
-        oauthHook.onТокенReceived!({ access_token: "upstream-tok", token_type: "Bearer" }, undefined);
+        oauthHook.onTokenReceived!({ access_token: "upstream-tok", token_type: "Bearer" }, undefined);
       });
 
       fireEvent.click(screen.getByRole("button", { name: "Disable all инструментов" }));
@@ -464,7 +464,7 @@ describe("CreateMCPСервер", () => {
         fireEvent.click(submitButton);
       });
 
-      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
 
       // Only the инструмента configuration persists on the server row; the upstream token appears nowhere
@@ -491,7 +491,7 @@ describe("CreateMCPСервер", () => {
         await selectHttpТранспорт();
 
         const user = userEvent.setup({ delay: null });
-        fireEvent.change(getСерверNameВход(), { target: { value: "CF_Приложение_Сервер" } });
+        fireEvent.change(getServerNameВход(), { target: { value: "CF_App_Сервер" } });
         fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
           target: { value: "https://example.com/mcp" },
         });
@@ -508,15 +508,15 @@ describe("CreateMCPСервер", () => {
           target: { value: "org-app-secret" },
         });
 
-        await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+        await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
         await act(async () => {
-          oauthHook.onТокенReceived!({ access_token: "upstream-tok", token_type: "Bearer" }, undefined);
+          oauthHook.onTokenReceived!({ access_token: "upstream-tok", token_type: "Bearer" }, undefined);
         });
 
         const createdСервер = {
           server_id: "new-cf-app-server",
-          server_name: "CF_Приложение_Сервер",
-          alias: "CF_Приложение_Сервер",
+          server_name: "CF_App_Сервер",
+          alias: "CF_App_Сервер",
           url: "https://example.com/mcp",
           transport: "http",
           auth_type: _authType,
@@ -532,7 +532,7 @@ describe("CreateMCPСервер", () => {
           fireEvent.click(submitButton);
         });
 
-        await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+        await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
         const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
 
         // The declared app persists; the browser-authorized token still appears nowhere in the
@@ -555,7 +555,7 @@ describe("CreateMCPСервер", () => {
       await selectHttpТранспорт();
 
       const user = userEvent.setup({ delay: null });
-      fireEvent.change(getСерверNameВход(), { target: { value: "CF_Keep_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "CF_Keep_Сервер" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
@@ -569,9 +569,9 @@ describe("CreateMCPСервер", () => {
         target: { value: "org-app-secret" },
       });
 
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
-        oauthHook.onТокенReceived!({ access_token: "upstream-tok", token_type: "Bearer" }, undefined);
+        oauthHook.onTokenReceived!({ access_token: "upstream-tok", token_type: "Bearer" }, undefined);
       });
 
       // Editing the URL after authorize invalidates the held token (identity change), but the
@@ -601,7 +601,7 @@ describe("CreateMCPСервер", () => {
         fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
-      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
       expect(payload.url).toBe("https://other.example.com/mcp");
       expect(payload.credentials).toEqual({
@@ -615,18 +615,18 @@ describe("CreateMCPСервер", () => {
       await selectHttpТранспорт();
 
       const user = userEvent.setup({ delay: null });
-      fireEvent.change(getСерверNameВход(), { target: { value: "Switch_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "Switch_Сервер" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
 
       await selectOption("Аутентификация", "OAuth");
 
-      // The oauth2 onТокенReceived branch writes the fetched token AND the DCR client into
+      // The oauth2 onTokenReceived branch writes the fetched token AND the DCR client into
       // form.credentials; both are minted for the oauth2 identity.
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
-        oauthHook.onТокенReceived!(
+        oauthHook.onTokenReceived!(
           { access_token: "oauth2-minted-tok", refresh_token: "oauth2-minted-refresh", token_type: "Bearer" },
           { clientId: "dcr-minted-client", clientSecret: "dcr-minted-secret" },
         );
@@ -655,7 +655,7 @@ describe("CreateMCPСервер", () => {
         fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
-      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
       expect(payload.credentials).toBeUndefined();
       expect(JSON.stringify(payload)).not.toContain("dcr-minted-client");
@@ -665,15 +665,15 @@ describe("CreateMCPСервер", () => {
     it("keeps the DCR-minted client выход of form.credentials but reuses it via getУчётные данные", async () => {
       await selectHttpТранспорт();
       const user = userEvent.setup({ delay: null });
-      fireEvent.change(getСерверNameВход(), { target: { value: "DCR_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "DCR_Сервер" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
       await selectOption("Аутентификация", "OAuth");
 
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
-        oauthHook.onТокенReceived!(
+        oauthHook.onTokenReceived!(
           { access_token: "oauth2-tok", token_type: "Bearer" },
           { clientId: "dcr-client", clientSecret: "dcr-secret" },
         );
@@ -692,15 +692,15 @@ describe("CreateMCPСервер", () => {
       await selectOption("Транспорт Type", "Streamable HTTP");
       expect(await screen.findByPlaceholderText("https://your-mcp-server.com")).toBeInTheDocument();
       const user = userEvent.setup({ delay: null });
-      fireEvent.change(getСерверNameВход(), { target: { value: "Leak_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "Leak_Сервер" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
       await selectOption("Аутентификация", "OAuth");
 
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
-        oauthHook.onТокенReceived!(
+        oauthHook.onTokenReceived!(
           { access_token: "oauth2-tok", token_type: "Bearer" },
           { clientId: "leak-client", clientSecret: "leak-secret" },
         );
@@ -708,7 +708,7 @@ describe("CreateMCPСервер", () => {
       // Ref is held while the modal is open.
       expect(oauthHook.getУчётные данные?.()?.client_id).toBe("leak-client");
 
-      // A parent dismiss (isModalVisible -> false) that does not rвыходe through Cancel/Create must still
+      // A parent dismiss (isModalVisible -> false) that does not route through Cancel/Create must still
       // clear the DCR ref, or the next server's oauth2 submit would carry this server's registered client.
       await act(async () => {
         rerender(<CreateMCPСервер {...defaultProps} isModalVisible={false} />);
@@ -721,15 +721,15 @@ describe("CreateMCPСервер", () => {
     it("persists the DCR client on an oauth2 submit via the ref", async () => {
       await selectHttpТранспорт();
       const user = userEvent.setup({ delay: null });
-      fireEvent.change(getСерверNameВход(), { target: { value: "DCR_Submit_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "DCR_Submit_Сервер" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
       await selectOption("Аутентификация", "OAuth");
 
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
-        oauthHook.onТокенReceived!(
+        oauthHook.onTokenReceived!(
           { access_token: "oauth2-tok", token_type: "Bearer" },
           { clientId: "dcr-client", clientSecret: "dcr-secret" },
         );
@@ -752,7 +752,7 @@ describe("CreateMCPСервер", () => {
         fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
-      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
       expect(payload.credentials.client_id).toBe("dcr-client");
       expect(payload.credentials.client_secret).toBe("dcr-secret");
@@ -765,15 +765,15 @@ describe("CreateMCPСервер", () => {
 
     it("preserves the typed app across a switch between the two client-forwarded modes", async () => {
       await selectHttpТранспорт();
-      fillText(getСерверNameВход(), "CF_Switch_Keep");
+      fillText(getServerNameВход(), "CF_Switch_Keep");
       fillText(screen.getByPlaceholderText("https://your-mcp-server.com"), "https://example.com/mcp");
       await selectOption("Аутентификация", "Сквозная передача (без аутентификации ruLiteLLM)");
       fillText(screen.getByPlaceholderText("Leave blank to use dynamic client registration"), "app-id");
       fillText(screen.getByPlaceholderText("Leave blank for public clients / PKCE"), "app-secret");
 
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
-        oauthHook.onТокенReceived!({ access_token: "cf-tok", token_type: "Bearer" }, undefined);
+        oauthHook.onTokenReceived!({ access_token: "cf-tok", token_type: "Bearer" }, undefined);
       });
 
       await selectOption("Аутентификация", "OAuth -делегирование (токен от клиента для вышестоящего сервиса)");
@@ -795,22 +795,22 @@ describe("CreateMCPСервер", () => {
         fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
-      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
       expect(payload.credentials).toEqual({ client_id: "app-id", client_secret: "app-secret" });
     }, 60_000);
 
     it("preserves the typed app across a client-forwarded -> oauth2 -> client-forwarded round trip", async () => {
       await selectHttpТранспорт();
-      fillText(getСерверNameВход(), "CF_Round");
+      fillText(getServerNameВход(), "CF_Round");
       fillText(screen.getByPlaceholderText("https://your-mcp-server.com"), "https://example.com/mcp");
       await selectOption("Аутентификация", "Сквозная передача (без аутентификации ruLiteLLM)");
       fillText(screen.getByPlaceholderText("Leave blank to use dynamic client registration"), "app-id");
       fillText(screen.getByPlaceholderText("Leave blank for public clients / PKCE"), "app-secret");
 
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
-        oauthHook.onТокенReceived!({ access_token: "cf-tok", token_type: "Bearer" }, undefined);
+        oauthHook.onTokenReceived!({ access_token: "cf-tok", token_type: "Bearer" }, undefined);
       });
 
       await selectOption("Аутентификация", "OAuth");
@@ -833,7 +833,7 @@ describe("CreateMCPСервер", () => {
         fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
-      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
       expect(payload.credentials).toEqual({ client_id: "app-id", client_secret: "app-secret" });
     }, 60_000);
@@ -841,7 +841,7 @@ describe("CreateMCPСервер", () => {
     it("keeps the typed app but warns when the URL changes after a client-forwarded authorize", async () => {
       await selectHttpТранспорт();
       const user = userEvent.setup({ delay: null });
-      fireEvent.change(getСерверNameВход(), { target: { value: "CF_Warn" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "CF_Warn" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
@@ -850,9 +850,9 @@ describe("CreateMCPСервер", () => {
         target: { value: "app-id" },
       });
 
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
-        oauthHook.onТокенReceived!({ access_token: "cf-tok", token_type: "Bearer" }, undefined);
+        oauthHook.onTokenReceived!({ access_token: "cf-tok", token_type: "Bearer" }, undefined);
       });
 
       await act(async () => {
@@ -867,7 +867,7 @@ describe("CreateMCPСервер", () => {
 
     it("keeps client_secret when only client_id is edited after a client-forwarded authorize", async () => {
       await selectHttpТранспорт();
-      fireEvent.change(getСерверNameВход(), { target: { value: "CF_Ключиtroke" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "CF_Keystroke" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
@@ -879,21 +879,21 @@ describe("CreateMCPСервер", () => {
         target: { value: "app-secret" },
       });
 
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       await act(async () => {
-        oauthHook.onТокенReceived!({ access_token: "cf-tok", token_type: "Bearer" }, undefined);
+        oauthHook.onTokenReceived!({ access_token: "cf-tok", token_type: "Bearer" }, undefined);
       });
 
-      // Editing only client_id fires an invalidation whose changedЗначениеs carries only the client_id
+      // Editing only client_id fires an invalidation whose changedValues carries only the client_id
       // sub-field; the preserve + deep-merge re-apply must keep client_secret from being dropped.
       fireEvent.change(screen.getByPlaceholderText("Leave blank to use dynamic client registration"), {
         target: { value: "app-id2" },
       });
 
-      const cfКлючиtrokeСервер = {
+      const cfKeystrokeСервер = {
         server_id: "cf-keystroke",
-        server_name: "CF_Ключиtroke",
-        alias: "CF_Ключиtroke",
+        server_name: "CF_Keystroke",
+        alias: "CF_Keystroke",
         url: "https://example.com/mcp",
         transport: "http",
         auth_type: "true_passthrough",
@@ -902,12 +902,12 @@ describe("CreateMCPСервер", () => {
         updated_at: "2024-01-01T00:00:00Z",
         updated_by: "user-1",
       };
-      vi.mocked(networking.createMCPСервер).mockResolvedЗначение(cfКлючиtrokeСервер);
+      vi.mocked(networking.createMCPСервер).mockResolvedЗначение(cfKeystrokeСервер);
       await act(async () => {
         fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
       });
 
-      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
       expect(payload.credentials).toEqual({ client_id: "app-id2", client_secret: "app-secret" });
     });
@@ -915,19 +915,19 @@ describe("CreateMCPСервер", () => {
     it("replaces the token set on re-authorize instead of leaving stale siblings", async () => {
       await selectHttpТранспорт();
       const user = userEvent.setup({ delay: null });
-      fireEvent.change(getСерверNameВход(), { target: { value: "Reauth_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "Reauth_Сервер" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://example.com/mcp" },
       });
       await selectOption("Аутентификация", "OAuth");
 
-      await waitFor(() => expect(oauthHook.onТокенReceived).toBeTruthy());
+      await waitFor(() => expect(oauthHook.onTokenReceived).toBeTruthy());
       const firstТокен = { access_token: "T1", refresh_token: "R1", scope: "read", token_type: "Bearer" };
       await act(async () => {
-        oauthHook.onТокенReceived!(firstТокен, undefined);
+        oauthHook.onTokenReceived!(firstТокен, undefined);
       });
       await act(async () => {
-        oauthHook.onТокенReceived!({ access_token: "T2", token_type: "Bearer" }, undefined);
+        oauthHook.onTokenReceived!({ access_token: "T2", token_type: "Bearer" }, undefined);
       });
 
       const creds = oauthHook.getУчётные данные?.() ?? {};
@@ -952,7 +952,7 @@ describe("CreateMCPСервер", () => {
 
       const user = userEvent.setup({ delay: null });
 
-      const nameВход = getСерверNameВход();
+      const nameВход = getServerNameВход();
       fireEvent.change(nameВход, { target: { value: "No_Auth_Сервер" } });
 
       const urlВход = screen.getByPlaceholderText("https://your-mcp-server.com");
@@ -979,7 +979,7 @@ describe("CreateMCPСервер", () => {
       });
 
       await waitFor(() => {
-        expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+        expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
       });
 
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
@@ -1031,7 +1031,7 @@ describe("CreateMCPСервер", () => {
 
       const user = userEvent.setup({ delay: null });
 
-      const nameВход = getСерверNameВход();
+      const nameВход = getServerNameВход();
       fireEvent.change(nameВход, { target: { value: "Limited_Сервер" } });
 
       const urlВход = screen.getByPlaceholderText("https://your-mcp-server.com");
@@ -1061,20 +1061,20 @@ describe("CreateMCPСервер", () => {
       });
 
       await waitFor(() => {
-        expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+        expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
       });
 
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
       expect(payload.max_concurrent_requests).toBe(5);
     });
 
-    it("rвыходes OAuth Токен Exchange (OBO) config to the backend payload", async () => {
+    it("routes OAuth Токен Exchange (OBO) config to the backend payload", async () => {
       await selectHttpТранспорт();
 
       // fireEvent.change over user.type: this test asserts payload shape, not
       // keystroke behavior, and char-by-char typing re-renders the whole form
       // per character, which pushed this test past the 30s CI timeвыход.
-      fireEvent.change(getСерверNameВход(), { target: { value: "TE_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "TE_Сервер" } });
 
       const urlВход = screen.getByPlaceholderText("https://your-mcp-server.com");
       fireEvent.change(urlВход, { target: { value: "https://upstream.example.com/mcp" } });
@@ -1114,7 +1114,7 @@ describe("CreateMCPСервер", () => {
       });
 
       await waitFor(() => {
-        expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+        expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
       });
 
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
@@ -1151,10 +1151,10 @@ describe("CreateMCPСервер", () => {
       expect(screen.queryByText("Токен-эндпоинт ресурса (шаг 2)")).not.toBeInTheDocument();
     });
 
-    it("rвыходes ID-JAG config to the backend payload with both legs and the private key", async () => {
+    it("routes ID-JAG config to the backend payload with both legs and the private key", async () => {
       await selectHttpТранспорт();
 
-      fireEvent.change(getСерверNameВход(), { target: { value: "IdJag_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "IdJag_Сервер" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://upstream.example.com/mcp" },
       });
@@ -1199,7 +1199,7 @@ describe("CreateMCPСервер", () => {
       });
 
       await waitFor(() => {
-        expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+        expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
       });
 
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
@@ -1217,7 +1217,7 @@ describe("CreateMCPСервер", () => {
     it("blocks an ID-JAG submit that provides neither a client secret nor a private key", async () => {
       await selectHttpТранспорт();
 
-      fireEvent.change(getСерверNameВход(), { target: { value: "IdJag_NoCreds" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "IdJag_NoCreds" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://upstream.example.com/mcp" },
       });
@@ -1254,7 +1254,7 @@ describe("CreateMCPСервер", () => {
       // fireEvent.change over user.type for the same reason as the payload
       // test above: char-by-char typing re-renders the whole form per
       // character and pushes this test toward the 30s CI timeвыход.
-      fireEvent.change(getСерверNameВход(), { target: { value: "Entra_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "Entra_Сервер" } });
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
         target: { value: "https://upstream.example.com/mcp" },
       });
@@ -1295,7 +1295,7 @@ describe("CreateMCPСервер", () => {
 
       const user = userEvent.setup({ delay: null });
 
-      const nameВход = getСерверNameВход();
+      const nameВход = getServerNameВход();
       fireEvent.change(nameВход, { target: { value: "Locked_Down_Сервер" } });
 
       const urlВход = screen.getByPlaceholderText("https://your-mcp-server.com");
@@ -1326,7 +1326,7 @@ describe("CreateMCPСервер", () => {
       });
 
       await waitFor(() => {
-        expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+        expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
       });
 
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
@@ -1347,12 +1347,12 @@ describe("CreateMCPСервер", () => {
 
       await selectOption("Аутентификация", "OAuth");
 
-      // Wait for OAuthFormПолеs to render (OAuth Flow Type selector is the sentinel)
+      // Wait for OAuthFormFields to render (OAuth Flow Type selector is the sentinel)
       await waitFor(() => {
         expect(screen.getByText("OAuth Flow Type")).toBeInTheDocument();
       });
 
-      // OAuthFormПолеs defaults to INTERACTIVE, so the new fields should appear
+      // OAuthFormFields defaults to INTERACTIVE, so the new fields should appear
       await waitFor(() => {
         expect(screen.getByText("Токен Validation Rules (необязательно)")).toBeInTheDocument();
         expect(screen.getByText("Токен Storage TTL (seconds, необязательно)")).toBeInTheDocument();
@@ -1371,7 +1371,7 @@ describe("CreateMCPСервер", () => {
         fireEvent.change(urlВход, { target: { value: "https://a.example.com/mcp" } });
       });
       act(() => {
-        oauthHook.onТокенReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
+        oauthHook.onTokenReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
       });
       oauthHook.reset.mockClear();
 
@@ -1388,23 +1388,23 @@ describe("CreateMCPСервер", () => {
         fireEvent.change(urlВход, { target: { value: "https://a.example.com/mcp" } });
       });
       act(() => {
-        oauthHook.onТокенReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
+        oauthHook.onTokenReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
       });
       oauthHook.reset.mockClear();
 
-      const nameВход = document.getElementById("server_name") as HTMLВходElement;
+      const nameВход = document.getElementById("server_name") as HTMLInElement;
       await act(async () => {
         fireEvent.change(nameВход, { target: { value: "Renamed_Сервер" } });
       });
 
       // server_name is not part of the OAuth identity, so the held token must survive the edit.
-      await waitFor(() => expect(screen.getВсеByRole("button", { name: "Добавить MCP-сервер" }).length).toBeGreaterThan(0));
+      await waitFor(() => expect(screen.getAllByRole("button", { name: "Добавить MCP-сервер" }).length).toBeGreaterThan(0));
       expect(oauthHook.reset).not.toHaveBeenCalled();
     });
 
     it("does not refetch the инструмента preview with a discarded token after invalidation", async () => {
-      // Regression: handleFormЗначениеsChange used to publish the pre-reset antd snapshot into
-      // formЗначениеs after clearHeldOAuthТокен, so useTestMCPПодключение kept the discarded OAuth
+      // Regression: handleFormValuesChange used to publish the pre-reset antd snapshot into
+      // formValues after clearHeldOAuthТокен, so useTestMCPПодключение kept the discarded OAuth
       // material (the DCR client minted for the old identity) and sent it on the next инструмента-preview
       // request.
       await setupOAuthInteractive();
@@ -1413,18 +1413,18 @@ describe("CreateMCPСервер", () => {
         fireEvent.change(urlВход, { target: { value: "https://a.example.com/mcp" } });
       });
       act(() => {
-        oauthHook.onТокенReceived?.({ access_token: "stale-tok" }, { clientId: "client-a", clientSecret: "secret-a" });
+        oauthHook.onTokenReceived?.({ access_token: "stale-tok" }, { clientId: "client-a", clientSecret: "secret-a" });
       });
-      const nameВход = document.getElementById("server_name") as HTMLВходElement;
+      const nameВход = document.getElementById("server_name") as HTMLInElement;
       await act(async () => {
-        fireEvent.change(nameВход, { target: { value: "Sync_FormЗначениеs" } });
+        fireEvent.change(nameВход, { target: { value: "Sync_FormValues" } });
       });
-      vi.mocked(networking.testMCPИнструментыListЗапрос).mockClear();
+      vi.mocked(networking.testMCPToolsListЗапрос).mockClear();
 
       await selectOption("Аутентификация", "API ключ");
 
-      await waitFor(() => expect(vi.mocked(networking.testMCPИнструментыListЗапрос)).toHaveBeenCalled());
-      for (const call of vi.mocked(networking.testMCPИнструментыListЗапрос).mock.calls) {
+      await waitFor(() => expect(vi.mocked(networking.testMCPToolsListЗапрос)).toHaveBeenCalled());
+      for (const call of vi.mocked(networking.testMCPToolsListЗапрос).mock.calls) {
         expect(call[1]?.credentials?.client_id).not.toBe("client-a");
         expect(call[1]?.credentials?.client_secret).not.toBe("secret-a");
       }
@@ -1439,7 +1439,7 @@ describe("CreateMCPСервер", () => {
         fireEvent.change(urlВход, { target: { value: "https://a.example.com/mcp" } });
       });
       act(() => {
-        oauthHook.onТокенReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
+        oauthHook.onTokenReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
       });
       oauthHook.reset.mockClear();
 
@@ -1468,7 +1468,7 @@ describe("CreateMCPСервер", () => {
       await setupOAuthInteractive();
 
       // Fill required form fields
-      const nameВход = document.getElementById("server_name") as HTMLВходElement;
+      const nameВход = document.getElementById("server_name") as HTMLInElement;
       await act(async () => {
         fireEvent.change(nameВход, { target: { value: "OAuth_Сервер" } });
       });
@@ -1489,7 +1489,7 @@ describe("CreateMCPСервер", () => {
       });
 
       await waitFor(() => {
-        expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+        expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
       });
 
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
@@ -1499,7 +1499,7 @@ describe("CreateMCPСервер", () => {
     it("invalidates the DCR client and OAuth flow when the MCP URL changes after Authorize & Fetch", async () => {
       await setupOAuthInteractive();
 
-      const nameВход = document.getElementById("server_name") as HTMLВходElement;
+      const nameВход = document.getElementById("server_name") as HTMLInElement;
       await act(async () => {
         fireEvent.change(nameВход, { target: { value: "Url_Change_Сервер" } });
       });
@@ -1509,7 +1509,7 @@ describe("CreateMCPСервер", () => {
       });
 
       act(() => {
-        oauthHook.onТокенReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
+        oauthHook.onTokenReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
       });
       oauthHook.reset.mockClear();
 
@@ -1537,7 +1537,7 @@ describe("CreateMCPСервер", () => {
         fireEvent.click(submitButton);
       });
 
-      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
       expect(payload.credentials?.client_id).toBeUndefined();
       expect(payload.credentials?.client_secret).toBeUndefined();
@@ -1554,7 +1554,7 @@ describe("CreateMCPСервер", () => {
         expect(screen.getByText("OAuth Flow Type")).toBeInTheDocument();
       });
 
-      const nameВход = document.getElementById("server_name") as HTMLВходElement;
+      const nameВход = document.getElementById("server_name") as HTMLInElement;
       await act(async () => {
         fireEvent.change(nameВход, { target: { value: "OpenAPI_Сервер" } });
       });
@@ -1564,7 +1564,7 @@ describe("CreateMCPСервер", () => {
       });
 
       act(() => {
-        oauthHook.onТокенReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
+        oauthHook.onTokenReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
       });
       oauthHook.reset.mockClear();
 
@@ -1592,7 +1592,7 @@ describe("CreateMCPСервер", () => {
         fireEvent.click(submitButton);
       });
 
-      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
       expect(payload.spec_path).toBe("https://b.example.com/openapi.json");
       expect(payload.credentials?.client_id).toBeUndefined();
@@ -1610,7 +1610,7 @@ describe("CreateMCPСервер", () => {
         expect(screen.getByText("OAuth Flow Type")).toBeInTheDocument();
       });
 
-      const nameВход = document.getElementById("server_name") as HTMLВходElement;
+      const nameВход = document.getElementById("server_name") as HTMLInElement;
       await act(async () => {
         fireEvent.change(nameВход, { target: { value: "Транспорт_Change_Сервер" } });
       });
@@ -1620,7 +1620,7 @@ describe("CreateMCPСервер", () => {
       });
 
       act(() => {
-        oauthHook.onТокенReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
+        oauthHook.onTokenReceived?.({ access_token: "tok-a" }, { clientId: "client-a", clientSecret: "secret-a" });
       });
       oauthHook.reset.mockClear();
 
@@ -1653,14 +1653,14 @@ describe("CreateMCPСервер", () => {
         fireEvent.click(submitButton);
       });
 
-      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1));
+      await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
       expect(payload.url).toBe("https://same.example.com/spec-or-mcp");
       expect(payload.credentials?.client_id).toBeUndefined();
       expect(payload.credentials?.client_secret).toBeUndefined();
     });
 
-    // Empty/whitespace token_validation is covered in createСерверPayload.test.ts; the sibling
+    // Empty/whitespace token_validation is covered in createServerPayload.test.ts; the sibling
     // test above still proves the textarea reaches token_validation_json.
 
     it("includes credentials.token_endpoint_auth_method in payload when client_secret_basic is selected", async () => {
@@ -1679,7 +1679,7 @@ describe("CreateMCPСервер", () => {
 
       await setupOAuthInteractive();
 
-      const nameВход = document.getElementById("server_name") as HTMLВходElement;
+      const nameВход = document.getElementById("server_name") as HTMLInElement;
       await act(async () => {
         fireEvent.change(nameВход, { target: { value: "OAuth_Сервер" } });
       });
@@ -1696,14 +1696,14 @@ describe("CreateMCPСервер", () => {
       });
 
       await waitFor(() => {
-        expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+        expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
       });
 
       const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
       expect(payload.credentials?.token_endpoint_auth_method).toBe("client_secret_basic");
     });
 
-    // Blank credential keys are dropped by the shared filter, covered in createСерверPayload.test.ts;
+    // Blank credential keys are dropped by the shared filter, covered in createServerPayload.test.ts;
     // the sibling test above still proves the select reaches credentials.token_endpoint_auth_method.
 
     it("persists access + refresh token to the DB on submit for OBO mode", async () => {
@@ -1731,7 +1731,7 @@ describe("CreateMCPСервер", () => {
       // Interactive OAuth + delegate_auth_to_upstream off (the default) => OBO mode.
       await setupOAuthInteractive();
 
-      const nameВход = document.getElementById("server_name") as HTMLВходElement;
+      const nameВход = document.getElementById("server_name") as HTMLInElement;
       await act(async () => {
         fireEvent.change(nameВход, { target: { value: "OBO_Сервер" } });
       });
@@ -1746,7 +1746,7 @@ describe("CreateMCPСервер", () => {
       });
 
       await waitFor(() => {
-        expect(networking.storeMCPOAuthUserCredential).toHaveBeenCalledВремяs(1);
+        expect(networking.storeMCPOAuthUserCredential).toHaveBeenCalledTimes(1);
       });
       expect(networking.storeMCPOAuthUserCredential).toHaveBeenCalledWith("test-token", "obo-server-1", {
         access_token: "obo-access-token",
@@ -1766,7 +1766,7 @@ describe("CreateMCPСервер", () => {
         fireEvent.change(textarea, { target: { value: "not-valid-json{" } });
       });
 
-      const nameВход = document.getElementById("server_name") as HTMLВходElement;
+      const nameВход = document.getElementById("server_name") as HTMLInElement;
       await act(async () => {
         fireEvent.change(nameВход, { target: { value: "OAuth_Сервер" } });
       });
@@ -1800,7 +1800,7 @@ describe("CreateMCPСервер", () => {
 
     it("does not leak a previous server's OAuth token into the next add-server session", async () => {
       const usedТокен = (token: string) =>
-        vi.mocked(networking.testMCPИнструментыListЗапрос).mock.calls.some((call) => call[2] === token);
+        vi.mocked(networking.testMCPToolsListЗапрос).mock.calls.some((call) => call[2] === token);
 
       const { rerender } = render(<CreateMCPСервер {...defaultProps} />);
 
@@ -1820,7 +1820,7 @@ describe("CreateMCPСервер", () => {
 
       // Simulate "Authorize & Fetch Токен" completing for server A.
       await act(async () => {
-        oauthHook.onТокенReceived?.({ access_token: "stale-token-A", expires_in: 3600 });
+        oauthHook.onTokenReceived?.({ access_token: "stale-token-A", expires_in: 3600 });
       });
 
       // Precondition: the freshly fetched token drives the инструмента preview for server A.
@@ -1834,7 +1834,7 @@ describe("CreateMCPСервер", () => {
       // The OAuth flow state (source of the "Токен fetched" badge) is reset on close.
       expect(oauthHook.reset).toHaveBeenCalled();
 
-      vi.mocked(networking.testMCPИнструментыListЗапрос).mockClear();
+      vi.mocked(networking.testMCPToolsListЗапрос).mockClear();
 
       // Reopen for a brand-new server and enter a different URL withвыход re-authorizing.
       rerender(<CreateMCPСервер {...defaultProps} isModalVisible={true} />);
@@ -1850,7 +1850,7 @@ describe("CreateMCPСервер", () => {
     });
 
     it("clears the tool list and form fields when a parent dismisses the modal", async () => {
-      vi.mocked(networking.testMCPИнструментыListЗапрос).mockResolvedЗначение({
+      vi.mocked(networking.testMCPToolsListЗапрос).mockResolvedЗначение({
         tools: [{ name: "tool_a" }],
         error: null,
       });
@@ -1872,7 +1872,7 @@ describe("CreateMCPСервер", () => {
         fireEvent.change(urlВход, { target: { value: "https://server-a.example.com/mcp" } });
       });
       await act(async () => {
-        oauthHook.onТокенReceived?.({ access_token: "stale-token-A", expires_in: 3600 });
+        oauthHook.onTokenReceived?.({ access_token: "stale-token-A", expires_in: 3600 });
       });
 
       // Precondition: a инструмента list is shown for server A.
@@ -1880,7 +1880,7 @@ describe("CreateMCPСервер", () => {
         expect(ToolCount()).toBe("1");
       });
 
-      // Parent dismisses the modal withвыход rвыходing through Cancel or create.
+      // Parent dismisses the modal withвыход routing through Cancel or create.
       rerender(<CreateMCPСервер {...defaultProps} isModalVisible={false} />);
 
       await waitFor(() => {
@@ -1889,7 +1889,7 @@ describe("CreateMCPСервер", () => {
 
       // Reopening starts clean: neither the prior server's URL nor its инструмента list survives.
       rerender(<CreateMCPСервер {...defaultProps} isModalVisible={true} />);
-      const reopenedUrlВход = screen.getByPlaceholderText("https://your-mcp-server.com") as HTMLВходElement;
+      const reopenedUrlВход = screen.getByPlaceholderText("https://your-mcp-server.com") as HTMLInElement;
       expect(reopenedUrlВход.value).toBe("");
       expect(ToolCount()).toBe("0");
     });
@@ -1940,7 +1940,7 @@ describe("CreateMCPСервер", () => {
 
       await waitFor(() => {
         // Сервер name should be sanitized (hyphens replaced with underscores)
-        const nameВход = getСерверNameВход();
+        const nameВход = getServerNameВход();
         expect(nameВход).toHaveЗначение("github_mcp");
       });
     });
@@ -1959,14 +1959,14 @@ describe("CreateMCPСервер", () => {
         fireEvent.click(backButton);
       });
 
-      expect(onBackToDiscovery).toHaveBeenCalledВремяs(1);
+      expect(onBackToDiscovery).toHaveBeenCalledTimes(1);
     });
   });
 });
 
 describe("CreateMCPСервер oauth2_flow persistence", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   const createdСервер = {
@@ -1982,13 +1982,13 @@ describe("CreateMCPСервер oauth2_flow persistence", () => {
     updated_by: "user-1",
   };
 
-  async function setupHttpСерверForm() {
+  async function setupHttpServerForm() {
     render(<CreateMCPСервер {...defaultProps} />);
     await selectOption("Транспорт Type", "Streamable HTTP");
     await waitFor(() => {
       expect(screen.getByPlaceholderText("https://your-mcp-server.com")).toBeInTheDocument();
     });
-    const nameВход = document.getElementById("server_name") as HTMLВходElement;
+    const nameВход = document.getElementById("server_name") as HTMLInElement;
     await act(async () => {
       fireEvent.change(nameВход, { target: { value: "OAuth_Сервер" } });
     });
@@ -2004,7 +2004,7 @@ describe("CreateMCPСервер oauth2_flow persistence", () => {
       fireEvent.click(submitButton);
     });
     await waitFor(() => {
-      expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+      expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
     });
     const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
     return payload;
@@ -2012,7 +2012,7 @@ describe("CreateMCPСервер oauth2_flow persistence", () => {
 
   it("persists authorization_code for an interactive OAuth create", async () => {
     vi.mocked(networking.createMCPСервер).mockResolvedЗначение(createdСервер);
-    await setupHttpСерверForm();
+    await setupHttpServerForm();
     await selectOption("Аутентификация", "OAuth");
     await waitFor(() => {
       expect(screen.getByText("OAuth Flow Type")).toBeInTheDocument();
@@ -2025,7 +2025,7 @@ describe("CreateMCPСервер oauth2_flow persistence", () => {
 
   it("persists client_credentials for an M2M OAuth create", async () => {
     vi.mocked(networking.createMCPСервер).mockResolvedЗначение({ ...createdСервер, oauth2_flow: "client_credentials" });
-    await setupHttpСерверForm();
+    await setupHttpServerForm();
     await selectOption("Аутентификация", "OAuth");
     await waitFor(() => {
       expect(screen.getByText("OAuth Flow Type")).toBeInTheDocument();
@@ -2050,15 +2050,15 @@ describe("CreateMCPСервер oauth2_flow persistence", () => {
     expect(payload.oauth2_flow).toBe("client_credentials");
   });
 
-  // oauth2_flow branch coverage lives in createСерверPayload.test.ts; the two cases above keep
+  // oauth2_flow branch coverage lives in createServerPayload.test.ts; the two cases above keep
   // the dropdown-to-payload wiring they uniquely prove.
 });
 
 describe("CreateMCPСервер dcr_bridge toggle", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     oauthHook.tokenОтвет = null;
-    oauthHook.onТокенReceived = null;
+    oauthHook.onTokenReceived = null;
   });
 
   const createdСервер = {
@@ -2076,14 +2076,14 @@ describe("CreateMCPСервер dcr_bridge toggle", () => {
 
   const getDcrToggle = () => screen.queryByRole("switch", { name: /Gateway-hosted sign-in \(DCR bridge\)/ });
 
-  async function setupHttpСерверForm() {
+  async function setupHttpServerForm() {
     render(<CreateMCPСервер {...defaultProps} />);
     await selectOption("Транспорт Type", "Streamable HTTP");
     await waitFor(() => {
       expect(screen.getByPlaceholderText("https://your-mcp-server.com")).toBeInTheDocument();
     });
     await act(async () => {
-      fireEvent.change(getСерверNameВход(), { target: { value: "CF_Сервер" } });
+      fireEvent.change(getServerNameВход(), { target: { value: "CF_Сервер" } });
     });
     await act(async () => {
       fireEvent.change(screen.getByPlaceholderText("https://your-mcp-server.com"), {
@@ -2098,7 +2098,7 @@ describe("CreateMCPСервер dcr_bridge toggle", () => {
       fireEvent.click(submitButton);
     });
     await waitFor(() => {
-      expect(networking.createMCPСервер).toHaveBeenCalledВремяs(1);
+      expect(networking.createMCPСервер).toHaveBeenCalledTimes(1);
     });
     const [, payload] = vi.mocked(networking.createMCPСервер).mock.calls[0];
     return payload;
@@ -2107,7 +2107,7 @@ describe("CreateMCPСервер dcr_bridge toggle", () => {
   it.each([["Сквозная передача (без аутентификации ruLiteLLM)"], ["OAuth -делегирование (токен от клиента для вышестоящего сервиса)"]])(
     "renders the toggle default-checked when %s is selected",
     async (optionLabel) => {
-      await setupHttpСерверForm();
+      await setupHttpServerForm();
 
       await selectOption("Аутентификация", optionLabel);
 
@@ -2120,7 +2120,7 @@ describe("CreateMCPСервер dcr_bridge toggle", () => {
   );
 
   it.each([["None"], ["API ключ"], ["OAuth"]])("does not render the toggle for %s", async (optionLabel) => {
-    await setupHttpСерверForm();
+    await setupHttpServerForm();
 
     await selectOption("Аутентификация", optionLabel);
 
@@ -2131,7 +2131,7 @@ describe("CreateMCPСервер dcr_bridge toggle", () => {
   });
 
   it("renders the toggle between the OAuth client fields and the Authorize button", async () => {
-    await setupHttpСерверForm();
+    await setupHttpServerForm();
 
     await selectOption("Аутентификация", "Сквозная передача (без аутентификации ruLiteLLM)");
 
@@ -2150,7 +2150,7 @@ describe("CreateMCPСервер dcr_bridge toggle", () => {
     ["oauth_delegate", "OAuth -делегирование (токен от клиента для вышестоящего сервиса)"],
   ])("sends dcr_bridge: true by default on create for %s", async (authType, optionLabel) => {
     vi.mocked(networking.createMCPСервер).mockResolvedЗначение({ ...createdСервер, auth_type: authType });
-    await setupHttpСерверForm();
+    await setupHttpServerForm();
     await selectOption("Аутентификация", optionLabel);
     await waitFor(() => {
       expect(getDcrToggle()).toBeInTheDocument();
@@ -2162,7 +2162,7 @@ describe("CreateMCPСервер dcr_bridge toggle", () => {
 
   it("sends an explicit dcr_bridge: false when the toggle is unchecked", async () => {
     vi.mocked(networking.createMCPСервер).mockResolvedЗначение({ ...createdСервер, auth_type: "oauth_delegate" });
-    await setupHttpСерверForm();
+    await setupHttpServerForm();
     await selectOption("Аутентификация", "OAuth -делегирование (токен от клиента для вышестоящего сервиса)");
     await waitFor(() => {
       expect(getDcrToggle()).toBeInTheDocument();
@@ -2178,12 +2178,12 @@ describe("CreateMCPСервер dcr_bridge toggle", () => {
   });
 
   // Forcing dcr_bridge false for every non-client-forwarded auth type is covered in
-  // createСерверPayload.test.ts. The two form-state cases below stay: they prove the field
+  // createServerPayload.test.ts. The two form-state cases below stay: they prove the field
   // unmounts on a switch away, and that the live value survives a client-forwarded swap.
 
   it("forces dcr_bridge: false when the auth type is switched away after toggling", async () => {
     vi.mocked(networking.createMCPСервер).mockResolvedЗначение({ ...createdСервер, auth_type: "none" });
-    await setupHttpСерверForm();
+    await setupHttpServerForm();
     await selectOption("Аутентификация", "Сквозная передача (без аутентификации ruLiteLLM)");
     await waitFor(() => {
       expect(getDcrToggle()).toBeInTheDocument();
@@ -2203,7 +2203,7 @@ describe("CreateMCPСервер dcr_bridge toggle", () => {
 
   it("preserves the toggle value when switching between the two client-forwarded modes", async () => {
     vi.mocked(networking.createMCPСервер).mockResolvedЗначение({ ...createdСервер, auth_type: "oauth_delegate" });
-    await setupHttpСерверForm();
+    await setupHttpServerForm();
     await selectOption("Аутентификация", "Сквозная передача (без аутентификации ruLiteLLM)");
     await waitFor(() => {
       expect(getDcrToggle()).toBeInTheDocument();

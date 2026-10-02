@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { renderWithПровайдерs } from "@/../tests/test-utils";
+import { renderWithProviders } from "@/../tests/test-utils";
 import { МетрикаWithМетаданные } from "@/components/ИспользованиеPage/types";
 import ЭндпоинтИспользованиеBarChart from "./ЭндпоинтИспользованиеBarChart";
 
@@ -27,7 +27,7 @@ const endpointData = {
 
 describe("ЭндпоинтИспользованиеBarChart", () => {
   it("renders the title and the header legend labels", () => {
-    renderWithПровайдерs(<ЭндпоинтИспользованиеBarChart endpointData={endpointData} />);
+    renderWithProviders(<ЭндпоинтИспользованиеBarChart endpointData={endpointData} />);
 
     expect(screen.getByText("Success vs Запросов с ошибкой by Эндпоинт")).toBeInTheDocument();
     expect(screen.getByText("Успешных запросов")).toBeInTheDocument();
@@ -35,36 +35,36 @@ describe("ЭндпоинтИспользованиеBarChart", () => {
   });
 
   it("renders stacked green and red bars per endpoint", () => {
-    const { container } = renderWithПровайдерs(<ЭндпоинтИспользованиеBarChart endpointData={endpointData} />);
+    const { container } = renderWithProviders(<ЭндпоинтИспользованиеBarChart endpointData={endpointData} />);
 
-    expect(container.queryВыбратьorВсе(".recharts-bar")).toHaveLength(2);
-    const rectangles = Array.from(container.queryВыбратьorВсе("path.recharts-rectangle"));
+    expect(container.querySelectorВсе(".recharts-bar")).toHaveLength(2);
+    const rectangles = Array.from(container.querySelectorВсе("path.recharts-rectangle"));
     expect(rectangles).toHaveLength(4);
     const fills = new Set(rectangles.map((rect) => rect.getAttribute("fill")));
     expect(fills).toEqual(new Set(["var(--color-green-500, #22c55e)", "var(--color-red-500, #ef4444)"]));
 
-    const xПозицияs = rectangles.map((rect) => rect.getAttribute("d")?.split(",")[0]);
-    expect(new Set(xПозицияs).size).toBe(2);
+    const xPositions = rectangles.map((rect) => rect.getAttribute("d")?.split(",")[0]);
+    expect(new Set(xPositions).size).toBe(2);
   });
 
   it("labels the x axis with endpoint names", () => {
-    renderWithПровайдерs(<ЭндпоинтИспользованиеBarChart endpointData={endpointData} />);
+    renderWithProviders(<ЭндпоинтИспользованиеBarChart endpointData={endpointData} />);
 
-    expect(screen.getВсеByText("/chat/completions").length).toBeGreaterThan(0);
-    expect(screen.getВсеByText("/embeddings").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("/chat/completions").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("/embeddings").length).toBeGreaterThan(0);
   });
 
   it("keeps the chart's own legend off; only the header legend is shown", () => {
-    const { container } = renderWithПровайдерs(<ЭндпоинтИспользованиеBarChart endpointData={endpointData} />);
+    const { container } = renderWithProviders(<ЭндпоинтИспользованиеBarChart endpointData={endpointData} />);
 
-    expect(container.queryВыбратьor(".recharts-legend-wrapper")).toBeNull();
+    expect(container.querySelector(".recharts-legend-wrapper")).toBeNull();
     expect(screen.queryByText("metrics.successful_requests")).not.toBeInTheDocument();
   });
 
   it("renders an empty chart withвыход bars when endpointData is absent", () => {
-    const { container } = renderWithПровайдерs(<ЭндпоинтИспользованиеBarChart />);
+    const { container } = renderWithProviders(<ЭндпоинтИспользованиеBarChart />);
 
     expect(screen.getByText("Success vs Запросов с ошибкой by Эндпоинт")).toBeInTheDocument();
-    expect(container.queryВыбратьorВсе("path.recharts-rectangle")).toHaveLength(0);
+    expect(container.querySelectorВсе("path.recharts-rectangle")).toHaveLength(0);
   });
 });

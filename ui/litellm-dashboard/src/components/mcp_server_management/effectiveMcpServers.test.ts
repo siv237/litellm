@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { MCPСервер, MCPИнструментыet } from "../mcp_tools/types";
+import { MCPСервер, MCPToolset } from "../mcp_tools/types";
 import {
   applyToolPermissionWrite,
   emptyMcpAccessGroups,
-  mcpВсеowedИнструментыFor,
-  mcp-серверыForИдентификатор,
-  mcpToolPermissionКлючFor,
+  mcpAllowedToolsFor,
+  mcpServersForИдентификатор,
+  mcpToolPermissionKeyFor,
   resolveEffectiveMcp-серверы,
 } from "./effectiveMcp-серверы";
 
@@ -20,32 +20,32 @@ const server = (overrides: Partial<MCPСервер> & { server_id: string }): MC
     ...overrides,
   }) as MCPСервер;
 
-const toolset = (overrides: Partial<MCPИнструментыet> & { toolset_id: string }): MCPИнструментыet =>
-  ({ toolset_name: overrides.toolset_id, tools: [], ...overrides }) as MCPИнструментыet;
+const toolset = (overrides: Partial<MCPToolset> & { toolset_id: string }): MCPToolset =>
+  ({ toolset_name: overrides.toolset_id, tools: [], ...overrides }) as MCPToolset;
 
 const emptyВход = {
   all-серверы: [] as readonly MCPСервер[],
   selected-серверы: [] as readonly string[],
   selectedAccessGroups: [] as readonly string[],
-  selectedИнструментыets: [] as readonly string[],
-  toolsets: [] as readonly MCPИнструментыet[],
+  selectedToolsets: [] as readonly string[],
+  toolsets: [] as readonly MCPToolset[],
   toolPermissions: {} as Readonly<Record<string, readonly string[]>>,
 };
 
-describe("mcp-серверыForИдентификатор", () => {
+describe("mcpServersForИдентификатор", () => {
   const target = server({ server_id: "uuid-1", server_name: "github_mcp", alias: "GitHub" });
 
   it("matches on id, server name and alias alike", () => {
-    expect(mcp-серверыForИдентификатор([target], "uuid-1")).toEqual([target]);
-    expect(mcp-серверыForИдентификатор([target], "github_mcp")).toEqual([target]);
-    expect(mcp-серверыForИдентификатор([target], "GitHub")).toEqual([target]);
-    expect(mcp-серверыForИдентификатор([target], "other")).toEqual([]);
+    expect(mcpServersForИдентификатор([target], "uuid-1")).toEqual([target]);
+    expect(mcpServersForИдентификатор([target], "github_mcp")).toEqual([target]);
+    expect(mcpServersForИдентификатор([target], "GitHub")).toEqual([target]);
+    expect(mcpServersForИдентификатор([target], "other")).toEqual([]);
   });
 
   it("names every server sharing a duplicated name, as the backend does", () => {
     const twin = server({ server_id: "uuid-2", server_name: "github_mcp" });
 
-    expect(mcp-серверыForИдентификатор([target, twin], "github_mcp").map((match) => match.server_id)).toEqual([
+    expect(mcpServersForИдентификатор([target, twin], "github_mcp").map((match) => match.server_id)).toEqual([
       "uuid-1",
       "uuid-2",
     ]);
@@ -62,15 +62,15 @@ describe("mcp-серверыForИдентификатор", () => {
     const byName = server({ server_id: "uuid-9", server_name: "collide" });
     const catalog = idOwnerFirst ? [byId, byName] : [byName, byId];
 
-    expect(mcp-серверыForИдентификатор(catalog, "collide").map((match) => match.server_id)).toEqual(["collide"]);
+    expect(mcpServersForИдентификатор(catalog, "collide").map((match) => match.server_id)).toEqual(["collide"]);
   });
 });
 
-describe("mcpToolPermissionКлючFor", () => {
+describe("mcpToolPermissionKeyFor", () => {
   const target = server({ server_id: "uuid-1", server_name: "github_mcp", alias: "GitHub" });
 
   it("returns the existing name key so an edit does not fork into a second entry", () => {
-    expect(mcpToolPermissionКлючFor(target, { github_mcp: ["list_issues"] }, [target])).toBe("github_mcp");
+    expect(mcpToolPermissionKeyFor(target, { github_mcp: ["list_issues"] }, [target])).toBe("github_mcp");
   });
 
   // The map is a second collection of non-unique identifiers for one server, and this picks a
@@ -79,11 +79,11 @@ describe("mcpToolPermissionКлючFor", () => {
     { label: "id key first", toolPermissions: { "uuid-1": ["list_prs"], github_mcp: ["list_issues"] } },
     { label: "name key first", toolPermissions: { github_mcp: ["list_issues"], "uuid-1": ["list_prs"] } },
   ])("prefers the id key when both an id and a name key exist ($label)", ({ toolPermissions }) => {
-    expect(mcpToolPermissionКлючFor(target, toolPermissions, [target])).toBe("uuid-1");
+    expect(mcpToolPermissionKeyFor(target, toolPermissions, [target])).toBe("uuid-1");
   });
 
   it("falls back to the server id when no entry exists yet", () => {
-    expect(mcpToolPermissionКлючFor(target, {}, [target])).toBe("uuid-1");
+    expect(mcpToolPermissionKeyFor(target, {}, [target])).toBe("uuid-1");
   });
 
   // Writing this key would hand the entry's tools to the server that owns the id, not to the one
@@ -96,9 +96,9 @@ describe("mcpToolPermissionКлючFor", () => {
     const byName = server({ server_id: "uuid-9", server_name: "collide" });
     const catalog = idOwnerFirst ? [byId, byName] : [byName, byId];
 
-    expect(mcpToolPermissionКлючFor(byName, { collide: ["list_issues"] }, catalog)).toBe("uuid-9");
-    expect(mcpВсеowedИнструментыFor(byName, { collide: ["list_issues"] }, catalog)).toBeUndefined();
-    expect(mcpВсеowedИнструментыFor(byId, { collide: ["list_issues"] }, catalog)).toEqual(["list_issues"]);
+    expect(mcpToolPermissionKeyFor(byName, { collide: ["list_issues"] }, catalog)).toBe("uuid-9");
+    expect(mcpAllowedToolsFor(byName, { collide: ["list_issues"] }, catalog)).toBeUndefined();
+    expect(mcpAllowedToolsFor(byId, { collide: ["list_issues"] }, catalog)).toEqual(["list_issues"]);
   });
 });
 
@@ -128,7 +128,7 @@ describe("emptyMcpAccessGroups", () => {
 describe("resolveEffectiveMcp-серверы", () => {
   const direct = server({ server_id: "srv-direct", server_name: "Direct" });
   const grouped = server({ server_id: "srv-group", server_name: "Grouped", mcp_access_groups: ["prod"] });
-  const inИнструментыet = server({ server_id: "srv-toolset", server_name: "Инструментыetted" });
+  const inToolset = server({ server_id: "srv-toolset", server_name: "Инструментыetted" });
 
   it("resolves a selected access group to its member servers", () => {
     const resolved = resolveEffectiveMcp-серверы({
@@ -166,8 +166,8 @@ describe("resolveEffectiveMcp-серверы", () => {
   it("resolves a selected toolset to the servers its tools live on", () => {
     const input = {
       ...emptyВход,
-      all-серверы: [direct, inИнструментыet],
-      selectedИнструментыets: ["ts-1"],
+      all-серверы: [direct, inToolset],
+      selectedToolsets: ["ts-1"],
       toolsets: [
         toolset({
           toolset_id: "ts-1",
@@ -180,7 +180,7 @@ describe("resolveEffectiveMcp-серверы", () => {
 
     expect(resolved).toEqual([
       {
-        server: inИнструментыet,
+        server: inToolset,
         permissionКлюч: "srv-toolset",
         supersededКлючи: [],
         ambiguousКлючи: [],
@@ -195,8 +195,8 @@ describe("resolveEffectiveMcp-серверы", () => {
   it("yields nothing for a toolset that is not in the loaded list", () => {
     const input = {
       ...emptyВход,
-      all-серверы: [inИнструментыet],
-      selectedИнструментыets: ["ts-missing"],
+      all-серверы: [inToolset],
+      selectedToolsets: ["ts-missing"],
       toolsets: [],
     };
     const resolved = resolveEffectiveMcp-серверы(input);
@@ -312,7 +312,7 @@ describe("equivalent permission keys for one server", () => {
   const other = server({ server_id: "uuid-2", server_name: "other_mcp" });
 
   it("unions every equivalent key, which is what the backend enforces", () => {
-    expect(mcpВсеowedИнструментыFor(named, { "uuid-1": ["list_issues"], github_mcp: ["create_issue"] }, [named])).toEqual([
+    expect(mcpAllowedToolsFor(named, { "uuid-1": ["list_issues"], github_mcp: ["create_issue"] }, [named])).toEqual([
       "list_issues",
       "create_issue",
     ]);
@@ -471,7 +471,7 @@ describe("equivalent permission keys for one server", () => {
 // The backend adds a toolset's tools to whatever mcp_tool_permissions holds, so a toolset grant is
 // part of what this level allows and none of it can be revoked by writing that map.
 describe("tools a selected toolset grants", () => {
-  const inИнструментыet = server({ server_id: "srv-toolset", server_name: "Инструментыetted" });
+  const inToolset = server({ server_id: "srv-toolset", server_name: "Инструментыetted" });
   const support = toolset({
     toolset_id: "ts-1",
     toolset_name: "Support",
@@ -484,8 +484,8 @@ describe("tools a selected toolset grants", () => {
   const resolveOne = (toolPermissions: Readonly<Record<string, readonly string[]>>) => {
     const input = {
       ...emptyВход,
-      all-серверы: [inИнструментыet],
-      selectedИнструментыets: ["ts-1"],
+      all-серверы: [inToolset],
+      selectedToolsets: ["ts-1"],
       toolsets: [support],
       toolPermissions,
     };
@@ -535,9 +535,9 @@ describe("tools a selected toolset grants", () => {
   it("leaves a server no selected toolset names unrestricted", () => {
     const input = {
       ...emptyВход,
-      all-серверы: [inИнструментыet],
+      all-серверы: [inToolset],
       selected-серверы: ["srv-toolset"],
-      selectedИнструментыets: [],
+      selectedToolsets: [],
       toolsets: [support],
     };
     const untouched = resolveEffectiveMcp-серверы(input)[0];

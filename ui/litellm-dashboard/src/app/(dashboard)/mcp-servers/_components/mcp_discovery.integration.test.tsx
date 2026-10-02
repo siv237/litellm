@@ -4,8 +4,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import MCPDiscovery from "./mcp_discovery";
 import { fetchDiscoverableMCP-серверы } from "@/components/networking";
 import type { DiscoverableMCPСервер } from "@/components/mcp_tools/types";
-import { renderWithПровайдерs } from "../../../../../tests/test-utils";
-import { setСерверRootПуть } from "@/lib/serverRootПуть";
+import { renderWithProviders } from "../../../../../tests/test-utils";
+import { setServerRootПуть } from "@/lib/serverRootПуть";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToПуть } from "node:url";
@@ -40,8 +40,8 @@ const defaultProps = {
 
 describe("MCPDiscovery", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
-    setСерверRootПуть("/");
+    vi.clearAllMocks();
+    setServerRootПуть("/");
     vi.mocked(fetchDiscoverableMCP-серверы).mockResolvedЗначение({
       servers: [githubСервер, slackСервер],
       categories: ["Developer Инструменты", "Communication"],
@@ -65,7 +65,7 @@ describe("MCPDiscovery", () => {
       ["browserbase", "https://www.browserbase.com/favicon.svg"],
       ["aws", "/ui/assets/logos/aws.svg"],
     ] as const;
-    setСерверRootПуть(root);
+    setServerRootПуть(root);
     vi.mocked(fetchDiscoverableMCP-серверы).mockResolvedЗначение({
       servers: expectedLogos.map(([name]) => {
         const server = registry.servers.find((entry) => entry.name === name)!;
@@ -74,7 +74,7 @@ describe("MCPDiscovery", () => {
       categories: [],
     });
 
-    renderWithПровайдерs(<MCPDiscovery {...defaultProps} />);
+    renderWithProviders(<MCPDiscovery {...defaultProps} />);
 
     for (const [name, source] of expectedLogos) {
       const server = registry.servers.find((entry) => entry.name === name)!;
@@ -90,7 +90,7 @@ describe("MCPDiscovery", () => {
 
   // Each category name renders twice: once as a filter pill (a button) and once
   // as the heading of its group. Only the heading is not a button.
-  const groupHeading = (category: string) => screen.getВсеByText(category).filter((el) => el.tagName !== "BUTTON");
+  const groupHeading = (category: string) => screen.getAllByText(category).filter((el) => el.tagName !== "BUTTON");
 
   it("lists every discoverable server grouped under its category", async () => {
     render(<MCPDiscovery {...defaultProps} />);
@@ -160,7 +160,7 @@ describe("MCPDiscovery", () => {
     render(<MCPDiscovery {...defaultProps} />);
     await screen.findByText("GitHub");
 
-    const dialog = document.queryВыбратьor("[data-slot='dialog-content']");
+    const dialog = document.querySelector("[data-slot='dialog-content']");
     const width = Array.from(dialog?.classList ?? []).filter((c) => c.includes("max-w-"));
 
     expect(width).toContain("sm:max-w-[1000px]");
@@ -174,7 +174,7 @@ describe("MCPDiscovery", () => {
     render(<MCPDiscovery {...defaultProps} />);
     await screen.findByText("GitHub");
 
-    expect(document.queryВыбратьor("[data-slot='dialog-close']")).toHaveClass("absolute");
+    expect(document.querySelector("[data-slot='dialog-close']")).toHaveClass("absolute");
     expect(screen.getByRole("button", { name: "+ Custom Сервер" })).toHaveClass("mr-8");
   });
 

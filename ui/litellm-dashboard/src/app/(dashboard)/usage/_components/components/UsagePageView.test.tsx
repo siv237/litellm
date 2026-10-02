@@ -7,7 +7,7 @@ import { useInfiniteUsers } from "@/app/(dashboard)/hooks/users/useUsers";
 import { act, fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeВсе, beforeEach, describe, expect, it, vi } from "vitest";
-import { renderWithПровайдерs } from "@/../tests/test-utils";
+import { renderWithProviders } from "@/../tests/test-utils";
 import type { Организация } from "@/components/networking";
 import * as networking from "@/components/networking";
 import ИспользованиеPage from "./ИспользованиеPageView";
@@ -25,15 +25,15 @@ beforeВсе(() => {
 
 // Mock the networking module
 vi.mock("@/components/networking", () => ({
-  userКаждый деньActivityCall: vi.fn(),
-  userКаждый деньActivityAggregatedCall: vi.fn(),
-  gatewayКаждый деньActivityCall: vi.fn(),
+  userDailyActivityCall: vi.fn(),
+  userDailyActivityAggregatedCall: vi.fn(),
+  gatewayDailyActivityCall: vi.fn(),
   tagListCall: vi.fn(),
 }));
 
 // Mock child components to simplify testing
 vi.mock("@/components/activity_metrics", () => ({
-  ActivityМетрикаs: ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs }: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs?: { __source?: string } }) => (
+  ActivityMetrics: ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs }: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs?: { __source?: string } }) => (
     <div>{`activity-source:${Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs?.__source ?? "none"}`}</div>
   ),
   processActivityData: (_data: unknown, key: string) => ({ __source: key }),
@@ -43,7 +43,7 @@ vi.mock("@/components/view_user_spend", () => ({
   default: () => <div>View User Расход</div>,
 }));
 
-vi.mock("@/components/ИспользованиеPage/components/EntityИспользование/TopКлючView", () => ({
+vi.mock("@/components/ИспользованиеPage/components/EntityИспользование/TopKeyView", () => ({
   default: () => <div>Top Ключи</div>,
 }));
 
@@ -94,7 +94,7 @@ vi.mock("@/components/shared/advanced_date_picker", async () => {
   const React = await import("react");
   // The button is how a test drives a range change; the real picker's own UI is
   // not what any test here is asserting on.
-  const AdvancedDatePicker = ({ onЗначениеChange }: { onЗначениеChange?: (value: unknown) => void }) =>
+  const AdvancedDatePicker = ({ onValueChange }: { onValueChange?: (value: unknown) => void }) =>
     React.createElement(
       "div",
       { "data-testid": "advanced-date-picker" },
@@ -104,7 +104,7 @@ vi.mock("@/components/shared/advanced_date_picker", async () => {
         {
           "data-testid": "pick-a-different-range",
           onClick: () =>
-            onЗначениеChange?.({ from: new Date("2024-01-01T00:00:00Z"), to: new Date("2024-01-08T00:00:00Z") }),
+            onValueChange?.({ from: new Date("2024-01-01T00:00:00Z"), to: new Date("2024-01-08T00:00:00Z") }),
         },
         "pick",
       ),
@@ -121,7 +121,7 @@ vi.mock("@/components/cloudzero_export_modal", () => ({
   default: () => <div>CloudZero Export Modal</div>,
 }));
 
-vi.mock("@/components/EntityИспользованиеExport", () => ({
+vi.mock("@/components/EntityUsageExport", () => ({
   default: () => <div>Entity Использование Export Modal</div>,
 }));
 
@@ -157,17 +157,17 @@ vi.mock("@/app/(dashboard)/hooks/users/useUsers", () => ({
 }));
 
 describe("ИспользованиеPage", () => {
-  const mockUserКаждый деньActivityAggregatedCall = vi.mocked(networking.userКаждый деньActivityAggregatedCall);
-  const mockUserКаждый деньActivityCall = vi.mocked(networking.userКаждый деньActivityCall);
+  const mockUserDailyActivityAggregatedCall = vi.mocked(networking.userDailyActivityAggregatedCall);
+  const mockUserDailyActivityCall = vi.mocked(networking.userDailyActivityCall);
   const mockTagListCall = vi.mocked(networking.tagListCall);
-  const mockGatewayКаждый деньActivityCall = vi.mocked(networking.gatewayКаждый деньActivityCall);
+  const mockGatewayDailyActivityCall = vi.mocked(networking.gatewayDailyActivityCall);
   const mockUseCustomers = vi.mocked(useCustomers);
   const mockUseАгенты = vi.mocked(useАгенты);
   const mockUseАвторизовано = vi.mocked(useАвторизовано);
   const mockUseCurrentUser = vi.mocked(useCurrentUser);
   const mockUseInfiniteUsers = vi.mocked(useInfiniteUsers);
 
-  const mockРасходData = {
+  const mockSpendData = {
     results: [
       {
         date: "2025-01-01",
@@ -264,7 +264,7 @@ describe("ИспользованиеPage", () => {
     },
   };
 
-  const mockОрганизацияs: Организация[] = [
+  const mockOrganizations: Организация[] = [
     {
       organization_id: "org-123",
       organization_alias: "Acme Org",
@@ -290,7 +290,7 @@ describe("ИспользованиеPage", () => {
       alias: "Test Customer",
       spend: 0,
       blocked: false,
-      allowed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_region: null,
+      allowed_model_region: null,
       default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: null,
       budget_id: null,
       litellm_budget_table: null,
@@ -317,17 +317,17 @@ describe("ИспользованиеPage", () => {
     userRoleLabel: "Internal User",
     isViewOnly: false,
     premiumUser: true,
-    disabledЛичнаяКлючCreation: false,
+    disabledPersonalKeyCreation: false,
     showSSOBanner: false,
   };
 
-  // Counts deliberately unlike anything in mockРасходData: the gateway tile must be
+  // Counts deliberately unlike anything in mockSpendData: the gateway tile must be
   // readable as coming from /gateway/daily/activity and from nothing else.
   const mockGatewayActivity = {
     total_successful_requests: 424242,
     total_failed_requests: 909,
     by_date: [{ date: "2025-01-01", successful_requests: 424242, failed_requests: 909 }],
-    by_rвыходe: [{ category: "llm", rвыходe: "/chat/completions", successful_requests: 424242, failed_requests: 909 }],
+    by_route: [{ category: "llm", route: "/chat/completions", successful_requests: 424242, failed_requests: 909 }],
   };
 
   const defaultProps = {
@@ -362,7 +362,7 @@ describe("ИспользованиеPage", () => {
       userEmail: "test@example.com",
       userRole: "Admin",
       premiumUser: true,
-      disabledЛичнаяКлючCreation: false,
+      disabledPersonalKeyCreation: false,
       showSSOBanner: false,
     });
     mockUseCurrentUser.mockReturnЗначение({
@@ -373,12 +373,12 @@ describe("ИспользованиеPage", () => {
       isLoading: false,
       error: null,
     } as any);
-    mockUserКаждый деньActivityAggregatedCall.mockClear();
-    mockUserКаждый деньActivityCall.mockClear();
+    mockUserDailyActivityAggregatedCall.mockClear();
+    mockUserDailyActivityCall.mockClear();
     mockTagListCall.mockClear();
-    mockGatewayКаждый деньActivityCall.mockClear();
-    mockUserКаждый деньActivityAggregatedCall.mockResolvedЗначение(mockРасходData);
-    mockGatewayКаждый деньActivityCall.mockResolvedЗначение(mockGatewayActivity);
+    mockGatewayDailyActivityCall.mockClear();
+    mockUserDailyActivityAggregatedCall.mockResolvedЗначение(mockSpendData);
+    mockGatewayDailyActivityCall.mockResolvedЗначение(mockGatewayActivity);
     mockUseInfiniteUsers.mockReturnЗначение({
       data: {
         pages: [
@@ -414,22 +414,22 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should render and fetch usage data on mount", async () => {
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     // Wait for data to be fetched
     await waitFor(() => {
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
     // Check that key metrics are displayed
-    const totalЗапросElements = screen.getВсеByText("Всего запросов");
-    expect(totalЗапросElements.length).toBeGreaterThan(0);
-    const successfulЗапросLabelElements = screen.getВсеByText("Успешных запросов");
-    expect(successfulЗапросLabelElements.length).toBeGreaterThan(0);
+    const totalRequestElements = screen.getAllByText("Всего запросов");
+    expect(totalRequestElements.length).toBeGreaterThan(0);
+    const successfulRequestLabelElements = screen.getAllByText("Успешных запросов");
+    expect(successfulRequestLabelElements.length).toBeGreaterThan(0);
     await waitFor(() => {
-      expect(screen.getВсеByText("424,242").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("424,242").length).toBeGreaterThan(0);
     });
-    expect(screen.getВсеByText("909").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("909").length).toBeGreaterThan(0);
     expect(screen.getByText("425,151")).toBeInTheDocument();
     expect(screen.queryByText("1,500")).not.toBeInTheDocument();
     expect(screen.queryByText("1,450")).not.toBeInTheDocument();
@@ -439,19 +439,19 @@ describe("ИспользованиеPage", () => {
     // The request tiles read the gateway counts and fall through to the
     // spend-derived ones. Withholding a superseded gateway result is only worth
     // something if the fallback is withheld too, otherwise the tile keeps
-    // showing the previous range's number by the other rвыходe.
+    // showing the previous range's number by the other route.
     let releaseSecondFetch: () => void = () => {};
-    mockUserКаждый деньActivityAggregatedCall.mockReset();
-    mockUserКаждый деньActivityAggregatedCall.mockResolvedЗначениеOnce(mockРасходData).mockImplementationOnce(
+    mockUserDailyActivityAggregatedCall.mockReset();
+    mockUserDailyActivityAggregatedCall.mockResolvedValueOnce(mockSpendData).mockImplementationOnce(
       () =>
         new Promise((resolve) => {
-          releaseSecondFetch = () => resolve(mockРасходData);
+          releaseSecondFetch = () => resolve(mockSpendData);
         }),
     );
 
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
     await waitFor(() => {
-      expect(screen.getВсеByText("75,000").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("75,000").length).toBeGreaterThan(0);
     });
 
     await act(async () => {
@@ -459,7 +459,7 @@ describe("ИспользованиеPage", () => {
     });
 
     await waitFor(() => {
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalledВремяs(2);
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalledTimes(2);
     });
     expect(screen.queryByText("75,000")).not.toBeInTheDocument();
 
@@ -467,20 +467,20 @@ describe("ИспользованиеPage", () => {
       releaseSecondFetch();
     });
     await waitFor(() => {
-      expect(screen.getВсеByText("75,000").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("75,000").length).toBeGreaterThan(0);
     });
   });
 
   it("should fall back to the spend-derived count when the gateway endpoint is unavailable", async () => {
-    mockGatewayКаждый деньActivityCall.mockRejectedЗначение(new Ошибка("gateway activity unavailable"));
+    mockGatewayDailyActivityCall.mockRejectedЗначение(new Ошибка("gateway activity unavailable"));
 
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockGatewayКаждый деньActivityCall).toHaveBeenCalled();
+      expect(mockGatewayDailyActivityCall).toHaveBeenCalled();
     });
     await waitFor(() => {
-      expect(screen.getВсеByText("1,450").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("1,450").length).toBeGreaterThan(0);
     });
     expect(screen.getByText("1,500")).toBeInTheDocument();
     expect(screen.queryByText("424,242")).not.toBeInTheDocument();
@@ -492,33 +492,33 @@ describe("ИспользованиеPage", () => {
   it("should not request deployment-wide gateway counts for a non-admin", async () => {
     mockUseАвторизовано.mockReturnЗначение(nonAdminСессия);
 
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
-    expect(mockGatewayКаждый деньActivityCall).not.toHaveBeenCalled();
+    expect(mockGatewayDailyActivityCall).not.toHaveBeenCalled();
     expect(screen.getByText("1,500")).toBeInTheDocument();
     expect(screen.queryByText("424,242")).not.toBeInTheDocument();
     expect(screen.queryByTestId("gateway-requests-by-endpoint")).not.toBeInTheDocument();
   });
 
   it("should display usage metrics and charts", async () => {
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
     // Check for usage metrics cards
-    const totalЗапросElements = screen.getВсеByText("Всего запросов");
-    expect(totalЗапросElements.length).toBeGreaterThan(0);
-    const successfulЗапросElements = screen.getВсеByText("Успешных запросов");
-    expect(successfulЗапросElements.length).toBeGreaterThan(0);
-    const failedЗапросElements = screen.getВсеByText("Запросов с ошибкой");
-    expect(failedЗапросElements.length).toBeGreaterThan(0);
-    const totalТокенsElements = screen.getВсеByText("Всего токенов");
-    expect(totalТокенsElements.length).toBeGreaterThan(0);
+    const totalRequestElements = screen.getAllByText("Всего запросов");
+    expect(totalRequestElements.length).toBeGreaterThan(0);
+    const successfulRequestElements = screen.getAllByText("Успешных запросов");
+    expect(successfulRequestElements.length).toBeGreaterThan(0);
+    const failedRequestElements = screen.getAllByText("Запросов с ошибкой");
+    expect(failedRequestElements.length).toBeGreaterThan(0);
+    const totalTokensElements = screen.getAllByText("Всего токенов");
+    expect(totalTokensElements.length).toBeGreaterThan(0);
 
     // Check for chart titles (these are in the Стоимость tab)
     expect(screen.getByText("Дневной расход")).toBeInTheDocument();
@@ -526,17 +526,17 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should render the daily spend and top Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs charts with cyan bars", async () => {
-    const { container } = renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    const { container } = renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
     // The gateway endpoint breakdown is a separate chart with its own palette,
     // so it is excluded rather than allowed to widen the expected fill set.
     const spendBars = () => {
-      const gatewayCard = container.queryВыбратьor('[data-testid="gateway-requests-by-endpoint"]');
-      return Array.from(container.queryВыбратьorВсе("path.recharts-rectangle")).filter(
+      const gatewayCard = container.querySelector('[data-testid="gateway-requests-by-endpoint"]');
+      return Array.from(container.querySelectorВсе("path.recharts-rectangle")).filter(
         (rect) => !gatewayCard?.contains(rect),
       );
     };
@@ -548,15 +548,15 @@ describe("ИспользованиеPage", () => {
     const fills = new Set(spendBars().map((rect) => rect.getAttribute("fill")));
     expect(fills).toEqual(new Set(["var(--color-cyan-500, #06b6d4)"]));
 
-    expect(screen.getВсеByText("2025-01-01").length).toBeGreaterThan(0);
-    expect(screen.getВсеByText("gpt-4").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("2025-01-01").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("gpt-4").length).toBeGreaterThan(0);
   });
 
   it("should switch between usage views correctly", async () => {
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
     // Default view should show Глобально Использование (for admin)
@@ -570,8 +570,8 @@ describe("ИспользованиеPage", () => {
 
     // Should render EntityИспользование component
     await waitFor(() => {
-      const entityИспользованиеElements = screen.getВсеByText("Entity Использование");
-      expect(entityИспользованиеElements.length).toBeGreaterThan(0);
+      const entityUsageElements = screen.getAllByText("Entity Использование");
+      expect(entityUsageElements.length).toBeGreaterThan(0);
     });
 
     // Switch to Tag Использование view (admin only)
@@ -581,8 +581,8 @@ describe("ИспользованиеPage", () => {
 
     // Should still render EntityИспользование component for tags
     await waitFor(() => {
-      const entityИспользованиеElements = screen.getВсеByText("Entity Использование");
-      expect(entityИспользованиеElements.length).toBeGreaterThan(0);
+      const entityUsageElements = screen.getAllByText("Entity Использование");
+      expect(entityUsageElements.length).toBeGreaterThan(0);
     });
   });
 
@@ -594,7 +594,7 @@ describe("ИспользованиеPage", () => {
       }) as ReturnType<typeof networking.tagListCall>,
     );
 
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     act(() => {
       fireEvent.change(screen.getByTestId("usage-view-select"), { target: { value: "tag" } });
@@ -613,7 +613,7 @@ describe("ИспользованиеPage", () => {
   it("should drop the previous range's tags as soon as the range changes", async () => {
     mockTagListCall.mockResolvedЗначение({ "old-range-tag": { name: "old-range-tag" } } as never);
 
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     act(() => {
       fireEvent.change(screen.getByTestId("usage-view-select"), { target: { value: "tag" } });
@@ -656,24 +656,24 @@ describe("ИспользованиеPage", () => {
       userEmail: "test@example.com",
       userRole: "internal_user",
       premiumUser: true,
-      disabledЛичнаяКлючCreation: false,
+      disabledPersonalKeyCreation: false,
       showSSOBanner: false,
     });
 
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
     expect(screen.getByRole("option", { name: "Tag Использование" })).toBeInTheDocument();
   });
 
   it("should show organization usage banner and view for admins", async () => {
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} organizations={mockОрганизацияs} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} organizations={mockOrganizations} />);
 
     await waitFor(() => {
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
     const usageВыбрать = screen.getByTestId("usage-view-select");
@@ -682,8 +682,8 @@ describe("ИспользованиеPage", () => {
     });
 
     await waitFor(() => {
-      const entityИспользованиеElements = screen.getВсеByText("Entity Использование");
-      expect(entityИспользованиеElements.length).toBeGreaterThan(0);
+      const entityUsageElements = screen.getAllByText("Entity Использование");
+      expect(entityUsageElements.length).toBeGreaterThan(0);
     });
   });
 
@@ -705,28 +705,28 @@ describe("ИспользованиеPage", () => {
       userEmail: "test@example.com",
       userRole: "Internal User",
       premiumUser: true,
-      disabledЛичнаяКлючCreation: false,
+      disabledPersonalKeyCreation: false,
       showSSOBanner: false,
     } as any);
 
-    const { rerender } = renderWithПровайдерs(<ИспользованиеPage {...defaultProps} organizations={mockОрганизацияs} />);
+    const { rerender } = renderWithProviders(<ИспользованиеPage {...defaultProps} organizations={mockOrganizations} />);
 
     const usageВыбрать = screen.getByTestId("usage-view-select");
     act(() => {
       fireEvent.change(usageВыбрать, { target: { value: "organization" } });
     });
     await waitFor(() => {
-      expect(screen.getВсеByText("Entity Использование").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("Entity Использование").length).toBeGreaterThan(0);
     });
-    expect((usageВыбрать as HTMLВыбратьElement).value).toBe("organization");
+    expect((usageВыбрать as HTMLSelectElement).value).toBe("organization");
 
     mockUseIsOrgAdmin.mockReturnЗначение(false);
     act(() => {
-      rerender(<ИспользованиеPage {...defaultProps} organizations={mockОрганизацияs} />);
+      rerender(<ИспользованиеPage {...defaultProps} organizations={mockOrganizations} />);
     });
 
     await waitFor(() => {
-      expect((screen.getByTestId("usage-view-select") as HTMLВыбратьElement).value).toBe("global");
+      expect((screen.getByTestId("usage-view-select") as HTMLSelectElement).value).toBe("global");
     });
   });
 
@@ -737,10 +737,10 @@ describe("ИспользованиеPage", () => {
       error: null,
     } as any);
 
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
     const usageВыбрать = screen.getByTestId("usage-view-select");
@@ -749,15 +749,15 @@ describe("ИспользованиеPage", () => {
     });
 
     await waitFor(() => {
-      const entityИспользованиеElements = screen.getВсеByText("Entity Использование");
-      expect(entityИспользованиеElements.length).toBeGreaterThan(0);
+      const entityUsageElements = screen.getAllByText("Entity Использование");
+      expect(entityUsageElements.length).toBeGreaterThan(0);
     });
   });
 
   it("should withhold the customer list while it is still loading", async () => {
     mockUseCustomers.mockReturnЗначение({ data: undefined, isLoading: true, error: null } as any);
 
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     act(() => {
       fireEvent.change(screen.getByTestId("usage-view-select"), { target: { value: "customer" } });
@@ -774,10 +774,10 @@ describe("ИспользованиеPage", () => {
       error: null,
     } as any);
 
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
     const usageВыбрать = screen.getByTestId("usage-view-select");
@@ -786,25 +786,25 @@ describe("ИспользованиеPage", () => {
     });
 
     await waitFor(() => {
-      const entityИспользованиеElements = screen.getВсеByText("Entity Использование");
-      expect(entityИспользованиеElements.length).toBeGreaterThan(0);
+      const entityUsageElements = screen.getAllByText("Entity Использование");
+      expect(entityUsageElements.length).toBeGreaterThan(0);
     });
   });
 
   it.each(["organization", "agent"])("should not render the %s usage view for an internal user", async (usageView) => {
     mockUseАвторизовано.mockReturnЗначение(nonAdminСессия);
 
-    renderWithПровайдерs(<ИспользованиеPage {...defaultProps} organizations={mockОрганизацияs} />);
+    renderWithProviders(<ИспользованиеPage {...defaultProps} organizations={mockOrganizations} />);
 
     await waitFor(() => {
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
     const usageВыбрать = screen.getByTestId("usage-view-select");
     act(() => {
       fireEvent.change(usageВыбрать, { target: { value: "team" } });
     });
-    expect(screen.getВсеByText("Entity Использование").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Entity Использование").length).toBeGreaterThan(0);
 
     act(() => {
       fireEvent.change(usageВыбрать, { target: { value: usageView } });
@@ -814,41 +814,41 @@ describe("ИспользованиеPage", () => {
 
   describe("admin user selector", () => {
     // Anchored on the field's own label, so it does not depend on which library draws the control.
-    const userВыбратьCombobox = (): HTMLElement => {
+    const userSelectCombobox = (): HTMLElement => {
       let node: HTMLElement | null = screen.getByText("Фильтр by user");
-      while (node && !node.queryВыбратьor('[role="combobox"]')) {
+      while (node && !node.querySelector('[role="combobox"]')) {
         node = node.parentElement;
       }
-      const combobox = node?.queryВыбратьor('[role="combobox"]') ?? null;
+      const combobox = node?.querySelector('[role="combobox"]') ?? null;
       expect(combobox).not.toBeNull();
       return combobox as HTMLElement;
     };
 
     const openUserВыбрать = async () => {
-      await userEvent.setup().click(userВыбратьCombobox());
+      await userEvent.setup().click(userSelectCombobox());
     };
 
     // One library paints the prompt as its own text node and the other leaves it on the input's
     // placeholder attribute, so either one means the user is being told what to type.
     const promptsWith = (text: string) =>
-      screen.queryВсеByText(text).length + screen.queryВсеByPlaceholderText(text).length > 0;
+      screen.queryAllByText(text).length + screen.queryAllByPlaceholderText(text).length > 0;
 
     it("should render user selector for admin users in global view", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
-      expect(userВыбратьCombobox()).toBeInTheDocument();
+      expect(userSelectCombobox()).toBeInTheDocument();
       expect(promptsWith("Search users by email…")).toBe(true);
     });
 
     it("should format user options with alias when available", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       await openUserВыбрать();
@@ -862,10 +862,10 @@ describe("ИспользованиеPage", () => {
     });
 
     it("should call useInfiniteUsers with debounced search", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       // useInfiniteUsers should be called with default page size
@@ -900,30 +900,30 @@ describe("ИспользованиеPage", () => {
         isLoading: false,
       } as any);
 
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       await openUserВыбрать();
 
       // Duplicate user should appear only once
-      const dupElements = screen.getВсеByText("DupUser (user-dup)");
+      const dupElements = screen.getAllByText("DupUser (user-dup)");
       expect(dupElements).toHaveLength(1);
       // Unique user should also appear
       expect(screen.getByText("UniqueUser (user-unique)")).toBeInTheDocument();
     });
 
     it("should pass selected userId to aggregated call", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       // Initially called with null (global view for admin)
-      expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalledWith(
+      expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalledWith(
         "test-token",
         expect.any(Date),
         expect.any(Date),
@@ -956,10 +956,10 @@ describe("ИспользованиеPage", () => {
         isLoading: false,
       } as unknown as ReturnType<typeof useInfiniteUsers>);
 
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       act(() => {
@@ -983,14 +983,14 @@ describe("ИспользованиеPage", () => {
         userEmail: "test@example.com",
         userRole: "Internal User",
         premiumUser: false,
-        disabledЛичнаяКлючCreation: false,
+        disabledPersonalKeyCreation: false,
         showSSOBanner: false,
       });
 
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       // The admin case above proves this label is rendered when the selector exists, so its
@@ -1008,14 +1008,14 @@ describe("ИспользованиеPage", () => {
         userEmail: "test@example.com",
         userRole: "Internal User",
         premiumUser: false,
-        disabledЛичнаяКлючCreation: false,
+        disabledPersonalKeyCreation: false,
         showSSOBanner: false,
       });
 
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalledWith(
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalledWith(
           "test-token",
           expect.any(Date),
           expect.any(Date),
@@ -1027,21 +1027,21 @@ describe("ИспользованиеPage", () => {
 
   describe("aggregated endpoint fallback", () => {
     it("should fall back to paginated calls when aggregated endpoint fails", async () => {
-      mockUserКаждый деньActivityAggregatedCall.mockRejectedЗначение(new Ошибка("Aggregated endpoint not available"));
-      mockUserКаждый деньActivityCall.mockResolvedЗначение({
-        ...mockРасходData,
+      mockUserDailyActivityAggregatedCall.mockRejectedЗначение(new Ошибка("Aggregated endpoint not available"));
+      mockUserDailyActivityCall.mockResolvedЗначение({
+        ...mockSpendData,
         metadata: {
-          ...mockРасходData.metadata,
+          ...mockSpendData.metadata,
           total_pages: 1,
           page: 1,
         },
       });
 
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
-        expect(mockUserКаждый деньActivityCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityCall).toHaveBeenCalled();
       });
 
       // Should still render the data from the paginated fallback, which lands a render after the call
@@ -1053,23 +1053,23 @@ describe("ИспользованиеPage", () => {
       // decides whether these pages are read belongs to the range the failure
       // happened on, or the previous range's pages reach the tile through it.
       let releaseSecondAggregated: () => void = () => {};
-      mockUserКаждый деньActivityAggregatedCall.mockReset();
-      mockUserКаждый деньActivityAggregatedCall
-        .mockRejectedЗначениеOnce(new Ошибка("Aggregated endpoint not available"))
+      mockUserDailyActivityAggregatedCall.mockReset();
+      mockUserDailyActivityAggregatedCall
+        .mockRejectedValueOnce(new Ошибка("Aggregated endpoint not available"))
         .mockImplementationOnce(
           () =>
             new Promise((_resolve, reject) => {
               releaseSecondAggregated = () => reject(new Ошибка("Aggregated endpoint not available"));
             }),
         );
-      mockUserКаждый деньActivityCall.mockResolvedЗначение({
-        ...mockРасходData,
-        metadata: { ...mockРасходData.metadata, total_pages: 1, page: 1 },
+      mockUserDailyActivityCall.mockResolvedЗначение({
+        ...mockSpendData,
+        metadata: { ...mockSpendData.metadata, total_pages: 1, page: 1 },
       });
 
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
       await waitFor(() => {
-        expect(screen.getВсеByText("75,000").length).toBeGreaterThan(0);
+        expect(screen.getAllByText("75,000").length).toBeGreaterThan(0);
       });
 
       await act(async () => {
@@ -1077,7 +1077,7 @@ describe("ИспользованиеPage", () => {
       });
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalledВремяs(2);
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalledTimes(2);
       });
       expect(screen.queryByText("75,000")).not.toBeInTheDocument();
 
@@ -1085,15 +1085,15 @@ describe("ИспользованиеPage", () => {
         releaseSecondAggregated();
       });
       await waitFor(() => {
-        expect(screen.getВсеByText("75,000").length).toBeGreaterThan(0);
+        expect(screen.getAllByText("75,000").length).toBeGreaterThan(0);
       });
     });
 
     it("should aggregate multiple pages when paginated endpoint has more than 1 page", async () => {
-      mockUserКаждый деньActivityAggregatedCall.mockRejectedЗначение(new Ошибка("Недоступно"));
+      mockUserDailyActivityAggregatedCall.mockRejectedЗначение(new Ошибка("Недоступно"));
 
       const page1Data = {
-        results: [mockРасходData.results[0]],
+        results: [mockSpendData.results[0]],
         metadata: {
           total_spend: 60,
           total_api_requests: 700,
@@ -1108,7 +1108,7 @@ describe("ИспользованиеPage", () => {
       const page2Data = {
         results: [
           {
-            ...mockРасходData.results[0],
+            ...mockSpendData.results[0],
             date: "2025-01-02",
           },
         ],
@@ -1123,29 +1123,29 @@ describe("ИспользованиеPage", () => {
         },
       };
 
-      mockUserКаждый деньActivityCall.mockResolvedЗначениеOnce(page1Data).mockResolvedЗначениеOnce(page2Data);
+      mockUserDailyActivityCall.mockResolvedValueOnce(page1Data).mockResolvedValueOnce(page2Data);
 
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
         // Both pages should have been fetched
-        expect(mockUserКаждый деньActivityCall).toHaveBeenCalledВремяs(2);
+        expect(mockUserDailyActivityCall).toHaveBeenCalledTimes(2);
       });
 
       // Verify first page call
-      expect(mockUserКаждый деньActivityCall).toHaveBeenCalledWith("test-token", expect.any(Date), expect.any(Date), 1, null);
+      expect(mockUserDailyActivityCall).toHaveBeenCalledWith("test-token", expect.any(Date), expect.any(Date), 1, null);
 
       // Verify second page call
-      expect(mockUserКаждый деньActivityCall).toHaveBeenCalledWith("test-token", expect.any(Date), expect.any(Date), 2, null);
+      expect(mockUserDailyActivityCall).toHaveBeenCalledWith("test-token", expect.any(Date), expect.any(Date), 2, null);
     });
   });
 
   describe("MCP Сервер Activity tab", () => {
     it("should render MCP Сервер Activity tab", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       // The tab list should contain MCP Сервер Activity
@@ -1155,10 +1155,10 @@ describe("ИспользованиеPage", () => {
 
   describe("User Agent Activity view", () => {
     it("should render User Agent Activity component when view is selected", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       const usageВыбрать = screen.getByTestId("usage-view-select");
@@ -1168,7 +1168,7 @@ describe("ИспользованиеPage", () => {
 
       await waitFor(() => {
         // "User Agent Activity" appears both in the select option and in the rendered component
-        const elements = screen.getВсеByText("User Agent Activity");
+        const elements = screen.getAllByText("User Agent Activity");
         expect(elements.length).toBeGreaterThanOrEqual(2);
       });
     });
@@ -1176,10 +1176,10 @@ describe("ИспользованиеPage", () => {
 
   describe("Export Data button", () => {
     it("should render Export Data button in global view for admin", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       expect(screen.getByText("Export Data")).toBeInTheDocument();
@@ -1188,20 +1188,20 @@ describe("ИспользованиеPage", () => {
 
   describe("Спросить ИИ button", () => {
     it("should render Спросить ИИ button in global view", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       expect(screen.getByText("Спросить ИИ")).toBeInTheDocument();
     });
 
     it("should render AI chat panel component", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       expect(screen.getByTestId("usage-ai-chat-panel")).toBeInTheDocument();
@@ -1210,27 +1210,27 @@ describe("ИспользованиеPage", () => {
 
   describe("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию view toggle", () => {
     it("should show Публичное название модели view by default", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       // Default should be "groups" view showing "Top Публичное название моделиs"
       expect(screen.getByText("Top Публичное название моделиs")).toBeInTheDocument();
-      expect(screen.getВсеByText("Публичное название модели").length).toBeGreaterThan(0);
-      expect(screen.getВсеByText("Litellm Название модели").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("Публичное название модели").length).toBeGreaterThan(0);
+      expect(screen.getAllByText("Litellm Название модели").length).toBeGreaterThan(0);
     });
 
     it("should switch to Litellm Название модели view on toggle click", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       // Click the "Litellm Название модели" toggle
-      const litellmToggle = screen.getВсеByText("Litellm Название модели")[0];
+      const litellmToggle = screen.getAllByText("Litellm Название модели")[0];
       act(() => {
         fireEvent.click(litellmToggle);
       });
@@ -1242,14 +1242,14 @@ describe("ИспользованиеPage", () => {
     });
 
     it("should switch back to Публичное название модели view", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       // Switch to individual first
-      const litellmToggle = screen.getВсеByText("Litellm Название модели")[0];
+      const litellmToggle = screen.getAllByText("Litellm Название модели")[0];
       act(() => {
         fireEvent.click(litellmToggle);
       });
@@ -1259,7 +1259,7 @@ describe("ИспользованиеPage", () => {
       });
 
       // Switch back to groups
-      const publicToggle = screen.getВсеByText("Публичное название модели")[0];
+      const publicToggle = screen.getAllByText("Публичное название модели")[0];
       act(() => {
         fireEvent.click(publicToggle);
       });
@@ -1270,10 +1270,10 @@ describe("ИспользованиеPage", () => {
     });
 
     it("should feed the Режимl Activity tab from the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups breakdown by default", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       expect(screen.getByText("activity-source:Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups")).toBeInTheDocument();
@@ -1281,14 +1281,14 @@ describe("ИспользованиеPage", () => {
     });
 
     it("should switch the Режимl Activity tab to the litellm Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs breakdown on toggle click", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       act(() => {
-        fireEvent.click(screen.getВсеByText("Litellm Название модели")[0]);
+        fireEvent.click(screen.getAllByText("Litellm Название модели")[0]);
       });
 
       await waitFor(() => {
@@ -1306,10 +1306,10 @@ describe("ИспользованиеPage", () => {
         error: null,
       } as any);
 
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       const usageВыбрать = screen.getByTestId("usage-view-select");
@@ -1318,8 +1318,8 @@ describe("ИспользованиеPage", () => {
       });
 
       await waitFor(() => {
-        const entityИспользованиеElements = screen.getВсеByText("Entity Использование");
-        expect(entityИспользованиеElements.length).toBeGreaterThan(0);
+        const entityUsageElements = screen.getAllByText("Entity Использование");
+        expect(entityUsageElements.length).toBeGreaterThan(0);
       });
     });
   });
@@ -1332,10 +1332,10 @@ describe("ИспользованиеPage", () => {
         error: null,
       } as any);
 
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       const usageВыбрать = screen.getByTestId("usage-view-select");
@@ -1344,18 +1344,18 @@ describe("ИспользованиеPage", () => {
       });
 
       await waitFor(() => {
-        const entityИспользованиеElements = screen.getВсеByText("Entity Использование");
-        expect(entityИспользованиеElements.length).toBeGreaterThan(0);
+        const entityUsageElements = screen.getAllByText("Entity Использование");
+        expect(entityUsageElements.length).toBeGreaterThan(0);
       });
     });
   });
 
   describe("tab navigation in global view", () => {
     it("should render all expected tabs", async () => {
-      renderWithПровайдерs(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
 
       await waitFor(() => {
-        expect(mockUserКаждый деньActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
       expect(screen.getByText("Стоимость")).toBeInTheDocument();

@@ -36,7 +36,7 @@ const renderModal = (settings: CloudZeroSettings = STORED_SETTINGS) => {
 };
 
 const submittedPayload = (): Record<string, unknown> => {
-  expect(mutate).toHaveBeenCalledВремяs(1);
+  expect(mutate).toHaveBeenCalledTimes(1);
   return mutate.mock.calls[0][0] as Record<string, unknown>;
 };
 

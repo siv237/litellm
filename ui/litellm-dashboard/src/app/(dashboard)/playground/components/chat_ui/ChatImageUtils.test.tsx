@@ -9,7 +9,7 @@ import { СообщениеType } from "@/components/chat_ui/types";
 
 describe("ChatImageUtils", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   describe("convertImageToBase64", () => {
@@ -79,38 +79,38 @@ describe("ChatImageUtils", () => {
 
       expect(result.role).toBe("user");
       expect(result.content).toBe("Hello world");
-      expect(result.image-предпросмотрUrl).toBeUndefined();
+      expect(result.imagePreviewUrl).toBeUndefined();
     });
 
     it("should create display message with PDF file", () => {
-      const file-предпросмотрUrl = "blob:test-url";
-      const result = createChatDisplayСообщение("Read this", true, file-предпросмотрUrl, "document.pdf");
+      const filePreviewUrl = "blob:test-url";
+      const result = createChatDisplayСообщение("Read this", true, filePreviewUrl, "document.pdf");
 
       expect(result.content).toBe("Read this [PDF attached]");
-      expect(result.image-предпросмотрUrl).toBe(file-предпросмотрUrl);
+      expect(result.imagePreviewUrl).toBe(filePreviewUrl);
     });
 
     it("should create display message with image file", () => {
-      const file-предпросмотрUrl = "blob:test-url";
-      const result = createChatDisplayСообщение("Look at this", true, file-предпросмотрUrl, "photo.jpg");
+      const filePreviewUrl = "blob:test-url";
+      const result = createChatDisplayСообщение("Look at this", true, filePreviewUrl, "photo.jpg");
 
       expect(result.content).toBe("Look at this [Image attached]");
-      expect(result.image-предпросмотрUrl).toBe(file-предпросмотрUrl);
+      expect(result.imagePreviewUrl).toBe(filePreviewUrl);
     });
 
     it("should create display message with file but no fileName", () => {
-      const file-предпросмотрUrl = "blob:test-url";
-      const result = createChatDisplayСообщение("Check this", true, file-предпросмотрUrl);
+      const filePreviewUrl = "blob:test-url";
+      const result = createChatDisplayСообщение("Check this", true, filePreviewUrl);
 
       expect(result.content).toBe("Check this ");
-      expect(result.image-предпросмотрUrl).toBe(file-предпросмотрUrl);
+      expect(result.imagePreviewUrl).toBe(filePreviewUrl);
     });
 
     it("should create display message with file but no preview URL", () => {
       const result = createChatDisplayСообщение("See this", true, undefined, "image.png");
 
       expect(result.content).toBe("See this [Image attached]");
-      expect(result.image-предпросмотрUrl).toBeUndefined();
+      expect(result.imagePreviewUrl).toBeUndefined();
     });
   });
 
@@ -119,7 +119,7 @@ describe("ChatImageUtils", () => {
       const message: СообщениеType = {
         role: "user",
         content: "Check this [Image attached]",
-        image-предпросмотрUrl: "blob:test-url",
+        imagePreviewUrl: "blob:test-url",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(true);
@@ -129,7 +129,7 @@ describe("ChatImageUtils", () => {
       const message: СообщениеType = {
         role: "user",
         content: "Read this [PDF attached]",
-        image-предпросмотрUrl: "blob:test-url",
+        imagePreviewUrl: "blob:test-url",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(true);
@@ -139,7 +139,7 @@ describe("ChatImageUtils", () => {
       const message: СообщениеType = {
         role: "assistant",
         content: "Here is the image [Image attached]",
-        image-предпросмотрUrl: "blob:test-url",
+        imagePreviewUrl: "blob:test-url",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(false);
@@ -149,7 +149,7 @@ describe("ChatImageUtils", () => {
       const message: СообщениеType = {
         role: "user",
         content: [{ type: "input_text", text: "test" }],
-        image-предпросмотрUrl: "blob:test-url",
+        imagePreviewUrl: "blob:test-url",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(false);
@@ -159,13 +159,13 @@ describe("ChatImageUtils", () => {
       const message: СообщениеType = {
         role: "user",
         content: "Just regular text",
-        image-предпросмотрUrl: "blob:test-url",
+        imagePreviewUrl: "blob:test-url",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(false);
     });
 
-    it("should return false when image-предпросмотрUrl is missing", () => {
+    it("should return false when imagePreviewUrl is missing", () => {
       const message: СообщениеType = {
         role: "user",
         content: "Check this [Image attached]",
@@ -174,11 +174,11 @@ describe("ChatImageUtils", () => {
       expect(shouldShowChatAttachedImage(message)).toBe(false);
     });
 
-    it("should return false when image-предпросмотрUrl is empty string", () => {
+    it("should return false when imagePreviewUrl is empty string", () => {
       const message: СообщениеType = {
         role: "user",
         content: "Check this [Image attached]",
-        image-предпросмотрUrl: "",
+        imagePreviewUrl: "",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(false);

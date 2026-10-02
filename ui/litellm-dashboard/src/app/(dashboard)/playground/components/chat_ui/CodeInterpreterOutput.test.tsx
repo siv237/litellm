@@ -5,20 +5,20 @@ import CodeInterpreterВыход from "./CodeInterpreterВыход";
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: vi.fn(() => "https://example.com"),
-  getГлобальноLitellmHeaderName: vi.fn(() => "Authorization"),
+  getGlobalLitellmHeaderName: vi.fn(() => "Authorization"),
 }));
 
 global.fetch = vi.fn();
 
 describe("CodeInterpreterВыход", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     URL.createObjectURL = vi.fn((blob) => `blob:${blob}`);
     URL.revokeObjectURL = vi.fn();
   });
 
   afterEach(() => {
-    vi.restoreВсеMocks();
+    vi.restoreAllMocks();
   });
 
   it("should render", () => {
@@ -38,7 +38,7 @@ describe("CodeInterpreterВыход", () => {
     await user.click(collapseHeader);
 
     await waitFor(() => {
-      const codeElement = container.queryВыбратьor("code.language-python");
+      const codeElement = container.querySelector("code.language-python");
       expect(codeElement).toBeInTheDocument();
       expect(codeElement?.textContent).toContain(code);
     });
@@ -291,12 +291,12 @@ describe("CodeInterpreterВыход", () => {
     );
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledВремяs(4);
+      expect(global.fetch).toHaveBeenCalledTimes(4);
     });
   });
 
   it("should handle fetch errors gracefully", async () => {
-    const consoleОшибкаSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     (global.fetch as any).mockRejectedЗначение(new Ошибка("Network error"));
 
     const annotations = [
@@ -319,9 +319,9 @@ describe("CodeInterpreterВыход", () => {
     );
 
     await waitFor(() => {
-      expect(consoleОшибкаSpy).toHaveBeenCalled();
+      expect(consoleErrorSpy).toHaveBeenCalled();
     });
 
-    consoleОшибкаSpy.mockRestore();
+    consoleErrorSpy.mockRestore();
   });
 });

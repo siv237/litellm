@@ -1,5 +1,5 @@
 /* @vitest-environment jsdom */
-import type { PaginationState, RowВыбратьionState, SortingState } from "@tanstack/react-table";
+import type { PaginationState, RowSelectionState, SortingState } from "@tanstack/react-table";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
@@ -58,13 +58,13 @@ function Harness({
 }: HarnessOverrides) {
   const [sorting, setSorting] = useState<SortingState>([{ id: "created_at", desc: true }]);
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 });
-  const [rowВыбратьion, setRowВыбратьion] = useState<RowВыбратьionState>({});
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   return (
     <>
       <span data-testid="selected-ids">
-        {Object.keys(rowВыбратьion)
-          .filter((key) => rowВыбратьion[key])
+        {Object.keys(rowSelection)
+          .filter((key) => rowSelection[key])
           .sort()
           .join(",")}
       </span>
@@ -82,12 +82,12 @@ function Harness({
         pagination={pagination}
         onPaginationChange={setPagination}
         columnФильтры={[]}
-        onColumnФильтрыChange={vi.fn()}
+        onColumnFiltersChange={vi.fn()}
         searchЗначение=""
         onSearchChange={vi.fn()}
         selectionEnabled={selectionEnabled}
-        rowВыбратьion={rowВыбратьion}
-        onRowВыбратьionChange={setRowВыбратьion}
+        rowSelection={rowSelection}
+        onRowSelectionChange={setRowSelection}
         onUserClick={onUserClick}
         onDeleteUser={onDeleteUser}
         onResetПароль={onResetПароль}
@@ -107,7 +107,7 @@ describe("UsersТаблица", () => {
   it("renders every migrated column header", () => {
     render(<Harness />);
 
-    const headerRow = screen.getВсеByRole("row")[0];
+    const headerRow = screen.getAllByRole("row")[0];
 
     [
       "ID пользователя",
@@ -141,7 +141,7 @@ describe("UsersТаблица", () => {
     render(<Harness />);
 
     const sortableIds = screen
-      .getВсеByTestId(/^sort-header-/)
+      .getAllByTestId(/^sort-header-/)
       .map((node) => (node.getAttribute("data-testid") ?? "").replace("sort-header-", ""))
       .sort();
 
@@ -155,8 +155,8 @@ describe("UsersТаблица", () => {
 
     await user.click(screen.getByTestId("sort-header-user_email"));
 
-    expect(onSortingChange).toHaveBeenCalledВремяs(1);
-    expect(screen.getByTestId("sort-header-user_email").queryВыбратьor("[data-sort-indicator]")).toHaveAttribute(
+    expect(onSortingChange).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId("sort-header-user_email").querySelector("[data-sort-indicator]")).toHaveAttribute(
       "data-sort-indicator",
       "asc",
     );
@@ -269,14 +269,14 @@ describe("UsersТаблица", () => {
   it("shows skeleton rows on the initial load instead of the empty state", () => {
     render(<Harness data={[]} rowCount={0} isLoading />);
 
-    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
     expect(screen.queryByText("Пользователи не найдены")).not.toBeInTheDocument();
   });
 
   it("keeps the row menu выход of the identity cell so only the name and menu act on a row", () => {
     render(<Harness />);
 
-    const rows = screen.getВсеByRole("row");
+    const rows = screen.getAllByRole("row");
     const dataRow = rows[rows.length - 1];
     expect(within(dataRow).getByTestId("user-actions-user-1")).toBeInTheDocument();
   });

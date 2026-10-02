@@ -12,13 +12,13 @@ describe("МаршрутизацияGroupsТаблица", () => {
   const prodGroup: МаршрутизацияGroup = {
     group_name: "prod-group",
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o", "claude-sonnet-4-5"],
-    rвыходing_strategy: "usage-based-rвыходing",
+    routing_strategy: "usage-based-routing",
   };
 
   const devGroup: МаршрутизацияGroup = {
     group_name: "dev-group",
     Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o-mini"],
-    rвыходing_strategy: "simple-shuffle",
+    routing_strategy: "simple-shuffle",
   };
 
   const defaultProps = {
@@ -29,7 +29,7 @@ describe("МаршрутизацияGroupsТаблица", () => {
   };
 
   const rowFor = (groupName: string): HTMLElement => {
-    const row = document.queryВыбратьor(`[data-row-id="${groupName}"]`);
+    const row = document.querySelector(`[data-row-id="${groupName}"]`);
     if (!(row instanceof HTMLElement)) {
       throw new Ошибка(`No row rendered for ${groupName}`);
     }
@@ -37,7 +37,7 @@ describe("МаршрутизацияGroupsТаблица", () => {
   };
 
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render every column header", () => {
@@ -49,7 +49,7 @@ describe("МаршрутизацияGroupsТаблица", () => {
 
   it("should show the empty state when there are no groups", () => {
     render(<МаршрутизацияGroupsТаблица {...defaultProps} />);
-    expect(screen.getByText("No rвыходing groups yet")).toBeInTheDocument();
+    expect(screen.getByText("No routing groups yet")).toBeInTheDocument();
   });
 
   it("should render the group name, its Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs, and a human-readable strategy label", () => {
@@ -62,7 +62,7 @@ describe("МаршрутизацияGroupsТаблица", () => {
   });
 
   it("should fall back to the raw strategy value when it has no friendly label", () => {
-    render(<МаршрутизацияGroupsТаблица {...defaultProps} groups={[{ ...prodGroup, rвыходing_strategy: "custom-strategy" }]} />);
+    render(<МаршрутизацияGroupsТаблица {...defaultProps} groups={[{ ...prodGroup, routing_strategy: "custom-strategy" }]} />);
     expect(within(rowFor("prod-group")).getByText("custom-strategy")).toBeInTheDocument();
   });
 
@@ -80,7 +80,7 @@ describe("МаршрутизацияGroupsТаблица", () => {
 
     const namesInOrder = () =>
       screen
-        .getВсеByRole("row")
+        .getAllByRole("row")
         .slice(1)
         .map((row) => row.getAttribute("data-row-id"));
 
@@ -94,13 +94,13 @@ describe("МаршрутизацияGroupsТаблица", () => {
     const user = userEvent.setup();
     render(<МаршрутизацияGroupsТаблица {...defaultProps} groups={[prodGroup]} />);
 
-    expect(screen.queryByText("How rвыходing works for this group")).not.toBeInTheDocument();
+    expect(screen.queryByText("How routing works for this group")).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "prod-group" }));
-    expect(await screen.findByText("How rвыходing works for this group")).toBeInTheDocument();
+    expect(await screen.findByText("How routing works for this group")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "prod-group" }));
-    expect(screen.queryByText("How rвыходing works for this group")).not.toBeInTheDocument();
+    expect(screen.queryByText("How routing works for this group")).not.toBeInTheDocument();
   });
 
   it("should build the usage snippet from the proxy base url and the group's first Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
@@ -108,7 +108,7 @@ describe("МаршрутизацияGroupsТаблица", () => {
     render(<МаршрутизацияGroupsТаблица {...defaultProps} groups={[prodGroup]} />);
     await user.click(screen.getByRole("button", { name: "prod-group" }));
 
-    const panel = (await screen.findByText("How rвыходing works for this group")).closest("div")?.parentElement;
+    const panel = (await screen.findByText("How routing works for this group")).closest("div")?.parentElement;
     expect(panel?.textContent).toContain("https://proxy.example.com");
     expect(panel?.textContent).toContain("gpt-4o");
   });
@@ -118,28 +118,28 @@ describe("МаршрутизацияGroupsТаблица", () => {
     render(<МаршрутизацияGroupsТаблица {...defaultProps} groups={[prodGroup, devGroup]} />);
 
     await user.click(screen.getByRole("button", { name: "dev-group" }));
-    expect(await screen.findВсеByText("How rвыходing works for this group")).toHaveLength(1);
-    expect(within(rowFor("prod-group")).queryByText("How rвыходing works for this group")).not.toBeInTheDocument();
+    expect(await screen.findAllByText("How routing works for this group")).toHaveLength(1);
+    expect(within(rowFor("prod-group")).queryByText("How routing works for this group")).not.toBeInTheDocument();
   });
 
   it("should edit a group through the actions menu", async () => {
     const user = userEvent.setup();
     render(<МаршрутизацияGroupsТаблица {...defaultProps} groups={[prodGroup]} />);
-    await user.click(screen.getByTestId("rвыходing-group-actions-prod-group"));
-    await user.click(await screen.findByTestId("rвыходing-group-action-edit"));
+    await user.click(screen.getByTestId("routing-group-actions-prod-group"));
+    await user.click(await screen.findByTestId("routing-group-action-edit"));
     expect(onEdit).toHaveBeenCalledWith(prodGroup);
   });
 
   it("should delete a group through the actions menu", async () => {
     const user = userEvent.setup();
     render(<МаршрутизацияGroupsТаблица {...defaultProps} groups={[prodGroup]} />);
-    await user.click(screen.getByTestId("rвыходing-group-actions-prod-group"));
-    await user.click(await screen.findByTestId("rвыходing-group-action-delete"));
+    await user.click(screen.getByTestId("routing-group-actions-prod-group"));
+    await user.click(await screen.findByTestId("routing-group-action-delete"));
     expect(onDelete).toHaveBeenCalledWith(prodGroup);
   });
 
   it("should show skeleton rows instead of the empty state while loading", () => {
     render(<МаршрутизацияGroupsТаблица {...defaultProps} isLoading />);
-    expect(screen.queryByText("No rвыходing groups yet")).not.toBeInTheDocument();
+    expect(screen.queryByText("No routing groups yet")).not.toBeInTheDocument();
   });
 });

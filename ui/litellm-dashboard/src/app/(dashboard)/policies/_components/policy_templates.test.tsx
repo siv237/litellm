@@ -1,7 +1,7 @@
 import React from "react";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs } from "@/../tests/test-utils";
+import { renderWithProviders } from "@/../tests/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as networking from "@/components/networking";
 import ПолитикаTemplates from "./policy_templates";
@@ -47,18 +47,18 @@ const defaultProps = {
 
 describe("ПолитикаTemplates", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render the section header after loading", async () => {
-    vi.mocked(networking.getПолитикаTemplates).mockResolvedЗначение([]);
-    renderWithПровайдерs(<ПолитикаTemplates {...defaultProps} />);
+    vi.mocked(networking.getPolicyTemplates).mockResolvedЗначение([]);
+    renderWithProviders(<ПолитикаTemplates {...defaultProps} />);
     expect(await screen.findByText("Шаблоны политик")).toBeInTheDocument();
   });
 
   it("should not show the template grid while fetching", () => {
-    vi.mocked(networking.getПолитикаTemplates).mockReturnЗначение(new Promise(() => {}));
-    renderWithПровайдерs(<ПолитикаTemplates {...defaultProps} />);
+    vi.mocked(networking.getPolicyTemplates).mockReturnЗначение(new Promise(() => {}));
+    renderWithProviders(<ПолитикаTemplates {...defaultProps} />);
     expect(screen.queryByText("Шаблоны политик")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /use ai to find templates/i })).not.toBeInTheDocument();
   });
@@ -68,26 +68,26 @@ describe("ПолитикаTemplates", () => {
       makeTemplate({ title: "Template Alpha" }),
       makeTemplate({ id: "tpl-2", title: "Template Бета" }),
     ];
-    vi.mocked(networking.getПолитикаTemplates).mockResolvedЗначение(templates);
-    renderWithПровайдерs(<ПолитикаTemplates {...defaultProps} />);
+    vi.mocked(networking.getPolicyTemplates).mockResolvedЗначение(templates);
+    renderWithProviders(<ПолитикаTemplates {...defaultProps} />);
     expect(await screen.findByText("Template Alpha")).toBeInTheDocument();
     expect(screen.getByText("Template Бета")).toBeInTheDocument();
   });
 
   it("should call onTemplatesLoaded with the fetched templates after loading", async () => {
     const templates = [makeTemplate()];
-    vi.mocked(networking.getПолитикаTemplates).mockResolvedЗначение(templates);
+    vi.mocked(networking.getPolicyTemplates).mockResolvedЗначение(templates);
     const onTemplatesLoaded = vi.fn();
-    renderWithПровайдерs(<ПолитикаTemplates {...defaultProps} onTemplatesLoaded={onTemplatesLoaded} />);
+    renderWithProviders(<ПолитикаTemplates {...defaultProps} onTemplatesLoaded={onTemplatesLoaded} />);
     await waitFor(() => {
       expect(onTemplatesLoaded).toHaveBeenCalledWith(templates);
     });
   });
 
   it("should call onOpenAiSuggestion when the AI suggestion button is clicked", async () => {
-    vi.mocked(networking.getПолитикаTemplates).mockResolvedЗначение([]);
+    vi.mocked(networking.getPolicyTemplates).mockResolvedЗначение([]);
     const user = userEvent.setup();
-    renderWithПровайдерs(<ПолитикаTemplates {...defaultProps} />);
+    renderWithProviders(<ПолитикаTemplates {...defaultProps} />);
     await screen.findByText("Шаблоны политик");
     await user.click(screen.getByRole("button", { name: /use ai to find templates/i }));
     expect(defaultProps.onOpenAiSuggestion).toHaveBeenCalled();
@@ -98,8 +98,8 @@ describe("ПолитикаTemplates", () => {
       makeTemplate({ tags: ["compliance"] }),
       makeTemplate({ id: "tpl-2", tags: ["compliance", "security"] }),
     ];
-    vi.mocked(networking.getПолитикаTemplates).mockResolvedЗначение(templates);
-    renderWithПровайдерs(<ПолитикаTemplates {...defaultProps} />);
+    vi.mocked(networking.getPolicyTemplates).mockResolvedЗначение(templates);
+    renderWithProviders(<ПолитикаTemplates {...defaultProps} />);
     expect(await screen.findByRole("checkbox", { name: /compliance/i })).toBeInTheDocument();
     expect(screen.getByRole("checkbox", { name: /security/i })).toBeInTheDocument();
   });
@@ -109,9 +109,9 @@ describe("ПолитикаTemplates", () => {
       makeTemplate({ id: "tpl-1", title: "Compliance Template", tags: ["compliance"] }),
       makeTemplate({ id: "tpl-2", title: "Безопасность Template", tags: ["security"] }),
     ];
-    vi.mocked(networking.getПолитикаTemplates).mockResolvedЗначение(templates);
+    vi.mocked(networking.getPolicyTemplates).mockResolvedЗначение(templates);
     const user = userEvent.setup();
-    renderWithПровайдерs(<ПолитикаTemplates {...defaultProps} />);
+    renderWithProviders(<ПолитикаTemplates {...defaultProps} />);
     await screen.findByText("Compliance Template");
     await user.click(screen.getByRole("checkbox", { name: /compliance/i }));
     expect(screen.getByText("Compliance Template")).toBeInTheDocument();
@@ -123,9 +123,9 @@ describe("ПолитикаTemplates", () => {
       makeTemplate({ id: "tpl-1", title: "Alpha Template", tags: ["alpha"] }),
       makeTemplate({ id: "tpl-2", title: "Бета Template", tags: ["beta"] }),
     ];
-    vi.mocked(networking.getПолитикаTemplates).mockResolvedЗначение(templates);
+    vi.mocked(networking.getPolicyTemplates).mockResolvedЗначение(templates);
     const user = userEvent.setup();
-    renderWithПровайдерs(<ПолитикаTemplates {...defaultProps} />);
+    renderWithProviders(<ПолитикаTemplates {...defaultProps} />);
     await screen.findByText("Alpha Template");
     await user.click(screen.getByRole("checkbox", { name: /alpha/i }));
     await user.click(screen.getByRole("checkbox", { name: /beta/i }));
@@ -137,9 +137,9 @@ describe("ПолитикаTemplates", () => {
       makeTemplate({ id: "tpl-1", title: "Alpha Template", tags: ["alpha"] }),
       makeTemplate({ id: "tpl-2", title: "Бета Template", tags: ["beta"] }),
     ];
-    vi.mocked(networking.getПолитикаTemplates).mockResolvedЗначение(templates);
+    vi.mocked(networking.getPolicyTemplates).mockResolvedЗначение(templates);
     const user = userEvent.setup();
-    renderWithПровайдерs(<ПолитикаTemplates {...defaultProps} />);
+    renderWithProviders(<ПолитикаTemplates {...defaultProps} />);
     await screen.findByText("Alpha Template");
     await user.click(screen.getByRole("checkbox", { name: /alpha/i }));
     expect(screen.queryByText("Бета Template")).not.toBeInTheDocument();
@@ -148,7 +148,7 @@ describe("ПолитикаTemplates", () => {
   });
 
   it("should not fetch templates when accessТокен is null", () => {
-    renderWithПровайдерs(<ПолитикаTemplates {...defaultProps} accessТокен={null} />);
-    expect(networking.getПолитикаTemplates).not.toHaveBeenCalled();
+    renderWithProviders(<ПолитикаTemplates {...defaultProps} accessТокен={null} />);
+    expect(networking.getPolicyTemplates).not.toHaveBeenCalled();
   });
 });

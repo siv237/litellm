@@ -2,7 +2,7 @@ import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { act, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs } from "../../../../../tests/test-utils";
+import { renderWithProviders } from "../../../../../tests/test-utils";
 import СтоимостьTrackingSettings from "./cost_tracking_settings";
 
 // Mock sub-hooks so we can control their state withвыход network calls
@@ -37,8 +37,8 @@ vi.mock("./pricing_calculator/index", () => ({
   default: () => <div data-testid="pricing-calculator">Pricing Calculator</div>,
 }));
 
-vi.mock("@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => ({
-  fetchAvailableРежимls: vi.fn().mockResolvedЗначение([]),
+vi.mock("@/components/llm_calls/fetch_models", () => ({
+  fetchAvailableModels: vi.fn().mockResolvedЗначение([]),
 }));
 
 vi.mock("@/components/HelpLink", () => ({
@@ -53,7 +53,7 @@ vi.mock("@/components/provider_info_helpers", () => ({
   Провайдерs: { OpenAI: "OpenAI" },
   provider_map: { OpenAI: "openai" },
   providerLogoMap: {},
-  getПровайдерLogoAndName: (providerЗначение: string) => ({ logo: "", displayName: providerЗначение }),
+  getProviderLogoAndName: (providerЗначение: string) => ({ logo: "", displayName: providerЗначение }),
 }));
 
 const ADMIN_PROPS = {
@@ -64,68 +64,68 @@ const ADMIN_PROPS = {
 
 describe("СтоимостьTrackingSettings", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockDiscountКонфигурация.mockReturnЗначение({});
     mockMarginКонфигурация.mockReturnЗначение({});
   });
 
   it("should return nothing when accessТокен is null", () => {
-    const { container } = renderWithПровайдерs(
+    const { container } = renderWithProviders(
       <СтоимостьTrackingSettings userID="user-1" userRole="proxy_admin" accessТокен={null} />,
     );
     expect(container).toBeEmptyDOMElement();
   });
 
   it("should render the page title", () => {
-    renderWithПровайдерs(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
+    renderWithProviders(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
     expect(screen.getByText("Стоимость Tracking Settings")).toBeInTheDocument();
   });
 
   it("should show the Провайдер Discounts accordion header for proxy_admin", () => {
-    renderWithПровайдерs(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
+    renderWithProviders(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
     expect(screen.getByText("Провайдер Discounts")).toBeInTheDocument();
   });
 
   it("should show the Fee/Price Margin accordion header for proxy_admin", () => {
-    renderWithПровайдерs(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
+    renderWithProviders(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
     expect(screen.getByText("Fee/Price Margin")).toBeInTheDocument();
   });
 
   it("should always show the Pricing Calculator section", () => {
-    renderWithПровайдерs(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
-    // The accordion header text appears in the DOM; getВсеByText tolerates duplicates
-    expect(screen.getВсеByText("Pricing Calculator").length).toBeGreaterThan(0);
+    renderWithProviders(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
+    // The accordion header text appears in the DOM; getAllByText tolerates duplicates
+    expect(screen.getAllByText("Pricing Calculator").length).toBeGreaterThan(0);
   });
 
   it("should show the pricing calculator component", async () => {
-    renderWithПровайдерs(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
+    renderWithProviders(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
     expect(await screen.findByTestId("pricing-calculator")).toBeInTheDocument();
   });
 
   it("should not show Провайдер Discounts section for a non-admin role", () => {
-    renderWithПровайдерs(<СтоимостьTrackingSettings userID="user-1" userRole="internal_user" accessТокен="test-token" />);
+    renderWithProviders(<СтоимостьTrackingSettings userID="user-1" userRole="internal_user" accessТокен="test-token" />);
     expect(screen.queryByText("Провайдер Discounts")).not.toBeInTheDocument();
   });
 
   it("should not show Fee/Price Margin section for a non-admin role", () => {
-    renderWithПровайдерs(<СтоимостьTrackingSettings userID="user-1" userRole="internal_user" accessТокен="test-token" />);
+    renderWithProviders(<СтоимостьTrackingSettings userID="user-1" userRole="internal_user" accessТокен="test-token" />);
     expect(screen.queryByText("Fee/Price Margin")).not.toBeInTheDocument();
   });
 
   it("should show Провайдер Discounts for the 'Admin' role as well", () => {
-    renderWithПровайдерs(<СтоимостьTrackingSettings userID="user-1" userRole="Admin" accessТокен="test-token" />);
+    renderWithProviders(<СтоимостьTrackingSettings userID="user-1" userRole="Admin" accessТокен="test-token" />);
     expect(screen.getByText("Провайдер Discounts")).toBeInTheDocument();
   });
 
   it("should show the subtitle describing discount/margin configuration", () => {
-    renderWithПровайдерs(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
+    renderWithProviders(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
     expect(screen.getByText(/configure cost discounts and margins/i)).toBeInTheDocument();
   });
 
   describe("Add Провайдер Discount modal", () => {
     it("should open the Add Провайдер Discount modal when the button is clicked", async () => {
       const user = userEvent.setup();
-      renderWithПровайдерs(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
+      renderWithProviders(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
 
       // The button lives inside the Провайдер Discounts accordion — click the header to expand first
       const accordionHeader = screen.getByText("Провайдер Discounts").closest("button");
@@ -143,7 +143,7 @@ describe("СтоимостьTrackingSettings", () => {
   describe("Add Провайдер Margin modal", () => {
     it("should open the Add Провайдер Margin modal when the button is clicked", async () => {
       const user = userEvent.setup();
-      renderWithПровайдерs(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
+      renderWithProviders(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
 
       const accordionHeader = screen.getByText("Fee/Price Margin").closest("button");
       if (accordionHeader) {
@@ -160,7 +160,7 @@ describe("СтоимостьTrackingSettings", () => {
   describe("removing a configured provider", () => {
     const expandAndRemove = async (section: string, actionName: string) => {
       const user = userEvent.setup();
-      renderWithПровайдерs(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
+      renderWithProviders(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
 
       await user.click(screen.getByText(section).closest("button")!);
       await user.click(await screen.findByRole("button", { name: actionName }));
@@ -233,7 +233,7 @@ describe("СтоимостьTrackingSettings", () => {
   describe("empty state messages", () => {
     it("should show the empty state message when no discount config is loaded", async () => {
       mockDiscountКонфигурация.mockReturnЗначение({});
-      renderWithПровайдерs(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
+      renderWithProviders(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
 
       const accordionHeader = screen.getByText("Провайдер Discounts").closest("button");
       if (accordionHeader) {
@@ -245,7 +245,7 @@ describe("СтоимостьTrackingSettings", () => {
 
     it("should show the empty state message when no margin config is loaded", async () => {
       mockMarginКонфигурация.mockReturnЗначение({});
-      renderWithПровайдерs(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
+      renderWithProviders(<СтоимостьTrackingSettings {...ADMIN_PROPS} />);
 
       const accordionHeader = screen.getByText("Fee/Price Margin").closest("button");
       if (accordionHeader) {

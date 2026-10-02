@@ -2,7 +2,7 @@ import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { fireEvent, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithПровайдерs } from "@/../tests/test-utils";
+import { renderWithProviders } from "@/../tests/test-utils";
 import PipelineFlowBuilder, { FlowBuilderPage, PipelineInfoDisplay } from "./pipeline_flow_builder";
 import { GuardrailPipeline, PipelineStep } from "@/components/policies/types";
 import { Guardrail } from "@/components/гардрейловs/types";
@@ -27,37 +27,37 @@ const гардрейловs = [
 
 describe("PipelineInfoDisplay", () => {
   it("renders the trigger card", () => {
-    renderWithПровайдерs(<PipelineInfoDisplay pipeline={pipeline([step()])} />);
+    renderWithProviders(<PipelineInfoDisplay pipeline={pipeline([step()])} />);
 
     expect(screen.getByText("TRIGGER")).toBeInTheDocument();
     expect(screen.getByText("Входящий LLM-запрос")).toBeInTheDocument();
   });
 
   it("renders one numbered card per step, naming its гардрейлов", () => {
-    renderWithПровайдерs(<PipelineInfoDisplay pipeline={pipeline([step(), step({ гардрейлов: "prompt-injection" })])} />);
+    renderWithProviders(<PipelineInfoDisplay pipeline={pipeline([step(), step({ гардрейлов: "prompt-injection" })])} />);
 
     expect(screen.getByText("Шаг 1")).toBeInTheDocument();
     expect(screen.getByText("Шаг 2")).toBeInTheDocument();
     expect(screen.getByText("pii-masker")).toBeInTheDocument();
     expect(screen.getByText("prompt-injection")).toBeInTheDocument();
-    expect(screen.getВсеByText("GUARDRAIL")).toHaveLength(2);
+    expect(screen.getAllByText("GUARDRAIL")).toHaveLength(2);
   });
 
   it("maps raw action values to their human labels", () => {
-    renderWithПровайдерs(<PipelineInfoDisplay pipeline={pipeline([step({ on_pass: "next", on_fail: "block" })])} />);
+    renderWithProviders(<PipelineInfoDisplay pipeline={pipeline([step({ on_pass: "next", on_fail: "block" })])} />);
 
     expect(screen.getByText(/Пройдено .* Следующий шаг/)).toBeInTheDocument();
     expect(screen.getByText(/Отказ .* Заблокировать/)).toBeInTheDocument();
   });
 
   it("falls back to the on-fail action when no API-failure action is set", () => {
-    renderWithПровайдерs(<PipelineInfoDisplay pipeline={pipeline([step({ on_fail: "block", on_error: null })])} />);
+    renderWithProviders(<PipelineInfoDisplay pipeline={pipeline([step({ on_fail: "block", on_error: null })])} />);
 
     expect(screen.getByText(/Сбой API .* Заблокировать \(как при отказе\)/)).toBeInTheDocument();
   });
 
   it("shows an explicit API-failure action when one is set", () => {
-    renderWithПровайдерs(<PipelineInfoDisplay pipeline={pipeline([step({ on_error: "allow" })])} />);
+    renderWithProviders(<PipelineInfoDisplay pipeline={pipeline([step({ on_error: "allow" })])} />);
 
     expect(screen.getByText(/Сбой API .* Разрешить/)).toBeInTheDocument();
     expect(screen.queryByText(/как при отказе/)).not.toBeInTheDocument();
@@ -66,7 +66,7 @@ describe("PipelineInfoDisplay", () => {
 
 describe("PipelineFlowBuilder", () => {
   it("renders the trigger and end cards around the steps", () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableГардрейлы={гардрейловs} />,
     );
 
@@ -76,7 +76,7 @@ describe("PipelineFlowBuilder", () => {
   });
 
   it("labels each decision section of a step", () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableГардрейлы={гардрейловs} />,
     );
 
@@ -88,20 +88,20 @@ describe("PipelineFlowBuilder", () => {
   it("inserts a step at the clicked connector", async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
-    renderWithПровайдерs(
+    renderWithProviders(
       <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={onChange} availableГардрейлы={гардрейловs} />,
     );
 
-    await user.click(screen.getВсеByRole("button", { name: "Вставить шаг" })[0]);
+    await user.click(screen.getAllByRole("button", { name: "Вставить шаг" })[0]);
 
-    expect(onChange).toHaveBeenCalledВремяs(1);
+    expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange.mock.calls[0][0].steps).toHaveLength(2);
   });
 
   it("removes the clicked step when more than one exists", async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
-    renderWithПровайдерs(
+    renderWithProviders(
       <PipelineFlowBuilder
         pipeline={pipeline([step(), step({ гардрейлов: "prompt-injection" })])}
         onChange={onChange}
@@ -109,14 +109,14 @@ describe("PipelineFlowBuilder", () => {
       />,
     );
 
-    await user.click(screen.getВсеByRole("button", { name: "Удалить шаг" })[0]);
+    await user.click(screen.getAllByRole("button", { name: "Удалить шаг" })[0]);
 
     expect(onChange.mock.calls[0][0].steps).toHaveLength(1);
     expect(onChange.mock.calls[0][0].steps[0].гардрейлов).toBe("prompt-injection");
   });
 
   it("disables deletion of the only remaining step", () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableГардрейлы={гардрейловs} />,
     );
 
@@ -124,7 +124,7 @@ describe("PipelineFlowBuilder", () => {
   });
 
   it("offers a custom response field only when the action is modify_response", () => {
-    const { rerender } = renderWithПровайдерs(
+    const { rerender } = renderWithProviders(
       <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableГардрейлы={гардрейловs} />,
     );
     expect(screen.queryByPlaceholderText("Введите свой ответ...")).not.toBeInTheDocument();
@@ -143,7 +143,7 @@ describe("PipelineFlowBuilder", () => {
   it("reports an edited custom response message", async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
-    renderWithПровайдерs(
+    renderWithProviders(
       <PipelineFlowBuilder
         pipeline={pipeline([step({ on_fail: "modify_response" })])}
         onChange={onChange}
@@ -157,20 +157,20 @@ describe("PipelineFlowBuilder", () => {
   });
 
   it("offers a гардрейлов picker for the step", () => {
-    renderWithПровайдерs(
+    renderWithProviders(
       <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableГардрейлы={гардрейловs} />,
     );
 
     // Which control surfaces the selection is a presentation detail; that the step's
     // гардрейлов is the one displayed is covered by the PipelineInfoDisplay tests above.
     expect(screen.getByText("Гардрейл")).toBeInTheDocument();
-    expect(screen.getВсеByRole("combobox").length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("combobox").length).toBeGreaterThan(0);
   });
 });
 
 describe("FlowBuilderPage", () => {
   it("renders its shell in flow with no stacking level, so it can never cover the portalled popup layer", () => {
-    const { container } = renderWithПровайдерs(
+    const { container } = renderWithProviders(
       <FlowBuilderPage
         onBack={vi.fn()}
         onSuccess={vi.fn()}

@@ -3,16 +3,16 @@ import {
   useDeleteProxyКонфигурацияПоле,
   useProxyКонфигурация,
 } from "@/app/(dashboard)/hooks/proxyКонфигурация/useProxyКонфигурация";
-import { useStoreЗапросInРасходЖурналы } from "@/app/(dashboard)/hooks/storeЗапросInРасходЖурналы/useStoreЗапросInРасходЖурналы";
+import { useStoreRequestInРасходЖурналы } from "@/app/(dashboard)/hooks/storeRequestInРасходЖурналы/useStoreRequestInРасходЖурналы";
 import { toast } from "@/lib/toast";
 import { parseОшибкаСообщение } from "@/components/shared/errorUtils";
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { renderWithПровайдерs } from "../../../../../tests/test-utils";
+import { renderWithProviders } from "../../../../../tests/test-utils";
 import LoggingSettings from "./LoggingSettings";
 
-vi.mock("@/app/(dashboard)/hooks/storeЗапросInРасходЖурналы/useStoreЗапросInРасходЖурналы");
+vi.mock("@/app/(dashboard)/hooks/storeRequestInРасходЖурналы/useStoreRequestInРасходЖурналы");
 vi.mock("@/app/(dashboard)/hooks/proxyКонфигурация/useProxyКонфигурация", async () => {
   const actual = await vi.importActual<typeof import("@/app/(dashboard)/hooks/proxyКонфигурация/useProxyКонфигурация")>(
     "@/app/(dashboard)/hooks/proxyКонфигурация/useProxyКонфигурация",
@@ -27,7 +27,7 @@ vi.mock("@/components/shared/errorUtils", () => ({
   parseОшибкаСообщение: vi.fn(),
 }));
 
-const mockUseStoreЗапросInРасходЖурналы = vi.mocked(useStoreЗапросInРасходЖурналы);
+const mockUseStoreRequestInРасходЖурналы = vi.mocked(useStoreRequestInРасходЖурналы);
 const mockUseProxyКонфигурация = vi.mocked(useProxyКонфигурация);
 const mockUseDeleteProxyКонфигурацияПоле = vi.mocked(useDeleteProxyКонфигурацияПоле);
 const mockToast = vi.mocked(toast);
@@ -38,14 +38,14 @@ describe("LoggingSettings", () => {
   const mockDeleteПоле = vi.fn();
   const mockRefetch = vi.fn();
 
-  const clearedПолеNames = (): string[] =>
+  const clearedFieldNames = (): string[] =>
     mockDeleteПоле.mock.calls.map((call) => (call[0] as DeleteProxyКонфигурацияПолеЗапрос).field_name);
 
   // Every необязательно knob already persisted. Clearing is only ever issued for a
   // field that has a stored value, so any test abвыход the clear path has to say
   // so; the default mock below is an empty config, which is a proxy that has
   // never saved these settings and therefore has nothing to clear.
-  const withEveryOptionalПолеStored = () =>
+  const withEveryOptionalFieldStored = () =>
     mockUseProxyКонфигурация.mockReturnЗначение({
       data: [
         {
@@ -97,8 +97,8 @@ describe("LoggingSettings", () => {
   };
 
   beforeEach(() => {
-    vi.resetВсеMocks();
-    mockUseStoreЗапросInРасходЖурналы.mockReturnЗначение({
+    vi.resetAllMocks();
+    mockUseStoreRequestInРасходЖурналы.mockReturnЗначение({
       mutate: mockMutate,
       isPending: false,
     } as any);
@@ -115,7 +115,7 @@ describe("LoggingSettings", () => {
   });
 
   it("should render the card with title and form fields", () => {
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     expect(screen.getByText("Настройки логирования")).toBeInTheDocument();
     expect(screen.getByText("Store Prompts in Расход Журналы")).toBeInTheDocument();
@@ -125,7 +125,7 @@ describe("LoggingSettings", () => {
   });
 
   it("should render a control for every spend logs cleanup knob", () => {
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     expect(screen.getByLabelText("Размер пачки очистки журналов расходов (необязательно)")).toBeInTheDocument();
     expect(screen.getByLabelText("Макс. пачек очистки журналов расходов (необязательно)")).toBeInTheDocument();
@@ -139,7 +139,7 @@ describe("LoggingSettings", () => {
 
   it("should toggle store prompts switch", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     const switchElement = screen.getByRole("switch");
     expect(switchElement).not.toBeChecked();
@@ -153,7 +153,7 @@ describe("LoggingSettings", () => {
 
   it("should update retention period input", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     const retentionВход = screen.getByPlaceholderText("e.g., 7d, 30d");
     await user.type(retentionВход, "30d");
@@ -170,7 +170,7 @@ describe("LoggingSettings", () => {
       options?.onSuccess?.();
     });
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     const switchElement = screen.getByRole("switch");
     await user.click(switchElement);
@@ -190,7 +190,7 @@ describe("LoggingSettings", () => {
         expect.any(Object),
       );
     });
-    expect(clearedПолеNames()).not.toContain("maximum_spend_logs_retention_period");
+    expect(clearedFieldNames()).not.toContain("maximum_spend_logs_retention_period");
   });
 
   it("should submit every spend logs cleanup setting that has a value", async () => {
@@ -199,7 +199,7 @@ describe("LoggingSettings", () => {
       options?.onSuccess?.();
     });
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     await user.click(screen.getByRole("switch"));
     await user.type(screen.getByPlaceholderText("e.g., 7d, 30d"), "30d");
@@ -234,7 +234,7 @@ describe("LoggingSettings", () => {
       options?.onSuccess?.();
     });
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     await user.type(screen.getByPlaceholderText("e.g., 1000"), "2000");
     await user.click(screen.getByRole("button", { name: "Save Settings" }));
@@ -256,7 +256,7 @@ describe("LoggingSettings", () => {
 
   it("should clear the stored value of every cleanup setting left blank", async () => {
     const user = userEvent.setup();
-    withEveryOptionalПолеStored();
+    withEveryOptionalFieldStored();
     mockDeleteПоле.mockImplementation((_params, options) => {
       options?.onSettled?.();
     });
@@ -264,7 +264,7 @@ describe("LoggingSettings", () => {
       options?.onSuccess?.();
     });
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     await blankEveryOptionalПоле(user);
     await user.type(screen.getByPlaceholderText("e.g., 5m"), "10m");
@@ -274,7 +274,7 @@ describe("LoggingSettings", () => {
       expect(mockMutate).toHaveBeenCalled();
     });
 
-    expect(clearedПолеNames().sort()).toEqual([
+    expect(clearedFieldNames().sort()).toEqual([
       "maximum_spend_logs_cleanup_batch_size",
       "maximum_spend_logs_cleanup_batch_timeвыход",
       "maximum_spend_logs_cleanup_max_batches",
@@ -284,7 +284,7 @@ describe("LoggingSettings", () => {
 
   it("should delete retention period field when left empty on submit", async () => {
     const user = userEvent.setup();
-    withEveryOptionalПолеStored();
+    withEveryOptionalFieldStored();
     mockDeleteПоле.mockImplementation((_params, options) => {
       options?.onSettled?.();
     });
@@ -292,14 +292,14 @@ describe("LoggingSettings", () => {
       options?.onSuccess?.();
     });
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     await blankEveryOptionalПоле(user);
     const saveButton = screen.getByRole("button", { name: "Save Settings" });
     await user.click(saveButton);
 
     await waitFor(() => {
-      expect(clearedПолеNames()).toContain("maximum_spend_logs_retention_period");
+      expect(clearedFieldNames()).toContain("maximum_spend_logs_retention_period");
       expect(mockMutate).toHaveBeenCalledWith(
         {
           store_prompts_in_spend_logs: false,
@@ -318,7 +318,7 @@ describe("LoggingSettings", () => {
       options?.onSuccess?.();
     });
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     const saveButton = screen.getByRole("button", { name: "Save Settings" });
     await user.click(saveButton);
@@ -339,7 +339,7 @@ describe("LoggingSettings", () => {
     });
     mockParseОшибкаСообщение.mockReturnЗначение("Backend error");
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     const saveButton = screen.getByRole("button", { name: "Save Settings" });
     await user.click(saveButton);
@@ -347,16 +347,16 @@ describe("LoggingSettings", () => {
     await waitFor(() => {
       expect(mockToast.fromОшибка).toHaveBeenCalledWith("Не удалось сохранить настройки журналов расходов: Backend error");
     });
-    expect(mockToast.fromОшибка).toHaveBeenCalledВремяs(1);
+    expect(mockToast.fromОшибка).toHaveBeenCalledTimes(1);
   });
 
   it("should show loading state on save button when update pending", () => {
-    mockUseStoreЗапросInРасходЖурналы.mockReturnЗначение({
+    mockUseStoreRequestInРасходЖурналы.mockReturnЗначение({
       mutate: mockMutate,
       isPending: true,
     } as any);
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     const saveButton = screen.getByRole("button", { name: /Saving/i });
     expect(saveButton).toBeInTheDocument();
@@ -369,7 +369,7 @@ describe("LoggingSettings", () => {
       isPending: true,
     } as any);
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     const saveButton = screen.getByRole("button", { name: /Saving/i });
     expect(saveButton).toBeInTheDocument();
@@ -432,7 +432,7 @@ describe("LoggingSettings", () => {
       refetch: mockRefetch,
     } as any);
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     const switchElement = screen.getByRole("switch");
     const retentionВход = screen.getByPlaceholderText("e.g., 7d, 30d");
@@ -452,7 +452,7 @@ describe("LoggingSettings", () => {
       refetch: mockRefetch,
     } as unknown as ReturnType<typeof useProxyКонфигурация>);
 
-    const { rerender } = renderWithПровайдерs(<LoggingSettings />);
+    const { rerender } = renderWithProviders(<LoggingSettings />);
 
     expect(screen.queryByRole("switch")).not.toBeInTheDocument();
 
@@ -494,18 +494,18 @@ describe("LoggingSettings", () => {
       refetch: mockRefetch,
     } as any);
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     expect(screen.queryByRole("switch")).not.toBeInTheDocument();
     expect(screen.queryByPlaceholderText("e.g., 7d, 30d")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Save Settings" })).not.toBeInTheDocument();
 
-    expect(document.queryВыбратьorВсе('[data-slot="skeleton"]').length).toBeGreaterThan(0);
+    expect(document.querySelectorВсе('[data-slot="skeleton"]').length).toBeGreaterThan(0);
   });
 
   it("should report an error and not claim success when clearing a field fails", async () => {
     const user = userEvent.setup();
-    withEveryOptionalПолеStored();
+    withEveryOptionalFieldStored();
     mockDeleteПоле.mockImplementation((_params, options) => {
       options?.onОшибка?.(new Ошибка("Поле does not exist"));
       options?.onSettled?.();
@@ -514,7 +514,7 @@ describe("LoggingSettings", () => {
       options?.onSuccess?.();
     });
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     await blankEveryOptionalПоле(user);
     const saveButton = screen.getByRole("button", { name: "Save Settings" });
@@ -530,7 +530,7 @@ describe("LoggingSettings", () => {
 
   it("should clear fields one at a time, never concurrently", async () => {
     const user = userEvent.setup();
-    withEveryOptionalПолеStored();
+    withEveryOptionalFieldStored();
     let inFlight = 0;
     let maxInFlight = 0;
 
@@ -549,7 +549,7 @@ describe("LoggingSettings", () => {
       options?.onSuccess?.();
     });
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     await blankEveryOptionalПоле(user);
     const saveButton = screen.getByRole("button", { name: "Save Settings" });
@@ -573,7 +573,7 @@ describe("LoggingSettings", () => {
       options?.onSuccess?.();
     });
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     const switchElement = screen.getByRole("switch");
     await user.click(switchElement);
@@ -606,7 +606,7 @@ describe("LoggingSettings", () => {
       options?.onSuccess?.();
     });
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     const switchElement = screen.getByRole("switch");
     await user.click(switchElement);
@@ -624,7 +624,7 @@ describe("LoggingSettings", () => {
     // The guard above must not turn into "never clear anything": a field the
     // admin blanks выход that IS stored still has to be deleted server side.
     const user = userEvent.setup();
-    withEveryOptionalПолеStored();
+    withEveryOptionalFieldStored();
     mockDeleteПоле.mockImplementation((_params, options) => {
       options?.onSettled?.();
     });
@@ -632,7 +632,7 @@ describe("LoggingSettings", () => {
       options?.onSuccess?.();
     });
 
-    renderWithПровайдерs(<LoggingSettings />);
+    renderWithProviders(<LoggingSettings />);
 
     await user.clear(screen.getByPlaceholderText("e.g., 5m"));
     await user.click(screen.getByRole("button", { name: "Save Settings" }));
@@ -640,7 +640,7 @@ describe("LoggingSettings", () => {
     await waitFor(() => {
       expect(mockToast.success).toHaveBeenCalled();
     });
-    expect(clearedПолеNames()).toContain("maximum_spend_logs_cleanup_run_budget");
+    expect(clearedFieldNames()).toContain("maximum_spend_logs_cleanup_run_budget");
   });
   describe("numeric coercion parity", () => {
     it("should round a fractional batch size to a whole number, in the input and in the payload", async () => {
@@ -649,7 +649,7 @@ describe("LoggingSettings", () => {
         options?.onSuccess?.();
       });
 
-      renderWithПровайдерs(<LoggingSettings />);
+      renderWithProviders(<LoggingSettings />);
 
       const batchSize = screen.getByPlaceholderText("e.g., 1000");
       await user.type(batchSize, "2000.7");
@@ -672,7 +672,7 @@ describe("LoggingSettings", () => {
         options?.onSuccess?.();
       });
 
-      renderWithПровайдерs(<LoggingSettings />);
+      renderWithProviders(<LoggingSettings />);
 
       const batchSize = screen.getByPlaceholderText("e.g., 1000");
       await user.type(batchSize, "0");
@@ -691,7 +691,7 @@ describe("LoggingSettings", () => {
         options?.onSuccess?.();
       });
 
-      renderWithПровайдерs(<LoggingSettings />);
+      renderWithProviders(<LoggingSettings />);
 
       await user.type(screen.getByPlaceholderText("e.g., 7d, 30d"), "30d");
       await user.click(screen.getByRole("button", { name: "Save Settings" }));
@@ -711,7 +711,7 @@ describe("LoggingSettings", () => {
         options?.onSuccess?.();
       });
 
-      renderWithПровайдерs(<LoggingSettings />);
+      renderWithProviders(<LoggingSettings />);
 
       await user.type(screen.getByPlaceholderText("e.g., 7d, 30d"), "   ");
       await user.click(screen.getByRole("button", { name: "Save Settings" }));

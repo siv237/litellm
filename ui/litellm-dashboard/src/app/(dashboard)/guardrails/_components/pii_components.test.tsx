@@ -13,7 +13,7 @@ describe("КатегорияФильтр", () => {
 
 describe("QuickДействия", () => {
   it("should render", () => {
-    render(<QuickДействия onВыбратьВсе={() => {}} onUnselectВсе={() => {}} hasВыбраноEntities={false} />);
+    render(<QuickДействия onВыбратьВсе={() => {}} onUnselectВсе={() => {}} hasSelectedEntities={false} />);
     expect(screen.getByText("Быстрые действия")).toBeInTheDocument();
   });
 });
@@ -28,7 +28,7 @@ describe("PiiEntityList", () => {
         actions={[]}
         onEntityВыбрать={() => {}}
         onДействиеВыбрать={() => {}}
-        entityToКатегорияMap={new Map()}
+        entityToCategoryMap={new Map()}
       />,
     );
     expect(screen.getByText("Ни один тип PII не подходит под фильтр")).toBeInTheDocument();

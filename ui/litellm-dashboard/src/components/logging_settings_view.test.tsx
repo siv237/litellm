@@ -6,7 +6,7 @@ describe("LoggingSettingsView logos", () => {
   it("renders the bundled logo for a known logging integration", () => {
     render(
       <LoggingSettingsView
-        loggingКонфигурацияs={[{ callback_name: "langfuse", callback_type: "success", callback_vars: {} }]}
+        loggingConfigs={[{ callback_name: "langfuse", callback_type: "success", callback_vars: {} }]}
       />,
     );
 
@@ -22,11 +22,11 @@ describe("LoggingSettingsView logos", () => {
   it("renders a letter avatar for an unknown callback name", () => {
     render(
       <LoggingSettingsView
-        loggingКонфигурацияs={[{ callback_name: "mystery_callback", callback_type: "success", callback_vars: {} }]}
+        loggingConfigs={[{ callback_name: "mystery_callback", callback_type: "success", callback_vars: {} }]}
       />,
     );
 
-    expect(document.queryВыбратьor("img")).toBeNull();
+    expect(document.querySelector("img")).toBeNull();
     expect(screen.getByText("m")).toBeInTheDocument();
     expect(screen.getByText("mystery_callback")).toBeInTheDocument();
   });

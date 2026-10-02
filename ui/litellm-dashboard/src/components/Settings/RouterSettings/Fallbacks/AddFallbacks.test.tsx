@@ -2,23 +2,23 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import AddРезервные модели, { Резервные модели } from "./AddРезервные модели";
-import * as fetchРежимlsModule from "@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs";
+import * as fetchModelsModule from "@/components/llm_calls/fetch_models";
 import { toast } from "@/lib/toast";
 
-vi.mock("@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => ({
-  fetchAvailableРежимls: vi.fn(),
+vi.mock("@/components/llm_calls/fetch_models", () => ({
+  fetchAvailableModels: vi.fn(),
 }));
 
-vi.mock("./FallbackВыбратьionForm", () => ({
-  FallbackВыбратьionForm: ({ groups, onGroupsChange }: any) => {
+vi.mock("./FallbackSelectionForm", () => ({
+  FallbackSelectionForm: ({ groups, onGroupsChange }: any) => {
     const handleUpdateGroup = () => {
       if (groups.length > 0) {
         const updatedGroups = groups.map((group: any, index: number) => {
-          if (index === 0 && !group.primaryРежимl) {
+          if (index === 0 && !group.primaryModel) {
             return {
               ...group,
-              primaryРежимl: "gpt-4",
-              fallbackРежимls: ["gpt-3.5-turbo"],
+              primaryModel: "gpt-4",
+              fallbackModels: ["gpt-3.5-turbo"],
             };
           }
           return group;
@@ -35,7 +35,7 @@ vi.mock("./FallbackВыбратьionForm", () => ({
         <div data-testid="groups-count">{groups.length}</div>
         {groups.map((group: any) => (
           <div key={group.id} data-testid={`group-${group.id}`}>
-            Primary: {group.primaryРежимl || "None"}, Резервные модели: {group.fallbackРежимls.length}
+            Primary: {group.primaryModel || "None"}, Резервные модели: {group.fallbackModels.length}
           </div>
         ))}
       </div>
@@ -46,7 +46,7 @@ vi.mock("./FallbackВыбратьionForm", () => ({
 describe("AddРезервные модели", () => {
   const mockOnChange = vi.fn();
   const mockAccessТокен = "test-token";
-  const mockРежимlGroups = [
+  const mockModelGroups = [
     { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4", mode: "chat" },
     { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo", mode: "chat" },
     { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "claude-3-opus", mode: "chat" },
@@ -59,8 +59,8 @@ describe("AddРезервные модели", () => {
   };
 
   beforeEach(() => {
-    vi.clearВсеMocks();
-    vi.mocked(fetchРежимlsModule.fetchAvailableРежимls).mockResolvedЗначение(mockРежимlGroups);
+    vi.clearAllMocks();
+    vi.mocked(fetchModelsModule.fetchAvailableModels).mockResolvedЗначение(mockModelGroups);
   });
 
   it("should render the component", () => {
@@ -88,7 +88,7 @@ describe("AddРезервные модели", () => {
     await user.click(addButton);
 
     await waitFor(() => {
-      expect(fetchРежимlsModule.fetchAvailableРежимls).toHaveBeenCalledWith(mockAccessТокен);
+      expect(fetchModelsModule.fetchAvailableModels).toHaveBeenCalledWith(mockAccessТокен);
     });
   });
 

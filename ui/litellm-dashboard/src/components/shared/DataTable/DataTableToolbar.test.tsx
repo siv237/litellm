@@ -5,7 +5,7 @@ import type * as React from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { DataТаблица } from "./DataТаблица";
-import { DataТаблицаToolbar } from "./DataТаблицаToolbar";
+import { DataTableToolbar } from "./DataTableToolbar";
 
 interface Person {
   id: string;
@@ -27,7 +27,7 @@ const columns: ColumnDef<Person, unknown>[] = [
   },
 ];
 
-const names = (): (string | null)[] => screen.getВсеByTestId("name-cell").map((el) => el.textContent);
+const names = (): (string | null)[] => screen.getAllByTestId("name-cell").map((el) => el.textContent);
 
 function Harness({
   onOpenФильтры,
@@ -45,15 +45,15 @@ function Harness({
       filterРежим="client"
       defaultColumnФильтры={[{ id: "name", value: "Alice" }]}
       toolbar={(table) => (
-        <DataТаблицаToolbar table={table} onOpenФильтры={onOpenФильтры} onRefresh={onRefresh}>
+        <DataTableToolbar table={table} onOpenФильтры={onOpenФильтры} onRefresh={onRefresh}>
           {children}
-        </DataТаблицаToolbar>
+        </DataTableToolbar>
       )}
     />
   );
 }
 
-describe("DataТаблицаToolbar", () => {
+describe("DataTableToolbar", () => {
   it("renders a chip for each active filter with its label and value", () => {
     render(<Harness />);
     expect(names()).toEqual(["Alice"]);
@@ -84,7 +84,7 @@ describe("DataТаблицаToolbar", () => {
     render(<Harness onOpenФильтры={onOpenФильтры} />);
     expect(screen.getByTestId("datatable-filter-count")).toHaveTextContent("1");
     await user.click(screen.getByTestId("datatable-filters-trigger"));
-    expect(onOpenФильтры).toHaveBeenCalledВремяs(1);
+    expect(onOpenФильтры).toHaveBeenCalledTimes(1);
   });
 
   it("renders slotted action children", () => {
@@ -101,6 +101,6 @@ describe("DataТаблицаToolbar", () => {
     const onRefresh = vi.fn();
     render(<Harness onRefresh={onRefresh} />);
     await user.click(screen.getByTestId("datatable-refresh"));
-    expect(onRefresh).toHaveBeenCalledВремяs(1);
+    expect(onRefresh).toHaveBeenCalledTimes(1);
   });
 });

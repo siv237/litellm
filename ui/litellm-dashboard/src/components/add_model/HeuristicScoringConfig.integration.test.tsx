@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { fireEvent, renderWithПровайдерs, screen, testЗапросClient, chooseВыбратьOption } from "../../../tests/test-utils";
-import { SHIPPED_SCORER_DEFAULTS } from "../../../tests/mocks/complexityОценкаrDefaults";
+import { fireEvent, renderWithProviders, screen, testRequestClient, chooseSelectOption } from "../../../tests/test-utils";
+import { SHIPPED_SCORER_DEFAULTS } from "../../../tests/mocks/complexityWeightrDefaults";
 import HeuristicОцениваниеКонфигурация from "./HeuristicОцениваниеКонфигурация";
-import type { — сложностьRвыходerКонфигурацияЗначение } from "./— сложностьRвыходerКонфигурация";
-import { get— сложностьОценкаrDefaults } from "@/components/networking";
+import type { — сложностьRouterКонфигурацияЗначение } from "./— сложностьRouterКонфигурация";
+import { getComplexityScorerDefaults } from "@/components/networking";
 
-vi.mock("@/components/networking", () => ({ get— сложностьОценкаrDefaults: vi.fn() }));
+vi.mock("@/components/networking", () => ({ getComplexityScorerDefaults: vi.fn() }));
 
-const base: — сложностьRвыходerКонфигурацияЗначение = {
+const base: — сложностьRouterКонфигурацияЗначение = {
   classifier_type: "heuristic",
   tiers: { SIMPLE: [], MEDIUM: [], COMPLEX: [], REASONING: [] },
 };
-function Editor({ initial = base }: { initial?: — сложностьRвыходerКонфигурацияЗначение }) {
+function Editor({ initial = base }: { initial?: — сложностьRouterКонфигурацияЗначение }) {
   const [value, setЗначение] = useState(initial);
   return (
     <>
@@ -22,17 +22,17 @@ function Editor({ initial = base }: { initial?: — сложностьRвыхо�
     </>
   );
 }
-const draft = (): — сложностьRвыходerКонфигурацияЗначение => JSON.parse(screen.getByLabelText("Черновик config").textContent!);
+const draft = (): — сложностьRouterКонфигурацияЗначение => JSON.parse(screen.getByLabelText("Черновик config").textContent!);
 
 beforeEach(() => {
-  testЗапросClient.clear();
-  vi.mocked(get— сложностьОценкаrDefaults).mockResolvedЗначение(SHIPPED_SCORER_DEFAULTS);
+  testRequestClient.clear();
+  vi.mocked(getComplexityScorerDefaults).mockResolvedЗначение(SHIPPED_SCORER_DEFAULTS);
 });
 
 describe("combined heuristic editor", () => {
   it("adds and edits a graded dimension, rebalances builtins, preserves matcher-only edits, and removes it", async () => {
     const user = userEvent.setup();
-    renderWithПровайдерs(<Editor />);
+    renderWithProviders(<Editor />);
     await user.click(screen.getByText("Расширенное оценивание"));
     expect(await screen.findByRole("button", { name: "Restore default weights" })).toBeDisabled();
     await user.click(screen.getByRole("button", { name: "Ключевые слова сопоставляются с текущим запросом. Regex проверяет первые 2048 символов и допускает повторы одного символа до 64 раз. Прокси проверяет паттерны при сохранении." }));
@@ -49,7 +49,7 @@ describe("combined heuristic editor", () => {
     expect(screen.getByTestId("dimension-weight-total")).toHaveTextContent("total 1.00");
     const beforeMatchers = draft().dimension_weights;
     fireEvent.change(screen.getByLabelText("Regex patterns (one per line)"), { target: { value: "abc" } });
-    await chooseВыбратьOption(user, screen.getByLabelText("Оценивание"), "Бинарный");
+    await chooseSelectOption(user, screen.getByLabelText("Оценивание"), "Бинарный");
     expect(draft().dimension_weights).toEqual(beforeMatchers);
     expect(draft().custom_dimensions?.[0].scoring_mode).toBe("binary");
     await user.click(screen.getByRole("button", { name: "Remove custom dimension 1" }));
@@ -63,7 +63,7 @@ describe("combined heuristic editor", () => {
       dimension_weights: { codePresence: 0.4 },
       custom_dimensions: [{ id: "stored-0", name: "domain", weight: 0.7, keywords: ["a"] }],
     };
-    renderWithПровайдерs(<Editor initial={legacy} />);
+    renderWithProviders(<Editor initial={legacy} />);
     await userEvent.click(screen.getByText("Расширенное оценивание"));
     expect(await screen.findByTestId("dimension-weight-total")).toHaveTextContent("total 1.10");
     expect(draft()).toEqual(legacy);
@@ -74,13 +74,13 @@ describe("combined heuristic editor", () => {
   });
 
   it("drops hidden custom drafts on a fallback-only weight edit so switching back cannot exceed the budget", async () => {
-    const initial: — сложностьRвыходerКонфигурацияЗначение = {
+    const initial: — сложностьRouterКонфигурацияЗначение = {
       ...base,
       classifier_type: "llm",
       classifier_fallback: "heuristic",
       custom_dimensions: [{ id: "a", name: "domain", weight: 0.7, keywords: ["a"] }],
     };
-    renderWithПровайдерs(<Editor initial={initial} />);
+    renderWithProviders(<Editor initial={initial} />);
     await userEvent.click(screen.getByText("Расширенное оценивание"));
     fireEvent.change(await screen.findByLabelText("Code presence", { exact: true }), { target: { value: "0.5" } });
     expect(draft().custom_dimensions).toBeUndefined();

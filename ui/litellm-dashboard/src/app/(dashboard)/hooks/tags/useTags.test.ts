@@ -72,7 +72,7 @@ describe("useТеги", () => {
     });
 
     // Reset all mocks
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
 
     // Set default mock for useАвторизовано (enabled state)
     mockUseАвторизовано.mockReturnЗначение({
@@ -82,7 +82,7 @@ describe("useТеги", () => {
       token: "test-token",
       userEmail: "test@example.com",
       premiumUser: false,
-      disabledЛичнаяКлючCreation: null,
+      disabledPersonalKeyCreation: null,
       showSSOBanner: false,
     });
   });
@@ -109,7 +109,7 @@ describe("useТеги", () => {
     expect(result.current.data).toEqual(mockТеги);
     expect(result.current.error).toBeNull();
     expect(tagListCall).toHaveBeenCalledWith("test-access-token");
-    expect(tagListCall).toHaveBeenCalledВремяs(1);
+    expect(tagListCall).toHaveBeenCalledTimes(1);
   });
 
   it("should handle error when tagListCall fails", async () => {
@@ -133,7 +133,7 @@ describe("useТеги", () => {
     expect(result.current.error).toEqual(testОшибка);
     expect(result.current.data).toBeUndefined();
     expect(tagListCall).toHaveBeenCalledWith("test-access-token");
-    expect(tagListCall).toHaveBeenCalledВремяs(1);
+    expect(tagListCall).toHaveBeenCalledTimes(1);
   });
 
   it("should not execute query when accessТокен is missing", async () => {
@@ -145,7 +145,7 @@ describe("useТеги", () => {
       token: null,
       userEmail: "test@example.com",
       premiumUser: false,
-      disabledЛичнаяКлючCreation: null,
+      disabledPersonalKeyCreation: null,
       showSSOBanner: false,
     });
 
@@ -169,7 +169,7 @@ describe("useТеги", () => {
       token: "test-token",
       userEmail: "test@example.com",
       premiumUser: false,
-      disabledЛичнаяКлючCreation: null,
+      disabledPersonalKeyCreation: null,
       showSSOBanner: false,
     });
 
@@ -193,7 +193,7 @@ describe("useТеги", () => {
       token: "test-token",
       userEmail: "test@example.com",
       premiumUser: false,
-      disabledЛичнаяКлючCreation: null,
+      disabledPersonalKeyCreation: null,
       showSSOBanner: false,
     });
 
@@ -217,7 +217,7 @@ describe("useТеги", () => {
       token: null,
       userEmail: "test@example.com",
       premiumUser: false,
-      disabledЛичнаяКлючCreation: null,
+      disabledPersonalKeyCreation: null,
       showSSOBanner: false,
     });
 
@@ -245,7 +245,7 @@ describe("useТеги", () => {
     });
 
     expect(tagListCall).toHaveBeenCalledWith("test-access-token");
-    expect(tagListCall).toHaveBeenCalledВремяs(1);
+    expect(tagListCall).toHaveBeenCalledTimes(1);
   });
 
   it("should return empty object when API returns empty data", async () => {

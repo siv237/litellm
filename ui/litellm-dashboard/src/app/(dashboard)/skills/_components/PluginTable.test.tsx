@@ -39,7 +39,7 @@ const defaultProps = {
 
 describe("PluginТаблица", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
   });
 
   it("should render every column header", () => {
@@ -56,7 +56,7 @@ describe("PluginТаблица", () => {
 
   it("should sort by created date descending by default", () => {
     render(<PluginТаблица {...defaultProps} />);
-    const rows = screen.getВсеByRole("row").slice(1);
+    const rows = screen.getAllByRole("row").slice(1);
     expect(within(rows[0]).getByText("newer-skill")).toBeInTheDocument();
     expect(within(rows[1]).getByText("older-skill")).toBeInTheDocument();
   });

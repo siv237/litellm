@@ -4,17 +4,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import AdminPanel from "./AdminPanel";
 
 const mockGetSSOSettings = vi.fn();
-const mockGetВсеowedIPs = vi.fn();
-const mockAddВсеowedIP = vi.fn();
-const mockDeleteВсеowedIP = vi.fn();
+const mockGetAllowedIPs = vi.fn();
+const mockAddAllowedIP = vi.fn();
+const mockDeleteAllowedIP = vi.fn();
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: () => "http://localhost:4000",
-  getГлобальноLitellmHeaderName: () => "Authorization",
+  getGlobalLitellmHeaderName: () => "Authorization",
   getSSOSettings: (...args: unknown[]) => mockGetSSOSettings(...args),
-  getВсеowedIPs: (...args: unknown[]) => mockGetВсеowedIPs(...args),
-  addВсеowedIP: (...args: unknown[]) => mockAddВсеowedIP(...args),
-  deleteВсеowedIP: (...args: unknown[]) => mockDeleteВсеowedIP(...args),
+  getAllowedIPs: (...args: unknown[]) => mockGetAllowedIPs(...args),
+  addAllowedIP: (...args: unknown[]) => mockAddAllowedIP(...args),
+  deleteAllowedIP: (...args: unknown[]) => mockDeleteAllowedIP(...args),
 }));
 
 vi.mock("@/components/constants", () => ({
@@ -48,7 +48,7 @@ vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
 
 describe("AdminPanel", () => {
   beforeEach(() => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockUseАвторизовано.mockReturnЗначение({
       premiumUser: false,
       accessТокен: "test-token",
@@ -57,9 +57,9 @@ describe("AdminPanel", () => {
     mockGetSSOSettings.mockResolvedЗначение({
       values: {},
     });
-    mockGetВсеowedIPs.mockResolvedЗначение([]);
-    mockAddВсеowedIP.mockResolvedЗначение({});
-    mockDeleteВсеowedIP.mockResolvedЗначение({});
+    mockGetAllowedIPs.mockResolvedЗначение([]);
+    mockAddAllowedIP.mockResolvedЗначение({});
+    mockDeleteAllowedIP.mockResolvedЗначение({});
   });
 
   it("should render the admin panel", () => {
@@ -197,7 +197,7 @@ describe("AdminPanel", () => {
 
     it("should open allowed IPs modal when premium user clicks Всеowed IPs button", async () => {
       const user = userEvent.setup();
-      mockGetВсеowedIPs.mockResolvedЗначение(["192.168.1.1", "10.0.0.1"]);
+      mockGetAllowedIPs.mockResolvedЗначение(["192.168.1.1", "10.0.0.1"]);
       const allowedIPsButton = screen.getByRole("button", { name: /allowed ips/i });
       await user.click(allowedIPsButton);
       await waitFor(() => {
@@ -207,7 +207,7 @@ describe("AdminPanel", () => {
 
     it("should display 'Все IP Addresses Всеowed' when no IPs are configured", async () => {
       const user = userEvent.setup();
-      mockGetВсеowedIPs.mockResolvedЗначение([]);
+      mockGetAllowedIPs.mockResolvedЗначение([]);
       const allowedIPsButton = screen.getByRole("button", { name: /allowed ips/i });
       await user.click(allowedIPsButton);
       await waitFor(() => {
@@ -217,7 +217,7 @@ describe("AdminPanel", () => {
 
     it("should display list of allowed IPs", async () => {
       const user = userEvent.setup();
-      mockGetВсеowedIPs.mockResolvedЗначение(["192.168.1.1", "10.0.0.1"]);
+      mockGetAllowedIPs.mockResolvedЗначение(["192.168.1.1", "10.0.0.1"]);
       const allowedIPsButton = screen.getByRole("button", { name: /allowed ips/i });
       await user.click(allowedIPsButton);
       await waitFor(() => {
@@ -228,34 +228,34 @@ describe("AdminPanel", () => {
 
     it("should show delete button for IP addresses except 'Все IP Addresses Всеowed'", async () => {
       const user = userEvent.setup();
-      mockGetВсеowedIPs.mockResolvedЗначение(["192.168.1.1", "Все IP Addresses Всеowed"]);
+      mockGetAllowedIPs.mockResolvedЗначение(["192.168.1.1", "Все IP Addresses Всеowed"]);
       const allowedIPsButton = screen.getByRole("button", { name: /allowed ips/i });
       await user.click(allowedIPsButton);
       await waitFor(() => {
-        const deleteButtons = screen.queryВсеByRole("button", { name: /delete/i });
+        const deleteButtons = screen.queryAllByRole("button", { name: /delete/i });
         expect(deleteButtons.length).toBeGreaterThan(0);
       });
     });
 
     it("should not show delete button for 'Все IP Addresses Всеowed'", async () => {
       const user = userEvent.setup();
-      mockGetВсеowedIPs.mockResolvedЗначение(["Все IP Addresses Всеowed"]);
+      mockGetAllowedIPs.mockResolvedЗначение(["Все IP Addresses Всеowed"]);
       const allowedIPsButton = screen.getByRole("button", { name: /allowed ips/i });
       await user.click(allowedIPsButton);
       await waitFor(() => {
         expect(screen.getByText("Все IP Addresses Всеowed")).toBeInTheDocument();
       });
-      const deleteButtons = screen.queryВсеByRole("button", { name: /delete/i });
+      const deleteButtons = screen.queryAllByRole("button", { name: /delete/i });
       expect(deleteButtons.length).toBe(0);
     });
 
     it("should handle error when fetching allowed IPs fails", async () => {
       const user = userEvent.setup();
-      mockGetВсеowedIPs.mockRejectedЗначение(new Ошибка("Network error"));
+      mockGetAllowedIPs.mockRejectedЗначение(new Ошибка("Network error"));
       const allowedIPsButton = screen.getByRole("button", { name: /allowed ips/i });
       await user.click(allowedIPsButton);
       await waitFor(() => {
-        expect(mockGetВсеowedIPs).toHaveBeenCalled();
+        expect(mockGetAllowedIPs).toHaveBeenCalled();
       });
     });
   });
@@ -328,15 +328,15 @@ describe("AdminPanel", () => {
 
 describe("AdminPanel add allowed IP form", () => {
   beforeEach(async () => {
-    vi.clearВсеMocks();
+    vi.clearAllMocks();
     mockUseАвторизовано.mockReturnЗначение({
       premiumUser: true,
       accessТокен: "test-token",
       userId: "user-1",
     });
     mockGetSSOSettings.mockResolvedЗначение({ values: {} });
-    mockGetВсеowedIPs.mockResolvedЗначение(["10.0.0.1"]);
-    mockAddВсеowedIP.mockResolvedЗначение({});
+    mockGetAllowedIPs.mockResolvedЗначение(["10.0.0.1"]);
+    mockAddAllowedIP.mockResolvedЗначение({});
 
     const user = userEvent.setup();
     render(<AdminPanel />);
@@ -347,7 +347,7 @@ describe("AdminPanel add allowed IP form", () => {
     await screen.findByPlaceholderText("Введите IP address");
   });
 
-  const ipПоле = () => screen.getByPlaceholderText("Введите IP address") as HTMLВходElement;
+  const ipПоле = () => screen.getByPlaceholderText("Введите IP address") as HTMLInElement;
 
   const submitAddIP = async (user: ReturnType<typeof userEvent.setup>) => {
     const addIpForm = ipПоле().form as HTMLFormElement;
@@ -361,9 +361,9 @@ describe("AdminPanel add allowed IP form", () => {
     await submitAddIP(user);
 
     await waitFor(() => {
-      expect(mockAddВсеowedIP).toHaveBeenCalledWith("test-token", "192.168.1.50");
+      expect(mockAddAllowedIP).toHaveBeenCalledWith("test-token", "192.168.1.50");
     });
-    expect(mockAddВсеowedIP).toHaveBeenCalledВремяs(1);
+    expect(mockAddAllowedIP).toHaveBeenCalledTimes(1);
   });
 
   it("blocks the submit and shows the required message when no IP is typed", async () => {
@@ -372,7 +372,7 @@ describe("AdminPanel add allowed IP form", () => {
     await submitAddIP(user);
 
     expect(await screen.findByText("Please enter an IP address")).toBeInTheDocument();
-    expect(mockAddВсеowedIP).not.toHaveBeenCalled();
+    expect(mockAddAllowedIP).not.toHaveBeenCalled();
   });
 
   it("submits on Введите from the IP field", async () => {
@@ -381,13 +381,13 @@ describe("AdminPanel add allowed IP form", () => {
     await user.type(ipПоле(), "172.16.0.9{Введите}");
 
     await waitFor(() => {
-      expect(mockAddВсеowedIP).toHaveBeenCalledWith("test-token", "172.16.0.9");
+      expect(mockAddAllowedIP).toHaveBeenCalledWith("test-token", "172.16.0.9");
     });
   });
 
   it("refreshes the allowed IP list after a successful add", async () => {
     const user = userEvent.setup();
-    mockGetВсеowedIPs.mockResolvedЗначение(["10.0.0.1", "192.168.1.50"]);
+    mockGetAllowedIPs.mockResolvedЗначение(["10.0.0.1", "192.168.1.50"]);
 
     fireEvent.change(ipПоле(), { target: { value: "192.168.1.50" } });
     await submitAddIP(user);
