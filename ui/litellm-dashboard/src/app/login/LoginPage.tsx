@@ -10,6 +10,7 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { FormField } from "@/components/shared/form/FormField";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { resolveLogoSrc } from "@/lib/assetPaths";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -190,7 +191,10 @@ function LoginPageContent() {
           <CardContent>
             <div className="flex w-full flex-col gap-4">
               <div className="text-center">
-                <h2 className="text-3xl font-semibold text-foreground">🚅 ruLiteLLM</h2>
+                <h2 className="flex items-center justify-center gap-2 text-3xl font-semibold text-foreground">
+                  <img src={resolveLogoSrc("/ui/assets/logos/rulitellm_cab.png")} alt="" aria-hidden className="h-10 w-auto shrink-0" />
+                  ruLiteLLM
+                </h2>
               </div>
 
               <Alert variant="warning">
@@ -219,7 +223,10 @@ function LoginPageContent() {
           <TooltipProvider>
             <div className="flex w-full flex-col gap-4">
               <div className="text-center">
-                <h2 className="text-3xl font-semibold text-foreground">🚅 ruLiteLLM</h2>
+                <h2 className="flex items-center justify-center gap-2 text-3xl font-semibold text-foreground">
+                  <img src={resolveLogoSrc("/ui/assets/logos/rulitellm_cab.png")} alt="" aria-hidden className="h-10 w-auto shrink-0" />
+                  ruLiteLLM
+                </h2>
               </div>
 
               <div className="text-center">

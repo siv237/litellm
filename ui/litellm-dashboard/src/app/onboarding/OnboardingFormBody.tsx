@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { UiLoadingSpinner } from "@/components/ui/ui-loading-spinner";
 import { cn } from "@/lib/cva.config";
+import { resolveLogoSrc } from "@/lib/assetPaths";
 import { useZodForm } from "@/lib/forms/useZodForm";
 
 type OnboardingFormBodyProps = {
@@ -38,7 +39,10 @@ export function OnboardingFormBody({ variant, userEmail, isPending, claimError, 
     <div className="mx-auto w-full max-w-md mt-10">
       <Card>
         <CardContent>
-          <h5 className="text-center mb-5 text-base font-semibold text-foreground">🚅 LiteLLM</h5>
+          <h5 className="mb-5 flex items-center justify-center gap-2 text-base font-semibold text-foreground">
+            <img src={resolveLogoSrc("/ui/assets/logos/rulitellm_cab.png")} alt="Логотип ruLiteLLM" className="h-6 w-auto shrink-0" />
+            ruLiteLLM
+          </h5>
           <h3 className="text-2xl font-semibold text-foreground">{actionLabel}</h3>
           <p className="text-sm text-foreground">
             {isResetPassword
