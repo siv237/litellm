@@ -87,11 +87,11 @@ const KeyLifecycleSettings: React.FC<KeyLifecycleSettingsProps> = ({
     <TooltipProvider>
       <div className="space-y-6">
         <div className="space-y-4">
-          <span className="text-sm font-medium text-foreground">Key Expiry Settings</span>
+          <span className="text-sm font-medium text-foreground">Настройки срока действия ключа</span>
 
           <div className="space-y-2">
             <div className="flex items-center space-x-1 text-sm font-medium text-foreground">
-              <label htmlFor={durationId}>Expire Key</label>
+              <label htmlFor={durationId}>Истекает</label>
               {hintIcon(
                 "Set when this key should expire. Format: 30s (seconds), 30m (minutes), 30h (hours), 30d (days). Leave empty to keep the current expiry unchanged.",
               )}
@@ -103,7 +103,7 @@ const KeyLifecycleSettings: React.FC<KeyLifecycleSettingsProps> = ({
                     onCheckedChange={handleNeverExpireChange}
                   />
                   <label htmlFor={`${durationId}-never-expire`} className="cursor-pointer">
-                    Never Expire
+                    Никогда не истекать
                   </label>
                 </span>
               )}
@@ -122,12 +122,12 @@ const KeyLifecycleSettings: React.FC<KeyLifecycleSettingsProps> = ({
         <Separator />
 
         <div className="space-y-4">
-          <span className="text-sm font-medium text-foreground">Auto-Rotation Settings</span>
+          <span className="text-sm font-medium text-foreground">Настройки автоматической ротации</span>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <label className="flex items-center space-x-1 text-sm font-medium text-foreground">
-                <span>Enable Auto-Rotation</span>
+                <span>Включить автоматическую ротацию</span>
                 {hintIcon("Key will automatically regenerate at the specified interval for enhanced security.")}
               </label>
               <Switch checked={autoRotationEnabled} onCheckedChange={onAutoRotationChange} />
@@ -136,7 +136,7 @@ const KeyLifecycleSettings: React.FC<KeyLifecycleSettingsProps> = ({
             {autoRotationEnabled && (
               <div className="space-y-2">
                 <label className="flex items-center space-x-1 text-sm font-medium text-foreground">
-                  <span>Rotation Interval</span>
+                  <span>Интервал ротации</span>
                   {hintIcon(
                     "How often the key should be automatically rotated. Choose the interval that best fits your security requirements.",
                   )}
@@ -147,7 +147,7 @@ const KeyLifecycleSettings: React.FC<KeyLifecycleSettingsProps> = ({
                     onValueChange={(next: string | null) => next !== null && handleIntervalChange(next)}
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select interval">
+                      <SelectValue placeholder="Выберите интервал">
                         {(selected: string | null) =>
                           selected === null ? (
                             "Select interval"
@@ -179,7 +179,7 @@ const KeyLifecycleSettings: React.FC<KeyLifecycleSettingsProps> = ({
                         placeholder="e.g., 1s, 5m, 2h, 14d"
                       />
                       <div className="text-xs text-muted-foreground">
-                        Supported formats: seconds (s), minutes (m), hours (h), days (d)
+                        Поддерживаемые форматы: секунды (s), минуты (m), часы (h), дни (d)
                       </div>
                     </div>
                   )}
@@ -190,8 +190,8 @@ const KeyLifecycleSettings: React.FC<KeyLifecycleSettingsProps> = ({
 
           {autoRotationEnabled && (
             <div className="rounded-md bg-info/10 p-3 text-sm text-info">
-              When rotation occurs, you&apos;ll receive a notification with the new key. The old key will be deactivated
-              after a brief grace period.
+              При ротации вы получите уведомление с новым ключом. Старый ключ будет деактивирован
+              после короткого льготного периода.
             </div>
           )}
         </div>

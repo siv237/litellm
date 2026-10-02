@@ -3,19 +3,19 @@ import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
 import { useForm } from "react-hook-form";
 
-import type { MountedFormValues } from "@/components/common_components/MountedFormField";
-import { allFieldsValue, deepMergedFieldsValue, resetFields, setFieldsValue, singleBranchChange } from "./mcpFormStore";
+import type { MountedFormЗначениеs } from "@/components/common_components/MountedFormПоле";
+import { allПолеsЗначение, deepMergedПолеsЗначение, resetПолеs, setПолеsЗначение, singleBranchChange } from "./mcpFormStore";
 
 const withForm = (
-  defaultValues: MountedFormValues,
-  act: (form: ReturnType<typeof useForm<MountedFormValues>>) => void,
+  defaultЗначениеs: MountedFormЗначениеs,
+  act: (form: ReturnType<typeof useForm<MountedFormЗначениеs>>) => void,
 ) => {
-  let store: MountedFormValues = {};
+  let store: MountedFormЗначениеs = {};
   const Probe: React.FC = () => {
-    const form = useForm<MountedFormValues>({ defaultValues });
+    const form = useForm<MountedFormЗначениеs>({ defaultЗначениеs });
     React.useEffect(() => {
       act(form);
-      store = allFieldsValue(form);
+      store = allПолеsЗначение(form);
     }, [form]);
     return null;
   };
@@ -23,10 +23,10 @@ const withForm = (
   return store;
 };
 
-describe("deepMergedFieldsValue", () => {
+describe("deepMergedПолеsЗначение", () => {
   it("keeps a sibling key when a nested object is written, which is what preserves a declared app", () => {
     expect(
-      deepMergedFieldsValue(
+      deepMergedПолеsЗначение(
         { credentials: { client_id: "kept", access_token: "tok" } },
         { credentials: { client_id: "typed" } },
       ),
@@ -34,37 +34,37 @@ describe("deepMergedFieldsValue", () => {
   });
 
   it("replaces an array rather than merging it index by index", () => {
-    expect(deepMergedFieldsValue({ extra_headers: ["a", "b", "c"] }, { extra_headers: ["z"] })).toStrictEqual({
+    expect(deepMergedПолеsЗначение({ extra_headers: ["a", "b", "c"] }, { extra_headers: ["z"] })).toStrictEqual({
       extra_headers: ["z"],
     });
   });
 
   it("writes an explicit undefined instead of skipping the key, which is how a transport switch clears a field", () => {
-    const merged = deepMergedFieldsValue({ url: "https://old", auth_type: "api_key" }, { url: undefined });
+    const merged = deepMergedПолеsЗначение({ url: "https://old", auth_type: "api_key" }, { url: undefined });
     expect(merged).toStrictEqual({ url: undefined, auth_type: "api_key" });
     expect("url" in merged).toBe(true);
   });
 
   it("writes an explicit null rather than treating it as a merge target", () => {
-    expect(deepMergedFieldsValue({ credentials: { client_id: "x" } }, { credentials: null })).toStrictEqual({
+    expect(deepMergedПолеsЗначение({ credentials: { client_id: "x" } }, { credentials: null })).toStrictEqual({
       credentials: null,
     });
   });
 
   it("replaces a primitive with an object when the incoming value is an object", () => {
-    expect(deepMergedFieldsValue({ credentials: "not-an-object" }, { credentials: { client_id: "x" } })).toStrictEqual({
+    expect(deepMergedПолеsЗначение({ credentials: "not-an-object" }, { credentials: { client_id: "x" } })).toStrictEqual({
       credentials: { client_id: "x" },
     });
   });
 
   it("does not mutate the store it was handed", () => {
     const store = { credentials: { client_id: "kept" } };
-    deepMergedFieldsValue(store, { credentials: { client_secret: "added" } });
+    deepMergedПолеsЗначение(store, { credentials: { client_secret: "added" } });
     expect(store).toStrictEqual({ credentials: { client_id: "kept" } });
   });
 
   it("treats a missing store as empty rather than throwing", () => {
-    expect(deepMergedFieldsValue(undefined, { alias: "a" })).toStrictEqual({ alias: "a" });
+    expect(deepMergedПолеsЗначение(undefined, { alias: "a" })).toStrictEqual({ alias: "a" });
   });
 });
 
@@ -94,11 +94,11 @@ describe("singleBranchChange", () => {
   });
 });
 
-describe("resetFields", () => {
+describe("resetПолеs", () => {
   it("restores the seeded value rather than clearing the key, so an edit reset keeps the saved server's credentials", () => {
     const store = withForm({ credentials: { client_id: "saved", access_token: "tok" } }, (form) => {
-      form.setValue("credentials", { client_id: "typed" });
-      resetFields(form, ["credentials"], { credentials: { client_id: "saved", access_token: "tok" } });
+      form.setЗначение("credentials", { client_id: "typed" });
+      resetПолеs(form, ["credentials"], { credentials: { client_id: "saved", access_token: "tok" } });
     });
 
     expect(store.credentials).toStrictEqual({ client_id: "saved", access_token: "tok" });
@@ -106,17 +106,17 @@ describe("resetFields", () => {
 
   it("clears the key when no seed is supplied, which is what the create form's blank store means", () => {
     const store = withForm({ credentials: { client_id: "typed" } }, (form) => {
-      resetFields(form, ["credentials"]);
+      resetПолеs(form, ["credentials"]);
     });
 
-    expect(store).toHaveProperty("credentials", undefined);
+    expect(store).toHaveСвойство("credentials", undefined);
   });
 });
 
-describe("setFieldsValue", () => {
+describe("setПолеsЗначение", () => {
   it("writes an undefined leaf into the live store, so a transport switch really clears the field", () => {
     const store = withForm({ url: "https://example.com", command: "npx" }, (form) => {
-      setFieldsValue(form, { url: undefined });
+      setПолеsЗначение(form, { url: undefined });
     });
 
     expect(store).toStrictEqual({ url: undefined, command: "npx" });
@@ -124,7 +124,7 @@ describe("setFieldsValue", () => {
 
   it("merges a nested write into the live store instead of replacing the whole object", () => {
     const store = withForm({ credentials: { client_id: "kept", scopes: ["a"] } }, (form) => {
-      setFieldsValue(form, { credentials: { client_secret: "new" } });
+      setПолеsЗначение(form, { credentials: { client_secret: "new" } });
     });
 
     expect(store.credentials).toStrictEqual({ client_id: "kept", scopes: ["a"], client_secret: "new" });

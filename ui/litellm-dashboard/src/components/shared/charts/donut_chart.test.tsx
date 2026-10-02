@@ -15,7 +15,7 @@ describe("DonutChart", () => {
       <DonutChart data={data} index="provider" category="spend" colors={["cyan", "blue"]} />,
     );
 
-    const sectors = Array.from(container.querySelectorAll(".recharts-pie-sector path"));
+    const sectors = Array.from(container.queryВыбратьorВсе(".recharts-pie-sector path"));
     expect(sectors).toHaveLength(3);
     expect(sectors.map((sector) => sector.getAttribute("fill"))).toEqual([
       "var(--color-cyan-500, #06b6d4)",
@@ -30,10 +30,10 @@ describe("DonutChart", () => {
       <DonutChart data={data} index="provider" category="spend" colors={["cyan"]} variant="pie" />,
     );
 
-    const donutPath = donut.querySelector(".recharts-pie-sector path")?.getAttribute("d") ?? "";
-    const piePath = pie.querySelector(".recharts-pie-sector path")?.getAttribute("d") ?? "";
-    expect(donutPath).not.toEqual(piePath);
-    expect((donutPath.match(/A/g) ?? []).length).toBeGreaterThan((piePath.match(/A/g) ?? []).length);
+    const donutПуть = donut.queryВыбратьor(".recharts-pie-sector path")?.getAttribute("d") ?? "";
+    const pieПуть = pie.queryВыбратьor(".recharts-pie-sector path")?.getAttribute("d") ?? "";
+    expect(donutПуть).not.toEqual(pieПуть);
+    expect((donutПуть.match(/A/g) ?? []).length).toBeGreaterThan((pieПуть.match(/A/g) ?? []).length);
   });
 
   it("hides the center label by default and shows the formatted total when showLabel is set", () => {
@@ -46,7 +46,7 @@ describe("DonutChart", () => {
         valueFormatter={(value) => `$${value.toFixed(2)}`}
       />,
     );
-    expect(container.querySelector("text.fill-foreground")).toBeNull();
+    expect(container.queryВыбратьor("text.fill-foreground")).toBeNull();
 
     rerender(
       <DonutChart
@@ -58,7 +58,7 @@ describe("DonutChart", () => {
         showLabel
       />,
     );
-    expect(container.querySelector("text.fill-foreground")?.textContent).toBe("$90.00");
+    expect(container.queryВыбратьor("text.fill-foreground")?.textContent).toBe("$90.00");
   });
 
   it("never invokes the valueFormatter for the center label unless it is shown", () => {
@@ -81,20 +81,20 @@ describe("DonutChart", () => {
 
   it("prefers an explicit label over the computed total", () => {
     const { container } = render(
-      <DonutChart data={data} index="provider" category="spend" colors={["cyan"]} showLabel label="All providers" />,
+      <DonutChart data={data} index="provider" category="spend" colors={["cyan"]} showLabel label="Все providers" />,
     );
-    expect(container.querySelector("text.fill-foreground")?.textContent).toBe("All providers");
+    expect(container.queryВыбратьor("text.fill-foreground")?.textContent).toBe("Все providers");
   });
 
   it("renders no center label when data is empty", () => {
     const { container } = render(
       <DonutChart data={[]} index="provider" category="spend" colors={["cyan"]} showLabel />,
     );
-    expect(container.querySelector("text.fill-foreground")).toBeNull();
+    expect(container.queryВыбратьor("text.fill-foreground")).toBeNull();
   });
 
-  const firstPathPoint = (container: HTMLElement) => {
-    const d = container.querySelector(".recharts-pie-sector path")?.getAttribute("d") ?? "";
+  const firstПутьPoint = (container: HTMLElement) => {
+    const d = container.queryВыбратьor(".recharts-pie-sector path")?.getAttribute("d") ?? "";
     const match = d.match(/M\s*([\d.-]+)\s*,\s*([\d.-]+)/);
     expect(match).not.toBeNull();
     return { x: Number(match![1]), y: Number(match![2]) };
@@ -108,8 +108,8 @@ describe("DonutChart", () => {
       <DonutChart data={data} index="provider" category="spend" colors={["cyan"]} startAngle={90} endAngle={-270} />,
     );
 
-    const defaultStart = firstPathPoint(byDefault);
-    const angledStart = firstPathPoint(clockwiseFromTop);
+    const defaultStart = firstПутьPoint(byDefault);
+    const angledStart = firstПутьPoint(clockwiseFromTop);
     expect(defaultStart.x).toBeGreaterThan(400);
     expect(Math.abs(defaultStart.y - 200)).toBeLessThan(1);
     expect(Math.abs(angledStart.x - 400)).toBeLessThan(1);

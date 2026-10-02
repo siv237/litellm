@@ -27,8 +27,8 @@ const OpenApiByokFields: React.FC = () => {
       <MountedFormField
         label={
           <span className="text-sm font-medium text-foreground flex items-center gap-2">
-            BYOK (Bring Your Own Key)
-            <SimpleTooltip content="When enabled, each user provides their own API key for this service. Keys are stored per-user and never shared.">
+            BYOK (свой ключ у пользователя)
+            <SimpleTooltip content="Если включено, каждый пользователь предоставляет свой API-ключ для сервиса. Ключи хранятся у пользователя и не разделяются.">
               <Info className="size-4 text-info hover:text-info/80 cursor-help" />
             </SimpleTooltip>
           </span>
@@ -44,7 +44,7 @@ const OpenApiByokFields: React.FC = () => {
             <div className="mb-4 p-3 bg-info/10 rounded-lg text-sm text-info flex items-start gap-2">
               <Info className="mt-0.5 size-4 shrink-0" />
               <span>
-                User keys will be sent as:{" "}
+                Ключи пользователей будут отправляться как:{" "}
                 <code className="font-mono bg-info/15 px-1 rounded-sm">
                   {authType === undefined ? "" : AUTH_HEADER_FORMATS[authType]}
                 </code>
@@ -55,16 +55,15 @@ const OpenApiByokFields: React.FC = () => {
             <div className="mb-4 p-3 bg-warning/10 rounded-lg text-sm text-warning flex items-start gap-2">
               <Info className="mt-0.5 size-4 shrink-0" />
               <span>
-                Set the <strong>Authentication Type</strong> below to specify how user keys are sent (e.g., Bearer
-                Token, API Key header).
+                Установите <strong>Тип аутентификации</strong> ниже, чтобы указать, как отправляются ключи (напр. Bearer Token, заголовок API Key).
               </span>
             </div>
           )}
           <MountedFormField
             label={
               <span className="text-sm font-medium text-foreground">
-                Access Description
-                <SimpleTooltip content="List of permissions shown to users in the connection modal (e.g. 'Create and manage Jira issues')">
+                Описание доступа
+                <SimpleTooltip content="Список прав, показываемых пользователям в модалке подключения (напр. «Создание и управление задачами Jira»)">
                   <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                 </SimpleTooltip>
               </span>
@@ -74,7 +73,7 @@ const OpenApiByokFields: React.FC = () => {
             {(control) => (
               <MultiSelect
                 {...tagsControl(control)}
-                placeholder="Add access description items (press Enter after each)"
+                placeholder="Добавьте пункты описания доступа (Enter после каждого)"
                 className="w-full"
               />
             )}
@@ -83,8 +82,8 @@ const OpenApiByokFields: React.FC = () => {
           <MountedFormField
             label={
               <span className="text-sm font-medium text-foreground">
-                API Key Help URL
-                <SimpleTooltip content="Optional link shown to users to help them find their API key">
+                URL справки по API-ключу
+                <SimpleTooltip content="Необязательная ссылка, помогающая пользователям найти их API-ключ">
                   <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
                 </SimpleTooltip>
               </span>

@@ -1,44 +1,44 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { DataTable } from "@/components/shared/DataTable";
-import { getModelHubTableColumns, ModelHubData } from "./ModelHubTableColumns";
+import { DataТаблица } from "@/components/shared/DataТаблица";
+import { getРежимlHubТаблицаColumns, РежимlHubData } from "./РежимlHubТаблицаColumns";
 
-const mockModel: ModelHubData = {
-  model_group: "gpt-4o",
+const mockРежимl: РежимlHubData = {
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4o",
   providers: ["openai", "azure", "bedrock"],
   max_input_tokens: 128000,
-  max_output_tokens: 16384,
+  max_выходput_tokens: 16384,
   input_cost_per_token: 0.0000025,
-  output_cost_per_token: 0.00001,
+  выходput_cost_per_token: 0.00001,
   mode: "chat",
   supports_parallel_function_calling: false,
   supports_vision: true,
   supports_function_calling: true,
-  is_public_model_group: true,
+  is_public_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: true,
 };
 
-function renderTable(data: ModelHubData[], onModelClick = vi.fn()) {
+function renderТаблица(data: РежимlHubData[], onРежимlClick = vi.fn()) {
   render(
-    <DataTable
+    <DataТаблица
       data={data}
-      columns={getModelHubTableColumns({ onModelClick })}
-      getRowId={(model, index) => model.model_group || String(index)}
-      sortingMode="client"
+      columns={getРежимlHubТаблицаColumns({ onРежимlClick })}
+      getRowId={(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, index) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group || String(index)}
+      sortingРежим="client"
       size="compact"
     />,
   );
-  return onModelClick;
+  return onРежимlClick;
 }
 
-describe("getModelHubTableColumns", () => {
-  it("renders the model row", () => {
-    renderTable([mockModel]);
+describe("getРежимlHubТаблицаColumns", () => {
+  it("renders the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию row", () => {
+    renderТаблица([mockРежимl]);
     expect(screen.getByText("gpt-4o")).toBeInTheDocument();
   });
 
   it("shows the first two providers and '+1' for overflow", () => {
-    renderTable([mockModel]);
+    renderТаблица([mockРежимl]);
     expect(screen.getByText("openai")).toBeInTheDocument();
     expect(screen.getByText("azure")).toBeInTheDocument();
     expect(screen.queryByText("bedrock")).not.toBeInTheDocument();
@@ -46,46 +46,46 @@ describe("getModelHubTableColumns", () => {
   });
 
   it("formats token limits and per-million costs", () => {
-    renderTable([mockModel]);
+    renderТаблица([mockРежимl]);
     expect(screen.getByText("128.0K / 16.4K")).toBeInTheDocument();
     expect(screen.getByText("$2.50")).toBeInTheDocument();
     expect(screen.getByText("$10.00")).toBeInTheDocument();
   });
 
   it("shows capability badges only for supported features", () => {
-    renderTable([mockModel]);
+    renderТаблица([mockРежимl]);
     expect(screen.getByText("Vision")).toBeInTheDocument();
     expect(screen.getByText("Function Calling")).toBeInTheDocument();
     expect(screen.queryByText("Parallel Function Calling")).not.toBeInTheDocument();
   });
 
   it("shows the public status badge", () => {
-    renderTable([mockModel]);
+    renderТаблица([mockРежимl]);
     expect(screen.getByText("Yes")).toBeInTheDocument();
-    renderTable([{ ...mockModel, model_group: "private-model", is_public_model_group: false }]);
+    renderТаблица([{ ...mockРежимl, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "private-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", is_public_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: false }]);
     expect(screen.getByText("No")).toBeInTheDocument();
   });
 
-  it("opens the model details when the name is clicked", async () => {
+  it("opens the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию details when the name is clicked", async () => {
     const user = userEvent.setup();
-    const onModelClick = renderTable([mockModel]);
+    const onРежимlClick = renderТаблица([mockРежимl]);
     await user.click(screen.getByRole("button", { name: "gpt-4o" }));
-    expect(onModelClick).toHaveBeenCalledWith(mockModel);
+    expect(onРежимlClick).toHaveBeenCalledWith(mockРежимl);
   });
 
-  it("opens the model details from the actions menu", async () => {
+  it("opens the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию details from the actions menu", async () => {
     const user = userEvent.setup();
-    const onModelClick = renderTable([mockModel]);
-    await user.click(screen.getByTestId("model-hub-actions-gpt-4o"));
-    await user.click(await screen.findByTestId("model-hub-action-details"));
-    expect(onModelClick).toHaveBeenCalledWith(mockModel);
+    const onРежимlClick = renderТаблица([mockРежимl]);
+    await user.click(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-hub-actions-gpt-4o"));
+    await user.click(await screen.findByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-hub-action-details"));
+    expect(onРежимlClick).toHaveBeenCalledWith(mockРежимl);
   });
 
-  it("copies the model name from the actions menu", async () => {
+  it("copies the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name from the actions menu", async () => {
     const user = userEvent.setup();
-    renderTable([mockModel]);
-    await user.click(screen.getByTestId("model-hub-actions-gpt-4o"));
-    await user.click(await screen.findByTestId("model-hub-action-copy"));
+    renderТаблица([mockРежимl]);
+    await user.click(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-hub-actions-gpt-4o"));
+    await user.click(await screen.findByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-hub-action-copy"));
     expect(await window.navigator.clipboard.readText()).toBe("gpt-4o");
   });
 });

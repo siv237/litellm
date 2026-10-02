@@ -48,7 +48,7 @@ export const AUTH_TYPE = {
 
 export const AUTH_TYPE_ITEMS = [
   { value: AUTH_TYPE.NONE, label: "Нет" },
-  { value: AUTH_TYPE.API_KEY, label: "API Key" },
+  { value: AUTH_TYPE.API_KEY, label: "API-ключ" },
   { value: AUTH_TYPE.BEARER_TOKEN, label: "Bearer Token" },
   { value: AUTH_TYPE.TOKEN, label: "Токен" },
   { value: AUTH_TYPE.BASIC, label: "Basic Auth" },
@@ -56,8 +56,8 @@ export const AUTH_TYPE_ITEMS = [
   { value: AUTH_TYPE.OAUTH2_TOKEN_EXCHANGE, label: "OAuth Token Exchange (OBO)" },
   { value: AUTH_TYPE.OAUTH2_ID_JAG, label: "ID-JAG (Okta Cross App Access)" },
   { value: AUTH_TYPE.AWS_SIGV4, label: "AWS SigV4 (Bedrock AgentCore MCPs)" },
-  { value: AUTH_TYPE.TRUE_PASSTHROUGH, label: "True Passthrough (no LiteLLM auth)" },
-  { value: AUTH_TYPE.OAUTH_DELEGATE, label: "OAuth Delegate (client-supplied upstream token)" },
+  { value: AUTH_TYPE.TRUE_PASSTHROUGH, label: "Сквозная передача (без аутентификации ruLiteLLM)" },
+  { value: AUTH_TYPE.OAUTH_DELEGATE, label: "OAuth-делегирование (токен от клиента для вышестоящего сервиса)" },
 ];
 
 // The two client-forwarded token modes: the caller supplies the upstream Authorization (forwarded
@@ -265,10 +265,10 @@ export const TRANSPORT = {
 };
 
 export const TRANSPORT_ITEMS = [
-  { value: TRANSPORT.HTTP, label: "Streamable HTTP (Recommended)" },
+  { value: TRANSPORT.HTTP, label: "Streamable HTTP (рекомендуется)" },
   { value: TRANSPORT.SSE, label: "Server-Sent Events (SSE)" },
-  { value: TRANSPORT.STDIO, label: "Standard Input/Output (stdio)" },
-  { value: TRANSPORT.OPENAPI, label: "OpenAPI Spec" },
+  { value: TRANSPORT.STDIO, label: "Стандартный ввод/вывод (stdio)" },
+  { value: TRANSPORT.OPENAPI, label: "Спецификация OpenAPI" },
 ];
 
 export const handleTransport = (transport?: string | null, specPath?: string | null): string => {

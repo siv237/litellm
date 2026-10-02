@@ -40,7 +40,7 @@ const CoordinationRedisSettings: React.FC = () => {
 
   useEffect(() => {
     if (isError) {
-      toast.fromError("Failed to load coordination Redis settings");
+      toast.fromError("Не удалось загрузить настройки координационного Redis");
     }
   }, [isError]);
 
@@ -65,7 +65,7 @@ const CoordinationRedisSettings: React.FC = () => {
     try {
       const result = await testConnection.mutateAsync(buildCoordinationPayload(redisType, values));
       if (result.status === "healthy") {
-        toast.success("Coordination Redis connection test successful!");
+        toast.success("Тест соединения координационного Redis успешен!");
       } else {
         toast.fromError(`Connection test failed: ${result.error ?? "Unknown error"}`);
       }
@@ -82,9 +82,9 @@ const CoordinationRedisSettings: React.FC = () => {
 
     try {
       await updateSettings.mutateAsync(buildCoordinationPayload(redisType, values));
-      toast.success("Coordination Redis settings saved. Restart the proxy to apply them.");
+      toast.success("Настройки координационного Redis сохранены. Для применения перезапустите прокси.");
     } catch {
-      toast.fromError("Failed to update coordination Redis settings");
+      toast.fromError("Не удалось обновить настройки координационного Redis");
     }
   };
 
@@ -97,24 +97,23 @@ const CoordinationRedisSettings: React.FC = () => {
         <form onSubmit={(event) => event.preventDefault()} className="space-y-6">
           <div className="max-w-3xl space-y-2">
             <div className="flex items-center gap-3">
-              <h3 className="text-sm font-medium text-foreground">Coordination Redis</h3>
+              <h3 className="text-sm font-medium text-foreground">Координационный Redis</h3>
               {!isLoading && (
                 <StatusBadge tone={badge.tone} label={badge.label} dataTestId="coordination-redis-source" />
               )}
             </div>
             <p className="text-xs text-muted-foreground">
-              Redis used to coordinate work across proxy pods: cross-pod rate limits, spend tracking, and the pod lock
-              manager. It is configured independently of the response cache.
+              Redis для координации работы между подами прокси: лимиты запросов между подами, учёт расходов и менеджер блокировок подов. Настраивается независимо от кэша ответов.
             </p>
             <p className="text-xs text-muted-foreground">{badge.tooltip}</p>
-            <p className="text-xs text-warning">Saved changes take effect on proxy restart.</p>
+            <p className="text-xs text-warning">Сохранённые изменения применятся после перезапуска прокси.</p>
           </div>
 
           <CoordinationRedisTypeSelector redisType={redisType} onTypeChange={setSelectedRedisType} />
 
           <div className="pt-4 border-t border-border">
             <CoordinationRedisFieldSection
-              title="Connection Settings"
+              title="Настройки подключения"
               section="connection"
               redisType={redisType}
               configuredSecrets={configuredSecrets}
@@ -124,7 +123,7 @@ const CoordinationRedisSettings: React.FC = () => {
           {redisType === "cluster" && (
             <div className="pt-4 border-t border-border">
               <CoordinationRedisFieldSection
-                title="Cluster Configuration"
+                title="Конфигурация кластера"
                 section="cluster"
                 redisType={redisType}
                 configuredSecrets={configuredSecrets}
@@ -136,7 +135,7 @@ const CoordinationRedisSettings: React.FC = () => {
           {redisType === "sentinel" && (
             <div className="pt-4 border-t border-border">
               <CoordinationRedisFieldSection
-                title="Sentinel Configuration"
+                title="Конфигурация Sentinel"
                 section="sentinel"
                 redisType={redisType}
                 configuredSecrets={configuredSecrets}
@@ -146,7 +145,7 @@ const CoordinationRedisSettings: React.FC = () => {
 
           <div className="pt-4 border-t border-border">
             <CoordinationRedisFieldSection
-              title="SSL Settings"
+              title="Настройки SSL"
               section="ssl"
               redisType={redisType}
               configuredSecrets={configuredSecrets}

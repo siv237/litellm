@@ -1,13 +1,13 @@
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeВсе, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 import { useInfiniteUsers } from "@/app/(dashboard)/hooks/users/useUsers";
-import useTeams from "@/app/(dashboard)/hooks/useTeams";
+import useКоманды from "@/app/(dashboard)/hooks/useКоманды";
 import * as networking from "@/components/networking";
-import EntityUsage from "./EntityUsage";
+import EntityИспользование from "./EntityИспользование";
 
-beforeAll(() => {
+beforeВсе(() => {
   if (typeof window !== "undefined" && !window.ResizeObserver) {
     window.ResizeObserver = class ResizeObserver {
       observe() {}
@@ -19,70 +19,70 @@ beforeAll(() => {
 
 // Mock the networking module
 vi.mock("@/components/networking", () => ({
-  tagDailyActivityCall: vi.fn(),
-  teamDailyActivityCall: vi.fn(),
-  teamDailyActivityAggregatedCall: vi.fn(),
-  organizationDailyActivityCall: vi.fn(),
-  customerDailyActivityCall: vi.fn(),
-  agentDailyActivityCall: vi.fn(),
-  userDailyActivityCall: vi.fn(),
+  tagКаждый деньActivityCall: vi.fn(),
+  teamКаждый деньActivityCall: vi.fn(),
+  teamКаждый деньActivityAggregatedCall: vi.fn(),
+  organizationКаждый деньActivityCall: vi.fn(),
+  customerКаждый деньActivityCall: vi.fn(),
+  agentКаждый деньActivityCall: vi.fn(),
+  userКаждый деньActivityCall: vi.fn(),
 }));
 
 // Mock the child components to simplify testing
 vi.mock("@/components/activity_metrics", () => ({
-  ActivityMetrics: ({ modelMetrics }: { modelMetrics?: { __source?: string } }) => (
+  ActivityМетрикаs: ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs }: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs?: { __source?: string } }) => (
     <div>
-      <span>Activity Metrics</span>
-      <span>{`metrics-source:${modelMetrics?.__source ?? "none"}`}</span>
+      <span>Activity Метрикаs</span>
+      <span>{`metrics-source:${Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs?.__source ?? "none"}`}</span>
     </div>
   ),
   processActivityData: (_data: unknown, key: string) => ({ __source: key }),
 }));
 
-vi.mock("../EndpointUsage/EndpointUsage", () => ({
-  default: () => <div>Endpoint Usage Panel</div>,
+vi.mock("../ЭндпоинтИспользование/ЭндпоинтИспользование", () => ({
+  default: () => <div>Эндпоинт Использование Panel</div>,
 }));
 
-vi.mock("@/components/UsagePage/components/EntityUsage/TopKeyView", () => ({
-  default: ({ topKeys }: { topKeys: { api_key: string; spend: number }[] }) => (
+vi.mock("@/components/ИспользованиеPage/components/EntityИспользование/TopКлючView", () => ({
+  default: ({ topКлючи }: { topКлючи: { api_key: string; spend: number }[] }) => (
     <div>
-      <span>Top Keys</span>
-      <span>{`top-keys:${topKeys.map((row) => `${row.api_key}=${row.spend}`).join("|")}`}</span>
+      <span>Top Ключи</span>
+      <span>{`top-keys:${topКлючи.map((row) => `${row.api_key}=${row.spend}`).join("|")}`}</span>
     </div>
   ),
 }));
 
-vi.mock("./TopModelView", () => ({
-  default: ({ topModels }: { topModels: { key: string; spend: number }[] }) => (
+vi.mock("./TopРежимlView", () => ({
+  default: ({ topРежимls }: { topРежимls: { key: string; spend: number }[] }) => (
     <div>
-      <span>Top Models</span>
-      <span>{`top-models:${topModels.map((row) => `${row.key}=${row.spend}`).join("|")}`}</span>
+      <span>Top Режимls</span>
+      <span>{`top-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs:${topРежимls.map((row) => `${row.key}=${row.spend}`).join("|")}`}</span>
     </div>
   ),
 }));
 
-vi.mock("./TeamUserSpendCard", () => ({
+vi.mock("./TeamUserРасходCard", () => ({
   default: ({ teamIds }: { teamIds: string[] }) => <div>{`team-user-spend:${teamIds.join("|")}`}</div>,
 }));
 
-vi.mock("@/components/EntityUsageExport/EntityUsageExportModal", () => ({
-  default: () => <div>Entity Usage Export Modal</div>,
+vi.mock("@/components/EntityИспользованиеExport/EntityИспользованиеExportModal", () => ({
+  default: () => <div>Entity Использование Export Modal</div>,
 }));
 
-vi.mock("@/components/EntityUsageExport", () => ({
-  UsageExportHeader: ({
+vi.mock("@/components/EntityИспользованиеExport", () => ({
+  ИспользованиеExportHeader: ({
     filterLabel,
     filterSlot,
-    showFilters,
+    showФильтры,
   }: {
     filterLabel?: string;
     filterSlot?: ReactNode;
-    showFilters?: boolean;
+    showФильтры?: boolean;
   }) => (
     <div>
-      <span>Usage Export Header</span>
+      <span>Использование Export Header</span>
       <span>{filterLabel}</span>
-      <span>{`show-filters:${showFilters === true}`}</span>
+      <span>{`show-filters:${showФильтры === true}`}</span>
       {filterSlot}
     </div>
   ),
@@ -94,28 +94,28 @@ vi.mock("@/app/(dashboard)/hooks/users/useUsers", () => ({
 }));
 
 vi.mock("@/components/common_components/team_multi_select", () => ({
-  default: () => <div>Team Multi Select</div>,
+  default: () => <div>Team Multi Выбрать</div>,
 }));
 
-// Mock useTeams hook
-vi.mock("@/app/(dashboard)/hooks/useTeams", () => ({
+// Mock useКоманды hook
+vi.mock("@/app/(dashboard)/hooks/useКоманды", () => ({
   default: vi.fn(() => ({
     teams: [],
-    setTeams: vi.fn(),
+    setКоманды: vi.fn(),
   })),
 }));
 
-describe("EntityUsage", () => {
-  const mockTagDailyActivityCall = vi.mocked(networking.tagDailyActivityCall);
-  const mockTeamDailyActivityCall = vi.mocked(networking.teamDailyActivityCall);
-  const mockTeamDailyActivityAggregatedCall = vi.mocked(networking.teamDailyActivityAggregatedCall);
-  const mockOrganizationDailyActivityCall = vi.mocked(networking.organizationDailyActivityCall);
-  const mockCustomerDailyActivityCall = vi.mocked(networking.customerDailyActivityCall);
-  const mockAgentDailyActivityCall = vi.mocked(networking.agentDailyActivityCall);
-  const mockUserDailyActivityCall = vi.mocked(networking.userDailyActivityCall);
+describe("EntityИспользование", () => {
+  const mockTagКаждый деньActivityCall = vi.mocked(networking.tagКаждый деньActivityCall);
+  const mockTeamКаждый деньActivityCall = vi.mocked(networking.teamКаждый деньActivityCall);
+  const mockTeamКаждый деньActivityAggregatedCall = vi.mocked(networking.teamКаждый деньActivityAggregatedCall);
+  const mockОрганизацияКаждый деньActivityCall = vi.mocked(networking.organizationКаждый деньActivityCall);
+  const mockCustomerКаждый деньActivityCall = vi.mocked(networking.customerКаждый деньActivityCall);
+  const mockAgentКаждый деньActivityCall = vi.mocked(networking.agentКаждый деньActivityCall);
+  const mockUserКаждый деньActivityCall = vi.mocked(networking.userКаждый деньActivityCall);
   const mockUseInfiniteUsers = vi.mocked(useInfiniteUsers);
 
-  const infiniteUsersResult = (users: { user_id: string; user_alias: string | null; user_email: string | null }[]) =>
+  const infiniteUsersРезультат = (users: { user_id: string; user_alias: string | null; user_email: string | null }[]) =>
     ({
       data: { pages: [{ users, page: 1, total_pages: 1, total_count: users.length }], pageParams: [1] },
       fetchNextPage: vi.fn(),
@@ -124,7 +124,7 @@ describe("EntityUsage", () => {
       isLoading: false,
     }) as unknown as ReturnType<typeof useInfiniteUsers>;
 
-  const mockSpendData = {
+  const mockРасходData = {
     results: [
       {
         date: "2025-01-01",
@@ -159,7 +159,7 @@ describe("EntityUsage", () => {
               api_key_breakdown: {},
             },
           },
-          models: {},
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {},
           api_keys: {},
           providers: {
             openai: {
@@ -188,7 +188,7 @@ describe("EntityUsage", () => {
     },
   };
 
-  const mockAgentSpendData = {
+  const mockAgentРасходData = {
     results: [
       {
         date: "2025-01-01",
@@ -251,7 +251,7 @@ describe("EntityUsage", () => {
               api_key_breakdown: {},
             },
           },
-          models: {
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {
             "gpt-4o": {
               metrics: {
                 spend: 180.0,
@@ -375,7 +375,7 @@ describe("EntityUsage", () => {
               api_key_breakdown: {},
             },
           },
-          models: {},
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {},
           api_keys: {},
           providers: {},
         },
@@ -391,7 +391,7 @@ describe("EntityUsage", () => {
   };
 
   const defaultProps = {
-    accessToken: "test-token",
+    accessТокен: "test-token",
     entityType: "tag" as const,
     entityId: "test-tag",
     userID: "user-123",
@@ -401,30 +401,30 @@ describe("EntityUsage", () => {
       { label: "Tag 2", value: "tag-2" },
     ],
     premiumUser: true,
-    dateValue: {
+    dateЗначение: {
       from: new Date("2025-01-01"),
       to: new Date("2025-01-31"),
     },
   };
 
   beforeEach(() => {
-    mockTagDailyActivityCall.mockClear();
-    mockTeamDailyActivityCall.mockClear();
-    mockTeamDailyActivityAggregatedCall.mockClear();
-    mockOrganizationDailyActivityCall.mockClear();
-    mockCustomerDailyActivityCall.mockClear();
-    mockAgentDailyActivityCall.mockClear();
-    mockUserDailyActivityCall.mockClear();
-    mockTagDailyActivityCall.mockResolvedValue(mockSpendData);
-    mockTeamDailyActivityCall.mockResolvedValue(mockSpendData);
-    mockTeamDailyActivityAggregatedCall.mockResolvedValue(mockSpendData);
-    mockOrganizationDailyActivityCall.mockResolvedValue(mockSpendData);
-    mockCustomerDailyActivityCall.mockResolvedValue(mockSpendData);
-    mockAgentDailyActivityCall.mockResolvedValue(mockAgentSpendData);
-    mockUserDailyActivityCall.mockResolvedValue(mockSpendData);
+    mockTagКаждый деньActivityCall.mockClear();
+    mockTeamКаждый деньActivityCall.mockClear();
+    mockTeamКаждый деньActivityAggregatedCall.mockClear();
+    mockОрганизацияКаждый деньActivityCall.mockClear();
+    mockCustomerКаждый деньActivityCall.mockClear();
+    mockAgentКаждый деньActivityCall.mockClear();
+    mockUserКаждый деньActivityCall.mockClear();
+    mockTagКаждый деньActivityCall.mockResolvedЗначение(mockРасходData);
+    mockTeamКаждый деньActivityCall.mockResolvedЗначение(mockРасходData);
+    mockTeamКаждый деньActivityAggregatedCall.mockResolvedЗначение(mockРасходData);
+    mockОрганизацияКаждый деньActivityCall.mockResolvedЗначение(mockРасходData);
+    mockCustomerКаждый деньActivityCall.mockResolvedЗначение(mockРасходData);
+    mockAgentКаждый деньActivityCall.mockResolvedЗначение(mockAgentРасходData);
+    mockUserКаждый деньActivityCall.mockResolvedЗначение(mockРасходData);
     mockUseInfiniteUsers.mockClear();
-    mockUseInfiniteUsers.mockReturnValue(
-      infiniteUsersResult([
+    mockUseInfiniteUsers.mockReturnЗначение(
+      infiniteUsersРезультат([
         { user_id: "user-001", user_alias: "Alice", user_email: "alice@example.com" },
         { user_id: "user-002", user_alias: null, user_email: "bob@example.com" },
       ]),
@@ -432,141 +432,141 @@ describe("EntityUsage", () => {
   });
 
   it("should render with tag entity type and display spend metrics", async () => {
-    render(<EntityUsage {...defaultProps} />);
+    render(<EntityИспользование {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     expect(screen.getByText("Tag Обзор расходов")).toBeInTheDocument();
-    expect(screen.getByText("Total Spend")).toBeInTheDocument();
+    expect(screen.getByText("Общий расход")).toBeInTheDocument();
 
     await waitFor(() => {
-      const spendElements = screen.getAllByText("$100.50");
+      const spendElements = screen.getВсеByText("$100.50");
       expect(spendElements.length).toBeGreaterThan(0);
     });
 
-    expect(screen.getByText("1,000")).toBeInTheDocument(); // Total Requests
+    expect(screen.getByText("1,000")).toBeInTheDocument(); // Всего запросов
   });
 
   it("should render with team entity type and call team API", async () => {
-    render(<EntityUsage {...defaultProps} entityType="team" />);
+    render(<EntityИспользование {...defaultProps} entityType="team" />);
 
     await waitFor(() => {
-      expect(mockTeamDailyActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockTeamКаждый деньActivityAggregatedCall).toHaveBeenCalled();
     });
 
     // Check that it shows team-specific label
     expect(screen.getByText("Team Обзор расходов")).toBeInTheDocument();
 
     await waitFor(() => {
-      const spendElements = screen.getAllByText("$100.50");
+      const spendElements = screen.getВсеByText("$100.50");
       expect(spendElements.length).toBeGreaterThan(0);
     });
   });
 
   it("feeds the per-user spend card every visible team except the dashboard team, only for teams", async () => {
-    const mockUseTeams = vi.mocked(useTeams);
-    const teamsResult = (teams: { team_id: string }[]) =>
-      ({ teams, setTeams: vi.fn() }) as unknown as ReturnType<typeof useTeams>;
-    mockUseTeams.mockReturnValue(
-      teamsResult([{ team_id: "team-alpha" }, { team_id: "litellm-dashboard" }, { team_id: "team-beta" }]),
+    const mockUseКоманды = vi.mocked(useКоманды);
+    const teamsРезультат = (teams: { team_id: string }[]) =>
+      ({ teams, setКоманды: vi.fn() }) as unknown as ReturnType<typeof useКоманды>;
+    mockUseКоманды.mockReturnЗначение(
+      teamsРезультат([{ team_id: "team-alpha" }, { team_id: "litellm-dashboard" }, { team_id: "team-beta" }]),
     );
 
-    render(<EntityUsage {...defaultProps} entityType="team" />);
+    render(<EntityИспользование {...defaultProps} entityType="team" />);
     expect(await screen.findByText("team-user-spend:team-alpha|team-beta")).toBeInTheDocument();
 
     cleanup();
-    mockUseTeams.mockReturnValue(teamsResult([]));
-    render(<EntityUsage {...defaultProps} entityType="tag" />);
+    mockUseКоманды.mockReturnЗначение(teamsРезультат([]));
+    render(<EntityИспользование {...defaultProps} entityType="tag" />);
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
     expect(screen.queryByText(/^team-user-spend:/)).not.toBeInTheDocument();
   });
 
   it("should render with organization entity type and call organization API", async () => {
-    render(<EntityUsage {...defaultProps} entityType="organization" />);
+    render(<EntityИспользование {...defaultProps} entityType="organization" />);
 
     await waitFor(() => {
-      expect(mockOrganizationDailyActivityCall).toHaveBeenCalled();
+      expect(mockОрганизацияКаждый деньActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Organization Обзор расходов")).toBeInTheDocument();
+    expect(screen.getByText("Организация Обзор расходов")).toBeInTheDocument();
 
     await waitFor(() => {
-      const spendElements = screen.getAllByText("$100.50");
+      const spendElements = screen.getВсеByText("$100.50");
       expect(spendElements.length).toBeGreaterThan(0);
     });
   });
 
   it("should render with customer entity type and call customer API", async () => {
-    render(<EntityUsage {...defaultProps} entityType="customer" />);
+    render(<EntityИспользование {...defaultProps} entityType="customer" />);
 
     await waitFor(() => {
-      expect(mockCustomerDailyActivityCall).toHaveBeenCalled();
+      expect(mockCustomerКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     expect(screen.getByText("Customer Обзор расходов")).toBeInTheDocument();
 
     await waitFor(() => {
-      const spendElements = screen.getAllByText("$100.50");
+      const spendElements = screen.getВсеByText("$100.50");
       expect(spendElements.length).toBeGreaterThan(0);
     });
   });
 
   it("should render with agent entity type and call agent API", async () => {
-    render(<EntityUsage {...defaultProps} entityType="agent" />);
+    render(<EntityИспользование {...defaultProps} entityType="agent" />);
 
     await waitFor(() => {
-      expect(mockAgentDailyActivityCall).toHaveBeenCalled();
+      expect(mockAgentКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     expect(screen.getByText("Agent Обзор расходов")).toBeInTheDocument();
 
     await waitFor(() => {
-      const spendElements = screen.getAllByText("$444.30");
+      const spendElements = screen.getВсеByText("$444.30");
       expect(spendElements.length).toBeGreaterThan(0);
     });
   });
 
   it("should render with user entity type and call user API", async () => {
-    render(<EntityUsage {...defaultProps} entityType="user" />);
+    render(<EntityИспользование {...defaultProps} entityType="user" />);
 
     await waitFor(() => {
-      expect(mockUserDailyActivityCall).toHaveBeenCalled();
+      expect(mockUserКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     expect(screen.getByText("User Обзор расходов")).toBeInTheDocument();
 
     await waitFor(() => {
-      const spendElements = screen.getAllByText("$100.50");
+      const spendElements = screen.getВсеByText("$100.50");
       expect(spendElements.length).toBeGreaterThan(0);
     });
   });
 
   it("should switch between tabs", async () => {
-    render(<EntityUsage {...defaultProps} />);
+    render(<EntityИспользование {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     expect(screen.getByText("Tag Обзор расходов")).toBeInTheDocument();
 
-    const modelActivityTab = screen.getByText("Активность моделей");
+    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюActivityTab = screen.getByText("Активность моделей");
     act(() => {
-      fireEvent.click(modelActivityTab);
+      fireEvent.click(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюActivityTab);
     });
 
-    expect(screen.getAllByText("Activity Metrics")[0]).toBeInTheDocument();
+    expect(screen.getВсеByText("Activity Метрикаs")[0]).toBeInTheDocument();
 
     const keyActivityTab = screen.getByText("Активность ключей");
     act(() => {
       fireEvent.click(keyActivityTab);
     });
 
-    expect(screen.getAllByText("Activity Metrics")[1]).toBeInTheDocument();
+    expect(screen.getВсеByText("Activity Метрикаs")[1]).toBeInTheDocument();
   });
 
   // An inactive tab panel is marked aria-selected="false" by one tab library and hidden by the
@@ -579,26 +579,26 @@ describe("EntityUsage", () => {
     return true;
   };
 
-  const showingCount = (marker: string): number => screen.queryAllByText(marker).filter(isShowing).length;
+  const showingCount = (marker: string): number => screen.queryВсеByText(marker).filter(isShowing).length;
 
   const showingText = (text: string): HTMLElement => {
-    const [element] = screen.getAllByText(text).filter(isShowing);
+    const [element] = screen.getВсеByText(text).filter(isShowing);
     expect(element).toBeDefined();
     return element;
   };
 
   const NON_TEAM_PANELS: [string, string][] = [
     ["Стоимость", "Tag Обзор расходов"],
-    ["Активность моделей", "metrics-source:model_groups"],
+    ["Активность моделей", "metrics-source:Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups"],
     ["Активность ключей", "metrics-source:api_keys"],
-    ["Активность эндпоинтов", "Endpoint Usage Panel"],
+    ["Активность эндпоинтов", "Эндпоинт Использование Panel"],
   ];
 
   it.each(NON_TEAM_PANELS)("shows only the %s panel for a non-team entity type", async (tabLabel, marker) => {
-    render(<EntityUsage {...defaultProps} />);
+    render(<EntityИспользование {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     act(() => {
@@ -614,17 +614,17 @@ describe("EntityUsage", () => {
 
   const TEAM_PANELS: [string, string][] = [
     ["Стоимость", "Team Обзор расходов"],
-    ["Активность моделей", "metrics-source:model_groups"],
-    ["Activity Metrics", "metrics-source:entities"],
+    ["Активность моделей", "metrics-source:Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups"],
+    ["Activity Метрикаs", "metrics-source:entities"],
     ["Активность ключей", "metrics-source:api_keys"],
-    ["Активность эндпоинтов", "Endpoint Usage Panel"],
+    ["Активность эндпоинтов", "Эндпоинт Использование Panel"],
   ];
 
   it.each(TEAM_PANELS)("shows only the %s panel for the team entity type", async (tabLabel, marker) => {
-    render(<EntityUsage {...defaultProps} entityType="team" />);
+    render(<EntityИспользование {...defaultProps} entityType="team" />);
 
     await waitFor(() => {
-      expect(mockTeamDailyActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockTeamКаждый деньActivityAggregatedCall).toHaveBeenCalled();
     });
 
     act(() => {
@@ -650,84 +650,84 @@ describe("EntityUsage", () => {
       },
     };
 
-    mockTagDailyActivityCall.mockResolvedValue(emptyData);
+    mockTagКаждый деньActivityCall.mockResolvedЗначение(emptyData);
 
-    render(<EntityUsage {...defaultProps} />);
+    render(<EntityИспользование {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     expect(await screen.findByText("Tag Обзор расходов")).toBeInTheDocument();
     expect(await screen.findByText("$0.00")).toBeInTheDocument();
-    expect(screen.getByText("Total Spend")).toBeInTheDocument();
-    expect(screen.getAllByText("0")[0]).toBeInTheDocument();
+    expect(screen.getByText("Общий расход")).toBeInTheDocument();
+    expect(screen.getВсеByText("0")[0]).toBeInTheDocument();
   });
 
-  it("should display Model Activity tab for non-agent entity types", async () => {
-    render(<EntityUsage {...defaultProps} entityType="tag" />);
+  it("should display Режимl Activity tab for non-agent entity types", async () => {
+    render(<EntityИспользование {...defaultProps} entityType="tag" />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     expect(screen.getByText("Активность моделей")).toBeInTheDocument();
   });
 
   it("should display Потребление запросов / токенов tab for agent entity type", async () => {
-    render(<EntityUsage {...defaultProps} entityType="agent" />);
+    render(<EntityИспользование {...defaultProps} entityType="agent" />);
 
     await waitFor(() => {
-      expect(mockAgentDailyActivityCall).toHaveBeenCalled();
+      expect(mockAgentКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     expect(screen.getByText("Потребление запросов / токенов")).toBeInTheDocument();
   });
 
-  it("should display Top Public Model Names title for non-agent entity types", async () => {
-    render(<EntityUsage {...defaultProps} entityType="tag" />);
+  it("should display Top Публичное название моделиs title for non-agent entity types", async () => {
+    render(<EntityИспользование {...defaultProps} entityType="tag" />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Top Public Model Names")).toBeInTheDocument();
+    expect(screen.getByText("Top Публичное название моделиs")).toBeInTheDocument();
   });
 
-  it("defaults Model Activity to public model names and toggles to litellm models", async () => {
-    const { container } = render(<EntityUsage {...defaultProps} />);
+  it("defaults Режимl Activity to public Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию names and toggles to litellm Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", async () => {
+    const { container } = render(<EntityИспользование {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     act(() => {
       fireEvent.click(screen.getByText("Активность моделей"));
     });
 
-    expect(showingCount("metrics-source:model_groups")).toBeGreaterThan(0);
+    expect(showingCount("metrics-source:Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups")).toBeGreaterThan(0);
 
     act(() => {
-      fireEvent.click(showingText("Litellm Model Name"));
+      fireEvent.click(showingText("Litellm Название модели"));
     });
 
-    expect(showingCount("metrics-source:models")).toBeGreaterThan(0);
+    expect(showingCount("metrics-source:Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs")).toBeGreaterThan(0);
 
     act(() => {
-      fireEvent.click(showingText("Public Model Name"));
+      fireEvent.click(showingText("Публичное название модели"));
     });
 
-    expect(showingCount("metrics-source:model_groups")).toBeGreaterThan(0);
+    expect(showingCount("metrics-source:Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups")).toBeGreaterThan(0);
   });
 
-  it("should display Top Agents title for agent entity type", async () => {
-    render(<EntityUsage {...defaultProps} entityType="agent" />);
+  it("should display Top Агенты title for agent entity type", async () => {
+    render(<EntityИспользование {...defaultProps} entityType="agent" />);
 
     await waitFor(() => {
-      expect(mockAgentDailyActivityCall).toHaveBeenCalled();
+      expect(mockAgentКаждый деньActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Top Agents")).toBeInTheDocument();
+    expect(screen.getByText("Top Агенты")).toBeInTheDocument();
   });
 
   it("should use entityList label when entityList is provided and entity exists", async () => {
@@ -736,10 +736,10 @@ describe("EntityUsage", () => {
       { label: "Tag 2", value: "tag-2" },
     ];
 
-    render(<EntityUsage {...defaultProps} entityList={customEntityList} />);
+    render(<EntityИспользование {...defaultProps} entityList={customEntityList} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     await waitFor(() => {
@@ -750,94 +750,94 @@ describe("EntityUsage", () => {
   it("should fallback to team_alias when entityList is provided but entity does not exist", async () => {
     const customEntityList = [{ label: "Tag 2", value: "tag-2" }];
 
-    render(<EntityUsage {...defaultProps} entityList={customEntityList} />);
+    render(<EntityИспользование {...defaultProps} entityList={customEntityList} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     await waitFor(() => {
-      expect(screen.getAllByText("Tag 1").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("Tag 1").length).toBeGreaterThan(0);
     });
   });
 
   it("should fallback to team_alias when entityList is null", async () => {
-    render(<EntityUsage {...defaultProps} entityList={null} />);
+    render(<EntityИспользование {...defaultProps} entityList={null} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     await waitFor(() => {
-      expect(screen.getAllByText("Tag 1").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("Tag 1").length).toBeGreaterThan(0);
     });
   });
 
   it("should still request the filter when the caller's tag scope is empty", async () => {
-    render(<EntityUsage {...defaultProps} entityList={[]} />);
+    render(<EntityИспользование {...defaultProps} entityList={[]} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     expect(screen.getByText("show-filters:true")).toBeInTheDocument();
   });
 
   it("should not request the filter while the entity list is still unresolved", async () => {
-    render(<EntityUsage {...defaultProps} entityList={null} />);
+    render(<EntityИспользование {...defaultProps} entityList={null} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     expect(screen.getByText("show-filters:false")).toBeInTheDocument();
   });
 
   it("should display Agent Activity tab for team entity type", async () => {
-    render(<EntityUsage {...defaultProps} entityType="team" />);
+    render(<EntityИспользование {...defaultProps} entityType="team" />);
 
     await waitFor(() => {
-      expect(mockTeamDailyActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockTeamКаждый деньActivityAggregatedCall).toHaveBeenCalled();
     });
 
-    expect(screen.getByText("Activity Metrics")).toBeInTheDocument();
+    expect(screen.getByText("Activity Метрикаs")).toBeInTheDocument();
   });
 
   it("should not display Agent Activity tab for non-team entity types", async () => {
-    render(<EntityUsage {...defaultProps} entityType="tag" />);
+    render(<EntityИспользование {...defaultProps} entityType="tag" />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
-    expect(screen.queryByText("Activity Metrics")).not.toBeInTheDocument();
+    expect(screen.queryByText("Activity Метрикаs")).not.toBeInTheDocument();
   });
 
-  it("should display Top Agents Driving Spend card for team entity type", async () => {
-    render(<EntityUsage {...defaultProps} entityType="team" />);
+  it("should display Top Агенты Driving Расход card for team entity type", async () => {
+    render(<EntityИспользование {...defaultProps} entityType="team" />);
 
     await waitFor(() => {
-      expect(mockTeamDailyActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockTeamКаждый деньActivityAggregatedCall).toHaveBeenCalled();
     });
 
     expect(screen.getByText("Топ агентов по расходам")).toBeInTheDocument();
   });
 
-  it("should not display Top Agents Driving Spend card for non-team entity types", async () => {
-    render(<EntityUsage {...defaultProps} entityType="tag" />);
+  it("should not display Top Агенты Driving Расход card for non-team entity types", async () => {
+    render(<EntityИспользование {...defaultProps} entityType="tag" />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     expect(screen.queryByText("Топ агентов по расходам")).not.toBeInTheDocument();
   });
 
   it("should fetch agent activity data when entity type is team", async () => {
-    render(<EntityUsage {...defaultProps} entityType="team" />);
+    render(<EntityИспользование {...defaultProps} entityType="team" />);
 
     await waitFor(() => {
-      expect(mockAgentDailyActivityCall).toHaveBeenCalledWith(
+      expect(mockAgentКаждый деньActivityCall).toHaveBeenCalledWith(
         "test-token",
         expect.any(Date),
         expect.any(Date),
@@ -848,43 +848,43 @@ describe("EntityUsage", () => {
   });
 
   it("should not fetch agent activity data for non-team entity types", async () => {
-    render(<EntityUsage {...defaultProps} entityType="tag" />);
+    render(<EntityИспользование {...defaultProps} entityType="tag" />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
-    expect(mockAgentDailyActivityCall).not.toHaveBeenCalled();
+    expect(mockAgentКаждый деньActivityCall).not.toHaveBeenCalled();
   });
 
   it("should switch to Agent Activity tab for team entity type", async () => {
-    render(<EntityUsage {...defaultProps} entityType="team" />);
+    render(<EntityИспользование {...defaultProps} entityType="team" />);
 
     await waitFor(() => {
-      expect(mockTeamDailyActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockTeamКаждый деньActivityAggregatedCall).toHaveBeenCalled();
     });
 
-    const agentActivityTab = screen.getByText("Activity Metrics");
+    const agentActivityTab = screen.getByText("Activity Метрикаs");
     act(() => {
       fireEvent.click(agentActivityTab);
     });
 
     await waitFor(() => {
-      expect(screen.getAllByText("Activity Metrics").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("Activity Метрикаs").length).toBeGreaterThan(0);
     });
   });
 
   it("should fallback to entity value when no entityList and no team_alias", async () => {
-    const spendDataWithoutAlias = {
-      ...mockSpendData,
+    const spendDataWithвыходAlias = {
+      ...mockРасходData,
       results: [
         {
-          ...mockSpendData.results[0],
+          ...mockРасходData.results[0],
           breakdown: {
-            ...mockSpendData.results[0].breakdown,
+            ...mockРасходData.results[0].breakdown,
             entities: {
               "tag-1": {
-                ...mockSpendData.results[0].breakdown.entities["tag-1"],
+                ...mockРасходData.results[0].breakdown.entities["tag-1"],
                 metadata: {},
               },
             },
@@ -893,58 +893,58 @@ describe("EntityUsage", () => {
       ],
     };
 
-    mockTagDailyActivityCall.mockResolvedValue(spendDataWithoutAlias);
+    mockTagКаждый деньActivityCall.mockResolvedЗначение(spendDataWithвыходAlias);
 
-    render(<EntityUsage {...defaultProps} entityList={null} />);
+    render(<EntityИспользование {...defaultProps} entityList={null} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     await waitFor(() => {
-      expect(screen.getAllByText("tag-1").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("tag-1").length).toBeGreaterThan(0);
     });
   });
 
   it("renders daily spend bars, per-entity bars, and the provider donut with cyan fills and a $ center total", async () => {
-    const { container } = render(<EntityUsage {...defaultProps} />);
+    const { container } = render(<EntityИспользование {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockTagDailyActivityCall).toHaveBeenCalled();
+      expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     await waitFor(() => {
-      expect(container.querySelectorAll("path.recharts-rectangle")).toHaveLength(2);
+      expect(container.queryВыбратьorВсе("path.recharts-rectangle")).toHaveLength(2);
     });
 
     const barFills = new Set(
-      Array.from(container.querySelectorAll("path.recharts-rectangle")).map((rect) => rect.getAttribute("fill")),
+      Array.from(container.queryВыбратьorВсе("path.recharts-rectangle")).map((rect) => rect.getAttribute("fill")),
     );
     expect(barFills).toEqual(new Set(["var(--color-cyan-500, #06b6d4)"]));
 
-    expect(screen.getAllByText("2025-01-01").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Tag 1").length).toBeGreaterThan(1);
+    expect(screen.getВсеByText("2025-01-01").length).toBeGreaterThan(0);
+    expect(screen.getВсеByText("Tag 1").length).toBeGreaterThan(1);
 
-    const sectors = container.querySelectorAll(".recharts-pie-sector path");
+    const sectors = container.queryВыбратьorВсе(".recharts-pie-sector path");
     expect(sectors).toHaveLength(1);
     expect(sectors[0]).toHaveAttribute("fill", "var(--color-cyan-500, #06b6d4)");
 
-    const centerLabels = Array.from(container.querySelectorAll("text.fill-foreground")).map((text) => text.textContent);
+    const centerLabels = Array.from(container.queryВыбратьorВсе("text.fill-foreground")).map((text) => text.textContent);
     expect(centerLabels).toContain("$100.50");
   });
 
   it("should label the chart with user_email metadata instead of the raw UUID (LIT-3889)", async () => {
     const userUuid = "c0e68be8-057e-4e2f-9d3a-000000000000";
     const spendDataForUser = {
-      ...mockSpendData,
+      ...mockРасходData,
       results: [
         {
-          ...mockSpendData.results[0],
+          ...mockРасходData.results[0],
           breakdown: {
-            ...mockSpendData.results[0].breakdown,
+            ...mockРасходData.results[0].breakdown,
             entities: {
               [userUuid]: {
-                ...mockSpendData.results[0].breakdown.entities["tag-1"],
+                ...mockРасходData.results[0].breakdown.entities["tag-1"],
                 metadata: { user_email: "spender@example.com" },
               },
             },
@@ -953,13 +953,13 @@ describe("EntityUsage", () => {
       ],
     };
 
-    mockUserDailyActivityCall.mockResolvedValue(spendDataForUser);
+    mockUserКаждый деньActivityCall.mockResolvedЗначение(spendDataForUser);
 
     // entityList is null to simulate a spender missing from the paginated user list
-    render(<EntityUsage {...defaultProps} entityType="user" entityList={null} />);
+    render(<EntityИспользование {...defaultProps} entityType="user" entityList={null} />);
 
     await waitFor(() => {
-      expect(mockUserDailyActivityCall).toHaveBeenCalled();
+      expect(mockUserКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     await waitFor(() => {
@@ -969,7 +969,7 @@ describe("EntityUsage", () => {
   });
 
   it("renders the provider spend table logo from the bundled provider map", async () => {
-    render(<EntityUsage {...defaultProps} />);
+    render(<EntityИспользование {...defaultProps} />);
 
     const logo = await screen.findByAltText("openai logo");
     expect(logo).toHaveAttribute("src", expect.stringContaining("openai_small"));
@@ -977,10 +977,10 @@ describe("EntityUsage", () => {
 
   describe("capability gating", () => {
     it.each([
-      ["organization", () => mockOrganizationDailyActivityCall, "Organization Обзор расходов"],
-      ["agent", () => mockAgentDailyActivityCall, "Agent Обзор расходов"],
+      ["organization", () => mockОрганизацияКаждый деньActivityCall, "Организация Обзор расходов"],
+      ["agent", () => mockAgentКаждый деньActivityCall, "Agent Обзор расходов"],
     ] as const)("fetches %s activity for an admin but not for an internal user", async (entityType, call, heading) => {
-      render(<EntityUsage {...defaultProps} entityType={entityType} />);
+      render(<EntityИспользование {...defaultProps} entityType={entityType} />);
       await waitFor(() => {
         expect(call()).toHaveBeenCalled();
       });
@@ -988,20 +988,20 @@ describe("EntityUsage", () => {
       cleanup();
       call().mockClear();
 
-      render(<EntityUsage {...defaultProps} entityType={entityType} userRole="Internal User" />);
+      render(<EntityИспользование {...defaultProps} entityType={entityType} userRole="Internal User" />);
       expect(await screen.findByText(heading)).toBeInTheDocument();
       expect(call()).not.toHaveBeenCalled();
     });
 
     // An org admin's session role is "Internal User", so the row above cannot
     // distinguish them. Gating the fetch on the session role alone left the
-    // Organization Usage panel rendered but permanently empty, because the
+    // Организация Использование panel rendered but permanently empty, because the
     // request was never issued even though the proxy would have served it.
     it.each([
-      ["organization", () => mockOrganizationDailyActivityCall, true],
-      ["agent", () => mockAgentDailyActivityCall, false],
+      ["organization", () => mockОрганизацияКаждый деньActivityCall, true],
+      ["agent", () => mockAgentКаждый деньActivityCall, false],
     ] as const)("fetches %s activity for an org admin: %s", async (entityType, call, expected) => {
-      render(<EntityUsage {...defaultProps} entityType={entityType} userRole="Internal User" isOrgAdmin={true} />);
+      render(<EntityИспользование {...defaultProps} entityType={entityType} userRole="Internal User" isOrgAdmin={true} />);
 
       if (expected) {
         await waitFor(() => {
@@ -1014,56 +1014,56 @@ describe("EntityUsage", () => {
     });
 
     it("keeps the team breakdown but drops its agent sub-fetch for an internal user", async () => {
-      render(<EntityUsage {...defaultProps} entityType="team" userRole="Internal User" />);
+      render(<EntityИспользование {...defaultProps} entityType="team" userRole="Internal User" />);
 
       await waitFor(() => {
-        expect(mockTeamDailyActivityAggregatedCall).toHaveBeenCalled();
+        expect(mockTeamКаждый деньActivityAggregatedCall).toHaveBeenCalled();
       });
       expect(screen.getByText("Team Обзор расходов")).toBeInTheDocument();
 
-      expect(mockAgentDailyActivityCall).not.toHaveBeenCalled();
-      expect(screen.queryByText("Activity Metrics")).not.toBeInTheDocument();
+      expect(mockAgentКаждый деньActivityCall).not.toHaveBeenCalled();
+      expect(screen.queryByText("Activity Метрикаs")).not.toBeInTheDocument();
       expect(screen.queryByText("Топ агентов по расходам")).not.toBeInTheDocument();
     });
 
     it("keeps the tag breakdown for an internal user", async () => {
-      render(<EntityUsage {...defaultProps} entityType="tag" userRole="Internal User" />);
+      render(<EntityИспользование {...defaultProps} entityType="tag" userRole="Internal User" />);
 
       await waitFor(() => {
-        expect(mockTagDailyActivityCall).toHaveBeenCalled();
+        expect(mockTagКаждый деньActivityCall).toHaveBeenCalled();
       });
       expect(screen.getByText("Tag Обзор расходов")).toBeInTheDocument();
     });
   });
 
   it("renders a letter avatar instead of an img for an unknown provider slug", async () => {
-    const spendDataUnknownProvider = {
-      ...mockSpendData,
+    const spendDataUnknownПровайдер = {
+      ...mockРасходData,
       results: [
         {
-          ...mockSpendData.results[0],
+          ...mockРасходData.results[0],
           breakdown: {
-            ...mockSpendData.results[0].breakdown,
+            ...mockРасходData.results[0].breakdown,
             providers: {
-              "zzz-internal": mockSpendData.results[0].breakdown.providers.openai,
+              "zzz-internal": mockРасходData.results[0].breakdown.providers.openai,
             },
           },
         },
       ],
     };
-    mockTagDailyActivityCall.mockResolvedValue(spendDataUnknownProvider);
+    mockTagКаждый деньActivityCall.mockResolvedЗначение(spendDataUnknownПровайдер);
 
-    render(<EntityUsage {...defaultProps} />);
+    render(<EntityИспользование {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("zzz-internal").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("zzz-internal").length).toBeGreaterThan(0);
     });
     expect(screen.queryByAltText("zzz-internal logo")).not.toBeInTheDocument();
     expect(screen.getByText("z")).toBeInTheDocument();
   });
 
-  it("feeds the key, model and agent tables from their own breakdowns", async () => {
-    const usageMetrics = {
+  it("feeds the key, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию and agent tables from their own breakdowns", async () => {
+    const usageМетрикаs = {
       spend: 30.75,
       api_requests: 300,
       successful_requests: 290,
@@ -1074,53 +1074,53 @@ describe("EntityUsage", () => {
       cache_read_input_tokens: 0,
       cache_creation_input_tokens: 0,
     };
-    mockTeamDailyActivityAggregatedCall.mockResolvedValue({
-      ...mockSpendData,
+    mockTeamКаждый деньActivityAggregatedCall.mockResolvedЗначение({
+      ...mockРасходData,
       results: [
         {
-          ...mockSpendData.results[0],
+          ...mockРасходData.results[0],
           breakdown: {
-            ...mockSpendData.results[0].breakdown,
-            model_groups: { "gpt-4o": { metrics: { ...usageMetrics, spend: 70.25 }, metadata: {} } },
-            api_keys: { "sk-abc": { metrics: usageMetrics, metadata: { key_alias: "prod-key", team_id: null } } },
+            ...mockРасходData.results[0].breakdown,
+            Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups: { "gpt-4o": { metrics: { ...usageМетрикаs, spend: 70.25 }, metadata: {} } },
+            api_keys: { "sk-abc": { metrics: usageМетрикаs, metadata: { key_alias: "prod-key", team_id: null } } },
           },
         },
       ],
     });
 
-    render(<EntityUsage {...defaultProps} entityType="team" />);
+    render(<EntityИспользование {...defaultProps} entityType="team" />);
 
     await waitFor(() => {
       expect(screen.getByText("top-keys:sk-abc=30.75")).toBeInTheDocument();
     });
-    expect(screen.getByText("top-models:gpt-4o=70.25")).toBeInTheDocument();
-    expect(screen.getByText(/^top-models:Code Review Agent=/)).toBeInTheDocument();
+    expect(screen.getByText("top-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs:gpt-4o=70.25")).toBeInTheDocument();
+    expect(screen.getByText(/^top-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs:Code Review Agent=/)).toBeInTheDocument();
   });
 
   it("uses the aggregated team endpoint and never drains paginated pages for teams", async () => {
-    render(<EntityUsage {...defaultProps} entityType="team" />);
+    render(<EntityИспользование {...defaultProps} entityType="team" />);
 
     await waitFor(() => {
-      expect(mockTeamDailyActivityAggregatedCall).toHaveBeenCalled();
+      expect(mockTeamКаждый деньActivityAggregatedCall).toHaveBeenCalled();
     });
-    expect(mockTeamDailyActivityCall).not.toHaveBeenCalled();
+    expect(mockTeamКаждый деньActivityCall).not.toHaveBeenCalled();
 
     await waitFor(() => {
-      expect(screen.getAllByText("$100.50").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("$100.50").length).toBeGreaterThan(0);
     });
   });
 
   it("falls back to the paginated team endpoint when the aggregated call fails", async () => {
-    mockTeamDailyActivityAggregatedCall.mockRejectedValue(new Error("aggregated unavailable"));
+    mockTeamКаждый деньActivityAggregatedCall.mockRejectedЗначение(new Ошибка("aggregated unavailable"));
 
-    render(<EntityUsage {...defaultProps} entityType="team" />);
+    render(<EntityИспользование {...defaultProps} entityType="team" />);
 
     await waitFor(() => {
-      expect(mockTeamDailyActivityCall).toHaveBeenCalled();
+      expect(mockTeamКаждый деньActivityCall).toHaveBeenCalled();
     });
 
     await waitFor(() => {
-      expect(screen.getAllByText("$100.50").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("$100.50").length).toBeGreaterThan(0);
     });
   });
 
@@ -1128,22 +1128,22 @@ describe("EntityUsage", () => {
     const userDropdown = (): HTMLElement => screen.getByTestId("user-dropdown");
     const userCombobox = (): HTMLElement => within(userDropdown()).getByRole("combobox");
 
-    const renderUserUsage = async () => {
-      render(<EntityUsage {...defaultProps} entityType="user" entityList={null} />);
+    const renderUserИспользование = async () => {
+      render(<EntityИспользование {...defaultProps} entityType="user" entityList={null} />);
       await waitFor(() => {
-        expect(mockUserDailyActivityCall).toHaveBeenCalled();
+        expect(mockUserКаждый деньActivityCall).toHaveBeenCalled();
       });
     };
 
     it("offers a user filter even when the caller preloaded no user page", async () => {
-      await renderUserUsage();
+      await renderUserИспользование();
 
       expect(userCombobox()).toHaveAttribute("placeholder", "Search users by email…");
     });
 
     it("searches every user on the server rather than a preloaded page", async () => {
       const user = userEvent.setup();
-      await renderUserUsage();
+      await renderUserИспользование();
 
       expect(mockUseInfiniteUsers).toHaveBeenCalledWith(50, undefined);
 
@@ -1156,15 +1156,15 @@ describe("EntityUsage", () => {
 
     it("refetches daily activity for the picked user and drops the filter when cleared", async () => {
       const user = userEvent.setup();
-      await renderUserUsage();
+      await renderUserИспользование();
 
-      expect(mockUserDailyActivityCall).toHaveBeenCalledWith("test-token", expect.any(Date), expect.any(Date), 1, null);
+      expect(mockUserКаждый деньActivityCall).toHaveBeenCalledWith("test-token", expect.any(Date), expect.any(Date), 1, null);
 
       await user.click(userCombobox());
       await user.click(await screen.findByText("Alice (user-001)"));
 
       await waitFor(() => {
-        expect(mockUserDailyActivityCall).toHaveBeenCalledWith(
+        expect(mockUserКаждый деньActivityCall).toHaveBeenCalledWith(
           "test-token",
           expect.any(Date),
           expect.any(Date),
@@ -1173,11 +1173,11 @@ describe("EntityUsage", () => {
         );
       });
 
-      mockUserDailyActivityCall.mockClear();
-      await user.click(userDropdown().querySelector('[data-slot="combobox-clear"]') as HTMLElement);
+      mockUserКаждый деньActivityCall.mockClear();
+      await user.click(userDropdown().queryВыбратьor('[data-slot="combobox-clear"]') as HTMLElement);
 
       await waitFor(() => {
-        expect(mockUserDailyActivityCall).toHaveBeenCalledWith(
+        expect(mockUserКаждый деньActivityCall).toHaveBeenCalledWith(
           "test-token",
           expect.any(Date),
           expect.any(Date),

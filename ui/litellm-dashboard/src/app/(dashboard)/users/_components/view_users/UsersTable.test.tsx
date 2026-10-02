@@ -1,5 +1,5 @@
 /* @vitest-environment jsdom */
-import type { PaginationState, RowSelectionState, SortingState } from "@tanstack/react-table";
+import type { PaginationState, RowВыбратьionState, SortingState } from "@tanstack/react-table";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
@@ -7,7 +7,7 @@ import { describe, expect, it, vi, type Mock } from "vitest";
 
 import { UserInfo } from "@/components/networking";
 
-import { UsersTable } from "./UsersTable";
+import { UsersТаблица } from "./UsersТаблица";
 
 const possibleUIRoles = {
   proxy_admin: { ui_label: "Admin" },
@@ -22,7 +22,7 @@ const makeUser = (overrides: Partial<UserInfo> = {}): UserInfo =>
     user_role: "proxy_admin",
     spend: 12.5,
     max_budget: null,
-    models: [],
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
     key_count: 2,
     created_at: "2024-01-01T00:00:00Z",
     updated_at: "2024-02-01T00:00:00Z",
@@ -36,9 +36,9 @@ interface HarnessOverrides {
   rowCount?: number;
   isLoading?: boolean;
   selectionEnabled?: boolean;
-  onUserClick?: (userId: string, openInEditMode?: boolean) => void;
+  onUserClick?: (userId: string, openInEditРежим?: boolean) => void;
   onDeleteUser?: (user: UserInfo) => void;
-  onResetPassword?: (userId: string) => void;
+  onResetПароль?: (userId: string) => void;
   onSortingChange?: Mock;
 }
 
@@ -53,22 +53,22 @@ function Harness({
   selectionEnabled = false,
   onUserClick = vi.fn(),
   onDeleteUser = vi.fn(),
-  onResetPassword = vi.fn(),
+  onResetПароль = vi.fn(),
   onSortingChange,
 }: HarnessOverrides) {
   const [sorting, setSorting] = useState<SortingState>([{ id: "created_at", desc: true }]);
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 });
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [rowВыбратьion, setRowВыбратьion] = useState<RowВыбратьionState>({});
 
   return (
     <>
       <span data-testid="selected-ids">
-        {Object.keys(rowSelection)
-          .filter((key) => rowSelection[key])
+        {Object.keys(rowВыбратьion)
+          .filter((key) => rowВыбратьion[key])
           .sort()
           .join(",")}
       </span>
-      <UsersTable
+      <UsersТаблица
         data={data}
         rowCount={rowCount}
         isLoading={isLoading}
@@ -81,17 +81,17 @@ function Harness({
         }}
         pagination={pagination}
         onPaginationChange={setPagination}
-        columnFilters={[]}
-        onColumnFiltersChange={vi.fn()}
-        searchValue=""
+        columnФильтры={[]}
+        onColumnФильтрыChange={vi.fn()}
+        searchЗначение=""
         onSearchChange={vi.fn()}
         selectionEnabled={selectionEnabled}
-        rowSelection={rowSelection}
-        onRowSelectionChange={setRowSelection}
+        rowВыбратьion={rowВыбратьion}
+        onRowВыбратьionChange={setRowВыбратьion}
         onUserClick={onUserClick}
         onDeleteUser={onDeleteUser}
-        onResetPassword={onResetPassword}
-        accessToken={null}
+        onResetПароль={onResetПароль}
+        accessТокен={null}
         canEdit={false}
         onQuotaChanged={vi.fn()}
       />
@@ -103,11 +103,11 @@ const openRowMenu = async (user: ReturnType<typeof userEvent.setup>, userId: str
   await user.click(screen.getByTestId(`user-actions-${userId}`));
 };
 
-describe("UsersTable", () => {
+describe("UsersТаблица", () => {
   it("renders every migrated column header", () => {
     render(<Harness />);
 
-    const headerRow = screen.getAllByRole("row")[0];
+    const headerRow = screen.getВсеByRole("row")[0];
 
     [
       "ID пользователя",
@@ -141,7 +141,7 @@ describe("UsersTable", () => {
     render(<Harness />);
 
     const sortableIds = screen
-      .getAllByTestId(/^sort-header-/)
+      .getВсеByTestId(/^sort-header-/)
       .map((node) => (node.getAttribute("data-testid") ?? "").replace("sort-header-", ""))
       .sort();
 
@@ -155,14 +155,14 @@ describe("UsersTable", () => {
 
     await user.click(screen.getByTestId("sort-header-user_email"));
 
-    expect(onSortingChange).toHaveBeenCalledTimes(1);
-    expect(screen.getByTestId("sort-header-user_email").querySelector("[data-sort-indicator]")).toHaveAttribute(
+    expect(onSortingChange).toHaveBeenCalledВремяs(1);
+    expect(screen.getByTestId("sort-header-user_email").queryВыбратьor("[data-sort-indicator]")).toHaveAttribute(
       "data-sort-indicator",
       "asc",
     );
   });
 
-  it("opens the detail view from the identity cell without edit mode", async () => {
+  it("opens the detail view from the identity cell withвыход edit mode", async () => {
     const user = userEvent.setup();
     const onUserClick = vi.fn();
     render(<Harness onUserClick={onUserClick} />);
@@ -186,12 +186,12 @@ describe("UsersTable", () => {
   it("delegates delete and reset-password from the row menu", async () => {
     const user = userEvent.setup();
     const onDeleteUser = vi.fn();
-    const onResetPassword = vi.fn();
-    render(<Harness onDeleteUser={onDeleteUser} onResetPassword={onResetPassword} />);
+    const onResetПароль = vi.fn();
+    render(<Harness onDeleteUser={onDeleteUser} onResetПароль={onResetПароль} />);
 
     await openRowMenu(user, "user-1");
     await user.click(await screen.findByTestId("user-action-reset-password"));
-    expect(onResetPassword).toHaveBeenCalledWith("user-1");
+    expect(onResetПароль).toHaveBeenCalledWith("user-1");
 
     await openRowMenu(user, "user-1");
     await user.click(await screen.findByTestId("user-action-delete"));
@@ -263,20 +263,20 @@ describe("UsersTable", () => {
   it("renders the empty state when there are no users", () => {
     render(<Harness data={[]} rowCount={0} />);
 
-    expect(screen.getByText("No users found")).toBeInTheDocument();
+    expect(screen.getByText("Пользователи не найдены")).toBeInTheDocument();
   });
 
   it("shows skeleton rows on the initial load instead of the empty state", () => {
     render(<Harness data={[]} rowCount={0} isLoading />);
 
-    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
-    expect(screen.queryByText("No users found")).not.toBeInTheDocument();
+    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
+    expect(screen.queryByText("Пользователи не найдены")).not.toBeInTheDocument();
   });
 
-  it("keeps the row menu out of the identity cell so only the name and menu act on a row", () => {
+  it("keeps the row menu выход of the identity cell so only the name and menu act on a row", () => {
     render(<Harness />);
 
-    const rows = screen.getAllByRole("row");
+    const rows = screen.getВсеByRole("row");
     const dataRow = rows[rows.length - 1];
     expect(within(dataRow).getByTestId("user-actions-user-1")).toBeInTheDocument();
   });

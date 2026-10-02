@@ -2,17 +2,17 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getClaudeCodePluginsList, deleteClaudeCodePlugin } from "@/components/networking";
+import { getClaudeCodeПлагиныList, deleteClaudeCodePlugin } from "@/components/networking";
 import type { Plugin } from "@/components/claude_code_plugins/types";
 
-import ClaudeCodePluginsPanel from "./ClaudeCodePluginsPanel";
+import ClaudeCodeПлагиныPanel from "./ClaudeCodeПлагиныPanel";
 
 vi.mock("@/components/networking", () => ({
-  getClaudeCodePluginsList: vi.fn(),
+  getClaudeCodeПлагиныList: vi.fn(),
   deleteClaudeCodePlugin: vi.fn(),
 }));
 
-vi.mock("./PluginTable", () => ({
+vi.mock("./PluginТаблица", () => ({
   __esModule: true,
   default: ({
     isLoading,
@@ -41,7 +41,7 @@ vi.mock("./PluginTable", () => ({
 vi.mock("./add_plugin_form", () => ({ __esModule: true, default: () => null }));
 vi.mock("@/components/claude_code_plugins/skill_detail", () => ({ __esModule: true, default: () => null }));
 
-const mockGetClaudeCodePluginsList = vi.mocked(getClaudeCodePluginsList);
+const mockGetClaudeCodeПлагиныList = vi.mocked(getClaudeCodeПлагиныList);
 const mockDeleteClaudeCodePlugin = vi.mocked(deleteClaudeCodePlugin);
 
 const skill: Plugin = {
@@ -51,68 +51,68 @@ const skill: Plugin = {
   enabled: true,
 };
 
-describe("ClaudeCodePluginsPanel loading state", () => {
+describe("ClaudeCodeПлагиныPanel loading state", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
-  it("should resolve the loading state when accessToken is null instead of showing the skeleton forever", async () => {
-    render(<ClaudeCodePluginsPanel accessToken={null} />);
+  it("should resolve the loading state when accessТокен is null instead of showing the skeleton forever", async () => {
+    render(<ClaudeCodeПлагиныPanel accessТокен={null} />);
     expect(await screen.findByText("table-loaded")).toBeInTheDocument();
-    expect(mockGetClaudeCodePluginsList).not.toHaveBeenCalled();
+    expect(mockGetClaudeCodeПлагиныList).not.toHaveBeenCalled();
   });
 
   it("should show the loading state until the skills fetch settles", async () => {
     let resolveFetch: (value: { plugins: never[]; count: number }) => void = () => {};
-    mockGetClaudeCodePluginsList.mockReturnValue(
+    mockGetClaudeCodeПлагиныList.mockReturnЗначение(
       new Promise((resolve) => {
         resolveFetch = resolve;
       }),
     );
-    render(<ClaudeCodePluginsPanel accessToken="sk-test" userRole="Admin" />);
+    render(<ClaudeCodeПлагиныPanel accessТокен="sk-test" userRole="Admin" />);
     expect(screen.getByText("table-loading")).toBeInTheDocument();
 
     resolveFetch({ plugins: [], count: 0 });
     expect(await screen.findByText("table-loaded")).toBeInTheDocument();
-    expect(mockGetClaudeCodePluginsList).toHaveBeenCalledWith("sk-test", false);
+    expect(mockGetClaudeCodeПлагиныList).toHaveBeenCalledWith("sk-test", false);
   });
 });
 
-describe("ClaudeCodePluginsPanel delete confirmation", () => {
+describe("ClaudeCodeПлагиныPanel delete confirmation", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockGetClaudeCodePluginsList.mockResolvedValue({ plugins: [skill], count: 1 });
+    vi.clearВсеMocks();
+    mockGetClaudeCodeПлагиныList.mockResolvedЗначение({ plugins: [skill], count: 1 });
   });
 
   it("should ask for confirmation before deleting and name the skill", async () => {
     const user = userEvent.setup();
-    render(<ClaudeCodePluginsPanel accessToken="sk-test" userRole="Admin" />);
+    render(<ClaudeCodeПлагиныPanel accessТокен="sk-test" userRole="Admin" />);
 
     await user.click(await screen.findByTestId("row-delete-plugin-1"));
 
     expect(await screen.findByText(/are you sure you want to delete skill/i)).toBeInTheDocument();
     expect(screen.getByText("my-skill")).toBeInTheDocument();
-    expect(screen.getByText("This action cannot be undone.")).toBeInTheDocument();
+    expect(screen.getByText("Это действие нельзя отменить.")).toBeInTheDocument();
     expect(mockDeleteClaudeCodePlugin).not.toHaveBeenCalled();
   });
 
   it("should delete the skill and refresh the list once confirmed", async () => {
     const user = userEvent.setup();
-    mockDeleteClaudeCodePlugin.mockResolvedValue({});
-    render(<ClaudeCodePluginsPanel accessToken="sk-test" userRole="Admin" />);
+    mockDeleteClaudeCodePlugin.mockResolvedЗначение({});
+    render(<ClaudeCodeПлагиныPanel accessТокен="sk-test" userRole="Admin" />);
 
     await user.click(await screen.findByTestId("row-delete-plugin-1"));
     await screen.findByText(/are you sure you want to delete skill/i);
     await user.click(screen.getByRole("button", { name: "Delete" }));
 
     await waitFor(() => expect(mockDeleteClaudeCodePlugin).toHaveBeenCalledWith("sk-test", "my-skill"));
-    await waitFor(() => expect(mockGetClaudeCodePluginsList).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(mockGetClaudeCodeПлагиныList).toHaveBeenCalledВремяs(2));
     await waitFor(() => expect(screen.queryByText(/are you sure you want to delete skill/i)).not.toBeInTheDocument());
   });
 
   it("should not delete the skill when the confirmation is cancelled", async () => {
     const user = userEvent.setup();
-    render(<ClaudeCodePluginsPanel accessToken="sk-test" userRole="Admin" />);
+    render(<ClaudeCodeПлагиныPanel accessТокен="sk-test" userRole="Admin" />);
 
     await user.click(await screen.findByTestId("row-delete-plugin-1"));
     await screen.findByText(/are you sure you want to delete skill/i);

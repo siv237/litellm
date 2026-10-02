@@ -1,12 +1,12 @@
-import type { ColumnDef, ColumnFiltersState } from "@tanstack/react-table";
+import type { ColumnDef, ColumnФильтрыState } from "@tanstack/react-table";
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
 
-import { DataTable } from "./DataTable";
-import { DataTableFilterDrawer } from "./DataTableFilterDrawer";
-import { DataTableToolbar } from "./DataTableToolbar";
+import { DataТаблица } from "./DataТаблица";
+import { DataТаблицаФильтрDrawer } from "./DataТаблицаФильтрDrawer";
+import { DataТаблицаToolbar } from "./DataТаблицаToolbar";
 
 interface Person {
   id: string;
@@ -21,28 +21,28 @@ const DATA: Person[] = [
 
 const columns: ColumnDef<Person, unknown>[] = [
   {
-    accessorKey: "name",
+    accessorКлюч: "name",
     header: "Name",
     meta: { title: "Name" },
-    filterFn: (row, columnId, value) => row.getValue<string>(columnId) === value,
+    filterFn: (row, columnId, value) => row.getЗначение<string>(columnId) === value,
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
 ];
 
-const names = (): (string | null)[] => screen.getAllByTestId("name-cell").map((el) => el.textContent);
+const names = (): (string | null)[] => screen.getВсеByTestId("name-cell").map((el) => el.textContent);
 
-function Harness({ initialFilters }: { initialFilters?: ColumnFiltersState }) {
+function Harness({ initialФильтры }: { initialФильтры?: ColumnФильтрыState }) {
   const [open, setOpen] = useState(false);
   return (
-    <DataTable
+    <DataТаблица
       data={DATA}
       columns={columns}
-      filterMode="client"
-      defaultColumnFilters={initialFilters}
+      filterРежим="client"
+      defaultColumnФильтры={initialФильтры}
       toolbar={(table) => (
         <>
-          <DataTableToolbar table={table} onOpenFilters={() => setOpen(true)} />
-          <DataTableFilterDrawer table={table} open={open} onOpenChange={setOpen} title="Filters">
+          <DataТаблицаToolbar table={table} onOpenФильтры={() => setOpen(true)} />
+          <DataТаблицаФильтрDrawer table={table} open={open} onOpenChange={setOpen} title="Фильтры">
             {({ get, set }) => (
               <input
                 aria-label="name filter"
@@ -51,15 +51,15 @@ function Harness({ initialFilters }: { initialFilters?: ColumnFiltersState }) {
                 onChange={(event) => set("name", event.target.value)}
               />
             )}
-          </DataTableFilterDrawer>
+          </DataТаблицаФильтрDrawer>
         </>
       )}
     />
   );
 }
 
-describe("DataTableFilterDrawer", () => {
-  it("stages edits and only commits them to the table on Apply", async () => {
+describe("DataТаблицаФильтрDrawer", () => {
+  it("stages edits and only commits them to the table on Приложениеly", async () => {
     const user = userEvent.setup();
     render(<Harness />);
     expect(names()).toEqual(["Alice", "Bob", "Carol"]);
@@ -77,22 +77,22 @@ describe("DataTableFilterDrawer", () => {
 
   it("seeds the draft from committed filters when opened", async () => {
     const user = userEvent.setup();
-    render(<Harness initialFilters={[{ id: "name", value: "Bob" }]} />);
+    render(<Harness initialФильтры={[{ id: "name", value: "Bob" }]} />);
     expect(names()).toEqual(["Bob"]);
 
     await user.click(screen.getByTestId("datatable-filters-trigger"));
-    expect(await screen.findByTestId("draft-name")).toHaveValue("Bob");
+    expect(await screen.findByTestId("draft-name")).toHaveЗначение("Bob");
   });
 
   it("reset clears the committed filters and the draft", async () => {
     const user = userEvent.setup();
-    render(<Harness initialFilters={[{ id: "name", value: "Bob" }]} />);
+    render(<Harness initialФильтры={[{ id: "name", value: "Bob" }]} />);
 
     await user.click(screen.getByTestId("datatable-filters-trigger"));
     await user.click(await screen.findByTestId("filter-drawer-reset"));
 
     expect(names()).toEqual(["Alice", "Bob", "Carol"]);
     expect(screen.queryByTestId("filter-chip-name")).not.toBeInTheDocument();
-    expect(screen.getByTestId("draft-name")).toHaveValue("");
+    expect(screen.getByTestId("draft-name")).toHaveЗначение("");
   });
 });

@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,17 +6,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CredentialItem, credentialCreateCall, credentialUpdateCall } from "@/components/networking";
 import { toast } from "@/lib/toast";
 
-import CredentialsPanel from "./CredentialsPanel";
+import Учётные данныеPanel from "./Учётные данныеPanel";
 
-const mockUseAuthorized = vi.fn();
-const mockUseCredentials = vi.fn();
+const mockUseАвторизовано = vi.fn();
+const mockUseУчётные данные = vi.fn();
 
-vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({
-  default: () => mockUseAuthorized(),
+vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
+  default: () => mockUseАвторизовано(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/credentials/useCredentials", () => ({
-  useCredentials: () => mockUseCredentials(),
+vi.mock("@/app/(dashboard)/hooks/credentials/useУчётные данные", () => ({
+  useУчётные данные: () => mockUseУчётные данные(),
 }));
 
 vi.mock("@/components/networking", async (importOriginal) => {
@@ -69,31 +69,31 @@ const credentials: CredentialItem[] = [
   },
 ];
 
-const createQueryClient = () =>
-  new QueryClient({
+const createЗапросClient = () =>
+  new ЗапросClient({
     defaultOptions: {
       queries: {
         retry: false,
-        gcTime: 0,
+        gcВремя: 0,
       },
     },
   });
 
 const renderPanel = () =>
   render(
-    <QueryClientProvider client={createQueryClient()}>
-      <CredentialsPanel />
-    </QueryClientProvider>,
+    <ЗапросClientПровайдер client={createЗапросClient()}>
+      <Учётные данныеPanel />
+    </ЗапросClientПровайдер>,
   );
 
-describe("CredentialsPanel", () => {
+describe("Учётные данныеPanel", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
-  it("renders the Add Credential button for an admin", () => {
-    mockUseAuthorized.mockReturnValue({ accessToken: "test-token", userRole: "Admin" });
-    mockUseCredentials.mockReturnValue({ data: { credentials: [] }, isLoading: false, refetch: vi.fn() });
+  it("renders the Добавить учётные данные button for an admin", () => {
+    mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin" });
+    mockUseУчётные данные.mockReturnЗначение({ data: { credentials: [] }, isLoading: false, refetch: vi.fn() });
 
     renderPanel();
 
@@ -101,8 +101,8 @@ describe("CredentialsPanel", () => {
   });
 
   it("displays the credential rows", () => {
-    mockUseAuthorized.mockReturnValue({ accessToken: "test-token", userRole: "Admin" });
-    mockUseCredentials.mockReturnValue({ data: { credentials }, isLoading: false, refetch: vi.fn() });
+    mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin" });
+    mockUseУчётные данные.mockReturnЗначение({ data: { credentials }, isLoading: false, refetch: vi.fn() });
 
     renderPanel();
 
@@ -110,8 +110,8 @@ describe("CredentialsPanel", () => {
   });
 
   it("shows the empty state when there are no credentials", () => {
-    mockUseAuthorized.mockReturnValue({ accessToken: "test-token", userRole: "Admin" });
-    mockUseCredentials.mockReturnValue({ data: { credentials: [] }, isLoading: false, refetch: vi.fn() });
+    mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin" });
+    mockUseУчётные данные.mockReturnЗначение({ data: { credentials: [] }, isLoading: false, refetch: vi.fn() });
 
     renderPanel();
 
@@ -119,8 +119,8 @@ describe("CredentialsPanel", () => {
   });
 
   it("shows the loading skeleton instead of the empty state while credentials load", () => {
-    mockUseAuthorized.mockReturnValue({ accessToken: "test-token", userRole: "Admin" });
-    mockUseCredentials.mockReturnValue({ data: undefined, isLoading: true, refetch: vi.fn() });
+    mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin" });
+    mockUseУчётные данные.mockReturnЗначение({ data: undefined, isLoading: true, refetch: vi.fn() });
 
     renderPanel();
 
@@ -130,8 +130,8 @@ describe("CredentialsPanel", () => {
 
   it("opens the add modal when the add button is clicked", async () => {
     const user = userEvent.setup();
-    mockUseAuthorized.mockReturnValue({ accessToken: "test-token", userRole: "Admin" });
-    mockUseCredentials.mockReturnValue({ data: { credentials: [] }, isLoading: false, refetch: vi.fn() });
+    mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin" });
+    mockUseУчётные данные.mockReturnЗначение({ data: { credentials: [] }, isLoading: false, refetch: vi.fn() });
 
     renderPanel();
 
@@ -143,9 +143,9 @@ describe("CredentialsPanel", () => {
   it("closes the add modal and refetches after a successful add", async () => {
     const user = userEvent.setup();
     const refetch = vi.fn();
-    mockUseAuthorized.mockReturnValue({ accessToken: "test-token", userRole: "Admin" });
-    mockUseCredentials.mockReturnValue({ data: { credentials: [] }, isLoading: false, refetch });
-    vi.mocked(credentialCreateCall).mockResolvedValueOnce(undefined as never);
+    mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin" });
+    mockUseУчётные данные.mockReturnЗначение({ data: { credentials: [] }, isLoading: false, refetch });
+    vi.mocked(credentialCreateCall).mockResolvedЗначениеOnce(undefined as never);
 
     renderPanel();
 
@@ -153,7 +153,7 @@ describe("CredentialsPanel", () => {
     await user.click(screen.getByTestId("credential-modal-add-submit"));
 
     await waitFor(() => {
-      expect(toast.success).toHaveBeenCalledWith("Credential added successfully");
+      expect(toast.success).toHaveBeenCalledWith("Учётные данные добавлены");
     });
     expect(refetch).toHaveBeenCalled();
     expect(screen.queryByTestId("credential-modal-add-submit")).not.toBeInTheDocument();
@@ -161,9 +161,9 @@ describe("CredentialsPanel", () => {
 
   it("surfaces an error and keeps the add modal open when the create call fails", async () => {
     const user = userEvent.setup();
-    mockUseAuthorized.mockReturnValue({ accessToken: "test-token", userRole: "Admin" });
-    mockUseCredentials.mockReturnValue({ data: { credentials: [] }, isLoading: false, refetch: vi.fn() });
-    vi.mocked(credentialCreateCall).mockRejectedValueOnce(new Error("network down"));
+    mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin" });
+    mockUseУчётные данные.mockReturnЗначение({ data: { credentials: [] }, isLoading: false, refetch: vi.fn() });
+    vi.mocked(credentialCreateCall).mockRejectedЗначениеOnce(new Ошибка("network down"));
 
     renderPanel();
 
@@ -171,7 +171,7 @@ describe("CredentialsPanel", () => {
     await user.click(screen.getByTestId("credential-modal-add-submit"));
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("Failed to add credential");
+      expect(toast.error).toHaveBeenCalledWith("Не удалось добавить учётные данные");
     });
     // The modal stays open so the user can retry, and no success toast fired.
     expect(screen.getByTestId("credential-modal-add-submit")).toBeInTheDocument();
@@ -180,9 +180,9 @@ describe("CredentialsPanel", () => {
 
   it("drops the masked api key from the update payload while keeping the edited api base", async () => {
     const user = userEvent.setup();
-    mockUseAuthorized.mockReturnValue({ accessToken: "test-token", userRole: "Admin" });
-    mockUseCredentials.mockReturnValue({ data: { credentials }, isLoading: false, refetch: vi.fn() });
-    vi.mocked(credentialUpdateCall).mockResolvedValueOnce(undefined as never);
+    mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin" });
+    mockUseУчётные данные.mockReturnЗначение({ data: { credentials }, isLoading: false, refetch: vi.fn() });
+    vi.mocked(credentialUpdateCall).mockResolvedЗначениеOnce(undefined as never);
 
     renderPanel();
 
@@ -200,9 +200,9 @@ describe("CredentialsPanel", () => {
 
   describe("Admin Viewer write-action gating", () => {
     // Admin Viewer can VIEW credentials but must not add / edit / delete them.
-    it("hides the Add Credential button but still lists credentials", () => {
-      mockUseAuthorized.mockReturnValue({ accessToken: "test-token", userRole: "Admin Viewer" });
-      mockUseCredentials.mockReturnValue({ data: { credentials }, isLoading: false, refetch: vi.fn() });
+    it("hides the Добавить учётные данные button but still lists credentials", () => {
+      mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin Viewer" });
+      mockUseУчётные данные.mockReturnЗначение({ data: { credentials }, isLoading: false, refetch: vi.fn() });
 
       renderPanel();
 
@@ -211,8 +211,8 @@ describe("CredentialsPanel", () => {
     });
 
     it("does not render the per-row actions menu for Admin Viewer", () => {
-      mockUseAuthorized.mockReturnValue({ accessToken: "test-token", userRole: "Admin Viewer" });
-      mockUseCredentials.mockReturnValue({ data: { credentials }, isLoading: false, refetch: vi.fn() });
+      mockUseАвторизовано.mockReturnЗначение({ accessТокен: "test-token", userRole: "Admin Viewer" });
+      mockUseУчётные данные.mockReturnЗначение({ data: { credentials }, isLoading: false, refetch: vi.fn() });
 
       renderPanel();
 

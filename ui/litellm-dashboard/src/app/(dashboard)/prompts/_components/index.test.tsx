@@ -5,14 +5,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { deletePromptCall, getPromptsList } from "@/components/networking";
 
 import PromptsPanel from "./index";
-import { chooseSelectOption } from "../../../../../tests/test-utils";
+import { chooseВыбратьOption } from "../../../../../tests/test-utils";
 
 vi.mock("@/components/networking", () => ({
   getPromptsList: vi.fn(),
   deletePromptCall: vi.fn(),
 }));
 
-vi.mock("./PromptTable", () => ({
+vi.mock("./PromptТаблица", () => ({
   __esModule: true,
   default: ({
     isLoading,
@@ -37,8 +37,8 @@ vi.mock("./PromptTable", () => ({
 
 vi.mock("./prompt_info", () => ({
   __esModule: true,
-  default: ({ initialEnvironment }: { initialEnvironment?: string }) => (
-    <div>prompt-info-view:{initialEnvironment ?? "none"}</div>
+  default: ({ initialОкружение }: { initialОкружение?: string }) => (
+    <div>prompt-info-view:{initialОкружение ?? "none"}</div>
   ),
 }));
 vi.mock("./add_prompt_form", () => ({
@@ -51,28 +51,28 @@ const mockGetPromptsList = vi.mocked(getPromptsList);
 const mockDeletePromptCall = vi.mocked(deletePromptCall);
 
 const renderPanel = (userRole?: string) =>
-  render(<PromptsPanel accessToken="sk-test" userRole={userRole ?? "Admin"} />);
+  render(<PromptsPanel accessТокен="sk-test" userRole={userRole ?? "Admin"} />);
 
 describe("PromptsPanel loading state", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockGetPromptsList.mockResolvedValue({ prompts: [] } as never);
+    vi.clearВсеMocks();
+    mockGetPromptsList.mockResolvedЗначение({ prompts: [] } as never);
   });
 
-  it("should resolve the loading state when accessToken is null instead of showing the skeleton forever", async () => {
-    render(<PromptsPanel accessToken={null} />);
+  it("should resolve the loading state when accessТокен is null instead of showing the skeleton forever", async () => {
+    render(<PromptsPanel accessТокен={null} />);
     expect(await screen.findByText("table-loaded")).toBeInTheDocument();
     expect(mockGetPromptsList).not.toHaveBeenCalled();
   });
 
   it("should show the loading state until the prompt fetch settles", async () => {
     let resolveFetch: (value: { prompts: never[] }) => void = () => {};
-    mockGetPromptsList.mockReturnValue(
+    mockGetPromptsList.mockReturnЗначение(
       new Promise((resolve) => {
         resolveFetch = resolve;
       }) as never,
     );
-    render(<PromptsPanel accessToken="sk-test" userRole="Admin" />);
+    render(<PromptsPanel accessТокен="sk-test" userRole="Admin" />);
     expect(screen.getByText("table-loading")).toBeInTheDocument();
 
     resolveFetch({ prompts: [] });
@@ -83,8 +83,8 @@ describe("PromptsPanel loading state", () => {
 
 describe("PromptsPanel toolbar", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockGetPromptsList.mockResolvedValue({ prompts: [] } as never);
+    vi.clearВсеMocks();
+    mockGetPromptsList.mockResolvedЗначение({ prompts: [] } as never);
   });
 
   it("should offer both create actions to a proxy admin", async () => {
@@ -127,9 +127,9 @@ describe("PromptsPanel toolbar", () => {
     renderPanel("Admin");
     await screen.findByText("table-loaded");
 
-    expect(screen.getByText("All Environments")).toBeInTheDocument();
+    expect(screen.getByText("Все Окружениеs")).toBeInTheDocument();
 
-    await chooseSelectOption(user, screen.getByRole("combobox"), "Production");
+    await chooseВыбратьOption(user, screen.getByRole("combobox"), "Продакшен");
 
     await waitFor(() => expect(mockGetPromptsList).toHaveBeenLastCalledWith("sk-test", "production"));
   });
@@ -141,20 +141,20 @@ describe("PromptsPanel toolbar", () => {
     renderPanel("Admin");
     await screen.findByText("table-loaded");
 
-    await chooseSelectOption(user, screen.getByRole("combobox"), "Production");
-    await waitFor(() => expect(screen.getByRole("combobox")).toHaveTextContent("Production"));
+    await chooseВыбратьOption(user, screen.getByRole("combobox"), "Продакшен");
+    await waitFor(() => expect(screen.getByRole("combobox")).toHaveTextContent("Продакшен"));
 
-    await chooseSelectOption(user, screen.getByRole("combobox"), "All Environments");
+    await chooseВыбратьOption(user, screen.getByRole("combobox"), "Все Окружениеs");
 
-    await waitFor(() => expect(screen.getByRole("combobox")).toHaveTextContent("All Environments"));
+    await waitFor(() => expect(screen.getByRole("combobox")).toHaveTextContent("Все Окружениеs"));
     await waitFor(() => expect(mockGetPromptsList).toHaveBeenLastCalledWith("sk-test", undefined));
   });
 });
 
 describe("PromptsPanel row navigation", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockGetPromptsList.mockResolvedValue({ prompts: [] } as never);
+    vi.clearВсеMocks();
+    mockGetPromptsList.mockResolvedЗначение({ prompts: [] } as never);
   });
 
   it("should open the info view preselected to the clicked row's environment", async () => {
@@ -169,9 +169,9 @@ describe("PromptsPanel row navigation", () => {
 
 describe("PromptsPanel delete confirmation", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockGetPromptsList.mockResolvedValue({ prompts: [] } as never);
-    mockDeletePromptCall.mockResolvedValue(undefined as never);
+    vi.clearВсеMocks();
+    mockGetPromptsList.mockResolvedЗначение({ prompts: [] } as never);
+    mockDeletePromptCall.mockResolvedЗначение(undefined as never);
   });
 
   it("should not delete until the confirmation is accepted", async () => {
@@ -205,7 +205,7 @@ describe("PromptsPanel delete confirmation", () => {
   it("should keep the confirmation up while the delete request is still in flight", async () => {
     const user = userEvent.setup();
     let finishDelete: () => void = () => {};
-    mockDeletePromptCall.mockReturnValue(
+    mockDeletePromptCall.mockReturnЗначение(
       new Promise<void>((resolve) => {
         finishDelete = () => resolve();
       }) as never,

@@ -2,45 +2,45 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { exportMultiToPDF, exportMultiToCSV } from "./multi_export_utils";
-import type { MultiModelResult } from "./types";
-import type { CostEstimateResponse } from "../types";
+import type { MultiРежимlРезультат } from "./types";
+import type { СтоимостьEstimateОтвет } from "../types";
 
 vi.mock("@/utils/dataUtils", () => ({
   formatNumberWithCommas: vi.fn((v: number, d: number = 0) => (Number.isFinite(v) ? v.toFixed(d) : "-")),
 }));
 
-function makeCostResponse(overrides: Partial<CostEstimateResponse> = {}): CostEstimateResponse {
+function makeСтоимостьОтвет(overrides: Partial<СтоимостьEstimateОтвет> = {}): СтоимостьEstimateОтвет {
   return {
-    model: "gpt-4",
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
     input_tokens: 1000,
-    output_tokens: 500,
+    выходput_tokens: 500,
     num_requests_per_day: 100,
     num_requests_per_month: 3000,
     cost_per_request: 0.05,
     input_cost_per_request: 0.03,
-    output_cost_per_request: 0.02,
+    выходput_cost_per_request: 0.02,
     margin_cost_per_request: 0,
     daily_cost: 5.0,
     daily_input_cost: 3.0,
-    daily_output_cost: 2.0,
+    daily_выходput_cost: 2.0,
     daily_margin_cost: 0,
     monthly_cost: 150.0,
     monthly_input_cost: 90.0,
-    monthly_output_cost: 60.0,
+    monthly_выходput_cost: 60.0,
     monthly_margin_cost: 0,
     input_cost_per_token: 0.00003,
-    output_cost_per_token: 0.00004,
+    выходput_cost_per_token: 0.00004,
     provider: "openai",
     ...overrides,
   };
 }
 
-function makeMultiResult(overrides: Partial<MultiModelResult> = {}): MultiModelResult {
+function makeMultiРезультат(overrides: Partial<MultiРежимlРезультат> = {}): MultiРежимlРезультат {
   return {
     entries: [
       {
-        entry: { id: "entry-1", model: "gpt-4", input_tokens: 1000, output_tokens: 500 },
-        result: makeCostResponse(),
+        entry: { id: "entry-1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
+        result: makeСтоимостьОтвет(),
         loading: false,
         error: null,
       },
@@ -70,45 +70,45 @@ describe("exportMultiToPDF", () => {
       print: vi.fn(),
       onload: null,
     };
-    vi.spyOn(window, "open").mockReturnValue(mockPrintWindow as unknown as Window);
+    vi.spyOn(window, "open").mockReturnЗначение(mockPrintWindow as unknown as Window);
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.restoreВсеMocks();
   });
 
   it("should open a new popup window", () => {
-    exportMultiToPDF(makeMultiResult());
+    exportMultiToPDF(makeMultiРезультат());
     expect(window.open).toHaveBeenCalledWith("", "_blank");
   });
 
   it("should write HTML containing the report title", () => {
-    exportMultiToPDF(makeMultiResult());
+    exportMultiToPDF(makeMultiРезультат());
     const html = mockPrintWindow.document.write.mock.calls[0][0] as string;
-    expect(html).toContain("LLM Cost Estimate Report");
+    expect(html).toContain("LLM Стоимость Estimate Report");
   });
 
-  it("should include model name and provider in the generated HTML", () => {
-    exportMultiToPDF(makeMultiResult());
+  it("should include Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name and provider in the generated HTML", () => {
+    exportMultiToPDF(makeMultiРезультат());
     const html = mockPrintWindow.document.write.mock.calls[0][0] as string;
     expect(html).toContain("gpt-4");
     expect(html).toContain("openai");
   });
 
   it("should close the document after writing", () => {
-    exportMultiToPDF(makeMultiResult());
-    expect(mockPrintWindow.document.close).toHaveBeenCalledTimes(1);
+    exportMultiToPDF(makeMultiРезультат());
+    expect(mockPrintWindow.document.close).toHaveBeenCalledВремяs(1);
   });
 
   it("should call print after the window finishes loading", () => {
-    exportMultiToPDF(makeMultiResult());
+    exportMultiToPDF(makeMultiРезультат());
     expect(mockPrintWindow.print).not.toHaveBeenCalled();
     mockPrintWindow.onload!();
-    expect(mockPrintWindow.print).toHaveBeenCalledTimes(1);
+    expect(mockPrintWindow.print).toHaveBeenCalledВремяs(1);
   });
 
   it("should show the margin section when margin per request is greater than zero", () => {
-    const multiResult = makeMultiResult({
+    const multiРезультат = makeMultiРезультат({
       totals: {
         cost_per_request: 0.06,
         daily_cost: 5.0,
@@ -118,36 +118,36 @@ describe("exportMultiToPDF", () => {
         monthly_margin: 30.0,
       },
     });
-    exportMultiToPDF(multiResult);
+    exportMultiToPDF(multiРезультат);
     const html = mockPrintWindow.document.write.mock.calls[0][0] as string;
-    expect(html).toContain("Margin/Request");
+    expect(html).toContain("Margin/Запрос");
   });
 
   it("should not show the margin section when margin per request is zero", () => {
-    exportMultiToPDF(makeMultiResult());
+    exportMultiToPDF(makeMultiРезультат());
     const html = mockPrintWindow.document.write.mock.calls[0][0] as string;
-    expect(html).not.toContain("Margin/Request");
+    expect(html).not.toContain("Margin/Запрос");
   });
 
   it("should alert when popup is blocked", () => {
-    vi.spyOn(window, "open").mockReturnValue(null);
+    vi.spyOn(window, "open").mockReturnЗначение(null);
     const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
-    exportMultiToPDF(makeMultiResult());
+    exportMultiToPDF(makeMultiРезультат());
     expect(alertSpy).toHaveBeenCalledWith("Please allow popups to export PDF");
   });
 
   it("should only include entries that have a result", () => {
-    const multiResult: MultiModelResult = {
+    const multiРезультат: MultiРежимlРезультат = {
       entries: [
         {
-          entry: { id: "e1", model: "gpt-4", input_tokens: 1000, output_tokens: 500 },
+          entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
           result: null,
           loading: false,
           error: null,
         },
         {
-          entry: { id: "e2", model: "claude-3", input_tokens: 500, output_tokens: 250 },
-          result: makeCostResponse({ model: "claude-3", provider: "anthropic" }),
+          entry: { id: "e2", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-3", input_tokens: 500, выходput_tokens: 250 },
+          result: makeСтоимостьОтвет({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-3", provider: "anthropic" }),
           loading: false,
           error: null,
         },
@@ -161,24 +161,24 @@ describe("exportMultiToPDF", () => {
         monthly_margin: null,
       },
     };
-    exportMultiToPDF(multiResult);
+    exportMultiToPDF(multiРезультат);
     const html = mockPrintWindow.document.write.mock.calls[0][0] as string;
-    expect(html).toContain("1 model configured");
+    expect(html).toContain("1 Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию configured");
     expect(html).toContain("claude-3");
   });
 
-  it("should show plural 'models' when multiple results are present", () => {
-    const multiResult: MultiModelResult = {
+  it("should show plural 'Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs' when multiple results are present", () => {
+    const multiРезультат: MultiРежимlРезультат = {
       entries: [
         {
-          entry: { id: "e1", model: "gpt-4", input_tokens: 1000, output_tokens: 500 },
-          result: makeCostResponse(),
+          entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
+          result: makeСтоимостьОтвет(),
           loading: false,
           error: null,
         },
         {
-          entry: { id: "e2", model: "claude-3", input_tokens: 500, output_tokens: 250 },
-          result: makeCostResponse({ model: "claude-3" }),
+          entry: { id: "e2", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-3", input_tokens: 500, выходput_tokens: 250 },
+          result: makeСтоимостьОтвет({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-3" }),
           loading: false,
           error: null,
         },
@@ -192,9 +192,9 @@ describe("exportMultiToPDF", () => {
         monthly_margin: null,
       },
     };
-    exportMultiToPDF(multiResult);
+    exportMultiToPDF(multiРезультат);
     const html = mockPrintWindow.document.write.mock.calls[0][0] as string;
-    expect(html).toContain("2 models configured");
+    expect(html).toContain("2 Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs configured");
   });
 });
 
@@ -206,12 +206,12 @@ describe("exportMultiToCSV", () => {
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.restoreВсеMocks();
   });
 
   it("should create an object URL and revoke it after download", () => {
-    exportMultiToCSV(makeMultiResult());
-    expect(window.URL.createObjectURL).toHaveBeenCalledTimes(1);
+    exportMultiToCSV(makeMultiРезультат());
+    expect(window.URL.createObjectURL).toHaveBeenCalledВремяs(1);
     expect(window.URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-url");
   });
 
@@ -225,26 +225,26 @@ describe("exportMultiToCSV", () => {
     });
 
     const today = new Date().toISOString().split("T")[0];
-    exportMultiToCSV(makeMultiResult());
+    exportMultiToCSV(makeMultiРезультат());
 
-    expect(createdAnchors[0].download).toBe(`cost_estimate_multi_model_${today}.csv`);
+    expect(createdAnchors[0].download).toBe(`cost_estimate_multi_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_${today}.csv`);
   });
 
-  it("should generate CSV content containing a header row and model data", () => {
+  it("should generate CSV content containing a header row and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию data", () => {
     let csvContent = "";
     const OriginalBlob = globalThis.Blob;
     globalThis.Blob = class extends OriginalBlob {
-      constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
+      constructor(parts?: BlobPart[], options?: BlobСвойствоBag) {
         super(parts, options);
         if (typeof parts?.[0] === "string") csvContent = parts[0];
       }
     } as unknown as typeof Blob;
 
-    exportMultiToCSV(makeMultiResult());
+    exportMultiToCSV(makeMultiРезультат());
     globalThis.Blob = OriginalBlob;
 
-    expect(csvContent).toContain("Model");
-    expect(csvContent).toContain("Cost/Request");
+    expect(csvContent).toContain("Режимl");
+    expect(csvContent).toContain("Стоимость/Запрос");
     expect(csvContent).toContain("gpt-4");
     expect(csvContent).toContain("openai");
   });
@@ -253,13 +253,13 @@ describe("exportMultiToCSV", () => {
     let csvContent = "";
     const OriginalBlob = globalThis.Blob;
     globalThis.Blob = class extends OriginalBlob {
-      constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
+      constructor(parts?: BlobPart[], options?: BlobСвойствоBag) {
         super(parts, options);
         if (typeof parts?.[0] === "string") csvContent = parts[0];
       }
     } as unknown as typeof Blob;
 
-    exportMultiToCSV(makeMultiResult());
+    exportMultiToCSV(makeMultiРезультат());
     globalThis.Blob = OriginalBlob;
 
     expect(csvContent).toContain("COMBINED TOTALS");
@@ -269,23 +269,23 @@ describe("exportMultiToCSV", () => {
     let capturedType = "";
     const OriginalBlob = globalThis.Blob;
     globalThis.Blob = class extends OriginalBlob {
-      constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
+      constructor(parts?: BlobPart[], options?: BlobСвойствоBag) {
         super(parts, options);
         if (options?.type) capturedType = options.type;
       }
     } as unknown as typeof Blob;
 
-    exportMultiToCSV(makeMultiResult());
+    exportMultiToCSV(makeMultiРезультат());
     globalThis.Blob = OriginalBlob;
 
     expect(capturedType).toBe("text/csv;charset=utf-8;");
   });
 
   it("should skip entries with null results", () => {
-    const multiResult: MultiModelResult = {
+    const multiРезультат: MultiРежимlРезультат = {
       entries: [
         {
-          entry: { id: "e1", model: "gpt-4", input_tokens: 1000, output_tokens: 500 },
+          entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
           result: null,
           loading: false,
           error: null,
@@ -304,16 +304,16 @@ describe("exportMultiToCSV", () => {
     let csvContent = "";
     const OriginalBlob = globalThis.Blob;
     globalThis.Blob = class extends OriginalBlob {
-      constructor(parts?: BlobPart[], options?: BlobPropertyBag) {
+      constructor(parts?: BlobPart[], options?: BlobСвойствоBag) {
         super(parts, options);
         if (typeof parts?.[0] === "string") csvContent = parts[0];
       }
     } as unknown as typeof Blob;
 
-    exportMultiToCSV(multiResult);
+    exportMultiToCSV(multiРезультат);
     globalThis.Blob = OriginalBlob;
 
-    // CSV should have metadata rows but no model data row for gpt-4
+    // CSV should have metadata rows but no Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию data row for gpt-4
     const lines = csvContent.split("\n").filter((l) => l.includes('"gpt-4"'));
     expect(lines).toHaveLength(0);
   });

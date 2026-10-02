@@ -170,34 +170,34 @@ const AddPluginForm: React.FC<AddPluginFormProps> = ({ visible, onClose, accessT
 
   const handleSubmit = async (values: AddPluginFormValues) => {
     if (!accessToken) {
-      toast.error("No access token available");
+      toast.error("Токен доступа недоступен");
       return;
     }
 
     if (!urlPreview) {
-      toast.error("Please enter a valid repository or zip archive URL");
+      toast.error("Введите корректный URL репозитория или zip-архива");
       return;
     }
 
     if (!validatePluginName(values.name)) {
-      toast.error("Skill name must be kebab-case (lowercase letters, numbers, and hyphens only)");
+      toast.error("Название скилла должно быть в kebab-case (строчные буквы, цифры и дефисы)");
       return;
     }
 
     if (values.version && !isValidSemanticVersion(values.version)) {
-      toast.error("Version must be in semantic versioning format (e.g., 1.0.0)");
+      toast.error("Версия должна быть в формате семантического версионирования (напр. 1.0.0)");
       return;
     }
 
     if (values.authorEmail && !isValidEmail(values.authorEmail)) {
-      toast.error("Invalid email format");
+      toast.error("Некорректный формат email");
       return;
     }
 
     setIsSubmitting(true);
     try {
       await registerClaudeCodePlugin(accessToken, buildRegisterRequest(values, urlPreview.parsed));
-      toast.success("Skill registered successfully");
+      toast.success("Скилл зарегистрирован");
       form.reset(EMPTY_VALUES);
       setUrlPreview(null);
       setSubPathLock(null);
@@ -222,7 +222,7 @@ const AddPluginForm: React.FC<AddPluginFormProps> = ({ visible, onClose, accessT
     <Dialog open={visible} onOpenChange={(open) => !open && handleCancel()}>
       <DialogContent className="top-8 max-h-[calc(100dvh-4rem)] translate-y-0 overflow-y-auto sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>Add New Skill</DialogTitle>
+          <DialogTitle>Добавить новый скилл</DialogTitle>
         </DialogHeader>
         <TooltipProvider>
           <form onSubmit={form.handleSubmit(handleSubmit)} noValidate className="mt-4">
@@ -290,7 +290,7 @@ const AddPluginForm: React.FC<AddPluginFormProps> = ({ visible, onClose, accessT
 
               {urlPreview && (
                 <div className="rounded-lg border border-info/20 bg-info/10 px-3 py-2 text-sm text-info">
-                  Detected: {urlPreview.label}
+                  Обнаружено: {urlPreview.label}
                 </div>
               )}
 
@@ -310,7 +310,7 @@ const AddPluginForm: React.FC<AddPluginFormProps> = ({ visible, onClose, accessT
                   className="flex-1"
                 >
                   {({ ref, ...field }) => (
-                    <Input {...field} ref={ref} placeholder="Productivity" className="rounded-lg" />
+                    <Input {...field} ref={ref} placeholder="Продуктивность" className="rounded-lg" />
                   )}
                 </FormField>
                 <FormField
@@ -351,12 +351,12 @@ const AddPluginForm: React.FC<AddPluginFormProps> = ({ visible, onClose, accessT
                       id={id}
                       aria-invalid={ariaInvalid}
                       aria-describedby={ariaDescribedBy}
-                      placeholder="Select or type a category"
+                      placeholder="Выберите или введите категорию"
                       className="w-full rounded-lg"
                       showClear={value != null && value !== ""}
                     />
                     <ComboboxContent>
-                      <ComboboxEmpty>No matching categories</ComboboxEmpty>
+                      <ComboboxEmpty>Нет подходящих категорий</ComboboxEmpty>
                       <ComboboxList>
                         {(category: string) => (
                           <ComboboxItem key={category} value={category}>
@@ -393,7 +393,7 @@ const AddPluginForm: React.FC<AddPluginFormProps> = ({ visible, onClose, accessT
                 label={labelWithHint("Author Name (Optional)", "Name of the skill author or organization")}
               >
                 {({ ref, ...field }) => (
-                  <Input {...field} ref={ref} placeholder="Your Name or Organization" className="rounded-lg" />
+                  <Input {...field} ref={ref} placeholder="Ваше имя или организация" className="rounded-lg" />
                 )}
               </FormField>
 

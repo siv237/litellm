@@ -13,22 +13,22 @@ vi.mock("@/components/networking", () => ({
 }));
 
 vi.mock("@/lib/toast", () => ({
-  toast: { success: vi.fn(), fromError: vi.fn() },
+  toast: { success: vi.fn(), fromОшибка: vi.fn() },
 }));
 
 const mockConvert = vi.mocked(convertPromptFileToJson);
 const mockCreate = vi.mocked(createPromptCall);
-const mockFromBackend = vi.mocked(toast.fromError);
+const mockFromBackend = vi.mocked(toast.fromОшибка);
 const mockSuccess = vi.mocked(toast.success);
 
-const PROMPT_ID_PLACEHOLDER = "Enter unique prompt ID (e.g., my_prompt_id)";
+const PROMPT_ID_PLACEHOLDER = "Введите уникальный ID промпта (напр. my_prompt_id)";
 
-const CONVERTED_JSON = { model: "gpt-4o", messages: [{ role: "user", content: "hi {{name}}" }] };
+const CONVERTED_JSON = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o", messages: [{ role: "user", content: "hi {{name}}" }] };
 
 const renderForm = () => {
   const onClose = vi.fn();
   const onSuccess = vi.fn();
-  render(<AddPromptForm visible onClose={onClose} accessToken="sk-test" onSuccess={onSuccess} />);
+  render(<AddPromptForm visible onClose={onClose} accessТокен="sk-test" onSuccess={onSuccess} />);
   return { onClose, onSuccess };
 };
 
@@ -36,11 +36,11 @@ const typePromptId = (value: string) =>
   fireEvent.change(screen.getByPlaceholderText(PROMPT_ID_PLACEHOLDER), { target: { value } });
 
 const attachPromptFile = async (file: File) => {
-  const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+  const fileВход = document.queryВыбратьor('input[type="file"]') as HTMLВходElement;
   await act(async () => {
-    fireEvent.change(fileInput, { target: { files: [file] } });
+    fireEvent.change(fileВход, { target: { files: [file] } });
   });
-  await screen.findByText(`Selected: ${file.name}`);
+  await screen.findByText(`Выбрано: ${file.name}`);
 };
 
 const submit = async () => {
@@ -51,14 +51,14 @@ const submit = async () => {
 
 describe("AddPromptForm", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockConvert.mockResolvedValue({ prompt_id: "converted_prompt_id", json_data: CONVERTED_JSON });
-    mockCreate.mockResolvedValue({ status: "success" });
+    vi.clearВсеMocks();
+    mockConvert.mockResolvedЗначение({ prompt_id: "converted_prompt_id", json_data: CONVERTED_JSON });
+    mockCreate.mockResolvedЗначение({ status: "success" });
   });
 
   it("sends the converted upload as the exact create-prompt payload, then closes and refreshes", async () => {
     const { onClose, onSuccess } = renderForm();
-    const file = new File(["model: gpt-4o"], "greeting.prompt", { type: "text/plain" });
+    const file = new File(["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4o"], "greeting.prompt", { type: "text/plain" });
 
     typePromptId("my_prompt_id");
     await attachPromptFile(file);
@@ -78,19 +78,19 @@ describe("AddPromptForm", () => {
       });
     });
     expect(mockConvert).toHaveBeenCalledWith("sk-test", file);
-    expect(mockSuccess).toHaveBeenCalledWith("Prompt created successfully!");
-    expect(onClose).toHaveBeenCalledTimes(1);
-    expect(onSuccess).toHaveBeenCalledTimes(1);
+    expect(mockSuccess).toHaveBeenCalledWith("Промпт создан");
+    expect(onClose).toHaveBeenCalledВремяs(1);
+    expect(onSuccess).toHaveBeenCalledВремяs(1);
   });
 
-  it("refuses to submit without an uploaded file", async () => {
+  it("refuses to submit withвыход an uploaded file", async () => {
     renderForm();
 
     typePromptId("my_prompt_id");
     await submit();
 
     await waitFor(() => {
-      expect(mockFromBackend).toHaveBeenCalledWith("Please upload a .prompt file");
+      expect(mockFromBackend).toHaveBeenCalledWith("Загрузите файл .prompt");
     });
     expect(mockConvert).not.toHaveBeenCalled();
     expect(mockCreate).not.toHaveBeenCalled();
@@ -107,14 +107,14 @@ describe("AddPromptForm", () => {
 
   it("blocks submission and reports a prompt ID with unsupported characters", async () => {
     renderForm();
-    const file = new File(["model: gpt-4o"], "greeting.prompt", { type: "text/plain" });
+    const file = new File(["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4o"], "greeting.prompt", { type: "text/plain" });
 
     typePromptId("my prompt!");
     await attachPromptFile(file);
     await submit();
 
     expect(
-      await screen.findByText("Prompt ID can only contain letters, numbers, underscores, and hyphens"),
+      await screen.findByText("ID промпта can only contain letters, numbers, underscores, and hyphens"),
     ).toBeInTheDocument();
     expect(mockCreate).not.toHaveBeenCalled();
   });

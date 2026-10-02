@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { filterKeyActivity, keyActivityMatches } from "./keyActivityFilter";
-import type { KeyMetadata, ModelActivityData } from "./types";
+import { filterКлючActivity, keyActivityMatches } from "./keyActivityФильтр";
+import type { КлючМетаданные, РежимlActivityData } from "./types";
 
-function activity(label: string, key_metadata?: KeyMetadata): ModelActivityData {
+function activity(label: string, key_metadata?: КлючМетаданные): РежимlActivityData {
   return {
     label,
     key_metadata,
@@ -17,18 +17,18 @@ function activity(label: string, key_metadata?: KeyMetadata): ModelActivityData 
     completion_tokens: 5,
     total_spend: 0.01,
     top_api_keys: [],
-    top_models: [],
+    top_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
     daily_data: [],
   };
 }
 
-const aliceMeta: KeyMetadata = {
+const aliceMeta: КлючМетаданные = {
   key_alias: "alice-batch",
   team_id: "team-research",
   user_id: "user-alice-1234",
   user_email: "alice@example.com",
 };
-const bobMeta: KeyMetadata = {
+const bobMeta: КлючМетаданные = {
   key_alias: null,
   team_id: "team-research",
   user_id: "user-bob-5678",
@@ -38,7 +38,7 @@ const alice = activity("alice-batch (team: research)", aliceMeta);
 const bob = activity("bob@example.com (team: research)", bobMeta);
 const orphan = activity("key-hash-deadbeef", { key_alias: null, team_id: null });
 
-const keyMetrics: Record<string, ModelActivityData> = {
+const keyМетрикаs: Record<string, РежимlActivityData> = {
   "hash-alice": alice,
   "hash-bob": bob,
   deadbeef: orphan,
@@ -75,17 +75,17 @@ describe("keyActivityMatches", () => {
   });
 });
 
-describe("filterKeyActivity", () => {
+describe("filterКлючActivity", () => {
   it("returns the same object when the query is blank", () => {
-    expect(filterKeyActivity(keyMetrics, "")).toBe(keyMetrics);
+    expect(filterКлючActivity(keyМетрикаs, "")).toBe(keyМетрикаs);
   });
 
   it("keeps only the keys matching the query, preserving their hashes", () => {
-    expect(Object.keys(filterKeyActivity(keyMetrics, "example.com"))).toEqual(["hash-alice", "hash-bob"]);
-    expect(filterKeyActivity(keyMetrics, "user-bob")).toEqual({ "hash-bob": bob });
+    expect(Object.keys(filterКлючActivity(keyМетрикаs, "example.com"))).toEqual(["hash-alice", "hash-bob"]);
+    expect(filterКлючActivity(keyМетрикаs, "user-bob")).toEqual({ "hash-bob": bob });
   });
 
   it("returns an empty record when nothing matches", () => {
-    expect(filterKeyActivity(keyMetrics, "nobody")).toEqual({});
+    expect(filterКлючActivity(keyМетрикаs, "nobody")).toEqual({});
   });
 });

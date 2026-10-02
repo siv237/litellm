@@ -74,22 +74,22 @@ const S3VectorsConfig: React.FC<S3VectorsConfigProps> = ({ accessToken, provider
     <TooltipProvider>
       <Alert variant="info" className="mb-4">
         <Info />
-        <AlertTitle>AWS S3 Vectors Setup</AlertTitle>
+        <AlertTitle>Настройка AWS S3 Vectors</AlertTitle>
         <AlertDescription>
           <div>
-            <p>AWS S3 Vectors allows you to store and query vector embeddings directly in S3:</p>
+            <p>AWS S3 Vectors позволяет хранить и запрашивать векторные эмбеддинги прямо в S3:</p>
             <ul style={{ marginLeft: "16px", marginTop: "8px" }}>
-              <li>Vector buckets and indexes will be automatically created if they don&apos;t exist</li>
-              <li>Vector dimensions are auto-detected from your selected embedding model</li>
-              <li>Ensure your AWS credentials have permissions for S3 Vectors operations</li>
+              <li>Векторные бакеты и индексы создадутся автоматически, если ещё не существуют</li>
+              <li>Размерность векторов определяется автоматически по выбранной эмбеддинг-модели</li>
+              <li>Убедитесь, что вашим учётным данным AWS разрешены операции S3 Vectors</li>
               <li>
-                Learn more:{" "}
+                Подробнее:{" "}
                 <a
                   href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vector-buckets.html"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  AWS S3 Vectors Documentation
+                  Документация AWS S3 Vectors
                 </a>
               </li>
             </ul>
@@ -108,7 +108,7 @@ const S3VectorsConfig: React.FC<S3VectorsConfigProps> = ({ accessToken, provider
           id="s3-vector-bucket-name"
           value={bucketName}
           onChange={(e) => handleFieldChange("vector_bucket_name", e.target.value)}
-          placeholder="my-vector-bucket (min 3 chars)"
+          placeholder="my-vector-bucket (мин. 3 символа)"
           aria-invalid={bucketNameError !== undefined || undefined}
         />
         <FieldError>{bucketNameError}</FieldError>
@@ -125,7 +125,7 @@ const S3VectorsConfig: React.FC<S3VectorsConfigProps> = ({ accessToken, provider
           id="s3-index-name"
           value={indexName}
           onChange={(e) => handleFieldChange("index_name", e.target.value)}
-          placeholder="my-vector-index (optional, min 3 chars)"
+          placeholder="my-vector-index (необязательно, мин. 3 символа)"
           aria-invalid={indexNameError !== undefined || undefined}
         />
         <FieldError>{indexNameError}</FieldError>
@@ -152,7 +152,7 @@ const S3VectorsConfig: React.FC<S3VectorsConfigProps> = ({ accessToken, provider
           onValueChange={(value: string | null) => value !== null && handleFieldChange("embedding_model", value)}
           items={embeddingModels.map((model) => model.model_group)}
         >
-          <ComboboxInput id="s3-embedding-model" placeholder="Select an embedding model" />
+          <ComboboxInput id="s3-embedding-model" placeholder="Выберите эмбеддинг-модель" />
           <ComboboxContent>
             <ComboboxEmpty>{isLoadingModels ? "Loading models..." : "No embedding models found."}</ComboboxEmpty>
             <ComboboxList>

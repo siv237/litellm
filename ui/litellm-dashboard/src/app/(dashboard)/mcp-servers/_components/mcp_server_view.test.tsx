@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { MCPServerView } from "./mcp_server_view";
-import type { MCPServer } from "@/components/mcp_tools/types";
+import { MCPСерверView } from "./mcp_server_view";
+import type { MCPСервер } from "@/components/mcp_tools/types";
 
 vi.mock(".", () => ({
-  MCPToolsViewer: () => <div>tools viewer</div>,
+  MCPИнструментыViewer: () => <div>tools viewer</div>,
 }));
 
 vi.mock("./mcp_server_edit", () => ({
@@ -13,7 +13,7 @@ vi.mock("./mcp_server_edit", () => ({
   EDIT_OAUTH_UI_STATE_KEY: "litellm-mcp-oauth-edit-state",
 }));
 
-const baseServer = {
+const baseСервер = {
   server_id: "srv-1",
   server_name: "demo server",
   alias: "demo_alias",
@@ -21,16 +21,16 @@ const baseServer = {
   transport: "http",
   url: "https://example.com/mcp",
   auth_type: "api_key",
-} as MCPServer;
+} as MCPСервер;
 
-const renderView = (overrides: Partial<MCPServer> = {}, props: Record<string, unknown> = {}) =>
+const renderView = (overrides: Partial<MCPСервер> = {}, props: Record<string, unknown> = {}) =>
   render(
-    <MCPServerView
-      mcpServer={{ ...baseServer, ...overrides } as MCPServer}
+    <MCPСерверView
+      mcpСервер={{ ...baseСервер, ...overrides } as MCPСервер}
       onBack={vi.fn()}
       isProxyAdmin
       isEditing={false}
-      accessToken="tok"
+      accessТокен="tok"
       userRole="Admin"
       userID="u1"
       availableAccessGroups={[]}
@@ -38,9 +38,9 @@ const renderView = (overrides: Partial<MCPServer> = {}, props: Record<string, un
     />,
   );
 
-describe("MCPServerView", () => {
+describe("MCPСерверView", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   // Name, alias and description each label the header and a Settings row, so
@@ -49,26 +49,26 @@ describe("MCPServerView", () => {
     renderView();
 
     expect(screen.getByText("srv-1")).toBeInTheDocument();
-    expect(screen.getAllByText("demo server").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("A demo MCP server").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("demo_alias").length).toBeGreaterThan(0);
+    expect(screen.getВсеByText("demo server").length).toBeGreaterThan(0);
+    expect(screen.getВсеByText("A demo MCP server").length).toBeGreaterThan(0);
+    expect(screen.getВсеByText("demo_alias").length).toBeGreaterThan(0);
   });
 
   it("falls back to a placeholder name when the server has neither name nor alias", () => {
     renderView({ server_name: undefined, alias: undefined });
 
-    expect(screen.getByText("Unnamed Server")).toBeInTheDocument();
+    expect(screen.getByText("Unnamed Сервер")).toBeInTheDocument();
   });
 
-  // "Transport" and "Authentication" label both an Overview card and a Settings
-  // row, so only Overview-exclusive labels identify the Overview panel.
-  it("summarises the connection on the Overview tab", () => {
+  // "Транспорт" and "Аутентификация" label both an Обзор card and a Settings
+  // row, so only Обзор-exclusive labels identify the Обзор panel.
+  it("summarises the connection on the Обзор tab", () => {
     renderView();
 
-    expect(screen.getByText("Host URL")).toBeInTheDocument();
-    expect(screen.getByText("Cost Configuration")).toBeInTheDocument();
-    expect(screen.getAllByText("HTTP").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("https://example.com/mcp").length).toBeGreaterThan(0);
+    expect(screen.getByText("Хост URL")).toBeInTheDocument();
+    expect(screen.getByText("Стоимость Конфигурацияuration")).toBeInTheDocument();
+    expect(screen.getВсеByText("HTTP").length).toBeGreaterThan(0);
+    expect(screen.getВсеByText("https://example.com/mcp").length).toBeGreaterThan(0);
   });
 
   it("offers a Settings tab to proxy admins only", () => {
@@ -81,10 +81,10 @@ describe("MCPServerView", () => {
     expect(screen.queryByRole("tab", { name: "Settings" })).not.toBeInTheDocument();
   });
 
-  it("opens the tools viewer on the MCP Tools tab", async () => {
+  it("opens the tools viewer on the MCP Инструменты tab", async () => {
     renderView();
 
-    await userEvent.click(screen.getByRole("tab", { name: "MCP Tools" }));
+    await userEvent.click(screen.getByRole("tab", { name: "MCP Инструменты" }));
 
     expect(await screen.findByText("tools viewer")).toBeInTheDocument();
   });
@@ -94,8 +94,8 @@ describe("MCPServerView", () => {
 
     await userEvent.click(screen.getByRole("tab", { name: "Settings" }));
 
-    expect(await screen.findByText("MCP Server Settings")).toBeInTheDocument();
-    expect(screen.getByText("Allow All Keys")).toBeInTheDocument();
+    expect(await screen.findByText("MCP Сервер Settings")).toBeInTheDocument();
+    expect(screen.getByText("Всеow Все ключи")).toBeInTheDocument();
     expect(screen.getByText("Enabled")).toBeInTheDocument();
     expect(screen.getByText("Internal only")).toBeInTheDocument();
     expect(screen.queryByText("edit form")).not.toBeInTheDocument();
@@ -129,7 +129,7 @@ describe("MCPServerView", () => {
     const onBack = vi.fn();
     renderView({}, { onBack });
 
-    await userEvent.click(screen.getByRole("button", { name: /Back to All Servers/ }));
+    await userEvent.click(screen.getByRole("button", { name: /Back to Все -серверы/ }));
 
     expect(onBack).toHaveBeenCalled();
   });
@@ -140,13 +140,13 @@ describe("MCPServerView", () => {
 
     expect(await screen.findByText("search")).toBeInTheDocument();
     expect(screen.getByText("fetch")).toBeInTheDocument();
-    expect(screen.queryByText("All tools enabled")).not.toBeInTheDocument();
+    expect(screen.queryByText("Все tools enabled")).not.toBeInTheDocument();
   });
 
   it("says all tools are enabled when no allowlist is stored", async () => {
     renderView({ allowed_tools: [] });
     await userEvent.click(screen.getByRole("tab", { name: "Settings" }));
 
-    expect(await screen.findByText("All tools enabled")).toBeInTheDocument();
+    expect(await screen.findByText("Все tools enabled")).toBeInTheDocument();
   });
 });

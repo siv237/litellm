@@ -33,32 +33,32 @@ export const buildSummaryTiles = (metadata: SpendSummaryMetadata, showFlatCost: 
   return [
     showFlatCost
       ? {
-          title: "Total Cost",
+          title: "Общая стоимость",
           value: `$${formatNumberWithCommas(metadata.total_spend + flatCost, 2)}`,
           tooltip: TOTAL_COST_TOOLTIP,
           expandable: true,
         }
-      : { title: "Total Spend", value: `$${formatNumberWithCommas(metadata.total_spend, 2)}` },
-    { title: "Total Requests", value: metadata.total_api_requests.toLocaleString() },
+      : { title: "Общий расход", value: `$${formatNumberWithCommas(metadata.total_spend, 2)}` },
+    { title: "Всего запросов", value: metadata.total_api_requests.toLocaleString() },
     {
-      title: "Successful Requests",
+      title: "Успешных запросов",
       value: metadata.total_successful_requests.toLocaleString(),
       className: "text-success",
     },
-    { title: "Failed Requests", value: metadata.total_failed_requests.toLocaleString(), className: "text-destructive" },
-    { title: "Total Tokens", value: metadata.total_tokens.toLocaleString() },
+    { title: "Запросов с ошибкой", value: metadata.total_failed_requests.toLocaleString(), className: "text-destructive" },
+    { title: "Всего токенов", value: metadata.total_tokens.toLocaleString() },
   ];
 };
 
 export const buildCostBreakdownTiles = (metadata: SpendSummaryMetadata): SummaryTile[] => [
   {
-    title: "Request Cost",
+    title: "Стоимость запроса",
     value: `$${formatNumberWithCommas(metadata.total_spend, 2)}`,
     className: "text-info",
     tooltip: REQUEST_COST_TOOLTIP,
   },
   {
-    title: "Flat Cost",
+    title: "Фиксированная стоимость",
     value: `$${formatNumberWithCommas(metadata.total_flat_cost ?? 0, 2)}`,
     className: "text-violet-600",
     tooltip: FLAT_COST_TOOLTIP,

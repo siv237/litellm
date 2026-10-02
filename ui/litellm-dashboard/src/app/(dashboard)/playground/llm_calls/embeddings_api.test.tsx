@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { makeOpenAIEmbeddingsRequest } from "./embeddings_api";
+import { makeOpenAIEmbeddingsЗапрос } from "./embeddings_api";
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: vi.fn(() => "https://example.com"),
-  getGlobalLitellmHeaderName: vi.fn(() => "Authorization"),
+  getГлобальноLitellmHeaderName: vi.fn(() => "Authorization"),
 }));
 
 describe("embeddings_api", () => {
@@ -11,7 +11,7 @@ describe("embeddings_api", () => {
   const mockFetch = vi.fn();
 
   beforeEach(() => {
-    mockFetch.mockResolvedValue({
+    mockFetch.mockResolvedЗначение({
       ok: true,
       json: async () => ({
         data: [
@@ -21,22 +21,22 @@ describe("embeddings_api", () => {
             object: "embedding",
           },
         ],
-        model: "text-embedding-3-small",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "text-embedding-3-small",
         object: "list",
       }),
       text: async () => "",
-    } as Response);
+    } as Ответ);
 
     // @ts-ignore - assigning to global for test environment
     global.fetch = mockFetch;
   });
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should make a request to the embeddings endpoint", async () => {
-    await makeOpenAIEmbeddingsRequest(
+    await makeOpenAIEmbeddingsЗапрос(
       "Hello, world!",
       mockUpdateEmbeddingsUI,
       "text-embedding-3-small",
@@ -44,7 +44,7 @@ describe("embeddings_api", () => {
       [],
     );
 
-    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(mockFetch).toHaveBeenCalledВремяs(1);
     expect(mockFetch).toHaveBeenCalledWith("https://example.com/embeddings", {
       method: "POST",
       headers: {
@@ -52,7 +52,7 @@ describe("embeddings_api", () => {
         Authorization: "Bearer 1234567890",
       },
       body: JSON.stringify({
-        model: "text-embedding-3-small",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "text-embedding-3-small",
         input: "Hello, world!",
       }),
     });
@@ -63,16 +63,16 @@ describe("embeddings_api", () => {
   });
 
   it("should not include encoding_format when making the request", async () => {
-    await makeOpenAIEmbeddingsRequest("Sample text", mockUpdateEmbeddingsUI, "text-embedding-3-small", "abcdef", []);
+    await makeOpenAIEmbeddingsЗапрос("Sample text", mockUpdateEmbeddingsUI, "text-embedding-3-small", "abcdef", []);
 
     const fetchCall = mockFetch.mock.calls[0];
-    const options = fetchCall[1] as RequestInit;
+    const options = fetchCall[1] as ЗапросInit;
     const body = options.body as string;
     const parsedBody = JSON.parse(body);
 
-    expect(parsedBody).not.toHaveProperty("encoding_format");
+    expect(parsedBody).not.toHaveСвойство("encoding_format");
     expect(parsedBody).toEqual({
-      model: "text-embedding-3-small",
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "text-embedding-3-small",
       input: "Sample text",
     });
   });

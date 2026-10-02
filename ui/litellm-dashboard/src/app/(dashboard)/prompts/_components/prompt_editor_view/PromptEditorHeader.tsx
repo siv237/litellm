@@ -7,9 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const ENVIRONMENT_ITEMS = [
-  { value: "development", label: "Development" },
-  { value: "staging", label: "Staging" },
-  { value: "production", label: "Production" },
+  { value: "development", label: "Разработка" },
+  { value: "staging", label: "Стейджинг" },
+  { value: "production", label: "Продакшен" },
 ] as const;
 
 interface PromptEditorHeaderProps {
@@ -56,7 +56,7 @@ const PromptEditorHeader: React.FC<PromptEditorHeaderProps> = ({
           Назад
         </Button>
         <Input
-          aria-label="Prompt name"
+          aria-label="Название промпта"
           value={promptName}
           onChange={(e) => onNameChange(e.target.value)}
           className="text-base font-medium border-none shadow-none"
@@ -68,7 +68,7 @@ const PromptEditorHeader: React.FC<PromptEditorHeaderProps> = ({
           value={environment}
           onValueChange={(value) => onEnvironmentChange(String(value))}
         >
-          <SelectTrigger size="sm" className="w-[140px]" aria-label="Environment">
+          <SelectTrigger size="sm" className="w-[140px]" aria-label="Окружение">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -79,8 +79,8 @@ const PromptEditorHeader: React.FC<PromptEditorHeaderProps> = ({
             ))}
           </SelectContent>
         </Select>
-        <Badge variant="secondary">Draft</Badge>
-        <span className="text-xs text-muted-foreground">Unsaved changes</span>
+        <Badge variant="secondary">Черновик</Badge>
+        <span className="text-xs text-muted-foreground">Несохранённые изменения</span>
       </div>
       <div className="flex items-center space-x-2">
         <PromptCodeSnippets
@@ -95,7 +95,7 @@ const PromptEditorHeader: React.FC<PromptEditorHeaderProps> = ({
         {editMode && onShowHistory && (
           <Button variant="outline" onClick={onShowHistory}>
             <ClockIcon />
-            History
+            История
           </Button>
         )}
         <Button onClick={onSave} disabled={isSaving}>

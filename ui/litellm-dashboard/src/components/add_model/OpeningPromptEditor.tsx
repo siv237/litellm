@@ -173,7 +173,7 @@ const OpeningPromptEditor: React.FC<OpeningPromptEditorProps> = ({
               })
             }
           >
-            Reset to default
+            Сбросить к значению по умолчанию
           </Button>
         )}
       </div>
@@ -182,13 +182,13 @@ const OpeningPromptEditor: React.FC<OpeningPromptEditorProps> = ({
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Classifier prompt</DialogTitle>
+            <DialogTitle>Промпт классификатора</DialogTitle>
           </DialogHeader>
 
           {tierSource.kind === "builtIn" && (
             <div>
               <label className="text-sm font-medium" htmlFor="base-classification-rubric">
-                Base rubric
+                Базовая рубрика
               </label>
               <Select
                 items={Object.entries(CLASSIFICATION_RUBRIC_DESCRIPTIONS).map(([rubric, description]) => ({
@@ -199,7 +199,7 @@ const OpeningPromptEditor: React.FC<OpeningPromptEditorProps> = ({
                 onValueChange={(rubric: ClassificationRubric | null) => rubric && setRubricDraft(rubric)}
                 disabled={Boolean(tierSource.rubricRestriction)}
               >
-                <SelectTrigger id="base-classification-rubric" aria-label="Base rubric" className="mt-1 w-full">
+                <SelectTrigger id="base-classification-rubric" aria-label="Базовая рубрика" className="mt-1 w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent
@@ -225,10 +225,10 @@ const OpeningPromptEditor: React.FC<OpeningPromptEditorProps> = ({
           <div className="mt-3 space-y-4">
             <div>
               <label className="text-sm font-medium" htmlFor="classification-instructions">
-                Classification instructions
+                Инструкции классификации
               </label>
               <p className="mt-1 text-xs text-muted-foreground">
-                Explain what the classifier should judge. Tier definitions are managed separately below.
+                Опишите, что должен оценивать классификатор. Определения уровней настраиваются отдельно ниже.
               </p>
               <Textarea
                 id="classification-instructions"
@@ -236,18 +236,17 @@ const OpeningPromptEditor: React.FC<OpeningPromptEditorProps> = ({
                 onChange={(e) => setInstructionDraft(e.target.value)}
                 rows={5}
                 placeholder={copy.placeholder}
-                aria-label="Classification instructions"
+                aria-label="Инструкции классификации"
                 className="mt-2 font-mono text-xs"
               />
             </div>
 
             <div>
               <label className="text-sm font-medium" htmlFor="calibration-examples">
-                Calibration examples
+                Примеры калибровки
               </label>
               <p className="mt-1 text-xs text-muted-foreground">
-                Show representative requests and the tier they should receive. The router adds these after its tier
-                definitions.
+                Покажите типичные запросы и уровни для них. Роутер добавит их после своих определений уровней.
               </p>
               <Textarea
                 id="calibration-examples"
@@ -255,25 +254,25 @@ const OpeningPromptEditor: React.FC<OpeningPromptEditorProps> = ({
                 onChange={(e) => setExampleDraft(e.target.value)}
                 rows={6}
                 placeholder={'- "what is the capital of France?" -> SIMPLE'}
-                aria-label="Calibration examples"
+                aria-label="Примеры калибровки"
                 className="mt-2 font-mono text-xs"
               />
             </div>
           </div>
 
           <div className="mt-3">
-            <p className="text-xs font-medium">What this router sends</p>
+            <p className="text-xs font-medium">Что отправляет этот роутер</p>
             {preview.status === "loading" && (
-              <p className="mt-1 text-xs text-muted-foreground">Loading the assembled prompt…</p>
+              <p className="mt-1 text-xs text-muted-foreground">Загрузка собранного промпта…</p>
             )}
             {preview.status === "error" && (
               <p className="mt-1 text-xs text-muted-foreground">
-                Could not load the assembled prompt. Your text is still saved as written.
+                Не удалось загрузить собранный промпт. Ваш текст сохранён как есть.
               </p>
             )}
             {preview.status === "ready" && (
               <pre
-                aria-label="Assembled classifier prompt"
+                aria-label="Собранный промпт классификатора"
                 className="mt-1 overflow-x-auto rounded-md bg-muted p-3 font-mono text-xs whitespace-pre-wrap text-muted-foreground"
               >
                 {preview.text}
@@ -286,7 +285,7 @@ const OpeningPromptEditor: React.FC<OpeningPromptEditorProps> = ({
               Отмена
             </Button>
             <Button type="button" onClick={handleSave}>
-              Save prompt
+              Сохранить промпт
             </Button>
           </DialogFooter>
         </DialogContent>

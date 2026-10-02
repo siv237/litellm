@@ -147,7 +147,7 @@ export const MemoryView: React.FC<MemoryViewProps> = ({ accessToken }) => {
       try {
         metadataPayload = JSON.parse(metadataText);
       } catch {
-        toast.error("Metadata must be valid JSON (or leave empty).");
+        toast.error("Метаданные должны быть корректным JSON (или оставьте пустыми).");
         return false;
       }
     }
@@ -178,9 +178,9 @@ export const MemoryView: React.FC<MemoryViewProps> = ({ accessToken }) => {
       <div className="flex flex-col gap-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-semibold text-foreground">Memory</h1>
+            <h1 className="text-2xl font-semibold text-foreground">Память</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Inspect what your agents have stored under{" "}
+              Посмотрите, что ваши агенты сохранили в{" "}
               <code className="rounded-sm border border-border bg-muted px-1 py-0.5 font-mono text-xs text-foreground">
                 /v1/memory
               </code>
@@ -189,7 +189,7 @@ export const MemoryView: React.FC<MemoryViewProps> = ({ accessToken }) => {
           </div>
           <Button onClick={() => setIsCreateOpen(true)}>
             <Plus />
-            New memory
+            Новая запись памяти
           </Button>
         </div>
 
@@ -228,16 +228,16 @@ export const MemoryView: React.FC<MemoryViewProps> = ({ accessToken }) => {
       {/* Delete confirmation modal */}
       <DeleteResourceModal
         isOpen={!!deleteRow}
-        title="Delete memory"
+        title="Удалить запись памяти"
         message="This action cannot be undone."
         resourceInformationTitle="Memory"
         resourceInformation={
           deleteRow
             ? [
-                { label: "Key", value: deleteRow.key, code: true },
-                { label: "Memory ID", value: deleteRow.memory_id, code: true },
-                { label: "User ID", value: deleteRow.user_id ?? "-", code: true },
-                { label: "Team ID", value: deleteRow.team_id ?? "-", code: true },
+                { label: "Ключ", value: deleteRow.key, code: true },
+                { label: "ID памяти", value: deleteRow.memory_id, code: true },
+                { label: "ID пользователя", value: deleteRow.user_id ?? "-", code: true },
+                { label: "ID команды", value: deleteRow.team_id ?? "-", code: true },
               ]
             : []
         }

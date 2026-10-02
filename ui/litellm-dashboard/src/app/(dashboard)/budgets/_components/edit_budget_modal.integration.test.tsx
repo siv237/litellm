@@ -5,18 +5,18 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { components } from "@/lib/http/schema";
 
-import EditBudgetModal from "./edit_budget_modal";
-import { chooseSelectOption } from "../../../../../tests/test-utils";
+import EditБюджетModal from "./edit_budget_modal";
+import { chooseВыбратьOption } from "../../../../../tests/test-utils";
 
 const { updateMock } = vi.hoisted(() => ({ updateMock: vi.fn() }));
 
-vi.mock("@/app/(dashboard)/hooks/budgets/useBudgets", () => ({
-  useUpdateBudget: () => ({ mutateAsync: updateMock }),
+vi.mock("@/app/(dashboard)/hooks/budgets/useБюджеты", () => ({
+  useUpdateБюджет: () => ({ mutateAsync: updateMock }),
 }));
 
-type BudgetItem = components["schemas"]["BudgetListItem"];
+type БюджетItem = components["schemas"]["БюджетListItem"];
 
-const EXISTING_BUDGET: BudgetItem = {
+const EXISTING_BUDGET: БюджетItem = {
   budget_id: "budget-alpha",
   max_budget: 100,
   budget_duration: "7d",
@@ -29,31 +29,31 @@ const EXISTING_BUDGET: BudgetItem = {
 };
 
 const renderModal = () =>
-  render(<EditBudgetModal isModalVisible={true} setIsModalVisible={vi.fn()} existingBudget={EXISTING_BUDGET} />);
+  render(<EditБюджетModal isModalVisible={true} setIsModalVisible={vi.fn()} existingБюджет={EXISTING_BUDGET} />);
 
 const save = async (user: ReturnType<typeof userEvent.setup>) =>
   user.click(screen.getByRole("button", { name: "Save" }));
 
 const openOptionalSettings = async (user: ReturnType<typeof userEvent.setup>) => {
-  await user.click(screen.getByText("Optional Settings"));
-  await screen.findByLabelText("Max Budget (USD)");
+  await user.click(screen.getByText("Дополнительные параметры"));
+  await screen.findByLabelText("Макс. бюджет (USD)");
 };
 
-describe("EditBudgetModal", () => {
+describe("EditБюджетModal", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    updateMock.mockResolvedValue(undefined);
+    vi.clearВсеMocks();
+    updateMock.mockResolvedЗначение(undefined);
   });
 
-  it("submits only the mounted fields when Optional Settings stays collapsed", async () => {
+  it("submits only the mounted fields when Дополнительные параметры stays collapsed", async () => {
     const user = userEvent.setup();
     renderModal();
 
-    await user.clear(screen.getByLabelText("Max Tokens per minute"));
-    fireEvent.change(screen.getByLabelText("Max Tokens per minute"), { target: { value: "500.567" } });
+    await user.clear(screen.getByLabelText("Макс. токенов в минуту"));
+    fireEvent.change(screen.getByLabelText("Макс. токенов в минуту"), { target: { value: "500.567" } });
     await save(user);
 
-    await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(updateMock).toHaveBeenCalledВремяs(1));
     expect(updateMock.mock.calls[0][0]).toEqual({
       budget_id: "budget-alpha",
       tpm_limit: 500.57,
@@ -61,24 +61,24 @@ describe("EditBudgetModal", () => {
     });
   });
 
-  it("submits every field once Optional Settings is expanded", async () => {
+  it("submits every field once Дополнительные параметры is expanded", async () => {
     const user = userEvent.setup();
     renderModal();
 
-    await user.clear(screen.getByLabelText("Max Tokens per minute"));
-    fireEvent.change(screen.getByLabelText("Max Tokens per minute"), { target: { value: "500.567" } });
-    await user.clear(screen.getByLabelText("Max Requests per minute"));
-    fireEvent.change(screen.getByLabelText("Max Requests per minute"), { target: { value: "7" } });
+    await user.clear(screen.getByLabelText("Макс. токенов в минуту"));
+    fireEvent.change(screen.getByLabelText("Макс. токенов в минуту"), { target: { value: "500.567" } });
+    await user.clear(screen.getByLabelText("Макс. запросов в минуту"));
+    fireEvent.change(screen.getByLabelText("Макс. запросов в минуту"), { target: { value: "7" } });
 
     await openOptionalSettings(user);
-    await user.clear(screen.getByLabelText("Max Budget (USD)"));
-    fireEvent.change(screen.getByLabelText("Max Budget (USD)"), { target: { value: "42.567" } });
+    await user.clear(screen.getByLabelText("Макс. бюджет (USD)"));
+    fireEvent.change(screen.getByLabelText("Макс. бюджет (USD)"), { target: { value: "42.567" } });
 
-    await chooseSelectOption(user, screen.getByRole("combobox"), "monthly");
+    await chooseВыбратьOption(user, screen.getByRole("combobox"), "monthly");
 
     await save(user);
 
-    await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(updateMock).toHaveBeenCalledВремяs(1));
     const expected = {
       budget_id: "budget-alpha",
       tpm_limit: 500.57,
@@ -95,18 +95,18 @@ describe("EditBudgetModal", () => {
     renderModal();
 
     await openOptionalSettings(user);
-    const maxBudget = screen.getByLabelText("Max Budget (USD)");
-    await user.clear(maxBudget);
-    fireEvent.change(maxBudget, { target: { value: "99.25" } });
+    const maxБюджет = screen.getByLabelText("Макс. бюджет (USD)");
+    await user.clear(maxБюджет);
+    fireEvent.change(maxБюджет, { target: { value: "99.25" } });
 
-    await user.click(screen.getByText("Optional Settings"));
-    await user.click(screen.getByText("Optional Settings"));
+    await user.click(screen.getByText("Дополнительные параметры"));
+    await user.click(screen.getByText("Дополнительные параметры"));
 
-    expect(await screen.findByLabelText("Max Budget (USD)")).toHaveValue(99.25);
+    expect(await screen.findByLabelText("Макс. бюджет (USD)")).toHaveЗначение(99.25);
 
     await save(user);
 
-    await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(updateMock).toHaveBeenCalledВремяs(1));
     expect(updateMock.mock.calls[0][0]).toMatchObject({ max_budget: 99.25 });
   });
 });

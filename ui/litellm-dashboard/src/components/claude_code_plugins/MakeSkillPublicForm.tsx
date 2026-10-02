@@ -38,7 +38,7 @@ const MakeSkillPublicForm: React.FC<MakeSkillPublicFormProps> = ({
 
   const handleNext = () => {
     if (selectedSkills.size === 0) {
-      toast.fromError("Please select at least one skill");
+      toast.fromError("Выберите хотя бы один скилл");
       return;
     }
     setCurrentStep(1);
@@ -71,7 +71,7 @@ const MakeSkillPublicForm: React.FC<MakeSkillPublicFormProps> = ({
 
   const handleSubmit = async () => {
     if (selectedSkills.size === 0) {
-      toast.fromError("Please select at least one skill");
+      toast.fromError("Выберите хотя бы один скилл");
       return;
     }
 
@@ -96,7 +96,7 @@ const MakeSkillPublicForm: React.FC<MakeSkillPublicFormProps> = ({
       onSuccess();
     } catch (error) {
       console.error("Error publishing skills:", error);
-      toast.fromError("Failed to update skills. Please try again.");
+      toast.fromError("Не удалось обновить скиллы. Попробуйте снова.");
     } finally {
       setLoading(false);
     }
@@ -108,7 +108,7 @@ const MakeSkillPublicForm: React.FC<MakeSkillPublicFormProps> = ({
   const renderStep1 = () => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Select Skills to Publish</h3>
+        <h3 className="text-lg font-semibold">Выберите скиллы для публикации</h3>
         <label className="flex items-center gap-2 text-sm">
           <Checkbox
             checked={allSelected}
@@ -116,19 +116,19 @@ const MakeSkillPublicForm: React.FC<MakeSkillPublicFormProps> = ({
             onCheckedChange={(checked) => handleSelectAll(checked === true)}
             disabled={skillsList.length === 0}
           />
-          Select All ({skillsList.length})
+          Выбрать всё ({skillsList.length})
         </label>
       </div>
 
       <p className="text-sm text-muted-foreground">
-        Selected skills will be visible to all users in the Skill Hub. Deselected skills will be unpublished.
+        Выбранные скиллы будут видны всем пользователям в Skill Hub. Снятые с выбора будут скрыты оттуда.
       </p>
 
       <div className="max-h-96 overflow-y-auto border rounded-lg p-4">
         <div className="space-y-3">
           {skillsList.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <p>No skills registered yet.</p>
+              <p>Скиллы ещё не зарегистрированы.</p>
             </div>
           ) : (
             skillsList.map((skill) => (
@@ -141,7 +141,7 @@ const MakeSkillPublicForm: React.FC<MakeSkillPublicFormProps> = ({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="font-medium font-mono text-sm break-words">{skill.name}</p>
-                    {skill.enabled && <Badge variant="secondary">Public</Badge>}
+                    {skill.enabled && <Badge variant="secondary">Публичный</Badge>}
                   </div>
                   {skill.description && (
                     <p className="text-xs text-muted-foreground truncate max-w-sm">{skill.description}</p>
@@ -166,17 +166,16 @@ const MakeSkillPublicForm: React.FC<MakeSkillPublicFormProps> = ({
 
   const renderStep2 = () => (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Confirm Publish to Skill Hub</h3>
+      <h3 className="text-lg font-semibold">Подтвердите публикацию в Skill Hub</h3>
 
       <div className="bg-warning/10 border border-warning/20 rounded-lg p-4">
         <p className="text-sm text-warning">
-          <strong>Note:</strong> Published skills will be visible to all users in the Skill Hub tab. Skills not in the
-          list below will be unpublished.
+          <strong>Примечание:</strong> Опубликованные скиллы будут видны всем пользователям во вкладке Skill Hub. Скиллы вне списка ниже будут сняты с публикации.
         </p>
       </div>
 
       <div className="space-y-3">
-        <p className="font-medium">Skills to be published:</p>
+        <p className="font-medium">Скиллы для публикации:</p>
         <div className="max-h-48 overflow-y-auto border rounded-lg p-3">
           <div className="space-y-2">
             {Array.from(selectedSkills).map((name) => {
@@ -194,7 +193,7 @@ const MakeSkillPublicForm: React.FC<MakeSkillPublicFormProps> = ({
 
       <div className="bg-info/10 border border-info/20 rounded-lg p-3">
         <p className="text-sm text-info">
-          Total: <strong>{selectedSkills.size}</strong> skill{selectedSkills.size !== 1 ? "s" : ""} will be published
+          Всего: <strong>{selectedSkills.size}</strong> skill{selectedSkills.size !== 1 ? "s" : ""} will be published
         </p>
       </div>
     </div>
@@ -204,7 +203,7 @@ const MakeSkillPublicForm: React.FC<MakeSkillPublicFormProps> = ({
     <Dialog open={visible} onOpenChange={(open) => !open && handleClose()} disablePointerDismissal>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>Publish to Skill Hub</DialogTitle>
+          <DialogTitle>Опубликовать в Skill Hub</DialogTitle>
         </DialogHeader>
 
         <div>

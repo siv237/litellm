@@ -4,10 +4,10 @@ import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-import { DataTable } from "./DataTable";
-import { DataTableMultiSortHeader, DataTableSortHeader } from "./DataTableSortHeader";
-import { DataTableViewOptions } from "./DataTableViewOptions";
-import { chooseSelectOption } from "../../../../tests/test-utils";
+import { DataТаблица } from "./DataТаблица";
+import { DataТаблицаMultiSortHeader, DataТаблицаSortHeader } from "./DataТаблицаSortHeader";
+import { DataТаблицаViewOptions } from "./DataТаблицаViewOptions";
+import { chooseВыбратьOption } from "../../../../tests/test-utils";
 
 interface Person {
   id: string;
@@ -20,7 +20,7 @@ function person(id: string, name: string, flagged = false): Person {
   return { id, name, email: `${name.toLowerCase()}@x.io`, flagged };
 }
 
-const names = (): (string | null)[] => screen.getAllByTestId("name-cell").map((el) => el.textContent);
+const names = (): (string | null)[] => screen.getВсеByTestId("name-cell").map((el) => el.textContent);
 
 const heightClassesOf = (el: HTMLElement | undefined): string[] =>
   (el?.className ?? "")
@@ -30,7 +30,7 @@ const heightClassesOf = (el: HTMLElement | undefined): string[] =>
 
 const nameCellColumns: ColumnDef<Person, unknown>[] = [
   {
-    accessorKey: "name",
+    accessorКлюч: "name",
     header: "Name",
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
@@ -38,26 +38,26 @@ const nameCellColumns: ColumnDef<Person, unknown>[] = [
 
 const filterableColumns: ColumnDef<Person, unknown>[] = [
   {
-    accessorKey: "name",
+    accessorКлюч: "name",
     header: "Name",
     meta: { title: "Name" },
-    filterFn: (row, columnId, value) => row.getValue<string>(columnId) === value,
+    filterFn: (row, columnId, value) => row.getЗначение<string>(columnId) === value,
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
 ];
 
 const headerCycleColumns: ColumnDef<Person, unknown>[] = [
   {
-    accessorKey: "name",
-    header: ({ column }) => <DataTableSortHeader column={column} title="Name" variant="header-cycle" />,
+    accessorКлюч: "name",
+    header: ({ column }) => <DataТаблицаSortHeader column={column} title="Name" variant="header-cycle" />,
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
 ];
 
 const dropdownSortColumns: ColumnDef<Person, unknown>[] = [
   {
-    accessorKey: "name",
-    header: ({ column }) => <DataTableSortHeader column={column} title="Name" variant="dropdown-tristate" />,
+    accessorКлюч: "name",
+    header: ({ column }) => <DataТаблицаSortHeader column={column} title="Name" variant="dropdown-tristate" />,
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
 ];
@@ -65,13 +65,13 @@ const dropdownSortColumns: ColumnDef<Person, unknown>[] = [
 const multiSortColumns: ColumnDef<Person, unknown>[] = [
   {
     id: "spend",
-    accessorKey: "name",
+    accessorКлюч: "name",
     header: ({ table }) => (
-      <DataTableMultiSortHeader
+      <DataТаблицаMultiSortHeader
         table={table}
         fields={[
-          { id: "spend", label: "Spend" },
-          { id: "max_budget", label: "Budget" },
+          { id: "spend", label: "Расход" },
+          { id: "max_budget", label: "Бюджет" },
         ]}
       />
     ),
@@ -81,12 +81,12 @@ const multiSortColumns: ColumnDef<Person, unknown>[] = [
 
 const nameEmailColumns: ColumnDef<Person, unknown>[] = [
   {
-    accessorKey: "name",
+    accessorКлюч: "name",
     header: "Name",
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
   {
-    accessorKey: "email",
+    accessorКлюч: "email",
     header: "Email",
     cell: ({ row }) => <span>{row.original.email}</span>,
   },
@@ -94,13 +94,13 @@ const nameEmailColumns: ColumnDef<Person, unknown>[] = [
 
 const pinnedColumns: ColumnDef<Person, unknown>[] = [
   {
-    accessorKey: "name",
+    accessorКлюч: "name",
     header: "Name",
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
     meta: { pinned: "left" },
   },
   {
-    accessorKey: "email",
+    accessorКлюч: "email",
     header: "Email",
     cell: ({ row }) => <span>{row.original.email}</span>,
   },
@@ -108,13 +108,13 @@ const pinnedColumns: ColumnDef<Person, unknown>[] = [
 
 const rowClickColumns: ColumnDef<Person, unknown>[] = [
   {
-    accessorKey: "name",
+    accessorКлюч: "name",
     header: "Name",
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
   {
     id: "actions",
-    header: "Actions",
+    header: "Действия",
     cell: () => (
       <div>
         <button data-testid="row-button">Act</button>
@@ -135,7 +135,7 @@ const expansionColumns: ColumnDef<Person, unknown>[] = [
     ),
   },
   {
-    accessorKey: "name",
+    accessorКлюч: "name",
     header: "Name",
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
@@ -143,10 +143,10 @@ const expansionColumns: ColumnDef<Person, unknown>[] = [
 
 const CHARLIE_ALICE_BOB: Person[] = [person("c", "Charlie"), person("a", "Alice"), person("b", "Bob")];
 
-describe("DataTable sorting", () => {
+describe("DataТаблица sorting", () => {
   it("client mode reorders rows when the sort header is clicked", async () => {
     const user = userEvent.setup();
-    render(<DataTable data={CHARLIE_ALICE_BOB} columns={headerCycleColumns} sortingMode="client" />);
+    render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={headerCycleColumns} sortingРежим="client" />);
 
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
     await user.click(screen.getByTestId("sort-header-name"));
@@ -157,10 +157,10 @@ describe("DataTable sorting", () => {
     const user = userEvent.setup();
     const onSortingChange = vi.fn();
     render(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={headerCycleColumns}
-        sortingMode="server"
+        sortingРежим="server"
         sorting={[{ id: "name", desc: false }]}
         onSortingChange={onSortingChange}
       />,
@@ -169,21 +169,21 @@ describe("DataTable sorting", () => {
     // sorting state says ascending, but server mode must render data as given
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
     await user.click(screen.getByTestId("sort-header-name"));
-    expect(onSortingChange).toHaveBeenCalledTimes(1);
+    expect(onSortingChange).toHaveBeenCalledВремяs(1);
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
   });
 
   it("dropdown-tristate variant sorts ascending, descending, then resets", async () => {
     const user = userEvent.setup();
-    render(<DataTable data={CHARLIE_ALICE_BOB} columns={dropdownSortColumns} sortingMode="client" />);
+    render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={dropdownSortColumns} sortingРежим="client" />);
 
-    await chooseSelectOption(user, screen.getByTestId("sort-trigger-name"), "Ascending", "menuitem");
+    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-name"), "Ascending", "menuitem");
     expect(names()).toEqual(["Alice", "Bob", "Charlie"]);
 
-    await chooseSelectOption(user, screen.getByTestId("sort-trigger-name"), "Descending", "menuitem");
+    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-name"), "Descending", "menuitem");
     expect(names()).toEqual(["Charlie", "Bob", "Alice"]);
 
-    await chooseSelectOption(user, screen.getByTestId("sort-trigger-name"), "Reset", "menuitem");
+    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-name"), "Reset", "menuitem");
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
   });
 
@@ -191,19 +191,19 @@ describe("DataTable sorting", () => {
     const user = userEvent.setup();
     const onSortingChange = vi.fn();
     render(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={multiSortColumns}
-        sortingMode="server"
+        sortingРежим="server"
         sorting={[]}
         onSortingChange={onSortingChange}
       />,
     );
 
-    await chooseSelectOption(user, screen.getByTestId("sort-trigger-spend"), "Budget descending", "menuitem");
+    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-spend"), "Бюджет descending", "menuitem");
     expect(onSortingChange).toHaveBeenLastCalledWith([{ id: "max_budget", desc: true }]);
 
-    await chooseSelectOption(user, screen.getByTestId("sort-trigger-spend"), "Spend ascending", "menuitem");
+    await chooseВыбратьOption(user, screen.getByTestId("sort-trigger-spend"), "Расход ascending", "menuitem");
     expect(onSortingChange).toHaveBeenLastCalledWith([{ id: "spend", desc: false }]);
   });
 
@@ -211,10 +211,10 @@ describe("DataTable sorting", () => {
     const user = userEvent.setup();
     const onSortingChange = vi.fn();
     render(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={multiSortColumns}
-        sortingMode="server"
+        sortingРежим="server"
         sorting={[{ id: "max_budget", desc: true }]}
         onSortingChange={onSortingChange}
       />,
@@ -222,28 +222,28 @@ describe("DataTable sorting", () => {
 
     await user.click(screen.getByTestId("sort-trigger-spend"));
     // The header trigger shows the active (descending) indicator while sorted by a field it owns.
-    expect(screen.getByTestId("sort-trigger-spend").querySelector("[data-sort-indicator='desc']")).not.toBeNull();
+    expect(screen.getByTestId("sort-trigger-spend").queryВыбратьor("[data-sort-indicator='desc']")).not.toBeNull();
 
     await user.click(await screen.findByText("Reset"));
     expect(onSortingChange).toHaveBeenLastCalledWith([]);
   });
 });
 
-describe("DataTable layout", () => {
+describe("DataТаблица layвыход", () => {
   it("stretches the table to fill the container when resizing is on, so hidden columns leave no right-side gap", () => {
-    render(<DataTable data={CHARLIE_ALICE_BOB} columns={nameCellColumns} enableColumnResizing />);
+    render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} enableColumnResizing />);
 
     // width pins the natural column total (horizontal scroll on overflow); minWidth:100% fills the gap on underflow.
     expect(screen.getByRole("table")).toHaveStyle({ minWidth: "100%" });
   });
 });
 
-describe("DataTable pagination", () => {
+describe("DataТаблица pagination", () => {
   const fivePeople: Person[] = Array.from({ length: 5 }, (_, i) => person(String(i), `P${i}`));
 
   it("client mode slices rows and advances pages", async () => {
     const user = userEvent.setup();
-    render(<DataTable data={fivePeople} columns={nameCellColumns} paginationMode="client" pageSizeOptions={[2]} />);
+    render(<DataТаблица data={fivePeople} columns={nameCellColumns} paginationРежим="client" pageSizeOptions={[2]} />);
 
     expect(names()).toEqual(["P0", "P1"]);
     expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-2 of 5");
@@ -258,10 +258,10 @@ describe("DataTable pagination", () => {
     const onPaginationChange = vi.fn();
     const pageSlice: Person[] = [person("10", "P10"), person("11", "P11"), person("12", "P12")];
     render(
-      <DataTable
+      <DataТаблица
         data={pageSlice}
         columns={nameCellColumns}
-        paginationMode="server"
+        paginationРежим="server"
         pagination={{ pageIndex: 1, pageSize: 10 }}
         rowCount={25}
         onPaginationChange={onPaginationChange}
@@ -272,17 +272,17 @@ describe("DataTable pagination", () => {
     expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 11-20 of 25");
 
     await user.click(screen.getByTestId("pagination-next"));
-    expect(onPaginationChange).toHaveBeenCalledTimes(1);
+    expect(onPaginationChange).toHaveBeenCalledВремяs(1);
   });
 
-  type ServerPageHarnessProps = {
+  type СерверPageHarnessProps = {
     rowCount: number;
     isLoading?: boolean;
     initialPageIndex: number;
     onChange: (next: PaginationState) => void;
   };
 
-  function ServerPageHarness({ rowCount, isLoading = false, initialPageIndex, onChange }: ServerPageHarnessProps) {
+  function СерверPageHarness({ rowCount, isLoading = false, initialPageIndex, onChange }: СерверPageHarnessProps) {
     const [pagination, setPagination] = useState<PaginationState>({ pageIndex: initialPageIndex, pageSize: 10 });
     const handleChange: OnChangeFn<PaginationState> = (updater) => {
       const next = typeof updater === "function" ? updater(pagination) : updater;
@@ -290,10 +290,10 @@ describe("DataTable pagination", () => {
       setPagination(next);
     };
     return (
-      <DataTable
+      <DataТаблица
         data={[]}
         columns={nameCellColumns}
-        paginationMode="server"
+        paginationРежим="server"
         pagination={pagination}
         onPaginationChange={handleChange}
         rowCount={rowCount}
@@ -304,10 +304,10 @@ describe("DataTable pagination", () => {
 
   it("server mode snaps to the last page when rowCount no longer reaches the current page", async () => {
     const onChange = vi.fn();
-    render(<ServerPageHarness rowCount={15} initialPageIndex={2} onChange={onChange} />);
+    render(<СерверPageHarness rowCount={15} initialPageIndex={2} onChange={onChange} />);
 
     await waitFor(() => expect(onChange).toHaveBeenCalledWith({ pageIndex: 1, pageSize: 10 }));
-    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledВремяs(1);
     expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 11-15 of 15");
     expect(screen.getByText("Page 2 of 2")).toBeInTheDocument();
     expect(screen.getByTestId("pagination-next")).toBeDisabled();
@@ -315,11 +315,11 @@ describe("DataTable pagination", () => {
 
   it("server mode falls back to the first page when rowCount drops to zero", async () => {
     const onChange = vi.fn();
-    render(<ServerPageHarness rowCount={0} initialPageIndex={2} onChange={onChange} />);
+    render(<СерверPageHarness rowCount={0} initialPageIndex={2} onChange={onChange} />);
 
     await waitFor(() => expect(onChange).toHaveBeenCalledWith({ pageIndex: 0, pageSize: 10 }));
-    expect(onChange).toHaveBeenCalledTimes(1);
-    expect(screen.getByTestId("pagination-range")).toHaveTextContent("No results");
+    expect(onChange).toHaveBeenCalledВремяs(1);
+    expect(screen.getByTestId("pagination-range")).toHaveTextContent("Нет результатов");
     expect(screen.getByText("Page 1 of 1")).toBeInTheDocument();
     expect(screen.getByTestId("pagination-first")).toBeDisabled();
     expect(screen.getByTestId("pagination-prev")).toBeDisabled();
@@ -327,40 +327,40 @@ describe("DataTable pagination", () => {
 
   it("server mode leaves the page index alone while loading and clamps once the response lands", async () => {
     const onChange = vi.fn();
-    const { rerender } = render(<ServerPageHarness rowCount={0} isLoading initialPageIndex={2} onChange={onChange} />);
+    const { rerender } = render(<СерверPageHarness rowCount={0} isLoading initialPageIndex={2} onChange={onChange} />);
 
     expect(screen.getByText("Page 3 of 1")).toBeInTheDocument();
-    await new Promise((resolve) => setTimeout(resolve, 20));
+    await new Promise((resolve) => setВремявыход(resolve, 20));
     expect(onChange).not.toHaveBeenCalled();
 
-    rerender(<ServerPageHarness rowCount={15} initialPageIndex={2} onChange={onChange} />);
+    rerender(<СерверPageHarness rowCount={15} initialPageIndex={2} onChange={onChange} />);
 
     await waitFor(() => expect(onChange).toHaveBeenCalledWith({ pageIndex: 1, pageSize: 10 }));
-    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledВремяs(1);
     expect(screen.getByText("Page 2 of 2")).toBeInTheDocument();
   });
 });
 
-describe("DataTable filtering", () => {
-  it("client mode filters rows by columnFilters", () => {
+describe("DataТаблица filtering", () => {
+  it("client mode filters rows by columnФильтры", () => {
     const { rerender } = render(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={filterableColumns}
-        filterMode="client"
-        columnFilters={[]}
-        onColumnFiltersChange={vi.fn()}
+        filterРежим="client"
+        columnФильтры={[]}
+        onColumnФильтрыChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
 
     rerender(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={filterableColumns}
-        filterMode="client"
-        columnFilters={[{ id: "name", value: "Alice" }]}
-        onColumnFiltersChange={vi.fn()}
+        filterРежим="client"
+        columnФильтры={[{ id: "name", value: "Alice" }]}
+        onColumnФильтрыChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Alice"]);
@@ -368,23 +368,23 @@ describe("DataTable filtering", () => {
 
   it("client global filter matches substrings across columns", () => {
     const { rerender } = render(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={nameEmailColumns}
-        filterMode="client"
-        globalFilter=""
-        onGlobalFilterChange={vi.fn()}
+        filterРежим="client"
+        globalФильтр=""
+        onГлобальноФильтрChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
 
     rerender(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={nameEmailColumns}
-        filterMode="client"
-        globalFilter="ali"
-        onGlobalFilterChange={vi.fn()}
+        filterРежим="client"
+        globalФильтр="ali"
+        onГлобальноФильтрChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Alice"]);
@@ -396,54 +396,54 @@ describe("DataTable filtering", () => {
       {
         id: "nickname",
         accessorFn: (row) => (row.id === "b" ? "Bobby" : undefined),
-        enableGlobalFilter: true,
+        enableГлобальноФильтр: true,
         header: "Nickname",
       },
     ];
     render(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={nicknameColumns}
-        filterMode="client"
-        globalFilter="bobby"
-        onGlobalFilterChange={vi.fn()}
+        filterРежим="client"
+        globalФильтр="bobby"
+        onГлобальноФильтрChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Bob"]);
   });
 
-  it("server mode never filters locally even when columnFilters is set", () => {
+  it("server mode never filters locally even when columnФильтры is set", () => {
     render(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={filterableColumns}
-        filterMode="server"
-        columnFilters={[{ id: "name", value: "Alice" }]}
-        onColumnFiltersChange={vi.fn()}
+        filterРежим="server"
+        columnФильтры={[{ id: "name", value: "Alice" }]}
+        onColumnФильтрыChange={vi.fn()}
       />,
     );
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
   });
 });
 
-describe("DataTable loading", () => {
+describe("DataТаблица loading", () => {
   it("renders skeleton rows while loading and real rows once loaded", () => {
-    const { rerender } = render(<DataTable data={CHARLIE_ALICE_BOB} columns={nameCellColumns} isLoading />);
-    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
+    const { rerender } = render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} isLoading />);
+    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
     expect(screen.queryByTestId("name-cell")).not.toBeInTheDocument();
 
-    rerender(<DataTable data={CHARLIE_ALICE_BOB} columns={nameCellColumns} />);
-    expect(screen.queryAllByTestId("skeleton-row")).toHaveLength(0);
+    rerender(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} />);
+    expect(screen.queryВсеByTestId("skeleton-row")).toHaveLength(0);
     expect(names()).toEqual(["Charlie", "Alice", "Bob"]);
   });
 
   it("gives compact skeleton rows the same height as loaded rows so loading does not shrink the table", () => {
     const { rerender } = render(
-      <DataTable data={CHARLIE_ALICE_BOB} columns={nameCellColumns} size="compact" isLoading />,
+      <DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} size="compact" isLoading />,
     );
-    const skeletonHeight = heightClassesOf(screen.getAllByRole("row").at(-1));
+    const skeletonHeight = heightClassesOf(screen.getВсеByRole("row").at(-1));
 
-    rerender(<DataTable data={CHARLIE_ALICE_BOB} columns={nameCellColumns} size="compact" />);
+    rerender(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} size="compact" />);
     const loadedHeight = heightClassesOf(screen.getByRole("row", { name: /Charlie/ }));
 
     expect(loadedHeight).not.toEqual([]);
@@ -451,23 +451,23 @@ describe("DataTable loading", () => {
   });
 
   it("does not force the compact height on default-size skeleton rows", () => {
-    const { rerender } = render(<DataTable data={CHARLIE_ALICE_BOB} columns={nameCellColumns} isLoading />);
-    const skeletonHeight = heightClassesOf(screen.getAllByRole("row").at(-1));
+    const { rerender } = render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} isLoading />);
+    const skeletonHeight = heightClassesOf(screen.getВсеByRole("row").at(-1));
 
-    rerender(<DataTable data={CHARLIE_ALICE_BOB} columns={nameCellColumns} size="compact" isLoading />);
-    expect(heightClassesOf(screen.getAllByRole("row").at(-1))).not.toEqual(skeletonHeight);
+    rerender(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameCellColumns} size="compact" isLoading />);
+    expect(heightClassesOf(screen.getВсеByRole("row").at(-1))).not.toEqual(skeletonHeight);
   });
 
   it("varies skeleton shape and width per column instead of one fixed bar", () => {
     const columns: ColumnDef<Person, unknown>[] = [
-      { accessorKey: "name", header: "Name", meta: { skeleton: "twoLine" }, cell: () => null },
-      { accessorKey: "email", header: "Email", cell: () => null },
+      { accessorКлюч: "name", header: "Name", meta: { skeleton: "twoLine" }, cell: () => null },
+      { accessorКлюч: "email", header: "Email", cell: () => null },
     ];
-    render(<DataTable data={CHARLIE_ALICE_BOB} columns={columns} isLoading />);
+    render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={columns} isLoading />);
 
-    const firstRow = screen.getAllByTestId("skeleton-row").at(0);
+    const firstRow = screen.getВсеByTestId("skeleton-row").at(0);
     expect(firstRow).toBeDefined();
-    const bars = Array.from(firstRow?.querySelectorAll('[data-slot="skeleton"]') ?? []);
+    const bars = Array.from(firstRow?.queryВыбратьorВсе('[data-slot="skeleton"]') ?? []);
 
     // twoLine column contributes a main + sub bar (2); the text column contributes 1
     expect(bars).toHaveLength(3);
@@ -481,15 +481,15 @@ describe("DataTable loading", () => {
       { id: "chips", header: "Chips", meta: { skeleton: "chips" }, cell: () => null },
       { id: "meter", header: "Meter", meta: { skeleton: "meter" }, cell: () => null },
     ];
-    render(<DataTable data={CHARLIE_ALICE_BOB} columns={columns} isLoading />);
+    render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={columns} isLoading />);
 
-    const firstRow = screen.getAllByTestId("skeleton-row").at(0);
-    const cells = Array.from(firstRow?.querySelectorAll("td") ?? []);
-    const barsIn = (cell: Element | undefined) => cell?.querySelectorAll('[data-slot="skeleton"]').length ?? 0;
+    const firstRow = screen.getВсеByTestId("skeleton-row").at(0);
+    const cells = Array.from(firstRow?.queryВыбратьorВсе("td") ?? []);
+    const barsIn = (cell: Element | undefined) => cell?.queryВыбратьorВсе('[data-slot="skeleton"]').length ?? 0;
 
     // badge = a single pill, chips = three pills, meter = value bar + track bar
     expect(barsIn(cells[0])).toBe(1);
-    expect(cells[0]?.querySelector('[data-slot="skeleton"]')?.className).toContain("rounded-full");
+    expect(cells[0]?.queryВыбратьor('[data-slot="skeleton"]')?.className).toContain("rounded-full");
     expect(barsIn(cells[1])).toBe(3);
     expect(barsIn(cells[2])).toBe(2);
   });
@@ -503,19 +503,19 @@ describe("DataTable loading", () => {
         cell: () => null,
       },
     ];
-    render(<DataTable data={CHARLIE_ALICE_BOB} columns={columns} isLoading />);
-    expect(screen.getAllByTestId("custom-skeleton").length).toBeGreaterThan(0);
+    render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={columns} isLoading />);
+    expect(screen.getВсеByTestId("custom-skeleton").length).toBeGreaterThan(0);
   });
 });
 
-describe("DataTable column visibility", () => {
+describe("DataТаблица column visibility", () => {
   it("hides a column when toggled off in the view-options menu", async () => {
     const user = userEvent.setup();
     render(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={nameEmailColumns}
-        toolbar={(table) => <DataTableViewOptions table={table} />}
+        toolbar={(table) => <DataТаблицаViewOptions table={table} />}
       />,
     );
 
@@ -528,26 +528,26 @@ describe("DataTable column visibility", () => {
     expect(await screen.findByRole("columnheader", { name: "Email" })).toBeInTheDocument();
   });
 
-  it("omits columns that opt out of hiding from the menu", async () => {
+  it("omits columns that opt выход of hiding from the menu", async () => {
     const user = userEvent.setup();
     const columns: ColumnDef<Person, unknown>[] = [
       {
-        accessorKey: "name",
+        accessorКлюч: "name",
         header: "Name",
         enableHiding: false,
         cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
       },
       {
-        accessorKey: "email",
+        accessorКлюч: "email",
         header: "Email",
         cell: ({ row }) => <span>{row.original.email}</span>,
       },
     ];
     render(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={columns}
-        toolbar={(table) => <DataTableViewOptions table={table} />}
+        toolbar={(table) => <DataТаблицаViewOptions table={table} />}
       />,
     );
 
@@ -557,34 +557,34 @@ describe("DataTable column visibility", () => {
   });
 });
 
-describe("DataTable pinned columns", () => {
+describe("DataТаблица pinned columns", () => {
   it("applies sticky positioning to a pinned column only", () => {
-    render(<DataTable data={CHARLIE_ALICE_BOB} columns={pinnedColumns} />);
+    render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={pinnedColumns} />);
 
     expect(screen.getByRole("columnheader", { name: "Name" })).toHaveStyle({ position: "sticky", left: "0px" });
     expect(screen.getByRole("columnheader", { name: "Email" })).not.toHaveStyle({ position: "sticky" });
   });
 });
 
-describe("DataTable row click guard", () => {
+describe("DataТаблица row click guard", () => {
   it("fires onRowClick from a plain cell but not from interactive elements", async () => {
     const user = userEvent.setup();
     const onRowClick = vi.fn();
-    render(<DataTable data={[person("a", "Alice")]} columns={rowClickColumns} onRowClick={onRowClick} />);
+    render(<DataТаблица data={[person("a", "Alice")]} columns={rowClickColumns} onRowClick={onRowClick} />);
 
     await user.click(screen.getByTestId("name-cell"));
-    expect(onRowClick).toHaveBeenCalledTimes(1);
+    expect(onRowClick).toHaveBeenCalledВремяs(1);
     expect(onRowClick).toHaveBeenCalledWith(expect.objectContaining({ id: "a" }));
 
     await user.click(screen.getByTestId("row-button"));
-    expect(onRowClick).toHaveBeenCalledTimes(1);
+    expect(onRowClick).toHaveBeenCalledВремяs(1);
 
     await user.click(screen.getByTestId("row-input"));
-    expect(onRowClick).toHaveBeenCalledTimes(1);
+    expect(onRowClick).toHaveBeenCalledВремяs(1);
   });
 });
 
-describe("DataTable expansion", () => {
+describe("DataТаблица expansion", () => {
   const subComponent = ({ row }: { row: { original: Person } }) => (
     <div data-testid="sub-row">details for {row.original.name}</div>
   );
@@ -592,7 +592,7 @@ describe("DataTable expansion", () => {
   it("toggles the sub-row in uncontrolled mode", async () => {
     const user = userEvent.setup();
     render(
-      <DataTable
+      <DataТаблица
         data={[person("a", "Alice")]}
         columns={expansionColumns}
         getRowId={(row) => row.id}
@@ -613,7 +613,7 @@ describe("DataTable expansion", () => {
     const Harness = () => {
       const [expanded, setExpanded] = useState<ExpandedState>({});
       return (
-        <DataTable
+        <DataТаблица
           data={[person("a", "Alice")]}
           columns={expansionColumns}
           getRowId={(row) => row.id}
@@ -637,7 +637,7 @@ describe("DataTable expansion", () => {
     const user = userEvent.setup();
     const onExpandedChange = vi.fn();
     render(
-      <DataTable
+      <DataТаблица
         data={[person("a", "Alice")]}
         columns={expansionColumns}
         getRowId={(row) => row.id}
@@ -649,16 +649,16 @@ describe("DataTable expansion", () => {
     );
 
     await user.click(screen.getByTestId("expand-a"));
-    expect(onExpandedChange).toHaveBeenCalledTimes(1);
+    expect(onExpandedChange).toHaveBeenCalledВремяs(1);
     expect(screen.queryByTestId("sub-row")).not.toBeInTheDocument();
   });
 });
 
-describe("DataTable row styling and footer", () => {
+describe("DataТаблица row styling and footer", () => {
   it("applies rowClassName to the matching row only", () => {
     const data = [person("a", "Alice", true), person("b", "Bob", false)];
     render(
-      <DataTable
+      <DataТаблица
         data={data}
         columns={nameCellColumns}
         getRowId={(row) => row.id}
@@ -672,7 +672,7 @@ describe("DataTable row styling and footer", () => {
 
   it("renders the footer slot inside a tfoot element", () => {
     render(
-      <DataTable
+      <DataТаблица
         data={CHARLIE_ALICE_BOB}
         columns={nameCellColumns}
         footer={() => (
@@ -683,23 +683,23 @@ describe("DataTable row styling and footer", () => {
       />,
     );
 
-    const rowGroups = screen.getAllByRole("rowgroup");
+    const rowGroups = screen.getВсеByRole("rowgroup");
     expect(within(rowGroups.at(-1) as HTMLElement).getByText("Total: 3")).toBeInTheDocument();
   });
 });
 
-describe("DataTable layout", () => {
+describe("DataТаблица layвыход", () => {
   it("exposes resize handles with stable selectors only when resizing is enabled", () => {
-    const { rerender } = render(<DataTable data={CHARLIE_ALICE_BOB} columns={nameEmailColumns} enableColumnResizing />);
+    const { rerender } = render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameEmailColumns} enableColumnResizing />);
     expect(screen.getByTestId("column-resizer-name")).toBeInTheDocument();
     expect(screen.getByTestId("column-resizer-email")).toBeInTheDocument();
 
-    rerender(<DataTable data={CHARLIE_ALICE_BOB} columns={nameEmailColumns} />);
+    rerender(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameEmailColumns} />);
     expect(screen.queryByTestId("column-resizer-name")).not.toBeInTheDocument();
   });
 
   it("makes the header sticky and constrains body height when maxBodyHeight is set", () => {
-    render(<DataTable data={CHARLIE_ALICE_BOB} columns={nameEmailColumns} maxBodyHeight={240} />);
+    render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameEmailColumns} maxBodyHeight={240} />);
     const scroller = screen.getByTestId("data-table-scroller");
     expect(scroller).toHaveStyle({ maxHeight: "240px" });
     expect(scroller).toHaveClass("overflow-auto");
@@ -708,29 +708,29 @@ describe("DataTable layout", () => {
   });
 
   it("caps fillHeight at the parent's height instead of stretching to it, so a short table stays short", () => {
-    render(<DataTable data={CHARLIE_ALICE_BOB} columns={nameEmailColumns} fillHeight />);
-    const outer = screen.getByTestId("data-table-root");
+    render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameEmailColumns} fillHeight />);
+    const выходer = screen.getByTestId("data-table-root");
     const frame = screen.getByTestId("data-table-frame");
     const scroller = screen.getByTestId("data-table-scroller");
 
     // A ceiling, not a stretch: flex-1 here would hold the footer at the bottom on a two-row table.
-    expect(outer).toHaveClass("max-h-full", "flex-col");
-    expect(outer).not.toHaveClass("flex-1");
+    expect(выходer).toHaveClass("max-h-full", "flex-col");
+    expect(выходer).not.toHaveClass("flex-1");
     expect(frame).toHaveClass("flex-col");
     expect(frame).not.toHaveClass("flex-1");
     expect(scroller).not.toHaveClass("flex-1");
 
     expect(scroller).toHaveClass("min-h-0", "overflow-auto");
     expect(scroller).toHaveStyle({ maxHeight: "" });
-    // Without this the Table primitive's own overflow container captures the sticky header.
+    // Withвыход this the Таблица primitive's own overflow container captures the sticky header.
     expect(scroller).toHaveClass("[&_[data-slot=table-container]]:overflow-visible");
 
     // Rows pass under the header, so the semi-transparent row tint alone would let them show through.
     expect(screen.getByTestId("data-table-head")).toHaveClass("sticky", "bg-background");
   });
 
-  it("leaves the default layout untouched when neither height mode is set", () => {
-    render(<DataTable data={CHARLIE_ALICE_BOB} columns={nameEmailColumns} />);
+  it("leaves the default layвыход untouched when neither height mode is set", () => {
+    render(<DataТаблица data={CHARLIE_ALICE_BOB} columns={nameEmailColumns} />);
     const scroller = screen.getByTestId("data-table-scroller");
 
     expect(scroller).toHaveClass("overflow-x-auto");

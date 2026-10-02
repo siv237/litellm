@@ -2,10 +2,10 @@ import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders } from "../../../../../../tests/test-utils";
-import MultiCostResults from "./multi_cost_results";
-import type { MultiModelResult } from "./types";
-import type { CostEstimateResponse } from "../types";
+import { renderWithПровайдерs } from "../../../../../../tests/test-utils";
+import MultiСтоимостьРезультатs from "./multi_cost_results";
+import type { MultiРежимlРезультат } from "./types";
+import type { СтоимостьEstimateОтвет } from "../types";
 
 vi.mock("./multi_export_utils", () => ({
   exportMultiToPDF: vi.fn(),
@@ -16,38 +16,38 @@ vi.mock("@/utils/dataUtils", () => ({
   formatNumberWithCommas: vi.fn((v: number, d: number = 0) => (Number.isFinite(v) ? v.toFixed(d) : "-")),
 }));
 
-function makeCostResponse(overrides: Partial<CostEstimateResponse> = {}): CostEstimateResponse {
+function makeСтоимостьОтвет(overrides: Partial<СтоимостьEstimateОтвет> = {}): СтоимостьEstimateОтвет {
   return {
-    model: "gpt-4",
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
     input_tokens: 1000,
-    output_tokens: 500,
+    выходput_tokens: 500,
     num_requests_per_day: 100,
     num_requests_per_month: null,
     cost_per_request: 0.05,
     input_cost_per_request: 0.03,
-    output_cost_per_request: 0.02,
+    выходput_cost_per_request: 0.02,
     margin_cost_per_request: 0,
     daily_cost: 5.0,
     daily_input_cost: 3.0,
-    daily_output_cost: 2.0,
+    daily_выходput_cost: 2.0,
     daily_margin_cost: 0,
     monthly_cost: null,
     monthly_input_cost: null,
-    monthly_output_cost: null,
+    monthly_выходput_cost: null,
     monthly_margin_cost: null,
     input_cost_per_token: null,
-    output_cost_per_token: null,
+    выходput_cost_per_token: null,
     provider: "openai",
     ...overrides,
   };
 }
 
-function makeMultiResult(overrides: Partial<MultiModelResult> = {}): MultiModelResult {
+function makeMultiРезультат(overrides: Partial<MultiРежимlРезультат> = {}): MultiРежимlРезультат {
   return {
     entries: [
       {
-        entry: { id: "e1", model: "gpt-4", input_tokens: 1000, output_tokens: 500 },
-        result: makeCostResponse(),
+        entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
+        result: makeСтоимостьОтвет(),
         loading: false,
         error: null,
       },
@@ -64,11 +64,11 @@ function makeMultiResult(overrides: Partial<MultiModelResult> = {}): MultiModelR
   };
 }
 
-function emptyMultiResult(): MultiModelResult {
+function emptyMultiРезультат(): MultiРежимlРезультат {
   return {
     entries: [
       {
-        entry: { id: "e1", model: "", input_tokens: 1000, output_tokens: 500 },
+        entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "", input_tokens: 1000, выходput_tokens: 500 },
         result: null,
         loading: false,
         error: null,
@@ -88,29 +88,29 @@ function emptyMultiResult(): MultiModelResult {
 const expandToggle = (): HTMLElement => screen.getByRole("button", { name: /cost breakdown for / });
 
 const shownBreakdown = (): HTMLElement | null => {
-  const label = screen.queryByText("Total/Request");
+  const label = screen.queryByText("Total/Запрос");
   if (label === null) return null;
   return label.closest("[style*='display: none']") === null ? label : null;
 };
 
-describe("MultiCostResults", () => {
+describe("MultiСтоимостьРезультатs", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
-  describe("when no model has been selected", () => {
-    it("should show a prompt to select models", () => {
-      renderWithProviders(<MultiCostResults multiResult={emptyMultiResult()} timePeriod="month" />);
-      expect(screen.getByText(/select models above to see cost estimates/i)).toBeInTheDocument();
+  describe("when no Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию has been selected", () => {
+    it("should show a prompt to select Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => {
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={emptyMultiРезультат()} timePeriod="month" />);
+      expect(screen.getByText(/select Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs above to see cost estimates/i)).toBeInTheDocument();
     });
   });
 
   describe("when results are loading and no data has arrived yet", () => {
     it("should show a calculating costs spinner", () => {
-      const multiResult: MultiModelResult = {
+      const multiРезультат: MultiРежимlРезультат = {
         entries: [
           {
-            entry: { id: "e1", model: "gpt-4", input_tokens: 1000, output_tokens: 500 },
+            entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
             result: null,
             loading: true,
             error: null,
@@ -126,17 +126,17 @@ describe("MultiCostResults", () => {
         },
       };
 
-      renderWithProviders(<MultiCostResults multiResult={multiResult} timePeriod="month" />);
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={multiРезультат} timePeriod="month" />);
       expect(screen.getByText(/calculating costs/i)).toBeInTheDocument();
     });
   });
 
   describe("when there are errors but no valid results", () => {
-    it("should display the error message with the model name", () => {
-      const multiResult: MultiModelResult = {
+    it("should display the error message with the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name", () => {
+      const multiРезультат: MultiРежимlРезультат = {
         entries: [
           {
-            entry: { id: "e1", model: "bad-model", input_tokens: 0, output_tokens: 0 },
+            entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "bad-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", input_tokens: 0, выходput_tokens: 0 },
             result: null,
             loading: false,
             error: "Pricing not found",
@@ -152,32 +152,32 @@ describe("MultiCostResults", () => {
         },
       };
 
-      renderWithProviders(<MultiCostResults multiResult={multiResult} timePeriod="month" />);
-      expect(screen.getByText(/bad-model/i)).toBeInTheDocument();
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={multiРезультат} timePeriod="month" />);
+      expect(screen.getByText(/bad-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/i)).toBeInTheDocument();
       expect(screen.getByText(/Pricing not found/i)).toBeInTheDocument();
     });
   });
 
   describe("when valid results are available", () => {
-    it("should show the Cost Estimates heading", () => {
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
-      expect(screen.getByText("Cost Estimates")).toBeInTheDocument();
+    it("should show the Стоимость Estimates heading", () => {
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
+      expect(screen.getByText("Стоимость Estimates")).toBeInTheDocument();
     });
 
-    it("should display the Total Per Request statistic", () => {
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
-      expect(screen.getByText("Total Per Request")).toBeInTheDocument();
+    it("should display the Total Per Запрос statistic", () => {
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
+      expect(screen.getByText("Total Per Запрос")).toBeInTheDocument();
     });
 
-    it("should display Total Daily statistic when timePeriod is day", () => {
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
-      expect(screen.getByText("Total Daily")).toBeInTheDocument();
+    it("should display Total Каждый день statistic when timePeriod is day", () => {
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
+      expect(screen.getByText("Total Каждый день")).toBeInTheDocument();
     });
 
-    it("should display Total Monthly statistic when timePeriod is month", () => {
-      renderWithProviders(
-        <MultiCostResults
-          multiResult={makeMultiResult({
+    it("should display Total Каждый месяц statistic when timePeriod is month", () => {
+      renderWithПровайдерs(
+        <MultiСтоимостьРезультатs
+          multiРезультат={makeMultiРезультат({
             totals: {
               cost_per_request: 0.05,
               daily_cost: null,
@@ -190,51 +190,51 @@ describe("MultiCostResults", () => {
           timePeriod="month"
         />,
       );
-      expect(screen.getByText("Total Monthly")).toBeInTheDocument();
+      expect(screen.getByText("Total Каждый месяц")).toBeInTheDocument();
     });
 
-    it("should show the model name in the summary table", () => {
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
+    it("should show the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name in the summary table", () => {
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
       expect(screen.getByText("gpt-4")).toBeInTheDocument();
     });
 
-    it("should show the provider tag next to the model name", () => {
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
+    it("should show the provider tag next to the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name", () => {
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
       expect(screen.getByText("openai")).toBeInTheDocument();
     });
 
     it("should show the Export button when results are available", () => {
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
       expect(screen.getByRole("button", { name: /export/i })).toBeInTheDocument();
     });
 
     it("should render a column header for each summary column", () => {
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
 
-      expect(screen.getByRole("columnheader", { name: "Model" })).toBeInTheDocument();
-      expect(screen.getByRole("columnheader", { name: "Per Request" })).toBeInTheDocument();
+      expect(screen.getByRole("columnheader", { name: "Режимl" })).toBeInTheDocument();
+      expect(screen.getByRole("columnheader", { name: "Per Запрос" })).toBeInTheDocument();
       expect(screen.getByRole("columnheader", { name: "Margin Fee" })).toBeInTheDocument();
-      expect(screen.getByRole("columnheader", { name: "Daily" })).toBeInTheDocument();
+      expect(screen.getByRole("columnheader", { name: "Каждый день" })).toBeInTheDocument();
     });
 
-    it("should not show the model breakdown before the row is expanded", () => {
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
+    it("should not show the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию breakdown before the row is expanded", () => {
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
       expect(shownBreakdown()).toBeNull();
     });
 
-    it("should expand the model breakdown row when the expand button is clicked", async () => {
+    it("should expand the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию breakdown row when the expand button is clicked", async () => {
       const user = userEvent.setup();
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
 
       await user.click(expandToggle());
 
       expect(shownBreakdown()).toBeVisible();
-      expect(screen.getByText("Daily Total (100 req)")).toBeInTheDocument();
+      expect(screen.getByText("Каждый день Total (100 req)")).toBeInTheDocument();
     });
 
-    it("should collapse the model breakdown again on a second click", async () => {
+    it("should collapse the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию breakdown again on a second click", async () => {
       const user = userEvent.setup();
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
 
       await user.click(expandToggle());
       expect(shownBreakdown()).toBeVisible();
@@ -245,7 +245,7 @@ describe("MultiCostResults", () => {
 
     it("should name the breakdown toggle and report its expanded state", async () => {
       const user = userEvent.setup();
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
 
       const toggle = screen.getByRole("button", { name: "Show cost breakdown for gpt-4" });
       expect(toggle).toHaveAttribute("aria-expanded", "false");
@@ -257,18 +257,18 @@ describe("MultiCostResults", () => {
     });
 
     it("should not offer an expand toggle for a row that failed", () => {
-      renderWithProviders(
-        <MultiCostResults
-          multiResult={makeMultiResult({
+      renderWithПровайдерs(
+        <MultiСтоимостьРезультатs
+          multiРезультат={makeMultiРезультат({
             entries: [
               {
-                entry: { id: "e1", model: "gpt-4", input_tokens: 1000, output_tokens: 500 },
-                result: makeCostResponse(),
+                entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
+                result: makeСтоимостьОтвет(),
                 loading: false,
                 error: null,
               },
               {
-                entry: { id: "e2", model: "bad-model", input_tokens: 0, output_tokens: 0 },
+                entry: { id: "e2", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "bad-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", input_tokens: 0, выходput_tokens: 0 },
                 result: null,
                 loading: false,
                 error: "Pricing not found",
@@ -279,17 +279,17 @@ describe("MultiCostResults", () => {
         />,
       );
 
-      expect(screen.getAllByRole("button", { name: /cost breakdown for / })).toHaveLength(1);
+      expect(screen.getВсеByRole("button", { name: /cost breakdown for / })).toHaveLength(1);
     });
   });
 
   describe("margin section", () => {
     it("should show margin fee details when margin per request is greater than zero", () => {
-      const multiResult = makeMultiResult({
+      const multiРезультат = makeMultiРезультат({
         entries: [
           {
-            entry: { id: "e1", model: "gpt-4", input_tokens: 1000, output_tokens: 500 },
-            result: makeCostResponse({ margin_cost_per_request: 0.01, daily_margin_cost: 1.0 }),
+            entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
+            result: makeСтоимостьОтвет({ margin_cost_per_request: 0.01, daily_margin_cost: 1.0 }),
             loading: false,
             error: null,
           },
@@ -304,30 +304,30 @@ describe("MultiCostResults", () => {
         },
       });
 
-      renderWithProviders(<MultiCostResults multiResult={multiResult} timePeriod="day" />);
-      expect(screen.getByText("Margin Fee/Request")).toBeInTheDocument();
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={multiРезультат} timePeriod="day" />);
+      expect(screen.getByText("Margin Fee/Запрос")).toBeInTheDocument();
     });
 
     it("should not show margin fee details when margin per request is zero", () => {
-      renderWithProviders(<MultiCostResults multiResult={makeMultiResult()} timePeriod="day" />);
-      expect(screen.queryByText("Margin Fee/Request")).not.toBeInTheDocument();
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={makeMultiРезультат()} timePeriod="day" />);
+      expect(screen.queryByText("Margin Fee/Запрос")).not.toBeInTheDocument();
     });
   });
 
-  describe("when a model has zero cost", () => {
-    it("should show a warning about missing pricing data", () => {
-      const multiResult = makeMultiResult({
+  describe("when a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию has zero cost", () => {
+    it("should show a warning abвыход missing pricing data", () => {
+      const multiРезультат = makeMultiРезультат({
         entries: [
           {
-            entry: { id: "e1", model: "custom-model", input_tokens: 1000, output_tokens: 500 },
-            result: makeCostResponse({ model: "custom-model", cost_per_request: 0 }),
+            entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "custom-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", input_tokens: 1000, выходput_tokens: 500 },
+            result: makeСтоимостьОтвет({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "custom-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", cost_per_request: 0 }),
             loading: false,
             error: null,
           },
         ],
       });
 
-      renderWithProviders(<MultiCostResults multiResult={multiResult} timePeriod="day" />);
+      renderWithПровайдерs(<MultiСтоимостьРезультатs multiРезультат={multiРезультат} timePeriod="day" />);
       expect(screen.getByText(/no pricing data found/i)).toBeInTheDocument();
     });
   });

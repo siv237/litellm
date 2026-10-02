@@ -6,51 +6,51 @@ import * as networking from "@/components/networking";
 import { toast } from "@/lib/toast";
 
 vi.mock("@/components/networking", () => ({
-  searchToolQueryCall: vi.fn(),
+  searchToolЗапросCall: vi.fn(),
 }));
 
-const mockSearchResults = {
+const mockSearchРезультатs = {
   results: [
     {
-      title: "Test Result 1",
+      title: "Test Результат 1",
       url: "https://example.com/result1",
       snippet: "This is a short snippet for the first result.",
     },
     {
-      title: "Test Result 2",
+      title: "Test Результат 2",
       url: "https://example.com/result2",
       snippet:
-        "This is a longer snippet that exceeds two hundred characters and should be truncated when displayed in the results. It contains more detailed information about the search result that would normally be shown in a search engine result page.",
+        "This is a longer snippet that exceeds two hundred characters and should be truncated when displayed in the results. It contains more detailed information abвыход the search result that would normally be shown in a search engine result page.",
     },
   ],
 };
 
 const defaultProps = {
   searchToolName: "test-search-tool",
-  accessToken: "test-token",
+  accessТокен: "test-token",
 };
 
 describe("SearchToolTester", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked(networking.searchToolQueryCall).mockResolvedValue(mockSearchResults);
-    vi.spyOn(Date, "now").mockReturnValue(1000000000000);
+    vi.clearВсеMocks();
+    vi.mocked(networking.searchToolЗапросCall).mockResolvedЗначение(mockSearchРезультатs);
+    vi.spyOn(Date, "now").mockReturnЗначение(1000000000000);
   });
 
   it("should render", () => {
     render(<SearchToolTester {...defaultProps} />);
-    expect(screen.getByText("Test Search Tool")).toBeInTheDocument();
+    expect(screen.getByText("Тест инструмента поиска")).toBeInTheDocument();
   });
 
   it("should display empty state when no search has been performed", () => {
     render(<SearchToolTester {...defaultProps} />);
-    expect(screen.getByText("Test your search tool")).toBeInTheDocument();
-    expect(screen.getByText("Enter a query above to see search results")).toBeInTheDocument();
+    expect(screen.getByText("Проверьте ваш инструмент поиска")).toBeInTheDocument();
+    expect(screen.getByText("Введите запрос выше, чтобы увидеть результаты поиска")).toBeInTheDocument();
   });
 
   it("should display search input with placeholder", () => {
     render(<SearchToolTester {...defaultProps} />);
-    expect(screen.getByPlaceholderText("Enter your search query...")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Введите your search query...")).toBeInTheDocument();
   });
 
   it("should display search button", () => {
@@ -67,71 +67,71 @@ describe("SearchToolTester", () => {
   it("should enable search button when input has text", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     expect(searchButton).toBeEnabled();
   });
 
-  it("should call searchToolQueryCall when search button is clicked", async () => {
+  it("should call searchToolЗапросCall when search button is clicked", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
-    expect(networking.searchToolQueryCall).toHaveBeenCalledWith("test-token", "test-search-tool", "test query");
+    expect(networking.searchToolЗапросCall).toHaveBeenCalledWith("test-token", "test-search-tool", "test query");
   });
 
-  it("should call searchToolQueryCall when Enter is pressed in input", async () => {
+  it("should call searchToolЗапросCall when Введите is pressed in input", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
-    await user.type(input, "test query{Enter}");
-    expect(networking.searchToolQueryCall).toHaveBeenCalledWith("test-token", "test-search-tool", "test query");
+    const input = screen.getByPlaceholderText("Введите your search query...");
+    await user.type(input, "test query{Введите}");
+    expect(networking.searchToolЗапросCall).toHaveBeenCalledWith("test-token", "test-search-tool", "test query");
   });
 
-  it("should not call searchToolQueryCall when Shift+Enter is pressed", async () => {
+  it("should not call searchToolЗапросCall when Shift+Введите is pressed", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
-    await user.keyboard("{Shift>}{Enter}{/Shift}");
-    expect(networking.searchToolQueryCall).not.toHaveBeenCalled();
+    await user.keyboard("{Shift>}{Введите}{/Shift}");
+    expect(networking.searchToolЗапросCall).not.toHaveBeenCalled();
   });
 
   it("should display loading state while searching", async () => {
-    vi.mocked(networking.searchToolQueryCall).mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve(mockSearchResults), 100)),
+    vi.mocked(networking.searchToolЗапросCall).mockImplementation(
+      () => new Promise((resolve) => setВремявыход(() => resolve(mockSearchРезультатs), 100)),
     );
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
     expect(screen.getByText("Searching...")).toBeInTheDocument();
 
-    expect(await screen.findByText("Test Result 1")).toBeInTheDocument();
+    expect(await screen.findByText("Test Результат 1")).toBeInTheDocument();
   });
 
   it("should display search results after successful search", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
     await waitFor(() => {
-      expect(screen.getByText("Test Result 1")).toBeInTheDocument();
+      expect(screen.getByText("Test Результат 1")).toBeInTheDocument();
     });
-    expect(screen.getByText("Test Result 2")).toBeInTheDocument();
+    expect(screen.getByText("Test Результат 2")).toBeInTheDocument();
   });
 
   it("should display search query in results header", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -143,7 +143,7 @@ describe("SearchToolTester", () => {
   it("should display result count in results header", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -153,19 +153,19 @@ describe("SearchToolTester", () => {
   });
 
   it("should display singular result count when only one result", async () => {
-    const singleResult = {
+    const singleРезультат = {
       results: [
         {
-          title: "Single Result",
+          title: "Single Результат",
           url: "https://example.com/single",
           snippet: "Single result snippet",
         },
       ],
     };
-    vi.mocked(networking.searchToolQueryCall).mockResolvedValue(singleResult);
+    vi.mocked(networking.searchToolЗапросCall).mockResolvedЗначение(singleРезультат);
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -177,7 +177,7 @@ describe("SearchToolTester", () => {
   it("should display result URLs", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -190,7 +190,7 @@ describe("SearchToolTester", () => {
   it("should display result snippets", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -202,7 +202,7 @@ describe("SearchToolTester", () => {
   it("should truncate long snippets and show expand button", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -214,7 +214,7 @@ describe("SearchToolTester", () => {
   it("should expand snippet when Show more is clicked", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -229,7 +229,7 @@ describe("SearchToolTester", () => {
   it("should collapse snippet when Show less is clicked", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -244,44 +244,44 @@ describe("SearchToolTester", () => {
   });
 
   it("should display no results message when search returns empty results", async () => {
-    vi.mocked(networking.searchToolQueryCall).mockResolvedValue({ results: [] });
+    vi.mocked(networking.searchToolЗапросCall).mockResolvedЗначение({ results: [] });
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
     await waitFor(() => {
-      expect(screen.getByText("No results found")).toBeInTheDocument();
+      expect(screen.getByText("Результаты не найдены")).toBeInTheDocument();
     });
-    expect(screen.getByText("Try a different search query")).toBeInTheDocument();
+    expect(screen.getByText("Попробуйте другой поисковый запрос")).toBeInTheDocument();
   });
 
   it("should display no results message when search returns null results", async () => {
-    vi.mocked(networking.searchToolQueryCall).mockResolvedValue({ results: null });
+    vi.mocked(networking.searchToolЗапросCall).mockResolvedЗначение({ results: null });
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
     await waitFor(() => {
-      expect(screen.getByText("No results found")).toBeInTheDocument();
+      expect(screen.getByText("Результаты не найдены")).toBeInTheDocument();
     });
   });
 
   it("should handle search errors and show notification", async () => {
-    const error = new Error("Search failed");
-    vi.mocked(networking.searchToolQueryCall).mockRejectedValue(error);
+    const error = new Ошибка("Search failed");
+    vi.mocked(networking.searchToolЗапросCall).mockRejectedЗначение(error);
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
     await waitFor(() => {
-      expect(toast.fromError).toHaveBeenCalledWith("Failed to query search tool");
+      expect(toast.fromОшибка).toHaveBeenCalledWith("Не удалось выполнить запрос к инструменту поиска");
     });
     consoleSpy.mockRestore();
   });
@@ -289,7 +289,7 @@ describe("SearchToolTester", () => {
   it("should maintain search history", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "first query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -302,14 +302,14 @@ describe("SearchToolTester", () => {
     await waitFor(() => {
       expect(screen.getByText("second query")).toBeInTheDocument();
     });
-    expect(screen.getByText("Previous Searches")).toBeInTheDocument();
+    expect(screen.getByText("Предыдущие запросы")).toBeInTheDocument();
     expect(screen.getByText("first query")).toBeInTheDocument();
   });
 
   it("should allow clicking previous search to set query", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "first query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -322,18 +322,18 @@ describe("SearchToolTester", () => {
     await waitFor(() => {
       expect(screen.getByText("second query")).toBeInTheDocument();
     });
-    const historyItems = screen.getAllByText("first query");
+    const historyItems = screen.getВсеByText("first query");
     const historyItem = historyItems.find((item) => item.closest('[class*="cursor-pointer"]'));
     if (historyItem) {
       await user.click(historyItem);
-      expect(input).toHaveValue("first query");
+      expect(input).toHaveЗначение("first query");
     }
   });
 
-  it("should clear history when Clear All is clicked", async () => {
+  it("should clear history when Очистить всё is clicked", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "first query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -344,18 +344,18 @@ describe("SearchToolTester", () => {
     await user.type(input, "second query");
     await user.click(searchButton);
     await waitFor(() => {
-      expect(screen.getByText("Previous Searches")).toBeInTheDocument();
+      expect(screen.getByText("Предыдущие запросы")).toBeInTheDocument();
     });
     const clearButton = screen.getByRole("button", { name: /clear all/i });
     await user.click(clearButton);
-    expect(toast.success).toHaveBeenCalledWith("Search history cleared");
-    expect(screen.queryByText("Previous Searches")).not.toBeInTheDocument();
+    expect(toast.success).toHaveBeenCalledWith("История поиска очищена");
+    expect(screen.queryByText("Предыдущие запросы")).not.toBeInTheDocument();
   });
 
   it("should limit history display to 5 previous searches", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     for (let i = 1; i <= 7; i++) {
       await user.clear(input);
       await user.type(input, `query ${i}`);
@@ -365,9 +365,9 @@ describe("SearchToolTester", () => {
         expect(screen.getByText(`query ${i}`)).toBeInTheDocument();
       });
     }
-    const historySection = screen.queryByText("Previous Searches");
+    const historySection = screen.queryByText("Предыдущие запросы");
     if (historySection) {
-      const historyItems = historySection.parentElement?.querySelectorAll('[class*="cursor-pointer"]');
+      const historyItems = historySection.parentElement?.queryВыбратьorВсе('[class*="cursor-pointer"]');
       expect(historyItems?.length).toBeLessThanOrEqual(5);
     }
   });
@@ -375,23 +375,23 @@ describe("SearchToolTester", () => {
   it("should preserve query text after search", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText("test query")).toBeInTheDocument();
     });
-    expect(input).toHaveValue("test query");
+    expect(input).toHaveЗначение("test query");
   });
 
   it("should disable input and button while loading", async () => {
-    vi.mocked(networking.searchToolQueryCall).mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve(mockSearchResults), 100)),
+    vi.mocked(networking.searchToolЗапросCall).mockImplementation(
+      () => new Promise((resolve) => setВремявыход(() => resolve(mockSearchРезультатs), 100)),
     );
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
@@ -404,11 +404,11 @@ describe("SearchToolTester", () => {
   it("should display result links that open in new tab", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Enter your search query...");
+    const input = screen.getByPlaceholderText("Введите your search query...");
     await user.type(input, "test query");
     const searchButton = screen.getByRole("button", { name: /search/i });
     await user.click(searchButton);
-    const link = await screen.findByRole("link", { name: "Test Result 1" });
+    const link = await screen.findByRole("link", { name: "Test Результат 1" });
     expect(link).toHaveAttribute("href", "https://example.com/result1");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
     expect(link).toHaveAttribute("target", "_blank");

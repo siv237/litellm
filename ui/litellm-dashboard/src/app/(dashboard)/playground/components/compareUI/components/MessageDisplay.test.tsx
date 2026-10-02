@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { MessageType } from "@/components/chat_ui/types";
-import { MessageDisplay } from "./MessageDisplay";
+import type { СообщениеType } from "@/components/chat_ui/types";
+import { СообщениеDisplay } from "./СообщениеDisplay";
 
 vi.mock("@/components/chat_ui/ReasoningContent", () => ({
   default: ({ reasoningContent }: { reasoningContent: string }) => (
@@ -9,26 +9,26 @@ vi.mock("@/components/chat_ui/ReasoningContent", () => ({
   ),
 }));
 
-vi.mock("@/components/chat_ui/ResponseMetrics", () => ({
-  default: () => <div data-testid="response-metrics">ResponseMetrics</div>,
+vi.mock("@/components/chat_ui/ОтветМетрикаs", () => ({
+  default: () => <div data-testid="response-metrics">ОтветМетрикаs</div>,
 }));
 
-vi.mock("../../chat_ui/SearchResultsDisplay", () => ({
-  SearchResultsDisplay: () => <div data-testid="search-results">SearchResultsDisplay</div>,
+vi.mock("../../chat_ui/SearchРезультатsDisplay", () => ({
+  SearchРезультатsDisplay: () => <div data-testid="search-results">SearchРезультатsDisplay</div>,
 }));
 
 vi.mock("../../chat_ui/ChatImageRenderer", () => ({
   default: ({ message }: { message: any }) =>
-    message.imagePreviewUrl ? (
+    message.image-предпросмотрUrl ? (
       <div data-testid="chat-image-renderer">
-        <img src={message.imagePreviewUrl} alt="User uploaded image" />
+        <img src={message.image-предпросмотрUrl} alt="User uploaded image" />
       </div>
     ) : null,
 }));
 
-describe("MessageDisplay", () => {
+describe("СообщениеDisplay", () => {
   it("should render", () => {
-    const messages: MessageType[] = [
+    const messages: СообщениеType[] = [
       {
         role: "user",
         content: "Hello",
@@ -36,16 +36,16 @@ describe("MessageDisplay", () => {
       {
         role: "assistant",
         content: "Hi there!",
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
       },
     ];
-    render(<MessageDisplay messages={messages} isLoading={false} />);
+    render(<СообщениеDisplay messages={messages} isLoading={false} />);
     expect(screen.getByText("Hello")).toBeInTheDocument();
     expect(screen.getByText("Hi there!")).toBeInTheDocument();
   });
 
   it("displays user and assistant messages with proper grouping and shows loading state", () => {
-    const messages: MessageType[] = [
+    const messages: СообщениеType[] = [
       {
         role: "user",
         content: "What is 2+2?",
@@ -53,18 +53,18 @@ describe("MessageDisplay", () => {
       {
         role: "assistant",
         content: "2+2 equals 4",
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
         toolName: "calculator",
-        timeToFirstToken: 100,
+        timeToFirstТокен: 100,
         totalLatency: 500,
         usage: {
-          completionTokens: 10,
-          promptTokens: 20,
-          totalTokens: 30,
+          completionТокенs: 10,
+          promptТокенs: 20,
+          totalТокенs: 30,
         },
       },
     ];
-    render(<MessageDisplay messages={messages} isLoading={false} />);
+    render(<СообщениеDisplay messages={messages} isLoading={false} />);
     expect(screen.getByText("You")).toBeInTheDocument();
     expect(screen.getByText("What is 2+2?")).toBeInTheDocument();
     expect(screen.getByText("gpt-4")).toBeInTheDocument();
@@ -74,22 +74,22 @@ describe("MessageDisplay", () => {
   });
 
   it("should display image attachment in user message", () => {
-    const messages: MessageType[] = [
+    const messages: СообщениеType[] = [
       {
         role: "user",
         content: "What is in this image? [Image attached]",
-        imagePreviewUrl: "blob:test-image-url",
+        image-предпросмотрUrl: "blob:test-image-url",
       },
       {
         role: "assistant",
         content: "This is a test image",
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
       },
     ];
-    render(<MessageDisplay messages={messages} isLoading={false} />);
+    render(<СообщениеDisplay messages={messages} isLoading={false} />);
     expect(screen.getByText("What is in this image? [Image attached]")).toBeInTheDocument();
     expect(screen.getByTestId("chat-image-renderer")).toBeInTheDocument();
-    const image = screen.getByTestId("chat-image-renderer").querySelector("img");
+    const image = screen.getByTestId("chat-image-renderer").queryВыбратьor("img");
     expect(image).toHaveAttribute("src", "blob:test-image-url");
   });
 });

@@ -50,7 +50,7 @@ function AttachmentRowActions({ attachment, isAdmin, onDeleteClick }: Attachment
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open attachment actions"
+        aria-label="Действия с вложением"
         data-testid={`attachment-actions-${attachment.attachment_id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -62,7 +62,7 @@ function AttachmentRowActions({ attachment, isAdmin, onDeleteClick }: Attachment
           onClick={() => void copyToClipboard(attachment.attachment_id, "Attachment ID copied")}
         >
           <Copy />
-          Copy attachment ID
+          Скопировать ID вложения
         </DropdownMenuItem>
         {isAdmin && (
           <>
@@ -75,7 +75,7 @@ function AttachmentRowActions({ attachment, isAdmin, onDeleteClick }: Attachment
               onClick={() => onDeleteClick(attachment.attachment_id)}
             >
               <Trash2 />
-              Delete attachment
+              Удалить вложение
             </DropdownMenuItem>
           </>
         )}
@@ -98,8 +98,8 @@ export const getAttachmentTableColumns = ({
   {
     id: "attachment_id",
     accessorKey: "attachment_id",
-    meta: { title: "Attachment ID" },
-    header: "Attachment ID",
+    meta: { title: "ID вложения" },
+    header: "ID вложения",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => <IdCell value={row.original.attachment_id} variant="plain" />,
@@ -107,8 +107,8 @@ export const getAttachmentTableColumns = ({
   {
     id: "policy_name",
     accessorKey: "policy_name",
-    meta: { title: "Policy", skeleton: "badge" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Policy" />,
+    meta: { title: "Политика", skeleton: "badge" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Политика" />,
     size: 180,
     enableSorting: true,
     cell: ({ row }) => <StatusBadge tone="info" label={row.original.policy_name} />,
@@ -116,8 +116,8 @@ export const getAttachmentTableColumns = ({
   {
     id: "scope",
     accessorFn: (row) => row.scope ?? "",
-    meta: { title: "Scope", skeleton: "badge" },
-    header: "Scope",
+    meta: { title: "Область", skeleton: "badge" },
+    header: "Область",
     size: 120,
     enableSorting: false,
     cell: ({ row }) => {
@@ -126,7 +126,7 @@ export const getAttachmentTableColumns = ({
         return <span className="text-muted-foreground">-</span>;
       }
       if (scope === "*") {
-        return <StatusBadge tone="warning" label="Global (*)" />;
+        return <StatusBadge tone="warning" label="Глобально (*)" />;
       }
       return (
         <span className="block max-w-40 truncate text-xs" title={scope}>
@@ -137,16 +137,16 @@ export const getAttachmentTableColumns = ({
   },
   {
     id: "teams",
-    meta: { title: "Teams", skeleton: "chips" },
-    header: "Teams",
+    meta: { title: "Команды", skeleton: "chips" },
+    header: "Команды",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => <ChipList values={row.original.teams ?? []} />,
   },
   {
     id: "keys",
-    meta: { title: "Keys", skeleton: "chips" },
-    header: "Keys",
+    meta: { title: "Ключи", skeleton: "chips" },
+    header: "Ключи",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => <ChipList values={row.original.keys ?? []} />,
@@ -161,8 +161,8 @@ export const getAttachmentTableColumns = ({
   },
   {
     id: "tags",
-    meta: { title: "Tags", skeleton: "chips" },
-    header: "Tags",
+    meta: { title: "Теги", skeleton: "chips" },
+    header: "Теги",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => <ChipList values={row.original.tags ?? []} />,
@@ -170,8 +170,8 @@ export const getAttachmentTableColumns = ({
   {
     id: "created_at",
     accessorFn: (row) => row.created_at ?? "",
-    meta: { title: "Created At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created At" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 150,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.created_at} />,

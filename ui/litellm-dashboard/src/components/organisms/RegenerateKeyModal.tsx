@@ -97,7 +97,7 @@ export function RegenerateKeyModal({ selectedToken, visible, onClose, onKeyUpdat
     try {
       const response = await regenerateKeyCall(accessToken, selectedToken.token || selectedToken.token_id, formValues);
       setRegeneratedKey(response.key);
-      toast.success("Virtual Key regenerated successfully");
+      toast.success("Виртуальный ключ перегенерирован");
 
       // Build the update payload. Spread the API response first so any new
       // fields it returns (new token, timestamps, etc.) are captured, then
@@ -151,22 +151,22 @@ export function RegenerateKeyModal({ selectedToken, visible, onClose, onKeyUpdat
     <Dialog open={visible} onOpenChange={(open) => !open && handleClose()} disablePointerDismissal>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[520px]">
         <DialogHeader>
-          <DialogTitle>Regenerate Virtual Key</DialogTitle>
+          <DialogTitle>Перегенерировать виртуальный ключ</DialogTitle>
         </DialogHeader>
         {regeneratedKey ? (
           <div className="flex flex-col gap-4">
             <Alert variant="warning">
               <TriangleAlert />
-              <AlertTitle>Save it now, you will not see it again</AlertTitle>
+              <AlertTitle>Сохраните сейчас — больше вы его не увидите</AlertTitle>
             </Alert>
 
             <div className="flex flex-col gap-0.5">
-              <span className="text-xs text-muted-foreground">Key Alias</span>
+              <span className="text-xs text-muted-foreground">Псевдоним ключа</span>
               <span className="text-sm text-foreground">{selectedToken?.key_alias || "No alias set"}</span>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <span className="text-xs text-muted-foreground">Virtual Key</span>
+              <span className="text-xs text-muted-foreground">Виртуальный ключ</span>
               <div className="rounded-md border border-border bg-muted px-4 py-3.5 font-mono text-base break-all text-foreground">
                 {regeneratedKey}
               </div>
@@ -176,12 +176,12 @@ export function RegenerateKeyModal({ selectedToken, visible, onClose, onKeyUpdat
           <TooltipProvider>
             <form onSubmit={(event) => event.preventDefault()} noValidate className="mt-1">
               <FieldGroup>
-                <FormField control={form.control} name="key_alias" label="Key Alias">
+                <FormField control={form.control} name="key_alias" label="Псевдоним ключа">
                   {({ ref, value, ...field }) => <Input {...field} ref={ref} value={value ?? ""} disabled />}
                 </FormField>
 
                 <div className="grid grid-cols-3 gap-3">
-                  <FormField control={form.control} name="max_budget" label="Max Budget (USD)">
+                  <FormField control={form.control} name="max_budget" label="Макс. бюджет (USD)">
                     {({ ref, value, onChange, ...field }) => (
                       <Input
                         {...field}
@@ -194,7 +194,7 @@ export function RegenerateKeyModal({ selectedToken, visible, onClose, onKeyUpdat
                     )}
                   </FormField>
 
-                  <FormField control={form.control} name="tpm_limit" label="TPM Limit">
+                  <FormField control={form.control} name="tpm_limit" label="Лимит TPM">
                     {({ ref, value, onChange, ...field }) => (
                       <Input
                         {...field}
@@ -206,7 +206,7 @@ export function RegenerateKeyModal({ selectedToken, visible, onClose, onKeyUpdat
                     )}
                   </FormField>
 
-                  <FormField control={form.control} name="rpm_limit" label="RPM Limit">
+                  <FormField control={form.control} name="rpm_limit" label="Лимит RPM">
                     {({ ref, value, onChange, ...field }) => (
                       <Input
                         {...field}
@@ -223,14 +223,14 @@ export function RegenerateKeyModal({ selectedToken, visible, onClose, onKeyUpdat
                   <FormField
                     control={form.control}
                     name="duration"
-                    label="Expire Key"
+                    label="Истекает"
                     description={
                       <span className="flex flex-col gap-0.5 text-xs">
                         <span className={keyIsExpired ? "text-destructive" : "text-muted-foreground"}>
-                          Current expiry: {selectedToken?.expires ? formatExpiresUtc(selectedToken.expires) : "Never"}
+                          Текущий срок: {selectedToken?.expires ? formatExpiresUtc(selectedToken.expires) : "Never"}
                           {keyIsExpired && " (expired)"}
                         </span>
-                        {newExpiryTime && <span className="text-success">New expiry: {newExpiryTime}</span>}
+                        {newExpiryTime && <span className="text-success">Новый срок: {newExpiryTime}</span>}
                       </span>
                     }
                   >
@@ -244,7 +244,7 @@ export function RegenerateKeyModal({ selectedToken, visible, onClose, onKeyUpdat
                       "Grace Period",
                       "Keep the old key valid for this duration after rotation. Both keys work during this period for seamless cutover. Empty = immediate revoke.",
                     )}
-                    description={<span className="text-xs">Recommended: 24h to 72h for production keys</span>}
+                    description={<span className="text-xs">Рекомендуется: 24–72 ч для продуктовых ключей</span>}
                   >
                     {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="e.g. 24h, 2d" />}
                   </FormField>
@@ -273,7 +273,7 @@ export function RegenerateKeyModal({ selectedToken, visible, onClose, onKeyUpdat
               </Button>
               <Button onClick={handleRegenerateKey} disabled={isRegenerating} aria-busy={isRegenerating}>
                 <RefreshCw />
-                Regenerate
+                Перегенерировать
               </Button>
             </>
           )}

@@ -252,18 +252,18 @@ main();`;
     <>
       <Button variant="outline" onClick={showModal}>
         <CodeIcon />
-        Get Code
+        Получить код
       </Button>
 
       <Dialog open={isModalVisible} onOpenChange={(open) => !open && handleCancel()}>
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Generated Code</DialogTitle>
+            <DialogTitle>Сгенерированный код</DialogTitle>
           </DialogHeader>
           <div className="flex justify-between items-center mb-4">
             <div>
               <label htmlFor="prompt-code-language" className="font-medium block mb-1 text-foreground">
-                Language
+                Язык
               </label>
               <Select
                 items={LANGUAGE_ITEMS}
@@ -286,19 +286,19 @@ main();`;
               variant="outline"
               onClick={() => {
                 navigator.clipboard.writeText(generatedCode);
-                toast.success("Copied to clipboard!");
+                toast.success("Скопировано в буфер");
               }}
             >
               <CopyIcon />
-              Copy to Clipboard
+              Скопировать в буфер
             </Button>
           </div>
 
           <Tabs value={selectedTab} onValueChange={(value) => setSelectedTab(String(value))}>
-            <TabsList aria-label="Generated code type">
-              <TabsTrigger value="basic">Basic</TabsTrigger>
-              <TabsTrigger value="messages">With Messages</TabsTrigger>
-              <TabsTrigger value="version">With Version</TabsTrigger>
+            <TabsList aria-label="Тип генерируемого кода">
+              <TabsTrigger value="basic">Базовый</TabsTrigger>
+              <TabsTrigger value="messages">С сообщениями</TabsTrigger>
+              <TabsTrigger value="version">С версией</TabsTrigger>
             </TabsList>
           </Tabs>
 

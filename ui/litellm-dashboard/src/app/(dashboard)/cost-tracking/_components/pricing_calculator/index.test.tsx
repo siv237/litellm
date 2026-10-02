@@ -2,17 +2,17 @@ import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders } from "../../../../../../tests/test-utils";
+import { renderWithПровайдерs } from "../../../../../../tests/test-utils";
 import PricingCalculator from "./index";
-import type { ModelEntry } from "./types";
-import type { MultiModelResult } from "./types";
+import type { РежимlEntry } from "./types";
+import type { MultiРежимlРезультат } from "./types";
 
 vi.mock("./use_multi_cost_estimate", () => ({
-  useMultiCostEstimate: vi.fn(() => ({
+  useMultiСтоимостьEstimate: vi.fn(() => ({
     debouncedFetchForEntry: vi.fn(),
     removeEntry: vi.fn(),
-    getMultiModelResult: vi.fn(
-      (entries: ModelEntry[]): MultiModelResult => ({
+    getMultiРежимlРезультат: vi.fn(
+      (entries: РежимlEntry[]): MultiРежимlРезультат => ({
         entries: entries.map((e) => ({ entry: e, result: null, loading: false, error: null })),
         totals: {
           cost_per_request: 0,
@@ -37,123 +37,123 @@ vi.mock("@/utils/dataUtils", () => ({
 }));
 
 const DEFAULT_PROPS = {
-  accessToken: "test-token",
-  models: ["gpt-4", "gpt-3.5-turbo", "claude-3-sonnet"],
+  accessТокен: "test-token",
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4", "gpt-3.5-turbo", "claude-3-sonnet"],
 };
 
 const dataRows = (): HTMLElement[] =>
   within(screen.getByRole("table"))
-    .getAllByRole("row")
-    .filter((row) => within(row).queryAllByRole("combobox").length > 0);
+    .getВсеByRole("row")
+    .filter((row) => within(row).queryВсеByRole("combobox").length > 0);
 
 const deleteButtonIn = (row: HTMLElement): HTMLElement => {
-  const cells = within(row).getAllByRole("cell");
+  const cells = within(row).getВсеByRole("cell");
   return within(cells[cells.length - 1]).getByRole("button");
 };
 
 describe("PricingCalculator", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
-  it("should render the calculator with an initial model row", () => {
-    renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
+  it("should render the calculator with an initial Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию row", () => {
+    renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
     expect(screen.getByRole("table")).toBeInTheDocument();
   });
 
   it("should render the time period toggle with Per Day and Per Month options", () => {
-    renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
+    renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
     expect(screen.getByText("Per Day")).toBeInTheDocument();
     expect(screen.getByText("Per Month")).toBeInTheDocument();
   });
 
-  it("should render an Add Another Model button", () => {
-    renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
-    expect(screen.getByRole("button", { name: /add another model/i })).toBeInTheDocument();
+  it("should render an Add Another Режимl button", () => {
+    renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
+    expect(screen.getByRole("button", { name: /add another Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/i })).toBeInTheDocument();
   });
 
-  it("should show the Requests/Month column header by default", () => {
-    renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
-    expect(screen.getByText("Requests/Month")).toBeInTheDocument();
+  it("should show the Запросs/Month column header by default", () => {
+    renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
+    expect(screen.getByText("Запросs/Month")).toBeInTheDocument();
   });
 
-  it("should add a new row when Add Another Model is clicked", async () => {
+  it("should add a new row when Add Another Режимl is clicked", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
+    renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
 
     const table = screen.getByRole("table");
-    const initialRows = within(table).getAllByRole("row");
+    const initialRows = within(table).getВсеByRole("row");
 
-    await user.click(screen.getByRole("button", { name: /add another model/i }));
+    await user.click(screen.getByRole("button", { name: /add another Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/i }));
 
-    const updatedRows = within(table).getAllByRole("row");
+    const updatedRows = within(table).getВсеByRole("row");
     // One new data row added (header row + data rows)
     expect(updatedRows.length).toBeGreaterThan(initialRows.length);
   });
 
   it("should have the delete button disabled when there is only one row", () => {
-    renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
-    const allButtons = screen.getAllByRole("button");
+    renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
+    const allButtons = screen.getВсеByRole("button");
     const disabledButtons = allButtons.filter((btn) => btn.hasAttribute("disabled"));
     expect(disabledButtons.length).toBeGreaterThan(0);
   });
 
   it("should have no disabled buttons after adding a second row", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
+    renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
 
-    await user.click(screen.getByRole("button", { name: /add another model/i }));
+    await user.click(screen.getByRole("button", { name: /add another Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/i }));
 
     // With two rows, no delete buttons should be disabled
-    const allButtons = screen.getAllByRole("button");
+    const allButtons = screen.getВсеByRole("button");
     const disabledButtons = allButtons.filter((btn) => btn.hasAttribute("disabled"));
     expect(disabledButtons.length).toBe(0);
   });
 
   describe("time period toggle", () => {
-    it("should switch the column header to Requests/Day when Per Day is selected", async () => {
+    it("should switch the column header to Запросs/Day when Per Day is selected", async () => {
       const user = userEvent.setup();
-      renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
+      renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
 
       await user.click(screen.getByText("Per Day"));
 
-      expect(screen.getByText("Requests/Day")).toBeInTheDocument();
+      expect(screen.getByText("Запросs/Day")).toBeInTheDocument();
     });
 
-    it("should switch the column header back to Requests/Month when Per Month is selected", async () => {
+    it("should switch the column header back to Запросs/Month when Per Month is selected", async () => {
       const user = userEvent.setup();
-      renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
+      renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
 
       await user.click(screen.getByText("Per Day"));
-      expect(screen.getByText("Requests/Day")).toBeInTheDocument();
+      expect(screen.getByText("Запросs/Day")).toBeInTheDocument();
 
       await user.click(screen.getByText("Per Month"));
-      expect(screen.getByText("Requests/Month")).toBeInTheDocument();
+      expect(screen.getByText("Запросs/Month")).toBeInTheDocument();
     });
   });
 
-  it("should render column headers for Model, Input Tokens, and Output Tokens", () => {
-    renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
-    expect(screen.getByRole("columnheader", { name: "Model" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Input Tokens" })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: "Output Tokens" })).toBeInTheDocument();
+  it("should render column headers for Режимl, Вход Токенs, and Выход Токенs", () => {
+    renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
+    expect(screen.getByRole("columnheader", { name: "Режимl" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Вход Токенs" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "Выход Токенs" })).toBeInTheDocument();
   });
 
-  it("should render a numeric field for input tokens, output tokens and requests", () => {
-    renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
-    expect(screen.getAllByRole("spinbutton")).toHaveLength(3);
+  it("should render a numeric field for input tokens, выходput tokens and requests", () => {
+    renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
+    expect(screen.getВсеByRole("spinbutton")).toHaveLength(3);
   });
 
-  it("should offer a model picker per row", () => {
-    renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
-    expect(screen.getAllByRole("combobox")).toHaveLength(1);
+  it("should offer a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию picker per row", () => {
+    renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
+    expect(screen.getВсеByRole("combobox")).toHaveLength(1);
   });
 
   it("should remove a row when its delete button is clicked", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<PricingCalculator {...DEFAULT_PROPS} />);
+    renderWithПровайдерs(<PricingCalculator {...DEFAULT_PROPS} />);
 
-    await user.click(screen.getByRole("button", { name: /add another model/i }));
+    await user.click(screen.getByRole("button", { name: /add another Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/i }));
     const withTwoRows = dataRows();
     expect(withTwoRows).toHaveLength(2);
 

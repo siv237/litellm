@@ -1,20 +1,20 @@
-import { renderWithProviders, screen, within } from "../../../../../tests/test-utils";
+import { renderWithПровайдерs, screen, within } from "../../../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import GeneralSettings from "./general_settings";
-import { deleteConfigFieldSetting, getGeneralSettingsCall, updateConfigFieldSetting } from "@/components/networking";
+import { deleteКонфигурацияПолеSetting, getGeneralSettingsCall, updateКонфигурацияПолеSetting } from "@/components/networking";
 
 vi.mock("@/components/networking", () => ({
   getGeneralSettingsCall: vi.fn(),
-  updateConfigFieldSetting: vi.fn().mockResolvedValue({}),
-  deleteConfigFieldSetting: vi.fn().mockResolvedValue({}),
+  updateКонфигурацияПолеSetting: vi.fn().mockResolvedЗначение({}),
+  deleteКонфигурацияПолеSetting: vi.fn().mockResolvedЗначение({}),
 }));
 
-vi.mock("@/components/router_settings", () => ({ default: () => null }));
-vi.mock("@/components/Settings/RouterSettings/Fallbacks/Fallbacks", () => ({ default: () => null }));
-vi.mock("@/components/routing_groups", () => ({ default: () => null }));
+vi.mock("@/components/rвыходer_settings", () => ({ default: () => null }));
+vi.mock("@/components/Settings/RвыходerSettings/Резервные модели/Резервные модели", () => ({ default: () => null }));
+vi.mock("@/components/rвыходing_groups", () => ({ default: () => null }));
 // Mirrors the /config/list ordering: the two prompt-caching rows sit between the
-// General-tab rows in the unfiltered response but are filtered out of the General
+// General-tab rows in the unfiltered response but are filtered выход of the General
 // tab's table, so any index-based lookup into the unfiltered array reads the wrong
 // row for every field rendered after them.
 const SETTINGS_FIXTURE = [
@@ -37,7 +37,7 @@ const SETTINGS_FIXTURE = [
   },
   {
     field_name: "anthropic_prompt_caching_ttl",
-    field_type: "Select",
+    field_type: "Выбрать",
     field_value: "5m",
     field_description: "prompt caching ttl",
     stored_in_db: true,
@@ -62,66 +62,66 @@ const settingsRow = async (fieldName: string) => {
   return row as HTMLElement;
 };
 
-const numericValueIn = (row: HTMLElement) => Number((within(row).getByRole("spinbutton") as HTMLInputElement).value);
+const numericЗначениеIn = (row: HTMLElement) => Number((within(row).getByRole("spinbutton") as HTMLВходElement).value);
 
 describe("GeneralSettings General tab", () => {
   beforeEach(() => {
-    vi.mocked(getGeneralSettingsCall).mockResolvedValue([...SETTINGS_FIXTURE.map((s) => ({ ...s }))]);
-    vi.mocked(updateConfigFieldSetting).mockClear();
-    vi.mocked(deleteConfigFieldSetting).mockClear();
+    vi.mocked(getGeneralSettingsCall).mockResolvedЗначение([...SETTINGS_FIXTURE.map((s) => ({ ...s }))]);
+    vi.mocked(updateКонфигурацияПолеSetting).mockClear();
+    vi.mocked(deleteКонфигурацияПолеSetting).mockClear();
   });
 
   it("updates max_ui_session_budget with its own value, not the value at its filtered index", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<GeneralSettings accessToken="token" userRole="Admin" userID="user" />);
+    renderWithПровайдерs(<GeneralSettings accessТокен="token" userRole="Admin" userID="user" />);
 
     await user.click(screen.getByText("General"));
     const row = await settingsRow("max_ui_session_budget");
 
     await user.click(within(row).getByRole("button", { name: /update/i }));
 
-    expect(updateConfigFieldSetting).toHaveBeenCalledWith("token", "max_ui_session_budget", 7.5);
+    expect(updateКонфигурацияПолеSetting).toHaveBeenCalledWith("token", "max_ui_session_budget", 7.5);
   });
 
   it("reset shows the field's default value instead of an empty input", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<GeneralSettings accessToken="token" userRole="Admin" userID="user" />);
+    renderWithПровайдерs(<GeneralSettings accessТокен="token" userRole="Admin" userID="user" />);
 
     await user.click(screen.getByText("General"));
     const row = await settingsRow("max_ui_session_budget");
-    expect(numericValueIn(row)).toBe(7.5);
+    expect(numericЗначениеIn(row)).toBe(7.5);
 
-    const actionCell = row.querySelectorAll("td")[3];
-    const resetIcon = actionCell.querySelector("svg");
+    const actionCell = row.queryВыбратьorВсе("td")[3];
+    const resetIcon = actionCell.queryВыбратьor("svg");
     expect(resetIcon).not.toBeNull();
     await user.click(resetIcon as unknown as Element);
 
-    expect(deleteConfigFieldSetting).toHaveBeenCalledWith("token", "max_ui_session_budget");
-    expect(numericValueIn(row)).toBe(1);
+    expect(deleteКонфигурацияПолеSetting).toHaveBeenCalledWith("token", "max_ui_session_budget");
+    expect(numericЗначениеIn(row)).toBe(1);
   });
 });
 
-// The five tabs here are proxy-wide settings. Auto-routers moved to Models + Endpoints.
+// The five tabs here are proxy-wide settings. Auto-rвыходers moved to Режимls + Эндпоинтs.
 describe("GeneralSettings tabs", () => {
   beforeEach(() => {
-    vi.mocked(getGeneralSettingsCall).mockResolvedValue([]);
+    vi.mocked(getGeneralSettingsCall).mockResolvedЗначение([]);
   });
 
-  it("renders the proxy-wide tabs and no auto-router tab", async () => {
-    renderWithProviders(<GeneralSettings accessToken="token" userRole="proxy_admin" userID="u" />);
+  it("renders the proxy-wide tabs and no auto-rвыходer tab", async () => {
+    renderWithПровайдерs(<GeneralSettings accessТокен="token" userRole="proxy_admin" userID="u" />);
 
-    for (const name of ["Loadbalancing", "Routing Groups", "Fallbacks", "Prompt Caching", "General"]) {
+    for (const name of ["Loadbalancing", "Маршрутизация Groups", "Резервные модели", "Prompt Caching", "General"]) {
       expect(await screen.findByRole("tab", { name })).toBeInTheDocument();
     }
-    expect(screen.queryByRole("tab", { name: /auto.?router/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("tab", { name: /auto.?rвыходer/i })).not.toBeInTheDocument();
   });
 });
 
 it("should delete only the Default setting and retain explicit false and zero", async () => {
-  vi.mocked(getGeneralSettingsCall).mockResolvedValue([
+  vi.mocked(getGeneralSettingsCall).mockResolvedЗначение([
     {
       field_name: "synthetic_choice",
-      field_type: "Select",
+      field_type: "Выбрать",
       field_value: "enabled",
       field_options: ["enabled"],
       field_description: "choice",
@@ -142,10 +142,10 @@ it("should delete only the Default setting and retain explicit false and zero", 
       stored_in_db: true,
     },
   ]);
-  vi.mocked(updateConfigFieldSetting).mockClear();
-  vi.mocked(deleteConfigFieldSetting).mockClear();
+  vi.mocked(updateКонфигурацияПолеSetting).mockClear();
+  vi.mocked(deleteКонфигурацияПолеSetting).mockClear();
   const user = userEvent.setup();
-  renderWithProviders(<GeneralSettings accessToken="token" userRole="Admin" userID="user" />);
+  renderWithПровайдерs(<GeneralSettings accessТокен="token" userRole="Admin" userID="user" />);
   await user.click(screen.getByRole("tab", { name: "General" }));
   const row = await screen.findByRole("row", { name: /synthetic_choice/ });
   await user.click(within(row).getByRole("combobox"));
@@ -155,8 +155,8 @@ it("should delete only the Default setting and retain explicit false and zero", 
   await user.click(
     within(screen.getByRole("row", { name: /synthetic_count/ })).getByRole("button", { name: "Update" }),
   );
-  expect(vi.mocked(deleteConfigFieldSetting).mock.calls).toEqual([["token", "synthetic_choice"]]);
-  expect(vi.mocked(updateConfigFieldSetting).mock.calls).toEqual([
+  expect(vi.mocked(deleteКонфигурацияПолеSetting).mock.calls).toEqual([["token", "synthetic_choice"]]);
+  expect(vi.mocked(updateКонфигурацияПолеSetting).mock.calls).toEqual([
     ["token", "synthetic_flag", false],
     ["token", "synthetic_count", 0],
   ]);

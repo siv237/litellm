@@ -51,7 +51,7 @@ function AgentHubRowActions({ agent, onAgentClick }: AgentHubRowActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open agent actions"
+        aria-label="Действия с агентом"
         data-testid={`agent-hub-actions-${agent.agent_id || agent.name}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -60,14 +60,14 @@ function AgentHubRowActions({ agent, onAgentClick }: AgentHubRowActionsProps) {
       <DropdownMenuContent align="end" className="w-52">
         <DropdownMenuItem data-testid="agent-hub-action-details" onClick={() => onAgentClick(agent)}>
           <Info />
-          View details
+          Подробнее
         </DropdownMenuItem>
         <DropdownMenuItem
           data-testid="agent-hub-action-copy"
           onClick={() => void copyToClipboard(agent.name, "Agent name copied")}
         >
           <Copy />
-          Copy agent name
+          Скопировать название агента
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -82,8 +82,8 @@ export const getAgentHubTableColumns = ({ onAgentClick }: AgentHubTableColumnsDe
   {
     id: "name",
     accessorKey: "name",
-    meta: { title: "Agent Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Agent Name" />,
+    meta: { title: "Название агента" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Название агента" />,
     size: 200,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -108,8 +108,8 @@ export const getAgentHubTableColumns = ({ onAgentClick }: AgentHubTableColumnsDe
   {
     id: "version",
     accessorKey: "version",
-    meta: { title: "Version", skeleton: "badge", className: "hidden lg:table-cell" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Version" />,
+    meta: { title: "Версия", skeleton: "badge", className: "hidden lg:table-cell" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Версия" />,
     size: 100,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -122,8 +122,8 @@ export const getAgentHubTableColumns = ({ onAgentClick }: AgentHubTableColumnsDe
   {
     id: "protocolVersion",
     accessorKey: "protocolVersion",
-    meta: { title: "Protocol", className: "hidden lg:table-cell" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Protocol" />,
+    meta: { title: "Протокол", className: "hidden lg:table-cell" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Протокол" />,
     size: 100,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -131,8 +131,8 @@ export const getAgentHubTableColumns = ({ onAgentClick }: AgentHubTableColumnsDe
   },
   {
     id: "skills",
-    meta: { title: "Skills", skeleton: "chips" },
-    header: "Skills",
+    meta: { title: "Скиллы", skeleton: "chips" },
+    header: "Скиллы",
     size: 180,
     enableSorting: false,
     cell: ({ row }) => {
@@ -158,8 +158,8 @@ export const getAgentHubTableColumns = ({ onAgentClick }: AgentHubTableColumnsDe
   },
   {
     id: "capabilities",
-    meta: { title: "Capabilities", skeleton: "chips" },
-    header: "Capabilities",
+    meta: { title: "Возможности", skeleton: "chips" },
+    header: "Возможности",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => {
@@ -182,8 +182,8 @@ export const getAgentHubTableColumns = ({ onAgentClick }: AgentHubTableColumnsDe
   },
   {
     id: "io_modes",
-    meta: { title: "I/O Modes", skeleton: "twoLine", className: "hidden xl:table-cell" },
-    header: "I/O Modes",
+    meta: { title: "Режимы ввода/вывода", skeleton: "twoLine", className: "hidden xl:table-cell" },
+    header: "Режимы ввода/вывода",
     size: 150,
     enableSorting: false,
     cell: ({ row }) => {
@@ -192,10 +192,10 @@ export const getAgentHubTableColumns = ({ onAgentClick }: AgentHubTableColumnsDe
       return (
         <div className="flex flex-col gap-0.5 text-xs">
           <span>
-            <span className="font-medium">In:</span> {inputModes.join(", ") || "-"}
+            <span className="font-medium">Вход:</span> {inputModes.join(", ") || "-"}
           </span>
           <span>
-            <span className="font-medium">Out:</span> {outputModes.join(", ") || "-"}
+            <span className="font-medium">Выход:</span> {outputModes.join(", ") || "-"}
           </span>
         </div>
       );
@@ -204,8 +204,8 @@ export const getAgentHubTableColumns = ({ onAgentClick }: AgentHubTableColumnsDe
   {
     id: "is_public",
     accessorKey: "is_public",
-    meta: { title: "Public", skeleton: "badge", className: "hidden md:table-cell" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Public" />,
+    meta: { title: "Публичный", skeleton: "badge", className: "hidden md:table-cell" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Публичный" />,
     size: 100,
     enableSorting: true,
     sortingFn: (rowA, rowB) => {

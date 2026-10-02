@@ -101,9 +101,9 @@ export default function TeamMemberTab({
     {
       title: (
         <span className="flex items-center gap-1">
-          Model Scope
-          <SimpleTooltip content="Models this member can access. Empty means they inherit all team models.">
-            <CircleHelp className="size-4" aria-label="Model scope information" />
+          Область моделей
+          <SimpleTooltip content="Модели, доступные этому участнику. Пусто означает все модели команды.">
+            <CircleHelp className="size-4" aria-label="Информация об области моделей" />
           </SimpleTooltip>
         </span>
       ),
@@ -111,7 +111,7 @@ export default function TeamMemberTab({
       render: (record: Member) => {
         const models = getUserAllowedModels(record.user_id);
         if (!models) {
-          return <span className="text-muted-foreground">(all team models)</span>;
+          return <span className="text-muted-foreground">(все модели команды)</span>;
         }
         const displayed = models.slice(0, 2);
         const remaining = models.length - displayed.length;
@@ -124,7 +124,7 @@ export default function TeamMemberTab({
             ))}
             {remaining > 0 && (
               <SimpleTooltip content={models.slice(2).join(", ")}>
-                <span className="text-muted-foreground">+{remaining} more</span>
+                <span className="text-muted-foreground">ещё +{remaining}</span>
               </SimpleTooltip>
             )}
           </div>
@@ -134,9 +134,9 @@ export default function TeamMemberTab({
     {
       title: (
         <span className="flex items-center gap-1">
-          Current Cycle Spend (USD)
-          <SimpleTooltip content="Spend for the current budget cycle. Resets to $0 when the member's budget window rolls over. This is the value checked against the member's budget.">
-            <CircleHelp className="size-4" aria-label="Current cycle spend information" />
+          Расход текущего цикла (USD)
+          <SimpleTooltip content="Расход за текущий цикл бюджета. Сбрасывается к $0 при переходе окна бюджета участника. Это значение сверяется с бюджетом участника.">
+            <CircleHelp className="size-4" aria-label="Информация о расходе текущего цикла" />
           </SimpleTooltip>
         </span>
       ),
@@ -147,9 +147,9 @@ export default function TeamMemberTab({
     {
       title: (
         <span className="flex items-center gap-1">
-          Total Spend (USD)
+          Общий расход (USD)
           <SimpleTooltip content="Cumulative spend by this member within this team, across all budget cycles. Tracking began 2026-04-21; spend from before that date is not included.">
-            <CircleHelp className="size-4" aria-label="Total spend information" />
+            <CircleHelp className="size-4" aria-label="Информация об общем расходе" />
           </SimpleTooltip>
         </span>
       ),
@@ -174,9 +174,9 @@ export default function TeamMemberTab({
     {
       title: (
         <span className="flex items-center gap-1">
-          Team Member Rate Limits
-          <SimpleTooltip content="Rate limits for this member's usage within this team.">
-            <CircleHelp className="size-4" aria-label="Team member rate limits information" />
+          Лимиты запросов участника команды
+          <SimpleTooltip content="Лимиты запросов для использования этого участника в команде.">
+            <CircleHelp className="size-4" aria-label="Информация о лимитах участника команды" />
           </SimpleTooltip>
         </span>
       ),

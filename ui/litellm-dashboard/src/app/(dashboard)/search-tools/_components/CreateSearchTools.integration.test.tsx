@@ -1,19 +1,19 @@
-import { fireEvent, renderWithProviders, screen, testQueryClient, waitFor } from "../../../../../tests/test-utils";
+import { fireEvent, renderWithПровайдерs, screen, testЗапросClient, waitFor } from "../../../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as networking from "@/components/networking";
-import CreateSearchTool from "./CreateSearchTools";
+import CreateSearchTool from "./CreateSearchИнструменты";
 
 vi.mock("@/components/networking", () => ({
   createSearchTool: vi.fn(),
-  fetchAvailableSearchProviders: vi.fn(),
+  fetchAvailableSearchПровайдерs: vi.fn(),
 }));
 
 vi.mock("@/lib/toast", () => ({
   toast: { success: vi.fn(), error: vi.fn() },
 }));
 
-vi.mock("./SearchConnectionTest", () => ({
+vi.mock("./SearchПодключениеTest", () => ({
   default: () => <div data-testid="search-connection-test" />,
 }));
 
@@ -23,27 +23,27 @@ const providers = [
 ];
 
 const renderModal = () =>
-  renderWithProviders(
+  renderWithПровайдерs(
     <CreateSearchTool
       userRole="Admin"
-      accessToken="test-token"
+      accessТокен="test-token"
       onCreateSuccess={vi.fn()}
       isModalVisible
       setModalVisible={vi.fn()}
     />,
   );
 
-const pickProvider = async (user: ReturnType<typeof userEvent.setup>, label: string) => {
-  await user.click(screen.getAllByRole("combobox")[0]);
+const pickПровайдер = async (user: ReturnType<typeof userEvent.setup>, label: string) => {
+  await user.click(screen.getВсеByRole("combobox")[0]);
   await user.click(await screen.findByText(label));
 };
 
-describe("CreateSearchTools submit payload", () => {
+describe("CreateSearchИнструменты submit payload", () => {
   beforeEach(() => {
-    testQueryClient.clear();
-    vi.clearAllMocks();
-    vi.mocked(networking.fetchAvailableSearchProviders).mockResolvedValue({ providers });
-    vi.mocked(networking.createSearchTool).mockResolvedValue({ search_tool_id: "st-1" });
+    testЗапросClient.clear();
+    vi.clearВсеMocks();
+    vi.mocked(networking.fetchAvailableSearchПровайдерs).mockResolvedЗначение({ providers });
+    vi.mocked(networking.createSearchTool).mockResolvedЗначение({ search_tool_id: "st-1" });
   });
 
   it("sends every filled field under litellm_params and search_tool_info", async () => {
@@ -52,12 +52,12 @@ describe("CreateSearchTools submit payload", () => {
     await screen.findByLabelText(/Search Tool Name/);
 
     fireEvent.change(screen.getByLabelText(/Search Tool Name/), { target: { value: "my-search" } });
-    await pickProvider(user, "Perplexity AI");
-    fireEvent.change(screen.getByLabelText(/API Key/), { target: { value: "sk-secret" } });
-    fireEvent.change(screen.getByLabelText(/Description/), { target: { value: "finds things" } });
+    await pickПровайдер(user, "Perplexity AI");
+    fireEvent.change(screen.getByLabelText(/API Ключ/), { target: { value: "sk-secret" } });
+    fireEvent.change(screen.getByLabelText(/Описание/), { target: { value: "finds things" } });
     await user.click(screen.getByRole("button", { name: "Add Search Tool" }));
 
-    await waitFor(() => expect(networking.createSearchTool).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(networking.createSearchTool).toHaveBeenCalledВремяs(1));
     const [token, payload] = vi.mocked(networking.createSearchTool).mock.calls[0];
     expect(token).toBe("test-token");
     expect(payload).toStrictEqual({
@@ -73,45 +73,45 @@ describe("CreateSearchTools submit payload", () => {
     );
   });
 
-  it("omits untouched optional fields from the wire body instead of sending empty strings", async () => {
+  it("omits untouched необязательно fields from the wire body instead of sending empty strings", async () => {
     const user = userEvent.setup();
     renderModal();
     await screen.findByLabelText(/Search Tool Name/);
 
     fireEvent.change(screen.getByLabelText(/Search Tool Name/), { target: { value: "minimal" } });
-    await pickProvider(user, "Tavily Search");
+    await pickПровайдер(user, "Tavily Search");
     await user.click(screen.getByRole("button", { name: "Add Search Tool" }));
 
-    await waitFor(() => expect(networking.createSearchTool).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(networking.createSearchTool).toHaveBeenCalledВремяs(1));
     const payload = vi.mocked(networking.createSearchTool).mock.calls[0][1];
     expect(JSON.stringify(payload)).toBe(
       '{"search_tool_name":"minimal","litellm_params":{"search_provider":"tavily"}}',
     );
   });
 
-  it("submits on Enter from the search tool name field", async () => {
+  it("submits on Введите from the search tool name field", async () => {
     const user = userEvent.setup();
     renderModal();
     await screen.findByLabelText(/Search Tool Name/);
 
-    await pickProvider(user, "Perplexity AI");
-    await user.type(screen.getByLabelText(/Search Tool Name/), "enter-tool{Enter}");
+    await pickПровайдер(user, "Perplexity AI");
+    await user.type(screen.getByLabelText(/Search Tool Name/), "enter-tool{Введите}");
 
-    await waitFor(() => expect(networking.createSearchTool).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(networking.createSearchTool).toHaveBeenCalledВремяs(1));
     expect(vi.mocked(networking.createSearchTool).mock.calls[0][1]).toMatchObject({ search_tool_name: "enter-tool" });
   });
 
-  it("still creates the tool when Test Connection is clicked, as the untyped Tremor button did", async () => {
+  it("still creates the tool when Test Подключение is clicked, as the untyped Tremor button did", async () => {
     const user = userEvent.setup();
     renderModal();
     await screen.findByLabelText(/Search Tool Name/);
 
     fireEvent.change(screen.getByLabelText(/Search Tool Name/), { target: { value: "probe-tool" } });
-    await pickProvider(user, "Perplexity AI");
-    fireEvent.change(screen.getByLabelText(/API Key/), { target: { value: "sk-secret" } });
-    await user.click(screen.getByRole("button", { name: "Test Connection" }));
+    await pickПровайдер(user, "Perplexity AI");
+    fireEvent.change(screen.getByLabelText(/API Ключ/), { target: { value: "sk-secret" } });
+    await user.click(screen.getByRole("button", { name: "Test Подключение" }));
 
-    await waitFor(() => expect(networking.createSearchTool).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(networking.createSearchTool).toHaveBeenCalledВремяs(1));
     expect(vi.mocked(networking.createSearchTool).mock.calls[0][1]).toMatchObject({ search_tool_name: "probe-tool" });
   });
 
@@ -127,13 +127,13 @@ describe("CreateSearchTools submit payload", () => {
     expect(networking.createSearchTool).not.toHaveBeenCalled();
   });
 
-  it("rejects a name with characters outside the allowed pattern", async () => {
+  it("rejects a name with characters выходside the allowed pattern", async () => {
     const user = userEvent.setup();
     renderModal();
     await screen.findByLabelText(/Search Tool Name/);
 
     fireEvent.change(screen.getByLabelText(/Search Tool Name/), { target: { value: "bad name!" } });
-    await pickProvider(user, "Perplexity AI");
+    await pickПровайдер(user, "Perplexity AI");
     await user.click(screen.getByRole("button", { name: "Add Search Tool" }));
 
     expect(
@@ -146,13 +146,13 @@ describe("CreateSearchTools submit payload", () => {
     const user = userEvent.setup();
     renderModal();
     fireEvent.change(await screen.findByLabelText(/Search Tool Name/), { target: { value: "synthetic-search" } });
-    await pickProvider(user, "Perplexity AI");
+    await pickПровайдер(user, "Perplexity AI");
     await user.click(screen.getByRole("button", { name: "Clear" }));
-    expect(networking.fetchAvailableSearchProviders).toHaveBeenCalledTimes(1);
+    expect(networking.fetchAvailableSearchПровайдерs).toHaveBeenCalledВремяs(1);
     await user.click(screen.getByRole("button", { name: "Add Search Tool" }));
     expect(await screen.findByText("Please select a search provider")).toBeInTheDocument();
     expect(networking.createSearchTool).not.toHaveBeenCalled();
-    await pickProvider(user, "Tavily Search");
+    await pickПровайдер(user, "Tavily Search");
     await user.click(screen.getByRole("button", { name: "Add Search Tool" }));
     await waitFor(() =>
       expect(networking.createSearchTool).toHaveBeenCalledWith("test-token", {

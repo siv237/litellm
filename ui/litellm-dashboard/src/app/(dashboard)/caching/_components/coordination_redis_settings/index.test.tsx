@@ -1,102 +1,102 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
 import userEvent from "@testing-library/user-event";
-import CoordinationRedisSettings from "./index";
+import КоординационныйRedisSettings from "./index";
 import { REDACTED_VALUE } from "./types";
 import * as networking from "@/components/networking";
 import { toast } from "@/lib/toast";
 
 vi.mock("@/components/networking", () => ({
-  getCoordinationRedisSettingsCall: vi.fn(),
-  testCoordinationRedisConnectionCall: vi.fn(),
-  updateCoordinationRedisSettingsCall: vi.fn(),
+  getКоординационныйRedisSettingsCall: vi.fn(),
+  testКоординационныйRedisПодключениеCall: vi.fn(),
+  updateКоординационныйRedisSettingsCall: vi.fn(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({
-  default: () => ({ accessToken: "sk-test" }),
+vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
+  default: () => ({ accessТокен: "sk-test" }),
 }));
 
-const getSettings = vi.mocked(networking.getCoordinationRedisSettingsCall);
-const updateSettings = vi.mocked(networking.updateCoordinationRedisSettingsCall);
-const testConnection = vi.mocked(networking.testCoordinationRedisConnectionCall);
+const getSettings = vi.mocked(networking.getКоординационныйRedisSettingsCall);
+const updateSettings = vi.mocked(networking.updateКоординационныйRedisSettingsCall);
+const testПодключение = vi.mocked(networking.testКоординационныйRedisПодключениеCall);
 const notifications = vi.mocked(toast);
 
-const settingsResponse = (
+const settingsОтвет = (
   values: Record<string, unknown>,
   source: "coordination_redis" | "cache_backend" | "environment" | null = null,
 ) => ({ values, fields: [], source });
 
 const wrapper = ({ children }: { children: React.ReactNode }) => {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
+  return <ЗапросClientПровайдер client={queryClient}>{children}</ЗапросClientПровайдер>;
 };
 
-const renderSettings = () => render(<CoordinationRedisSettings />, { wrapper });
+const renderSettings = () => render(<КоординационныйRedisSettings />, { wrapper });
 
 const clickSave = async (user: ReturnType<typeof userEvent.setup>) =>
   user.click(screen.getByRole("button", { name: /save changes/i }));
 
-describe("CoordinationRedisSettings", () => {
+describe("КоординационныйRedisSettings", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    getSettings.mockResolvedValue(settingsResponse({}));
-    updateSettings.mockResolvedValue(undefined);
-    testConnection.mockResolvedValue({ status: "healthy" });
+    vi.clearВсеMocks();
+    getSettings.mockResolvedЗначение(settingsОтвет({}));
+    updateSettings.mockResolvedЗначение(undefined);
+    testПодключение.mockResolvedЗначение({ status: "healthy" });
   });
 
   describe("when the redis type is node", () => {
     it("should show the connection fields and hide cluster/sentinel fields", async () => {
       renderSettings();
 
-      expect(await screen.findByText("Connection Settings")).toBeInTheDocument();
+      expect(await screen.findByText("Подключение Settings")).toBeInTheDocument();
       expect(screen.getByText("Redis URL")).toBeInTheDocument();
       expect(screen.getByText("SSL")).toBeInTheDocument();
-      expect(screen.queryByText("Startup Nodes")).not.toBeInTheDocument();
-      expect(screen.queryByText("Sentinel Nodes")).not.toBeInTheDocument();
+      expect(screen.queryByText("Узлы запуска")).not.toBeInTheDocument();
+      expect(screen.queryByText("Узлы Sentinel")).not.toBeInTheDocument();
     });
 
     it("should not offer semantic caching, which is a response-cache-only concern", async () => {
       renderSettings();
-      await screen.findByText("Connection Settings");
+      await screen.findByText("Подключение Settings");
       expect(screen.queryByText(/semantic/i)).not.toBeInTheDocument();
     });
   });
 
   describe("when the saved settings describe a cluster", () => {
     it("should reveal the cluster startup nodes field", async () => {
-      getSettings.mockResolvedValue(settingsResponse({ startup_nodes: [{ host: "127.0.0.1", port: 7001 }] }));
+      getSettings.mockResolvedЗначение(settingsОтвет({ startup_nodes: [{ host: "127.0.0.1", port: 7001 }] }));
       renderSettings();
-      expect(await screen.findByText("Startup Nodes")).toBeInTheDocument();
-      expect(screen.queryByText("Sentinel Nodes")).not.toBeInTheDocument();
+      expect(await screen.findByText("Узлы запуска")).toBeInTheDocument();
+      expect(screen.queryByText("Узлы Sentinel")).not.toBeInTheDocument();
     });
   });
 
   describe("when the saved settings describe a sentinel", () => {
     it("should reveal the sentinel fields", async () => {
-      getSettings.mockResolvedValue(settingsResponse({ sentinel_nodes: [["localhost", 26379]] }));
+      getSettings.mockResolvedЗначение(settingsОтвет({ sentinel_nodes: [["localhost", 26379]] }));
       renderSettings();
-      expect(await screen.findByText("Sentinel Nodes")).toBeInTheDocument();
-      expect(screen.getByText("Service Name")).toBeInTheDocument();
-      expect(screen.getByText("Sentinel Password")).toBeInTheDocument();
+      expect(await screen.findByText("Узлы Sentinel")).toBeInTheDocument();
+      expect(screen.getByText("Имя сервиса")).toBeInTheDocument();
+      expect(screen.getByText("Пароль Sentinel")).toBeInTheDocument();
     });
   });
 
   describe("the source badge", () => {
     it.each([
-      ["coordination_redis", "Configured here"],
+      ["coordination_redis", "Конфигурацияured here"],
       ["cache_backend", "Borrowed from response cache"],
       ["environment", "From REDIS_* environment"],
     ] as const)("should render %s as %s", async (source, label) => {
-      getSettings.mockResolvedValue(settingsResponse({}, source));
+      getSettings.mockResolvedЗначение(settingsОтвет({}, source));
       renderSettings();
       expect(await screen.findByTestId("coordination-redis-source")).toHaveTextContent(label);
     });
 
     it("should render a null source as not configured", async () => {
-      getSettings.mockResolvedValue(settingsResponse({}, null));
+      getSettings.mockResolvedЗначение(settingsОтвет({}, null));
       renderSettings();
-      expect(await screen.findByTestId("coordination-redis-source")).toHaveTextContent("Not configured");
+      expect(await screen.findByTestId("coordination-redis-source")).toHaveTextContent("Не настроено");
     });
 
     it("should tell the admin that saved changes need a proxy restart", async () => {
@@ -110,21 +110,21 @@ describe("CoordinationRedisSettings", () => {
       const user = userEvent.setup();
       renderSettings();
 
-      const port = await screen.findByLabelText("Port");
+      const port = await screen.findByLabelText("Порт");
       await user.clear(port);
       await user.type(port, "99999");
       await clickSave(user);
 
-      expect(await screen.findByText(/Port must be an integer between 1 and 65535/i)).toBeInTheDocument();
+      expect(await screen.findByText(/Порт must be an integer between 1 and 65535/i)).toBeInTheDocument();
       expect(updateSettings).not.toHaveBeenCalled();
     });
 
     it("should block save when a list field holds malformed JSON instead of silently dropping it", async () => {
       const user = userEvent.setup();
-      getSettings.mockResolvedValue(settingsResponse({ startup_nodes: [], sentinel_nodes: [["localhost", 26379]] }));
+      getSettings.mockResolvedЗначение(settingsОтвет({ startup_nodes: [], sentinel_nodes: [["localhost", 26379]] }));
       renderSettings();
 
-      const sentinelNodes = await screen.findByLabelText("Sentinel Nodes");
+      const sentinelNodes = await screen.findByLabelText("Узлы Sentinel");
       await user.clear(sentinelNodes);
       await user.type(sentinelNodes, "not json");
       await clickSave(user);
@@ -139,7 +139,7 @@ describe("CoordinationRedisSettings", () => {
       const user = userEvent.setup();
       renderSettings();
 
-      await user.type(await screen.findByLabelText("Host"), "coord-redis");
+      await user.type(await screen.findByLabelText("Хост"), "coord-redis");
       await clickSave(user);
 
       await waitFor(() =>
@@ -149,10 +149,10 @@ describe("CoordinationRedisSettings", () => {
 
     it("should parse the cluster startup nodes textarea into a JSON array", async () => {
       const user = userEvent.setup();
-      getSettings.mockResolvedValue(settingsResponse({ startup_nodes: [{ host: "127.0.0.1", port: 7001 }] }));
+      getSettings.mockResolvedЗначение(settingsОтвет({ startup_nodes: [{ host: "127.0.0.1", port: 7001 }] }));
       renderSettings();
 
-      await screen.findByLabelText("Startup Nodes");
+      await screen.findByLabelText("Узлы запуска");
       await clickSave(user);
 
       await waitFor(() => expect(updateSettings).toHaveBeenCalled());
@@ -163,38 +163,38 @@ describe("CoordinationRedisSettings", () => {
 
     it("should not resubmit a redacted secret the admin never touched", async () => {
       const user = userEvent.setup();
-      getSettings.mockResolvedValue(
-        settingsResponse({ host: "coord-redis", password: REDACTED_VALUE, url: REDACTED_VALUE }),
+      getSettings.mockResolvedЗначение(
+        settingsОтвет({ host: "coord-redis", password: REDACTED_VALUE, url: REDACTED_VALUE }),
       );
       renderSettings();
 
-      await waitFor(() => expect(screen.getByLabelText("Host")).toHaveValue("coord-redis"));
+      await waitFor(() => expect(screen.getByLabelText("Хост")).toHaveЗначение("coord-redis"));
       await clickSave(user);
 
       await waitFor(() => expect(updateSettings).toHaveBeenCalled());
       const payload = updateSettings.mock.calls[0][1];
-      expect(payload).not.toHaveProperty("password");
-      expect(payload).not.toHaveProperty("url");
+      expect(payload).not.toHaveСвойство("password");
+      expect(payload).not.toHaveСвойство("url");
       expect(payload).toMatchObject({ host: "coord-redis" });
     });
 
     it("should leave an already-set secret blank and say so, rather than prefilling the redacted marker", async () => {
-      getSettings.mockResolvedValue(settingsResponse({ password: REDACTED_VALUE }));
+      getSettings.mockResolvedЗначение(settingsОтвет({ password: REDACTED_VALUE }));
       renderSettings();
 
-      const password = await screen.findByLabelText("Password");
-      await waitFor(() => expect(password).toHaveValue(""));
+      const password = await screen.findByLabelText("Пароль");
+      await waitFor(() => expect(password).toHaveЗначение(""));
       expect(password).toHaveAttribute("placeholder", expect.stringMatching(/already set/i));
-      expect(screen.queryByDisplayValue(REDACTED_VALUE)).not.toBeInTheDocument();
+      expect(screen.queryByDisplayЗначение(REDACTED_VALUE)).not.toBeInTheDocument();
     });
 
     it("should submit a secret the admin typed into the blank field", async () => {
       const user = userEvent.setup();
-      getSettings.mockResolvedValue(settingsResponse({ host: "coord-redis", password: REDACTED_VALUE }));
+      getSettings.mockResolvedЗначение(settingsОтвет({ host: "coord-redis", password: REDACTED_VALUE }));
       renderSettings();
 
-      const password = await screen.findByLabelText("Password");
-      await waitFor(() => expect(password).toHaveValue(""));
+      const password = await screen.findByLabelText("Пароль");
+      await waitFor(() => expect(password).toHaveЗначение(""));
       await user.type(password, "new-secret");
       await clickSave(user);
 
@@ -206,7 +206,7 @@ describe("CoordinationRedisSettings", () => {
       const user = userEvent.setup();
       renderSettings();
 
-      await screen.findByLabelText("Host");
+      await screen.findByLabelText("Хост");
       await clickSave(user);
 
       await waitFor(() => expect(notifications.success).toHaveBeenCalledWith(expect.stringMatching(/restart/i)));
@@ -218,23 +218,23 @@ describe("CoordinationRedisSettings", () => {
       const user = userEvent.setup();
       renderSettings();
 
-      await screen.findByLabelText("Host");
+      await screen.findByLabelText("Хост");
       await user.click(screen.getByRole("button", { name: /test connection/i }));
 
       await waitFor(() => expect(notifications.success).toHaveBeenCalledWith(expect.stringMatching(/successful/i)));
-      expect(testConnection).toHaveBeenCalledWith("sk-test", { port: 6379, ssl: false });
+      expect(testПодключение).toHaveBeenCalledWith("sk-test", { port: 6379, ssl: false });
     });
 
     it("should surface the backend error when the connection is unhealthy", async () => {
       const user = userEvent.setup();
-      testConnection.mockResolvedValue({ status: "unhealthy", error: "connection refused" });
+      testПодключение.mockResolvedЗначение({ status: "unhealthy", error: "connection refused" });
       renderSettings();
 
-      await screen.findByLabelText("Host");
+      await screen.findByLabelText("Хост");
       await user.click(screen.getByRole("button", { name: /test connection/i }));
 
       await waitFor(() =>
-        expect(notifications.fromError).toHaveBeenCalledWith(expect.stringContaining("connection refused")),
+        expect(notifications.fromОшибка).toHaveBeenCalledWith(expect.stringContaining("connection refused")),
       );
       expect(notifications.success).not.toHaveBeenCalled();
     });

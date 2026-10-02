@@ -1,25 +1,25 @@
 import { describe, expect, it } from "vitest";
 
-import type { DailyData, SpendMetrics } from "@/components/UsagePage/types";
-import type { ToolSpendDailyEntry, ToolSpendEntry } from "@/components/networking";
+import type { Каждый деньData, РасходМетрикаs } from "@/components/ИспользованиеPage/types";
+import type { ToolРасходКаждый деньEntry, ToolРасходEntry } from "@/components/networking";
 import {
   SAVINGS_COLORS,
   SAVINGS_DRIVERS,
   SAVINGS_SERIES,
-  buildDailyToolSeries,
+  buildКаждый деньToolSeries,
   classificationRatePer1kTurns,
   computeCacheLeakage,
   formatRangeLabel,
-  isAnthropicModel,
+  isAnthropicРежимl,
   localIsoDay,
   savingsSeriesOf,
   toCumulative,
-  topToolsBySpend,
+  topИнструментыByРасход,
   usd,
   withStartAnchor,
 } from "./costOptimizationUtils";
 
-const metrics = (overrides: Partial<SpendMetrics>): SpendMetrics => ({
+const metrics = (overrides: Partial<РасходМетрикаs>): РасходМетрикаs => ({
   spend: 0,
   prompt_tokens: 0,
   completion_tokens: 0,
@@ -34,13 +34,13 @@ const metrics = (overrides: Partial<SpendMetrics>): SpendMetrics => ({
 
 const day = (
   date: string,
-  keys: Record<string, { alias: string | null; metrics: Partial<SpendMetrics> }>,
-): DailyData => ({
+  keys: Record<string, { alias: string | null; metrics: Partial<РасходМетрикаs> }>,
+): Каждый деньData => ({
   date,
   metrics: metrics({}),
   breakdown: {
-    models: {},
-    model_groups: {},
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {},
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups: {},
     mcp_servers: {},
     providers: {},
     entities: {},
@@ -53,14 +53,14 @@ const day = (
   },
 });
 
-const modelDay = (date: string, models: Record<string, Partial<SpendMetrics>>): DailyData => ({
+const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDay = (date: string, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: Record<string, Partial<РасходМетрикаs>>): Каждый деньData => ({
   date,
   metrics: metrics({}),
   breakdown: {
-    models: Object.fromEntries(
-      Object.entries(models).map(([name, m]) => [name, { metrics: metrics(m), metadata: {}, api_key_breakdown: {} }]),
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: Object.fromEntries(
+      Object.entries(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs).map(([name, m]) => [name, { metrics: metrics(m), metadata: {}, api_key_breakdown: {} }]),
     ),
-    model_groups: {},
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups: {},
     mcp_servers: {},
     providers: {},
     entities: {},
@@ -72,10 +72,10 @@ describe("savingsSeriesOf", () => {
   it("plots the LiteLLM-injected caching share, sorted oldest first", () => {
     // Total and injected caching deliberately differ: every chart derives from
     // SAVINGS_DRIVERS, so the caching series must follow the injected figure.
-    const sharedSavings: Partial<SpendMetrics> = {
+    const sharedSavings: Partial<РасходМетрикаs> = {
       compression_savings_spend: 0.1,
       prompt_caching_savings_spend: 0.5,
-      autorouter_savings_spend: 0.05,
+      autorвыходer_savings_spend: 0.05,
     };
     const newestFirst = [day("2026-07-02", {}), day("2026-07-01", {})].map((d, i) => ({
       ...d,
@@ -85,8 +85,8 @@ describe("savingsSeriesOf", () => {
     const series = savingsSeriesOf(newestFirst);
 
     expect(series.map((p) => p.date)).toEqual(["Jul 1", "Jul 2"]);
-    expect(series[0]).toMatchObject({ Compression: 0.1, "Prompt caching": 0.3, "Auto-router": 0.05 });
-    expect(series[1]).toMatchObject({ Compression: 0.1, "Prompt caching": 0.2, "Auto-router": 0.05 });
+    expect(series[0]).toMatchObject({ Compression: 0.1, "Prompt caching": 0.3, "Auto-rвыходer": 0.05 });
+    expect(series[1]).toMatchObject({ Compression: 0.1, "Prompt caching": 0.2, "Auto-rвыходer": 0.05 });
   });
 });
 
@@ -98,7 +98,7 @@ describe("computeCacheLeakage", () => {
     ];
     const { rows } = computeCacheLeakage(results);
     expect(rows).toHaveLength(1);
-    expect(rows[0].uncachedPromptTokens).toBe(1500);
+    expect(rows[0].uncachedPromptТокенs).toBe(1500);
   });
 
   it("subtracts cache reads and writes from prompt tokens instead of double-counting them", () => {
@@ -112,7 +112,7 @@ describe("computeCacheLeakage", () => {
     ];
     const { rows } = computeCacheLeakage(results);
     expect(rows).toHaveLength(1);
-    expect(rows[0].uncachedPromptTokens).toBe(500);
+    expect(rows[0].uncachedPromptТокенs).toBe(500);
     expect(rows[0].cacheHitRatio).toBeCloseTo(0.4, 6);
   });
 
@@ -126,8 +126,8 @@ describe("computeCacheLeakage", () => {
         leaker: { alias: "leaker", metrics: { prompt_tokens: 500 } },
       }),
     ];
-    const { rows, netSavingsPerCachedToken } = computeCacheLeakage(results);
-    expect(netSavingsPerCachedToken).toBeCloseTo(0.002, 6);
+    const { rows, netSavingsPerCachedТокен } = computeCacheLeakage(results);
+    expect(netSavingsPerCachedТокен).toBeCloseTo(0.002, 6);
     expect(rows.map((r) => r.label)).toEqual(["leaker"]);
     expect(rows[0].potentialSavings).toBeCloseTo(1.0, 6);
   });
@@ -147,8 +147,8 @@ describe("computeCacheLeakage", () => {
         leaker: { alias: "leaker", metrics: { prompt_tokens: 500 } },
       }),
     ];
-    const { rows, netSavingsPerCachedToken } = computeCacheLeakage(results);
-    expect(netSavingsPerCachedToken).toBeCloseTo(0.001, 6);
+    const { rows, netSavingsPerCachedТокен } = computeCacheLeakage(results);
+    expect(netSavingsPerCachedТокен).toBeCloseTo(0.001, 6);
     expect(rows[0].potentialSavings).toBeCloseTo(0.5, 6);
   });
 
@@ -167,8 +167,8 @@ describe("computeCacheLeakage", () => {
         leaker: { alias: "leaker", metrics: { prompt_tokens: 500 } },
       }),
     ];
-    const { rows, netSavingsPerCachedToken } = computeCacheLeakage(results);
-    expect(netSavingsPerCachedToken).toBeLessThan(0);
+    const { rows, netSavingsPerCachedТокен } = computeCacheLeakage(results);
+    expect(netSavingsPerCachedТокен).toBeLessThan(0);
     expect(rows.every((r) => r.potentialSavings === null)).toBe(true);
     expect(rows.map((r) => r.label)).toEqual(["leaker", "writer"]);
   });
@@ -180,8 +180,8 @@ describe("computeCacheLeakage", () => {
         small: { alias: "small", metrics: { prompt_tokens: 100 } },
       }),
     ];
-    const { rows, netSavingsPerCachedToken } = computeCacheLeakage(results);
-    expect(netSavingsPerCachedToken).toBeNull();
+    const { rows, netSavingsPerCachedТокен } = computeCacheLeakage(results);
+    expect(netSavingsPerCachedТокен).toBeNull();
     expect(rows.map((r) => r.label)).toEqual(["big", "small"]);
     expect(rows.every((r) => r.potentialSavings === null)).toBe(true);
   });
@@ -196,7 +196,7 @@ describe("computeCacheLeakage", () => {
     const { rows } = computeCacheLeakage(results);
     expect(rows.map((r) => r.label)).toEqual(["mixed"]);
     expect(rows[0].cacheHitRatio).toBeCloseTo(0.75, 6);
-    expect(rows[0].uncachedPromptTokens).toBe(250);
+    expect(rows[0].uncachedPromptТокенs).toBe(250);
   });
 
   it("respects the row limit", () => {
@@ -208,16 +208,16 @@ describe("computeCacheLeakage", () => {
   });
 });
 
-describe("computeCacheLeakage by model", () => {
-  it("aggregates only Anthropic models and ignores other providers", () => {
-    const models: Record<string, Partial<SpendMetrics>> = {
+describe("computeCacheLeakage by Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
+  it("aggregates only Anthropic Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs and ignores other providers", () => {
+    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: Record<string, Partial<РасходМетрикаs>> = {
       "claude-sonnet-5": { prompt_tokens: 10000, cache_read_input_tokens: 0 },
       "anthropic/claude-haiku-4-5": { prompt_tokens: 4000, cache_read_input_tokens: 0 },
       "bedrock/anthropic.claude-3-5-sonnet": { prompt_tokens: 2000, cache_read_input_tokens: 0 },
       "gpt-4o": { prompt_tokens: 9000, cache_read_input_tokens: 0 },
       "deepseek-chat": { prompt_tokens: 8000, cache_read_input_tokens: 0 },
     };
-    const { rows } = computeCacheLeakage([modelDay("2026-07-01", models)], "model");
+    const { rows } = computeCacheLeakage([Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDay("2026-07-01", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs)], "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
     expect(rows.map((r) => r.id)).toEqual([
       "claude-sonnet-5",
       "anthropic/claude-haiku-4-5",
@@ -225,29 +225,29 @@ describe("computeCacheLeakage by model", () => {
     ]);
   });
 
-  it("labels model rows by model name with no sublabel", () => {
-    const results = [modelDay("2026-07-01", { "claude-sonnet-5": { prompt_tokens: 1000 } })];
-    const { rows } = computeCacheLeakage(results, "model");
+  it("labels Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию rows by Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name with no sublabel", () => {
+    const results = [Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDay("2026-07-01", { "claude-sonnet-5": { prompt_tokens: 1000 } })];
+    const { rows } = computeCacheLeakage(results, "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
     expect(rows[0].label).toBe("claude-sonnet-5");
     expect(rows[0].sublabel).toBeNull();
   });
 
-  it("prices model leakage at the Anthropic realized cache-read discount", () => {
+  it("prices Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию leakage at the Anthropic realized cache-read discount", () => {
     const results = [
-      modelDay("2026-07-01", {
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDay("2026-07-01", {
         "claude-sonnet-5": { prompt_tokens: 1000, cache_read_input_tokens: 1000, prompt_caching_savings_spend: 2.0 },
         "claude-haiku-4-5": { prompt_tokens: 500 },
       }),
     ];
-    const { rows, netSavingsPerCachedToken } = computeCacheLeakage(results, "model");
-    expect(netSavingsPerCachedToken).toBeCloseTo(0.002, 6);
+    const { rows, netSavingsPerCachedТокен } = computeCacheLeakage(results, "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
+    expect(netSavingsPerCachedТокен).toBeCloseTo(0.002, 6);
     expect(rows.map((r) => r.id)).toEqual(["claude-haiku-4-5"]);
     expect(rows[0].potentialSavings).toBeCloseTo(1.0, 6);
   });
 });
 
-describe("isAnthropicModel", () => {
-  it("matches Claude-family models across providers and rejects others", () => {
+describe("isAnthropicРежимl", () => {
+  it("matches Claude-family Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs across providers and rejects others", () => {
     const anthropic = [
       "claude-sonnet-5",
       "anthropic/claude-haiku-4-5",
@@ -255,13 +255,13 @@ describe("isAnthropicModel", () => {
       "vertex_ai/claude-opus-4-8",
     ];
     const others = ["gpt-4o", "deepseek-chat", "gemini-2.5-pro", "mistral-large"];
-    expect(anthropic.every(isAnthropicModel)).toBe(true);
-    expect(others.some(isAnthropicModel)).toBe(false);
+    expect(anthropic.every(isAnthropicРежимl)).toBe(true);
+    expect(others.some(isAnthropicРежимl)).toBe(false);
   });
 });
 
-describe("buildDailyToolSeries", () => {
-  const daily: ToolSpendDailyEntry[] = [
+describe("buildКаждый деньToolSeries", () => {
+  const daily: ToolРасходКаждый деньEntry[] = [
     { date: "2026-07-01", tool_name: "search", spend: 1.0, call_count: 1 },
     { date: "2026-07-01", tool_name: "read", spend: 0.5, call_count: 1 },
     { date: "2026-07-02", tool_name: "search", spend: 2.0, call_count: 1 },
@@ -269,7 +269,7 @@ describe("buildDailyToolSeries", () => {
   ];
 
   it("pivots to per-date points keyed by the selected tools, dropping others", () => {
-    const series = buildDailyToolSeries(daily, ["search", "read"]);
+    const series = buildКаждый деньToolSeries(daily, ["search", "read"]);
     expect(series).toEqual([
       { date: "2026-07-01", search: 1.0, read: 0.5 },
       { date: "2026-07-02", search: 2.0, read: 0 },
@@ -277,7 +277,7 @@ describe("buildDailyToolSeries", () => {
   });
 
   it("sums repeated (date, tool) rows", () => {
-    const series = buildDailyToolSeries(
+    const series = buildКаждый деньToolSeries(
       [
         { date: "2026-07-01", tool_name: "search", spend: 1.0, call_count: 1 },
         { date: "2026-07-01", tool_name: "search", spend: 2.5, call_count: 1 },
@@ -288,15 +288,15 @@ describe("buildDailyToolSeries", () => {
   });
 });
 
-describe("topToolsBySpend", () => {
-  const byTool: ToolSpendEntry[] = [
+describe("topИнструментыByРасход", () => {
+  const byTool: ToolРасходEntry[] = [
     { tool_name: "a", spend: 1, call_count: 1, total_tokens: 1 },
     { tool_name: "b", spend: 5, call_count: 1, total_tokens: 1 },
     { tool_name: "c", spend: 3, call_count: 1, total_tokens: 1 },
   ];
 
   it("sorts by spend descending and truncates to the limit", () => {
-    expect(topToolsBySpend(byTool, 2).map((t) => t.tool_name)).toEqual(["b", "c"]);
+    expect(topИнструментыByРасход(byTool, 2).map((t) => t.tool_name)).toEqual(["b", "c"]);
   });
 });
 
@@ -308,25 +308,25 @@ describe("localIsoDay", () => {
 });
 
 describe("toCumulative", () => {
-  const point = (date: string, compression: number, caching: number, autorouter: number = 0) => ({
+  const point = (date: string, compression: number, caching: number, autorвыходer: number = 0) => ({
     date,
     Compression: compression,
     "Prompt caching": caching,
-    "Auto-router": autorouter,
+    "Auto-rвыходer": autorвыходer,
   });
 
   it("turns each reading into everything saved up to that point", () => {
     const running = toCumulative([point("Jul 1", 1, 10), point("Jul 2", 2, 20), point("Jul 3", 3, 30)]);
     expect(running.map((p) => p.Compression)).toEqual([1, 3, 6]);
     expect(running.map((p) => p["Prompt caching"])).toEqual([10, 30, 60]);
-    expect(running.map((p) => p["Auto-router"])).toEqual([0, 0, 0]);
+    expect(running.map((p) => p["Auto-rвыходer"])).toEqual([0, 0, 0]);
   });
 
   it("accumulates each driver on its own, so one flat series cannot lift the other", () => {
     const running = toCumulative([point("Jul 1", 0, 5), point("Jul 2", 0, 5)]);
     expect(running.map((p) => p.Compression)).toEqual([0, 0]);
     expect(running.map((p) => p["Prompt caching"])).toEqual([5, 10]);
-    expect(running.map((p) => p["Auto-router"])).toEqual([0, 0]);
+    expect(running.map((p) => p["Auto-rвыходer"])).toEqual([0, 0]);
   });
 
   it("never falls, even across a quiet interval", () => {
@@ -340,18 +340,18 @@ describe("toCumulative", () => {
     expect(toCumulative([])).toEqual([]);
   });
 
-  it("accumulates auto-router savings like other drivers", () => {
+  it("accumulates auto-rвыходer savings like other drivers", () => {
     const running = toCumulative([point("Jul 1", 1, 1, 5), point("Jul 2", 1, 1, 10)]);
-    expect(running.map((p) => p["Auto-router"])).toEqual([5, 15]);
+    expect(running.map((p) => p["Auto-rвыходer"])).toEqual([5, 15]);
   });
 });
 
 describe("withStartAnchor", () => {
-  const point = (date: string, compression: number, caching: number, autorouter: number = 0) => ({
+  const point = (date: string, compression: number, caching: number, autorвыходer: number = 0) => ({
     date,
     Compression: compression,
     "Prompt caching": caching,
-    "Auto-router": autorouter,
+    "Auto-rвыходer": autorвыходer,
   });
 
   it("lifts a single-day cumulative off a floating dot by prepending a $0 origin", () => {
@@ -359,11 +359,11 @@ describe("withStartAnchor", () => {
     expect(anchored).toEqual([point("Jul 24", 0, 0), point("Jul 24", 12, 30)]);
   });
 
-  it("starts the range at zero without disturbing the running totals that follow", () => {
+  it("starts the range at zero withвыход disturbing the running totals that follow", () => {
     const anchored = withStartAnchor([point("Jul 16", 5, 1), point("Jul 17", 9, 4)], "Jul 16");
     expect(anchored.map((p) => p.Compression)).toEqual([0, 5, 9]);
     expect(anchored.map((p) => p["Prompt caching"])).toEqual([0, 1, 4]);
-    expect(anchored.map((p) => p["Auto-router"])).toEqual([0, 0, 0]);
+    expect(anchored.map((p) => p["Auto-rвыходer"])).toEqual([0, 0, 0]);
   });
 
   it("leaves an empty series alone so the chart's own no-data state can show", () => {
@@ -394,7 +394,7 @@ describe("usd", () => {
   });
 
   it("signs a loss ahead of the symbol and keeps its precision", () => {
-    // A driver can be negative once a model switch is charged for its cold cache.
+    // A driver can be negative once a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию switch is charged for its cold cache.
     // Sizing decimals off the raw value would render this as "$-0.00".
     expect(usd(-0.05)).toBe("-$0.0500");
     expect(usd(-0.0004)).toBe("-$0.0004");
@@ -420,19 +420,19 @@ describe("classificationRatePer1kTurns", () => {
 });
 
 describe("savings driver colours", () => {
-  it("keeps a driver's colour when a driver above it is filtered out", () => {
+  it("keeps a driver's colour when a driver above it is filtered выход", () => {
     // Charts colour by position in the data they are given, and the donut is given
     // only drivers that saved something. Compression is zero on any deployment not
-    // running the compression guardrail, so the survivors must not slide onto the
+    // running the compression гардрейлов, so the survivors must not slide onto the
     // colours of the drivers dropped above them.
-    const totals = { Compression: 0, "Prompt caching": 4, "Auto-router": 7 } as const;
+    const totals = { Compression: 0, "Prompt caching": 4, "Auto-rвыходer": 7 } as const;
     const plotted = SAVINGS_DRIVERS.map(({ name, color }) => ({ name, color, usd: totals[name] })).filter(
       (d) => d.usd > 0,
     );
 
     expect(plotted.map((d) => [d.name, d.color])).toEqual([
       ["Prompt caching", "blue"],
-      ["Auto-router", "amber"],
+      ["Auto-rвыходer", "amber"],
     ]);
   });
 

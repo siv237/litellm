@@ -183,7 +183,7 @@ const AllModelsTab = ({
 
   const teamOptions = useMemo(
     () => [
-      { value: PERSONAL_TEAM_VALUE, label: "Personal" },
+      { value: PERSONAL_TEAM_VALUE, label: "Личная" },
       ...(teams ?? [])
         .filter((team) => team.team_id)
         .map((team) => ({ value: team.team_id, label: team.team_alias ? team.team_alias : team.team_id })),
@@ -206,7 +206,7 @@ const AllModelsTab = ({
     try {
       setDeleteLoading(true);
       await modelDeleteCall(accessToken, deleteModalModelId);
-      toast.success("Model deleted successfully");
+      toast.success("Модель удалена");
       queryClient.invalidateQueries({ queryKey: ["models", "list"] });
       refetchModels();
     } catch (error) {
@@ -293,17 +293,17 @@ const AllModelsTab = ({
             <Info className="mt-0.5 size-3.5 shrink-0" />
             {selectedTeamValue === PERSONAL_TEAM_VALUE ? (
               <span>
-                To access these models, create a Virtual Key without selecting a team on the{" "}
+                Чтобы получить доступ к этим моделям, создайте виртуальный ключ без выбора команды на странице{" "}
                 <a href={uiHref("api-keys")} className="font-medium text-info hover:underline">
-                  Virtual Keys page
+                  Виртуальные ключи
                 </a>
                 .
               </span>
             ) : (
               <span>
-                To access these models, create a Virtual Key and select Team as &quot;{teamAccessLabel}&quot; on the{" "}
+                Чтобы получить доступ к этим моделям, создайте виртуальный ключ и выберите команду как «{teamAccessLabel}» на странице{" "}
                 <a href={uiHref("api-keys")} className="font-medium text-info hover:underline">
-                  Virtual Keys page
+                  Виртуальные ключи
                 </a>
                 .
               </span>
@@ -314,7 +314,7 @@ const AllModelsTab = ({
 
       <DeleteResourceModal
         isOpen={!!deleteModalModelId}
-        title="Delete Model"
+        title="Удалить модель"
         alertMessage="This action cannot be undone."
         message="Are you sure you want to delete this model?"
         resourceInformationTitle="Model Information"
@@ -322,11 +322,11 @@ const AllModelsTab = ({
           modelToDelete
             ? [
                 {
-                  label: "Model Name",
+                  label: "Название модели",
                   value: modelToDelete.model_name || "Not Set",
                 },
                 {
-                  label: "LiteLLM Model Name",
+                  label: "Название модели ruLiteLLM",
                   value: modelToDelete.litellm_model_name || "Not Set",
                 },
                 {
@@ -334,7 +334,7 @@ const AllModelsTab = ({
                   value: modelToDelete.provider || "Not Set",
                 },
                 {
-                  label: "Created By",
+                  label: "Автор",
                   value: modelToDelete.model_info?.created_by || "Not Set",
                 },
               ]

@@ -16,51 +16,51 @@ export interface FieldGroup {
 
 export const FIELD_GROUPS: FieldGroup[] = [
   {
-    label: "Documentation",
+    label: "Документация",
     fields: [
       {
         key: "description",
         label: "Описание",
-        description: "Must have a non-empty description",
+        description: "Требуется непустое описание",
         check: (s) => !!s.description?.trim(),
       },
       {
         key: "alias",
         label: "Псевдоним",
-        description: "Must have a display alias",
+        description: "Должен быть отображаемый псевдоним",
         check: (s) => !!s.alias?.trim(),
       },
     ],
   },
   {
-    label: "Source",
+    label: "Источник",
     fields: [
       {
         key: "source_url",
-        label: "GitHub / Source URL",
-        description: "Must link to a source repository",
+        label: "URL GitHub / исходников",
+        description: "Должна быть ссылка на репозиторий-источник",
         check: (s) => !!s.source_url?.trim(),
       },
     ],
   },
   {
-    label: "Connection",
+    label: "Подключение",
     fields: [
       {
         key: "url",
-        label: "Server URL",
-        description: "Must have a URL configured",
+        label: "URL сервера",
+        description: "Должен быть настроен URL",
         check: (s) => !!s.url?.trim(),
       },
     ],
   },
   {
-    label: "Security",
+    label: "Безопасность",
     fields: [
       {
         key: "auth_type",
-        label: "Auth configured",
-        description: "Must use authentication (not 'none')",
+        label: "Аутентификация настроена",
+        description: "Должна быть аутентификация (не 'none')",
         check: (s) => !!s.auth_type && s.auth_type !== "none",
       },
     ],

@@ -35,7 +35,7 @@ const OVERRIDE_FLOOR_ID = "reasoning-override-min-score";
 const GROUPS: GroupSpec[] = [
   {
     group: "tier_boundaries",
-    title: "Tier boundaries",
+    title: "Границы уровней",
     blurb:
       "The weighted score each tier starts at. Scores run from -1 to 1, and short or conversational prompts score below 0, so a negative boundary is a valid way to lift trivial traffic into a higher tier.",
     min: -1,
@@ -50,7 +50,7 @@ const GROUPS: GroupSpec[] = [
   },
   {
     group: "token_thresholds",
-    title: "Token thresholds",
+    title: "Пороги токенов",
     blurb:
       "Estimated prompt length, in tokens, that pushes the token count dimension to its floor or ceiling. Lengths between the two score neutral.",
     min: 0,
@@ -60,7 +60,7 @@ const GROUPS: GroupSpec[] = [
   },
   {
     group: "dimension_weights",
-    title: "Dimension weights",
+    title: "Веса измерений",
     blurb:
       "Changing a weight rebalances the other built-in and custom weights to total 1.00. Save stores those values. Untouched routers keep their existing weights.",
     min: 0,
@@ -148,7 +148,7 @@ const HeuristicScoringConfig: React.FC<HeuristicScoringConfigProps> = ({ value, 
         <ChevronDown
           className={`size-4 shrink-0 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`}
         />
-        <span className="text-sm font-medium">Advanced scoring</span>
+        <span className="text-sm font-medium">Расширенное оценивание</span>
         {overrides > 0 && (
           <Badge variant="secondary" data-testid="advanced-scoring-override-count">
             {overrides} {overrides === 1 ? "override" : "overrides"}
@@ -159,8 +159,7 @@ const HeuristicScoringConfig: React.FC<HeuristicScoringConfigProps> = ({ value, 
       <CollapsibleContent>
         <div className="mt-3 space-y-6 pl-6">
           <p className="text-xs text-muted-foreground">
-            Every knob below is optional. Left untouched, the router follows the shipped defaults, so it picks up any
-            recalibration of them rather than staying pinned to the numbers shown here.
+            Все параметры ниже необязательны. Если их не трогать, роутер следует поставляемым значениям по умолчанию и перенимает их перекалибровку, а не остаётся привязанным к показанным числам.
           </p>
 
           {isPending ? (
@@ -170,8 +169,7 @@ const HeuristicScoringConfig: React.FC<HeuristicScoringConfigProps> = ({ value, 
               {isError && (
                 <div className="flex items-start gap-2" role="alert">
                   <p className="text-xs font-medium text-destructive">
-                    Could not load the shipped defaults, so only values this router already overrides are shown. Saving
-                    still works, and an untouched knob keeps following the defaults.
+                    Не удалось загрузить поставляемые значения по умолчанию, показаны только значения, которые этот роутер уже переопределяет. Сохранение работает, а нетронутый параметр продолжает следовать значениям по умолчанию.
                   </p>
                   <Button type="button" variant="link" size="xs" onClick={() => void refetch()}>
                     Повторить
@@ -298,7 +296,7 @@ const HeuristicScoringConfig: React.FC<HeuristicScoringConfigProps> = ({ value, 
 
               <section className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Reasoning override floor</span>
+                  <span className="text-sm font-medium">Минимум переопределения reasoning</span>
                   {value.reasoning_override_min_score !== undefined && (
                     <Button
                       type="button"
@@ -306,21 +304,21 @@ const HeuristicScoringConfig: React.FC<HeuristicScoringConfigProps> = ({ value, 
                       size="xs"
                       onClick={() => onChange({ ...value, reasoning_override_min_score: undefined })}
                     >
-                      Reset to defaults
+                      Сбросить к значениям по умолчанию
                     </Button>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Two or more reasoning markers promote a request to the reasoning tier, but only once its weighted
-                  score reaches this floor.{" "}
+                  Два и более маркера reasoning переводят запрос в уровень reasoning, но только когда его взвешенная
+                  оценка достигает этого минимума.{" "}
                   {trackedFloor === undefined
-                    ? "Left untouched, it tracks the Simple to Medium boundary."
-                    : `Left untouched, it tracks the Simple to Medium boundary, currently ${trackedFloor.toFixed(2)}.`}{" "}
-                  Set it to 0 to promote on the markers alone.
+                    ? "Если не трогать, параметр следует границе Simple → Medium."
+                    : `если не трогать, параметр следует границе Simple → Medium, сейчас ${trackedFloor.toFixed(2)}.`}{" "}
+                  Поставьте 0, чтобы повышать только по маркерам.
                 </p>
                 <div className="flex items-center gap-3">
                   <Label htmlFor={OVERRIDE_FLOOR_ID} className="w-44 text-xs font-normal">
-                    Minimum score
+                    Минимальная оценка
                   </Label>
                   <Input
                     id={OVERRIDE_FLOOR_ID}

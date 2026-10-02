@@ -41,39 +41,38 @@ const SemanticKeywordMatching: React.FC<SemanticKeywordMatchingProps> = ({
       <div className="flex items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="font-medium">Semantic keyword matching</span>
-            <SimpleTooltip content="Recognize related phrasing beyond exact keyword matches by comparing embeddings instead of plain text. Overrides direct keyword matching">
+            <span className="font-medium">Семантическое сопоставление по ключевым словам</span>
+            <SimpleTooltip content="Распознавать похожие формулировки через сравнение эмбеддингов, а не текста. Переопределяет прямое совпадение ключевых слов">
               <Info className="size-4 text-muted-foreground" />
             </SimpleTooltip>
           </div>
           <span className="text-muted-foreground text-sm">
-            Uses same keyword-tier pairs as above and overrides direct keyword matching. Adds latency based on embedding
-            model network request.
+            Использует те же пары «слово — уровень» и переопределяет прямое совпадение. Добавляет задержку на сетевой запрос к эмбеддинг-модели.
           </span>
         </div>
-        <Switch checked={enabled} onCheckedChange={onEnabledChange} aria-label="Semantic keyword matching" />
+        <Switch checked={enabled} onCheckedChange={onEnabledChange} aria-label="Семантическое сопоставление по ключевым словам" />
       </div>
 
       {enabled && (
         <div className="grid gap-4 md:grid-cols-2 mt-4 pt-4 border-t border-border">
           <div>
-            <span className="mb-1 block text-sm font-medium">Embedding model</span>
+            <span className="mb-1 block text-sm font-medium">Эмбеддинг-модель</span>
             <SearchSelect
               options={modelOptions}
               value={embeddingModel ?? ""}
               onValueChange={(model) => {
                 if (model !== null) onEmbeddingModelChange(model);
               }}
-              placeholder="Select an embedding model"
-              emptyText="No embedding models found"
-              aria-label="Embedding model"
+              placeholder="Выберите эмбеддинг-модель"
+              emptyText="Эмбеддинг-модели не найдены"
+              aria-label="Эмбеддинг-модель"
               allowClear={false}
               className={embeddingModelMissing ? "border-destructive" : undefined}
             />
-            {embeddingModelMissing && <span className="text-xs text-destructive">An embedding model is required</span>}
+            {embeddingModelMissing && <span className="text-xs text-destructive">Требуется эмбеддинг-модель</span>}
           </div>
           <div>
-            <span className="mb-1 block text-sm font-medium">Minimum match score</span>
+            <span className="mb-1 block text-sm font-medium">Минимальная оценка совпадения</span>
             <Input
               type="number"
               value={matchThreshold}
@@ -86,7 +85,7 @@ const SemanticKeywordMatching: React.FC<SemanticKeywordMatchingProps> = ({
               className="w-full"
             />
             <span className="mt-1 block text-xs text-muted-foreground">
-              Match only at or above this similarity score.
+              Совпадение только при оценке сходства не ниже этой.
             </span>
           </div>
         </div>

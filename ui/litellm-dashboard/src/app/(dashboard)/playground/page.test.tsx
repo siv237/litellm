@@ -4,19 +4,19 @@ import PlaygroundPage from "./page";
 
 const authState = { userRole: "Admin" };
 
-vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({
+vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
   default: () => ({
     token: "token-1",
-    accessToken: "sk-test",
+    accessТокен: "sk-test",
     userId: "user-1",
     userRole: authState.userRole,
     isViewOnly: ["Admin Viewer", "Internal Viewer"].includes(authState.userRole),
-    disabledPersonalKeyCreation: false,
+    disabledЛичнаяКлючCreation: false,
   }),
 }));
 
 vi.mock("@/utils/proxyUtils", () => ({
-  fetchProxySettings: vi.fn().mockResolvedValue(null),
+  fetchProxySettings: vi.fn().mockResolvedЗначение(null),
 }));
 
 vi.mock("@/app/(dashboard)/playground/components/chat_ui/ChatUI", () => ({

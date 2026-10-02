@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { DataTable } from "@/components/shared/DataTable";
+import { DataТаблица } from "@/components/shared/DataТаблица";
 import { Plugin } from "@/components/claude_code_plugins/types";
-import { getSkillHubTableColumns } from "./SkillHubTableColumns";
+import { getSkillHubТаблицаColumns } from "./SkillHubТаблицаColumns";
 
 const mockSkill: Plugin = {
   id: "skill-1",
@@ -11,53 +11,53 @@ const mockSkill: Plugin = {
   description: "Work with PDF files",
   source: { source: "github", repo: "org/pdf-tools" },
   category: "documents",
-  domain: "Productivity",
+  domain: "Продуктивность",
   enabled: true,
 };
 
-function renderTable(data: Plugin[], onSkillClick = vi.fn()) {
+function renderТаблица(data: Plugin[], onSkillClick = vi.fn()) {
   render(
-    <DataTable
+    <DataТаблица
       data={data}
-      columns={getSkillHubTableColumns({ onSkillClick })}
+      columns={getSkillHubТаблицаColumns({ onSkillClick })}
       getRowId={(skill, index) => skill.id || String(index)}
-      sortingMode="client"
+      sortingРежим="client"
       size="compact"
     />,
   );
   return onSkillClick;
 }
 
-describe("getSkillHubTableColumns", () => {
+describe("getSkillHubТаблицаColumns", () => {
   it("renders the skill row with category and domain", () => {
-    renderTable([mockSkill]);
+    renderТаблица([mockSkill]);
     expect(screen.getByText("pdf-tools")).toBeInTheDocument();
     expect(screen.getByText("documents")).toBeInTheDocument();
-    expect(screen.getByText("Productivity")).toBeInTheDocument();
+    expect(screen.getByText("Продуктивность")).toBeInTheDocument();
   });
 
   it("links to the github source", () => {
-    renderTable([mockSkill]);
+    renderТаблица([mockSkill]);
     const link = screen.getByRole("link", { name: /org\/pdf-tools/ });
     expect(link).toHaveAttribute("href", "https://github.com/org/pdf-tools");
   });
 
-  it("shows Public for enabled skills and Draft for disabled ones", () => {
-    renderTable([mockSkill, { ...mockSkill, id: "skill-2", name: "draft-skill", enabled: false }]);
-    expect(screen.getByText("Public")).toBeInTheDocument();
-    expect(screen.getByText("Draft")).toBeInTheDocument();
+  it("shows Публичный for enabled skills and Черновик for disabled ones", () => {
+    renderТаблица([mockSkill, { ...mockSkill, id: "skill-2", name: "draft-skill", enabled: false }]);
+    expect(screen.getByText("Публичный")).toBeInTheDocument();
+    expect(screen.getByText("Черновик")).toBeInTheDocument();
   });
 
   it("opens the skill detail when the name is clicked", async () => {
     const user = userEvent.setup();
-    const onSkillClick = renderTable([mockSkill]);
+    const onSkillClick = renderТаблица([mockSkill]);
     await user.click(screen.getByRole("button", { name: "pdf-tools" }));
     expect(onSkillClick).toHaveBeenCalledWith(mockSkill);
   });
 
   it("opens the skill detail from the actions menu", async () => {
     const user = userEvent.setup();
-    const onSkillClick = renderTable([mockSkill]);
+    const onSkillClick = renderТаблица([mockSkill]);
     await user.click(screen.getByTestId("skill-hub-actions-skill-1"));
     await user.click(await screen.findByTestId("skill-hub-action-details"));
     expect(onSkillClick).toHaveBeenCalledWith(mockSkill);
@@ -65,7 +65,7 @@ describe("getSkillHubTableColumns", () => {
 
   it("copies the skill name from the actions menu", async () => {
     const user = userEvent.setup();
-    renderTable([mockSkill]);
+    renderТаблица([mockSkill]);
     await user.click(screen.getByTestId("skill-hub-actions-skill-1"));
     await user.click(await screen.findByTestId("skill-hub-action-copy"));
     expect(await window.navigator.clipboard.readText()).toBe("pdf-tools");

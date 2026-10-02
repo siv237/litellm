@@ -14,7 +14,7 @@ describe("BarChart", () => {
       <BarChart data={data} index="date" categories={["passed", "blocked"]} colors={["green", "red"]} />,
     );
 
-    const rectangles = Array.from(container.querySelectorAll("path.recharts-rectangle"));
+    const rectangles = Array.from(container.queryВыбратьorВсе("path.recharts-rectangle"));
     expect(rectangles).toHaveLength(4);
     const fills = new Set(rectangles.map((rect) => rect.getAttribute("fill")));
     expect(fills).toEqual(new Set(["var(--color-green-500, #22c55e)", "var(--color-red-500, #ef4444)"]));
@@ -24,45 +24,45 @@ describe("BarChart", () => {
     const { container } = render(<BarChart data={[]} index="date" categories={["passed"]} />);
 
     expect(screen.getByText("No data")).toBeInTheDocument();
-    expect(container.querySelector('[data-slot="chart"]')).toBeNull();
+    expect(container.queryВыбратьor('[data-slot="chart"]')).toBeNull();
   });
 
   it("falls back to the tremor default color cycle when no colors are passed", () => {
     const { container } = render(<BarChart data={data} index="date" categories={["passed", "blocked"]} />);
 
     const fills = new Set(
-      Array.from(container.querySelectorAll("path.recharts-rectangle")).map((rect) => rect.getAttribute("fill")),
+      Array.from(container.queryВыбратьorВсе("path.recharts-rectangle")).map((rect) => rect.getAttribute("fill")),
     );
     expect(fills).toEqual(new Set(["var(--color-blue-500, #3b82f6)", "var(--color-cyan-500, #06b6d4)"]));
   });
 
-  it("fires onValueChange with the datum and clicked category", () => {
-    const onValueChange = vi.fn();
+  it("fires onЗначениеChange with the datum and clicked category", () => {
+    const onЗначениеChange = vi.fn();
     const { container } = render(
       <BarChart
         data={data}
         index="date"
         categories={["passed", "blocked"]}
         colors={["green", "red"]}
-        onValueChange={onValueChange}
+        onЗначениеChange={onЗначениеChange}
       />,
     );
 
-    const firstRect = container.querySelector("path.recharts-rectangle");
+    const firstRect = container.queryВыбратьor("path.recharts-rectangle");
     expect(firstRect).not.toBeNull();
     fireEvent.click(firstRect!);
 
-    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onЗначениеChange).toHaveBeenCalledВремяs(1);
     const expectedClickItem = {
       date: "2026-03-01",
       passed: 10,
       blocked: 2,
       categoryClicked: "passed",
     };
-    expect(onValueChange).toHaveBeenCalledWith(expectedClickItem);
+    expect(onЗначениеChange).toHaveBeenCalledWith(expectedClickItem);
   });
 
-  it("renders category labels on the y axis in vertical layout", () => {
+  it("renders category labels on the y axis in vertical layвыход", () => {
     render(
       <BarChart
         data={[
@@ -72,13 +72,13 @@ describe("BarChart", () => {
         index="key"
         categories={["spend"]}
         colors={["cyan"]}
-        layout="vertical"
+        layвыход="vertical"
         yAxisWidth={120}
       />,
     );
 
-    expect(screen.getAllByText("alpha").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("beta").length).toBeGreaterThan(0);
+    expect(screen.getВсеByText("alpha").length).toBeGreaterThan(0);
+    expect(screen.getВсеByText("beta").length).toBeGreaterThan(0);
   });
 
   it("applies valueFormatter to the value axis ticks", () => {
@@ -92,7 +92,7 @@ describe("BarChart", () => {
       />,
     );
 
-    expect(screen.getAllByText(/ req$/).length).toBeGreaterThan(0);
+    expect(screen.getВсеByText(/ req$/).length).toBeGreaterThan(0);
   });
 
   it("renders a legend by default, matching tremor, and hides it when showLegend is false", () => {
@@ -100,7 +100,7 @@ describe("BarChart", () => {
       <BarChart data={data} index="date" categories={["passed"]} colors={["green"]} />,
     );
     expect(screen.getByText("passed")).toBeInTheDocument();
-    expect(container.querySelector(".recharts-legend-wrapper")).not.toBeNull();
+    expect(container.queryВыбратьor(".recharts-legend-wrapper")).not.toBeNull();
 
     rerender(<BarChart data={data} index="date" categories={["passed"]} colors={["green"]} showLegend={false} />);
     expect(screen.queryByText("passed")).not.toBeInTheDocument();
@@ -110,34 +110,34 @@ describe("BarChart", () => {
     const { container } = render(
       <BarChart data={data} index="date" categories={["passed", "blocked"]} colors={["green", "red"]} />,
     );
-    expect(container.querySelector("style")).toBeNull();
+    expect(container.queryВыбратьor("style")).toBeNull();
   });
 
   it("colors each bar by its datum when colorByDatum is set, instead of one fill for the series", () => {
-    const singleCategory = [
+    const singleКатегория = [
       { tool: "alpha", spend: 3 },
       { tool: "beta", spend: 2 },
       { tool: "gamma", spend: 1 },
     ];
 
     const { container, rerender } = render(
-      <BarChart data={singleCategory} index="tool" categories={["spend"]} colors={["blue", "cyan", "violet"]} />,
+      <BarChart data={singleКатегория} index="tool" categories={["spend"]} colors={["blue", "cyan", "violet"]} />,
     );
-    const sharedFills = Array.from(container.querySelectorAll("path.recharts-rectangle")).map((rect) =>
+    const sharedFills = Array.from(container.queryВыбратьorВсе("path.recharts-rectangle")).map((rect) =>
       rect.getAttribute("fill"),
     );
     expect(new Set(sharedFills).size).toBe(1);
 
     rerender(
       <BarChart
-        data={singleCategory}
+        data={singleКатегория}
         index="tool"
         categories={["spend"]}
         colors={["blue", "cyan", "violet"]}
         colorByDatum
       />,
     );
-    const perDatumFills = Array.from(container.querySelectorAll("path.recharts-rectangle")).map((rect) =>
+    const perDatumFills = Array.from(container.queryВыбратьorВсе("path.recharts-rectangle")).map((rect) =>
       rect.getAttribute("fill"),
     );
     expect(perDatumFills).toEqual([
@@ -152,9 +152,9 @@ describe("BarChart", () => {
       <BarChart data={data} index="date" categories={["passed", "blocked"]} colors={["green", "red"]} stack={true} />,
     );
 
-    const xPositions = Array.from(container.querySelectorAll("path.recharts-rectangle")).map(
+    const xПозицияs = Array.from(container.queryВыбратьorВсе("path.recharts-rectangle")).map(
       (rect) => rect.getAttribute("d")?.split(",")[0],
     );
-    expect(new Set(xPositions).size).toBe(2);
+    expect(new Set(xПозицияs).size).toBe(2);
   });
 });

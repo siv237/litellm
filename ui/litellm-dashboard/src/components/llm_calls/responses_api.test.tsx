@@ -1,16 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { makeOpenAIResponsesRequest } from "./responses_api";
-import { MessageType } from "../chat_ui/types";
-import type { TokenUsage } from "../chat_ui/ResponseMetrics";
+import { makeOpenAIОтветsЗапрос } from "./responses_api";
+import { СообщениеType } from "../chat_ui/types";
+import type { ТокенИспользование } from "../chat_ui/ОтветМетрикаs";
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: vi.fn(() => "https://example.com"),
 }));
 
-const mockResponsesCreate = vi.fn();
+const mockОтветsCreate = vi.fn();
 const mockClient = {
   responses: {
-    create: mockResponsesCreate,
+    create: mockОтветsCreate,
   },
 };
 
@@ -22,22 +22,22 @@ vi.mock("openai", () => ({
   },
 }));
 
-const nonStreamingResponse = (data: unknown, headers: Record<string, string> = {}) => ({
-  withResponse: async () => ({ data, response: { headers: new Headers(headers) } }),
+const nonStreamingОтвет = (data: unknown, headers: Record<string, string> = {}) => ({
+  withОтвет: async () => ({ data, response: { headers: new Заголовки(headers) } }),
 });
 
 describe("responses_api", () => {
   const mockUpdateTextUI = vi.fn();
-  const messages: MessageType[] = [{ role: "user", content: "Hello" }];
+  const messages: СообщениеType[] = [{ role: "user", content: "Hello" }];
 
   beforeEach(() => {
     const mockEvents = [
-      { type: "response.output_text.delta", delta: "Hi" },
+      { type: "response.выходput_text.delta", delta: "Hi" },
       {
         type: "response.completed",
         response: {
           id: "resp_123",
-          usage: { output_tokens: 2, input_tokens: 5, total_tokens: 7 },
+          usage: { выходput_tokens: 2, input_tokens: 5, total_tokens: 7 },
         },
       },
     ];
@@ -48,20 +48,20 @@ describe("responses_api", () => {
       }
     }
 
-    mockResponsesCreate.mockResolvedValue(mockStream());
+    mockОтветsCreate.mockResolvedЗначение(mockStream());
   });
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should send a basic responses request", async () => {
-    await makeOpenAIResponsesRequest(messages, mockUpdateTextUI, "gpt-4", "test-token");
+    await makeOpenAIОтветsЗапрос(messages, mockUpdateTextUI, "gpt-4", "test-token");
 
-    expect(mockResponsesCreate).toHaveBeenCalledTimes(1);
-    expect(mockResponsesCreate).toHaveBeenCalledWith(
+    expect(mockОтветsCreate).toHaveBeenCalledВремяs(1);
+    expect(mockОтветsCreate).toHaveBeenCalledWith(
       expect.objectContaining({
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
         input: [
           {
             role: "user",
@@ -76,28 +76,28 @@ describe("responses_api", () => {
     expect(mockUpdateTextUI).toHaveBeenCalledWith("assistant", "Hi", "gpt-4");
   });
 
-  it("should send a non-streaming request and render the whole output at once when streaming is disabled", async () => {
-    mockResponsesCreate.mockReturnValueOnce(
-      nonStreamingResponse({
+  it("should send a non-streaming request and render the whole выходput at once when streaming is disabled", async () => {
+    mockОтветsCreate.mockReturnЗначениеOnce(
+      nonStreamingОтвет({
         id: "resp_456",
-        output: [
+        выходput: [
           {
             type: "message",
             content: [
-              { type: "output_text", text: "Full " },
-              { type: "output_text", text: "answer" },
+              { type: "выходput_text", text: "Full " },
+              { type: "выходput_text", text: "answer" },
             ],
           },
         ],
-        usage: { output_tokens: 3, input_tokens: 4, total_tokens: 7 },
+        usage: { выходput_tokens: 3, input_tokens: 4, total_tokens: 7 },
       }),
     );
 
     const onTimingData = vi.fn();
-    const onUsageData = vi.fn();
-    const onResponseId = vi.fn();
+    const onИспользованиеData = vi.fn();
+    const onОтветId = vi.fn();
 
-    await makeOpenAIResponsesRequest(
+    await makeOpenAIОтветsЗапрос(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -106,39 +106,39 @@ describe("responses_api", () => {
       undefined, // signal
       undefined, // onReasoningContent
       onTimingData,
-      onUsageData,
+      onИспользованиеData,
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      undefined, // selectedMCPServers
-      undefined, // previousResponseId
-      onResponseId,
+      undefined, // selectedMCP-серверы
+      undefined, // previousОтветId
+      onОтветId,
       undefined, // onMCPEvent
       undefined, // codeInterpreterEnabled
-      undefined, // onCodeInterpreterResult
+      undefined, // onCodeInterpreterРезультат
       undefined, // customBaseUrl
-      undefined, // mcpServers
-      undefined, // mcpServerToolRestrictions
-      undefined, // mcpToolsets
+      undefined, // mcp-серверы
+      undefined, // mcpСерверToolRestrictions
+      undefined, // mcpИнструментыets
       false, // streamingEnabled
     );
 
-    expect(mockResponsesCreate).toHaveBeenCalledTimes(1);
-    expect(mockResponsesCreate.mock.calls[0][0].stream).toBe(false);
+    expect(mockОтветsCreate).toHaveBeenCalledВремяs(1);
+    expect(mockОтветsCreate.mock.calls[0][0].stream).toBe(false);
 
-    expect(mockUpdateTextUI).toHaveBeenCalledTimes(1);
+    expect(mockUpdateTextUI).toHaveBeenCalledВремяs(1);
     expect(mockUpdateTextUI).toHaveBeenCalledWith("assistant", "Full answer", "gpt-4");
 
-    expect(onUsageData).toHaveBeenCalledWith({ completionTokens: 3, promptTokens: 4, totalTokens: 7 }, "");
-    expect(onResponseId).toHaveBeenCalledWith("resp_456");
+    expect(onИспользованиеData).toHaveBeenCalledWith({ completionТокенs: 3, promptТокенs: 4, totalТокенs: 7 }, "");
+    expect(onОтветId).toHaveBeenCalledWith("resp_456");
     expect(onTimingData).not.toHaveBeenCalled();
   });
 
   it("should report total latency in both streaming and non-streaming modes", async () => {
     const onTotalLatency = vi.fn();
     const callWithStreaming = (streamingEnabled: boolean) =>
-      makeOpenAIResponsesRequest(
+      makeOpenAIОтветsЗапрос(
         messages,
         mockUpdateTextUI,
         "gpt-4",
@@ -147,57 +147,57 @@ describe("responses_api", () => {
         undefined, // signal
         undefined, // onReasoningContent
         undefined, // onTimingData
-        undefined, // onUsageData
+        undefined, // onИспользованиеData
         undefined, // traceId
         undefined, // vector_store_ids
-        undefined, // guardrails
+        undefined, // гардрейловs
         undefined, // policies
-        undefined, // selectedMCPServers
-        undefined, // previousResponseId
-        undefined, // onResponseId
+        undefined, // selectedMCP-серверы
+        undefined, // previousОтветId
+        undefined, // onОтветId
         undefined, // onMCPEvent
         undefined, // codeInterpreterEnabled
-        undefined, // onCodeInterpreterResult
+        undefined, // onCodeInterpreterРезультат
         undefined, // customBaseUrl
-        undefined, // mcpServers
-        undefined, // mcpServerToolRestrictions
-        undefined, // mcpToolsets
+        undefined, // mcp-серверы
+        undefined, // mcpСерверToolRestrictions
+        undefined, // mcpИнструментыets
         streamingEnabled,
         onTotalLatency,
       );
 
     await callWithStreaming(true);
-    expect(onTotalLatency).toHaveBeenCalledTimes(1);
+    expect(onTotalLatency).toHaveBeenCalledВремяs(1);
     expect(onTotalLatency).toHaveBeenLastCalledWith(expect.any(Number));
 
-    mockResponsesCreate.mockReturnValueOnce(
-      nonStreamingResponse({
+    mockОтветsCreate.mockReturnЗначениеOnce(
+      nonStreamingОтвет({
         id: "resp_latency",
-        output: [{ type: "message", content: [{ type: "output_text", text: "Answer" }] }],
+        выходput: [{ type: "message", content: [{ type: "выходput_text", text: "Answer" }] }],
       }),
     );
 
     await callWithStreaming(false);
-    expect(onTotalLatency).toHaveBeenCalledTimes(2);
+    expect(onTotalLatency).toHaveBeenCalledВремяs(2);
     expect(onTotalLatency).toHaveBeenLastCalledWith(expect.any(Number));
   });
 
   it("should forward the cost the proxy reports on the streamed usage object", async () => {
-    async function* streamWithCost() {
-      yield { type: "response.output_text.delta", delta: "Hi" };
+    async function* streamWithСтоимость() {
+      yield { type: "response.выходput_text.delta", delta: "Hi" };
       yield {
         type: "response.completed",
         response: {
           id: "resp_cost",
-          usage: { output_tokens: 12, input_tokens: 12, total_tokens: 24, cost: 0.000063 },
+          usage: { выходput_tokens: 12, input_tokens: 12, total_tokens: 24, cost: 0.000063 },
         },
       };
     }
-    mockResponsesCreate.mockResolvedValueOnce(streamWithCost());
+    mockОтветsCreate.mockResolvedЗначениеOnce(streamWithСтоимость());
 
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
 
-    await makeOpenAIResponsesRequest(
+    await makeOpenAIОтветsЗапрос(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -206,19 +206,19 @@ describe("responses_api", () => {
       undefined,
       undefined,
       undefined,
-      onUsageData,
+      onИспользованиеData,
     );
 
-    expect(onUsageData).toHaveBeenCalledWith(
-      { completionTokens: 12, promptTokens: 12, totalTokens: 24, cost: 0.000063 },
+    expect(onИспользованиеData).toHaveBeenCalledWith(
+      { completionТокенs: 12, promptТокенs: 12, totalТокенs: 24, cost: 0.000063 },
       "",
     );
   });
 
   it("should omit cost when the proxy reports none", async () => {
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
 
-    await makeOpenAIResponsesRequest(
+    await makeOpenAIОтветsЗапрос(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -227,27 +227,27 @@ describe("responses_api", () => {
       undefined,
       undefined,
       undefined,
-      onUsageData,
+      onИспользованиеData,
     );
 
-    expect(onUsageData).toHaveBeenCalledWith(expect.not.objectContaining({ cost: expect.anything() }), "");
+    expect(onИспользованиеData).toHaveBeenCalledWith(expect.not.objectContaining({ cost: expect.anything() }), "");
   });
 
   it("should omit cost when the proxy reports a non-numeric cost", async () => {
-    async function* streamWithNonNumericCost() {
+    async function* streamWithNonNumericСтоимость() {
       yield {
         type: "response.completed",
         response: {
           id: "resp_non_numeric_cost",
-          usage: { output_tokens: 12, input_tokens: 12, total_tokens: 24, cost: "not-a-number" },
+          usage: { выходput_tokens: 12, input_tokens: 12, total_tokens: 24, cost: "not-a-number" },
         },
       };
     }
-    mockResponsesCreate.mockResolvedValueOnce(streamWithNonNumericCost());
+    mockОтветsCreate.mockResolvedЗначениеOnce(streamWithNonNumericСтоимость());
 
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
 
-    await makeOpenAIResponsesRequest(
+    await makeOpenAIОтветsЗапрос(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -256,27 +256,27 @@ describe("responses_api", () => {
       undefined,
       undefined,
       undefined,
-      onUsageData,
+      onИспользованиеData,
     );
 
-    expect(onUsageData).toHaveBeenCalledWith(expect.not.objectContaining({ cost: expect.anything() }), "");
+    expect(onИспользованиеData).toHaveBeenCalledWith(expect.not.objectContaining({ cost: expect.anything() }), "");
   });
 
   it("should omit cost when the proxy reports a blank cost", async () => {
-    async function* streamWithBlankCost() {
+    async function* streamWithBlankСтоимость() {
       yield {
         type: "response.completed",
         response: {
           id: "resp_blank_cost",
-          usage: { output_tokens: 12, input_tokens: 12, total_tokens: 24, cost: "  " },
+          usage: { выходput_tokens: 12, input_tokens: 12, total_tokens: 24, cost: "  " },
         },
       };
     }
-    mockResponsesCreate.mockResolvedValueOnce(streamWithBlankCost());
+    mockОтветsCreate.mockResolvedЗначениеOnce(streamWithBlankСтоимость());
 
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
 
-    await makeOpenAIResponsesRequest(
+    await makeOpenAIОтветsЗапрос(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -285,28 +285,28 @@ describe("responses_api", () => {
       undefined,
       undefined,
       undefined,
-      onUsageData,
+      onИспользованиеData,
     );
 
-    expect(onUsageData).toHaveBeenCalledWith(expect.not.objectContaining({ cost: expect.anything() }), "");
+    expect(onИспользованиеData).toHaveBeenCalledWith(expect.not.objectContaining({ cost: expect.anything() }), "");
   });
 
-  it("should replay MCP output items as events for a non-streaming response", async () => {
-    mockResponsesCreate.mockReturnValueOnce(
-      nonStreamingResponse({
+  it("should replay MCP выходput items as events for a non-streaming response", async () => {
+    mockОтветsCreate.mockReturnЗначениеOnce(
+      nonStreamingОтвет({
         id: "resp_789",
-        output: [
-          { type: "mcp_call", id: "mcp_1", name: "search_docs", arguments: "{}", output: "found it" },
-          { type: "message", content: [{ type: "output_text", text: "Answer" }] },
+        выходput: [
+          { type: "mcp_call", id: "mcp_1", name: "search_docs", arguments: "{}", выходput: "found it" },
+          { type: "message", content: [{ type: "выходput_text", text: "Answer" }] },
         ],
-        usage: { output_tokens: 1, input_tokens: 1, total_tokens: 2 },
+        usage: { выходput_tokens: 1, input_tokens: 1, total_tokens: 2 },
       }),
     );
 
     const onMCPEvent = vi.fn();
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
 
-    await makeOpenAIResponsesRequest(
+    await makeOpenAIОтветsЗапрос(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -315,37 +315,37 @@ describe("responses_api", () => {
       undefined, // signal
       undefined, // onReasoningContent
       undefined, // onTimingData
-      onUsageData,
+      onИспользованиеData,
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      undefined, // selectedMCPServers
-      undefined, // previousResponseId
-      undefined, // onResponseId
+      undefined, // selectedMCP-серверы
+      undefined, // previousОтветId
+      undefined, // onОтветId
       onMCPEvent,
       undefined, // codeInterpreterEnabled
-      undefined, // onCodeInterpreterResult
+      undefined, // onCodeInterpreterРезультат
       undefined, // customBaseUrl
-      undefined, // mcpServers
-      undefined, // mcpServerToolRestrictions
-      undefined, // mcpToolsets
+      undefined, // mcp-серверы
+      undefined, // mcpСерверToolRestrictions
+      undefined, // mcpИнструментыets
       false, // streamingEnabled
     );
 
     expect(onMCPEvent).toHaveBeenCalledWith(
       expect.objectContaining({
-        type: "response.output_item.done",
+        type: "response.выходput_item.done",
         item_id: "mcp_1",
-        item: expect.objectContaining({ type: "mcp_call", name: "search_docs", output: "found it" }),
+        item: expect.objectContaining({ type: "mcp_call", name: "search_docs", выходput: "found it" }),
       }),
     );
-    expect(onUsageData).toHaveBeenCalledWith(expect.anything(), "search_docs");
+    expect(onИспользованиеData).toHaveBeenCalledWith(expect.anything(), "search_docs");
   });
 
   it("should configure MCP tools per server with restrictions", async () => {
-    const selectedMCPServers = ["server-1", "server-2"];
-    const mcpServers = [
+    const selectedMCP-серверы = ["server-1", "server-2"];
+    const mcp-серверы = [
       {
         server_id: "server-1",
         alias: "alpha",
@@ -358,7 +358,7 @@ describe("responses_api", () => {
       },
       {
         server_id: "server-2",
-        server_name: "Beta",
+        server_name: "Бета",
         url: "http://example.com",
         created_at: "2024-01-01",
         created_by: "test",
@@ -366,12 +366,12 @@ describe("responses_api", () => {
         updated_by: "test",
       },
     ];
-    const mcpServerToolRestrictions: Record<string, string[]> = {
+    const mcpСерверToolRestrictions: Record<string, string[]> = {
       "server-1": ["toolA"],
       "server-2": ["toolB", "toolC"],
     };
 
-    await makeOpenAIResponsesRequest(
+    await makeOpenAIОтветsЗапрос(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -380,23 +380,23 @@ describe("responses_api", () => {
       undefined, // signal
       undefined, // onReasoningContent
       undefined, // onTimingData
-      undefined, // onUsageData
+      undefined, // onИспользованиеData
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      selectedMCPServers,
-      undefined, // previousResponseId
-      undefined, // onResponseId
+      selectedMCP-серверы,
+      undefined, // previousОтветId
+      undefined, // onОтветId
       undefined, // onMCPEvent
       undefined, // codeInterpreterEnabled
-      undefined, // onCodeInterpreterResult
+      undefined, // onCodeInterpreterРезультат
       undefined, // customBaseUrl
-      mcpServers,
-      mcpServerToolRestrictions,
+      mcp-серверы,
+      mcpСерверToolRestrictions,
     );
 
-    const callArgs = mockResponsesCreate.mock.calls[0][0];
+    const callArgs = mockОтветsCreate.mock.calls[0][0];
     expect(callArgs.tool_choice).toBe("auto");
     expect(callArgs.tools).toEqual([
       {
@@ -408,8 +408,8 @@ describe("responses_api", () => {
       },
       {
         type: "mcp",
-        server_label: "Beta",
-        server_url: "https://example.com/mcp/Beta",
+        server_label: "Бета",
+        server_url: "https://example.com/mcp/Бета",
         require_approval: "never",
         allowed_tools: ["toolB", "toolC"],
       },
@@ -418,20 +418,20 @@ describe("responses_api", () => {
 });
 
 describe("responses_api prompt cache usage", () => {
-  const captureUsage = async (usage: Record<string, unknown>): Promise<TokenUsage> => {
+  const captureИспользование = async (usage: Record<string, unknown>): Promise<ТокенИспользование> => {
     async function* mockStream() {
       yield {
         type: "response.completed",
         response: {
           id: "resp_cache",
-          usage: { output_tokens: 2, input_tokens: 5000, total_tokens: 5002, ...usage },
+          usage: { выходput_tokens: 2, input_tokens: 5000, total_tokens: 5002, ...usage },
         },
       };
     }
-    mockResponsesCreate.mockResolvedValue(mockStream());
+    mockОтветsCreate.mockResolvedЗначение(mockStream());
 
-    const onUsageData = vi.fn();
-    await makeOpenAIResponsesRequest(
+    const onИспользованиеData = vi.fn();
+    await makeOpenAIОтветsЗапрос(
       [{ role: "user", content: "Hello" }],
       vi.fn(),
       "gpt-4",
@@ -440,66 +440,66 @@ describe("responses_api prompt cache usage", () => {
       undefined,
       undefined,
       undefined,
-      onUsageData,
+      onИспользованиеData,
     );
 
-    expect(onUsageData).toHaveBeenCalledTimes(1);
-    return onUsageData.mock.calls[0][0] as TokenUsage;
+    expect(onИспользованиеData).toHaveBeenCalledВремяs(1);
+    return onИспользованиеData.mock.calls[0][0] as ТокенИспользование;
   };
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
-  it("surfaces read tokens from Responses-shape input_tokens_details", async () => {
+  it("surfaces read tokens from Ответs-shape input_tokens_details", async () => {
     await expect(
-      captureUsage({ input_tokens_details: { cached_tokens: 4695, cache_write_tokens: 0 } }),
-    ).resolves.toMatchObject({ cacheReadTokens: 4695, promptTokens: 5000 });
+      captureИспользование({ input_tokens_details: { cached_tokens: 4695, cache_write_tokens: 0 } }),
+    ).resolves.toMatchObject({ cacheReadТокенs: 4695, promptТокенs: 5000 });
   });
 
-  it("surfaces creation tokens from Responses-shape cache writes", async () => {
+  it("surfaces creation tokens from Ответs-shape cache writes", async () => {
     await expect(
-      captureUsage({ input_tokens_details: { cached_tokens: 0, cache_write_tokens: 4695 } }),
-    ).resolves.toMatchObject({ cacheCreationTokens: 4695 });
+      captureИспользование({ input_tokens_details: { cached_tokens: 0, cache_write_tokens: 4695 } }),
+    ).resolves.toMatchObject({ cacheCreationТокенs: 4695 });
   });
 
   it("omits cache fields entirely for a provider that reports none", async () => {
-    const usageData = await captureUsage({});
+    const usageData = await captureИспользование({});
 
-    expect(usageData).not.toHaveProperty("cacheReadTokens");
-    expect(usageData).not.toHaveProperty("cacheCreationTokens");
-    expect(usageData.promptTokens).toBe(5000);
+    expect(usageData).not.toHaveСвойство("cacheReadТокенs");
+    expect(usageData).not.toHaveСвойство("cacheCreationТокенs");
+    expect(usageData.promptТокенs).toBe(5000);
   });
 
-  it("surfaces reasoning tokens from Responses-shape output_tokens_details", async () => {
-    await expect(captureUsage({ output_tokens_details: { reasoning_tokens: 42 } })).resolves.toMatchObject({
-      reasoningTokens: 42,
+  it("surfaces reasoning tokens from Ответs-shape выходput_tokens_details", async () => {
+    await expect(captureИспользование({ выходput_tokens_details: { reasoning_tokens: 42 } })).resolves.toMatchObject({
+      reasoningТокенs: 42,
     });
   });
 
-  it("falls back to completion_tokens_details reasoning tokens when output_tokens_details is absent", async () => {
-    await expect(captureUsage({ completion_tokens_details: { reasoning_tokens: 17 } })).resolves.toMatchObject({
-      reasoningTokens: 17,
+  it("falls back to completion_tokens_details reasoning tokens when выходput_tokens_details is absent", async () => {
+    await expect(captureИспользование({ completion_tokens_details: { reasoning_tokens: 17 } })).resolves.toMatchObject({
+      reasoningТокенs: 17,
     });
   });
 });
 
 describe("responses_api response cache", () => {
   const mockUpdateTextUI = vi.fn();
-  const messages: MessageType[] = [{ role: "user", content: "Hello" }];
+  const messages: СообщениеType[] = [{ role: "user", content: "Hello" }];
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("flags a non-streaming response-cache hit even though it replays provider prompt-cache usage", async () => {
-    mockResponsesCreate.mockReturnValueOnce(
-      nonStreamingResponse(
+    mockОтветsCreate.mockReturnЗначениеOnce(
+      nonStreamingОтвет(
         {
           id: "resp_replayed",
-          output: [{ type: "message", content: [{ type: "output_text", text: "Full answer" }] }],
+          выходput: [{ type: "message", content: [{ type: "выходput_text", text: "Full answer" }] }],
           usage: {
-            output_tokens: 2,
+            выходput_tokens: 2,
             input_tokens: 5000,
             total_tokens: 5002,
             input_tokens_details: { cached_tokens: 4695 },
@@ -509,9 +509,9 @@ describe("responses_api response cache", () => {
       ),
     );
 
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
 
-    await makeOpenAIResponsesRequest(
+    await makeOpenAIОтветsЗапрос(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -520,42 +520,42 @@ describe("responses_api response cache", () => {
       undefined, // signal
       undefined, // onReasoningContent
       undefined, // onTimingData
-      onUsageData,
+      onИспользованиеData,
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      undefined, // selectedMCPServers
-      undefined, // previousResponseId
-      undefined, // onResponseId
+      undefined, // selectedMCP-серверы
+      undefined, // previousОтветId
+      undefined, // onОтветId
       undefined, // onMCPEvent
       undefined, // codeInterpreterEnabled
-      undefined, // onCodeInterpreterResult
+      undefined, // onCodeInterpreterРезультат
       undefined, // customBaseUrl
-      undefined, // mcpServers
-      undefined, // mcpServerToolRestrictions
-      undefined, // mcpToolsets
+      undefined, // mcp-серверы
+      undefined, // mcpСерверToolRestrictions
+      undefined, // mcpИнструментыets
       false, // streamingEnabled
     );
 
-    expect(onUsageData).toHaveBeenCalledWith(
-      expect.objectContaining({ cacheReadTokens: 4695, servedFromResponseCache: true }),
+    expect(onИспользованиеData).toHaveBeenCalledWith(
+      expect.objectContaining({ cacheReadТокенs: 4695, servedFromОтветCache: true }),
       "",
     );
   });
 
   it("does not flag a non-streaming response that missed the response cache", async () => {
-    mockResponsesCreate.mockReturnValueOnce(
-      nonStreamingResponse({
+    mockОтветsCreate.mockReturnЗначениеOnce(
+      nonStreamingОтвет({
         id: "resp_fresh",
-        output: [{ type: "message", content: [{ type: "output_text", text: "Full answer" }] }],
-        usage: { output_tokens: 2, input_tokens: 5, total_tokens: 7 },
+        выходput: [{ type: "message", content: [{ type: "выходput_text", text: "Full answer" }] }],
+        usage: { выходput_tokens: 2, input_tokens: 5, total_tokens: 7 },
       }),
     );
 
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
 
-    await makeOpenAIResponsesRequest(
+    await makeOpenAIОтветsЗапрос(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -564,39 +564,39 @@ describe("responses_api response cache", () => {
       undefined, // signal
       undefined, // onReasoningContent
       undefined, // onTimingData
-      onUsageData,
+      onИспользованиеData,
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      undefined, // selectedMCPServers
-      undefined, // previousResponseId
-      undefined, // onResponseId
+      undefined, // selectedMCP-серверы
+      undefined, // previousОтветId
+      undefined, // onОтветId
       undefined, // onMCPEvent
       undefined, // codeInterpreterEnabled
-      undefined, // onCodeInterpreterResult
+      undefined, // onCodeInterpreterРезультат
       undefined, // customBaseUrl
-      undefined, // mcpServers
-      undefined, // mcpServerToolRestrictions
-      undefined, // mcpToolsets
+      undefined, // mcp-серверы
+      undefined, // mcpСерверToolRestrictions
+      undefined, // mcpИнструментыets
       false, // streamingEnabled
     );
 
-    expect(onUsageData).toHaveBeenCalledWith(expect.not.objectContaining({ servedFromResponseCache: true }), "");
+    expect(onИспользованиеData).toHaveBeenCalledWith(expect.not.objectContaining({ servedFromОтветCache: true }), "");
   });
 
   it("never flags a streaming response, even when the proxy reports a cache key", async () => {
     async function* mockStream() {
       yield {
         type: "response.completed",
-        response: { id: "resp_stream", usage: { output_tokens: 2, input_tokens: 5, total_tokens: 7 } },
+        response: { id: "resp_stream", usage: { выходput_tokens: 2, input_tokens: 5, total_tokens: 7 } },
       };
     }
-    mockResponsesCreate.mockResolvedValueOnce(mockStream());
+    mockОтветsCreate.mockResolvedЗначениеOnce(mockStream());
 
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
 
-    await makeOpenAIResponsesRequest(
+    await makeOpenAIОтветsЗапрос(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -605,9 +605,9 @@ describe("responses_api response cache", () => {
       undefined,
       undefined,
       undefined,
-      onUsageData,
+      onИспользованиеData,
     );
 
-    expect(onUsageData).toHaveBeenCalledWith(expect.not.objectContaining({ servedFromResponseCache: true }), "");
+    expect(onИспользованиеData).toHaveBeenCalledWith(expect.not.objectContaining({ servedFromОтветCache: true }), "");
   });
 });

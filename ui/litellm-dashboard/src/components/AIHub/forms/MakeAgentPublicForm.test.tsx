@@ -1,76 +1,76 @@
 import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import MakeAgentPublicForm from "./MakeAgentPublicForm";
-import { AgentHubData } from "@/components/AIHub/AgentHubTableColumns";
+import MakeAgentПубличныйForm from "./MakeAgentПубличныйForm";
+import { AgentHubData } from "@/components/AIHub/AgentHubТаблицаColumns";
 
 // Mock the networking function
 vi.mock("../../networking", () => ({
-  makeAgentsPublicCall: vi.fn(),
+  makeАгентыПубличныйCall: vi.fn(),
 }));
 
 // Import the mocked function
-import { makeAgentsPublicCall } from "../../networking";
-const mockMakeAgentsPublicCall = vi.mocked(makeAgentsPublicCall);
+import { makeАгентыПубличныйCall } from "../../networking";
+const mockMakeАгентыПубличныйCall = vi.mocked(makeАгентыПубличныйCall);
 
 const expectDisabledControl = (element: HTMLElement) =>
   expect(element.hasAttribute("disabled") || element.getAttribute("aria-disabled") === "true").toBe(true);
 
-describe("MakeAgentPublicForm", () => {
+describe("MakeAgentПубличныйForm", () => {
   const mockProps = {
     visible: true,
     onClose: vi.fn(),
-    accessToken: "test-token",
+    accessТокен: "test-token",
     agentHubData: [
       {
         agent_id: "agent-1",
         name: "Test Agent 1",
-        description: "Description 1",
+        description: "Описание 1",
         version: "1.0",
         is_public: false,
         skills: [
           { id: "skill-1", name: "Skill 1", description: "Skill desc" },
           { id: "skill-2", name: "Skill 2", description: "Skill desc" },
         ],
-        protocolVersion: "1.0",
+        protocolВерсия: "1.0",
       },
       {
         agent_id: "agent-2",
         name: "Test Agent 2",
-        description: "Description 2",
+        description: "Описание 2",
         version: "2.0",
         is_public: true,
         skills: [],
-        protocolVersion: "1.0",
+        protocolВерсия: "1.0",
       },
     ] as AgentHubData[],
     onSuccess: vi.fn(),
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   afterEach(() => {
-    vi.resetAllMocks();
+    vi.resetВсеMocks();
   });
 
   it("should render the component", () => {
-    render(<MakeAgentPublicForm {...mockProps} />);
+    render(<MakeAgentПубличныйForm {...mockProps} />);
 
-    expect(screen.getByText("Make Agents Public")).toBeInTheDocument();
-    expect(screen.getByText("Select Agents to Make Public")).toBeInTheDocument();
+    expect(screen.getByText("Make Агенты Публичный")).toBeInTheDocument();
+    expect(screen.getByText("Выберите агентов для публикации")).toBeInTheDocument();
   });
 
   it("should initialize with correct state", () => {
-    render(<MakeAgentPublicForm {...mockProps} />);
+    render(<MakeAgentПубличныйForm {...mockProps} />);
 
     // Check that the component renders with the correct title and content
-    expect(screen.getByText("Make Agents Public")).toBeInTheDocument();
-    expect(screen.getByText("Select Agents to Make Public")).toBeInTheDocument();
+    expect(screen.getByText("Make Агенты Публичный")).toBeInTheDocument();
+    expect(screen.getByText("Выберите агентов для публикации")).toBeInTheDocument();
 
     // Check that all agent checkboxes are present
-    const checkboxes = screen.getAllByRole("checkbox");
-    expect(checkboxes).toHaveLength(3); // Select all + 2 agents
+    const checkboxes = screen.getВсеByRole("checkbox");
+    expect(checkboxes).toHaveLength(3); // Выбрать all + 2 agents
 
     // Check that the Next button is enabled (agents are preselected)
     const nextButton = screen.getByRole("button", { name: "Next" });
@@ -78,15 +78,15 @@ describe("MakeAgentPublicForm", () => {
   });
 
   it("should handle agent selection and navigation", async () => {
-    render(<MakeAgentPublicForm {...mockProps} />);
+    render(<MakeAgentПубличныйForm {...mockProps} />);
 
     // Initially on step 1
-    expect(screen.getByText("Select Agents to Make Public")).toBeInTheDocument();
+    expect(screen.getByText("Выберите агентов для публикации")).toBeInTheDocument();
 
-    // Select all agents using the select all checkbox
-    const selectAllCheckbox = screen.getByRole("checkbox", { name: "Select All (2)" });
+    // Выбрать all agents using the select all checkbox
+    const selectВсеCheckbox = screen.getByRole("checkbox", { name: "Снять выделение (2)" });
     await act(async () => {
-      fireEvent.click(selectAllCheckbox);
+      fireEvent.click(selectВсеCheckbox);
     });
 
     // Verify Next button is enabled
@@ -100,19 +100,19 @@ describe("MakeAgentPublicForm", () => {
 
     // Should move to step 2
     await waitFor(() => {
-      expect(screen.getByText("Confirm Making Agents Public")).toBeInTheDocument();
+      expect(screen.getByText("Confirm Making Агенты Публичный")).toBeInTheDocument();
     });
   });
 
   it("should submit selected agents successfully", async () => {
-    mockMakeAgentsPublicCall.mockResolvedValueOnce({});
+    mockMakeАгентыПубличныйCall.mockResolvedЗначениеOnce({});
 
-    render(<MakeAgentPublicForm {...mockProps} />);
+    render(<MakeAgentПубличныйForm {...mockProps} />);
 
-    // Select all agents
-    const selectAllCheckbox = screen.getByRole("checkbox", { name: "Select All (2)" });
+    // Выбрать all agents
+    const selectВсеCheckbox = screen.getByRole("checkbox", { name: "Снять выделение (2)" });
     await act(async () => {
-      fireEvent.click(selectAllCheckbox);
+      fireEvent.click(selectВсеCheckbox);
     });
 
     const nextButton = screen.getByRole("button", { name: "Next" });
@@ -122,53 +122,53 @@ describe("MakeAgentPublicForm", () => {
 
     // Wait for navigation to complete
     await waitFor(() => {
-      expect(screen.getByText("Confirm Making Agents Public")).toBeInTheDocument();
+      expect(screen.getByText("Confirm Making Агенты Публичный")).toBeInTheDocument();
     });
 
-    const submitButton = screen.getByRole("button", { name: "Make Public" });
+    const submitButton = screen.getByRole("button", { name: "Make Публичный" });
     await act(async () => {
       fireEvent.click(submitButton);
     });
 
     await waitFor(() => {
-      expect(mockMakeAgentsPublicCall).toHaveBeenCalledWith("test-token", ["agent-1", "agent-2"]);
+      expect(mockMakeАгентыПубличныйCall).toHaveBeenCalledWith("test-token", ["agent-1", "agent-2"]);
       expect(mockProps.onSuccess).toHaveBeenCalled();
       expect(mockProps.onClose).toHaveBeenCalled();
     });
   });
 
   it("should handle select all functionality", async () => {
-    render(<MakeAgentPublicForm {...mockProps} />);
+    render(<MakeAgentПубличныйForm {...mockProps} />);
 
-    const checkboxes = screen.getAllByRole("checkbox");
-    const selectAllCheckbox = checkboxes[0];
+    const checkboxes = screen.getВсеByRole("checkbox");
+    const selectВсеCheckbox = checkboxes[0];
 
-    // Select all
+    // Выбрать all
     await act(async () => {
-      fireEvent.click(selectAllCheckbox);
+      fireEvent.click(selectВсеCheckbox);
     });
 
-    // All checkboxes should be checked
+    // Все checkboxes should be checked
     checkboxes.forEach((checkbox) => {
       expect(checkbox).toBeChecked();
     });
 
     // Deselect all
     await act(async () => {
-      fireEvent.click(selectAllCheckbox);
+      fireEvent.click(selectВсеCheckbox);
     });
 
-    // All checkboxes should be unchecked except the indeterminate state
+    // Все checkboxes should be unchecked except the indeterminate state
     expect(checkboxes[0]).not.toBeChecked();
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
   });
 
   it("should show error when no agents selected", async () => {
-    render(<MakeAgentPublicForm {...mockProps} />);
+    render(<MakeAgentПубличныйForm {...mockProps} />);
 
     // Deselect all agents first
-    const checkboxes = screen.getAllByRole("checkbox");
+    const checkboxes = screen.getВсеByRole("checkbox");
     await act(async () => {
       fireEvent.click(checkboxes[0]); // Click select all to select all
     });
@@ -183,7 +183,7 @@ describe("MakeAgentPublicForm", () => {
     });
 
     // Should stay on same step
-    expect(screen.getByText("Select Agents to Make Public")).toBeInTheDocument();
+    expect(screen.getByText("Выберите агентов для публикации")).toBeInTheDocument();
   });
 
   it("should display empty state when no agents are available", () => {
@@ -192,13 +192,13 @@ describe("MakeAgentPublicForm", () => {
       agentHubData: [] as AgentHubData[],
     };
 
-    render(<MakeAgentPublicForm {...emptyProps} />);
+    render(<MakeAgentПубличныйForm {...emptyProps} />);
 
     expect(screen.getByText("No agents available.")).toBeInTheDocument();
 
-    // Select All checkbox should be disabled
-    const selectAllCheckbox = screen.getByRole("checkbox", { name: "Select All" });
-    expectDisabledControl(selectAllCheckbox);
+    // Снять выделение checkbox should be disabled
+    const selectВсеCheckbox = screen.getByRole("checkbox", { name: "Снять выделение" });
+    expectDisabledControl(selectВсеCheckbox);
 
     // Next button should be disabled
     const nextButton = screen.getByRole("button", { name: "Next" });
@@ -206,7 +206,7 @@ describe("MakeAgentPublicForm", () => {
   });
 
   it("should handle Cancel button functionality", async () => {
-    render(<MakeAgentPublicForm {...mockProps} />);
+    render(<MakeAgentПубличныйForm {...mockProps} />);
 
     // Click Cancel button
     const cancelButton = screen.getByRole("button", { name: "Cancel" });
@@ -218,8 +218,8 @@ describe("MakeAgentPublicForm", () => {
     expect(mockProps.onClose).toHaveBeenCalled();
   });
 
-  it("should handle Previous button functionality", async () => {
-    render(<MakeAgentPublicForm {...mockProps} />);
+  it("should handle Предыдущее button functionality", async () => {
+    render(<MakeAgentПубличныйForm {...mockProps} />);
 
     // Navigate to step 1
     const nextButton = screen.getByRole("button", { name: "Next" });
@@ -229,25 +229,25 @@ describe("MakeAgentPublicForm", () => {
 
     // Verify we're on step 1
     await waitFor(() => {
-      expect(screen.getByText("Confirm Making Agents Public")).toBeInTheDocument();
+      expect(screen.getByText("Confirm Making Агенты Публичный")).toBeInTheDocument();
     });
 
-    // Click Previous button
-    const previousButton = screen.getByRole("button", { name: "Previous" });
+    // Click Предыдущее button
+    const previousButton = screen.getByRole("button", { name: "Предыдущее" });
     await act(async () => {
       fireEvent.click(previousButton);
     });
 
     // Should go back to step 0
-    expect(screen.getByText("Select Agents to Make Public")).toBeInTheDocument();
+    expect(screen.getByText("Выберите агентов для публикации")).toBeInTheDocument();
   });
 
   it("should handle individual agent selection", async () => {
-    render(<MakeAgentPublicForm {...mockProps} />);
+    render(<MakeAgentПубличныйForm {...mockProps} />);
 
     // Get all checkboxes (select all + individual agents)
-    const checkboxes = screen.getAllByRole("checkbox");
-    expect(checkboxes).toHaveLength(3); // Select all + 2 agents
+    const checkboxes = screen.getВсеByRole("checkbox");
+    expect(checkboxes).toHaveLength(3); // Выбрать all + 2 agents
 
     // Initially, agent-2 should be selected (it's already public)
     const agent1Checkbox = checkboxes[1]; // First agent checkbox
@@ -255,7 +255,7 @@ describe("MakeAgentPublicForm", () => {
 
     expect(agent2Checkbox).toBeChecked(); // agent-2 is already public
 
-    // Select agent-1
+    // Выбрать agent-1
     await act(async () => {
       fireEvent.click(agent1Checkbox);
     });
@@ -271,13 +271,13 @@ describe("MakeAgentPublicForm", () => {
     expect(agent1Checkbox).toBeChecked();
     expect(agent2Checkbox).not.toBeChecked();
 
-    // Select all should be indeterminate now
-    const selectAllCheckbox = checkboxes[0];
-    expect(selectAllCheckbox).toBePartiallyChecked();
+    // Выбрать all should be indeterminate now
+    const selectВсеCheckbox = checkboxes[0];
+    expect(selectВсеCheckbox).toBePartiallyChecked();
   });
 
   it("should display skills overflow text when agent has more than 3 skills", () => {
-    const agentWithManySkills = {
+    const agentWithManyСкиллы = {
       ...mockProps.agentHubData[0],
       skills: [
         { id: "skill-1", name: "Skill 1", description: "Skill desc" },
@@ -288,12 +288,12 @@ describe("MakeAgentPublicForm", () => {
       ],
     };
 
-    const propsWithManySkills = {
+    const propsWithManyСкиллы = {
       ...mockProps,
-      agentHubData: [agentWithManySkills],
+      agentHubData: [agentWithManyСкиллы],
     };
 
-    render(<MakeAgentPublicForm {...propsWithManySkills} />);
+    render(<MakeAgentПубличныйForm {...propsWithManyСкиллы} />);
 
     // Should show first 3 skills as badges
     expect(screen.getByText("Skill 1")).toBeInTheDocument();
@@ -305,10 +305,10 @@ describe("MakeAgentPublicForm", () => {
   });
 
   it("should handle submit error properly", async () => {
-    const errorMessage = "Network error";
-    mockMakeAgentsPublicCall.mockRejectedValueOnce(new Error(errorMessage));
+    const errorСообщение = "Network error";
+    mockMakeАгентыПубличныйCall.mockRejectedЗначениеOnce(new Ошибка(errorСообщение));
 
-    render(<MakeAgentPublicForm {...mockProps} />);
+    render(<MakeAgentПубличныйForm {...mockProps} />);
 
     const nextButton = screen.getByRole("button", { name: "Next" });
     await act(async () => {
@@ -316,17 +316,17 @@ describe("MakeAgentPublicForm", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText("Confirm Making Agents Public")).toBeInTheDocument();
+      expect(screen.getByText("Confirm Making Агенты Публичный")).toBeInTheDocument();
     });
 
-    const submitButton = screen.getByRole("button", { name: "Make Public" });
+    const submitButton = screen.getByRole("button", { name: "Make Публичный" });
     await act(async () => {
       fireEvent.click(submitButton);
     });
 
     // Should handle error and show error notification
     await waitFor(() => {
-      expect(mockMakeAgentsPublicCall).toHaveBeenCalledWith("test-token", ["agent-2"]);
+      expect(mockMakeАгентыПубличныйCall).toHaveBeenCalledWith("test-token", ["agent-2"]);
     });
 
     // Should not call onSuccess or onClose on error
@@ -339,9 +339,9 @@ describe("MakeAgentPublicForm", () => {
     const pendingPromise = new Promise((resolve) => {
       resolvePromise = resolve;
     });
-    mockMakeAgentsPublicCall.mockReturnValueOnce(pendingPromise);
+    mockMakeАгентыПубличныйCall.mockReturnЗначениеOnce(pendingPromise);
 
-    render(<MakeAgentPublicForm {...mockProps} />);
+    render(<MakeAgentПубличныйForm {...mockProps} />);
 
     const nextButton = screen.getByRole("button", { name: "Next" });
     await act(async () => {
@@ -349,10 +349,10 @@ describe("MakeAgentPublicForm", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText("Confirm Making Agents Public")).toBeInTheDocument();
+      expect(screen.getByText("Confirm Making Агенты Публичный")).toBeInTheDocument();
     });
 
-    const submitButton = screen.getByRole("button", { name: "Make Public" });
+    const submitButton = screen.getByRole("button", { name: "Make Публичный" });
     await act(async () => {
       fireEvent.click(submitButton);
     });
@@ -361,10 +361,10 @@ describe("MakeAgentPublicForm", () => {
     await act(async () => {
       fireEvent.click(submitButton);
     });
-    expect(mockMakeAgentsPublicCall).toHaveBeenCalledTimes(1);
+    expect(mockMakeАгентыПубличныйCall).toHaveBeenCalledВремяs(1);
     expect(mockProps.onSuccess).not.toHaveBeenCalled();
     expect(mockProps.onClose).not.toHaveBeenCalled();
-    expect(screen.getByText("Confirm Making Agents Public")).toBeInTheDocument();
+    expect(screen.getByText("Confirm Making Агенты Публичный")).toBeInTheDocument();
 
     resolvePromise({});
     await waitFor(() => {
@@ -379,56 +379,56 @@ describe("MakeAgentPublicForm", () => {
       visible: false,
     };
 
-    render(<MakeAgentPublicForm {...invisibleProps} />);
+    render(<MakeAgentПубличныйForm {...invisibleProps} />);
 
     // Modal should not be rendered
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    expect(screen.queryByText("Make Agents Public")).not.toBeInTheDocument();
+    expect(screen.queryByText("Make Агенты Публичный")).not.toBeInTheDocument();
   });
 
   it("should preselect already public agents when modal opens", () => {
     // Test data where one agent is public and one is not
-    const mixedPublicProps = {
+    const mixedПубличныйProps = {
       ...mockProps,
       agentHubData: [
         {
           agent_id: "agent-1",
           name: "Test Agent 1",
-          description: "Description 1",
+          description: "Описание 1",
           url: "http://example.com/agent1",
           version: "1.0",
           is_public: false, // Not public
           skills: [],
-          protocolVersion: "1.0",
+          protocolВерсия: "1.0",
         },
         {
           agent_id: "agent-2",
           name: "Test Agent 2",
-          description: "Description 2",
+          description: "Описание 2",
           url: "http://example.com/agent2",
           version: "2.0",
           is_public: true, // Already public
           skills: [],
-          protocolVersion: "1.0",
+          protocolВерсия: "1.0",
         },
         {
           agent_id: "agent-3",
           name: "Test Agent 3",
-          description: "Description 3",
+          description: "Описание 3",
           url: "http://example.com/agent3",
           version: "3.0",
           is_public: true, // Already public
           skills: [],
-          protocolVersion: "1.0",
+          protocolВерсия: "1.0",
         },
       ] as AgentHubData[],
     };
 
-    render(<MakeAgentPublicForm {...mixedPublicProps} />);
+    render(<MakeAgentПубличныйForm {...mixedПубличныйProps} />);
 
     // Check that the correct checkboxes are selected
-    const checkboxes = screen.getAllByRole("checkbox");
-    expect(checkboxes).toHaveLength(4); // Select all + 3 agents
+    const checkboxes = screen.getВсеByRole("checkbox");
+    expect(checkboxes).toHaveLength(4); // Выбрать all + 3 agents
 
     // agent-2 and agent-3 should be checked (they're already public)
     const agent1Checkbox = checkboxes[1];
@@ -439,8 +439,8 @@ describe("MakeAgentPublicForm", () => {
     expect(agent2Checkbox).toBeChecked(); // agent-2 is public
     expect(agent3Checkbox).toBeChecked(); // agent-3 is public
 
-    // Select all should be indeterminate
-    const selectAllCheckbox = checkboxes[0];
-    expect(selectAllCheckbox).toBePartiallyChecked();
+    // Выбрать all should be indeterminate
+    const selectВсеCheckbox = checkboxes[0];
+    expect(selectВсеCheckbox).toBePartiallyChecked();
   });
 });

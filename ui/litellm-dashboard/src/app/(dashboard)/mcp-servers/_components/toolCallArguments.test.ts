@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { InputSchema, InputSchemaProperty } from "@/components/mcp_tools/types";
+import { ВходSchema, ВходSchemaСвойство } from "@/components/mcp_tools/types";
 import {
-  ToolArgumentField,
-  argumentsFormKey,
+  ToolArgumentПоле,
+  argumentsFormКлюч,
   buildToolCallArguments,
   hasNestedParamsSchema,
-  initialArgumentValues,
-  resolveSchemaProperty,
-  toolArgumentFields,
+  initialArgumentЗначениеs,
+  resolveSchemaСвойство,
+  toolArgumentПолеs,
   toolArgumentsResolver,
   validateToolArgument,
 } from "./toolCallArguments";
@@ -18,21 +18,21 @@ const field = (
   type: string,
   required = false,
   extra: Record<string, unknown> = {},
-): ToolArgumentField => ({
+): ToolArgumentПоле => ({
   key,
   prop: { type, ...extra },
   required,
 });
 
-describe("toolArgumentFields", () => {
+describe("toolArgumentПолеs", () => {
   it("preserves schema property order and marks required entries", () => {
-    const schema: InputSchema = {
+    const schema: ВходSchema = {
       type: "object",
       properties: { b: { type: "string" }, a: { type: "integer" }, c: { type: "boolean" } },
       required: ["a"],
     };
 
-    expect(toolArgumentFields(schema).map((f) => [f.key, f.required])).toEqual([
+    expect(toolArgumentПолеs(schema).map((f) => [f.key, f.required])).toEqual([
       ["b", false],
       ["a", true],
       ["c", false],
@@ -40,7 +40,7 @@ describe("toolArgumentFields", () => {
   });
 
   it("returns no fields when the schema declares no properties", () => {
-    expect(toolArgumentFields({ type: "object" } as InputSchema)).toEqual([]);
+    expect(toolArgumentПолеs({ type: "object" } as ВходSchema)).toEqual([]);
   });
 });
 
@@ -55,14 +55,14 @@ describe("buildToolCallArguments", () => {
     const result = buildToolCallArguments([field("filter.name", "string")], ["acme"]);
 
     expect(result).toEqual({ "filter.name": "acme" });
-    expect(result).not.toHaveProperty("filter");
+    expect(result).not.toHaveСвойство("filter");
   });
 
   it("keeps a bracketed schema key flat instead of building an array", () => {
     const result = buildToolCallArguments([field("items[0]", "string")], ["x"]);
 
     expect(result).toEqual({ "items[0]": "x" });
-    expect(result).not.toHaveProperty("items");
+    expect(result).not.toHaveСвойство("items");
   });
 
   it("trims strings and drops fields that are blank after trimming", () => {
@@ -119,7 +119,7 @@ describe("validateToolArgument", () => {
     expect(validateToolArgument(field("name", "string", true), "x")).toBeUndefined();
   });
 
-  it("ignores an empty optional JSON field", () => {
+  it("ignores an empty необязательно JSON field", () => {
     expect(validateToolArgument(field("o", "object"), "")).toBeUndefined();
   });
 
@@ -172,7 +172,7 @@ describe("toolArgumentsResolver", () => {
 
 describe("hasNestedParamsSchema", () => {
   it("detects the nested params wrapper", () => {
-    const schema: InputSchema = {
+    const schema: ВходSchema = {
       type: "object",
       properties: { params: { type: "object", properties: { q: { type: "string" } } } },
     };
@@ -190,8 +190,8 @@ describe("hasNestedParamsSchema", () => {
   });
 });
 
-describe("initialArgumentValues", () => {
-  const seed = (schema: InputSchema): unknown[] => initialArgumentValues(toolArgumentFields(schema));
+describe("initialArgumentЗначениеs", () => {
+  const seed = (schema: ВходSchema): unknown[] => initialArgumentЗначениеs(toolArgumentПолеs(schema));
 
   it("seeds each primitive type with its empty value when the schema declares no default", () => {
     expect(
@@ -281,7 +281,7 @@ describe("initialArgumentValues", () => {
   });
 
   it("does not mutate the schema it seeds from", () => {
-    const schema: InputSchema = {
+    const schema: ВходSchema = {
       type: "object",
       properties: {
         payload: { type: "object", properties: { id: { type: "string" } }, default: { other: 1 } },
@@ -304,142 +304,142 @@ describe("initialArgumentValues", () => {
   });
 });
 
-describe("argumentsFormKey", () => {
+describe("argumentsFormКлюч", () => {
   it("changes when a property's type changes under the same property names", () => {
-    const before: InputSchema = { type: "object", properties: { value: { type: "string" } } };
-    const after: InputSchema = { type: "object", properties: { value: { type: "integer" } } };
+    const before: ВходSchema = { type: "object", properties: { value: { type: "string" } } };
+    const after: ВходSchema = { type: "object", properties: { value: { type: "integer" } } };
 
-    expect(argumentsFormKey(after)).not.toBe(argumentsFormKey(before));
+    expect(argumentsFormКлюч(after)).not.toBe(argumentsFormКлюч(before));
   });
 
   it("changes when a property's default changes", () => {
-    const before: InputSchema = { type: "object", properties: { value: { type: "string", default: "a" } } };
-    const after: InputSchema = { type: "object", properties: { value: { type: "string", default: "b" } } };
+    const before: ВходSchema = { type: "object", properties: { value: { type: "string", default: "a" } } };
+    const after: ВходSchema = { type: "object", properties: { value: { type: "string", default: "b" } } };
 
-    expect(argumentsFormKey(after)).not.toBe(argumentsFormKey(before));
+    expect(argumentsFormКлюч(after)).not.toBe(argumentsFormКлюч(before));
   });
 
   it("changes when a property is added", () => {
-    const before: InputSchema = { type: "object", properties: { a: { type: "string" } } };
-    const after: InputSchema = { type: "object", properties: { a: { type: "string" }, b: { type: "string" } } };
+    const before: ВходSchema = { type: "object", properties: { a: { type: "string" } } };
+    const after: ВходSchema = { type: "object", properties: { a: { type: "string" }, b: { type: "string" } } };
 
-    expect(argumentsFormKey(after)).not.toBe(argumentsFormKey(before));
+    expect(argumentsFormКлюч(after)).not.toBe(argumentsFormКлюч(before));
   });
 
   it("is stable across separately built but identical schemas", () => {
-    const one: InputSchema = { type: "object", properties: { a: { type: "string", default: "x" } } };
-    const two: InputSchema = { type: "object", properties: { a: { type: "string", default: "x" } } };
+    const one: ВходSchema = { type: "object", properties: { a: { type: "string", default: "x" } } };
+    const two: ВходSchema = { type: "object", properties: { a: { type: "string", default: "x" } } };
 
-    expect(argumentsFormKey(one)).toBe(argumentsFormKey(two));
+    expect(argumentsFormКлюч(one)).toBe(argumentsFormКлюч(two));
   });
 });
 
 describe("union-typed properties", () => {
-  const optionalArray: InputSchemaProperty = {
+  const необязательноArray: ВходSchemaСвойство = {
     anyOf: [{ type: "array", items: { type: "string" } }, { type: "null" }],
     default: null,
   };
-  const optionalObject: InputSchemaProperty = {
+  const необязательноObject: ВходSchemaСвойство = {
     anyOf: [{ type: "object", properties: { id: { type: "string" } } }, { type: "null" }],
     default: null,
   };
-  const unionField = (key: string, prop: InputSchemaProperty, required = false): ToolArgumentField => ({
+  const unionПоле = (key: string, prop: ВходSchemaСвойство, required = false): ToolArgumentПоле => ({
     key,
     prop,
     required,
   });
 
-  describe("resolveSchemaProperty", () => {
-    it("collapses an optional array to the array member", () => {
-      expect(resolveSchemaProperty(optionalArray)).toMatchObject({ type: "array", items: { type: "string" } });
+  describe("resolveSchemaСвойство", () => {
+    it("collapses an необязательно array to the array member", () => {
+      expect(resolveSchemaСвойство(необязательноArray)).toMatchObject({ type: "array", items: { type: "string" } });
     });
 
-    it("carries the outer description and default onto the resolved member", () => {
-      const resolved = resolveSchemaProperty({
+    it("carries the выходer description and default onto the resolved member", () => {
+      const resolved = resolveSchemaСвойство({
         anyOf: [{ type: "array", items: { type: "string" } }, { type: "null" }],
-        description: "outer text",
+        description: "выходer text",
         default: ["a"],
       });
 
-      expect(resolved).toMatchObject({ type: "array", description: "outer text", default: ["a"] });
+      expect(resolved).toMatchObject({ type: "array", description: "выходer text", default: ["a"] });
     });
 
     it("keeps the enum of a resolved string member so the select still renders", () => {
-      expect(resolveSchemaProperty({ anyOf: [{ type: "string", enum: ["a", "b"] }, { type: "null" }] })).toMatchObject({
+      expect(resolveSchemaСвойство({ anyOf: [{ type: "string", enum: ["a", "b"] }, { type: "null" }] })).toMatchObject({
         type: "string",
         enum: ["a", "b"],
       });
     });
 
     it("resolves oneOf the same way as anyOf", () => {
-      expect(resolveSchemaProperty({ oneOf: [{ type: "object" }, { type: "null" }] })).toMatchObject({
+      expect(resolveSchemaСвойство({ oneOf: [{ type: "object" }, { type: "null" }] })).toMatchObject({
         type: "object",
       });
     });
 
     it("leaves a property that already declares a type untouched", () => {
-      const plain: InputSchemaProperty = { type: "string", anyOf: [{ type: "array" }, { type: "null" }] };
+      const plain: ВходSchemaСвойство = { type: "string", anyOf: [{ type: "array" }, { type: "null" }] };
 
-      expect(resolveSchemaProperty(plain)).toBe(plain);
+      expect(resolveSchemaСвойство(plain)).toBe(plain);
     });
 
     it("leaves a genuine multi-type union unresolved", () => {
-      const multi: InputSchemaProperty = { anyOf: [{ type: "string" }, { type: "integer" }, { type: "null" }] };
+      const multi: ВходSchemaСвойство = { anyOf: [{ type: "string" }, { type: "integer" }, { type: "null" }] };
 
-      expect(resolveSchemaProperty(multi)).toBe(multi);
+      expect(resolveSchemaСвойство(multi)).toBe(multi);
     });
   });
 
   describe("validateToolArgument", () => {
-    it("reports an object supplied to an optional array parameter", () => {
-      expect(validateToolArgument(unionField("tags", optionalArray), '{"k":1}')).toBe("Please enter a JSON array");
+    it("reports an object supplied to an необязательно array parameter", () => {
+      expect(validateToolArgument(unionПоле("tags", необязательноArray), '{"k":1}')).toBe("Please enter a JSON array");
     });
 
-    it("reports an array supplied to an optional object parameter", () => {
-      expect(validateToolArgument(unionField("payload", optionalObject), "[1,2]")).toBe("Please enter a JSON object");
+    it("reports an array supplied to an необязательно object parameter", () => {
+      expect(validateToolArgument(unionПоле("payload", необязательноObject), "[1,2]")).toBe("Please enter a JSON object");
     });
 
     it("reports the comma-separated text a plain input would have produced as invalid JSON", () => {
-      expect(validateToolArgument(unionField("tags", optionalArray), "a,b")).toBe("Invalid JSON");
+      expect(validateToolArgument(unionПоле("tags", необязательноArray), "a,b")).toBe("Invalid JSON");
     });
 
-    it("accepts a well-formed value and an empty optional value", () => {
-      expect(validateToolArgument(unionField("tags", optionalArray), '["a","b"]')).toBeUndefined();
-      expect(validateToolArgument(unionField("tags", optionalArray), "")).toBeUndefined();
+    it("accepts a well-formed value and an empty необязательно value", () => {
+      expect(validateToolArgument(unionПоле("tags", необязательноArray), '["a","b"]')).toBeUndefined();
+      expect(validateToolArgument(unionПоле("tags", необязательноArray), "")).toBeUndefined();
     });
   });
 
   describe("buildToolCallArguments", () => {
-    it("sends a real array for an optional array parameter", () => {
-      expect(buildToolCallArguments([unionField("tags", optionalArray)], ['["a","b"]'])).toEqual({
+    it("sends a real array for an необязательно array parameter", () => {
+      expect(buildToolCallArguments([unionПоле("tags", необязательноArray)], ['["a","b"]'])).toEqual({
         tags: ["a", "b"],
       });
     });
 
-    it("sends a real object for an optional object parameter", () => {
-      expect(buildToolCallArguments([unionField("payload", optionalObject)], ['{"id":"x"}'])).toEqual({
+    it("sends a real object for an необязательно object parameter", () => {
+      expect(buildToolCallArguments([unionПоле("payload", необязательноObject)], ['{"id":"x"}'])).toEqual({
         payload: { id: "x" },
       });
     });
   });
 
-  describe("initialArgumentValues", () => {
-    it("leaves a null-defaulted optional parameter blank so it is not submitted at all", () => {
-      const fields = [unionField("tags", optionalArray), unionField("payload", optionalObject)];
+  describe("initialArgumentЗначениеs", () => {
+    it("leaves a null-defaulted необязательно parameter blank so it is not submitted at all", () => {
+      const fields = [unionПоле("tags", необязательноArray), unionПоле("payload", необязательноObject)];
 
-      expect(initialArgumentValues(fields)).toEqual(["", ""]);
-      expect(buildToolCallArguments(fields, initialArgumentValues(fields))).toEqual({});
+      expect(initialArgumentЗначениеs(fields)).toEqual(["", ""]);
+      expect(buildToolCallArguments(fields, initialArgumentЗначениеs(fields))).toEqual({});
     });
 
     it("builds a sample item from the resolved item schema when the union declares no default", () => {
-      const prop: InputSchemaProperty = { anyOf: [{ type: "array", items: { type: "string" } }, { type: "null" }] };
+      const prop: ВходSchemaСвойство = { anyOf: [{ type: "array", items: { type: "string" } }, { type: "null" }] };
 
-      expect(initialArgumentValues([unionField("tags", prop)])).toEqual([JSON.stringify([""], null, 2)]);
+      expect(initialArgumentЗначениеs([unionПоле("tags", prop)])).toEqual([JSON.stringify([""], null, 2)]);
     });
 
-    it("seeds a nested optional array inside an object from the resolved member", () => {
-      const [payload] = initialArgumentValues([
-        unionField("payload", {
+    it("seeds a nested необязательно array inside an object from the resolved member", () => {
+      const [payload] = initialArgumentЗначениеs([
+        unionПоле("payload", {
           type: "object",
           properties: { tags: { anyOf: [{ type: "array", items: { type: "string" } }, { type: "null" }] } },
         }),

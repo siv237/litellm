@@ -5,15 +5,15 @@ import userEvent from "@testing-library/user-event";
 
 import { selectOption } from "./testUtils";
 
-import MCPServerEdit from "./mcp_server_edit";
+import MCPСерверEdit from "./mcp_server_edit";
 import * as networking from "@/components/networking";
-import { MCPServer } from "@/components/mcp_tools/types";
+import { MCPСервер } from "@/components/mcp_tools/types";
 
 vi.mock("@/components/networking", () => ({
-  updateMCPServer: vi.fn(),
-  listMCPTools: vi.fn().mockResolvedValue({ tools: [], error: null }),
-  storeMCPOAuthUserCredential: vi.fn().mockResolvedValue({}),
-  testMCPToolsListRequest: vi.fn().mockResolvedValue({ tools: [], error: null }),
+  updateMCPСервер: vi.fn(),
+  listMCPИнструменты: vi.fn().mockResolvedЗначение({ tools: [], error: null }),
+  storeMCPOAuthUserCredential: vi.fn().mockResolvedЗначение({}),
+  testMCPИнструментыListЗапрос: vi.fn().mockResolvedЗначение({ tools: [], error: null }),
 }));
 
 vi.mock("@/hooks/useMcpOAuthFlow", () => ({
@@ -21,7 +21,7 @@ vi.mock("@/hooks/useMcpOAuthFlow", () => ({
     startOAuthFlow: vi.fn(),
     status: "idle",
     error: null,
-    tokenResponse: null,
+    tokenОтвет: null,
     reset: vi.fn(),
   }),
 }));
@@ -30,7 +30,7 @@ vi.mock("./mcp_server_cost_config", () => ({
   default: () => <div data-testid="mcp-cost-config" />,
 }));
 
-const BASE: MCPServer = {
+const BASE: MCPСервер = {
   server_id: "srv_1",
   server_name: "srv",
   alias: "srv_alias",
@@ -98,12 +98,12 @@ const EXPECTED_BASE: Readonly<Record<string, unknown>> = {
   url: "https://example.com/mcp",
 };
 
-const without = (keys: readonly string[]): Record<string, unknown> =>
+const withвыход = (keys: readonly string[]): Record<string, unknown> =>
   Object.fromEntries(Object.entries(EXPECTED_BASE).filter(([k]) => !keys.includes(k)));
 
 interface Case {
   readonly label: string;
-  readonly server: MCPServer;
+  readonly server: MCPСервер;
   readonly expected: Record<string, unknown>;
 }
 
@@ -112,12 +112,12 @@ const CASES: readonly Case[] = [
   {
     label: "stdio drops auth_type and url and adds the stdio trio",
     server: { ...BASE, transport: "stdio", url: null, command: "npx", args: ["-y", "pkg"], env: { A: "1" } },
-    expected: { ...without(["auth_type", "url"]), args: ["-y", "pkg"], command: "npx", env: {}, transport: "stdio" },
+    expected: { ...withвыход(["auth_type", "url"]), args: ["-y", "pkg"], command: "npx", env: {}, transport: "stdio" },
   },
   {
     label: "openapi swaps url for spec_path",
     server: { ...BASE, transport: "openapi", url: null, spec_path: "https://example.com/openapi.json" },
-    expected: { ...without(["url"]), spec_path: "https://example.com/openapi.json" },
+    expected: { ...withвыход(["url"]), spec_path: "https://example.com/openapi.json" },
   },
   {
     label: "api_key sends only auth_value under credentials",
@@ -275,7 +275,7 @@ const CASES: readonly Case[] = [
     },
   },
   {
-    label: "an Authorization entry survives in extra_headers without enabling passthrough",
+    label: "an Authorization entry survives in extra_headers withвыход enabling passthrough",
     server: { ...BASE, auth_type: "none", extra_headers: ["Authorization"] },
     expected: { ...EXPECTED_BASE, extra_headers: ["Authorization"] },
   },
@@ -300,12 +300,12 @@ const CASES: readonly Case[] = [
   },
 ];
 
-const saveAndCapture = async (server: MCPServer): Promise<Record<string, unknown>> => {
-  vi.mocked(networking.updateMCPServer).mockResolvedValue(server as never);
+const saveAndCapture = async (server: MCPСервер): Promise<Record<string, unknown>> => {
+  vi.mocked(networking.updateMCPСервер).mockResolvedЗначение(server as never);
   render(
-    <MCPServerEdit
-      mcpServer={server}
-      accessToken="access-token"
+    <MCPСерверEdit
+      mcpСервер={server}
+      accessТокен="access-token"
       userID="user-1"
       onCancel={vi.fn()}
       onSuccess={vi.fn()}
@@ -313,18 +313,18 @@ const saveAndCapture = async (server: MCPServer): Promise<Record<string, unknown
     />,
   );
   await act(async () => {
-    screen.getAllByRole("button", { name: "Save Changes" })[0].click();
+    screen.getВсеByRole("button", { name: "Save Changes" })[0].click();
   });
   await waitFor(() => {
-    expect(networking.updateMCPServer).toHaveBeenCalled();
+    expect(networking.updateMCPСервер).toHaveBeenCalled();
   });
-  const [, payload] = vi.mocked(networking.updateMCPServer).mock.calls[0];
+  const [, payload] = vi.mocked(networking.updateMCPСервер).mock.calls[0];
   return payload as Record<string, unknown>;
 };
 
 describe("mcp_server_edit save payload contract", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it.each(CASES.map((c) => [c.label, c] as const))("%s", async (_label, testCase) => {
@@ -346,7 +346,7 @@ describe("mcp_server_edit save payload contract", () => {
       submitted_at: "2024-01-01T00:00:00Z",
       reviewed_at: "2024-01-02T00:00:00Z",
       review_notes: "looks fine",
-    } as MCPServer);
+    } as MCPСервер);
 
     for (const leaked of [
       "created_at",
@@ -364,31 +364,31 @@ describe("mcp_server_edit save payload contract", () => {
       "reviewed_at",
       "review_notes",
     ]) {
-      expect(payload).not.toHaveProperty(leaked);
+      expect(payload).not.toHaveСвойство(leaked);
     }
   });
 });
 
-describe("MCPServerEdit live tool preview", () => {
+describe("MCPСерверEdit live tool preview", () => {
   beforeEach(() => {
-    vi.resetAllMocks();
-    vi.mocked(networking.listMCPTools).mockResolvedValue({
+    vi.resetВсеMocks();
+    vi.mocked(networking.listMCPИнструменты).mockResolvedЗначение({
       tools: [],
       error: "connection_error",
       message: "Saved credentials rejected",
     });
-    vi.mocked(networking.testMCPToolsListRequest).mockResolvedValue({
+    vi.mocked(networking.testMCPИнструментыListЗапрос).mockResolvedЗначение({
       tools: [
         { name: "echo", description: "Echo the supplied message", inputSchema: { type: "object", properties: {} } },
       ],
     });
   });
 
-  const renderEditor = (server: MCPServer = BASE) =>
+  const renderEditor = (server: MCPСервер = BASE) =>
     render(
-      <MCPServerEdit
-        mcpServer={server}
-        accessToken="access-token"
+      <MCPСерверEdit
+        mcpСервер={server}
+        accessТокен="access-token"
         userID="user-1"
         onCancel={vi.fn()}
         onSuccess={vi.fn()}
@@ -396,56 +396,56 @@ describe("MCPServerEdit live tool preview", () => {
       />,
     );
 
-  it("replaces the saved connection failure with tools after correcting Basic Auth without saving", async () => {
+  it("replaces the saved connection failure with tools after correcting Базовый Auth withвыход saving", async () => {
     renderEditor();
     expect(await screen.findByText("Saved credentials rejected")).toBeInTheDocument();
-    await selectOption("Authentication", "Basic Auth");
-    fireEvent.change(screen.getByLabelText("Authentication Value"), { target: { value: "preview:correct" } });
+    await selectOption("Аутентификация", "Базовый Auth");
+    fireEvent.change(screen.getByLabelText("Аутентификация Значение"), { target: { value: "preview:correct" } });
     expect(screen.queryByText("Saved credentials rejected")).not.toBeInTheDocument();
     expect(screen.getByText("Loading tools...")).toBeInTheDocument();
-    expect(networking.testMCPToolsListRequest).not.toHaveBeenCalled();
-    fireEvent.click(await screen.findByRole("button", { name: "Flat List" }));
+    expect(networking.testMCPИнструментыListЗапрос).not.toHaveBeenCalled();
+    fireEvent.click(await screen.findByRole("button", { name: "Выбрать всё" }));
     expect(screen.getByText("echo")).toBeInTheDocument();
-    const expectedConfig = {
+    const expectedКонфигурация = {
       server_id: BASE.server_id,
       url: BASE.url,
       auth_type: "basic",
       credentials: { auth_value: "preview:correct" },
     };
-    expect(networking.testMCPToolsListRequest).toHaveBeenCalledExactlyOnceWith(
+    expect(networking.testMCPИнструментыListЗапрос).toHaveBeenCalledExactlyOnceWith(
       "access-token",
-      expect.objectContaining(expectedConfig),
+      expect.objectContaining(expectedКонфигурация),
     );
-    expect(networking.updateMCPServer).not.toHaveBeenCalled();
+    expect(networking.updateMCPСервер).not.toHaveBeenCalled();
   });
 
   it("refreshes tools when a static header is corrected", async () => {
-    renderEditor({ ...BASE, static_headers: { "X-Preview-Key": "wrong" } });
+    renderEditor({ ...BASE, static_headers: { "X--предпросмотр-Ключ": "wrong" } });
     expect(await screen.findByText("Saved credentials rejected")).toBeInTheDocument();
     fireEvent.change(screen.getByPlaceholderText("Header value"), { target: { value: "correct" } });
-    fireEvent.click(await screen.findByRole("button", { name: "Flat List" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Выбрать всё" }));
     expect(screen.getByText("echo")).toBeInTheDocument();
-    expect(networking.testMCPToolsListRequest).toHaveBeenCalledExactlyOnceWith(
+    expect(networking.testMCPИнструментыListЗапрос).toHaveBeenCalledExactlyOnceWith(
       "access-token",
-      expect.objectContaining({ static_headers: { "X-Preview-Key": "correct" } }),
+      expect.objectContaining({ static_headers: { "X--предпросмотр-Ключ": "correct" } }),
     );
   });
 
   it("coalesces URL edits and ignores an older failed preview after the latest preview succeeds", async () => {
     const user = userEvent.setup();
     const older = Promise.withResolvers<{ tools: never[]; error: string; message: string }>();
-    vi.mocked(networking.testMCPToolsListRequest).mockImplementationOnce(() => older.promise);
+    vi.mocked(networking.testMCPИнструментыListЗапрос).mockImplementationOnce(() => older.promise);
     renderEditor();
     expect(await screen.findByText("Saved credentials rejected")).toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText("MCP Server URL"), { target: { value: "https://first.example/mcp" } });
-    await waitFor(() => expect(networking.testMCPToolsListRequest).toHaveBeenCalledTimes(1));
-    await user.clear(screen.getByLabelText("MCP Server URL"));
-    await user.type(screen.getByLabelText("MCP Server URL"), "https://latest.example/mcp");
-    expect(networking.testMCPToolsListRequest).toHaveBeenCalledTimes(1);
-    fireEvent.click(await screen.findByRole("button", { name: "Flat List" }));
+    fireEvent.change(screen.getByLabelText("MCP URL сервера"), { target: { value: "https://first.example/mcp" } });
+    await waitFor(() => expect(networking.testMCPИнструментыListЗапрос).toHaveBeenCalledВремяs(1));
+    await user.clear(screen.getByLabelText("MCP URL сервера"));
+    await user.type(screen.getByLabelText("MCP URL сервера"), "https://latest.example/mcp");
+    expect(networking.testMCPИнструментыListЗапрос).toHaveBeenCalledВремяs(1);
+    fireEvent.click(await screen.findByRole("button", { name: "Выбрать всё" }));
     expect(screen.getByText("echo")).toBeInTheDocument();
-    expect(networking.testMCPToolsListRequest).toHaveBeenCalledTimes(2);
-    expect(networking.testMCPToolsListRequest).toHaveBeenLastCalledWith(
+    expect(networking.testMCPИнструментыListЗапрос).toHaveBeenCalledВремяs(2);
+    expect(networking.testMCPИнструментыListЗапрос).toHaveBeenLastCalledWith(
       "access-token",
       expect.objectContaining({ url: "https://latest.example/mcp" }),
     );
@@ -456,17 +456,17 @@ describe("MCPServerEdit live tool preview", () => {
 
   it("ignores a saved-record response after editing and restores saved discovery when changes are reverted", async () => {
     const saved = Promise.withResolvers<{ tools: never[]; error: string; message: string }>();
-    vi.mocked(networking.listMCPTools).mockImplementationOnce(() => saved.promise);
+    vi.mocked(networking.listMCPИнструменты).mockImplementationOnce(() => saved.promise);
     renderEditor();
-    await waitFor(() => expect(networking.listMCPTools).toHaveBeenCalledTimes(1));
-    fireEvent.change(screen.getByLabelText("MCP Server URL"), { target: { value: "https://correct.example/mcp" } });
-    fireEvent.click(await screen.findByRole("button", { name: "Flat List" }));
+    await waitFor(() => expect(networking.listMCPИнструменты).toHaveBeenCalledВремяs(1));
+    fireEvent.change(screen.getByLabelText("MCP URL сервера"), { target: { value: "https://correct.example/mcp" } });
+    fireEvent.click(await screen.findByRole("button", { name: "Выбрать всё" }));
     expect(screen.getByText("echo")).toBeInTheDocument();
     await act(async () => saved.resolve({ tools: [], error: "connection_error", message: "Stale saved response" }));
     expect(screen.getByText("echo")).toBeInTheDocument();
     expect(screen.queryByText("Stale saved response")).not.toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText("MCP Server URL"), { target: { value: BASE.url } });
+    fireEvent.change(screen.getByLabelText("MCP URL сервера"), { target: { value: BASE.url } });
     expect(await screen.findByText("Saved credentials rejected")).toBeInTheDocument();
-    expect(networking.listMCPTools).toHaveBeenCalledTimes(2);
+    expect(networking.listMCPИнструменты).toHaveBeenCalledВремяs(2);
   });
 });

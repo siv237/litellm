@@ -1,47 +1,47 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { GuardrailUsageDetail } from "@/app/(dashboard)/hooks/guardrails/useGuardrailsUsage";
+import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import type { GuardrailИспользованиеDetail } from "@/app/(dashboard)/hooks/гардрейловs/useГардрейлыИспользование";
 import { GuardrailDetail } from "./GuardrailDetail";
 
-const mockUseGuardrailsUsageDetail = vi.fn();
-vi.mock("@/app/(dashboard)/hooks/guardrails/useGuardrailsUsage", () => ({
-  useGuardrailsUsageDetail: (...args: unknown[]) => mockUseGuardrailsUsageDetail(...args),
+const mockUseГардрейлыИспользованиеDetail = vi.fn();
+vi.mock("@/app/(dashboard)/hooks/гардрейловs/useГардрейлыИспользование", () => ({
+  useГардрейлыИспользованиеDetail: (...args: unknown[]) => mockUseГардрейлыИспользованиеDetail(...args),
 }));
 
-const mockGetGuardrailsUsageLogs = vi.fn();
+const mockGetГардрейлыИспользованиеЖурналы = vi.fn();
 vi.mock("@/components/networking", () => ({
-  getGuardrailsUsageLogs: (...args: unknown[]) => mockGetGuardrailsUsageLogs(...args),
+  getГардрейлыИспользованиеЖурналы: (...args: unknown[]) => mockGetГардрейлыИспользованиеЖурналы(...args),
 }));
 
-vi.mock("@/components/GuardrailsMonitor/LogViewer", () => ({
-  LogViewer: ({ guardrailName }: { guardrailName: string }) => <div data-testid="log-viewer">{guardrailName}</div>,
+vi.mock("@/components/ГардрейлыMonitor/LogViewer", () => ({
+  LogViewer: ({ гардрейловName }: { гардрейловName: string }) => <div data-testid="log-viewer">{гардрейловName}</div>,
 }));
 
 vi.mock("./EvaluationSettingsModal", () => ({
   EvaluationSettingsModal: ({ open }: { open: boolean }) => (open ? <div data-testid="evaluation-modal" /> : null),
 }));
 
-const detail: GuardrailUsageDetail = {
-  guardrail_id: "pii-detector",
-  guardrail_name: "pii-detector",
+const detail: GuardrailИспользованиеDetail = {
+  гардрейлов_id: "pii-detector",
+  гардрейлов_name: "pii-detector",
   description: "Blocks personally identifiable information",
   status: "warning",
   provider: "presidio",
   type: "pii",
   requestsEvaluated: 12345,
   failRate: 20,
-  avgScore: 0.4,
+  avgОценка: 0.4,
   avgLatency: 180,
   trend: "stable",
   time_series: [],
-  usage_units: { sensitiveInformationPolicyUnits: 4 },
+  usage_units: { sensitiveИнформацияПолитикаUnits: 4 },
   usage_units_daily: [],
-  usage_units_by_team: { "": { sensitiveInformationPolicyUnits: 4 } },
-  usage_units_by_key: { "hash-1": { sensitiveInformationPolicyUnits: 4 } },
+  usage_units_by_team: { "": { sensitiveИнформацияПолитикаUnits: 4 } },
+  usage_units_by_key: { "hash-1": { sensitiveИнформацияПолитикаUnits: 4 } },
   cost: 0.0004,
-  cost_by_unit: { sensitiveInformationPolicyUnits: 0.0004 },
+  cost_by_unit: { sensitiveИнформацияПолитикаUnits: 0.0004 },
   cost_by_team: { "": 0.0004 },
   cost_by_key: { "hash-1": 0.0004 },
   untracked_usage_units: {},
@@ -49,59 +49,59 @@ const detail: GuardrailUsageDetail = {
   untracked_usage_units_by_key: {},
 };
 
-const loaded = (data: GuardrailUsageDetail | undefined) => ({ data, isLoading: false, error: null });
+const loaded = (data: GuardrailИспользованиеDetail | undefined) => ({ data, isLoading: false, error: null });
 
 const defaultProps = {
-  guardrailId: "pii-detector",
+  гардрейловId: "pii-detector",
   onBack: vi.fn(),
-  accessToken: "test-token" as string | null,
+  accessТокен: "test-token" as string | null,
   startDate: "2026-07-01",
   endDate: "2026-07-24",
 };
 
 function renderDetail(props: Partial<typeof defaultProps> = {}) {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
   return render(<GuardrailDetail {...defaultProps} {...props} />, {
-    wrapper: ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>,
+    wrapper: ({ children }) => <ЗапросClientПровайдер client={queryClient}>{children}</ЗапросClientПровайдер>,
   });
 }
 
 describe("GuardrailDetail", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockUseGuardrailsUsageDetail.mockReturnValue(loaded(detail));
-    mockGetGuardrailsUsageLogs.mockResolvedValue({ logs: [], total: 0 });
+    vi.clearВсеMocks();
+    mockUseГардрейлыИспользованиеDetail.mockReturnЗначение(loaded(detail));
+    mockGetГардрейлыИспользованиеЖурналы.mockResolvedЗначение({ logs: [], total: 0 });
   });
 
   it("should show a busy indicator while the detail request is in flight", () => {
-    mockUseGuardrailsUsageDetail.mockReturnValue({ data: undefined, isLoading: true, error: null });
+    mockUseГардрейлыИспользованиеDetail.mockReturnЗначение({ data: undefined, isLoading: true, error: null });
     renderDetail();
-    expect(document.querySelector('[aria-busy="true"]')).toBeInTheDocument();
+    expect(document.queryВыбратьor('[aria-busy="true"]')).toBeInTheDocument();
     expect(screen.queryByText("pii-detector")).not.toBeInTheDocument();
   });
 
   it("should show an error message and a way back when the detail request fails", async () => {
-    mockUseGuardrailsUsageDetail.mockReturnValue({ data: undefined, isLoading: false, error: new Error("boom") });
+    mockUseГардрейлыИспользованиеDetail.mockReturnЗначение({ data: undefined, isLoading: false, error: new Ошибка("boom") });
     renderDetail();
-    expect(await screen.findByText("Failed to load guardrail details.")).toBeInTheDocument();
+    expect(await screen.findByText("Не удалось загрузить детали гардрейла.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /back to overview/i })).toBeInTheDocument();
   });
 
-  it("should request the detail and the logs for the guardrail and date range", async () => {
+  it("should request the detail and the logs for the гардрейлов and date range", async () => {
     renderDetail();
-    expect(mockUseGuardrailsUsageDetail).toHaveBeenCalledWith("pii-detector", {
-      accessToken: "test-token",
+    expect(mockUseГардрейлыИспользованиеDetail).toHaveBeenCalledWith("pii-detector", {
+      accessТокен: "test-token",
       startDate: "2026-07-01",
       endDate: "2026-07-24",
     });
-    await waitFor(() => expect(mockGetGuardrailsUsageLogs).toHaveBeenCalled());
-    expect(mockGetGuardrailsUsageLogs).toHaveBeenCalledWith(
+    await waitFor(() => expect(mockGetГардрейлыИспользованиеЖурналы).toHaveBeenCalled());
+    expect(mockGetГардрейлыИспользованиеЖурналы).toHaveBeenCalledWith(
       "test-token",
-      expect.objectContaining({ guardrailId: "pii-detector", startDate: "2026-07-01", endDate: "2026-07-24" }),
+      expect.objectContaining({ гардрейловId: "pii-detector", startDate: "2026-07-01", endDate: "2026-07-24" }),
     );
   });
 
-  it("should show the guardrail name, description, provider and capitalised status", async () => {
+  it("should show the гардрейлов name, description, provider and capitalised status", async () => {
     renderDetail();
     expect(await screen.findByRole("heading", { name: "pii-detector" })).toBeInTheDocument();
     expect(screen.getByText("Blocks personally identifiable information")).toBeInTheDocument();
@@ -118,19 +118,19 @@ describe("GuardrailDetail", () => {
   });
 
   it("should show a placeholder when no latency has been recorded", async () => {
-    mockUseGuardrailsUsageDetail.mockReturnValue(loaded({ ...detail, avgLatency: null }));
+    mockUseГардрейлыИспользованиеDetail.mockReturnЗначение(loaded({ ...detail, avgLatency: null }));
     renderDetail();
     expect(await screen.findByText("No data")).toBeInTheDocument();
   });
 
-  it("should show the usage and cost breakdown for the guardrail on the overview tab", async () => {
+  it("should show the usage and cost breakdown for the гардрейлов on the overview tab", async () => {
     renderDetail();
-    const section = await screen.findByRole("region", { name: "Usage and cost" });
+    const section = await screen.findByRole("region", { name: "Использование and cost" });
     expect(section).toHaveTextContent("$0.0004");
-    expect(section).toHaveTextContent("Sensitive Information Policy");
+    expect(section).toHaveTextContent("Sensitive Информация Политика");
   });
 
-  it("should call onBack when 'Back to Overview' is clicked", async () => {
+  it("should call onBack when 'Назад к обзору' is clicked", async () => {
     const user = userEvent.setup();
     const onBack = vi.fn();
     renderDetail({ onBack });
@@ -138,17 +138,17 @@ describe("GuardrailDetail", () => {
     expect(onBack).toHaveBeenCalledOnce();
   });
 
-  it("should offer an Overview tab and a Logs tab, with Overview selected first", async () => {
+  it("should offer an Обзор tab and a Журналы tab, with Обзор selected first", async () => {
     renderDetail();
-    expect(await screen.findByRole("tab", { name: "Overview" })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByRole("tab", { name: "Logs" })).toHaveAttribute("aria-selected", "false");
+    expect(await screen.findByRole("tab", { name: "Обзор" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tab", { name: "Журналы" })).toHaveAttribute("aria-selected", "false");
   });
 
-  it("should select the Logs tab when it is clicked", async () => {
+  it("should select the Журналы tab when it is clicked", async () => {
     const user = userEvent.setup();
     renderDetail();
-    await user.click(await screen.findByRole("tab", { name: "Logs" }));
-    await waitFor(() => expect(screen.getByRole("tab", { name: "Logs" })).toHaveAttribute("aria-selected", "true"));
+    await user.click(await screen.findByRole("tab", { name: "Журналы" }));
+    await waitFor(() => expect(screen.getByRole("tab", { name: "Журналы" })).toHaveAttribute("aria-selected", "true"));
     expect(screen.getByTestId("log-viewer")).toHaveTextContent("pii-detector");
   });
 
@@ -158,17 +158,17 @@ describe("GuardrailDetail", () => {
     await screen.findByRole("heading", { name: "pii-detector" });
     expect(screen.queryByTestId("evaluation-modal")).not.toBeInTheDocument();
 
-    await user.click(screen.getByTitle("Evaluation settings"));
+    await user.click(screen.getByTitle("Настройки оценки"));
     expect(screen.getByTestId("evaluation-modal")).toBeInTheDocument();
   });
 
-  it("should not request anything without an access token", () => {
-    mockUseGuardrailsUsageDetail.mockReturnValue(loaded(undefined));
-    renderDetail({ accessToken: null });
-    expect(mockUseGuardrailsUsageDetail).toHaveBeenCalledWith(
+  it("should not request anything withвыход an access token", () => {
+    mockUseГардрейлыИспользованиеDetail.mockReturnЗначение(loaded(undefined));
+    renderDetail({ accessТокен: null });
+    expect(mockUseГардрейлыИспользованиеDetail).toHaveBeenCalledWith(
       "pii-detector",
-      expect.objectContaining({ accessToken: null }),
+      expect.objectContaining({ accessТокен: null }),
     );
-    expect(mockGetGuardrailsUsageLogs).not.toHaveBeenCalled();
+    expect(mockGetГардрейлыИспользованиеЖурналы).not.toHaveBeenCalled();
   });
 });

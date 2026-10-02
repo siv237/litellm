@@ -1,14 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import GuardrailDetailView from "./guardrail_garden_detail";
-import type { GuardrailCardInfo } from "./guardrail_garden_data";
+import GuardrailDetailView from "./гардрейлов_garden_detail";
+import type { GuardrailCardInfo } from "./гардрейлов_garden_data";
 
-vi.mock("./add_guardrail_form", () => ({ default: () => null }));
+vi.mock("./add_гардрейлов_form", () => ({ default: () => null }));
 
 const makeCard = (overrides: Partial<GuardrailCardInfo> = {}): GuardrailCardInfo => ({
   id: "bedrock",
   name: "Bedrock Guardrail",
-  description: "AWS Bedrock Guardrails for content filtering.",
+  description: "AWS Bedrock Гардрейлы for content filtering.",
   category: "partner",
   logo: "/_next/static/media/bedrock.svg",
   tags: ["AWS"],
@@ -16,7 +16,7 @@ const makeCard = (overrides: Partial<GuardrailCardInfo> = {}): GuardrailCardInfo
 });
 
 const renderDetail = (card: GuardrailCardInfo) =>
-  render(<GuardrailDetailView card={card} onBack={vi.fn()} accessToken={null} onGuardrailCreated={vi.fn()} />);
+  render(<GuardrailDetailView card={card} onBack={vi.fn()} accessТокен={null} onGuardrailСоздан={vi.fn()} />);
 
 describe("GuardrailDetailView logo", () => {
   it("renders the card logo through the shared Logo component with the bundled src", () => {

@@ -1,34 +1,34 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AddFallbacksModal } from "./AddFallbacksModal";
+import { AddРезервные моделиModal } from "./AddРезервные моделиModal";
 
-describe("AddFallbacksModal", () => {
+describe("AddРезервные моделиModal", () => {
   const mockOnCancel = vi.fn();
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should render the modal when open is true", () => {
     render(
-      <AddFallbacksModal open={true} onCancel={mockOnCancel}>
+      <AddРезервные моделиModal open={true} onCancel={mockOnCancel}>
         <div>Test Content</div>
-      </AddFallbacksModal>,
+      </AddРезервные моделиModal>,
     );
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.getByText("Configure Model Fallbacks")).toBeInTheDocument();
+    expect(screen.getByText("Конфигурацияure Режимl Резервные модели")).toBeInTheDocument();
     expect(
-      screen.getByText("Manage multiple fallback chains for different models (up to 5 groups at a time)"),
+      screen.getByText("Manage multiple fallback chains for different Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs (up to 5 groups at a time)"),
     ).toBeInTheDocument();
     expect(screen.getByText("Test Content")).toBeInTheDocument();
   });
 
   it("should not render the modal when open is false", () => {
     render(
-      <AddFallbacksModal open={false} onCancel={mockOnCancel}>
+      <AddРезервные моделиModal open={false} onCancel={mockOnCancel}>
         <div>Test Content</div>
-      </AddFallbacksModal>,
+      </AddРезервные моделиModal>,
     );
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -36,9 +36,9 @@ describe("AddFallbacksModal", () => {
 
   it("should render children content when modal is open", () => {
     render(
-      <AddFallbacksModal open={true} onCancel={mockOnCancel}>
+      <AddРезервные моделиModal open={true} onCancel={mockOnCancel}>
         <div data-testid="child-content">Child Component</div>
-      </AddFallbacksModal>,
+      </AddРезервные моделиModal>,
     );
 
     expect(screen.getByTestId("child-content")).toBeInTheDocument();
@@ -47,12 +47,12 @@ describe("AddFallbacksModal", () => {
 
   it("should display the correct title and description", () => {
     render(
-      <AddFallbacksModal open={true} onCancel={mockOnCancel}>
+      <AddРезервные моделиModal open={true} onCancel={mockOnCancel}>
         <div>Content</div>
-      </AddFallbacksModal>,
+      </AddРезервные моделиModal>,
     );
 
-    expect(screen.getByText("Configure Model Fallbacks")).toBeInTheDocument();
+    expect(screen.getByText("Конфигурацияure Режимl Резервные модели")).toBeInTheDocument();
     expect(screen.getByText(/Manage multiple fallback chains/i)).toBeInTheDocument();
   });
 });

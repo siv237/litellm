@@ -1,17 +1,17 @@
 import * as roles from "@/utils/roles";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as networking from "@/components/networking";
-import SearchTools from "./SearchTools";
-import { AvailableSearchProvider, SearchTool } from "./types";
+import SearchИнструменты from "./SearchИнструменты";
+import { AvailableSearchПровайдер, SearchTool } from "./types";
 
 vi.mock("@/components/networking", () => ({
-  fetchSearchTools: vi.fn(),
+  fetchSearchИнструменты: vi.fn(),
   updateSearchTool: vi.fn(),
   deleteSearchTool: vi.fn(),
-  fetchAvailableSearchProviders: vi.fn(),
+  fetchAvailableSearchПровайдерs: vi.fn(),
 }));
 
 vi.mock("@/utils/roles", () => ({
@@ -29,8 +29,8 @@ vi.mock("./SearchToolView", () => {
   return { SearchToolView };
 });
 
-vi.mock("./CreateSearchTools", () => {
-  const CreateSearchTools = ({
+vi.mock("./CreateSearchИнструменты", () => {
+  const CreateSearchИнструменты = ({
     isModalVisible,
     setModalVisible,
   }: {
@@ -42,8 +42,8 @@ vi.mock("./CreateSearchTools", () => {
         <button onClick={() => setModalVisible(false)}>Close Create Modal</button>
       </div>
     ) : null;
-  CreateSearchTools.displayName = "CreateSearchTools";
-  return { default: CreateSearchTools };
+  CreateSearchИнструменты.displayName = "CreateSearchИнструменты";
+  return { default: CreateSearchИнструменты };
 });
 
 vi.mock("@/components/common_components/DeleteResourceModal", () => {
@@ -66,7 +66,7 @@ vi.mock("@/components/common_components/DeleteResourceModal", () => {
   return { default: DeleteResourceModal };
 });
 
-const mockSearchTools: SearchTool[] = [
+const mockSearchИнструменты: SearchTool[] = [
   {
     search_tool_id: "tool-1",
     search_tool_name: "Perplexity Search",
@@ -89,7 +89,7 @@ const mockSearchTools: SearchTool[] = [
   },
 ];
 
-const mockAvailableProviders: AvailableSearchProvider[] = [
+const mockAvailableПровайдерs: AvailableSearchПровайдер[] = [
   {
     provider_name: "perplexity",
     ui_friendly_name: "Perplexity AI",
@@ -101,7 +101,7 @@ const mockAvailableProviders: AvailableSearchProvider[] = [
 ];
 
 const createWrapper = () => {
-  const queryClient = new QueryClient({
+  const queryClient = new ЗапросClient({
     defaultOptions: {
       queries: {
         retry: false,
@@ -109,85 +109,85 @@ const createWrapper = () => {
     },
   });
   const Wrapper = ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <ЗапросClientПровайдер client={queryClient}>{children}</ЗапросClientПровайдер>
   );
   Wrapper.displayName = "TestWrapper";
   return Wrapper;
 };
 
-describe("SearchTools", () => {
+describe("SearchИнструменты", () => {
   const defaultProps = {
-    accessToken: "test-token",
+    accessТокен: "test-token",
     userRole: "Admin",
     userID: "user-1",
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked(networking.fetchSearchTools).mockResolvedValue({ search_tools: mockSearchTools });
-    vi.mocked(networking.fetchAvailableSearchProviders).mockResolvedValue({ providers: mockAvailableProviders });
-    vi.mocked(roles.isAdminRole).mockReturnValue(true);
+    vi.clearВсеMocks();
+    vi.mocked(networking.fetchSearchИнструменты).mockResolvedЗначение({ search_tools: mockSearchИнструменты });
+    vi.mocked(networking.fetchAvailableSearchПровайдерs).mockResolvedЗначение({ providers: mockAvailableПровайдерs });
+    vi.mocked(roles.isAdminRole).mockReturnЗначение(true);
   });
 
   it("should render", async () => {
-    render(<SearchTools {...defaultProps} />, { wrapper: createWrapper() });
+    render(<SearchИнструменты {...defaultProps} />, { wrapper: createWrapper() });
     await waitFor(() => {
-      expect(screen.getByText("Search Tools")).toBeInTheDocument();
+      expect(screen.getByText("Search Инструменты")).toBeInTheDocument();
     });
   });
 
-  it("should display missing authentication parameters message when accessToken is missing", () => {
-    render(<SearchTools {...defaultProps} accessToken={null} />, { wrapper: createWrapper() });
+  it("should display missing authentication parameters message when accessТокен is missing", () => {
+    render(<SearchИнструменты {...defaultProps} accessТокен={null} />, { wrapper: createWrapper() });
     expect(screen.getByText("Missing required authentication parameters.")).toBeInTheDocument();
   });
 
   it("should display missing authentication parameters message when userRole is missing", () => {
-    render(<SearchTools {...defaultProps} userRole={null} />, { wrapper: createWrapper() });
+    render(<SearchИнструменты {...defaultProps} userRole={null} />, { wrapper: createWrapper() });
     expect(screen.getByText("Missing required authentication parameters.")).toBeInTheDocument();
   });
 
   it("should display missing authentication parameters message when userID is missing", () => {
-    render(<SearchTools {...defaultProps} userID={null} />, { wrapper: createWrapper() });
+    render(<SearchИнструменты {...defaultProps} userID={null} />, { wrapper: createWrapper() });
     expect(screen.getByText("Missing required authentication parameters.")).toBeInTheDocument();
   });
 
   it("should display search tools table with tools", async () => {
-    render(<SearchTools {...defaultProps} />, { wrapper: createWrapper() });
+    render(<SearchИнструменты {...defaultProps} />, { wrapper: createWrapper() });
     await waitFor(() => {
       expect(screen.getByText("Perplexity Search")).toBeInTheDocument();
     });
-    expect(screen.getAllByText("Tavily Search").length).toBeGreaterThan(0);
+    expect(screen.getВсеByText("Tavily Search").length).toBeGreaterThan(0);
   });
 
   it("should display empty state when no search tools are available", async () => {
-    vi.mocked(networking.fetchSearchTools).mockResolvedValue({ search_tools: [] });
+    vi.mocked(networking.fetchSearchИнструменты).mockResolvedЗначение({ search_tools: [] });
 
-    render(<SearchTools {...defaultProps} />, { wrapper: createWrapper() });
+    render(<SearchИнструменты {...defaultProps} />, { wrapper: createWrapper() });
     await waitFor(() => {
       expect(screen.getByText("No search tools configured")).toBeInTheDocument();
     });
   });
 
-  it("should show Add New Search Tool button when user is admin", async () => {
-    render(<SearchTools {...defaultProps} />, { wrapper: createWrapper() });
+  it("should show Добавить новый инструмент поиска button when user is admin", async () => {
+    render(<SearchИнструменты {...defaultProps} />, { wrapper: createWrapper() });
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /add new search tool/i })).toBeInTheDocument();
     });
   });
 
-  it("should not show Add New Search Tool button when user is not admin", async () => {
-    vi.mocked(roles.isAdminRole).mockReturnValue(false);
+  it("should not show Добавить новый инструмент поиска button when user is not admin", async () => {
+    vi.mocked(roles.isAdminRole).mockReturnЗначение(false);
 
-    render(<SearchTools {...defaultProps} />, { wrapper: createWrapper() });
+    render(<SearchИнструменты {...defaultProps} />, { wrapper: createWrapper() });
     await waitFor(() => {
-      expect(screen.getByText("Search Tools")).toBeInTheDocument();
+      expect(screen.getByText("Search Инструменты")).toBeInTheDocument();
     });
     expect(screen.queryByRole("button", { name: /add new search tool/i })).not.toBeInTheDocument();
   });
 
-  it("should open create modal when Add New Search Tool button is clicked", async () => {
+  it("should open create modal when Добавить новый инструмент поиска button is clicked", async () => {
     const user = userEvent.setup({ delay: null });
-    render(<SearchTools {...defaultProps} />, { wrapper: createWrapper() });
+    render(<SearchИнструменты {...defaultProps} />, { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /add new search tool/i })).toBeInTheDocument();
@@ -201,7 +201,7 @@ describe("SearchTools", () => {
 
   it("should navigate to tool view when tool ID is clicked", async () => {
     const user = userEvent.setup({ delay: null });
-    render(<SearchTools {...defaultProps} />, { wrapper: createWrapper() });
+    render(<SearchИнструменты {...defaultProps} />, { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(screen.getByText("Perplexity Search")).toBeInTheDocument();
@@ -218,7 +218,7 @@ describe("SearchTools", () => {
 
   it("should navigate back from tool view to table", async () => {
     const user = userEvent.setup({ delay: null });
-    render(<SearchTools {...defaultProps} />, { wrapper: createWrapper() });
+    render(<SearchИнструменты {...defaultProps} />, { wrapper: createWrapper() });
 
     await waitFor(() => {
       expect(screen.getByText("Perplexity Search")).toBeInTheDocument();

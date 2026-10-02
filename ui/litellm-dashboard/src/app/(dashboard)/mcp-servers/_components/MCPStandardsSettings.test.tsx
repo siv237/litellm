@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { FIELD_GROUPS, MCP_REQUIRED_FIELD_DEFS, SETTINGS_KEY } from "./MCPStandardsSettings";
-import { MCPServer } from "@/components/mcp_tools/types";
+import { MCPСервер } from "@/components/mcp_tools/types";
 
-const makeServer = (overrides: Partial<MCPServer> = {}): MCPServer => ({
+const makeСервер = (overrides: Partial<MCPСервер> = {}): MCPСервер => ({
   server_id: "s1",
   created_at: "2024-01-01",
   created_by: "user",
@@ -14,14 +14,14 @@ const makeServer = (overrides: Partial<MCPServer> = {}): MCPServer => ({
 describe("FIELD_GROUPS", () => {
   it("should contain four groups", () => {
     expect(FIELD_GROUPS).toHaveLength(4);
-    expect(FIELD_GROUPS.map((g) => g.label)).toEqual(["Documentation", "Source", "Connection", "Security"]);
+    expect(FIELD_GROUPS.map((g) => g.label)).toEqual(["Документация", "Источник", "Подключение", "Безопасность"]);
   });
 });
 
 describe("MCP_REQUIRED_FIELD_DEFS", () => {
   it("should flatten all fields from groups", () => {
-    const totalFields = FIELD_GROUPS.reduce((sum, g) => sum + g.fields.length, 0);
-    expect(MCP_REQUIRED_FIELD_DEFS).toHaveLength(totalFields);
+    const totalПолеs = FIELD_GROUPS.reduce((sum, g) => sum + g.fields.length, 0);
+    expect(MCP_REQUIRED_FIELD_DEFS).toHaveLength(totalПолеs);
   });
 });
 
@@ -29,23 +29,23 @@ describe("field check functions", () => {
   const findCheck = (key: string) => MCP_REQUIRED_FIELD_DEFS.find((f) => f.key === key)!.check;
 
   it("should pass description check when description is present", () => {
-    expect(findCheck("description")(makeServer({ description: "A service" }))).toBe(true);
+    expect(findCheck("description")(makeСервер({ description: "A service" }))).toBe(true);
   });
 
   it("should fail description check when description is empty", () => {
-    expect(findCheck("description")(makeServer({ description: "  " }))).toBe(false);
+    expect(findCheck("description")(makeСервер({ description: "  " }))).toBe(false);
   });
 
   it("should pass auth check when auth_type is not none", () => {
-    expect(findCheck("auth_type")(makeServer({ auth_type: "oauth2" }))).toBe(true);
+    expect(findCheck("auth_type")(makeСервер({ auth_type: "oauth2" }))).toBe(true);
   });
 
   it("should fail auth check when auth_type is none", () => {
-    expect(findCheck("auth_type")(makeServer({ auth_type: "none" }))).toBe(false);
+    expect(findCheck("auth_type")(makeСервер({ auth_type: "none" }))).toBe(false);
   });
 
   it("should fail auth check when auth_type is missing", () => {
-    expect(findCheck("auth_type")(makeServer())).toBe(false);
+    expect(findCheck("auth_type")(makeСервер())).toBe(false);
   });
 });
 

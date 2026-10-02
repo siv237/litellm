@@ -1,126 +1,126 @@
 import React from "react";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders } from "@/../tests/test-utils";
+import { renderWithПровайдерs } from "@/../tests/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import GuardrailSelectionModal from "./guardrail_selection_modal";
+import GuardrailВыбратьionModal from "./гардрейлов_selection_modal";
 
-const makeGuardrailDef = (name: string, description = "A guardrail description") => ({
-  guardrail_name: name,
-  guardrail_info: { description },
-  litellm_params: { guardrail: "presidio", mode: "pre_call" },
+const makeGuardrailDef = (name: string, description = "A гардрейлов description") => ({
+  гардрейлов_name: name,
+  гардрейлов_info: { description },
+  litellm_params: { гардрейлов: "presidio", mode: "pre_call" },
 });
 
-const makeTemplate = (guardrailDefs: any[] = [], overrides: any = {}) => ({
+const makeTemplate = (гардрейловDefs: any[] = [], overrides: any = {}) => ({
   title: "Test Template",
-  guardrailDefinitions: guardrailDefs,
+  гардрейловDefinitions: гардрейловDefs,
   ...overrides,
 });
 
 const defaultProps = {
   visible: true,
-  template: makeTemplate([makeGuardrailDef("guardrail-new-1"), makeGuardrailDef("guardrail-new-2")]),
-  existingGuardrails: new Set<string>(),
+  template: makeTemplate([makeGuardrailDef("гардрейлов-new-1"), makeGuardrailDef("гардрейлов-new-2")]),
+  existingГардрейлы: new Set<string>(),
   onConfirm: vi.fn(),
   onCancel: vi.fn(),
 };
 
-describe("GuardrailSelectionModal", () => {
+describe("GuardrailВыбратьionModal", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
-  it("should render guardrail names from the template", async () => {
-    renderWithProviders(<GuardrailSelectionModal {...defaultProps} />);
-    expect(await screen.findByText("guardrail-new-1")).toBeInTheDocument();
-    expect(screen.getByText("guardrail-new-2")).toBeInTheDocument();
+  it("should render гардрейлов names from the template", async () => {
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...defaultProps} />);
+    expect(await screen.findByText("гардрейлов-new-1")).toBeInTheDocument();
+    expect(screen.getByText("гардрейлов-new-2")).toBeInTheDocument();
   });
 
-  it("should pre-select only new guardrails when the modal opens", async () => {
-    renderWithProviders(<GuardrailSelectionModal {...defaultProps} />);
-    await screen.findByText("guardrail-new-1");
-    const checkboxes = screen.getAllByRole("checkbox");
+  it("should pre-select only создания новых гардрейлов when the modal opens", async () => {
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...defaultProps} />);
+    await screen.findByText("гардрейлов-new-1");
+    const checkboxes = screen.getВсеByRole("checkbox");
     checkboxes.forEach((cb) => expect(cb).toBeChecked());
   });
 
-  it("should not show a checkbox for guardrails that already exist", async () => {
+  it("should not show a checkbox for гардрейловs that already exist", async () => {
     const props = {
       ...defaultProps,
       template: makeTemplate([makeGuardrailDef("existing-g"), makeGuardrailDef("new-g")]),
-      existingGuardrails: new Set(["existing-g"]),
+      existingГардрейлы: new Set(["existing-g"]),
     };
-    renderWithProviders(<GuardrailSelectionModal {...props} />);
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...props} />);
     await screen.findByText("existing-g");
-    expect(screen.getAllByRole("checkbox")).toHaveLength(1);
+    expect(screen.getВсеByRole("checkbox")).toHaveLength(1);
   });
 
-  it("should show an 'Already exists' tag for guardrails that exist in the system", async () => {
+  it("should show an 'Уже существует' tag for гардрейловs that exist in the system", async () => {
     const props = {
       ...defaultProps,
       template: makeTemplate([makeGuardrailDef("existing-g")]),
-      existingGuardrails: new Set(["existing-g"]),
+      existingГардрейлы: new Set(["existing-g"]),
     };
-    renderWithProviders(<GuardrailSelectionModal {...props} />);
-    expect(await screen.findByText("Already exists")).toBeInTheDocument();
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...props} />);
+    expect(await screen.findByText("Уже существует")).toBeInTheDocument();
   });
 
-  it("should show 'Create N Guardrails & Use Template' on the confirm button when N guardrails are selected", async () => {
-    renderWithProviders(<GuardrailSelectionModal {...defaultProps} />);
-    expect(await screen.findByRole("button", { name: /create 2 guardrails & use template/i })).toBeInTheDocument();
+  it("should show 'Create N Гардрейлы & Использовать шаблон' on the confirm button when N гардрейловs are selected", async () => {
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...defaultProps} />);
+    expect(await screen.findByRole("button", { name: /create 2 гардрейловs & use template/i })).toBeInTheDocument();
   });
 
-  it("should show 'Use Template' on the confirm button when no new guardrails are selected", async () => {
+  it("should show 'Использовать шаблон' on the confirm button when no создания новых гардрейлов are selected", async () => {
     const props = {
       ...defaultProps,
       template: makeTemplate([makeGuardrailDef("existing-g")]),
-      existingGuardrails: new Set(["existing-g"]),
+      existingГардрейлы: new Set(["existing-g"]),
     };
-    renderWithProviders(<GuardrailSelectionModal {...props} />);
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...props} />);
     expect(await screen.findByRole("button", { name: /^use template$/i })).toBeInTheDocument();
   });
 
-  it("should call onConfirm with the definitions of selected guardrails when confirmed", async () => {
+  it("should call onConfirm with the definitions of selected гардрейловs when confirmed", async () => {
     const user = userEvent.setup();
-    const def = makeGuardrailDef("my-guardrail");
+    const def = makeGuardrailDef("my-гардрейлов");
     const props = { ...defaultProps, template: makeTemplate([def]) };
-    renderWithProviders(<GuardrailSelectionModal {...props} />);
-    await user.click(await screen.findByRole("button", { name: /create 1 guardrail/i }));
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...props} />);
+    await user.click(await screen.findByRole("button", { name: /create 1 гардрейлов/i }));
     expect(defaultProps.onConfirm).toHaveBeenCalledWith([def]);
   });
 
-  it("should deselect all guardrails when 'Deselect All' is clicked", async () => {
+  it("should deselect all гардрейловs when 'Снять выделение' is clicked", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<GuardrailSelectionModal {...defaultProps} />);
-    await screen.findByText("guardrail-new-1");
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...defaultProps} />);
+    await screen.findByText("гардрейлов-new-1");
     await user.click(screen.getByRole("button", { name: /deselect all/i }));
-    screen.getAllByRole("checkbox").forEach((cb) => expect(cb).not.toBeChecked());
+    screen.getВсеByRole("checkbox").forEach((cb) => expect(cb).not.toBeChecked());
   });
 
-  it("should re-select all new guardrails when 'Select All New' is clicked after deselecting", async () => {
+  it("should re-select all создания новых гардрейлов when 'Выбрать все новые' is clicked after deselecting", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<GuardrailSelectionModal {...defaultProps} />);
-    await screen.findByText("guardrail-new-1");
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...defaultProps} />);
+    await screen.findByText("гардрейлов-new-1");
     await user.click(screen.getByRole("button", { name: /deselect all/i }));
     await user.click(screen.getByRole("button", { name: /select all new/i }));
-    screen.getAllByRole("checkbox").forEach((cb) => expect(cb).toBeChecked());
+    screen.getВсеByRole("checkbox").forEach((cb) => expect(cb).toBeChecked());
   });
 
-  it("should show 'No guardrails defined' when the template has no guardrail definitions", async () => {
+  it("should show 'No гардрейловs defined' when the template has no гардрейлов definitions", async () => {
     const props = { ...defaultProps, template: makeTemplate([]) };
-    renderWithProviders(<GuardrailSelectionModal {...props} />);
-    expect(await screen.findByText(/no guardrails defined for this template/i)).toBeInTheDocument();
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...props} />);
+    expect(await screen.findByText(/no гардрейловs defined for this template/i)).toBeInTheDocument();
   });
 
   it("should show a progress badge when progressInfo is provided", async () => {
     const props = { ...defaultProps, progressInfo: { current: 2, total: 5 } };
-    renderWithProviders(<GuardrailSelectionModal {...props} />);
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...props} />);
     expect(await screen.findByText(/template 2 of 5/i)).toBeInTheDocument();
   });
 
   it("should call onCancel when the Cancel button is clicked", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<GuardrailSelectionModal {...defaultProps} />);
-    await screen.findByText("guardrail-new-1");
+    renderWithПровайдерs(<GuardrailВыбратьionModal {...defaultProps} />);
+    await screen.findByText("гардрейлов-new-1");
     await user.click(screen.getByRole("button", { name: /^cancel$/i }));
     expect(defaultProps.onCancel).toHaveBeenCalled();
   });

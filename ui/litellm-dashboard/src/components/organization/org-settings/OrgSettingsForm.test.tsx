@@ -1,17 +1,17 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi, type Mock } from "vitest";
 
-vi.mock("@/components/ModelSelect/ModelSelect", () => ({
-  ModelSelect: ({ onChange }: { onChange: (values: string[]) => void }) => (
+vi.mock("@/components/РежимlВыбрать/РежимlВыбрать", () => ({
+  РежимlВыбрать: ({ onChange }: { onChange: (values: string[]) => void }) => (
     <button type="button" onClick={() => onChange([])}>
-      clear-models
+      clear-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs
     </button>
   ),
 }));
-vi.mock("@/components/vector_store_management/VectorStoreSelector", () => ({
+vi.mock("@/components/vector_store_management/VectorStoreВыбратьor", () => ({
   __esModule: true,
   default: ({ onChange }: { onChange: (values: string[]) => void }) => (
     <button type="button" onClick={() => onChange(["vs-2"])}>
@@ -19,7 +19,7 @@ vi.mock("@/components/vector_store_management/VectorStoreSelector", () => ({
     </button>
   ),
 }));
-vi.mock("@/components/mcp_server_management/MCPServerSelector", () => ({
+vi.mock("@/components/mcp_server_management/MCPСерверВыбратьor", () => ({
   __esModule: true,
   default: ({
     value,
@@ -39,18 +39,18 @@ vi.mock("@/components/mcp_server_management/MCPServerSelector", () => ({
   ),
 }));
 
-import type { Organization } from "@/components/networking";
+import type { Организация } from "@/components/networking";
 
 import { OrgSettingsForm } from "./OrgSettingsForm";
 
-const org: Organization = {
+const org: Организация = {
   organization_id: "org-1",
   organization_alias: "acme",
   budget_id: "budget-1",
   metadata: {},
-  models: ["gpt-5.2"],
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-5.2"],
   spend: 0,
-  model_spend: {},
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_spend: {},
   created_at: "2026-01-01T00:00:00Z",
   created_by: "admin",
   updated_at: "2026-01-01T00:00:00Z",
@@ -67,23 +67,23 @@ const org: Organization = {
   },
 };
 
-const renderForm = (overrides?: { patchOrganization?: Mock; onSaved?: () => void; org?: Organization }) => {
-  const patchOrganization = overrides?.patchOrganization ?? vi.fn().mockResolvedValue({});
+const renderForm = (overrides?: { patchОрганизация?: Mock; onSaved?: () => void; org?: Организация }) => {
+  const patchОрганизация = overrides?.patchОрганизация ?? vi.fn().mockResolvedЗначение({});
   const onSaved = overrides?.onSaved ?? vi.fn();
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
   render(
-    <QueryClientProvider client={queryClient}>
+    <ЗапросClientПровайдер client={queryClient}>
       <OrgSettingsForm
         organizationId="org-1"
         org={overrides?.org ?? org}
-        accessToken="token"
+        accessТокен="token"
         onCancel={vi.fn()}
         onSaved={onSaved}
-        patchOrganization={patchOrganization}
+        patchОрганизация={patchОрганизация}
       />
-    </QueryClientProvider>,
+    </ЗапросClientПровайдер>,
   );
-  return { patchOrganization, onSaved };
+  return { patchОрганизация, onSaved };
 };
 
 describe("OrgSettingsForm", () => {
@@ -95,21 +95,21 @@ describe("OrgSettingsForm", () => {
 
   it("sends only the edited field", async () => {
     const user = userEvent.setup();
-    const { patchOrganization } = renderForm();
+    const { patchОрганизация } = renderForm();
 
-    await user.clear(screen.getByLabelText("Organization Name"));
-    fireEvent.change(screen.getByLabelText("Organization Name"), { target: { value: "acme-2" } });
+    await user.clear(screen.getByLabelText("Название организации"));
+    fireEvent.change(screen.getByLabelText("Название организации"), { target: { value: "acme-2" } });
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchOrganization).toHaveBeenCalledTimes(1));
-    expect(patchOrganization).toHaveBeenCalledWith("org-1", { organization_alias: "acme-2" });
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    expect(patchОрганизация).toHaveBeenCalledWith("org-1", { organization_alias: "acme-2" });
   });
 
   it("saves a sub-cent max budget the browser would veto under a 0.01 step", async () => {
     const user = userEvent.setup();
-    const { patchOrganization } = renderForm();
+    const { patchОрганизация } = renderForm();
 
-    const budget: HTMLInputElement = screen.getByLabelText("Max Budget (USD)");
+    const budget: HTMLВходElement = screen.getByLabelText("Макс. бюджет (USD)");
     await user.clear(budget);
     fireEvent.change(budget, { target: { value: "0.001" } });
 
@@ -119,71 +119,71 @@ describe("OrgSettingsForm", () => {
 
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchOrganization).toHaveBeenCalledTimes(1));
-    expect(patchOrganization).toHaveBeenCalledWith("org-1", { max_budget: 0.001 });
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    expect(patchОрганизация).toHaveBeenCalledWith("org-1", { max_budget: 0.001 });
   });
 
   it("sends null when a limit is cleared", async () => {
     const user = userEvent.setup();
-    const { patchOrganization } = renderForm();
+    const { patchОрганизация } = renderForm();
 
-    await user.clear(screen.getByLabelText("Tokens per minute Limit (TPM)"));
+    await user.clear(screen.getByLabelText("Лимит токенов в минуту (TPM)"));
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchOrganization).toHaveBeenCalledTimes(1));
-    expect(patchOrganization).toHaveBeenCalledWith("org-1", { tpm_limit: null });
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    expect(patchОрганизация).toHaveBeenCalledWith("org-1", { tpm_limit: null });
   });
 
-  it("sends models as [] when the selector is cleared", async () => {
+  it("sends Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs as [] when the selector is cleared", async () => {
     const user = userEvent.setup();
-    const { patchOrganization } = renderForm();
+    const { patchОрганизация } = renderForm();
 
-    await user.click(screen.getByRole("button", { name: "clear-models" }));
+    await user.click(screen.getByRole("button", { name: "clear-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs" }));
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchOrganization).toHaveBeenCalledTimes(1));
-    expect(patchOrganization).toHaveBeenCalledWith("org-1", { models: [] });
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    expect(patchОрганизация).toHaveBeenCalledWith("org-1", { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [] });
   });
 
-  it("wraps a vector store change in object_permission without mcp keys", async () => {
+  it("wraps a vector store change in object_permission withвыход mcp keys", async () => {
     const user = userEvent.setup();
-    const { patchOrganization } = renderForm();
+    const { patchОрганизация } = renderForm();
 
     await user.click(screen.getByRole("button", { name: "set-vector-stores" }));
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchOrganization).toHaveBeenCalledTimes(1));
-    expect(patchOrganization).toHaveBeenCalledWith("org-1", {
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    expect(patchОрганизация).toHaveBeenCalledWith("org-1", {
       object_permission: { vector_stores: ["vs-2"] },
     });
   });
 
   it("wraps an mcp change in object_permission with all three mcp keys", async () => {
     const user = userEvent.setup();
-    const { patchOrganization } = renderForm();
+    const { patchОрганизация } = renderForm();
 
     await user.click(screen.getByRole("button", { name: "set-mcp" }));
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchOrganization).toHaveBeenCalledTimes(1));
-    expect(patchOrganization).toHaveBeenCalledWith("org-1", {
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    expect(patchОрганизация).toHaveBeenCalledWith("org-1", {
       object_permission: { mcp_servers: ["srv-2"], mcp_access_groups: [], mcp_toolsets: [] },
     });
   });
 
   it("preserves existing toolsets when only the servers change", async () => {
     const user = userEvent.setup();
-    const orgWithToolsets: Organization = {
+    const orgWithИнструментыets: Организация = {
       ...org,
       object_permission: { ...org.object_permission!, mcp_toolsets: ["ts-1"] },
     };
-    const { patchOrganization } = renderForm({ org: orgWithToolsets });
+    const { patchОрганизация } = renderForm({ org: orgWithИнструментыets });
 
     await user.click(screen.getByRole("button", { name: "set-mcp" }));
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchOrganization).toHaveBeenCalledTimes(1));
-    expect(patchOrganization).toHaveBeenCalledWith("org-1", {
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
+    expect(patchОрганизация).toHaveBeenCalledWith("org-1", {
       object_permission: { mcp_servers: ["srv-2"], mcp_access_groups: [], mcp_toolsets: ["ts-1"] },
     });
   });
@@ -192,7 +192,7 @@ describe("OrgSettingsForm", () => {
     const user = userEvent.setup();
     renderForm();
 
-    const alias = screen.getByLabelText("Organization Name");
+    const alias = screen.getByLabelText("Название организации");
     await user.clear(alias);
     fireEvent.change(alias, { target: { value: "acme" } });
 
@@ -201,28 +201,28 @@ describe("OrgSettingsForm", () => {
 
   it("blocks submit and shows an error for invalid metadata JSON", async () => {
     const user = userEvent.setup();
-    const { patchOrganization } = renderForm();
+    const { patchОрганизация } = renderForm();
 
-    fireEvent.change(screen.getByLabelText("Metadata"), { target: { value: "not json" } });
+    fireEvent.change(screen.getByLabelText("Метаданные"), { target: { value: "not json" } });
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent("Metadata must be a valid JSON object");
-    expect(patchOrganization).not.toHaveBeenCalled();
+    expect(await screen.findByRole("alert")).toHaveTextContent("Метаданные must be a valid JSON object");
+    expect(patchОрганизация).not.toHaveBeenCalled();
   });
 
   it("keeps the view open when the patch fails", async () => {
     const user = userEvent.setup();
     const onSaved = vi.fn();
-    const { patchOrganization } = renderForm({
-      patchOrganization: vi.fn().mockRejectedValue(new Error("boom")),
+    const { patchОрганизация } = renderForm({
+      patchОрганизация: vi.fn().mockRejectedЗначение(new Ошибка("boom")),
       onSaved,
     });
 
-    await user.clear(screen.getByLabelText("Organization Name"));
-    fireEvent.change(screen.getByLabelText("Organization Name"), { target: { value: "acme-2" } });
+    await user.clear(screen.getByLabelText("Название организации"));
+    fireEvent.change(screen.getByLabelText("Название организации"), { target: { value: "acme-2" } });
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(patchOrganization).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(patchОрганизация).toHaveBeenCalledВремяs(1));
     expect(onSaved).not.toHaveBeenCalled();
   });
 
@@ -231,10 +231,10 @@ describe("OrgSettingsForm", () => {
     const onSaved = vi.fn();
     renderForm({ onSaved });
 
-    await user.clear(screen.getByLabelText("Requests per minute Limit (RPM)"));
-    fireEvent.change(screen.getByLabelText("Requests per minute Limit (RPM)"), { target: { value: "75" } });
+    await user.clear(screen.getByLabelText("Лимит запросов в минуту (RPM)"));
+    fireEvent.change(screen.getByLabelText("Лимит запросов в минуту (RPM)"), { target: { value: "75" } });
     await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
-    await waitFor(() => expect(onSaved).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(onSaved).toHaveBeenCalledВремяs(1));
   });
 });

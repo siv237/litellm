@@ -63,10 +63,10 @@ const BudgetPanel: React.FC<BudgetSettingsPageProps> = ({ accessToken }) => {
     }
     try {
       await deleteBudget.mutateAsync(selectedBudget.budget_id);
-      toast.success("Budget deleted.");
+      toast.success("Бюджет удалён.");
     } catch (error) {
       console.error("Error deleting budget:", error);
-      toast.fromError("Failed to delete budget");
+      toast.fromError("Не удалось удалить бюджет");
     } finally {
       setIsDeleteModalVisible(false);
       setSelectedBudget(null);
@@ -82,13 +82,13 @@ const BudgetPanel: React.FC<BudgetSettingsPageProps> = ({ accessToken }) => {
       <Tabs defaultValue="budgets" className="min-h-0 flex-1 gap-6">
         <PageHeader
           icon={<Wallet />}
-          title="Budgets"
+          title="Бюджеты"
           subtitle="Spend, TPM and RPM limits you can assign to customers."
           primaryAction={
             canModify ? (
               <Button onClick={() => setIsCreateModelVisible(true)}>
                 <Plus className="size-4" />
-                Create Budget
+                Создать бюджет
               </Button>
             ) : undefined
           }
@@ -99,10 +99,10 @@ const BudgetPanel: React.FC<BudgetSettingsPageProps> = ({ accessToken }) => {
             >
               {leadingControls}
               <TabsTrigger value="budgets" className="flex-none px-0 py-[7px] data-active:font-semibold">
-                Budgets
+                Бюджеты
               </TabsTrigger>
               <TabsTrigger value="examples" className="flex-none px-0 py-[7px] data-active:font-semibold">
-                Examples
+                Примеры
               </TabsTrigger>
             </TabsList>
           )}
@@ -125,12 +125,12 @@ const BudgetPanel: React.FC<BudgetSettingsPageProps> = ({ accessToken }) => {
             />
             <DeleteResourceModal
               isOpen={isDeleteModalVisible}
-              title="Delete Budget?"
+              title="Удалить бюджет?"
               message="Are you sure you want to delete this budget? This action cannot be undone."
               resourceInformationTitle="Budget Information"
               resourceInformation={[
-                { label: "Budget ID", value: selectedBudget?.budget_id, code: true },
-                { label: "Max Budget", value: selectedBudget?.max_budget },
+                { label: "ID бюджета", value: selectedBudget?.budget_id, code: true },
+                { label: "Макс. бюджет", value: selectedBudget?.max_budget },
                 { label: "TPM", value: selectedBudget?.tpm_limit },
                 { label: "RPM", value: selectedBudget?.rpm_limit },
               ]}
@@ -142,17 +142,17 @@ const BudgetPanel: React.FC<BudgetSettingsPageProps> = ({ accessToken }) => {
         </TabsContent>
         <TabsContent value="examples" className="min-h-0 flex-1 overflow-y-auto" keepMounted>
           <div className="pt-6">
-            <p className="text-base text-muted-foreground">How to use budget id</p>
+            <p className="text-base text-muted-foreground">Как использовать ID бюджета</p>
             <Tabs defaultValue="assign-budget">
               <TabsList variant="line" className="h-auto w-full justify-start rounded-none border-b p-0">
                 <TabsTrigger value="assign-budget" className="flex-none rounded-none px-4 py-2">
-                  Assign Budget to Customer
+                  Назначить бюджет клиенту
                 </TabsTrigger>
                 <TabsTrigger value="curl" className="flex-none rounded-none px-4 py-2">
-                  Test it (Curl)
+                  Проверить (Curl)
                 </TabsTrigger>
                 <TabsTrigger value="openai-sdk" className="flex-none rounded-none px-4 py-2">
-                  Test it (OpenAI SDK)
+                  Проверить (OpenAI SDK)
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="assign-budget" keepMounted>

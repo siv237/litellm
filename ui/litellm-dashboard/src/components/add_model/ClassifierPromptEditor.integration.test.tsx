@@ -1,27 +1,27 @@
-import { fireEvent, renderWithProviders, screen } from "../../../tests/test-utils";
+import { fireEvent, renderWithПровайдерs, screen } from "../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import { vi, type Mock } from "vitest";
 import ClassifierPromptEditor from "./ClassifierPromptEditor";
-import { ClassificationRubric } from "./ComplexityRouterConfig";
+import { ClassificationRubric } from "./— сложностьRвыходerКонфигурация";
 vi.mock(
-  "@/app/(dashboard)/hooks/autoRouter/useComplexityScorerDefaults",
-  async () => await import("../../../tests/mocks/complexityScorerDefaults"),
+  "@/app/(dashboard)/hooks/autoRвыходer/use— сложностьОценкаrDefaults",
+  async () => await import("../../../tests/mocks/complexityОценкаrDefaults"),
 );
 
-vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({
-  default: () => ({ accessToken: "sk-test" }),
+vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
+  default: () => ({ accessТокен: "sk-test" }),
 }));
 
 const getDefaultPrompt = vi.hoisted(() => vi.fn());
 vi.mock("@/components/networking", () => ({
-  getAutoRouterClassifierDefaultPromptCall: getDefaultPrompt,
+  getAutoRвыходerClassifierDefaultPromptCall: getDefaultPrompt,
 }));
 
-const DEFAULT_PROMPT = "Classify the complexity of a user request into exactly one tier. Tiers: SIMPLE ...";
+const DEFAULT_PROMPT = "Classify the complexity of a user request into exactly one tier. Уровеньs: SIMPLE ...";
 
 beforeEach(() => {
   getDefaultPrompt.mockReset();
-  getDefaultPrompt.mockResolvedValue(DEFAULT_PROMPT);
+  getDefaultPrompt.mockResolvedЗначение(DEFAULT_PROMPT);
 });
 
 interface OpenEditorOptions {
@@ -39,7 +39,7 @@ const openEditor = async ({
   tierLabels,
   classificationRubric = "agentic",
 }: OpenEditorOptions = {}) => {
-  renderWithProviders(
+  renderWithПровайдерs(
     <ClassifierPromptEditor
       systemPrompt={systemPrompt}
       onChange={onChange}
@@ -59,19 +59,19 @@ describe("ClassifierPromptEditor", () => {
     // Prefilling from the backend rather than a frontend copy is the whole point: a copy would
     // drift the moment the rubric is edited.
     expect(getDefaultPrompt).toHaveBeenCalledWith("sk-test", 7, undefined, "agentic");
-    expect(screen.getByLabelText("Classifier system prompt")).toHaveValue(DEFAULT_PROMPT);
+    expect(screen.getByLabelText("Classifier system prompt")).toHaveЗначение(DEFAULT_PROMPT);
   });
 
-  it("prefills the preset the router is on, not always the default one", async () => {
+  it("prefills the preset the rвыходer is on, not always the default one", async () => {
     // The editor is how an operator inspects the rubric before replacing it. Prefilling the agentic
-    // text for a router on chat would show them examples their classifier never receives.
+    // text for a rвыходer on chat would show them examples their classifier never receives.
     await openEditor({ contextWindowSize: 7, classificationRubric: "chat" });
     expect(getDefaultPrompt).toHaveBeenCalledWith("sk-test", 7, undefined, "chat");
   });
 
   it("prefills the rubric named by the operator's renamed tiers", async () => {
-    // A renamed router sends a rubric using its own labels, and its classifier must return them,
-    // so prefilling the canonical names would hand back a prompt that router rejects.
+    // A renamed rвыходer sends a rubric using its own labels, and its classifier must return them,
+    // so prefilling the canonical names would hand back a prompt that rвыходer rejects.
     const tierLabels = { SIMPLE: "Cheap", REASONING: "Deep" };
     await openEditor({ contextWindowSize: 7, tierLabels });
     expect(getDefaultPrompt).toHaveBeenCalledWith("sk-test", 7, tierLabels, "agentic");
@@ -79,7 +79,7 @@ describe("ClassifierPromptEditor", () => {
 
   it("warns that the prompt replaces the injection-defense text", async () => {
     await openEditor();
-    expect(screen.getByText("Proceed with caution")).toBeInTheDocument();
+    expect(screen.getByText("Действуйте осторожно")).toBeInTheDocument();
     expect(screen.getByText(/entire system role/)).toBeInTheDocument();
   });
 
@@ -108,7 +108,7 @@ describe("ClassifierPromptEditor", () => {
 
   it("offers a reset that clears a stored override", async () => {
     const onChange = vi.fn();
-    renderWithProviders(
+    renderWithПровайдерs(
       <ClassifierPromptEditor
         systemPrompt="Grade data sensitivity"
         onChange={onChange}
@@ -117,12 +117,12 @@ describe("ClassifierPromptEditor", () => {
       />,
     );
     expect(screen.getByRole("button", { name: "Edit custom prompt" })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole("button", { name: "Reset to default" }));
+    await userEvent.click(screen.getByRole("button", { name: "Сбросить к значению по умолчанию" }));
     expect(onChange).toHaveBeenCalledWith(undefined);
   });
 
   it("seeds the editor from the stored override, not the default", async () => {
     await openEditor({ systemPrompt: "Grade data sensitivity" });
-    expect(screen.getByLabelText("Classifier system prompt")).toHaveValue("Grade data sensitivity");
+    expect(screen.getByLabelText("Classifier system prompt")).toHaveЗначение("Grade data sensitivity");
   });
 });

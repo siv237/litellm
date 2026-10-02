@@ -1,266 +1,266 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ModelGroup } from "@/components/llm_calls/fetch_models";
-import { determineEndpointType, filterModelsForEndpoint, isModelCompatibleWithEndpoint } from "./EndpointUtils";
-import { EndpointType } from "@/components/chat_ui/mode_endpoint_mapping";
+import type { РежимlGroup } from "@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs";
+import { determineЭндпоинтType, filterРежимlsForЭндпоинт, isРежимlCompatibleWithЭндпоинт } from "./ЭндпоинтUtils";
+import { ЭндпоинтType } from "@/components/chat_ui/mode_endpoint_mapping";
 
 vi.mock("@/components/chat_ui/mode_endpoint_mapping", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/components/chat_ui/mode_endpoint_mapping")>();
   return {
     ...actual,
-    getEndpointType: vi.fn(actual.getEndpointType),
+    getЭндпоинтType: vi.fn(actual.getЭндпоинтType),
   };
 });
 
-import { getEndpointType } from "@/components/chat_ui/mode_endpoint_mapping";
+import { getЭндпоинтType } from "@/components/chat_ui/mode_endpoint_mapping";
 
-describe("determineEndpointType", () => {
+describe("determineЭндпоинтType", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
-  it("should return the correct endpoint type when model is found and has a valid mode", () => {
-    const mockModelInfo: ModelGroup[] = [
+  it("should return the correct endpoint type when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is found and has a valid mode", () => {
+    const mockРежимlInfo: РежимlGroup[] = [
       {
-        model_group: "gpt-3.5-turbo",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo",
         mode: "chat",
       },
       {
-        model_group: "dall-e-3",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "dall-e-3",
         mode: "image_generation",
       },
     ];
 
-    // Mock getEndpointType to return IMAGE for image_generation mode
-    vi.mocked(getEndpointType).mockReturnValue(EndpointType.IMAGE);
+    // Mock getЭндпоинтType to return IMAGE for image_generation mode
+    vi.mocked(getЭндпоинтType).mockReturnЗначение(ЭндпоинтType.IMAGE);
 
-    const result = determineEndpointType("dall-e-3", mockModelInfo);
+    const result = determineЭндпоинтType("dall-e-3", mockРежимlInfo);
 
-    expect(getEndpointType).toHaveBeenCalledWith("image_generation");
-    expect(result).toBe(EndpointType.IMAGE);
+    expect(getЭндпоинтType).toHaveBeenCalledWith("image_generation");
+    expect(result).toBe(ЭндпоинтType.IMAGE);
   });
 
-  it("should return CHAT endpoint type when model is found but has no mode", () => {
-    const mockModelInfo: ModelGroup[] = [
+  it("should return CHAT endpoint type when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is found but has no mode", () => {
+    const mockРежимlInfo: РежимlGroup[] = [
       {
-        model_group: "gpt-3.5-turbo",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo",
         // No mode property
       },
     ];
 
-    const result = determineEndpointType("gpt-3.5-turbo", mockModelInfo);
+    const result = determineЭндпоинтType("gpt-3.5-turbo", mockРежимlInfo);
 
-    expect(getEndpointType).not.toHaveBeenCalled();
-    expect(result).toBe(EndpointType.CHAT);
+    expect(getЭндпоинтType).not.toHaveBeenCalled();
+    expect(result).toBe(ЭндпоинтType.CHAT);
   });
 
-  it("should return CHAT endpoint type when model is not found in modelInfo", () => {
-    const mockModelInfo: ModelGroup[] = [
+  it("should return CHAT endpoint type when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is not found in Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo", () => {
+    const mockРежимlInfo: РежимlGroup[] = [
       {
-        model_group: "gpt-3.5-turbo",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo",
         mode: "chat",
       },
     ];
 
-    const result = determineEndpointType("non-existent-model", mockModelInfo);
+    const result = determineЭндпоинтType("non-existent-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", mockРежимlInfo);
 
-    expect(getEndpointType).not.toHaveBeenCalled();
-    expect(result).toBe(EndpointType.CHAT);
+    expect(getЭндпоинтType).not.toHaveBeenCalled();
+    expect(result).toBe(ЭндпоинтType.CHAT);
   });
 
-  it("should return CHAT endpoint type when modelInfo array is empty", () => {
-    const mockModelInfo: ModelGroup[] = [];
+  it("should return CHAT endpoint type when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo array is empty", () => {
+    const mockРежимlInfo: РежимlGroup[] = [];
 
-    const result = determineEndpointType("any-model", mockModelInfo);
+    const result = determineЭндпоинтType("any-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", mockРежимlInfo);
 
-    expect(getEndpointType).not.toHaveBeenCalled();
-    expect(result).toBe(EndpointType.CHAT);
+    expect(getЭндпоинтType).not.toHaveBeenCalled();
+    expect(result).toBe(ЭндпоинтType.CHAT);
   });
 
   it("should handle different mode types correctly", () => {
-    const mockModelInfo: ModelGroup[] = [
+    const mockРежимlInfo: РежимlGroup[] = [
       {
-        model_group: "tts-model",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "tts-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
         mode: "audio_speech",
       },
       {
-        model_group: "whisper-model",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "whisper-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
         mode: "audio_transcription",
       },
       {
-        model_group: "embedding-model",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "embedding-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
         mode: "embedding",
       },
       {
-        model_group: "video-model",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "video-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
         mode: "video_generation",
       },
     ];
 
     // Test speech mode
-    vi.mocked(getEndpointType).mockReturnValueOnce(EndpointType.SPEECH);
-    const speechResult = determineEndpointType("tts-model", mockModelInfo);
-    expect(getEndpointType).toHaveBeenCalledWith("audio_speech");
-    expect(speechResult).toBe(EndpointType.SPEECH);
+    vi.mocked(getЭндпоинтType).mockReturnЗначениеOnce(ЭндпоинтType.SPEECH);
+    const speechРезультат = determineЭндпоинтType("tts-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", mockРежимlInfo);
+    expect(getЭндпоинтType).toHaveBeenCalledWith("audio_speech");
+    expect(speechРезультат).toBe(ЭндпоинтType.SPEECH);
 
     // Reset mock for next test
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
 
     // Test transcription mode
-    vi.mocked(getEndpointType).mockReturnValueOnce(EndpointType.TRANSCRIPTION);
-    const transcriptionResult = determineEndpointType("whisper-model", mockModelInfo);
-    expect(getEndpointType).toHaveBeenCalledWith("audio_transcription");
-    expect(transcriptionResult).toBe(EndpointType.TRANSCRIPTION);
+    vi.mocked(getЭндпоинтType).mockReturnЗначениеOnce(ЭндпоинтType.TRANSCRIPTION);
+    const transcriptionРезультат = determineЭндпоинтType("whisper-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", mockРежимlInfo);
+    expect(getЭндпоинтType).toHaveBeenCalledWith("audio_transcription");
+    expect(transcriptionРезультат).toBe(ЭндпоинтType.TRANSCRIPTION);
 
     // Reset mock for next test
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
 
     // Test embedding mode
-    vi.mocked(getEndpointType).mockReturnValueOnce(EndpointType.EMBEDDINGS);
-    const embeddingResult = determineEndpointType("embedding-model", mockModelInfo);
-    expect(getEndpointType).toHaveBeenCalledWith("embedding");
-    expect(embeddingResult).toBe(EndpointType.EMBEDDINGS);
+    vi.mocked(getЭндпоинтType).mockReturnЗначениеOnce(ЭндпоинтType.EMBEDDINGS);
+    const embeddingРезультат = determineЭндпоинтType("embedding-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", mockРежимlInfo);
+    expect(getЭндпоинтType).toHaveBeenCalledWith("embedding");
+    expect(embeddingРезультат).toBe(ЭндпоинтType.EMBEDDINGS);
 
     // Reset mock for next test
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
 
     // Test video mode
-    vi.mocked(getEndpointType).mockReturnValueOnce(EndpointType.VIDEO);
-    const videoResult = determineEndpointType("video-model", mockModelInfo);
-    expect(getEndpointType).toHaveBeenCalledWith("video_generation");
-    expect(videoResult).toBe(EndpointType.VIDEO);
+    vi.mocked(getЭндпоинтType).mockReturnЗначениеOnce(ЭндпоинтType.VIDEO);
+    const videoРезультат = determineЭндпоинтType("video-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", mockРежимlInfo);
+    expect(getЭндпоинтType).toHaveBeenCalledWith("video_generation");
+    expect(videoРезультат).toBe(ЭндпоинтType.VIDEO);
   });
 
-  it("should prioritize the first matching model when there are duplicates", () => {
-    const mockModelInfo: ModelGroup[] = [
+  it("should prioritize the first matching Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию when there are duplicates", () => {
+    const mockРежимlInfo: РежимlGroup[] = [
       {
-        model_group: "gpt-3.5-turbo",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo",
         mode: "chat",
       },
       {
-        model_group: "gpt-3.5-turbo",
-        mode: "image_generation", // Different mode for same model name
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo",
+        mode: "image_generation", // Different mode for same Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name
       },
     ];
 
-    vi.mocked(getEndpointType).mockReturnValue(EndpointType.CHAT);
+    vi.mocked(getЭндпоинтType).mockReturnЗначение(ЭндпоинтType.CHAT);
 
-    const result = determineEndpointType("gpt-3.5-turbo", mockModelInfo);
+    const result = determineЭндпоинтType("gpt-3.5-turbo", mockРежимlInfo);
 
-    expect(getEndpointType).toHaveBeenCalledWith("chat");
-    expect(result).toBe(EndpointType.CHAT);
+    expect(getЭндпоинтType).toHaveBeenCalledWith("chat");
+    expect(result).toBe(ЭндпоинтType.CHAT);
   });
 
-  it("should handle models with undefined mode property explicitly set", () => {
-    const mockModelInfo: ModelGroup[] = [
+  it("should handle Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs with undefined mode property explicitly set", () => {
+    const mockРежимlInfo: РежимlGroup[] = [
       {
-        model_group: "test-model",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
         mode: undefined,
       },
     ];
 
-    const result = determineEndpointType("test-model", mockModelInfo);
+    const result = determineЭндпоинтType("test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", mockРежимlInfo);
 
-    expect(getEndpointType).not.toHaveBeenCalled();
-    expect(result).toBe(EndpointType.CHAT);
+    expect(getЭндпоинтType).not.toHaveBeenCalled();
+    expect(result).toBe(ЭндпоинтType.CHAT);
   });
 
-  it("should handle models with empty string mode", () => {
-    const mockModelInfo: ModelGroup[] = [
+  it("should handle Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs with empty string mode", () => {
+    const mockРежимlInfo: РежимlGroup[] = [
       {
-        model_group: "test-model",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
         mode: "",
       },
     ];
 
-    const result = determineEndpointType("test-model", mockModelInfo);
+    const result = determineЭндпоинтType("test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", mockРежимlInfo);
 
-    // Empty string is falsy, so getEndpointType should not be called
-    expect(getEndpointType).not.toHaveBeenCalled();
-    expect(result).toBe(EndpointType.CHAT);
+    // Empty string is falsy, so getЭндпоинтType should not be called
+    expect(getЭндпоинтType).not.toHaveBeenCalled();
+    expect(result).toBe(ЭндпоинтType.CHAT);
   });
 
-  it("should handle case-sensitive model group matching", () => {
-    const mockModelInfo: ModelGroup[] = [
+  it("should handle case-sensitive Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию group matching", () => {
+    const mockРежимlInfo: РежимlGroup[] = [
       {
-        model_group: "GPT-3.5-TURBO",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "GPT-3.5-TURBO",
         mode: "chat",
       },
     ];
 
-    vi.mocked(getEndpointType).mockReturnValue(EndpointType.CHAT);
+    vi.mocked(getЭндпоинтType).mockReturnЗначение(ЭндпоинтType.CHAT);
 
-    const result = determineEndpointType("gpt-3.5-turbo", mockModelInfo);
+    const result = determineЭндпоинтType("gpt-3.5-turbo", mockРежимlInfo);
 
-    expect(getEndpointType).not.toHaveBeenCalled();
-    expect(result).toBe(EndpointType.CHAT);
+    expect(getЭндпоинтType).not.toHaveBeenCalled();
+    expect(result).toBe(ЭндпоинтType.CHAT);
   });
 });
 
-describe("isModelCompatibleWithEndpoint / filterModelsForEndpoint", () => {
+describe("isРежимlCompatibleWithЭндпоинт / filterРежимlsForЭндпоинт", () => {
   beforeEach(async () => {
     const actual = await vi.importActual<typeof import("@/components/chat_ui/mode_endpoint_mapping")>(
       "@/components/chat_ui/mode_endpoint_mapping",
     );
-    vi.mocked(getEndpointType).mockImplementation(actual.getEndpointType);
+    vi.mocked(getЭндпоинтType).mockImplementation(actual.getЭндпоинтType);
   });
 
-  it("keeps models with no mode for every endpoint", () => {
-    const model: ModelGroup = { model_group: "custom-proxy-model" };
-    expect(isModelCompatibleWithEndpoint(model, EndpointType.CHAT)).toBe(true);
-    expect(isModelCompatibleWithEndpoint(model, EndpointType.REALTIME)).toBe(true);
-    expect(isModelCompatibleWithEndpoint(model, EndpointType.SPEECH)).toBe(true);
+  it("keeps Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs with no mode for every endpoint", () => {
+    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: РежимlGroup = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "custom-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию" };
+    expect(isРежимlCompatibleWithЭндпоинт(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, ЭндпоинтType.CHAT)).toBe(true);
+    expect(isРежимlCompatibleWithЭндпоинт(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, ЭндпоинтType.REALTIME)).toBe(true);
+    expect(isРежимlCompatibleWithЭндпоинт(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, ЭндпоинтType.SPEECH)).toBe(true);
   });
 
-  it("keeps chat models for responses, anthropic messages, and interactions", () => {
-    const chatModel: ModelGroup = { model_group: "gpt-4o", mode: "chat" };
-    expect(isModelCompatibleWithEndpoint(chatModel, EndpointType.RESPONSES)).toBe(true);
-    expect(isModelCompatibleWithEndpoint(chatModel, EndpointType.ANTHROPIC_MESSAGES)).toBe(true);
-    expect(isModelCompatibleWithEndpoint(chatModel, EndpointType.INTERACTIONS)).toBe(true);
-    expect(isModelCompatibleWithEndpoint(chatModel, EndpointType.SPEECH)).toBe(false);
+  it("keeps chat Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs for responses, anthropic messages, and interactions", () => {
+    const chatРежимl: РежимlGroup = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4o", mode: "chat" };
+    expect(isРежимlCompatibleWithЭндпоинт(chatРежимl, ЭндпоинтType.RESPONSES)).toBe(true);
+    expect(isРежимlCompatibleWithЭндпоинт(chatРежимl, ЭндпоинтType.ANTHROPIC_MESSAGES)).toBe(true);
+    expect(isРежимlCompatibleWithЭндпоинт(chatРежимl, ЭндпоинтType.INTERACTIONS)).toBe(true);
+    expect(isРежимlCompatibleWithЭндпоинт(chatРежимl, ЭндпоинтType.SPEECH)).toBe(false);
   });
 
-  it("keeps image models for image_edits", () => {
-    const imageModel: ModelGroup = { model_group: "dall-e-3", mode: "image_generation" };
-    expect(isModelCompatibleWithEndpoint(imageModel, EndpointType.IMAGE_EDITS)).toBe(true);
-    expect(isModelCompatibleWithEndpoint(imageModel, EndpointType.IMAGE)).toBe(true);
-    expect(isModelCompatibleWithEndpoint(imageModel, EndpointType.CHAT)).toBe(false);
+  it("keeps image Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs for image_edits", () => {
+    const imageРежимl: РежимlGroup = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "dall-e-3", mode: "image_generation" };
+    expect(isРежимlCompatibleWithЭндпоинт(imageРежимl, ЭндпоинтType.IMAGE_EDITS)).toBe(true);
+    expect(isРежимlCompatibleWithЭндпоинт(imageРежимl, ЭндпоинтType.IMAGE)).toBe(true);
+    expect(isРежимlCompatibleWithЭндпоинт(imageРежимl, ЭндпоинтType.CHAT)).toBe(false);
   });
 
-  it("keeps only realtime models for the realtime endpoint", () => {
-    const models: ModelGroup[] = [
-      { model_group: "gpt-4o", mode: "chat" },
-      { model_group: "gpt-realtime", mode: "realtime" },
-      { model_group: "no-mode" },
+  it("keeps only realtime Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs for the realtime endpoint", () => {
+    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: РежимlGroup[] = [
+      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4o", mode: "chat" },
+      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-realtime", mode: "realtime" },
+      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "no-mode" },
     ];
 
-    expect(filterModelsForEndpoint(models, EndpointType.REALTIME).map((m) => m.model_group)).toEqual([
+    expect(filterРежимlsForЭндпоинт(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs, ЭндпоинтType.REALTIME).map((m) => m.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group)).toEqual([
       "gpt-realtime",
       "no-mode",
     ]);
   });
 
   it("excludes unknown modes from conversational endpoints", () => {
-    const batchModel: ModelGroup = { model_group: "batch-job", mode: "batch" };
-    const rerankModel: ModelGroup = { model_group: "reranker", mode: "rerank" };
-    expect(isModelCompatibleWithEndpoint(batchModel, EndpointType.CHAT)).toBe(false);
-    expect(isModelCompatibleWithEndpoint(rerankModel, EndpointType.RESPONSES)).toBe(false);
-    expect(isModelCompatibleWithEndpoint(batchModel, EndpointType.REALTIME)).toBe(false);
+    const batchРежимl: РежимlGroup = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "batch-job", mode: "batch" };
+    const rerankРежимl: РежимlGroup = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "reranker", mode: "rerank" };
+    expect(isРежимlCompatibleWithЭндпоинт(batchРежимl, ЭндпоинтType.CHAT)).toBe(false);
+    expect(isРежимlCompatibleWithЭндпоинт(rerankРежимl, ЭндпоинтType.RESPONSES)).toBe(false);
+    expect(isРежимlCompatibleWithЭндпоинт(batchРежимl, ЭндпоинтType.REALTIME)).toBe(false);
   });
 
-  it("keeps completion-mode models for the chat endpoint", () => {
-    const completionModel: ModelGroup = { model_group: "davinci-002", mode: "completion" };
-    expect(isModelCompatibleWithEndpoint(completionModel, EndpointType.CHAT)).toBe(true);
-    expect(isModelCompatibleWithEndpoint(completionModel, EndpointType.RESPONSES)).toBe(true);
-    expect(isModelCompatibleWithEndpoint(completionModel, EndpointType.SPEECH)).toBe(false);
+  it("keeps completion-mode Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs for the chat endpoint", () => {
+    const completionРежимl: РежимlGroup = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "davinci-002", mode: "completion" };
+    expect(isРежимlCompatibleWithЭндпоинт(completionРежимl, ЭндпоинтType.CHAT)).toBe(true);
+    expect(isРежимlCompatibleWithЭндпоинт(completionРежимl, ЭндпоинтType.RESPONSES)).toBe(true);
+    expect(isРежимlCompatibleWithЭндпоинт(completionРежимl, ЭндпоинтType.SPEECH)).toBe(false);
   });
 
-  it("keeps image-edit models for the image-edits endpoint using the mode the backend sends", () => {
-    const imageEditModel: ModelGroup = { model_group: "gpt-image-1", mode: "image_edit" };
-    const imageModel: ModelGroup = { model_group: "dall-e-3", mode: "image_generation" };
+  it("keeps image-edit Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs for the image-edits endpoint using the mode the backend sends", () => {
+    const imageEditРежимl: РежимlGroup = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-image-1", mode: "image_edit" };
+    const imageРежимl: РежимlGroup = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "dall-e-3", mode: "image_generation" };
 
-    expect(isModelCompatibleWithEndpoint(imageEditModel, EndpointType.IMAGE_EDITS)).toBe(true);
+    expect(isРежимlCompatibleWithЭндпоинт(imageEditРежимl, ЭндпоинтType.IMAGE_EDITS)).toBe(true);
     expect(
-      filterModelsForEndpoint([imageEditModel, imageModel], EndpointType.IMAGE_EDITS).map((m) => m.model_group),
+      filterРежимlsForЭндпоинт([imageEditРежимl, imageРежимl], ЭндпоинтType.IMAGE_EDITS).map((m) => m.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group),
     ).toEqual(["gpt-image-1", "dall-e-3"]);
   });
 });

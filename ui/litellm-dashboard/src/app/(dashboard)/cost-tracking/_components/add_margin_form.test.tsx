@@ -2,104 +2,104 @@ import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent, { PointerEventsCheckLevel } from "@testing-library/user-event";
-import { renderWithProviders } from "../../../../../tests/test-utils";
+import { renderWithПровайдерs } from "../../../../../tests/test-utils";
 import AddMarginForm from "./add_margin_form";
-import { MarginConfig } from "./types";
+import { MarginКонфигурация } from "./types";
 
 const DEFAULT_PROPS = {
-  marginConfig: {} as MarginConfig,
-  selectedProvider: undefined,
+  marginКонфигурация: {} as MarginКонфигурация,
+  selectedПровайдер: undefined,
   marginType: "percentage" as const,
-  percentageValue: "",
-  fixedAmountValue: "",
-  onProviderChange: vi.fn(),
+  percentageЗначение: "",
+  fixedAmountЗначение: "",
+  onПровайдерChange: vi.fn(),
   onMarginTypeChange: vi.fn(),
   onPercentageChange: vi.fn(),
   onFixedAmountChange: vi.fn(),
-  onAddProvider: vi.fn(),
+  onAddПровайдер: vi.fn(),
 };
 
 describe("AddMarginForm", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should render", () => {
-    renderWithProviders(<AddMarginForm {...DEFAULT_PROPS} />);
+    renderWithПровайдерs(<AddMarginForm {...DEFAULT_PROPS} />);
     expect(screen.getByRole("button", { name: /add provider margin/i })).toBeInTheDocument();
   });
 
   it("should show the percentage input when marginType is percentage", () => {
-    renderWithProviders(<AddMarginForm {...DEFAULT_PROPS} marginType="percentage" />);
+    renderWithПровайдерs(<AddMarginForm {...DEFAULT_PROPS} marginType="percentage" />);
     expect(screen.getByPlaceholderText("10")).toBeInTheDocument();
   });
 
   it("should show the fixed amount input when marginType is fixed", () => {
-    renderWithProviders(<AddMarginForm {...DEFAULT_PROPS} marginType="fixed" />);
+    renderWithПровайдерs(<AddMarginForm {...DEFAULT_PROPS} marginType="fixed" />);
     expect(screen.getByPlaceholderText("0.001")).toBeInTheDocument();
   });
 
   it("should not show the fixed amount input when marginType is percentage", () => {
-    renderWithProviders(<AddMarginForm {...DEFAULT_PROPS} marginType="percentage" />);
+    renderWithПровайдерs(<AddMarginForm {...DEFAULT_PROPS} marginType="percentage" />);
     expect(screen.queryByPlaceholderText("0.001")).not.toBeInTheDocument();
   });
 
   it("should not show the percentage input when marginType is fixed", () => {
-    renderWithProviders(<AddMarginForm {...DEFAULT_PROPS} marginType="fixed" />);
+    renderWithПровайдерs(<AddMarginForm {...DEFAULT_PROPS} marginType="fixed" />);
     expect(screen.queryByPlaceholderText("10")).not.toBeInTheDocument();
   });
 
   it("should show the Percentage-based and Fixed Amount radio options", () => {
-    renderWithProviders(<AddMarginForm {...DEFAULT_PROPS} />);
+    renderWithПровайдерs(<AddMarginForm {...DEFAULT_PROPS} />);
     expect(screen.getByText("Percentage-based")).toBeInTheDocument();
     expect(screen.getByText("Fixed Amount")).toBeInTheDocument();
   });
 
   it("should disable the submit button when no provider is selected (percentage mode)", () => {
-    renderWithProviders(<AddMarginForm {...DEFAULT_PROPS} selectedProvider={undefined} percentageValue="10" />);
+    renderWithПровайдерs(<AddMarginForm {...DEFAULT_PROPS} selectedПровайдер={undefined} percentageЗначение="10" />);
     expect(screen.getByRole("button", { name: /add provider margin/i })).toBeDisabled();
   });
 
   it("should disable the submit button when provider is selected but no percentage value (percentage mode)", () => {
-    renderWithProviders(<AddMarginForm {...DEFAULT_PROPS} selectedProvider="OpenAI" percentageValue="" />);
+    renderWithПровайдерs(<AddMarginForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" percentageЗначение="" />);
     expect(screen.getByRole("button", { name: /add provider margin/i })).toBeDisabled();
   });
 
   it("should enable the submit button when provider and percentage value are both provided", () => {
-    renderWithProviders(<AddMarginForm {...DEFAULT_PROPS} selectedProvider="OpenAI" percentageValue="10" />);
+    renderWithПровайдерs(<AddMarginForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" percentageЗначение="10" />);
     expect(screen.getByRole("button", { name: /add provider margin/i })).toBeEnabled();
   });
 
   it("should disable the submit button in fixed mode when no fixed amount is provided", () => {
-    renderWithProviders(
-      <AddMarginForm {...DEFAULT_PROPS} selectedProvider="OpenAI" marginType="fixed" fixedAmountValue="" />,
+    renderWithПровайдерs(
+      <AddMarginForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" marginType="fixed" fixedAmountЗначение="" />,
     );
     expect(screen.getByRole("button", { name: /add provider margin/i })).toBeDisabled();
   });
 
   it("should enable the submit button in fixed mode when provider and fixed amount are provided", () => {
-    renderWithProviders(
-      <AddMarginForm {...DEFAULT_PROPS} selectedProvider="OpenAI" marginType="fixed" fixedAmountValue="0.001" />,
+    renderWithПровайдерs(
+      <AddMarginForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" marginType="fixed" fixedAmountЗначение="0.001" />,
     );
     expect(screen.getByRole("button", { name: /add provider margin/i })).toBeEnabled();
   });
 
-  it("should call onAddProvider when the enabled submit button is clicked", async () => {
-    const onAddProvider = vi.fn();
+  it("should call onAddПровайдер when the enabled submit button is clicked", async () => {
+    const onAddПровайдер = vi.fn();
     const user = userEvent.setup();
-    renderWithProviders(
-      <AddMarginForm {...DEFAULT_PROPS} selectedProvider="OpenAI" percentageValue="10" onAddProvider={onAddProvider} />,
+    renderWithПровайдерs(
+      <AddMarginForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" percentageЗначение="10" onAddПровайдер={onAddПровайдер} />,
     );
 
     await user.click(screen.getByRole("button", { name: /add provider margin/i }));
-    expect(onAddProvider).toHaveBeenCalledTimes(1);
+    expect(onAddПровайдер).toHaveBeenCalledВремяs(1);
   });
 
   it("should report the edited percentage as the user types", async () => {
     const onPercentageChange = vi.fn();
     const user = userEvent.setup();
-    renderWithProviders(
-      <AddMarginForm {...DEFAULT_PROPS} percentageValue="1" onPercentageChange={onPercentageChange} />,
+    renderWithПровайдерs(
+      <AddMarginForm {...DEFAULT_PROPS} percentageЗначение="1" onPercentageChange={onPercentageChange} />,
     );
 
     await user.type(screen.getByPlaceholderText("10"), "0");
@@ -109,11 +109,11 @@ describe("AddMarginForm", () => {
   it("should report the edited fixed amount as the user types", async () => {
     const onFixedAmountChange = vi.fn();
     const user = userEvent.setup();
-    renderWithProviders(
+    renderWithПровайдерs(
       <AddMarginForm
         {...DEFAULT_PROPS}
         marginType="fixed"
-        fixedAmountValue="0.00"
+        fixedAmountЗначение="0.00"
         onFixedAmountChange={onFixedAmountChange}
       />,
     );
@@ -125,21 +125,21 @@ describe("AddMarginForm", () => {
   it("should call onMarginTypeChange when the Fixed Amount radio is clicked", async () => {
     const onMarginTypeChange = vi.fn();
     const user = userEvent.setup();
-    renderWithProviders(<AddMarginForm {...DEFAULT_PROPS} onMarginTypeChange={onMarginTypeChange} />);
+    renderWithПровайдерs(<AddMarginForm {...DEFAULT_PROPS} onMarginTypeChange={onMarginTypeChange} />);
 
     await user.click(screen.getByText("Fixed Amount"));
     expect(onMarginTypeChange).toHaveBeenCalledWith("fixed");
   });
 
-  it("should call onProviderChange with the provider key when a provider is picked", async () => {
-    const onProviderChange = vi.fn();
+  it("should call onПровайдерChange with the provider key when a provider is picked", async () => {
+    const onПровайдерChange = vi.fn();
     const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
-    renderWithProviders(<AddMarginForm {...DEFAULT_PROPS} onProviderChange={onProviderChange} />);
+    renderWithПровайдерs(<AddMarginForm {...DEFAULT_PROPS} onПровайдерChange={onПровайдерChange} />);
 
     await user.click(screen.getByRole("combobox"));
     await user.click(await screen.findByText("Anthropic"));
 
-    expect(onProviderChange.mock.calls).toHaveLength(1);
-    expect(onProviderChange.mock.calls[0]?.[0]).toBe("Anthropic");
+    expect(onПровайдерChange.mock.calls).toHaveLength(1);
+    expect(onПровайдерChange.mock.calls[0]?.[0]).toBe("Anthropic");
   });
 });

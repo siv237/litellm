@@ -135,13 +135,13 @@ const SkillsFieldArray = () => {
             onClick={() => remove(index)}
           >
             <Trash2 />
-            Remove Skill
+            Убрать скилл
           </Button>
         </div>
       ))}
       <Button type="button" variant="outline" className="w-full border-dashed" onClick={() => append({})}>
         <Plus />
-        Add Skill
+        Добавить скилл
       </Button>
     </>
   );
@@ -161,7 +161,7 @@ const StaticHeadersFieldArray = () => {
                 {...control}
                 ref={ref}
                 className="w-55"
-                placeholder="Header name (e.g. Authorization)"
+                placeholder="Имя заголовка (напр. Authorization)"
                 value={typeof value === "string" ? value : ""}
                 onChange={onChange}
               />
@@ -173,7 +173,7 @@ const StaticHeadersFieldArray = () => {
                 {...control}
                 ref={ref}
                 className="w-65"
-                placeholder="Value (e.g. Bearer token123)"
+                placeholder="Значение (напр. Bearer token123)"
                 value={typeof value === "string" ? value : ""}
                 onChange={onChange}
               />
@@ -183,7 +183,7 @@ const StaticHeadersFieldArray = () => {
             type="button"
             variant="ghost"
             size="icon"
-            aria-label="Remove static header"
+            aria-label="Убрать статический заголовок"
             className="text-destructive hover:text-destructive/80"
             onClick={() => remove(index)}
           >
@@ -193,7 +193,7 @@ const StaticHeadersFieldArray = () => {
       ))}
       <Button type="button" variant="outline" className="w-full border-dashed" onClick={() => append({})}>
         <Plus />
-        Add Static Header
+        Добавить статический заголовок
       </Button>
     </>
   );
@@ -215,7 +215,7 @@ const AgentFormFields: React.FC<AgentFormFieldsProps> = ({ panels, showAgentName
               <Input
                 {...control}
                 ref={ref}
-                placeholder="e.g., customer-support-agent"
+                placeholder="напр. customer-support-agent"
                 value={typeof value === "string" ? value : ""}
                 onChange={onChange}
               />
@@ -363,7 +363,7 @@ const AgentFormFields: React.FC<AgentFormFieldsProps> = ({ panels, showAgentName
         )}
 
         {shouldShow(AUTH_HEADERS_PANEL_KEY) && (
-          <AgentFormPanel panelKey={AUTH_HEADERS_PANEL_KEY} title="Authentication Headers" panels={panels}>
+          <AgentFormPanel panelKey={AUTH_HEADERS_PANEL_KEY} title="Заголовки аутентификации" panels={panels}>
             <Field>
               <FieldTitle>
                 {labelWithHint(
@@ -388,7 +388,7 @@ const AgentFormFields: React.FC<AgentFormFieldsProps> = ({ panels, showAgentName
                   id={id}
                   value={Array.isArray(value) ? (value as string[]) : []}
                   onValueChange={onChange}
-                  placeholder="e.g. x-api-key, Authorization"
+                  placeholder="напр. x-api-key, Authorization"
                 />
               )}
             </AgentFormField>

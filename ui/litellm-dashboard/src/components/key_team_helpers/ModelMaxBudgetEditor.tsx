@@ -41,11 +41,11 @@ const readNumber = (raw: unknown): number | null => {
 const readPeriod = (raw: unknown): string | null => (typeof raw === "string" && raw !== "" ? raw : null);
 
 export const MODEL_BUDGET_PERIOD_OPTIONS = [
-  { value: "1h", label: "Hourly" },
-  { value: "24h", label: "Daily" },
-  { value: "7d", label: "Weekly" },
-  { value: "30d", label: "Monthly" },
-  { value: "1mo", label: "Calendar month" },
+  { value: "1h", label: "Каждый час" },
+  { value: "24h", label: "Каждый день" },
+  { value: "7d", label: "Каждую неделю" },
+  { value: "30d", label: "Каждый месяц" },
+  { value: "1mo", label: "Календарный месяц" },
 ];
 
 const DEFAULT_PERIOD = "30d";
@@ -125,7 +125,7 @@ export function ModelMaxBudgetEditor({
         <div className="mb-2">{blurb}</div>
         <Button variant="outline" size="sm" onClick={addEntry} disabled={!premiumUser} title={hintWhenLocked}>
           <Plus className="w-3 h-3" />
-          Add Model Budget
+          Добавить бюджет модели
         </Button>
       </div>
     );
@@ -155,8 +155,8 @@ export function ModelMaxBudgetEditor({
                 options={modelOptions.map((model) => ({ label: model, value: model }))}
                 value={entry.model}
                 onValueChange={(model) => updateEntry(entry.id, { model })}
-                placeholder="Select model"
-                emptyText="No models found"
+                placeholder="Выберите модель"
+                emptyText="Модели не найдены"
                 disabled={!premiumUser}
               />
             </div>
@@ -177,7 +177,7 @@ export function ModelMaxBudgetEditor({
                     const typed = event.target.valueAsNumber;
                     updateEntry(entry.id, { budgetLimit: Number.isNaN(typed) ? null : typed });
                   }}
-                  placeholder="Max spend ($)"
+                  placeholder="Макс. расход ($)"
                   disabled={!premiumUser}
                 />
               </InputGroup>
@@ -201,7 +201,7 @@ export function ModelMaxBudgetEditor({
 
             {spent !== undefined && (
               <div className="text-[11px] text-muted-foreground mt-2 ml-1">
-                Current window spend: ${spent}
+                Расход текущего окна: ${spent}
                 {entry.budgetLimit !== null && ` of $${entry.budgetLimit}`}
               </div>
             )}
@@ -210,7 +210,7 @@ export function ModelMaxBudgetEditor({
       })}
       <Button variant="outline" size="sm" onClick={addEntry} disabled={!premiumUser} title={hintWhenLocked}>
         <Plus className="w-3 h-3" />
-        Add Model Budget
+        Добавить бюджет модели
       </Button>
     </div>
   );
@@ -225,7 +225,7 @@ export function ModelMaxBudgetField({ hint, ...editorProps }: ModelMaxBudgetFiel
   return (
     <Field>
       <FieldLabel>
-        <span title={hint}>Per-Model Budgets</span>
+        <span title={hint}>Бюджеты по моделям</span>
       </FieldLabel>
       <ModelMaxBudgetEditor {...editorProps} />
     </Field>

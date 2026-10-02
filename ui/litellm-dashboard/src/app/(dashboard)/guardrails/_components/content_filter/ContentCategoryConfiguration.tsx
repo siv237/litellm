@@ -196,7 +196,7 @@ const ContentCategoryConfiguration: React.FC<ContentCategoryConfigurationProps> 
           value={row.original.action}
           onValueChange={(value: string | null) => value && onCategoryUpdate(row.original.id, "action", value)}
         >
-          <SelectTrigger size="sm" className="w-full" aria-label="Action">
+          <SelectTrigger size="sm" className="w-full" aria-label="Действие">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -221,7 +221,7 @@ const ContentCategoryConfiguration: React.FC<ContentCategoryConfigurationProps> 
             value && onCategoryUpdate(row.original.id, "severity_threshold", value)
           }
         >
-          <SelectTrigger size="sm" className="w-full" aria-label="Severity Threshold">
+          <SelectTrigger size="sm" className="w-full" aria-label="Порог критичности">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -256,9 +256,9 @@ const ContentCategoryConfiguration: React.FC<ContentCategoryConfigurationProps> 
     <Card>
       <CardHeader>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <CardTitle>Blocked topics</CardTitle>
+          <CardTitle>Блокируемые темы</CardTitle>
           <p className="text-xs font-normal text-muted-foreground">
-            Select topics to block using keyword and semantic analysis
+            Выберите темы для блокировки по ключевым словам и семантическому анализу
           </p>
         </div>
       </CardHeader>
@@ -270,9 +270,9 @@ const ContentCategoryConfiguration: React.FC<ContentCategoryConfigurationProps> 
             onValueChange={(category: ContentCategory | null) => setSelectedCategoryName(category?.name ?? "")}
             itemToStringLabel={(category: ContentCategory) => category.display_name}
           >
-            <ComboboxInput className="w-full" placeholder="Select a content category" />
+            <ComboboxInput className="w-full" placeholder="Выберите категорию контента" />
             <ComboboxContent>
-              <ComboboxEmpty>No matching categories</ComboboxEmpty>
+              <ComboboxEmpty>Нет подходящих категорий</ComboboxEmpty>
               <ComboboxList>
                 {(cat: ContentCategory) => (
                   <ComboboxItem key={cat.name} value={cat}>
@@ -309,7 +309,7 @@ const ContentCategoryConfiguration: React.FC<ContentCategoryConfigurationProps> 
                 <code>{previewYaml}</code>
               </pre>
             ) : (
-              <div className="p-2 text-center text-xs text-muted-foreground">Unable to load category content</div>
+              <div className="p-2 text-center text-xs text-muted-foreground">Не удалось загрузить содержимое категории</div>
             )}
           </div>
         )}
@@ -339,7 +339,7 @@ const ContentCategoryConfiguration: React.FC<ContentCategoryConfigurationProps> 
                       <ChevronRight className={`size-4 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
                       <FileText className="size-4" />
                       <span>
-                        View {fileType.toUpperCase()} for {category.display_name}
+                        Просмотр {fileType.toUpperCase()} для {category.display_name}
                       </span>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
@@ -350,7 +350,7 @@ const ContentCategoryConfiguration: React.FC<ContentCategoryConfigurationProps> 
                           <code>{categoryYaml[category.category]}</code>
                         </pre>
                       ) : (
-                        <div className="p-4 text-center text-muted-foreground">Content will load when expanded</div>
+                        <div className="p-4 text-center text-muted-foreground">Содержимое загрузится при раскрытии</div>
                       )}
                     </CollapsibleContent>
                   </Collapsible>
@@ -360,7 +360,7 @@ const ContentCategoryConfiguration: React.FC<ContentCategoryConfigurationProps> 
           </>
         ) : (
           <div className="rounded-md border border-dashed border-border p-6 text-center text-muted-foreground">
-            No blocked topics selected. Add topics to detect and block harmful content.
+            Блокируемые темы не выбраны. Добавьте темы, чтобы обнаруживать и блокировать вредный контент.
           </div>
         )}
       </CardContent>

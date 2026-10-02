@@ -1,100 +1,100 @@
 import { describe, expect, it } from "vitest";
 
-import type { ActiveTierRow, CustomTierSet, TierRow } from "./tier_rows";
+import type { ActiveУровеньRow, CustomУровеньSet, УровеньRow } from "./tier_rows";
 import {
   CUSTOM_TIER_OMITTED_KEYS,
   CUSTOM_TIER_RESTRICTIONS,
   MAX_TIER_COUNT,
-  activeTierName,
-  activeTierRows,
-  isBuiltInTierName,
-  resolveComplexityDefaultModel,
-  sameTierIdentity,
+  activeУровеньName,
+  activeУровеньRows,
+  isBuiltInУровеньName,
+  resolve— сложностьDefaultРежимl,
+  sameУровеньIdentity,
   tierRowById,
-  getCustomTierRowsError,
+  getCustomУровеньRowsОшибка,
   tierParamsByRowId,
   tierRowByName,
 } from "./tier_rows";
 
 const tiers = { SIMPLE: ["a"], MEDIUM: ["b"], COMPLEX: ["c"], REASONING: ["d"] };
 
-describe("activeTierRows", () => {
+describe("activeУровеньRows", () => {
   it("reads the tier set as rows whose id is the canonical tier key, in severity order", () => {
-    expect(activeTierRows({ tiers })).toEqual([
-      { id: "SIMPLE", name: "SIMPLE", definition: "", models: ["a"], params: {} },
-      { id: "MEDIUM", name: "MEDIUM", definition: "", models: ["b"], params: {} },
-      { id: "COMPLEX", name: "COMPLEX", definition: "", models: ["c"], params: {} },
-      { id: "REASONING", name: "REASONING", definition: "", models: ["d"], params: {} },
+    expect(activeУровеньRows({ tiers })).toEqual([
+      { id: "SIMPLE", name: "SIMPLE", definition: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["a"], params: {} },
+      { id: "MEDIUM", name: "MEDIUM", definition: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["b"], params: {} },
+      { id: "COMPLEX", name: "COMPLEX", definition: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["c"], params: {} },
+      { id: "REASONING", name: "REASONING", definition: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["d"], params: {} },
     ]);
   });
 
-  it("gives a tier with no models an empty pool rather than dropping the row", () => {
+  it("gives a tier with no Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs an empty pool rather than dropping the row", () => {
     const withEmptyComplex = { tiers: { ...tiers, COMPLEX: [] } };
-    const emptyComplexRow: ActiveTierRow = { id: "COMPLEX", name: "COMPLEX", definition: "", models: [], params: {} };
-    expect(activeTierRows(withEmptyComplex)[2]).toEqual(emptyComplexRow);
+    const emptyComplexRow: ActiveУровеньRow = { id: "COMPLEX", name: "COMPLEX", definition: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [], params: {} };
+    expect(activeУровеньRows(withEmptyComplex)[2]).toEqual(emptyComplexRow);
   });
 
   it("finds a row by id and by name", () => {
-    const rows = activeTierRows({ tiers });
-    expect(tierRowById(rows, "MEDIUM")?.models).toEqual(["b"]);
+    const rows = activeУровеньRows({ tiers });
+    expect(tierRowById(rows, "MEDIUM")?.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs).toEqual(["b"]);
     expect(tierRowById(rows, undefined)).toBeUndefined();
     expect(tierRowByName(rows, " medium ")?.id).toBe("MEDIUM");
   });
 });
 
-describe("sameTierIdentity", () => {
+describe("sameУровеньIdentity", () => {
   it.each([
     ["AUDIT", "audit", true],
     ["AUDIT", " audit ", true],
     ["AUDIT", "AUDITS", false],
   ])("compares %s and %s casefold, matching the backend's uniqueness rule", (left, right, expected) => {
-    expect(sameTierIdentity(left, right)).toBe(expected);
+    expect(sameУровеньIdentity(left, right)).toBe(expected);
   });
 
   it("recognises the four built-in names regardless of case", () => {
-    expect(["SIMPLE", "medium", "Complex", "REASONING"].every(isBuiltInTierName)).toBe(true);
-    expect(isBuiltInTierName("SECURITY_REVIEW")).toBe(false);
+    expect(["SIMPLE", "medium", "Complex", "REASONING"].every(isBuiltInУровеньName)).toBe(true);
+    expect(isBuiltInУровеньName("SECURITY_REVIEW")).toBe(false);
   });
 
   it("trims a row name, since the backend matches fallback_tier and keyword rules exactly", () => {
-    const padded: TierRow = { id: "1", name: "  AUDIT  ", definition: "", models: [] };
-    expect(activeTierName(padded)).toBe("AUDIT");
+    const padded: УровеньRow = { id: "1", name: "  AUDIT  ", definition: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [] };
+    expect(activeУровеньName(padded)).toBe("AUDIT");
   });
 });
 
-describe("resolveComplexityDefaultModel", () => {
-  it("mirrors init_complexity_router_deployment: a pin wins, then MEDIUM, then SIMPLE", () => {
-    expect(resolveComplexityDefaultModel({ tiers }, "pinned")).toBe("pinned");
-    expect(resolveComplexityDefaultModel({ tiers })).toBe("b");
-    expect(resolveComplexityDefaultModel({ tiers: { ...tiers, MEDIUM: [] } })).toBe("a");
+describe("resolve— сложностьDefaultРежимl", () => {
+  it("mirrors init_complexity_rвыходer_deployment: a pin wins, then MEDIUM, then SIMPLE", () => {
+    expect(resolve— сложностьDefaultРежимl({ tiers }, "pinned")).toBe("pinned");
+    expect(resolve— сложностьDefaultРежимl({ tiers })).toBe("b");
+    expect(resolve— сложностьDefaultРежимl({ tiers: { ...tiers, MEDIUM: [] } })).toBe("a");
   });
 
   it("resolves to nothing rather than falling through to COMPLEX, which the backend never picks", () => {
-    expect(resolveComplexityDefaultModel({ tiers: { ...tiers, SIMPLE: [], MEDIUM: [] } })).toBeUndefined();
+    expect(resolve— сложностьDefaultРежимl({ tiers: { ...tiers, SIMPLE: [], MEDIUM: [] } })).toBeUndefined();
   });
 });
 
-const definedRow = (name: string, models: string[] = ["m"], definition = "what belongs here"): TierRow => ({
+const definedRow = (name: string, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: string[] = ["m"], definition = "what belongs here"): УровеньRow => ({
   id: name.toLowerCase(),
   name,
   definition,
-  models,
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs,
 });
 
-const set = (rows: TierRow[], fallback?: string): CustomTierSet => ({
+const set = (rows: УровеньRow[], fallback?: string): CustomУровеньSet => ({
   tiers: rows,
   fallback_tier_id: fallback ?? rows[0]?.id ?? "",
 });
 
-describe("activeTierRows with an edited set", () => {
+describe("activeУровеньRows with an edited set", () => {
   it("reads the edited rows instead of the built-in record once a set is present", () => {
     const custom = set([definedRow("CASUAL"), definedRow("AUDIT")]);
-    expect(activeTierRows({ tiers, custom_tier_set: custom }).map((r) => r.name)).toEqual(["CASUAL", "AUDIT"]);
+    expect(activeУровеньRows({ tiers, custom_tier_set: custom }).map((r) => r.name)).toEqual(["CASUAL", "AUDIT"]);
   });
 
-  it("prefers the fallback tier's pool for the default model, mirroring init_complexity_router_deployment", () => {
-    const custom = set([definedRow("CASUAL", ["casual-model"]), definedRow("AUDIT", ["audit-model"])], "audit");
-    expect(resolveComplexityDefaultModel({ tiers, custom_tier_set: custom })).toBe("audit-model");
+  it("prefers the fallback tier's pool for the default Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, mirroring init_complexity_rвыходer_deployment", () => {
+    const custom = set([definedRow("CASUAL", ["casual-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию"]), definedRow("AUDIT", ["audit-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию"])], "audit");
+    expect(resolve— сложностьDefaultРежимl({ tiers, custom_tier_set: custom })).toBe("audit-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
   });
 });
 
@@ -116,9 +116,9 @@ describe("CUSTOM_TIER_RESTRICTIONS", () => {
   });
 });
 
-describe("getCustomTierRowsError", () => {
+describe("getCustomУровеньRowsОшибка", () => {
   it("accepts a complete set", () => {
-    expect(getCustomTierRowsError(set([definedRow("CASUAL"), definedRow("AUDIT")]))).toBeNull();
+    expect(getCustomУровеньRowsОшибка(set([definedRow("CASUAL"), definedRow("AUDIT")]))).toBeNull();
   });
 
   it.each([
@@ -128,25 +128,25 @@ describe("getCustomTierRowsError", () => {
       "A tier set needs 2 to 8 tiers",
     ],
     [set([definedRow(""), definedRow("AUDIT")], "audit"), "Name every tier"],
-    [set([definedRow("AUDIT"), { ...definedRow("audit"), id: "second" }]), "Tier names must be unique, ignoring case"],
+    [set([definedRow("AUDIT"), { ...definedRow("audit"), id: "second" }]), "Уровень names must be unique, ignoring case"],
     [
       set([definedRow("CASUAL"), { ...definedRow("AUDIT"), definition: "  " }]),
-      "Every custom tier needs a definition: it is the rubric the classifier routes on",
+      "Every custom tier needs a definition: it is the rubric the classifier rвыходes on",
     ],
-    [set([definedRow("CASUAL"), definedRow("AUDIT")], "gone"), "Pick a Fallback Tier for classifier failures"],
-  ])("reports the row problem the backend would reject", (customTierSet, expected) => {
-    expect(getCustomTierRowsError(customTierSet)).toBe(expected);
+    [set([definedRow("CASUAL"), definedRow("AUDIT")], "gone"), "Pick a Fallback Уровень for classifier failures"],
+  ])("reports the row problem the backend would reject", (customУровеньSet, expected) => {
+    expect(getCustomУровеньRowsОшибка(customУровеньSet)).toBe(expected);
   });
 
   it("lets a built-in name inherit its definition, which is the one blank the backend allows", () => {
-    expect(getCustomTierRowsError(set([{ ...definedRow("SIMPLE"), definition: "" }, definedRow("AUDIT")]))).toBeNull();
+    expect(getCustomУровеньRowsОшибка(set([{ ...definedRow("SIMPLE"), definition: "" }, definedRow("AUDIT")]))).toBeNull();
   });
 });
 
 describe("tierParamsByRowId", () => {
   const rows = [
-    { id: "SIMPLE", name: "SIMPLE", definition: "", models: ["a"] },
-    { id: "stored-1", name: "SECURITY_REVIEW", definition: "audits", models: ["b"] },
+    { id: "SIMPLE", name: "SIMPLE", definition: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["a"] },
+    { id: "stored-1", name: "SECURITY_REVIEW", definition: "audits", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["b"] },
   ];
 
   it("re-keys a stored tier name onto the ephemeral row id the editor reads", () => {
@@ -164,18 +164,18 @@ describe("tierParamsByRowId", () => {
     expect(tierParamsByRowId(stored, rows)).toEqual(stored);
   });
 
-  it("returns nothing when there are no stored params, keeping the key out of the payload", () => {
+  it("returns nothing when there are no stored params, keeping the key выход of the payload", () => {
     expect(tierParamsByRowId(undefined, rows)).toBeUndefined();
   });
 });
 
 describe("the opt-in non-reasoning tier", () => {
-  const withTierZero = { SIMPLE: ["a"], MEDIUM: ["b"], COMPLEX: ["c"], REASONING: ["d"], NON_REASONING: ["cheap"] };
+  const withУровеньZero = { SIMPLE: ["a"], MEDIUM: ["b"], COMPLEX: ["c"], REASONING: ["d"], NON_REASONING: ["cheap"] };
 
   it("renders no fifth row while the toggle is off", () => {
-    // The regression for every existing router: the tier exists in the type, and the form must
+    // The regression for every existing rвыходer: the tier exists in the type, and the form must
     // still show the four rows it always showed.
-    expect(activeTierRows({ tiers: withTierZero }).map((row) => row.id)).toEqual([
+    expect(activeУровеньRows({ tiers: withУровеньZero }).map((row) => row.id)).toEqual([
       "SIMPLE",
       "MEDIUM",
       "COMPLEX",
@@ -184,25 +184,25 @@ describe("the opt-in non-reasoning tier", () => {
   });
 
   it("renders it first, as tier 0, when enabled", () => {
-    const rows = activeTierRows({ tiers: withTierZero, enable_non_reasoning_tier: true });
+    const rows = activeУровеньRows({ tiers: withУровеньZero, enable_non_reasoning_tier: true });
     expect(rows.map((row) => row.id)).toEqual(["NON_REASONING", "SIMPLE", "MEDIUM", "COMPLEX", "REASONING"]);
-    expect(rows[0].models).toEqual(["cheap"]);
+    expect(rows[0].Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs).toEqual(["cheap"]);
   });
 
-  it("renders an enabled tier with no models as an empty row rather than crashing", () => {
-    const emptyTierZeroRow: ActiveTierRow = {
+  it("renders an enabled tier with no Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs as an empty row rather than crashing", () => {
+    const emptyУровеньZeroRow: ActiveУровеньRow = {
       id: "NON_REASONING",
       name: "NON_REASONING",
       definition: "",
-      models: [],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
       params: {},
     };
-    const rows = activeTierRows({ tiers, enable_non_reasoning_tier: true });
-    expect(rows[0]).toEqual(emptyTierZeroRow);
+    const rows = activeУровеньRows({ tiers, enable_non_reasoning_tier: true });
+    expect(rows[0]).toEqual(emptyУровеньZeroRow);
   });
 
   it("counts as a built-in name either way, so a custom set cannot claim the name", () => {
-    expect(isBuiltInTierName("NON_REASONING")).toBe(true);
-    expect(isBuiltInTierName("non_reasoning")).toBe(true);
+    expect(isBuiltInУровеньName("NON_REASONING")).toBe(true);
+    expect(isBuiltInУровеньName("non_reasoning")).toBe(true);
   });
 });

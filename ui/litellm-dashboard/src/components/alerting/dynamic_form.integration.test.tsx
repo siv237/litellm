@@ -40,7 +40,7 @@ const SETTINGS: Setting[] = [
   },
   {
     field_name: "daily_spend_per_user_threshold",
-    field_description: "Daily spend threshold per user",
+    field_description: "Каждый день spend threshold per user",
     field_type: "Float",
     field_value: 5.5,
     stored_in_db: true,
@@ -53,27 +53,27 @@ const renderForm = (
     settings?: Setting[];
     premiumUser?: boolean;
     handleSubmit?: (values: Record<string, unknown>) => void;
-    handleInputChange?: (fieldName: string, newValue: unknown) => void;
-    handleResetField?: (fieldName: string, index: number) => void;
+    handleВходChange?: (fieldName: string, newЗначение: unknown) => void;
+    handleResetПоле?: (fieldName: string, index: number) => void;
   } = {},
 ) => {
   const handleSubmit = overrides.handleSubmit ?? vi.fn();
-  const handleInputChange = overrides.handleInputChange ?? vi.fn();
-  const handleResetField = overrides.handleResetField ?? vi.fn();
+  const handleВходChange = overrides.handleВходChange ?? vi.fn();
+  const handleResetПоле = overrides.handleResetПоле ?? vi.fn();
   render(
     <table>
       <tbody>
         <DynamicForm
           alertingSettings={overrides.settings ?? SETTINGS}
-          handleInputChange={handleInputChange}
-          handleResetField={handleResetField}
+          handleВходChange={handleВходChange}
+          handleResetПоле={handleResetПоле}
           handleSubmit={handleSubmit}
           premiumUser={overrides.premiumUser ?? false}
         />
       </tbody>
     </table>,
   );
-  return { handleSubmit, handleInputChange, handleResetField };
+  return { handleSubmit, handleВходChange, handleResetПоле };
 };
 
 const submit = async (user: ReturnType<typeof userEvent.setup>) =>
@@ -93,10 +93,10 @@ describe("DynamicForm submit payload", () => {
     const user = userEvent.setup();
     const { handleSubmit } = renderForm();
 
-    await user.type(screen.getByDisplayValue("us-east"), "Z");
+    await user.type(screen.getByDisplayЗначение("us-east"), "Z");
     await submit(user);
 
-    expect(handleSubmit).toHaveBeenCalledTimes(1);
+    expect(handleSubmit).toHaveBeenCalledВремяs(1);
     expect(handleSubmit).toHaveBeenCalledWith({ region_name: "us-eastZ" });
   });
 
@@ -104,7 +104,7 @@ describe("DynamicForm submit payload", () => {
     const user = userEvent.setup();
     const { handleSubmit } = renderForm();
 
-    await user.type(screen.getByDisplayValue("12"), "7");
+    await user.type(screen.getByDisplayЗначение("12"), "7");
     await submit(user);
 
     expect(handleSubmit).toHaveBeenCalledWith({ daily_report_frequency: "127" });
@@ -124,9 +124,9 @@ describe("DynamicForm submit payload", () => {
     const user = userEvent.setup();
     const { handleSubmit } = renderForm();
 
-    await user.type(screen.getByDisplayValue("us-east"), "Z");
+    await user.type(screen.getByDisplayЗначение("us-east"), "Z");
     await user.click(screen.getByRole("switch"));
-    await user.type(screen.getByDisplayValue("12"), "9");
+    await user.type(screen.getByDisplayЗначение("12"), "9");
     await submit(user);
 
     expect(handleSubmit).toHaveBeenCalledWith({
@@ -140,7 +140,7 @@ describe("DynamicForm submit payload", () => {
     const user = userEvent.setup();
     const { handleSubmit } = renderForm();
 
-    await user.clear(screen.getByDisplayValue("us-east"));
+    await user.clear(screen.getByDisplayЗначение("us-east"));
     await submit(user);
 
     expect(handleSubmit).not.toHaveBeenCalled();
@@ -162,42 +162,42 @@ describe("DynamicForm submit payload", () => {
 describe("DynamicForm change notifications", () => {
   it("reports a Boolean change to the parent as a boolean", async () => {
     const user = userEvent.setup();
-    const { handleInputChange } = renderForm();
+    const { handleВходChange } = renderForm();
 
     await user.click(screen.getByRole("switch"));
 
-    expect(handleInputChange).toHaveBeenCalledWith("slack_alerting", true);
+    expect(handleВходChange).toHaveBeenCalledWith("slack_alerting", true);
   });
 
   it("reports an Integer change to the parent as a number", async () => {
     const user = userEvent.setup();
-    const { handleInputChange } = renderForm();
+    const { handleВходChange } = renderForm();
 
-    await user.type(screen.getByDisplayValue("12"), "8");
+    await user.type(screen.getByDisplayЗначение("12"), "8");
 
-    expect(handleInputChange).toHaveBeenCalledWith("daily_report_frequency", 128);
+    expect(handleВходChange).toHaveBeenCalledWith("daily_report_frequency", 128);
   });
 
   it("renders a Float field as a decimal-friendly number input and reports changes as numbers", async () => {
     const user = userEvent.setup();
-    const { handleInputChange } = renderForm();
+    const { handleВходChange } = renderForm();
 
-    const input = screen.getByDisplayValue("5.5");
+    const input = screen.getByDisplayЗначение("5.5");
     expect(input).toHaveAttribute("type", "number");
     expect(input).toHaveAttribute("step", "any");
 
     await user.type(input, "1");
 
-    expect(handleInputChange).toHaveBeenCalledWith("daily_spend_per_user_threshold", 5.51);
+    expect(handleВходChange).toHaveBeenCalledWith("daily_spend_per_user_threshold", 5.51);
   });
 
   it("reports a reset with the field name and its row index", async () => {
     const user = userEvent.setup();
-    const { handleResetField } = renderForm();
+    const { handleResetПоле } = renderForm();
 
     await user.click(screen.getByRole("button", { name: "Reset region_name" }));
 
-    expect(handleResetField).toHaveBeenCalledWith("region_name", 1);
+    expect(handleResetПоле).toHaveBeenCalledWith("region_name", 1);
   });
 });
 
@@ -209,8 +209,8 @@ describe("DynamicForm premium gating", () => {
       premiumUser: false,
     });
 
-    expect(screen.getByText(/Enterprise Feature/)).toBeInTheDocument();
-    expect(screen.queryByDisplayValue("us-east")).not.toBeInTheDocument();
+    expect(screen.getByText(/Введитеprise Feature/)).toBeInTheDocument();
+    expect(screen.queryByDisplayЗначение("us-east")).not.toBeInTheDocument();
 
     await submit(user);
 
@@ -224,7 +224,7 @@ describe("DynamicForm premium gating", () => {
       premiumUser: true,
     });
 
-    await user.type(screen.getByDisplayValue("us-east"), "Q");
+    await user.type(screen.getByDisplayЗначение("us-east"), "Q");
     await submit(user);
 
     expect(handleSubmit).toHaveBeenCalledWith({ region_name: "us-eastQ" });
@@ -237,8 +237,8 @@ describe("DynamicForm presentation", () => {
 
     expect(screen.getByText("daily_report_frequency")).toBeInTheDocument();
     expect(screen.getByText("How often the report runs")).toBeInTheDocument();
-    expect(screen.getAllByText("In DB")).toHaveLength(2);
-    expect(screen.getByText("In Config")).toBeInTheDocument();
+    expect(screen.getВсеByText("In DB")).toHaveLength(2);
+    expect(screen.getByText("In Конфигурация")).toBeInTheDocument();
     expect(screen.getByText("Not Set")).toBeInTheDocument();
   });
 });

@@ -44,7 +44,7 @@ const inheritedBadgeFor = (source: McpGrantSource): InheritedBadge | null => {
     case "toolset":
       return { label: `Via toolset: ${source.name}`, className: "text-purple-700 bg-purple-50 border-purple-200" };
     case "toolPermission":
-      return { label: "Via tool permissions", className: "text-amber-700 bg-amber-50 border-amber-200" };
+      return { label: "Через права инструментов", className: "text-amber-700 bg-amber-50 border-amber-200" };
   }
 };
 
@@ -181,10 +181,10 @@ const MCPToolPermissions: React.FC<MCPToolPermissionsProps> = ({
     <div className="space-y-4">
       {serversFailed && (
         <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p className="text-sm text-yellow-800 font-medium">Unable to load MCP servers</p>
+          <p className="text-sm text-yellow-800 font-medium">Не удалось загрузить MCP-серверы</p>
           <p className="text-sm text-yellow-700 mt-1">
-            This list is incomplete; servers granted directly or through an access group may be missing. Reload before
-            changing tool permissions
+            Список неполон; серверы, выданные напрямую или через группу доступа, могут отсутствовать. Перезагрузите страницу перед
+            изменении прав инструментов
           </p>
         </div>
       )}
@@ -193,19 +193,18 @@ const MCPToolPermissions: React.FC<MCPToolPermissionsProps> = ({
         accessGroupsLoaded &&
         emptyMcpAccessGroups(allServers, populatedAccessGroups, selectedAccessGroups).map((group) => (
           <div key={group} className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-sm text-yellow-800 font-medium">Access group &quot;{group}&quot; has 0 servers</p>
+            <p className="text-sm text-yellow-800 font-medium">В группе доступа &quot;{group}&quot; 0 серверов</p>
             <p className="text-sm text-yellow-700 mt-1">
-              No MCP server lists this group, so it grants nothing. A server defined in config.yaml joins a group
-              through its <code>access_groups</code> key; <code>mcp_access_groups</code> is ignored there
+              Ни один MCP-сервер не указывает эту группу, поэтому она ничего не даёт. Сервер из config.yaml входит в группу через свой <code>access_groups</code> key; <code>mcp_access_groups</code> is ignored there
             </p>
           </div>
         ))}
 
       {toolsetsFailed && selectedToolsets.length > 0 && (
         <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <p className="text-sm text-yellow-800 font-medium">Unable to load toolsets</p>
+          <p className="text-sm text-yellow-800 font-medium">Не удалось загрузить наборы инструментов</p>
           <p className="text-sm text-yellow-700 mt-1">
-            Servers reached through the selected toolsets are not listed below
+            Серверы, доступные через выбранные наборы инструментов, не показаны ниже
           </p>
         </div>
       )}
@@ -269,11 +268,11 @@ const MCPToolPermissions: React.FC<MCPToolPermissionsProps> = ({
                   >
                     <label className="flex items-center gap-2 text-sm">
                       <RadioGroupItem value="crud" />
-                      Risk Groups
+                      Группы риска
                     </label>
                     <label className="flex items-center gap-2 text-sm">
                       <RadioGroupItem value="flat" />
-                      Flat List
+                      Плоский список
                     </label>
                   </RadioGroup>
                 )}
@@ -285,7 +284,7 @@ const MCPToolPermissions: React.FC<MCPToolPermissionsProps> = ({
                       onClick={() => handleSelectAll(entry)}
                       disabled={isLoading}
                     >
-                      Select All
+                      Выбрать всё
                     </button>
                     <button
                       type="button"
@@ -293,7 +292,7 @@ const MCPToolPermissions: React.FC<MCPToolPermissionsProps> = ({
                       onClick={() => writeAllowedTools(entry, [])}
                       disabled={isLoading}
                     >
-                      Deselect All
+                      Снять выделение
                     </button>
                   </>
                 )}
@@ -313,7 +312,7 @@ const MCPToolPermissions: React.FC<MCPToolPermissionsProps> = ({
               {/* Error */}
               {error && !isLoading && (
                 <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-center">
-                  <p className="text-sm text-destructive font-medium">Unable to load tools</p>
+                  <p className="text-sm text-destructive font-medium">Не удалось загрузить инструменты</p>
                   <p className="text-sm text-destructive mt-1">{error}</p>
                 </div>
               )}
@@ -366,7 +365,7 @@ const MCPToolPermissions: React.FC<MCPToolPermissionsProps> = ({
               {/* Empty State */}
               {!isLoading && !error && tools.length === 0 && (
                 <div className="text-center py-6">
-                  <p className="text-sm text-muted-foreground">No tools available</p>
+                  <p className="text-sm text-muted-foreground">Нет доступных инструментов</p>
                 </div>
               )}
             </div>

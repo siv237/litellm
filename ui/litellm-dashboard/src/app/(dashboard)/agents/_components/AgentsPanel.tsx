@@ -124,7 +124,7 @@ const AgentsPanel: React.FC<AgentsPanelProps> = ({ accessToken, userRole, teams 
       await refetchAgents(healthCheckEnabled);
     } catch (error) {
       console.error("Error deleting agent:", error);
-      toast.fromError("Failed to delete agent");
+      toast.fromError("Не удалось удалить агента");
     } finally {
       setIsDeleting(false);
       setAgentToDelete(null);
@@ -138,24 +138,22 @@ const AgentsPanel: React.FC<AgentsPanelProps> = ({ accessToken, userRole, teams 
   return (
     <div className="w-full mx-auto flex-auto overflow-y-auto m-8 p-2">
       <div className="flex flex-col gap-2 mb-4">
-        <h1 className="text-2xl font-bold">Agents</h1>
+        <h1 className="text-2xl font-bold">Агенты</h1>
         <p className="text-sm text-muted-foreground">
-          List of A2A-spec agents that are available to be used in your organization. Go to AI Hub, to make agents
-          public.
+          Список агентов по спецификации A2A, доступных для использования в вашей организации. Чтобы сделать агентов публичными, откройте AI Hub.
         </p>
         <Alert className="mb-3">
           <Info />
-          <AlertTitle>Why do agents need keys?</AlertTitle>
+          <AlertTitle>Зачем агентам нужны ключи?</AlertTitle>
           <AlertDescription>
-            Keys scope access to an agent and allow it to call MCP tools. Assign a key when creating an agent or from
-            the Virtual Keys page.
+            Ключи ограничивают доступ к агенту и разрешают ему вызывать MCP-инструменты. Назначьте ключ при создании агента или на странице «Виртуальные ключи».
           </AlertDescription>
         </Alert>
         {isAdmin && (
           <div className="mt-2 flex items-center gap-4">
             <Button onClick={handleAddAgent} disabled={!accessToken}>
               <Plus />
-              Add New Agent
+              Добавить нового агента
             </Button>
           </div>
         )}
@@ -198,9 +196,9 @@ const AgentsPanel: React.FC<AgentsPanelProps> = ({ accessToken, userRole, teams 
         >
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Agent</AlertDialogTitle>
+              <AlertDialogTitle>Удалить агента</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete agent: {agentToDelete.name}? This action cannot be undone.
+                Вы уверены, что хотите удалить агента {agentToDelete.name}? Это действие нельзя отменить.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

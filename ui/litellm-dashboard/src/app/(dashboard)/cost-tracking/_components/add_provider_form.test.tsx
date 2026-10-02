@@ -2,91 +2,91 @@ import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders } from "../../../../../tests/test-utils";
-import AddProviderForm from "./add_provider_form";
-import { DiscountConfig } from "./types";
-import { Providers, providerLogoMap } from "@/components/provider_info_helpers";
+import { renderWithПровайдерs } from "../../../../../tests/test-utils";
+import AddПровайдерForm from "./add_provider_form";
+import { DiscountКонфигурация } from "./types";
+import { Провайдерs, providerLogoMap } from "@/components/provider_info_helpers";
 
 const DEFAULT_PROPS = {
-  discountConfig: {} as DiscountConfig,
-  selectedProvider: undefined,
+  discountКонфигурация: {} as DiscountКонфигурация,
+  selectedПровайдер: undefined,
   newDiscount: "",
-  onProviderChange: vi.fn(),
+  onПровайдерChange: vi.fn(),
   onDiscountChange: vi.fn(),
-  onAddProvider: vi.fn(),
+  onAddПровайдер: vi.fn(),
 };
 
-describe("AddProviderForm", () => {
+describe("AddПровайдерForm", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should render", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} />);
+    renderWithПровайдерs(<AddПровайдерForm {...DEFAULT_PROPS} />);
     expect(screen.getByRole("button", { name: /add provider discount/i })).toBeInTheDocument();
   });
 
   it("should render the discount percentage input field", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} />);
+    renderWithПровайдерs(<AddПровайдерForm {...DEFAULT_PROPS} />);
     expect(screen.getByPlaceholderText("5")).toBeInTheDocument();
   });
 
   it("should disable the submit button when no provider is selected and no discount is entered", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} />);
+    renderWithПровайдерs(<AddПровайдерForm {...DEFAULT_PROPS} />);
     expect(screen.getByRole("button", { name: /add provider discount/i })).toBeDisabled();
   });
 
   it("should disable the submit button when a provider is selected but no discount is entered", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedProvider="OpenAI" newDiscount="" />);
+    renderWithПровайдерs(<AddПровайдерForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" newDiscount="" />);
     expect(screen.getByRole("button", { name: /add provider discount/i })).toBeDisabled();
   });
 
   it("should disable the submit button when a discount is entered but no provider is selected", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedProvider={undefined} newDiscount="5" />);
+    renderWithПровайдерs(<AddПровайдерForm {...DEFAULT_PROPS} selectedПровайдер={undefined} newDiscount="5" />);
     expect(screen.getByRole("button", { name: /add provider discount/i })).toBeDisabled();
   });
 
   it("should enable the submit button when both a provider and a discount value are provided", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedProvider="OpenAI" newDiscount="5" />);
+    renderWithПровайдерs(<AddПровайдерForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" newDiscount="5" />);
     expect(screen.getByRole("button", { name: /add provider discount/i })).toBeEnabled();
   });
 
-  it("should call onAddProvider when the enabled submit button is clicked", async () => {
-    const onAddProvider = vi.fn();
+  it("should call onAddПровайдер when the enabled submit button is clicked", async () => {
+    const onAddПровайдер = vi.fn();
     const user = userEvent.setup();
-    renderWithProviders(
-      <AddProviderForm {...DEFAULT_PROPS} selectedProvider="OpenAI" newDiscount="5" onAddProvider={onAddProvider} />,
+    renderWithПровайдерs(
+      <AddПровайдерForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" newDiscount="5" onAddПровайдер={onAddПровайдер} />,
     );
 
     await user.click(screen.getByRole("button", { name: /add provider discount/i }));
-    expect(onAddProvider).toHaveBeenCalledTimes(1);
+    expect(onAddПровайдер).toHaveBeenCalledВремяs(1);
   });
 
   it("should report the edited discount as the user types", async () => {
     const onDiscountChange = vi.fn();
     const user = userEvent.setup();
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} newDiscount="1" onDiscountChange={onDiscountChange} />);
+    renderWithПровайдерs(<AddПровайдерForm {...DEFAULT_PROPS} newDiscount="1" onDiscountChange={onDiscountChange} />);
 
     await user.type(screen.getByPlaceholderText("5"), "5");
     expect(onDiscountChange).toHaveBeenCalledWith("15");
   });
 
   it("should show the percent sign next to the discount input", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} />);
+    renderWithПровайдерs(<AddПровайдерForm {...DEFAULT_PROPS} />);
     expect(screen.getByText("%")).toBeInTheDocument();
   });
 
   it("renders the selected provider's bundled logo via the shared Logo component", async () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedProvider="OpenAI" />);
+    renderWithПровайдерs(<AddПровайдерForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" />);
 
-    const logo = await screen.findByRole("img", { name: `${Providers.OpenAI} logo` });
-    expect(logo).toHaveAttribute("src", providerLogoMap[Providers.OpenAI]);
+    const logo = await screen.findByRole("img", { name: `${Провайдерs.OpenAI} logo` });
+    expect(logo).toHaveAttribute("src", providerLogoMap[Провайдерs.OpenAI]);
   });
 
   it("falls back to a letter avatar for a selected provider that has no bundled logo", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedProvider="PG_VECTOR" />);
+    renderWithПровайдерs(<AddПровайдерForm {...DEFAULT_PROPS} selectedПровайдер="PG_VECTOR" />);
 
-    expect(screen.queryByRole("img", { name: `${Providers.PG_VECTOR} logo` })).not.toBeInTheDocument();
-    expect(screen.getByText(Providers.PG_VECTOR.charAt(0))).toBeInTheDocument();
+    expect(screen.queryByRole("img", { name: `${Провайдерs.PG_VECTOR} logo` })).not.toBeInTheDocument();
+    expect(screen.getByText(Провайдерs.PG_VECTOR.charAt(0))).toBeInTheDocument();
   });
 });

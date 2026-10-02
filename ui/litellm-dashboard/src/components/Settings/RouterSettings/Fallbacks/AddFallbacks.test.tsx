@@ -1,24 +1,24 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import AddFallbacks, { Fallbacks } from "./AddFallbacks";
-import * as fetchModelsModule from "@/components/llm_calls/fetch_models";
+import AddРезервные модели, { Резервные модели } from "./AddРезервные модели";
+import * as fetchРежимlsModule from "@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs";
 import { toast } from "@/lib/toast";
 
-vi.mock("@/components/llm_calls/fetch_models", () => ({
-  fetchAvailableModels: vi.fn(),
+vi.mock("@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => ({
+  fetchAvailableРежимls: vi.fn(),
 }));
 
-vi.mock("./FallbackSelectionForm", () => ({
-  FallbackSelectionForm: ({ groups, onGroupsChange }: any) => {
+vi.mock("./FallbackВыбратьionForm", () => ({
+  FallbackВыбратьionForm: ({ groups, onGroupsChange }: any) => {
     const handleUpdateGroup = () => {
       if (groups.length > 0) {
         const updatedGroups = groups.map((group: any, index: number) => {
-          if (index === 0 && !group.primaryModel) {
+          if (index === 0 && !group.primaryРежимl) {
             return {
               ...group,
-              primaryModel: "gpt-4",
-              fallbackModels: ["gpt-3.5-turbo"],
+              primaryРежимl: "gpt-4",
+              fallbackРежимls: ["gpt-3.5-turbo"],
             };
           }
           return group;
@@ -35,7 +35,7 @@ vi.mock("./FallbackSelectionForm", () => ({
         <div data-testid="groups-count">{groups.length}</div>
         {groups.map((group: any) => (
           <div key={group.id} data-testid={`group-${group.id}`}>
-            Primary: {group.primaryModel || "None"}, Fallbacks: {group.fallbackModels.length}
+            Primary: {group.primaryРежимl || "None"}, Резервные модели: {group.fallbackРежимls.length}
           </div>
         ))}
       </div>
@@ -43,34 +43,34 @@ vi.mock("./FallbackSelectionForm", () => ({
   },
 }));
 
-describe("AddFallbacks", () => {
+describe("AddРезервные модели", () => {
   const mockOnChange = vi.fn();
-  const mockAccessToken = "test-token";
-  const mockModelGroups = [
-    { model_group: "gpt-4", mode: "chat" },
-    { model_group: "gpt-3.5-turbo", mode: "chat" },
-    { model_group: "claude-3-opus", mode: "chat" },
+  const mockAccessТокен = "test-token";
+  const mockРежимlGroups = [
+    { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4", mode: "chat" },
+    { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo", mode: "chat" },
+    { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "claude-3-opus", mode: "chat" },
   ];
 
   const defaultProps = {
-    accessToken: mockAccessToken,
-    value: [] as Fallbacks,
+    accessТокен: mockAccessТокен,
+    value: [] as Резервные модели,
     onChange: mockOnChange,
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked(fetchModelsModule.fetchAvailableModels).mockResolvedValue(mockModelGroups);
+    vi.clearВсеMocks();
+    vi.mocked(fetchРежимlsModule.fetchAvailableРежимls).mockResolvedЗначение(mockРежимlGroups);
   });
 
   it("should render the component", () => {
-    render(<AddFallbacks {...defaultProps} />);
+    render(<AddРезервные модели {...defaultProps} />);
     expect(screen.getByRole("button", { name: /add fallbacks/i })).toBeInTheDocument();
   });
 
-  it("should open modal when Add Fallbacks button is clicked", async () => {
+  it("should open modal when Add Резервные модели button is clicked", async () => {
     const user = userEvent.setup();
-    render(<AddFallbacks {...defaultProps} />);
+    render(<AddРезервные модели {...defaultProps} />);
 
     const addButton = screen.getByRole("button", { name: /add fallbacks/i });
     await user.click(addButton);
@@ -80,21 +80,21 @@ describe("AddFallbacks", () => {
     });
   });
 
-  it("should fetch available models when modal opens", async () => {
+  it("should fetch available Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs when modal opens", async () => {
     const user = userEvent.setup();
-    render(<AddFallbacks {...defaultProps} />);
+    render(<AddРезервные модели {...defaultProps} />);
 
     const addButton = screen.getByRole("button", { name: /add fallbacks/i });
     await user.click(addButton);
 
     await waitFor(() => {
-      expect(fetchModelsModule.fetchAvailableModels).toHaveBeenCalledWith(mockAccessToken);
+      expect(fetchРежимlsModule.fetchAvailableРежимls).toHaveBeenCalledWith(mockAccessТокен);
     });
   });
 
   it("should close modal when Cancel button is clicked", async () => {
     const user = userEvent.setup();
-    render(<AddFallbacks {...defaultProps} />);
+    render(<AddРезервные модели {...defaultProps} />);
 
     const addButton = screen.getByRole("button", { name: /add fallbacks/i });
     await user.click(addButton);
@@ -113,7 +113,7 @@ describe("AddFallbacks", () => {
 
   it("should show error when saving incomplete groups", async () => {
     const user = userEvent.setup();
-    render(<AddFallbacks {...defaultProps} />);
+    render(<AddРезервные модели {...defaultProps} />);
 
     const addButton = screen.getByRole("button", { name: /add fallbacks/i });
     await user.click(addButton);
@@ -137,7 +137,7 @@ describe("AddFallbacks", () => {
 
   it("should show error message when saving incomplete groups", async () => {
     const user = userEvent.setup();
-    render(<AddFallbacks {...defaultProps} />);
+    render(<AddРезервные модели {...defaultProps} />);
 
     const addButton = screen.getByRole("button", { name: /add fallbacks/i });
     await user.click(addButton);
@@ -156,8 +156,8 @@ describe("AddFallbacks", () => {
 
   it("should call onChange with new fallbacks when Save is clicked with valid configuration", async () => {
     const user = userEvent.setup();
-    mockOnChange.mockResolvedValue(undefined);
-    render(<AddFallbacks {...defaultProps} />);
+    mockOnChange.mockResolvedЗначение(undefined);
+    render(<AddРезервные модели {...defaultProps} />);
 
     const addButton = screen.getByRole("button", { name: /add fallbacks/i });
     await user.click(addButton);
@@ -185,16 +185,16 @@ describe("AddFallbacks", () => {
       expect(mockOnChange).toHaveBeenCalled();
       const callArgs = mockOnChange.mock.calls[0][0];
       expect(callArgs).toHaveLength(1);
-      expect(callArgs[0]).toHaveProperty("gpt-4");
+      expect(callArgs[0]).toHaveСвойство("gpt-4");
       expect(callArgs[0]["gpt-4"]).toContain("gpt-3.5-turbo");
     });
   });
 
   it("should append new fallbacks to existing value", async () => {
     const user = userEvent.setup();
-    const existingFallbacks: Fallbacks = [{ "existing-model": ["fallback-1"] }];
-    mockOnChange.mockResolvedValue(undefined);
-    render(<AddFallbacks {...defaultProps} value={existingFallbacks} />);
+    const existingРезервные модели: Резервные модели = [{ "existing-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию": ["fallback-1"] }];
+    mockOnChange.mockResolvedЗначение(undefined);
+    render(<AddРезервные модели {...defaultProps} value={existingРезервные модели} />);
 
     const addButton = screen.getByRole("button", { name: /add fallbacks/i });
     await user.click(addButton);
@@ -221,14 +221,14 @@ describe("AddFallbacks", () => {
       expect(mockOnChange).toHaveBeenCalled();
       const callArgs = mockOnChange.mock.calls[0][0];
       expect(callArgs).toHaveLength(2);
-      expect(callArgs[0]).toEqual({ "existing-model": ["fallback-1"] });
-      expect(callArgs[1]).toHaveProperty("gpt-4");
+      expect(callArgs[0]).toEqual({ "existing-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию": ["fallback-1"] });
+      expect(callArgs[1]).toHaveСвойство("gpt-4");
     });
   });
 
   it("should reset form state when modal is closed", async () => {
     const user = userEvent.setup();
-    render(<AddFallbacks {...defaultProps} />);
+    render(<AddРезервные модели {...defaultProps} />);
 
     const addButton = screen.getByRole("button", { name: /add fallbacks/i });
     await user.click(addButton);
@@ -254,9 +254,9 @@ describe("AddFallbacks", () => {
 
   it("should handle onChange error gracefully", async () => {
     const user = userEvent.setup();
-    const error = new Error("Save failed");
-    mockOnChange.mockRejectedValue(error);
-    render(<AddFallbacks {...defaultProps} />);
+    const error = new Ошибка("Save failed");
+    mockOnChange.mockRejectedЗначение(error);
+    render(<AddРезервные модели {...defaultProps} />);
 
     const addButton = screen.getByRole("button", { name: /add fallbacks/i });
     await user.click(addButton);
@@ -286,7 +286,7 @@ describe("AddFallbacks", () => {
 
   it("should not call onChange when onChange prop is not provided", async () => {
     const user = userEvent.setup();
-    render(<AddFallbacks accessToken={mockAccessToken} value={[]} />);
+    render(<AddРезервные модели accessТокен={mockAccessТокен} value={[]} />);
 
     const addButton = screen.getByRole("button", { name: /add fallbacks/i });
     await user.click(addButton);

@@ -63,15 +63,14 @@ const ImportMCPServers: React.FC<ImportMCPServersProps> = ({ accessToken, open, 
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Import MCP Connectors</DialogTitle>
+          <DialogTitle>Импорт MCP-коннекторов</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Paste an Anthropic connector configuration: the <code>mcpServers</code> mapping from a Claude Desktop /
-            Claude Code config file, or the <code>mcp_servers</code> array from the Anthropic Messages API.
+            Вставьте конфигурацию коннекторов Anthropic: <code>mcpServers</code> маппинг из файла конфигурации Claude Desktop / Claude Code или <code>mcp_servers</code> массив из Anthropic Messages API.
           </p>
           <Textarea
-            aria-label="Connector JSON"
+            aria-label="JSON коннектора"
             value={configText}
             onChange={(e) => setConfigText(e.target.value)}
             placeholder={PLACEHOLDER}
@@ -87,13 +86,13 @@ const ImportMCPServers: React.FC<ImportMCPServersProps> = ({ accessToken, open, 
             <div className="space-y-2 text-sm">
               {result.imported.length > 0 && (
                 <div>
-                  <span className="font-semibold">Imported:</span>{" "}
+                  <span className="font-semibold">Импортировано:</span>{" "}
                   {result.imported.map((entry) => entry.alias || entry.name).join(", ")}
                 </div>
               )}
               {result.skipped.length > 0 && (
                 <div>
-                  <span className="font-semibold">Skipped:</span>
+                  <span className="font-semibold">Пропущено:</span>
                   <ul className="ml-4 list-disc">
                     {result.skipped.map((entry) => (
                       <li key={entry.name}>
@@ -105,7 +104,7 @@ const ImportMCPServers: React.FC<ImportMCPServersProps> = ({ accessToken, open, 
               )}
               {result.errors.length > 0 && (
                 <div>
-                  <span className="font-semibold">Failed:</span>
+                  <span className="font-semibold">Ошибка:</span>
                   <ul className="ml-4 list-disc">
                     {result.errors.map((entry) => (
                       <li key={entry.name}>

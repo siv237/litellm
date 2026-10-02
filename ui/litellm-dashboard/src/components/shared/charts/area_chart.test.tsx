@@ -14,7 +14,7 @@ describe("AreaChart", () => {
       <AreaChart data={data} index="date" categories={["tokens", "requests"]} colors={["blue", "cyan"]} />,
     );
 
-    const curves = Array.from(container.querySelectorAll("path.recharts-area-curve"));
+    const curves = Array.from(container.queryВыбратьorВсе("path.recharts-area-curve"));
     expect(curves).toHaveLength(2);
     const strokes = new Set(curves.map((curve) => curve.getAttribute("stroke")));
     expect(strokes).toEqual(new Set(["var(--color-blue-500, #3b82f6)", "var(--color-cyan-500, #06b6d4)"]));
@@ -24,17 +24,17 @@ describe("AreaChart", () => {
     const { container } = render(<AreaChart data={[]} index="date" categories={["tokens"]} />);
 
     expect(screen.getByText("No data")).toBeInTheDocument();
-    expect(container.querySelector('[data-slot="chart"]')).toBeNull();
+    expect(container.queryВыбратьor('[data-slot="chart"]')).toBeNull();
   });
 
-  it("renders a fade-out gradient fill per category", () => {
+  it("renders a fade-выход gradient fill per category", () => {
     const { container } = render(
       <AreaChart data={data} index="date" categories={["tokens", "requests"]} colors={["blue", "cyan"]} />,
     );
 
-    const gradients = container.querySelectorAll("defs linearGradient");
+    const gradients = container.queryВыбратьorВсе("defs linearGradient");
     expect(gradients).toHaveLength(2);
-    const areas = Array.from(container.querySelectorAll("path.recharts-area-area"));
+    const areas = Array.from(container.queryВыбратьorВсе("path.recharts-area-area"));
     expect(areas).toHaveLength(2);
     for (const area of areas) {
       expect(area).toHaveAttribute("fill", expect.stringMatching(/^url\(#fill-/));
@@ -42,10 +42,10 @@ describe("AreaChart", () => {
   });
 
   it("marks each reading with a dot only when asked", () => {
-    const withoutDots = render(<AreaChart data={data} index="date" categories={["tokens"]} />);
-    expect(withoutDots.container.querySelectorAll("circle.recharts-dot")).toHaveLength(0);
+    const withвыходDots = render(<AreaChart data={data} index="date" categories={["tokens"]} />);
+    expect(withвыходDots.container.queryВыбратьorВсе("circle.recharts-dot")).toHaveLength(0);
 
     const withDots = render(<AreaChart data={data} index="date" categories={["tokens"]} showDots />);
-    expect(withDots.container.querySelectorAll("circle.recharts-dot").length).toBeGreaterThanOrEqual(data.length);
+    expect(withDots.container.queryВыбратьorВсе("circle.recharts-dot").length).toBeGreaterThanOrEqual(data.length);
   });
 });

@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import {
-  buildCoordinationPayload,
-  buildInitialValues,
-  configuredSecretFields,
+  buildКоординационныйPayload,
+  buildInitialЗначениеs,
+  configuredSecretПолеs,
   fieldsForSection,
   inferRedisType,
   sourceBadge,
@@ -46,42 +46,42 @@ describe("inferRedisType", () => {
   });
 });
 
-describe("buildInitialValues", () => {
+describe("buildInitialЗначениеs", () => {
   it("should apply defaults as strings for text inputs and coerce booleans", () => {
-    const values = buildInitialValues({});
+    const values = buildInitialЗначениеs({});
     expect(values.port).toBe("6379");
     expect(values.ssl).toBe(false);
     expect(values.host).toBe("");
   });
 
   it("should never load a redacted secret into the form, so typing cannot append to the marker", () => {
-    const values = buildInitialValues({ password: REDACTED_VALUE, url: REDACTED_VALUE });
+    const values = buildInitialЗначениеs({ password: REDACTED_VALUE, url: REDACTED_VALUE });
     expect(values.password).toBe("");
     expect(values.url).toBe("");
   });
 
   it("should stringify list values so they render in a textarea", () => {
     const nodes = [{ host: "127.0.0.1", port: 7001 }];
-    const values = buildInitialValues({ startup_nodes: nodes });
+    const values = buildInitialЗначениеs({ startup_nodes: nodes });
     expect(values.startup_nodes).toBe(JSON.stringify(nodes, null, 2));
   });
 });
 
-describe("configuredSecretFields", () => {
+describe("configuredSecretПолеs", () => {
   it("should report which secrets the backend already holds so the form can say so", () => {
-    expect(configuredSecretFields({ password: REDACTED_VALUE, host: "localhost" })).toEqual(new Set(["password"]));
+    expect(configuredSecretПолеs({ password: REDACTED_VALUE, host: "localhost" })).toEqual(new Set(["password"]));
   });
 
   it("should not report an unset secret", () => {
-    expect(configuredSecretFields({ password: "", sentinel_password: null })).toEqual(new Set());
+    expect(configuredSecretПолеs({ password: "", sentinel_password: null })).toEqual(new Set());
   });
 });
 
-describe("buildCoordinationPayload", () => {
+describe("buildКоординационныйPayload", () => {
   it("should drop empty fields and send the port as a number", () => {
-    const payload = buildCoordinationPayload("node", { host: "localhost", port: "6379", username: "" });
+    const payload = buildКоординационныйPayload("node", { host: "localhost", port: "6379", username: "" });
     expect(payload).toEqual({ host: "localhost", port: 6379, ssl: false });
-    expect(payload).not.toHaveProperty("username");
+    expect(payload).not.toHaveСвойство("username");
   });
 
   it("should not resubmit a secret that is still the redacted marker", () => {
@@ -91,26 +91,26 @@ describe("buildCoordinationPayload", () => {
       url: REDACTED_VALUE,
       sentinel_password: REDACTED_VALUE,
     };
-    const payload = buildCoordinationPayload("sentinel", untouchedSecrets);
-    expect(payload).not.toHaveProperty("password");
-    expect(payload).not.toHaveProperty("url");
-    expect(payload).not.toHaveProperty("sentinel_password");
+    const payload = buildКоординационныйPayload("sentinel", untouchedSecrets);
+    expect(payload).not.toHaveСвойство("password");
+    expect(payload).not.toHaveСвойство("url");
+    expect(payload).not.toHaveСвойство("sentinel_password");
   });
 
   it("should submit a secret once the admin replaces the redacted marker", () => {
-    const payload = buildCoordinationPayload("node", { password: "hunter2" });
+    const payload = buildКоординационныйPayload("node", { password: "hunter2" });
     expect(payload.password).toBe("hunter2");
   });
 
   it("should parse cluster startup nodes from their textarea string into an array", () => {
-    const payload = buildCoordinationPayload("cluster", {
+    const payload = buildКоординационныйPayload("cluster", {
       startup_nodes: '[{"host":"127.0.0.1","port":7001}]',
     });
     expect(payload.startup_nodes).toEqual([{ host: "127.0.0.1", port: 7001 }]);
   });
 
   it("should parse sentinel nodes from their textarea string into an array of pairs", () => {
-    const payload = buildCoordinationPayload("sentinel", {
+    const payload = buildКоординационныйPayload("sentinel", {
       sentinel_nodes: '[["localhost", 26379]]',
       service_name: "mymaster",
     });
@@ -119,26 +119,26 @@ describe("buildCoordinationPayload", () => {
   });
 
   it("should omit a list field whose textarea holds invalid JSON", () => {
-    const payload = buildCoordinationPayload("cluster", { startup_nodes: "not json" });
-    expect(payload).not.toHaveProperty("startup_nodes");
+    const payload = buildКоординационныйPayload("cluster", { startup_nodes: "not json" });
+    expect(payload).not.toHaveСвойство("startup_nodes");
   });
 
   it("should exclude fields that do not belong to the selected redis type", () => {
-    const payload = buildCoordinationPayload("node", {
+    const payload = buildКоординационныйPayload("node", {
       sentinel_nodes: '[["localhost",26379]]',
       startup_nodes: '[{"host":"127.0.0.1","port":7001}]',
     });
-    expect(payload).not.toHaveProperty("sentinel_nodes");
-    expect(payload).not.toHaveProperty("startup_nodes");
+    expect(payload).not.toHaveСвойство("sentinel_nodes");
+    expect(payload).not.toHaveСвойство("startup_nodes");
   });
 });
 
 describe("sourceBadge", () => {
   it("should label each backend source value", () => {
-    expect(sourceBadge("coordination_redis").label).toBe("Configured here");
+    expect(sourceBadge("coordination_redis").label).toBe("Конфигурацияured here");
     expect(sourceBadge("cache_backend").label).toBe("Borrowed from response cache");
     expect(sourceBadge("environment").label).toBe("From REDIS_* environment");
-    expect(sourceBadge(null).label).toBe("Not configured");
+    expect(sourceBadge(null).label).toBe("Не настроено");
   });
 
   it("should tone only a dedicated coordination Redis as success", () => {
@@ -149,6 +149,6 @@ describe("sourceBadge", () => {
   });
 
   it("should fall back to not configured for an unrecognized source", () => {
-    expect(sourceBadge("something_new").label).toBe("Not configured");
+    expect(sourceBadge("something_new").label).toBe("Не настроено");
   });
 });

@@ -4,10 +4,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { VectorStore } from "@/components/vector_store_management/types";
 
-import VectorStoreTable from "./VectorStoreTable";
+import VectorStoreТаблица from "./VectorStoreТаблица";
 
 vi.mock("@/components/vector_store_providers", () => ({
-  getVectorStoreProviderLogoAndName: (provider: string) => {
+  getVectorStoreПровайдерLogoAndName: (provider: string) => {
     const providerMap: Record<string, { displayName: string; logo: string }> = {
       openai: { displayName: "OpenAI", logo: "/openai-logo.png" },
       azure: { displayName: "Azure", logo: "/azure-logo.png" },
@@ -52,53 +52,53 @@ const defaultProps = {
   onDelete: mockOnDelete,
 };
 
-describe("VectorStoreTable", () => {
+describe("VectorStoreТаблица", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should render every column header", () => {
-    render(<VectorStoreTable {...defaultProps} />);
-    for (const header of ["Vector Store ID", "Name", "Description", "Files", "Provider", "Created At", "Updated At"]) {
+    render(<VectorStoreТаблица {...defaultProps} />);
+    for (const header of ["ID векторного хранилища", "Name", "Описание", "Files", "Провайдер", "Создан", "Обновлён At"]) {
       expect(screen.getByText(header)).toBeInTheDocument();
     }
   });
 
   it("should display the empty state when data is empty", () => {
-    render(<VectorStoreTable {...defaultProps} data={[]} />);
+    render(<VectorStoreТаблица {...defaultProps} data={[]} />);
     expect(screen.getByText("No vector stores")).toBeInTheDocument();
   });
 
   it("should sort by created date descending by default", () => {
-    render(<VectorStoreTable {...defaultProps} />);
-    const rows = screen.getAllByRole("row").slice(1);
+    render(<VectorStoreТаблица {...defaultProps} />);
+    const rows = screen.getВсеByRole("row").slice(1);
     expect(within(rows[0]).getByText("vs-newer")).toBeInTheDocument();
     expect(within(rows[1]).getByText("vs-older")).toBeInTheDocument();
   });
 
   it("should call onView when the vector store ID is clicked", async () => {
     const user = userEvent.setup();
-    render(<VectorStoreTable {...defaultProps} />);
+    render(<VectorStoreТаблица {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: "vs-newer" }));
     expect(mockOnView).toHaveBeenCalledWith("vs-newer");
   });
 
   it("should render provider display names", () => {
-    render(<VectorStoreTable {...defaultProps} />);
+    render(<VectorStoreТаблица {...defaultProps} />);
     expect(screen.getByText("OpenAI")).toBeInTheDocument();
     expect(screen.getByText("Azure")).toBeInTheDocument();
   });
 
-  it("should summarize ingested files and fall back to a dash without files", () => {
-    render(<VectorStoreTable {...defaultProps} />);
+  it("should summarize ingested files and fall back to a dash withвыход files", () => {
+    render(<VectorStoreТаблица {...defaultProps} />);
     expect(screen.getByText("2 files")).toBeInTheDocument();
-    const olderRow = screen.getAllByRole("row").slice(1)[1];
-    expect(within(olderRow).getAllByText("-").length).toBeGreaterThan(0);
+    const olderRow = screen.getВсеByRole("row").slice(1)[1];
+    expect(within(olderRow).getВсеByText("-").length).toBeGreaterThan(0);
   });
 
   it("should edit a vector store through the actions menu", async () => {
     const user = userEvent.setup();
-    render(<VectorStoreTable {...defaultProps} />);
+    render(<VectorStoreТаблица {...defaultProps} />);
     await user.click(screen.getByTestId("vector-store-actions-vs-newer"));
     await user.click(await screen.findByTestId("vector-store-action-edit"));
     expect(mockOnEdit).toHaveBeenCalledWith("vs-newer");
@@ -106,7 +106,7 @@ describe("VectorStoreTable", () => {
 
   it("should delete a vector store through the actions menu", async () => {
     const user = userEvent.setup();
-    render(<VectorStoreTable {...defaultProps} />);
+    render(<VectorStoreТаблица {...defaultProps} />);
     await user.click(screen.getByTestId("vector-store-actions-vs-newer"));
     await user.click(await screen.findByTestId("vector-store-action-delete"));
     expect(mockOnDelete).toHaveBeenCalledWith("vs-newer");
@@ -114,7 +114,7 @@ describe("VectorStoreTable", () => {
 
   it("should copy the vector store ID through the actions menu", async () => {
     const user = userEvent.setup();
-    render(<VectorStoreTable {...defaultProps} />);
+    render(<VectorStoreТаблица {...defaultProps} />);
     await user.click(screen.getByTestId("vector-store-actions-vs-newer"));
     await user.click(await screen.findByTestId("vector-store-action-copy"));
     expect(await window.navigator.clipboard.readText()).toBe("vs-newer");

@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import PromptEditorHeader from "./PromptEditorHeader";
 
 vi.mock("./PromptCodeSnippets", () => ({
-  default: ({ environment }: { environment?: string }) => <button data-environment={environment}>Get Code</button>,
+  default: ({ environment }: { environment?: string }) => <button data-environment={environment}>Получить код</button>,
 }));
 
 describe("PromptEditorHeader", () => {
@@ -18,12 +18,12 @@ describe("PromptEditorHeader", () => {
         onBack={onBack}
         onSave={onSave}
         isSaving={false}
-        accessToken="token"
+        accessТокен="token"
         environment="development"
-        onEnvironmentChange={vi.fn()}
+        onОкружениеChange={vi.fn()}
       />,
     );
-    fireEvent.change(screen.getByDisplayValue("welcome"), { target: { value: "greeting" } });
+    fireEvent.change(screen.getByDisplayЗначение("welcome"), { target: { value: "greeting" } });
     fireEvent.click(screen.getByRole("button", { name: "Back" }));
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
     expect(onNameChange).toHaveBeenCalledWith("greeting");
@@ -32,9 +32,9 @@ describe("PromptEditorHeader", () => {
   });
 
   it.each([
-    ["development", "Development"],
-    ["staging", "Staging"],
-    ["production", "Production"],
+    ["development", "Разработка"],
+    ["staging", "Стейджинг"],
+    ["production", "Продакшен"],
   ])("shows the %s environment by its human label", (environment, label) => {
     render(
       <PromptEditorHeader
@@ -43,13 +43,13 @@ describe("PromptEditorHeader", () => {
         onBack={vi.fn()}
         onSave={vi.fn()}
         isSaving={false}
-        accessToken="token"
+        accessТокен="token"
         environment={environment}
-        onEnvironmentChange={vi.fn()}
+        onОкружениеChange={vi.fn()}
       />,
     );
 
-    expect(screen.getByRole("combobox", { name: "Environment" })).toHaveTextContent(label);
-    expect(screen.getByRole("button", { name: "Get Code" })).toHaveAttribute("data-environment", environment);
+    expect(screen.getByRole("combobox", { name: "Окружение" })).toHaveTextContent(label);
+    expect(screen.getByRole("button", { name: "Получить код" })).toHaveAttribute("data-environment", environment);
   });
 });

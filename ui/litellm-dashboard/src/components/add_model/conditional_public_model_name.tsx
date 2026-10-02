@@ -40,17 +40,17 @@ const ANTHROPIC_1M_HEADERS = JSON.stringify({ extra_headers: { "anthropic-beta":
 
 const publicNameTooltipContent = (
   <div className="flex flex-col gap-2 text-left font-normal">
-    <div>The name you specify in your API calls to LiteLLM Proxy</div>
+    <div>Название, которое вы указываете в вызовах API к прокси ruLiteLLM</div>
     <div>
-      <strong>Example:</strong> If you name your public model <code className={tooltipCodeClassName}>example-name</code>
-      , and choose <code className={tooltipCodeClassName}>openai/qwen-plus-latest</code> as the LiteLLM model
+      <strong>Пример:</strong> Если вы назовёте публичную модель <code className={tooltipCodeClassName}>example-name</code>
+      , and choose <code className={tooltipCodeClassName}>openai/qwen-plus-latest</code> как модель ruLiteLLM
     </div>
     <div>
-      <strong>Usage:</strong> You make an API call to the LiteLLM proxy with{" "}
+      <strong>Использование:</strong> Вы делаете вызов API к прокси ruLiteLLM с{" "}
       <code className={tooltipCodeClassName}>model = &quot;example-name&quot;</code>
     </div>
     <div>
-      <strong>Result:</strong> LiteLLM sends <code className={tooltipCodeClassName}>qwen-plus-latest</code> to the
+      <strong>Результат:</strong> ruLiteLLM отправляет <code className={tooltipCodeClassName}>qwen-plus-latest</code> to the
       provider
     </div>
   </div>
@@ -94,7 +94,7 @@ const columns: ColumnDef<ModelMapping>[] = [
     accessorKey: "public_name",
     header: () => (
       <span className="flex items-center">
-        Public Model Name
+        Публичное название модели
         <SimpleTooltip content={publicNameTooltipContent} width="500px" />
       </span>
     ),
@@ -105,8 +105,8 @@ const columns: ColumnDef<ModelMapping>[] = [
     accessorKey: "litellm_model",
     header: () => (
       <span className="flex items-center">
-        LiteLLM Model Name
-        <SimpleTooltip content={<div>The model name LiteLLM will send to the LLM API</div>} width="360px" />
+        Название модели ruLiteLLM
+        <SimpleTooltip content={<div>Название модели, которое ruLiteLLM отправит в API LLM</div>} width="360px" />
       </span>
     ),
   },
@@ -205,8 +205,8 @@ const ConditionalPublicModelName: React.FC = () => {
       name="model_mappings"
       label={
         <span className="flex items-center">
-          Model Mappings
-          <SimpleTooltip content="Map public model names to LiteLLM model names for load balancing" />
+          Маппинги моделей
+          <SimpleTooltip content="Соответствие публичных названий моделей названиям ruLiteLLM для балансировки нагрузки" />
         </span>
       }
       required

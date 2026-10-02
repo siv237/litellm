@@ -1,10 +1,10 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import ToolsCard from "./ToolsCard";
+import ИнструментыCard from "./ИнструментыCard";
 import { Tool } from "./types";
 
-describe("ToolsCard", () => {
-  const mockTools: Tool[] = [
+describe("ИнструментыCard", () => {
+  const mockИнструменты: Tool[] = [
     {
       name: "Calculator",
       description: "Performs mathematical calculations",
@@ -25,17 +25,17 @@ describe("ToolsCard", () => {
   };
 
   it("should render the component", () => {
-    render(<ToolsCard {...defaultProps} />);
-    expect(screen.getByText("Tools")).toBeInTheDocument();
+    render(<ИнструментыCard {...defaultProps} />);
+    expect(screen.getByText("Инструменты")).toBeInTheDocument();
   });
 
   it("should display no tools message when tools array is empty", () => {
-    render(<ToolsCard {...defaultProps} />);
+    render(<ИнструментыCard {...defaultProps} />);
     expect(screen.getByText("No tools added")).toBeInTheDocument();
   });
 
   it("should render tools when provided", () => {
-    render(<ToolsCard {...defaultProps} tools={mockTools} />);
+    render(<ИнструментыCard {...defaultProps} tools={mockИнструменты} />);
 
     expect(screen.getByText("Calculator")).toBeInTheDocument();
     expect(screen.getByText("Performs mathematical calculations")).toBeInTheDocument();
@@ -45,38 +45,38 @@ describe("ToolsCard", () => {
 
   it("should call onAddTool when Add button is clicked", () => {
     const mockOnAddTool = vi.fn();
-    render(<ToolsCard {...defaultProps} onAddTool={mockOnAddTool} />);
+    render(<ИнструментыCard {...defaultProps} onAddTool={mockOnAddTool} />);
 
     act(() => {
       fireEvent.click(screen.getByRole("button", { name: /add/i }));
     });
 
-    expect(mockOnAddTool).toHaveBeenCalledTimes(1);
+    expect(mockOnAddTool).toHaveBeenCalledВремяs(1);
   });
 
   it("should call onEditTool with correct index when Edit button is clicked", () => {
     const mockOnEditTool = vi.fn();
-    render(<ToolsCard {...defaultProps} tools={mockTools} onEditTool={mockOnEditTool} />);
+    render(<ИнструментыCard {...defaultProps} tools={mockИнструменты} onEditTool={mockOnEditTool} />);
 
-    const editButtons = screen.getAllByText("Edit");
+    const editButtons = screen.getВсеByText("Edit");
     act(() => {
       fireEvent.click(editButtons[0]);
     });
 
     expect(mockOnEditTool).toHaveBeenCalledWith(0);
-    expect(mockOnEditTool).toHaveBeenCalledTimes(1);
+    expect(mockOnEditTool).toHaveBeenCalledВремяs(1);
   });
 
   it("should call onRemoveTool with correct index when remove button is clicked", () => {
     const mockOnRemoveTool = vi.fn();
-    render(<ToolsCard {...defaultProps} tools={mockTools} onRemoveTool={mockOnRemoveTool} />);
+    render(<ИнструментыCard {...defaultProps} tools={mockИнструменты} onRemoveTool={mockOnRemoveTool} />);
 
-    const removeButtons = screen.getAllByRole("button", { name: /remove/i });
+    const removeButtons = screen.getВсеByRole("button", { name: /remove/i });
     act(() => {
       fireEvent.click(removeButtons[0]);
     });
 
     expect(mockOnRemoveTool).toHaveBeenCalledWith(0);
-    expect(mockOnRemoveTool).toHaveBeenCalledTimes(1);
+    expect(mockOnRemoveTool).toHaveBeenCalledВремяs(1);
   });
 });

@@ -80,7 +80,7 @@ function EndpointRowActions({ endpoint, onEndpointClick, onDeleteClick }: Endpoi
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open endpoint actions"
+        aria-label="Действия с эндпоинтом"
         data-testid={`endpoint-actions-${endpointId || endpoint.path}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -147,8 +147,8 @@ export const getPassThroughEndpointsTableColumns = ({
   },
   {
     id: "source",
-    meta: { title: "Source", skeleton: "badge" },
-    header: "Source",
+    meta: { title: "Источник", skeleton: "badge" },
+    header: "Источник",
     size: 100,
     enableSorting: false,
     cell: ({ row }) => {
@@ -159,8 +159,8 @@ export const getPassThroughEndpointsTableColumns = ({
   {
     id: "path",
     accessorKey: "path",
-    meta: { title: "Path" },
-    header: "Path",
+    meta: { title: "Путь" },
+    header: "Путь",
     size: 200,
     enableSorting: false,
     cell: ({ row }) => (
@@ -172,8 +172,8 @@ export const getPassThroughEndpointsTableColumns = ({
   {
     id: "target",
     accessorKey: "target",
-    meta: { title: "Target" },
-    header: "Target",
+    meta: { title: "Назначение" },
+    header: "Назначение",
     size: 240,
     enableSorting: false,
     cell: ({ row }) => (
@@ -184,8 +184,8 @@ export const getPassThroughEndpointsTableColumns = ({
   },
   {
     id: "methods",
-    meta: { title: "Methods", skeleton: "chips" },
-    header: () => <HeaderWithTooltip title="Methods" tooltip="HTTP methods supported by this endpoint" />,
+    meta: { title: "Методы", skeleton: "chips" },
+    header: () => <HeaderWithTooltip title="Методы" tooltip="HTTP-методы, поддерживаемые этим эндпоинтом" />,
     size: 150,
     enableSorting: false,
     cell: ({ row }) => <MethodsCell methods={row.original.methods} />,
@@ -193,8 +193,8 @@ export const getPassThroughEndpointsTableColumns = ({
   {
     id: "auth",
     accessorKey: "auth",
-    meta: { title: "Authentication", skeleton: "badge" },
-    header: () => <HeaderWithTooltip title="Authentication" tooltip="LiteLLM Virtual Key required to call endpoint" />,
+    meta: { title: "Аутентификация", skeleton: "badge" },
+    header: () => <HeaderWithTooltip title="Аутентификация" tooltip="Для вызова эндпоинта требуется виртуальный ключ ruLiteLLM" />,
     size: 140,
     enableSorting: false,
     cell: ({ row }) => (
@@ -203,8 +203,8 @@ export const getPassThroughEndpointsTableColumns = ({
   },
   {
     id: "headers",
-    meta: { title: "Headers" },
-    header: "Headers",
+    meta: { title: "Заголовки" },
+    header: "Заголовки",
     size: 180,
     enableSorting: false,
     cell: ({ row }) => <HeadersCell value={row.original.headers || {}} />,

@@ -8,12 +8,12 @@ import type { AgentCreateInfo } from "@/components/networking";
 
 vi.mock("@/components/networking", () => ({
   createAgentCall: vi.fn(),
-  getAgentCreateMetadata: vi.fn(),
-  getAgentsList: vi.fn(),
+  getAgentCreateМетаданные: vi.fn(),
+  getАгентыList: vi.fn(),
   keyCreateForAgentCall: vi.fn(),
   keyListCall: vi.fn(),
   keyUpdateCall: vi.fn(),
-  modelAvailableCall: vi.fn(),
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAvailableCall: vi.fn(),
 }));
 
 vi.mock("./agent_card_discovery", () => ({
@@ -24,7 +24,7 @@ vi.mock("./agent_form_fields", () => ({
   default: () => <div data-testid="agent-form-fields" />,
 }));
 
-vi.mock("@/components/mcp_server_management/MCPServerSelector", () => ({
+vi.mock("@/components/mcp_server_management/MCPСерверВыбратьor", () => ({
   default: ({
     onChange,
   }: {
@@ -35,7 +35,7 @@ vi.mock("@/components/mcp_server_management/MCPServerSelector", () => ({
       data-testid="select-mcp-toolset"
       onClick={() => onChange({ servers: [], accessGroups: [], toolsets: ["ts-1"] })}
     >
-      Select MCP toolset
+      Выбрать MCP toolset
     </button>
   ),
 }));
@@ -58,14 +58,14 @@ const a2aInfo: AgentCreateInfo = {
 };
 
 const renderForm = () =>
-  render(<AddAgentForm visible={true} onClose={vi.fn()} accessToken="test-token" onSuccess={vi.fn()} />);
+  render(<AddAgentForm visible={true} onClose={vi.fn()} accessТокен="test-token" onSuccess={vi.fn()} />);
 
 describe("AddAgentForm logos", () => {
   beforeEach(() => {
-    vi.mocked(networking.getAgentCreateMetadata).mockReset().mockResolvedValue([a2aInfo]);
-    vi.mocked(networking.getAgentsList).mockReset().mockResolvedValue({ agents: [] });
-    vi.mocked(networking.keyListCall).mockReset().mockResolvedValue({ keys: [] });
-    vi.mocked(networking.modelAvailableCall).mockReset().mockResolvedValue({ data: [] });
+    vi.mocked(networking.getAgentCreateМетаданные).mockReset().mockResolvedЗначение([a2aInfo]);
+    vi.mocked(networking.getАгентыList).mockReset().mockResolvedЗначение({ agents: [] });
+    vi.mocked(networking.keyListCall).mockReset().mockResolvedЗначение({ keys: [] });
+    vi.mocked(networking.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAvailableCall).mockReset().mockResolvedЗначение({ data: [] });
   });
 
   it("renders the modal title and agent type selection logos as images from logo_url", async () => {
@@ -96,7 +96,7 @@ describe("AddAgentForm logos", () => {
     await within(trigger).findByAltText("A2A Agent logo");
     await user.click(trigger);
 
-    const optionLogos = await screen.findAllByAltText("A2A Agent logo");
+    const optionLogos = await screen.findВсеByAltText("A2A Agent logo");
     expect(optionLogos.length).toBeGreaterThanOrEqual(2);
     optionLogos.forEach((img) => {
       expect(img).toHaveAttribute("src", expect.stringContaining("assets/logos/a2a_agent.png"));
@@ -108,7 +108,7 @@ describe("AddAgentForm logos", () => {
     renderForm();
 
     const titleLogo = await screen.findByAltText("Agent logo");
-    const header = screen.getByText("Add New Agent").parentElement!;
+    const header = screen.getByText("Вы уверены, что хотите удалить агента {agentToDelete.name}? Это действие нельзя отменить.").parentElement!;
     fireEvent.error(titleLogo);
 
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("assets/logos/a2a_agent.png"));
@@ -118,17 +118,17 @@ describe("AddAgentForm logos", () => {
     const trigger = screen.getByRole("combobox");
     fireEvent.error(within(trigger).getByAltText("A2A Agent logo"));
     expect(within(trigger).queryByAltText("A2A Agent logo")).not.toBeInTheDocument();
-    expect(warnSpy).toHaveBeenCalledTimes(2);
+    expect(warnSpy).toHaveBeenCalledВремяs(2);
     warnSpy.mockRestore();
   });
 
   it("includes selected MCP toolsets in the create payload", async () => {
     const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
-    vi.mocked(networking.createAgentCall).mockResolvedValue({
+    vi.mocked(networking.createAgentCall).mockResolvedЗначение({
       agent_id: "agent-1",
       agent_name: "Test Agent",
     } as never);
-    vi.mocked(networking.keyListCall).mockResolvedValue({ keys: [] });
+    vi.mocked(networking.keyListCall).mockResolvedЗначение({ keys: [] });
 
     renderForm();
     await user.click(screen.getByRole("button", { name: "Next →" }));

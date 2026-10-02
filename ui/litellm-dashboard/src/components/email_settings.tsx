@@ -13,16 +13,16 @@ interface EmailSettingsProps {
   alerts: any[];
 }
 
-const REQUIRED_MARKER = <span className="text-destructive"> Required * </span>;
+const REQUIRED_MARKER = <span className="text-destructive"> Обязательно * </span>;
 
 const FIELD_HELP: Record<string, React.ReactNode> = {
-  SMTP_HOST: <>Enter the SMTP host address, e.g. `smtp.resend.com`{REQUIRED_MARKER}</>,
-  SMTP_PORT: <>Enter the SMTP port number, e.g. `587`{REQUIRED_MARKER}</>,
-  SMTP_USERNAME: <>Enter the SMTP username, e.g. `username`{REQUIRED_MARKER}</>,
+  SMTP_HOST: <>Укажите адрес SMTP-хоста, напр. `smtp.resend.com`{REQUIRED_MARKER}</>,
+  SMTP_PORT: <>Укажите номер SMTP-порта, напр. `587`{REQUIRED_MARKER}</>,
+  SMTP_USERNAME: <>Укажите SMTP-пользователя, напр. `username`{REQUIRED_MARKER}</>,
   SMTP_PASSWORD: REQUIRED_MARKER,
   SMTP_SENDER_EMAIL: <>Enter the sender email address, e.g. `sender@berri.ai`{REQUIRED_MARKER}</>,
   TEST_EMAIL_ADDRESS: <>Email Address to send `Test Email Alert` to. example: `info@berri.ai`{REQUIRED_MARKER}</>,
-  EMAIL_LOGO_URL: <>(Optional) Customize the Logo that appears in the email, pass a url to your logo</>,
+  EMAIL_LOGO_URL: <>(Необязательно) Измените логотип в письмах — укажите URL вашего логотипа</>,
   EMAIL_SUPPORT_CONTACT: (
     <>(Optional) Customize the support email address that appears in the email. Default is support@berri.ai</>
   ),
@@ -78,7 +78,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ accessToken, premiumUser,
     };
     try {
       await setCallbacksCall(accessToken, payload);
-      toast.success("Email settings updated successfully");
+      toast.success("Настройки email обновлены");
     } catch (error) {
       toast.fromError(error);
     }
@@ -91,7 +91,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ accessToken, premiumUser,
       </div>
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Email Server Settings</CardTitle>
+          <CardTitle className="text-base">Настройки email-сервера</CardTitle>
           <p className="text-sm">
             <a
               href="https://docs.litellm.ai/docs/proxy/email"
@@ -99,7 +99,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ accessToken, premiumUser,
               rel="noreferrer"
               className="text-primary underline underline-offset-4"
             >
-              LiteLLM Docs: email alerts
+              Документация ruLiteLLM: email-оповещения
             </a>
           </p>
         </CardHeader>
@@ -161,13 +161,13 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ accessToken, premiumUser,
                 if (!accessToken) return;
                 try {
                   await serviceHealthCheck(accessToken, "email");
-                  toast.success("Email test triggered. Check your configured email inbox/logs.");
+                  toast.success("Тестовое письмо отправлено. Проверьте ваш ящик/журналы.");
                 } catch (error) {
                   toast.fromError(error);
                 }
               }}
             >
-              Test Email Alerts
+              Тест email-оповещений
             </Button>
           </div>
         </CardContent>

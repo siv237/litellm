@@ -106,7 +106,7 @@ export function AccessGroupBaseForm({
       <TabsList className="w-full">
         <TabsTrigger value={GENERAL_TAB}>
           <InfoIcon size={16} />
-          General Info
+          Общая информация
         </TabsTrigger>
         <TabsTrigger value={MODELS_TAB}>
           <LayersIcon size={16} />
@@ -114,19 +114,19 @@ export function AccessGroupBaseForm({
         </TabsTrigger>
         <TabsTrigger value={MCP_SERVERS_TAB}>
           <ServerIcon size={16} />
-          MCP Servers
+          MCP-серверы
         </TabsTrigger>
         <TabsTrigger value={AGENTS_TAB}>
           <BotIcon size={16} />
-          Agents
+          Агенты
         </TabsTrigger>
       </TabsList>
 
       <TabsContent value={GENERAL_TAB} className="pt-4">
         <FieldGroup>
-          <FormField control={form.control} name="name" label="Group Name">
+          <FormField control={form.control} name="name" label="Название группы">
             {({ ref, ...field }) => (
-              <Input {...field} ref={ref} placeholder="e.g. Engineering Team" disabled={isNameDisabled} />
+              <Input {...field} ref={ref} placeholder="напр. Команда разработки" disabled={isNameDisabled} />
             )}
           </FormField>
           <FormField control={form.control} name="description" label="Описание">
@@ -138,20 +138,20 @@ export function AccessGroupBaseForm({
       </TabsContent>
 
       <TabsContent value={MODELS_TAB} className="pt-4">
-        <FormField control={form.control} name="modelIds" label="Allowed Models">
+        <FormField control={form.control} name="modelIds" label="Разрешённые модели">
           {(field) => <ModelSelect context="global" value={field.value} onChange={field.onChange} />}
         </FormField>
       </TabsContent>
 
       <TabsContent value={MCP_SERVERS_TAB} className="pt-4">
-        <FormField control={form.control} name="mcpServerIds" label="Allowed MCP Servers">
+        <FormField control={form.control} name="mcpServerIds" label="Разрешённые MCP-серверы">
           {({ id, value, onChange, "aria-invalid": ariaInvalid, "aria-describedby": ariaDescribedBy }) => (
             <MultiSelect
               id={id}
               value={value}
               onChange={onChange}
               options={mcpServerOptions}
-              placeholder="Select MCP servers"
+              placeholder="Выберите MCP-серверы"
               aria-invalid={ariaInvalid}
               aria-describedby={ariaDescribedBy}
             />
@@ -160,14 +160,14 @@ export function AccessGroupBaseForm({
       </TabsContent>
 
       <TabsContent value={AGENTS_TAB} className="pt-4">
-        <FormField control={form.control} name="agentIds" label="Allowed Agents">
+        <FormField control={form.control} name="agentIds" label="Разрешённые агенты">
           {({ id, value, onChange, "aria-invalid": ariaInvalid, "aria-describedby": ariaDescribedBy }) => (
             <MultiSelect
               id={id}
               value={value}
               onChange={onChange}
               options={agentOptions}
-              placeholder="Select agents"
+              placeholder="Выберите агентов"
               aria-invalid={ariaInvalid}
               aria-describedby={ariaDescribedBy}
             />

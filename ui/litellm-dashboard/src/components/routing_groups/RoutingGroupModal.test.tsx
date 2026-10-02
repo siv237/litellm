@@ -1,63 +1,63 @@
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
-import { renderWithProviders, screen } from "@/../tests/test-utils";
+import { renderWithПровайдерs, screen } from "@/../tests/test-utils";
 
-import RoutingGroupModal from "./RoutingGroupModal";
-import type { RoutingGroup } from "./types";
+import МаршрутизацияGroupModal from "./МаршрутизацияGroupModal";
+import type { МаршрутизацияGroup } from "./types";
 
-const STRATEGIES = ["simple-shuffle", "latency-based-routing", "usage-based-routing"];
+const STRATEGIES = ["simple-shuffle", "latency-based-rвыходing", "usage-based-rвыходing"];
 const MODEL_OPTIONS = ["gpt-4o", "claude-sonnet", "gemini-pro"];
 const STRATEGY_DESCRIPTIONS = { "simple-shuffle": "Spreads requests evenly across the group." };
 
-const EXPECTED_STORED_PAYLOAD: RoutingGroup = {
+const EXPECTED_STORED_PAYLOAD: МаршрутизацияGroup = {
   group_name: "already-taken",
-  models: ["gpt-4o", "claude-sonnet"],
-  routing_strategy: "latency-based-routing",
-  routing_strategy_args: { ttl: 3600 },
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o", "claude-sonnet"],
+  rвыходing_strategy: "latency-based-rвыходing",
+  rвыходing_strategy_args: { ttl: 3600 },
 };
 
-const SEEDED_CREATE: RoutingGroup = { group_name: "", models: ["gemini-pro"], routing_strategy: "simple-shuffle" };
+const SEEDED_CREATE: МаршрутизацияGroup = { group_name: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gemini-pro"], rвыходing_strategy: "simple-shuffle" };
 
-const EXPECTED_SLASH_AND_SPACE_PAYLOAD: RoutingGroup = {
+const EXPECTED_SLASH_AND_SPACE_PAYLOAD: МаршрутизацияGroup = {
   group_name: "team a/fast chat",
-  models: ["gemini-pro"],
-  routing_strategy: "simple-shuffle",
-  routing_strategy_args: null,
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gemini-pro"],
+  rвыходing_strategy: "simple-shuffle",
+  rвыходing_strategy_args: null,
 };
 
-const STORED_GROUP: RoutingGroup = {
+const STORED_GROUP: МаршрутизацияGroup = {
   group_name: "already-taken",
-  models: ["gpt-4o", "claude-sonnet"],
-  routing_strategy: "latency-based-routing",
-  routing_strategy_args: { ttl: 3600 },
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o", "claude-sonnet"],
+  rвыходing_strategy: "latency-based-rвыходing",
+  rвыходing_strategy_args: { ttl: 3600 },
 };
 
-const STORED_GROUP_NULL_ARGS: RoutingGroup = {
+const STORED_GROUP_NULL_ARGS: МаршрутизацияGroup = {
   group_name: "already-taken",
-  models: ["gpt-4o"],
-  routing_strategy: "latency-based-routing",
-  routing_strategy_args: null,
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o"],
+  rвыходing_strategy: "latency-based-rвыходing",
+  rвыходing_strategy_args: null,
 };
 
-const EXPECTED_NULL_ARGS_PAYLOAD: RoutingGroup = {
+const EXPECTED_NULL_ARGS_PAYLOAD: МаршрутизацияGroup = {
   group_name: "already-taken",
-  models: ["gpt-4o"],
-  routing_strategy: "latency-based-routing",
-  routing_strategy_args: null,
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o"],
+  rвыходing_strategy: "latency-based-rвыходing",
+  rвыходing_strategy_args: null,
 };
 
-const renderModal = (overrides: Partial<React.ComponentProps<typeof RoutingGroupModal>> = {}) => {
+const renderModal = (overrides: Partial<React.ComponentProps<typeof МаршрутизацияGroupModal>> = {}) => {
   const onSubmit = vi.fn();
   const onClose = vi.fn();
-  renderWithProviders(
-    <RoutingGroupModal
+  renderWithПровайдерs(
+    <МаршрутизацияGroupModal
       open
       mode="create"
-      initialValue={null}
+      initialЗначение={null}
       availableStrategies={STRATEGIES}
-      strategyDescriptions={STRATEGY_DESCRIPTIONS}
-      modelOptions={MODEL_OPTIONS}
+      strategyОписаниеs={STRATEGY_DESCRIPTIONS}
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюOptions={MODEL_OPTIONS}
       existingGroupNames={["already-taken", "other-group"]}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -68,66 +68,66 @@ const renderModal = (overrides: Partial<React.ComponentProps<typeof RoutingGroup
 };
 
 const typeName = async (user: ReturnType<typeof userEvent.setup>, name: string) => {
-  const input = screen.getByLabelText("Group Name");
+  const input = screen.getByLabelText("Название группы");
   await user.clear(input);
   await user.type(input, name);
 };
 
 const setArgs = async (user: ReturnType<typeof userEvent.setup>, json: string) => {
-  const textarea = screen.getByLabelText("Strategy Arguments (JSON)");
+  const textarea = screen.getByLabelText("Аргументы стратегии (JSON)");
   await user.clear(textarea);
   if (json) {
     await user.type(textarea, json);
   }
 };
 
-const pickModels = async (user: ReturnType<typeof userEvent.setup>, ...models: string[]) => {
-  await user.click(screen.getByLabelText("Models"));
-  for (const model of models) {
-    await user.click(await screen.findByRole("option", { name: model }));
+const pickРежимls = async (user: ReturnType<typeof userEvent.setup>, ...Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: string[]) => {
+  await user.click(screen.getByLabelText("Режимls"));
+  for (const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию of Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs) {
+    await user.click(await screen.findByRole("option", { name: Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию }));
   }
 };
 
 const pickStrategy = async (user: ReturnType<typeof userEvent.setup>, strategy: string) => {
-  await user.click(screen.getByLabelText("Routing Strategy"));
+  await user.click(screen.getByLabelText("Стратегия маршрутизации"));
   await user.click(await screen.findByRole("option", { name: strategy }));
 };
 
 const save = async (user: ReturnType<typeof userEvent.setup>, name: string) =>
   await user.click(screen.getByRole("button", { name }));
 
-describe("RoutingGroupModal", () => {
+describe("МаршрутизацияGroupModal", () => {
   it("submits an untouched edit of a group whose stored arguments are null", async () => {
     const user = userEvent.setup();
-    const { onSubmit } = renderModal({ mode: "edit", initialValue: STORED_GROUP_NULL_ARGS });
+    const { onSubmit } = renderModal({ mode: "edit", initialЗначение: STORED_GROUP_NULL_ARGS });
 
     await save(user, "Save Changes");
 
     expect(onSubmit).toHaveBeenCalledWith(EXPECTED_NULL_ARGS_PAYLOAD);
   });
 
-  it("submits an untouched edit with the stored models, strategy and parsed arguments", async () => {
+  it("submits an untouched edit with the stored Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs, strategy and parsed arguments", async () => {
     const user = userEvent.setup();
-    const { onSubmit } = renderModal({ mode: "edit", initialValue: STORED_GROUP });
+    const { onSubmit } = renderModal({ mode: "edit", initialЗначение: STORED_GROUP });
 
     await save(user, "Save Changes");
 
-    expect(onSubmit).toHaveBeenCalledTimes(1);
+    expect(onSubmit).toHaveBeenCalledВремяs(1);
     expect(onSubmit.mock.calls[0][0]).toStrictEqual(EXPECTED_STORED_PAYLOAD);
   });
 
   it("carries a typed group name into the payload", async () => {
     const user = userEvent.setup();
-    const { onSubmit } = renderModal({ initialValue: SEEDED_CREATE });
+    const { onSubmit } = renderModal({ initialЗначение: SEEDED_CREATE });
 
     await typeName(user, "fast-chat");
     await save(user, "Create Group");
 
-    const expected: RoutingGroup = {
+    const expected: МаршрутизацияGroup = {
       group_name: "fast-chat",
-      models: ["gemini-pro"],
-      routing_strategy: "simple-shuffle",
-      routing_strategy_args: null,
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gemini-pro"],
+      rвыходing_strategy: "simple-shuffle",
+      rвыходing_strategy_args: null,
     };
     expect(onSubmit.mock.calls[0][0]).toStrictEqual(expected);
   });
@@ -136,44 +136,44 @@ describe("RoutingGroupModal", () => {
     const user = userEvent.setup();
     const { onSubmit } = renderModal({
       mode: "edit",
-      initialValue: { ...STORED_GROUP, routing_strategy: "simple-shuffle" },
+      initialЗначение: { ...STORED_GROUP, rвыходing_strategy: "simple-shuffle" },
     });
 
-    expect(screen.queryByLabelText("Strategy Arguments (JSON)")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Аргументы стратегии (JSON)")).not.toBeInTheDocument();
     await save(user, "Save Changes");
 
-    const expected: RoutingGroup = {
+    const expected: МаршрутизацияGroup = {
       group_name: "already-taken",
-      models: ["gpt-4o", "claude-sonnet"],
-      routing_strategy: "simple-shuffle",
-      routing_strategy_args: null,
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o", "claude-sonnet"],
+      rвыходing_strategy: "simple-shuffle",
+      rвыходing_strategy_args: null,
     };
     expect(onSubmit.mock.calls[0][0]).toStrictEqual(expected);
   });
 
   it("sends null arguments when the argument box is emptied", async () => {
     const user = userEvent.setup();
-    const { onSubmit } = renderModal({ mode: "edit", initialValue: STORED_GROUP });
+    const { onSubmit } = renderModal({ mode: "edit", initialЗначение: STORED_GROUP });
 
     await setArgs(user, "");
     await save(user, "Save Changes");
 
-    expect(onSubmit.mock.calls[0][0]?.routing_strategy_args).toBeNull();
+    expect(onSubmit.mock.calls[0][0]?.rвыходing_strategy_args).toBeNull();
   });
 
   it("edits the arguments into the payload", async () => {
     const user = userEvent.setup();
-    const { onSubmit } = renderModal({ mode: "edit", initialValue: STORED_GROUP });
+    const { onSubmit } = renderModal({ mode: "edit", initialЗначение: STORED_GROUP });
 
     await setArgs(user, '{{"ttl": 60, "lowest_latency_buffer": 0}');
     await save(user, "Save Changes");
 
-    expect(onSubmit.mock.calls[0][0]?.routing_strategy_args).toStrictEqual({ ttl: 60, lowest_latency_buffer: 0 });
+    expect(onSubmit.mock.calls[0][0]?.rвыходing_strategy_args).toStrictEqual({ ttl: 60, lowest_latency_buffer: 0 });
   });
 
   it("blocks the save and flags the field when the arguments are not valid JSON", async () => {
     const user = userEvent.setup();
-    const { onSubmit } = renderModal({ mode: "edit", initialValue: STORED_GROUP });
+    const { onSubmit } = renderModal({ mode: "edit", initialЗначение: STORED_GROUP });
 
     await setArgs(user, "not json");
     await save(user, "Save Changes");
@@ -185,7 +185,7 @@ describe("RoutingGroupModal", () => {
   it("requires a group name", async () => {
     const user = userEvent.setup();
     const { onSubmit } = renderModal({
-      initialValue: { group_name: "", models: ["gemini-pro"], routing_strategy: "simple-shuffle" },
+      initialЗначение: { group_name: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gemini-pro"], rвыходing_strategy: "simple-shuffle" },
     });
 
     await save(user, "Create Group");
@@ -194,21 +194,21 @@ describe("RoutingGroupModal", () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
-  it("requires at least one model", async () => {
+  it("requires at least one Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
     const user = userEvent.setup();
     const { onSubmit } = renderModal();
 
-    await typeName(user, "no-models");
+    await typeName(user, "no-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
     await save(user, "Create Group");
 
-    expect(await screen.findByText("Select at least one model")).toBeInTheDocument();
+    expect(await screen.findByText("Выбрать at least one Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию")).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
   it("rejects a name longer than 64 characters", async () => {
     const user = userEvent.setup();
     const { onSubmit } = renderModal({
-      initialValue: { group_name: "", models: ["gemini-pro"], routing_strategy: "simple-shuffle" },
+      initialЗначение: { group_name: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gemini-pro"], rвыходing_strategy: "simple-shuffle" },
     });
 
     await typeName(user, "a".repeat(65));
@@ -221,7 +221,7 @@ describe("RoutingGroupModal", () => {
   it("accepts a name with slashes and spaces, since the backend does", async () => {
     const user = userEvent.setup();
     const { onSubmit } = renderModal({
-      initialValue: { group_name: "", models: ["gemini-pro"], routing_strategy: "simple-shuffle" },
+      initialЗначение: { group_name: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gemini-pro"], rвыходing_strategy: "simple-shuffle" },
     });
 
     await typeName(user, "team a/fast chat");
@@ -233,7 +233,7 @@ describe("RoutingGroupModal", () => {
   it("rejects a whitespace-only name as missing", async () => {
     const user = userEvent.setup();
     const { onSubmit } = renderModal({
-      initialValue: { group_name: "", models: ["gemini-pro"], routing_strategy: "simple-shuffle" },
+      initialЗначение: { group_name: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gemini-pro"], rвыходing_strategy: "simple-shuffle" },
     });
 
     await typeName(user, "   ");
@@ -246,7 +246,7 @@ describe("RoutingGroupModal", () => {
   it("rejects a name another group already uses, ignoring case", async () => {
     const user = userEvent.setup();
     const { onSubmit } = renderModal({
-      initialValue: { group_name: "", models: ["gemini-pro"], routing_strategy: "simple-shuffle" },
+      initialЗначение: { group_name: "", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gemini-pro"], rвыходing_strategy: "simple-shuffle" },
     });
 
     await typeName(user, "Other-Group");
@@ -257,28 +257,28 @@ describe("RoutingGroupModal", () => {
   });
 
   it("locks the name in edit mode and pretty-prints the stored arguments", () => {
-    renderModal({ mode: "edit", initialValue: STORED_GROUP });
+    renderModal({ mode: "edit", initialЗначение: STORED_GROUP });
 
-    expect(screen.getByLabelText("Group Name")).toHaveValue("already-taken");
-    expect(screen.getByLabelText("Group Name")).toBeDisabled();
-    expect(screen.getByLabelText("Strategy Arguments (JSON)")).toHaveValue('{\n  "ttl": 3600\n}');
+    expect(screen.getByLabelText("Название группы")).toHaveЗначение("already-taken");
+    expect(screen.getByLabelText("Название группы")).toBeDisabled();
+    expect(screen.getByLabelText("Аргументы стратегии (JSON)")).toHaveЗначение('{\n  "ttl": 3600\n}');
   });
 
-  it("carries picked models and a picked strategy into the payload", async () => {
+  it("carries picked Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs and a picked strategy into the payload", async () => {
     const user = userEvent.setup();
     const { onSubmit } = renderModal();
 
     await typeName(user, "probe-group");
-    await pickModels(user, "gpt-4o", "claude-sonnet");
-    await pickStrategy(user, "latency-based-routing");
+    await pickРежимls(user, "gpt-4o", "claude-sonnet");
+    await pickStrategy(user, "latency-based-rвыходing");
     await setArgs(user, '{{"ttl": 99}');
     await save(user, "Create Group");
 
-    const expected: RoutingGroup = {
+    const expected: МаршрутизацияGroup = {
       group_name: "probe-group",
-      models: ["gpt-4o", "claude-sonnet"],
-      routing_strategy: "latency-based-routing",
-      routing_strategy_args: { ttl: 99 },
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o", "claude-sonnet"],
+      rвыходing_strategy: "latency-based-rвыходing",
+      rвыходing_strategy_args: { ttl: 99 },
     };
     expect(onSubmit.mock.calls[0][0]).toStrictEqual(expected);
   });
@@ -288,21 +288,21 @@ describe("RoutingGroupModal", () => {
     const { onSubmit } = renderModal();
 
     await typeName(user, "probe-group");
-    await pickModels(user, "gpt-4o");
-    await pickStrategy(user, "latency-based-routing");
+    await pickРежимls(user, "gpt-4o");
+    await pickStrategy(user, "latency-based-rвыходing");
     await setArgs(user, '{{"ttl": 99}');
     await pickStrategy(user, "simple-shuffle");
-    expect(screen.queryByLabelText("Strategy Arguments (JSON)")).not.toBeInTheDocument();
-    await pickStrategy(user, "latency-based-routing");
+    expect(screen.queryByLabelText("Аргументы стратегии (JSON)")).not.toBeInTheDocument();
+    await pickStrategy(user, "latency-based-rвыходing");
 
-    expect(screen.getByLabelText("Strategy Arguments (JSON)")).toHaveValue("");
+    expect(screen.getByLabelText("Аргументы стратегии (JSON)")).toHaveЗначение("");
 
     await save(user, "Create Group");
-    const expected: RoutingGroup = {
+    const expected: МаршрутизацияGroup = {
       group_name: "probe-group",
-      models: ["gpt-4o"],
-      routing_strategy: "latency-based-routing",
-      routing_strategy_args: null,
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o"],
+      rвыходing_strategy: "latency-based-rвыходing",
+      rвыходing_strategy_args: null,
     };
     expect(onSubmit.mock.calls[0][0]).toStrictEqual(expected);
   });

@@ -4,9 +4,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { Plugin } from "@/components/claude_code_plugins/types";
 
-import PluginTable from "./PluginTable";
+import PluginТаблица from "./PluginТаблица";
 
-const mockPlugins: Plugin[] = [
+const mockПлагины: Plugin[] = [
   {
     id: "plugin-id-newer",
     name: "newer-skill",
@@ -30,66 +30,66 @@ const mockOnDeleteClick = vi.fn();
 const mockOnPluginClick = vi.fn();
 
 const defaultProps = {
-  pluginsList: mockPlugins,
+  pluginsList: mockПлагины,
   isLoading: false,
   onDeleteClick: mockOnDeleteClick,
   isAdmin: true,
   onPluginClick: mockOnPluginClick,
 };
 
-describe("PluginTable", () => {
+describe("PluginТаблица", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should render every column header", () => {
-    render(<PluginTable {...defaultProps} />);
-    for (const header of ["Skill Name", "Version", "Description", "Category", "Public", "Created At"]) {
+    render(<PluginТаблица {...defaultProps} />);
+    for (const header of ["Skill Name", "Версия", "Описание", "Категория", "Публичный", "Создан"]) {
       expect(screen.getByText(header)).toBeInTheDocument();
     }
   });
 
   it("should display the empty state when data is empty", () => {
-    render(<PluginTable {...defaultProps} pluginsList={[]} />);
+    render(<PluginТаблица {...defaultProps} pluginsList={[]} />);
     expect(screen.getByText("No skills found")).toBeInTheDocument();
   });
 
   it("should sort by created date descending by default", () => {
-    render(<PluginTable {...defaultProps} />);
-    const rows = screen.getAllByRole("row").slice(1);
+    render(<PluginТаблица {...defaultProps} />);
+    const rows = screen.getВсеByRole("row").slice(1);
     expect(within(rows[0]).getByText("newer-skill")).toBeInTheDocument();
     expect(within(rows[1]).getByText("older-skill")).toBeInTheDocument();
   });
 
   it("should call onPluginClick with the plugin ID when the skill name is clicked", async () => {
     const user = userEvent.setup();
-    render(<PluginTable {...defaultProps} />);
+    render(<PluginТаблица {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: "newer-skill" }));
     expect(mockOnPluginClick).toHaveBeenCalledWith("plugin-id-newer");
   });
 
   it("should not navigate when clicking elsewhere in the row", async () => {
     const user = userEvent.setup();
-    render(<PluginTable {...defaultProps} />);
+    render(<PluginТаблица {...defaultProps} />);
     await user.click(screen.getByText("A skill for testing"));
     expect(mockOnPluginClick).not.toHaveBeenCalled();
   });
 
   it("should badge the category and fall back to Uncategorized", () => {
-    render(<PluginTable {...defaultProps} />);
+    render(<PluginТаблица {...defaultProps} />);
     expect(screen.getByText("development")).toBeInTheDocument();
     expect(screen.getByText("Uncategorized")).toBeInTheDocument();
   });
 
   it("should show whether the skill is public", () => {
-    render(<PluginTable {...defaultProps} />);
+    render(<PluginТаблица {...defaultProps} />);
     expect(screen.getByText("Yes")).toBeInTheDocument();
     expect(screen.getByText("No")).toBeInTheDocument();
   });
 
   it("should delete a skill through the actions menu when admin", async () => {
     const user = userEvent.setup();
-    render(<PluginTable {...defaultProps} />);
+    render(<PluginТаблица {...defaultProps} />);
     await user.click(screen.getByTestId("plugin-actions-newer-skill"));
     await user.click(await screen.findByTestId("plugin-action-delete"));
     expect(mockOnDeleteClick).toHaveBeenCalledWith("newer-skill", "newer-skill");
@@ -97,7 +97,7 @@ describe("PluginTable", () => {
 
   it("should copy the skill ID through the actions menu", async () => {
     const user = userEvent.setup();
-    render(<PluginTable {...defaultProps} />);
+    render(<PluginТаблица {...defaultProps} />);
     await user.click(screen.getByTestId("plugin-actions-newer-skill"));
     await user.click(await screen.findByTestId("plugin-action-copy"));
     expect(await window.navigator.clipboard.readText()).toBe("plugin-id-newer");
@@ -105,7 +105,7 @@ describe("PluginTable", () => {
 
   it("should hide the delete action for non-admins but keep copy available", async () => {
     const user = userEvent.setup();
-    render(<PluginTable {...defaultProps} isAdmin={false} />);
+    render(<PluginТаблица {...defaultProps} isAdmin={false} />);
     await user.click(screen.getByTestId("plugin-actions-newer-skill"));
     expect(await screen.findByTestId("plugin-action-copy")).toBeInTheDocument();
     expect(screen.queryByTestId("plugin-action-delete")).not.toBeInTheDocument();

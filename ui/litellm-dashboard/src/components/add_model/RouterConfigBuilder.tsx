@@ -84,7 +84,7 @@ const UtteranceInput = ({ value, onChange }: UtteranceInputProps) => {
         </Badge>
       ))}
       <input
-        aria-label="Example Utterances"
+        aria-label="Примеры фраз"
         value={draft}
         onChange={(event) => setDraft(event.target.value)}
         onBlur={() => draft.trim() && addUtterances(draft)}
@@ -207,19 +207,19 @@ const RouterConfigBuilder: React.FC<RouterConfigBuilderProps> = ({ modelInfo, va
       <div className="w-full space-y-6">
         <div className="flex w-full flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-semibold">Routes Configuration</h3>
-            <HelpTooltip content="Configure routing logic to automatically select the best model based on user input patterns" />
+            <h3 className="text-lg font-semibold">Конфигурация маршрутов</h3>
+            <HelpTooltip content="Настройте логику маршрутизации: автоматический выбор лучшей модели по вводу пользователя" />
           </div>
           <Button type="button" onClick={addRoute}>
             <Plus data-icon="inline-start" />
-            Add Route
+            Добавить маршрут
           </Button>
         </div>
 
         {routes.length === 0 ? (
           <Card>
             <CardContent className="py-8 text-center text-muted-foreground">
-              No routes configured. Click &quot;Add Route&quot; to get started.
+              Маршруты не настроены. Нажмите &quot;Добавить маршрут&quot;, чтобы начать.
             </CardContent>
           </Card>
         ) : (
@@ -245,7 +245,7 @@ const RouterConfigBuilder: React.FC<RouterConfigBuilderProps> = ({ modelInfo, va
                         className={`size-4 shrink-0 text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""}`}
                       />
                       <span className="truncate text-base font-medium">
-                        Route {index + 1}: {route.model || "Unnamed"}
+                        Маршрут {index + 1}: {route.model || "Без имени"}
                       </span>
                     </CollapsibleTrigger>
                     <Button
@@ -266,7 +266,7 @@ const RouterConfigBuilder: React.FC<RouterConfigBuilderProps> = ({ modelInfo, va
                         <SearchSelect
                           value={route.model}
                           onValueChange={(model) => updateRoute(route.id, "model", model)}
-                          placeholder="Select model"
+                          placeholder="Выберите модель"
                           options={modelOptions}
                         />
                       </div>
@@ -284,8 +284,8 @@ const RouterConfigBuilder: React.FC<RouterConfigBuilderProps> = ({ modelInfo, va
 
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <Label htmlFor={`${route.id}-threshold`}>Score Threshold</Label>
-                          <HelpTooltip content="Minimum similarity score to route to this model (0-1)" />
+                          <Label htmlFor={`${route.id}-threshold`}>Порог оценки</Label>
+                          <HelpTooltip content="Минимальная оценка сходства для маршрутизации к этой модели (0-1)" />
                         </div>
                         <Input
                           id={`${route.id}-threshold`}
@@ -303,11 +303,11 @@ const RouterConfigBuilder: React.FC<RouterConfigBuilderProps> = ({ modelInfo, va
 
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                          <Label>Example Utterances</Label>
-                          <HelpTooltip content="Training examples for this route. Type an utterance and press Enter to add it." />
+                          <Label>Примеры фраз</Label>
+                          <HelpTooltip content="Примеры для обучения этого маршрута. Введите фразу и нажмите Enter для добавления." />
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          Type an utterance and press Enter to add it. You can also paste multiple lines.
+                          Введите фразу и нажмите Enter. Можно вставить несколько строк сразу.
                         </p>
                         <UtteranceInput
                           value={route.utterances}
@@ -324,7 +324,7 @@ const RouterConfigBuilder: React.FC<RouterConfigBuilderProps> = ({ modelInfo, va
 
         <Separator />
         <div className="flex w-full items-center justify-between gap-3">
-          <h3 className="text-lg font-semibold">JSON Preview</h3>
+          <h3 className="text-lg font-semibold">JSON-предпросмотр</h3>
           <Button type="button" variant="link" onClick={() => setShowJsonPreview((visible) => !visible)}>
             {showJsonPreview ? "Hide" : "Show"}
           </Button>

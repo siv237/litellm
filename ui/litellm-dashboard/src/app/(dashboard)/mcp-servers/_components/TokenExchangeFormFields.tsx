@@ -19,7 +19,7 @@ interface TokenExchangeFormFieldsProps {
 const fieldClassName = "rounded-lg border-border focus:border-info focus:ring-ring";
 
 const TOKEN_EXCHANGE_PROFILE_ITEMS = [
-  { value: "rfc8693", label: "RFC 8693 (standard)" },
+  { value: "rfc8693", label: "RFC 8693 (стандарт)" },
   { value: "entra_obo", label: "Microsoft Entra OBO" },
 ];
 
@@ -43,7 +43,7 @@ const TokenExchangeFormFields: React.FC<TokenExchangeFormFieldsProps> = ({ isEdi
       <MountedFormField
         label={
           <FieldLabel
-            label="Profile"
+            label="Профиль"
             tooltip="Token-exchange wire dialect. RFC 8693 is the standard token-exchange grant. Microsoft Entra OBO uses Entra's On-Behalf-Of dialect (the RFC 7523 jwt-bearer grant with requested_token_use=on_behalf_of) and carries the target resource in a scope like api://<app-id>/.default."
           />
         }
@@ -68,8 +68,8 @@ const TokenExchangeFormFields: React.FC<TokenExchangeFormFieldsProps> = ({ isEdi
       <MountedFormField
         label={
           <FieldLabel
-            label="Token Exchange Endpoint (optional)"
-            tooltip="RFC 8693 token endpoint. The proxy exchanges the user's incoming token here for a scoped token used to call the upstream MCP server. Leave blank to auto-discover it from the upstream's protected-resource metadata (RFC 9728 then RFC 8414)."
+            label="Эндпоинт обмена токенов (необязательно)"
+            tooltip="Эндпоинт токенов RFC 8693. Прокси обменивает входящий токен пользователя на ограниченный токен для вызова вышестоящего MCP-сервера. Оставьте пустым — адрес определится автоматически по метаданным защищённого ресурса (сначала RFC 9728, затем RFC 8414)."
           />
         }
         name="token_exchange_endpoint"
@@ -85,8 +85,8 @@ const TokenExchangeFormFields: React.FC<TokenExchangeFormFieldsProps> = ({ isEdi
       <MountedFormField
         label={
           <FieldLabel
-            label="Client ID"
-            tooltip="OAuth2 client ID used to authenticate to the token exchange endpoint."
+            label="ID клиента"
+            tooltip="OAuth2 ID клиента для аутентификации в эндпоинте обмена токенов."
           />
         }
         name={["credentials", "client_id"]}
@@ -104,8 +104,8 @@ const TokenExchangeFormFields: React.FC<TokenExchangeFormFieldsProps> = ({ isEdi
       <MountedFormField
         label={
           <FieldLabel
-            label="Client Secret"
-            tooltip="OAuth2 client secret used to authenticate to the token exchange endpoint."
+            label="Секрет клиента"
+            tooltip="Секрет OAuth2-клиента для аутентификации в эндпоинте обмена токенов."
           />
         }
         name={["credentials", "client_secret"]}
@@ -125,8 +125,8 @@ const TokenExchangeFormFields: React.FC<TokenExchangeFormFieldsProps> = ({ isEdi
           <MountedFormField
             label={
               <FieldLabel
-                label="Audience (optional)"
-                tooltip="Target audience for the exchanged token (RFC 8693 audience). Identifies the upstream MCP server the token is for."
+                label="Audience (необязательно)"
+                tooltip="Целевая audience обменённого токена (RFC 8693). Указывает вышестоящий MCP-сервер, для которого предназначен токен."
               />
             }
             name="audience"
@@ -138,8 +138,8 @@ const TokenExchangeFormFields: React.FC<TokenExchangeFormFieldsProps> = ({ isEdi
           <MountedFormField
             label={
               <FieldLabel
-                label="Subject Token Type (optional)"
-                tooltip="Type of the user's incoming token (RFC 8693 subject_token_type). Defaults to urn:ietf:params:oauth:token-type:access_token."
+                label="Subject token type (необязательно)"
+                tooltip="Тип входящего токена пользователя (RFC 8693 subject_token_type). По умолчанию urn:ietf:params:oauth:token-type:access_token."
               />
             }
             name="subject_token_type"

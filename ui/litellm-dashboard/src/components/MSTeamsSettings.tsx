@@ -21,8 +21,8 @@ interface MSTeamsSettingsProps {
 const FIELD_HELP: Record<string, React.ReactNode> = {
   MS_TEAMS_WEBHOOK_URL: (
     <>
-      Incoming webhook URL for your Teams channel (Workflows or incoming webhook connector)
-      <span className="text-destructive"> Required * </span>
+      URL входящего вебхука для канала Teams (Workflows или коннектор входящих вебхуков)
+      <span className="text-destructive"> Обязательно * </span>
     </>
   ),
 };
@@ -77,7 +77,7 @@ const MSTeamsSettings: React.FC<MSTeamsSettingsProps> = ({ accessToken, userID, 
         environment_variables: updatedVariables,
       };
       await setCallbacksCall(accessToken, payload);
-      toast.success("MS Teams settings updated successfully");
+      toast.success("Настройки Microsoft Teams обновлены");
     } catch (error) {
       toast.fromError(error);
     }
@@ -86,16 +86,16 @@ const MSTeamsSettings: React.FC<MSTeamsSettingsProps> = ({ accessToken, userID, 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Microsoft Teams Alerting Settings</CardTitle>
+        <CardTitle className="text-base">Настройки оповещений Microsoft Teams</CardTitle>
         <p className="text-sm">
-          Send LiteLLM alerts to a Microsoft Teams channel via an incoming webhook. Create one from{" "}
+          Отправляйте оповещения ruLiteLLM в канал Microsoft Teams через входящий вебхук. Создайте его по{" "}
           <a
             href="https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook"
             target="_blank"
             rel="noreferrer"
             className="text-primary underline underline-offset-4"
           >
-            Microsoft Docs: incoming webhooks
+            Документация Microsoft: входящие вебхуки
           </a>
         </p>
       </CardHeader>
@@ -144,13 +144,13 @@ const MSTeamsSettings: React.FC<MSTeamsSettingsProps> = ({ accessToken, userID, 
               if (!accessToken) return;
               try {
                 await serviceHealthCheck(accessToken, "ms_teams");
-                toast.success("MS Teams test alert triggered. Check your Teams channel.");
+                toast.success("Тестовое оповещение отправлено. Проверьте канал Teams.");
               } catch (error) {
                 toast.fromError(error);
               }
             }}
           >
-            Test MS Teams Alerts
+            Тест оповещений MS Teams
           </Button>
         </div>
       </CardContent>

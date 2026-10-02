@@ -1,12 +1,12 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { RoutingDecisionCard, type RoutingDecision } from "./RoutingDecisionCard";
+import { МаршрутизацияDecisionCard, type МаршрутизацияDecision } from "./МаршрутизацияDecisionCard";
 
-const heuristic: RoutingDecision = {
-  router_model_name: "smart-router",
-  router_type: "complexity",
-  routed_model: "claude-sonnet",
+const heuristic: МаршрутизацияDecision = {
+  rвыходer_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "smart-rвыходer",
+  rвыходer_type: "complexity",
+  rвыходed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-sonnet",
   cause: "heuristic_scorer",
   tier: "REASONING",
   score: 0.82,
@@ -14,16 +14,16 @@ const heuristic: RoutingDecision = {
   tier_boundaries: { simple_medium: 0.15, medium_complex: 0.35, complex_reasoning: 0.6 },
 };
 
-describe("RoutingDecisionCard", () => {
-  it("renders nothing when the request carried no routing decision", () => {
-    const { container } = render(<RoutingDecisionCard decision={undefined} />);
+describe("МаршрутизацияDecisionCard", () => {
+  it("renders nothing when the request carried no rвыходing decision", () => {
+    const { container } = render(<МаршрутизацияDecisionCard decision={undefined} />);
     expect(container).toBeEmptyDOMElement();
   });
 
   it("explains a heuristic score against the boundaries that were in effect", () => {
-    render(<RoutingDecisionCard decision={heuristic} />);
-    expect(screen.getByText("smart-router")).toBeInTheDocument();
-    expect(screen.getByText("(Auto-Router v2)")).toBeInTheDocument();
+    render(<МаршрутизацияDecisionCard decision={heuristic} />);
+    expect(screen.getByText("smart-rвыходer")).toBeInTheDocument();
+    expect(screen.getByText("(Auto-Rвыходer v2)")).toBeInTheDocument();
     expect(screen.getByText("REASONING")).toBeInTheDocument();
     expect(screen.getByText("Heuristic scorer")).toBeInTheDocument();
     expect(screen.getByText("0.82")).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe("RoutingDecisionCard", () => {
     // Same score, boundaries the operator had configured lower: it lands in a
     // different band, and the card must say so.
     render(
-      <RoutingDecisionCard
+      <МаршрутизацияDecisionCard
         decision={{
           ...heuristic,
           score: 0.4,
@@ -50,7 +50,7 @@ describe("RoutingDecisionCard", () => {
 
   it("labels a reasoning override and does not claim the score met a boundary", () => {
     render(
-      <RoutingDecisionCard
+      <МаршрутизацияDecisionCard
         decision={{
           ...heuristic,
           cause: "reasoning_override",
@@ -71,49 +71,49 @@ describe("RoutingDecisionCard", () => {
     expect(screen.queryByText(/SIMPLE|MEDIUM|COMPLEX|at or above/)).not.toBeInTheDocument();
   });
 
-  it("names the judge model on the LLM classifier path and shows no score", () => {
+  it("names the judge Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию on the LLM classifier path and shows no score", () => {
     render(
-      <RoutingDecisionCard
+      <МаршрутизацияDecisionCard
         decision={{
-          router_model_name: "llm-router",
-          router_type: "complexity",
-          routed_model: "claude-sonnet",
+          rвыходer_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "llm-rвыходer",
+          rвыходer_type: "complexity",
+          rвыходed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-sonnet",
           cause: "llm_classifier",
           tier: "REASONING",
-          classifier_model: "claude-haiku",
+          classifier_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-haiku",
           signals: ["llm-classifier:REASONING"],
         }}
       />,
     );
     expect(screen.getByText("LLM classifier (claude-haiku)")).toBeInTheDocument();
-    expect(screen.queryByText("Score")).not.toBeInTheDocument();
+    expect(screen.queryByText("Оценка")).not.toBeInTheDocument();
   });
 
-  it("explains a route that fell back to the default model after the classifier failed", () => {
-    // No tier is recorded on this path, so the card must not show a Tier row: nothing
-    // about the request produced one, the classifier never answered.
+  it("explains a rвыходe that fell back to the default Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию after the classifier failed", () => {
+    // No tier is recorded on this path, so the card must not show a Уровень row: nothing
+    // abвыход the request produced one, the classifier never answered.
     render(
-      <RoutingDecisionCard
+      <МаршрутизацияDecisionCard
         decision={{
-          router_model_name: "llm-router",
-          router_type: "complexity",
-          routed_model: "gpt-4o",
-          cause: "default_model_fallback",
-          signals: ["classifier-failed:default-model"],
+          rвыходer_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "llm-rвыходer",
+          rвыходer_type: "complexity",
+          rвыходed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o",
+          cause: "default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_fallback",
+          signals: ["classifier-failed:default-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию"],
         }}
       />,
     );
-    expect(screen.getByText("Default model, classifier failed")).toBeInTheDocument();
-    expect(screen.queryByText("Tier")).not.toBeInTheDocument();
+    expect(screen.getByText("Default Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, classifier failed")).toBeInTheDocument();
+    expect(screen.queryByText("Уровень")).not.toBeInTheDocument();
   });
 
-  it("explains a route that fell back to the configured fallback tier after the classifier failed", () => {
+  it("explains a rвыходe that fell back to the configured fallback tier after the classifier failed", () => {
     render(
-      <RoutingDecisionCard
+      <МаршрутизацияDecisionCard
         decision={{
-          router_model_name: "custom-tier-router",
-          router_type: "complexity",
-          routed_model: "claude-sonnet",
+          rвыходer_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "custom-tier-rвыходer",
+          rвыходer_type: "complexity",
+          rвыходed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-sonnet",
           cause: "classifier_fallback",
           tier: "SECURITY_REVIEW",
           signals: ["classifier-fallback:SECURITY_REVIEW"],
@@ -126,16 +126,16 @@ describe("RoutingDecisionCard", () => {
 
   it("shows the keyword that fired a tier rule", () => {
     render(
-      <RoutingDecisionCard
+      <МаршрутизацияDecisionCard
         decision={{ ...heuristic, cause: "literal_keyword_match", matched_keyword: "deploy to k8s", score: undefined }}
       />,
     );
-    expect(screen.getByText('Keyword match: "deploy to k8s"')).toBeInTheDocument();
+    expect(screen.getByText('Ключевое слово match: "deploy to k8s"')).toBeInTheDocument();
   });
 
   it("shows the plan-mode sentinel that floored the tier", () => {
     render(
-      <RoutingDecisionCard
+      <МаршрутизацияDecisionCard
         decision={{ ...heuristic, cause: "plan_mode", matched_keyword: "Plan mode is active", score: undefined }}
       />,
     );
@@ -144,7 +144,7 @@ describe("RoutingDecisionCard", () => {
 
   it("names the exit_plan_mode tool instead of quoting it as a sentinel", () => {
     render(
-      <RoutingDecisionCard
+      <МаршрутизацияDecisionCard
         decision={{ ...heuristic, cause: "plan_mode", matched_keyword: "exit_plan_mode", score: undefined }}
       />,
     );
@@ -154,7 +154,7 @@ describe("RoutingDecisionCard", () => {
   it("does not claim the score chose the tier on a plan-mode floored row", () => {
     // The score's band can name a lower tier than the floored badge; the cause suppresses it.
     render(
-      <RoutingDecisionCard decision={{ ...heuristic, cause: "plan_mode", matched_keyword: "Plan mode is active" }} />,
+      <МаршрутизацияDecisionCard decision={{ ...heuristic, cause: "plan_mode", matched_keyword: "Plan mode is active" }} />,
     );
     expect(screen.queryByText(/below|to 0|at or above/)).not.toBeInTheDocument();
     expect(screen.getByText('Plan-mode floor: "Plan mode is active"')).toBeInTheDocument();
@@ -164,7 +164,7 @@ describe("RoutingDecisionCard", () => {
     // The sentinel is the string they would add to housekeeping_patterns to cover another
     // client, so the row is only useful if it says which one matched.
     render(
-      <RoutingDecisionCard
+      <МаршрутизацияDecisionCard
         decision={{
           ...heuristic,
           cause: "housekeeping",
@@ -181,26 +181,26 @@ describe("RoutingDecisionCard", () => {
   it("still labels a housekeeping row when redaction dropped the sentinel", () => {
     // matched_keyword is prompt-quoting, so message-log redaction removes it. The row must
     // still read as a housekeeping decision rather than falling back to the raw cause.
-    render(<RoutingDecisionCard decision={{ ...heuristic, cause: "housekeeping", score: undefined }} />);
+    render(<МаршрутизацияDecisionCard decision={{ ...heuristic, cause: "housekeeping", score: undefined }} />);
     expect(screen.getByText("Client housekeeping call, classifier skipped")).toBeInTheDocument();
     expect(screen.queryByText("housekeeping")).not.toBeInTheDocument();
   });
 
   it("labels a modality pin override instead of showing the raw cause token", () => {
-    render(<RoutingDecisionCard decision={{ ...heuristic, cause: "modality_pin_override" }} />);
+    render(<МаршрутизацияDecisionCard decision={{ ...heuristic, cause: "modality_pin_override" }} />);
     expect(screen.getByText("Overrode session pin for image input")).toBeInTheDocument();
     expect(screen.queryByText("modality_pin_override")).not.toBeInTheDocument();
   });
 
   it("labels a modality escalation instead of showing the raw cause token", () => {
-    render(<RoutingDecisionCard decision={{ ...heuristic, cause: "modality_escalation" }} />);
-    expect(screen.getByText("Escalated for image input")).toBeInTheDocument();
+    render(<МаршрутизацияDecisionCard decision={{ ...heuristic, cause: "modality_escalation" }} />);
+    expect(screen.getByText("Эскалировано for image input")).toBeInTheDocument();
     expect(screen.queryByText("modality_escalation")).not.toBeInTheDocument();
   });
 
   it("shows the escalation keyword", () => {
     render(
-      <RoutingDecisionCard decision={{ ...heuristic, escalated: true, escalation_keyword: "LITELLM ESCALATE" }} />,
+      <МаршрутизацияDecisionCard decision={{ ...heuristic, escalated: true, escalation_keyword: "LITELLM ESCALATE" }} />,
     );
     expect(screen.getByText('Yes, keyword "LITELLM ESCALATE"')).toBeInTheDocument();
   });
@@ -209,26 +209,26 @@ describe("RoutingDecisionCard", () => {
     // The tier did not move, but the row must not read like a request that never
     // asked to escalate.
     render(
-      <RoutingDecisionCard decision={{ ...heuristic, escalated: false, escalation_keyword: "LITELLM ESCALATE" }} />,
+      <МаршрутизацияDecisionCard decision={{ ...heuristic, escalated: false, escalation_keyword: "LITELLM ESCALATE" }} />,
     );
-    expect(screen.getByText('Requested via "LITELLM ESCALATE"; already at the highest tier')).toBeInTheDocument();
+    expect(screen.getByText('Запросed via "LITELLM ESCALATE"; already at the highest tier')).toBeInTheDocument();
   });
 
   it("omits the escalation row when no escalation was requested", () => {
-    render(<RoutingDecisionCard decision={heuristic} />);
-    expect(screen.queryByText("Escalated")).not.toBeInTheDocument();
+    render(<МаршрутизацияDecisionCard decision={heuristic} />);
+    expect(screen.queryByText("Эскалировано")).not.toBeInTheDocument();
   });
 
   it("still shows a ceiling escalation after the keyword is redacted away", () => {
     // Under message redaction the keyword is gone but `escalated` survives, so the
     // row must still say an escalation was requested.
-    render(<RoutingDecisionCard decision={{ ...heuristic, escalated: false }} />);
-    expect(screen.getByText("Requested; already at the highest tier")).toBeInTheDocument();
+    render(<МаршрутизацияDecisionCard decision={{ ...heuristic, escalated: false }} />);
+    expect(screen.getByText("Запросed; already at the highest tier")).toBeInTheDocument();
   });
 
   it("does not claim the score chose the tier on a redacted override row", () => {
     // `signals` is gone under redaction; the cause alone must suppress the band.
-    render(<RoutingDecisionCard decision={{ ...heuristic, cause: "reasoning_override", signals: undefined }} />);
+    render(<МаршрутизацияDecisionCard decision={{ ...heuristic, cause: "reasoning_override", signals: undefined }} />);
     expect(screen.queryByText(/SIMPLE|MEDIUM|COMPLEX|at or above/)).not.toBeInTheDocument();
     expect(
       screen.getByText(
@@ -238,25 +238,25 @@ describe("RoutingDecisionCard", () => {
   });
 
   it("shows the operator's tier name on the badge instead of the canonical one", () => {
-    render(<RoutingDecisionCard decision={{ ...heuristic, tier_label: "Deep" }} />);
+    render(<МаршрутизацияDecisionCard decision={{ ...heuristic, tier_label: "Deep" }} />);
     expect(screen.getByText("Deep")).toBeInTheDocument();
     expect(screen.queryByText("REASONING")).not.toBeInTheDocument();
   });
 
-  it("keeps the canonical tier name when the router did not rename it", () => {
-    render(<RoutingDecisionCard decision={heuristic} />);
+  it("keeps the canonical tier name when the rвыходer did not rename it", () => {
+    render(<МаршрутизацияDecisionCard decision={heuristic} />);
     expect(screen.getByText("REASONING")).toBeInTheDocument();
   });
 
-  it("drops the tier name from the score band on a renamed router", () => {
-    render(<RoutingDecisionCard decision={{ ...heuristic, tier_label: "Deep" }} />);
+  it("drops the tier name from the score band on a renamed rвыходer", () => {
+    render(<МаршрутизацияDecisionCard decision={{ ...heuristic, tier_label: "Deep" }} />);
     expect(screen.getByText("(at or above 0.6)")).toBeInTheDocument();
     expect(screen.queryByText(/at or above 0\.6, REASONING/)).not.toBeInTheDocument();
   });
 
   it("uses the operator's tier name in the reasoning override description", () => {
     render(
-      <RoutingDecisionCard decision={{ ...heuristic, cause: "reasoning_override", score: 0.2, tier_label: "Deep" }} />,
+      <МаршрутизацияDecisionCard decision={{ ...heuristic, cause: "reasoning_override", score: 0.2, tier_label: "Deep" }} />,
     );
     expect(
       screen.getByText(
@@ -267,7 +267,7 @@ describe("RoutingDecisionCard", () => {
 
   it("states the floor the override actually cleared", () => {
     render(
-      <RoutingDecisionCard
+      <МаршрутизацияDecisionCard
         decision={{ ...heuristic, cause: "reasoning_override", score: 0.2, reasoning_override_min_score: 0.05 }}
       />,
     );
@@ -280,7 +280,7 @@ describe("RoutingDecisionCard", () => {
   // wording on a row that recorded a real floor.
   it("states a recorded floor of 0 rather than treating it as unrecorded", () => {
     render(
-      <RoutingDecisionCard
+      <МаршрутизацияDecisionCard
         decision={{ ...heuristic, cause: "reasoning_override", score: 0.2, reasoning_override_min_score: 0 }}
       />,
     );
@@ -290,12 +290,12 @@ describe("RoutingDecisionCard", () => {
   });
 
   it("never prints undefined on a row logged before the floor was recorded", () => {
-    render(<RoutingDecisionCard decision={{ ...heuristic, cause: "reasoning_override", score: 0.2 }} />);
+    render(<МаршрутизацияDecisionCard decision={{ ...heuristic, cause: "reasoning_override", score: 0.2 }} />);
     expect(screen.queryByText(/undefined/)).not.toBeInTheDocument();
   });
 
   it("falls back to the raw cause for a value this build does not know", () => {
-    render(<RoutingDecisionCard decision={{ cause: "some_future_cause", routed_model: "m" }} />);
+    render(<МаршрутизацияDecisionCard decision={{ cause: "some_future_cause", rвыходed_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "m" }} />);
     expect(screen.getByText("some_future_cause")).toBeInTheDocument();
   });
 });

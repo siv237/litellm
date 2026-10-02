@@ -39,7 +39,7 @@ export default function EvalViewer({ data }: EvalViewerProps) {
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
         <FlaskConical className="size-4" style={{ color: "#6366f1" }} />
         <span className="font-semibold" style={{ fontSize: 15 }}>
-          LLM Judge Results
+          Результаты LLM-судьи
         </span>
       </div>
 
@@ -86,8 +86,7 @@ function EvalEntryCard({ entry }: { entry: EvalInformation }) {
                   {entry.threshold != null && ` (threshold: ${entry.threshold})`}
                 </TooltipTrigger>
                 <TooltipContent>
-                  Weighted average of all criterion scores. Each criterion has a weight (%) set when the eval was
-                  created — higher-weight criteria count more toward the final score.
+                  Взвешенное среднее оценок по всем критериям. Вес каждого критерия задаётся при создании оценки — более весомые критерии сильнее влияют на итоговую оценку.
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -97,12 +96,12 @@ function EvalEntryCard({ entry }: { entry: EvalInformation }) {
           <div className="flex items-center gap-2">
             {entry.judge_model && (
               <span className="text-muted-foreground" style={{ fontSize: 12 }}>
-                Judge: {entry.judge_model}
+                Судья: {entry.judge_model}
               </span>
             )}
             {entry.iteration != null && (
               <span className="text-muted-foreground" style={{ fontSize: 12 }}>
-                Iter: {entry.iteration + 1}
+                Итерация: {entry.iteration + 1}
               </span>
             )}
           </div>
@@ -112,7 +111,7 @@ function EvalEntryCard({ entry }: { entry: EvalInformation }) {
       <CardContent>
         {entry.eval_error && (
           <span className="text-warning" style={{ display: "block", marginBottom: 8, fontSize: 12 }}>
-            Judge error: {entry.eval_error}
+            Ошибка судьи: {entry.eval_error}
           </span>
         )}
 
@@ -120,22 +119,22 @@ function EvalEntryCard({ entry }: { entry: EvalInformation }) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead style={{ width: 160 }}>Criterion</TableHead>
-                <TableHead style={{ width: 65 }}>Weight</TableHead>
-                <TableHead style={{ width: 65 }}>Score</TableHead>
+                <TableHead style={{ width: 160 }}>Критерий</TableHead>
+                <TableHead style={{ width: 65 }}>Вес</TableHead>
+                <TableHead style={{ width: 65 }}>Оценка</TableHead>
                 <TableHead style={{ width: 75 }}>
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger render={<span style={{ borderBottom: "1px dashed #aaa", cursor: "help" }} />}>
-                        Weighted
+                        Взвешенная
                       </TooltipTrigger>
                       <TooltipContent>
-                        Score × Weight — how much each criterion contributes to the final score
+                        Оценка × вес — вклад каждого критерия в итоговую оценку
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 </TableHead>
-                <TableHead>Comment</TableHead>
+                <TableHead>Комментарий</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -206,7 +205,7 @@ function EvalEntryCard({ entry }: { entry: EvalInformation }) {
           </Table>
         ) : (
           <span className="text-muted-foreground" style={{ fontSize: 12 }}>
-            Score: {entry.overall_score?.toFixed(1)} — no per-criterion breakdown available.
+            Оценка: {entry.overall_score?.toFixed(1)} — no per-criterion breakdown available.
           </span>
         )}
       </CardContent>

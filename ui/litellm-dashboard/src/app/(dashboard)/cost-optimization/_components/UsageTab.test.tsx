@@ -1,26 +1,26 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ToolSpendResponse } from "@/components/networking";
+import type { ToolРасходОтвет } from "@/components/networking";
 
-import type { DailyData, SpendMetrics } from "@/components/UsagePage/types";
+import type { Каждый деньData, РасходМетрикаs } from "@/components/ИспользованиеPage/types";
 
-const mockGetToolSpend = vi.fn();
+const mockGetToolРасход = vi.fn();
 
-const { useAuthorizedMock } = vi.hoisted(() => ({ useAuthorizedMock: vi.fn() }));
+const { useАвторизованоMock } = vi.hoisted(() => ({ useАвторизованоMock: vi.fn() }));
 
-vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({
-  default: useAuthorizedMock,
+vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
+  default: useАвторизованоMock,
 }));
 
-// useCan reaches useOrganizations (react-query) through useIsOrgAdmin; stub the
-// org-admin leg so role gating flows through hasCapability without a QueryClient
+// useCan reaches useОрганизацияs (react-query) through useIsOrgAdmin; stub the
+// org-admin leg so role gating flows through hasCapability withвыход a ЗапросClient
 vi.mock("@/app/(dashboard)/hooks/useIsOrgAdmin", () => ({
   default: () => false,
 }));
 
 vi.mock("@/components/networking", () => ({
-  getToolSpend: (...args: unknown[]) => mockGetToolSpend(...args),
+  getToolРасход: (...args: unknown[]) => mockGetToolРасход(...args),
 }));
 
 vi.mock("@/components/shared/advanced_date_picker", () => ({
@@ -66,11 +66,11 @@ vi.mock("@/components/shared/charts", () => ({
   SEQUENTIAL_COLOR_RAMP: ["indigo", "blue", "sky", "cyan"],
 }));
 
-import UsageTab from "./UsageTab";
+import ИспользованиеTab from "./ИспользованиеTab";
 
-const emptyToolSpend: ToolSpendResponse = { by_tool: [], daily: [], start_date: null, end_date: null };
+const emptyToolРасход: ToolРасходОтвет = { by_tool: [], daily: [], start_date: null, end_date: null };
 
-const baseMetrics = (overrides: Partial<SpendMetrics>): SpendMetrics => ({
+const baseМетрикаs = (overrides: Partial<РасходМетрикаs>): РасходМетрикаs => ({
   spend: 0,
   prompt_tokens: 0,
   completion_tokens: 0,
@@ -83,12 +83,12 @@ const baseMetrics = (overrides: Partial<SpendMetrics>): SpendMetrics => ({
   ...overrides,
 });
 
-const day = (date: string, metrics: Partial<SpendMetrics>): DailyData => ({
+const day = (date: string, metrics: Partial<РасходМетрикаs>): Каждый деньData => ({
   date,
-  metrics: baseMetrics(metrics),
+  metrics: baseМетрикаs(metrics),
   breakdown: {
-    models: {},
-    model_groups: {},
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {},
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups: {},
     mcp_servers: {},
     providers: {},
     api_keys: {},
@@ -97,26 +97,26 @@ const day = (date: string, metrics: Partial<SpendMetrics>): DailyData => ({
 });
 
 interface RenderOptions {
-  toolSpend?: ToolSpendResponse;
+  toolРасход?: ToolРасходОтвет;
   from?: Date;
   to?: Date;
   userRole?: string;
 }
 
-const renderWith = (results: DailyData[], options: RenderOptions = {}) => {
+const renderWith = (results: Каждый деньData[], options: RenderOptions = {}) => {
   const {
-    toolSpend = emptyToolSpend,
+    toolРасход = emptyToolРасход,
     from = new Date(2026, 6, 1),
     to = new Date(2026, 6, 14),
     userRole = "Admin",
   } = options;
-  mockGetToolSpend.mockResolvedValue(toolSpend);
-  useAuthorizedMock.mockReturnValue({ accessToken: "test-token", userId: "u1", userRole });
+  mockGetToolРасход.mockResolvedЗначение(toolРасход);
+  useАвторизованоMock.mockReturnЗначение({ accessТокен: "test-token", userId: "u1", userRole });
   return render(
-    <UsageTab
-      accessToken="test-token"
+    <ИспользованиеTab
+      accessТокен="test-token"
       activity={{
-        dateValue: { from, to },
+        dateЗначение: { from, to },
         onDateChange: vi.fn(),
         results,
         loading: false,
@@ -131,22 +131,22 @@ const renderWith = (results: DailyData[], options: RenderOptions = {}) => {
 
 const readSeries = (element: HTMLElement) => JSON.parse(element.getAttribute("data-series") ?? "[]");
 
-describe("UsageTab", () => {
+describe("ИспользованиеTab", () => {
   beforeEach(() => {
-    mockGetToolSpend.mockReset();
+    mockGetToolРасход.mockReset();
   });
 
   it("sums compression and caching dollars across days into the summary cards", () => {
     // Total caching and the LiteLLM-injected share deliberately differ so these
     // assertions pin which one each figure uses: the caching headline and the
     // Total-saved tile take the injected share, the secondary keeps the total.
-    const firstDay: Partial<SpendMetrics> = {
+    const firstDay: Partial<РасходМетрикаs> = {
       compression_savings_spend: 0.04,
       prompt_caching_savings_spend: 0.006,
       gateway_injected_caching_savings_spend: 0.004,
       compression_saved_tokens: 40000,
     };
-    const secondDay: Partial<SpendMetrics> = {
+    const secondDay: Partial<РасходМетрикаs> = {
       compression_savings_spend: 0.1,
       prompt_caching_savings_spend: 0.01,
       gateway_injected_caching_savings_spend: 0.006,
@@ -259,24 +259,24 @@ describe("UsageTab", () => {
   });
 
   it("does not stack the per-day drivers, because one of them can be negative", async () => {
-    // Stacking sums the series into one bar. Auto-router savings go negative when a
-    // model switch pays for a cold cache, and that segment would be drawn below the
+    // Stacking sums the series into one bar. Auto-rвыходer savings go negative when a
+    // Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию switch pays for a cold cache, and that segment would be drawn below the
     // axis while the rest of the bar still read as the day's total.
     renderWith([
       day("2026-07-12", {
         compression_savings_spend: 0.1,
         gateway_injected_caching_savings_spend: 0.02,
-        autorouter_savings_spend: -0.05,
+        autorвыходer_savings_spend: -0.05,
       }),
     ]);
 
     await userEvent.click(screen.getByRole("tab", { name: "Per day" }));
     const bars = screen.getByTestId("bar-chart");
     expect(bars).toHaveAttribute("data-stack", "false");
-    expect(readSeries(bars)[0]).toMatchObject({ "Auto-router": -0.05 });
+    expect(readSeries(bars)[0]).toMatchObject({ "Auto-rвыходer": -0.05 });
   });
 
-  it("lays the savings header out with the card's own slots so nothing shifts between tabs", async () => {
+  it("lays the savings header выход with the card's own slots so nothing shifts between tabs", async () => {
     // The subtitle differs in length between the tabs ("Running total saved" vs "Saved
     // per day"). Hand-rolled rows made it compete with the legend and the toggle for
     // width, so the header grew a line on one tab and the chart moved with it. CardHeader
@@ -287,7 +287,7 @@ describe("UsageTab", () => {
       const legend = screen.getByTestId("chart-legend");
       const action = legend.closest('[data-slot="card-action"]') as HTMLElement;
       const cardHeader = action.parentElement as HTMLElement;
-      const description = cardHeader.querySelector('[data-slot="card-description"]') as HTMLElement;
+      const description = cardHeader.queryВыбратьor('[data-slot="card-description"]') as HTMLElement;
       return { action, cardHeader, description };
     };
 
@@ -296,7 +296,7 @@ describe("UsageTab", () => {
     expect(before.description).toBeTruthy();
     // the toggle rides in the same action slot as the legend, so neither moves alone
     expect(before.action.contains(screen.getByRole("tablist"))).toBe(true);
-    // the subtitle lives outside that slot, so its length cannot reposition the controls
+    // the subtitle lives выходside that slot, so its length cannot reposition the controls
     expect(before.action.contains(before.description)).toBe(false);
     expect(before.description).toHaveTextContent(/Running total saved/);
 
@@ -310,15 +310,15 @@ describe("UsageTab", () => {
     expect(container).toHaveTextContent(/Savings/);
   });
 
-  it("subtracts a losing auto-router route from the total and keeps it out of the donut", () => {
-    // Switching models leaves the new one with a cold cache, so a route can cost more
+  it("subtracts a losing auto-rвыходer rвыходe from the total and keeps it выход of the donut", () => {
+    // Switching Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs leaves the new one with a cold cache, so a rвыходe can cost more
     // than the baseline would have. A negative slice is meaningless in a donut, but the
     // total has to keep the loss or the page can only ever report good news.
     renderWith([
       day("2026-07-12", {
         compression_savings_spend: 0.1,
         gateway_injected_caching_savings_spend: 0.02,
-        autorouter_savings_spend: -0.05,
+        autorвыходer_savings_spend: -0.05,
       }),
     ]);
 
@@ -330,21 +330,21 @@ describe("UsageTab", () => {
     expect(screen.getByTestId("donut-chart")).toHaveAttribute("data-label", "$0.1200");
   });
 
-  it("carries auto-router savings into the summary card, donut slice, and cumulative series", () => {
+  it("carries auto-rвыходer savings into the summary card, donut slice, and cumulative series", () => {
     renderWith([
       day("2026-07-12", {
         compression_savings_spend: 0.04,
         gateway_injected_caching_savings_spend: 0.006,
-        autorouter_savings_spend: 0.02,
+        autorвыходer_savings_spend: 0.02,
       }),
       day("2026-07-13", {
         compression_savings_spend: 0.1,
         gateway_injected_caching_savings_spend: 0.01,
-        autorouter_savings_spend: 0.05,
+        autorвыходer_savings_spend: 0.05,
       }),
     ]);
 
-    // Total saved now sums three drivers, and the auto-router card carries its own total.
+    // Total saved now sums three drivers, and the auto-rвыходer card carries its own total.
     expect(screen.getByText("$0.2260")).toBeInTheDocument();
     expect(screen.getByText("$0.0700")).toBeInTheDocument();
 
@@ -353,16 +353,16 @@ describe("UsageTab", () => {
     expect(slices).toEqual([
       { driver: "Compression", color: "emerald", usd: expect.closeTo(0.14, 5) },
       { driver: "Prompt caching", color: "blue", usd: expect.closeTo(0.016, 5) },
-      { driver: "Auto-router", color: "amber", usd: expect.closeTo(0.07, 5) },
+      { driver: "Auto-rвыходer", color: "amber", usd: expect.closeTo(0.07, 5) },
     ]);
 
-    // And the cumulative line accumulates the auto-router series alongside the others.
+    // And the cumulative line accumulates the auto-rвыходer series alongside the others.
     const series = readSeries(screen.getByTestId("area-chart"));
-    expect(series[2]["Auto-router"]).toBeCloseTo(0.07, 5);
+    expect(series[2]["Auto-rвыходer"]).toBeCloseTo(0.07, 5);
   });
 
   it("renders spend-by-tool bars from the tool spend endpoint", async () => {
-    const toolSpend = {
+    const toolРасход = {
       by_tool: [
         { tool_name: "search", spend: 4.0, call_count: 3, total_tokens: 150 },
         { tool_name: "read_file", spend: 1.0, call_count: 2, total_tokens: 50 },
@@ -371,9 +371,9 @@ describe("UsageTab", () => {
       start_date: "2026-07-12",
       end_date: "2026-07-12",
     };
-    renderWith([day("2026-07-12", {})], { toolSpend });
+    renderWith([day("2026-07-12", {})], { toolРасход });
 
-    const bars = await screen.findAllByTestId("bar-chart");
+    const bars = await screen.findВсеByTestId("bar-chart");
     const series = JSON.parse(bars[0].getAttribute("data-series") ?? "[]");
     expect(series[0]).toMatchObject({ tool_name: "search", spend: 4.0 });
     // The 64px bar cap is this card's opt-in; the shared BarChart must not cap
@@ -381,8 +381,8 @@ describe("UsageTab", () => {
     expect(bars[0]).toHaveAttribute("data-max-bar-size", "64");
   });
 
-  it("renders the tool legend once outside the charts, with both charts sharing the tool colors", async () => {
-    const toolSpend = {
+  it("renders the tool legend once выходside the charts, with both charts sharing the tool colors", async () => {
+    const toolРасход = {
       by_tool: [
         { tool_name: "search", spend: 4.0, call_count: 3, total_tokens: 150 },
         { tool_name: "read_file", spend: 1.0, call_count: 2, total_tokens: 50 },
@@ -391,15 +391,15 @@ describe("UsageTab", () => {
       start_date: "2026-07-12",
       end_date: "2026-07-12",
     };
-    renderWith([day("2026-07-12", {})], { toolSpend });
+    renderWith([day("2026-07-12", {})], { toolРасход });
 
-    const bars = await screen.findAllByTestId("bar-chart");
+    const bars = await screen.findВсеByTestId("bar-chart");
     const [totalByTool, dailyByTool] = bars.slice(-2);
     expect(dailyByTool).toHaveAttribute("data-show-legend", "false");
     expect(totalByTool).toHaveAttribute("data-colors", dailyByTool.getAttribute("data-colors"));
 
     const toolLegends = screen
-      .getAllByTestId("chart-legend")
+      .getВсеByTestId("chart-legend")
       .filter((legend) => legend.textContent === "search,read_file");
     expect(toolLegends).toHaveLength(1);
   });
@@ -407,7 +407,7 @@ describe("UsageTab", () => {
   // `/v1/tool/spend` is proxy-admin-only while the daily-activity charts around
   // it are not, so this one card is dropped rather than the whole tab.
   describe("proxy-admin-only spend-by-tool card", () => {
-    const toolSpend = {
+    const toolРасход = {
       by_tool: [{ tool_name: "search", spend: 4.0, call_count: 3, total_tokens: 150 }],
       daily: [{ date: "2026-07-12", tool_name: "search", spend: 4.0, call_count: 3 }],
       start_date: "2026-07-12",
@@ -418,23 +418,23 @@ describe("UsageTab", () => {
       "hides the card and never calls the endpoint for %s",
       async (userRole) => {
         renderWith([day("2026-07-12", { compression_savings_spend: 0.04 })], {
-          toolSpend,
+          toolРасход,
           userRole,
         });
 
         // Liveness gate: the daily-activity charts still render for this role,
         // so the absence below is the gate, not an empty tab.
         expect(screen.getByTestId("donut-chart")).toBeInTheDocument();
-        expect(screen.queryByText("Spend by tool")).not.toBeInTheDocument();
-        await vi.waitFor(() => expect(mockGetToolSpend).not.toHaveBeenCalled());
+        expect(screen.queryByText("Расход by tool")).not.toBeInTheDocument();
+        await vi.waitFor(() => expect(mockGetToolРасход).not.toHaveBeenCalled());
       },
     );
 
     it("keeps the card and the endpoint call for an admin", async () => {
-      renderWith([day("2026-07-12", { compression_savings_spend: 0.04 })], { toolSpend });
+      renderWith([day("2026-07-12", { compression_savings_spend: 0.04 })], { toolРасход });
 
-      expect(await screen.findByText("Spend by tool")).toBeInTheDocument();
-      expect(mockGetToolSpend).toHaveBeenCalled();
+      expect(await screen.findByText("Расход by tool")).toBeInTheDocument();
+      expect(mockGetToolРасход).toHaveBeenCalled();
     });
   });
 });

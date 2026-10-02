@@ -587,7 +587,7 @@ const EditAutoRouterModal: React.FC<EditAutoRouterModalProps> = ({
       });
     } catch (error) {
       console.error("Error parsing auto router config:", error);
-      toast.fromError("Error loading auto router configuration");
+      toast.fromError("Ошибка загрузки конфигурации авто-роутера");
     }
   };
 
@@ -647,7 +647,7 @@ const EditAutoRouterModal: React.FC<EditAutoRouterModalProps> = ({
       if (!defaultModel) {
         setShowValidationErrors(true);
         toast.fromError(
-          "Add a model to the Simple or Medium tier, or pin a default model, so requests have somewhere to route.",
+          "Добавьте модель в уровень Simple или Medium или закрепите модель по умолчанию — запросам будет куда маршрутизироваться.",
         );
         return;
       }
@@ -686,7 +686,7 @@ const EditAutoRouterModal: React.FC<EditAutoRouterModalProps> = ({
         modelData.model_info.id,
       );
 
-      toast.success("Auto router configuration updated successfully");
+      toast.success("Конфигурация авто-роутера обновлена");
       onSuccess({
         ...modelData,
         model_name: values.auto_router_name,
@@ -726,7 +726,7 @@ const EditAutoRouterModal: React.FC<EditAutoRouterModalProps> = ({
       model_info: updatedModelInfo,
     };
 
-    toast.success("Auto router configuration updated successfully");
+    toast.success("Конфигурация авто-роутера обновлена");
     onSuccess(updatedModelData);
     onCancel();
   };
@@ -735,7 +735,7 @@ const EditAutoRouterModal: React.FC<EditAutoRouterModalProps> = ({
     try {
       setLoading(true);
       await form.handleSubmit(saveValues, () => {
-        toast.fromError("Failed to update auto router configuration");
+        toast.fromError("Не удалось обновить конфигурацию авто-роутера");
       })();
     } catch (error) {
       console.error("Error updating auto router:", error);
@@ -747,7 +747,7 @@ const EditAutoRouterModal: React.FC<EditAutoRouterModalProps> = ({
 
   const modelChoices: ModelChoice[] = [
     ...modelInfo.map((model) => ({ value: model.model_group, label: model.model_group })),
-    { value: "custom", label: "Enter custom model name" },
+    { value: "custom", label: "Введите название своей модели" },
   ];
 
   return (
@@ -755,16 +755,16 @@ const EditAutoRouterModal: React.FC<EditAutoRouterModalProps> = ({
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-4xl">
         <TooltipProvider>
           <DialogHeader>
-            <DialogTitle>Edit Auto Router Configuration</DialogTitle>
+            <DialogTitle>Изменить конфигурацию авто-роутера</DialogTitle>
             <DialogDescription>
-              Edit the auto router configuration including routing logic, default models, and access settings.
+              Измените конфигурацию авто-роутера: логику маршрутизации, модели по умолчанию и настройки доступа.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={(event) => event.preventDefault()} noValidate>
             <FieldGroup>
-              <FormField control={form.control} name="auto_router_name" label="Auto Router Name">
-                {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="e.g., auto_router_1, smart_routing" />}
+              <FormField control={form.control} name="auto_router_name" label="Имя авто-роутера">
+                {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="напр. auto_router_1, smart_routing" />}
               </FormField>
 
               {isComplexityRouterModel ? (
@@ -812,28 +812,28 @@ const EditAutoRouterModal: React.FC<EditAutoRouterModalProps> = ({
                     />
                   </div>
 
-                  <FormField control={form.control} name="auto_router_default_model" label="Default Model">
+                  <FormField control={form.control} name="auto_router_default_model" label="Модель по умолчанию">
                     {({ id, value, onChange, "aria-invalid": ariaInvalid, "aria-describedby": ariaDescribedBy }) => (
                       <ModelChoiceCombobox
                         id={id}
                         value={value}
                         onChange={onChange}
                         choices={modelChoices}
-                        placeholder="Select a default model"
+                        placeholder="Выберите модель по умолчанию"
                         ariaInvalid={ariaInvalid}
                         ariaDescribedBy={ariaDescribedBy}
                       />
                     )}
                   </FormField>
 
-                  <FormField control={form.control} name="auto_router_embedding_model" label="Embedding Model">
+                  <FormField control={form.control} name="auto_router_embedding_model" label="Эмбеддинг-модель">
                     {({ id, value, onChange, "aria-invalid": ariaInvalid, "aria-describedby": ariaDescribedBy }) => (
                       <ModelChoiceCombobox
                         id={id}
                         value={value}
                         onChange={onChange}
                         choices={modelChoices}
-                        placeholder="Select an embedding model"
+                        placeholder="Выберите эмбеддинг-модель"
                         ariaInvalid={ariaInvalid}
                         ariaDescribedBy={ariaDescribedBy}
                       />

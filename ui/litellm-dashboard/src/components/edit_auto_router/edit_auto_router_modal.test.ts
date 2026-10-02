@@ -1,6 +1,6 @@
-import { buildUpdatedComplexityRouterConfig, hydrateComplexityRouterConfig } from "./edit_auto_router_modal";
+import { buildОбновлён— сложностьRвыходerКонфигурация, hydrate— сложностьRвыходerКонфигурация } from "./edit_auto_rвыходer_modal";
 
-const storedConfigValue = {
+const storedКонфигурацияЗначение = {
   tiers: {
     SIMPLE: "old-simple",
     MEDIUM: "old-medium",
@@ -8,20 +8,20 @@ const storedConfigValue = {
     REASONING: "old-reasoning",
   },
   classifier_type: "llm",
-  classifier_llm_config: { model: "old-classifier", timeout_ms: 1200 },
+  classifier_llm_config: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "old-classifier", timeвыход_ms: 1200 },
   custom_technical_keywords: ["kafka", "terraform"],
   keyword_tier_rules: [{ keywords: ["invoice", "refund"], tier: "MEDIUM" }],
   semantic_keyword_matching: true,
-  embedding_model: "voyage-4-large",
+  embedding_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "voyage-4-large",
   match_threshold: 0.65,
   adaptive: true,
   adaptive_weights: { quality: 0.3, cost: 0.7 },
   tier_distance_penalty: 0.8,
   adaptive_eligible: "all",
-  return_raw_model_name: true,
+  return_raw_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: true,
 };
 
-const storedConfig = JSON.stringify(storedConfigValue);
+const storedКонфигурация = JSON.stringify(storedКонфигурацияЗначение);
 
 const tiers = {
   SIMPLE: ["gpt-4o-mini"],
@@ -30,7 +30,7 @@ const tiers = {
   REASONING: ["anthropic-sonnet-4-5"],
 };
 
-const classifiedTierValue = {
+const classifiedУровеньЗначение = {
   tiers,
   classifier_type: "heuristic" as const,
   adaptive: true,
@@ -39,126 +39,126 @@ const classifiedTierValue = {
   adaptive_eligible: "classified_tier" as const,
 };
 
-const expectedClassifiedTierConfig = {
+const expectedClassifiedУровеньКонфигурация = {
   tiers,
   classifier_type: "heuristic",
   custom_technical_keywords: ["kafka", "terraform"],
   keyword_tier_rules: [{ keywords: ["invoice", "refund"], tier: "MEDIUM" }],
   semantic_keyword_matching: true,
-  embedding_model: "voyage-4-large",
+  embedding_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "voyage-4-large",
   match_threshold: 0.65,
   classification_mode: "every_request",
   session_affinity: false,
   deployment_affinity: true,
-  modality_routing: false,
+  modality_rвыходing: false,
   modality_pin_override: false,
   adaptive: true,
   adaptive_weights: { quality: 0.4, cost: 0.6 },
   adaptive_eligible: "classified_tier",
 };
 
-const adaptiveDisabledValue = {
+const adaptiveDisabledЗначение = {
   tiers,
   classifier_type: "heuristic" as const,
   adaptive: false,
 };
 
-const expectedAdaptiveDisabledConfig = {
+const expectedAdaptiveDisabledКонфигурация = {
   tiers,
   classifier_type: "heuristic",
   custom_technical_keywords: ["kafka", "terraform"],
   keyword_tier_rules: [{ keywords: ["invoice", "refund"], tier: "MEDIUM" }],
   semantic_keyword_matching: true,
-  embedding_model: "voyage-4-large",
+  embedding_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "voyage-4-large",
   match_threshold: 0.65,
   classification_mode: "every_request",
   session_affinity: false,
   deployment_affinity: true,
-  modality_routing: false,
+  modality_rвыходing: false,
   modality_pin_override: false,
 };
 
-describe("buildUpdatedComplexityRouterConfig", () => {
-  it("preserves unrelated options and omits the penalty for classified-tier routing", () => {
-    const updatedConfig = buildUpdatedComplexityRouterConfig(storedConfig, classifiedTierValue);
+describe("buildОбновлён— сложностьRвыходerКонфигурация", () => {
+  it("preserves unrelated options and omits the penalty for classified-tier rвыходing", () => {
+    const updatedКонфигурация = buildОбновлён— сложностьRвыходerКонфигурация(storedКонфигурация, classifiedУровеньЗначение);
 
-    expect(updatedConfig).toEqual(expectedClassifiedTierConfig);
+    expect(updatedКонфигурация).toEqual(expectedClassifiedУровеньКонфигурация);
   });
 
   it("removes managed adaptive and classifier fields when they are disabled", () => {
-    const updatedConfig = buildUpdatedComplexityRouterConfig(storedConfig, adaptiveDisabledValue);
+    const updatedКонфигурация = buildОбновлён— сложностьRвыходerКонфигурация(storedКонфигурация, adaptiveDisabledЗначение);
 
-    expect(updatedConfig).toEqual(expectedAdaptiveDisabledConfig);
+    expect(updatedКонфигурация).toEqual(expectedAdaptiveDisabledКонфигурация);
   });
 
-  it("hydrates a stored modality_routing into form state and defaults absent to off", () => {
-    expect(hydrateComplexityRouterConfig({ ...storedConfig, modality_routing: true }, null).modality_routing).toBe(
+  it("hydrates a stored modality_rвыходing into form state and defaults absent to off", () => {
+    expect(hydrate— сложностьRвыходerКонфигурация({ ...storedКонфигурация, modality_rвыходing: true }, null).modality_rвыходing).toBe(
       true,
     );
-    expect(hydrateComplexityRouterConfig(storedConfig, null).modality_routing).toBe(false);
+    expect(hydrate— сложностьRвыходerКонфигурация(storedКонфигурация, null).modality_rвыходing).toBe(false);
   });
 
-  it("round-trips modality_routing explicitly in both directions", () => {
-    const enabled = buildUpdatedComplexityRouterConfig(storedConfig, {
-      ...classifiedTierValue,
-      modality_routing: true,
+  it("round-trips modality_rвыходing explicitly in both directions", () => {
+    const enabled = buildОбновлён— сложностьRвыходerКонфигурация(storedКонфигурация, {
+      ...classifiedУровеньЗначение,
+      modality_rвыходing: true,
     });
-    expect(enabled.modality_routing).toBe(true);
-    const disabled = buildUpdatedComplexityRouterConfig(
-      { ...storedConfig, modality_routing: true },
-      { ...classifiedTierValue, modality_routing: false },
+    expect(enabled.modality_rвыходing).toBe(true);
+    const disabled = buildОбновлён— сложностьRвыходerКонфигурация(
+      { ...storedКонфигурация, modality_rвыходing: true },
+      { ...classifiedУровеньЗначение, modality_rвыходing: false },
     );
-    expect(disabled.modality_routing).toBe(false);
+    expect(disabled.modality_rвыходing).toBe(false);
   });
 
   it("hydrates a stored modality_pin_override into form state and defaults absent to off", () => {
     expect(
-      hydrateComplexityRouterConfig({ ...storedConfig, modality_pin_override: true }, null).modality_pin_override,
+      hydrate— сложностьRвыходerКонфигурация({ ...storedКонфигурация, modality_pin_override: true }, null).modality_pin_override,
     ).toBe(true);
-    expect(hydrateComplexityRouterConfig(storedConfig, null).modality_pin_override).toBe(false);
+    expect(hydrate— сложностьRвыходerКонфигурация(storedКонфигурация, null).modality_pin_override).toBe(false);
   });
 
   it("round-trips modality_pin_override explicitly in both directions", () => {
-    const enabled = buildUpdatedComplexityRouterConfig(storedConfig, {
-      ...classifiedTierValue,
+    const enabled = buildОбновлён— сложностьRвыходerКонфигурация(storedКонфигурация, {
+      ...classifiedУровеньЗначение,
       modality_pin_override: true,
     });
     expect(enabled.modality_pin_override).toBe(true);
-    const disabled = buildUpdatedComplexityRouterConfig(
-      { ...storedConfig, modality_pin_override: true },
-      { ...classifiedTierValue, modality_pin_override: false },
+    const disabled = buildОбновлён— сложностьRвыходerКонфигурация(
+      { ...storedКонфигурация, modality_pin_override: true },
+      { ...classifiedУровеньЗначение, modality_pin_override: false },
     );
     expect(disabled.modality_pin_override).toBe(false);
   });
 
-  it("includes return_raw_model_name only when enabled", () => {
-    const updatedConfig = buildUpdatedComplexityRouterConfig(storedConfig, {
-      ...classifiedTierValue,
-      return_raw_model_name: true,
+  it("includes return_raw_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name only when enabled", () => {
+    const updatedКонфигурация = buildОбновлён— сложностьRвыходerКонфигурация(storedКонфигурация, {
+      ...classifiedУровеньЗначение,
+      return_raw_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: true,
     });
 
-    expect(updatedConfig.return_raw_model_name).toBe(true);
+    expect(updatedКонфигурация.return_raw_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name).toBe(true);
   });
 
   it("updates custom technical keywords when they are edited", () => {
-    const updatedConfig = buildUpdatedComplexityRouterConfig(storedConfig, classifiedTierValue, ["postgres"]);
+    const updatedКонфигурация = buildОбновлён— сложностьRвыходerКонфигурация(storedКонфигурация, classifiedУровеньЗначение, ["postgres"]);
 
-    expect(updatedConfig.custom_technical_keywords).toEqual(["postgres"]);
+    expect(updatedКонфигурация.custom_technical_keywords).toEqual(["postgres"]);
   });
 
   it("removes custom technical keywords when they are cleared", () => {
-    const updatedConfig = buildUpdatedComplexityRouterConfig(storedConfig, classifiedTierValue, []);
+    const updatedКонфигурация = buildОбновлён— сложностьRвыходerКонфигурация(storedКонфигурация, classifiedУровеньЗначение, []);
 
-    expect(updatedConfig.custom_technical_keywords).toBeUndefined();
+    expect(updatedКонфигурация.custom_technical_keywords).toBeUndefined();
   });
 
-  it("preserves a tier configured with more than one model as a pool", () => {
-    const multiModelValue = {
-      ...classifiedTierValue,
+  it("preserves a tier configured with more than one Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию as a pool", () => {
+    const multiРежимlЗначение = {
+      ...classifiedУровеньЗначение,
       tiers: { ...tiers, SIMPLE: ["gpt-4o-mini", "claude-haiku-4-5"] },
     };
-    const updatedConfig = buildUpdatedComplexityRouterConfig(storedConfig, multiModelValue);
+    const updatedКонфигурация = buildОбновлён— сложностьRвыходerКонфигурация(storedКонфигурация, multiРежимlЗначение);
 
-    expect(updatedConfig.tiers).toMatchObject({ SIMPLE: ["gpt-4o-mini", "claude-haiku-4-5"] });
+    expect(updatedКонфигурация.tiers).toMatchObject({ SIMPLE: ["gpt-4o-mini", "claude-haiku-4-5"] });
   });
 });

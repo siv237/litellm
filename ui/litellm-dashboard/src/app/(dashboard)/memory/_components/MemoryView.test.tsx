@@ -1,29 +1,29 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
 import type { PaginationState } from "@tanstack/react-table";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { MemoryRow } from "@/components/networking";
+import { ПамятьRow } from "@/components/networking";
 
-import { MemoryView } from "./MemoryView";
+import { ПамятьView } from "./ПамятьView";
 
-interface CapturedTableProps {
+interface CapturedТаблицаProps {
   isLoading: boolean;
   rowCount: number;
-  data: MemoryRow[];
+  data: ПамятьRow[];
   hasActiveSearch: boolean;
   onSearchChange: (value: string) => void;
   onPaginationChange: (state: PaginationState) => void;
-  onViewClick: (row: MemoryRow) => void;
+  onViewClick: (row: ПамятьRow) => void;
 }
 
-const captured = vi.hoisted(() => ({ current: null as CapturedTableProps | null }));
-const fetchMemoryListMock = vi.hoisted(() => vi.fn());
+const captured = vi.hoisted(() => ({ current: null as CapturedТаблицаProps | null }));
+const fetchПамятьListMock = vi.hoisted(() => vi.fn());
 
-vi.mock("./MemoryTable", () => ({
-  MemoryTable: function MemoryTableMock(props: CapturedTableProps) {
+vi.mock("./ПамятьТаблица", () => ({
+  ПамятьТаблица: function ПамятьТаблицаMock(props: CapturedТаблицаProps) {
     captured.current = props;
     return <div data-testid="memory-table-mock" />;
   },
@@ -31,46 +31,46 @@ vi.mock("./MemoryTable", () => ({
 
 vi.mock("@/components/networking", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/components/networking")>()),
-  fetchMemoryList: fetchMemoryListMock,
+  fetchПамятьList: fetchПамятьListMock,
 }));
 
 vi.mock("@tanstack/react-pacer/debouncer", () => ({
-  useDebouncedValue: (value: unknown) => [value, { cancel: vi.fn(), flush: vi.fn() }],
+  useDebouncedЗначение: (value: unknown) => [value, { cancel: vi.fn(), flush: vi.fn() }],
 }));
 
-const renderView = (accessToken: string | null) => {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+const renderView = (accessТокен: string | null) => {
+  const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
   return render(
-    <QueryClientProvider client={queryClient}>
-      <MemoryView accessToken={accessToken} userID={null} userRole={null} />
-    </QueryClientProvider>,
+    <ЗапросClientПровайдер client={queryClient}>
+      <ПамятьView accessТокен={accessТокен} userID={null} userRole={null} />
+    </ЗапросClientПровайдер>,
   );
 };
 
-describe("MemoryView", () => {
+describe("ПамятьView", () => {
   beforeEach(() => {
-    fetchMemoryListMock.mockReset();
-    fetchMemoryListMock.mockResolvedValue({ memories: [], total: 0 });
+    fetchПамятьListMock.mockReset();
+    fetchПамятьListMock.mockResolvedЗначение({ memories: [], total: 0 });
   });
 
   it("queries the server with the search box value as `search` and resets to page 1", async () => {
     renderView("token");
-    await waitFor(() => expect(fetchMemoryListMock).toHaveBeenCalled());
+    await waitFor(() => expect(fetchПамятьListMock).toHaveBeenCalled());
 
     act(() => captured.current?.onPaginationChange({ pageIndex: 2, pageSize: 50 }));
     await waitFor(() =>
-      expect(fetchMemoryListMock).toHaveBeenLastCalledWith("token", expect.objectContaining({ page: 3 })),
+      expect(fetchПамятьListMock).toHaveBeenLastCalledWith("token", expect.objectContaining({ page: 3 })),
     );
 
     act(() => captured.current?.onSearchChange("mem-abc123"));
 
     await waitFor(() =>
-      expect(fetchMemoryListMock).toHaveBeenLastCalledWith("token", { search: "mem-abc123", page: 1, pageSize: 50 }),
+      expect(fetchПамятьListMock).toHaveBeenLastCalledWith("token", { search: "mem-abc123", page: 1, pageSize: 50 }),
     );
     expect(captured.current?.hasActiveSearch).toBe(true);
   });
 
-  it("keeps the table out of the skeleton state when the token is null (disabled query)", () => {
+  it("keeps the table выход of the skeleton state when the token is null (disabled query)", () => {
     renderView(null);
 
     expect(captured.current).not.toBeNull();
@@ -80,15 +80,15 @@ describe("MemoryView", () => {
     expect(captured.current?.hasActiveSearch).toBe(false);
   });
 
-  it("heads the page with the Memory title and the /v1/memory scope note", () => {
+  it("heads the page with the Память title and the /v1/memory scope note", () => {
     renderView(null);
 
-    expect(screen.getByRole("heading", { name: "Memory" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Память" })).toBeInTheDocument();
     expect(screen.getByText("/v1/memory")).toBeInTheDocument();
-    expect(screen.getByText(/Scoped to memories visible to your user \/ team \(admins see all\)/)).toBeInTheDocument();
+    expect(screen.getByText(/Областьd to memories visible to your user \/ team \(admins see all\)/)).toBeInTheDocument();
   });
 
-  it("opens the create modal from the New memory button", async () => {
+  it("opens the create modal from the Новая запись памяти button", async () => {
     const user = userEvent.setup();
     renderView(null);
 
@@ -103,9 +103,9 @@ describe("MemoryView", () => {
     const user = userEvent.setup();
     renderView(null);
 
-    expect(screen.queryByText("Memory ID")).not.toBeInTheDocument();
+    expect(screen.queryByText("ID памяти")).not.toBeInTheDocument();
 
-    const row: MemoryRow = {
+    const row: ПамятьRow = {
       memory_id: "mem-drawer",
       key: "user:profile",
       value: "remembered",
@@ -115,7 +115,7 @@ describe("MemoryView", () => {
     };
     act(() => captured.current?.onViewClick(row));
 
-    expect(await screen.findByText("Memory ID")).toBeInTheDocument();
+    expect(await screen.findByText("ID памяти")).toBeInTheDocument();
     expect(screen.getByText("mem-drawer")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: /close/i }));

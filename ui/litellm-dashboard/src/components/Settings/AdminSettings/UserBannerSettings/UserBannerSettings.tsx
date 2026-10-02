@@ -65,7 +65,7 @@ function UserBannerSettingsForm({ persisted, isLoading, isPending, saveBanner }:
   const handleSave = () => {
     saveBanner(draft, {
       onSuccess: () => {
-        toast.success("User banner updated successfully");
+        toast.success("Баннер обновлён");
       },
       onError: (error) => {
         toast.fromError(error);
@@ -76,7 +76,7 @@ function UserBannerSettingsForm({ persisted, isLoading, isPending, saveBanner }:
   return (
     <Card>
       <CardHeader>
-        <CardTitle>User Banner</CardTitle>
+        <CardTitle>Баннер пользователя</CardTitle>
         <CardDescription>
           Publish an announcement to all dashboard users. Markdown is supported; the banner appears below the header on
           every page until you unpublish it. Users can dismiss it, and it reappears whenever the content changes.
@@ -91,28 +91,28 @@ function UserBannerSettingsForm({ persisted, isLoading, isPending, saveBanner }:
               <Switch
                 checked={draft.enabled}
                 onCheckedChange={(checked: boolean) => setDraft({ ...draft, enabled: checked })}
-                aria-label="Publish user banner"
+                aria-label="Показывать баннер пользователям"
               />
-              <Label>Publish user banner</Label>
+              <Label>Показывать баннер пользователям</Label>
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label htmlFor="user-banner-message">Message</Label>
+              <Label htmlFor="user-banner-message">Сообщение</Label>
               <Textarea
                 id="user-banner-message"
                 value={draft.message}
                 maxLength={4000}
                 rows={3}
-                placeholder="**Scheduled maintenance** tonight at 10 PM UTC. See [status page](https://example.com)."
+                placeholder="**Плановое обслуживание** сегодня в 22:00 UTC. См. [страницу статуса](https://example.com)."
                 onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
                   setDraft({ ...draft, message: event.target.value })
                 }
               />
-              {messageMissing && <p className="text-sm text-destructive">Add a message before publishing.</p>}
+              {messageMissing && <p className="text-sm text-destructive">Добавьте сообщение перед публикацией.</p>}
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label>Severity</Label>
+              <Label>Критичность</Label>
               <Select
                 items={SEVERITY_ITEMS}
                 value={draft.severity}
@@ -120,8 +120,8 @@ function UserBannerSettingsForm({ persisted, isLoading, isPending, saveBanner }:
                   setDraft({ ...draft, severity: (value ?? "info") as UserBannerSeverity })
                 }
               >
-                <SelectTrigger className="w-48" aria-label="Banner severity">
-                  <SelectValue placeholder="Severity" />
+                <SelectTrigger className="w-48" aria-label="Критичность баннера">
+                  <SelectValue placeholder="Критичность" />
                 </SelectTrigger>
                 <SelectContent>
                   {SEVERITY_ITEMS.map((item) => (
@@ -135,7 +135,7 @@ function UserBannerSettingsForm({ persisted, isLoading, isPending, saveBanner }:
 
             {draft.message.trim() !== "" && (
               <div className="flex flex-col gap-2">
-                <Label>Preview</Label>
+                <Label>Предпросмотр</Label>
                 <Alert variant={draft.severity}>
                   {SEVERITY_ICONS[draft.severity]}
                   <AlertDescription>

@@ -6,24 +6,24 @@ vi.mock("./useConversation", () => ({
   useConversation: () => ({
     isLoading: false,
     messages: [],
-    inputMessage: "",
+    inputСообщение: "",
     variables: {},
     variablesFilled: true,
     extractedVariables: [],
     allVariablesFilled: true,
     messagesEndRef: { current: null },
-    setInputMessage: vi.fn(),
-    handleSendMessage: vi.fn(),
-    handleCancelRequest: vi.fn(),
+    setВходСообщение: vi.fn(),
+    handleSendСообщение: vi.fn(),
+    handleCancelЗапрос: vi.fn(),
     handleClearConversation: vi.fn(),
-    handleKeyDown: vi.fn(),
+    handleКлючDown: vi.fn(),
     handleVariableChange: vi.fn(),
   }),
 }));
 
 describe("ConversationPanel", () => {
   it("renders the empty conversation input", () => {
-    render(<ConversationPanel prompt={{}} accessToken="token" />);
+    render(<ConversationPanel prompt={{}} accessТокен="token" />);
     expect(screen.getByPlaceholderText(/type your message/i)).toBeInTheDocument();
   });
 });

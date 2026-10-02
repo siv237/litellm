@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import KeySavingsTab from "./KeySavingsTab";
-import { DailyData, SpendMetrics } from "@/components/UsagePage/types";
-import * as useScopedDailyActivityRangeModule from "@/app/(dashboard)/cost-optimization/_components/useDailyActivityRange";
+import КлючSavingsTab from "./КлючSavingsTab";
+import { Каждый деньData, РасходМетрикаs } from "@/components/ИспользованиеPage/types";
+import * as useОбластьdКаждый деньActivityRangeModule from "@/app/(dashboard)/cost-optimization/_components/useКаждый деньActivityRange";
 
-const metrics = (overrides: Partial<SpendMetrics>): SpendMetrics => ({
+const metrics = (overrides: Partial<РасходМетрикаs>): РасходМетрикаs => ({
   spend: 0,
   prompt_tokens: 0,
   completion_tokens: 0,
@@ -17,12 +17,12 @@ const metrics = (overrides: Partial<SpendMetrics>): SpendMetrics => ({
   ...overrides,
 });
 
-const day = (date: string, overrides: Partial<SpendMetrics>): DailyData => ({
+const day = (date: string, overrides: Partial<РасходМетрикаs>): Каждый деньData => ({
   date,
   metrics: metrics(overrides),
   breakdown: {
-    models: {},
-    model_groups: {},
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {},
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups: {},
     mcp_servers: {},
     providers: {},
     api_keys: {},
@@ -31,11 +31,11 @@ const day = (date: string, overrides: Partial<SpendMetrics>): DailyData => ({
 });
 
 const mockActivity = (
-  overrides: Partial<useScopedDailyActivityRangeModule.DailyActivityRange> = {},
-): useScopedDailyActivityRangeModule.DailyActivityRange => ({
-  dateValue: { from: new Date("2025-01-01"), to: new Date("2025-01-31") },
+  overrides: Partial<useОбластьdКаждый деньActivityRangeModule.Каждый деньActivityRange> = {},
+): useОбластьdКаждый деньActivityRangeModule.Каждый деньActivityRange => ({
+  dateЗначение: { from: new Date("2025-01-01"), to: new Date("2025-01-31") },
   onDateChange: vi.fn(),
-  results: [] as DailyData[],
+  results: [] as Каждый деньData[],
   loading: false,
   isFetchingMore: false,
   progress: { currentPage: 1, totalPages: 1 },
@@ -44,18 +44,18 @@ const mockActivity = (
   ...overrides,
 });
 
-const scopedRange = () => vi.spyOn(useScopedDailyActivityRangeModule, "useScopedDailyActivityRange");
+const scopedRange = () => vi.spyOn(useОбластьdКаждый деньActivityRangeModule, "useОбластьdКаждый деньActivityRange");
 
 const activity = {
-  dateValue: { from: new Date(2025, 0, 1), to: new Date(2025, 0, 31) },
+  dateЗначение: { from: new Date(2025, 0, 1), to: new Date(2025, 0, 31) },
   onDateChange: vi.fn(),
 };
 
-const renderTab = (props: Partial<React.ComponentProps<typeof KeySavingsTab>> = {}) =>
+const renderTab = (props: Partial<React.ComponentProps<typeof КлючSavingsTab>> = {}) =>
   render(
-    <KeySavingsTab
-      accessToken="test-token"
-      keyToken="key-abc123"
+    <КлючSavingsTab
+      accessТокен="test-token"
+      keyТокен="key-abc123"
       userId="user-123"
       userRole="Internal User"
       activity={activity}
@@ -63,31 +63,31 @@ const renderTab = (props: Partial<React.ComponentProps<typeof KeySavingsTab>> = 
     />,
   );
 
-describe("KeySavingsTab", () => {
+describe("КлючSavingsTab", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("totals each savings driver across the days in range", () => {
-    const firstDay: Partial<SpendMetrics> = {
+    const firstDay: Partial<РасходМетрикаs> = {
       compression_savings_spend: 1.5,
       prompt_caching_savings_spend: 0.25,
       gateway_injected_caching_savings_spend: 0.1,
-      autorouter_savings_spend: 2,
+      autorвыходer_savings_spend: 2,
       compression_saved_tokens: 400,
       cache_read_input_tokens: 300,
       prompt_tokens: 1000,
     };
-    const secondDay: Partial<SpendMetrics> = {
+    const secondDay: Partial<РасходМетрикаs> = {
       compression_savings_spend: 0.5,
       prompt_caching_savings_spend: 0.75,
       gateway_injected_caching_savings_spend: 0.3,
-      autorouter_savings_spend: 1,
+      autorвыходer_savings_spend: 1,
       compression_saved_tokens: 600,
       cache_read_input_tokens: 200,
       prompt_tokens: 1000,
     };
-    scopedRange().mockReturnValue(
+    scopedRange().mockReturnЗначение(
       mockActivity({ results: [day("2025-01-01", firstDay), day("2025-01-02", secondDay)] }),
     );
 
@@ -100,45 +100,45 @@ describe("KeySavingsTab", () => {
     // so a key whose caching came mostly from its own cache_control does not read as gateway-earned
     expect(screen.getByTestId("summary-card-prompt-caching-savings")).toHaveTextContent("$0.40");
     expect(screen.getByTestId("summary-card-prompt-caching-savings")).toHaveTextContent("$1.00Total");
-    expect(screen.getByTestId("summary-card-auto-router-savings")).toHaveTextContent("$3.00");
+    expect(screen.getByTestId("summary-card-auto-rвыходer-savings")).toHaveTextContent("$3.00");
   });
 
   it("separates a key with no traffic from one still loading", () => {
-    scopedRange().mockReturnValue(mockActivity());
+    scopedRange().mockReturnЗначение(mockActivity());
 
     const { unmount } = renderTab();
     expect(screen.getByTestId("key-savings-empty")).toHaveTextContent("No usage recorded for this key");
     unmount();
 
-    scopedRange().mockReturnValue(mockActivity({ loading: true }));
+    scopedRange().mockReturnЗначение(mockActivity({ loading: true }));
     renderTab();
     expect(screen.getByTestId("key-savings-empty")).toHaveTextContent("Loading savings");
   });
 
   it("asks the endpoint for this key alone, scoped to the viewer's own rows", () => {
-    const hook = scopedRange().mockReturnValue(mockActivity());
+    const hook = scopedRange().mockReturnЗначение(mockActivity());
 
     renderTab({ userId: "user-456", userRole: "Internal User" });
 
-    expect(hook).toHaveBeenCalledWith("test-token", { userId: "user-456", apiKey: "key-abc123" }, activity);
+    expect(hook).toHaveBeenCalledWith("test-token", { userId: "user-456", apiКлюч: "key-abc123" }, activity);
     expect(screen.getByTestId("key-savings-scope-note")).toHaveTextContent("Showing your own requests");
   });
 
   it("reads the whole key for a proxy admin, with no scope note to contradict it", () => {
-    const hook = scopedRange().mockReturnValue(mockActivity());
+    const hook = scopedRange().mockReturnЗначение(mockActivity());
 
     renderTab({ userId: "admin-123", userRole: "Admin" });
 
-    expect(hook).toHaveBeenCalledWith("test-token", { userId: null, apiKey: "key-abc123" }, activity);
+    expect(hook).toHaveBeenCalledWith("test-token", { userId: null, apiКлюч: "key-abc123" }, activity);
     expect(screen.queryByTestId("key-savings-scope-note")).not.toBeInTheDocument();
   });
 
   it("keeps the scope note for an org admin, whose figures cover only their own requests", () => {
-    const hook = scopedRange().mockReturnValue(mockActivity());
+    const hook = scopedRange().mockReturnЗначение(mockActivity());
 
     renderTab({ userId: "org-admin-1", userRole: "Org Admin" });
 
-    expect(hook).toHaveBeenCalledWith("test-token", { userId: "org-admin-1", apiKey: "key-abc123" }, activity);
+    expect(hook).toHaveBeenCalledWith("test-token", { userId: "org-admin-1", apiКлюч: "key-abc123" }, activity);
     expect(screen.getByTestId("key-savings-scope-note")).toHaveTextContent("Showing your own requests");
   });
 });

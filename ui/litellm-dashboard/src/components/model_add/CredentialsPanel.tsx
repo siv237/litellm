@@ -54,11 +54,11 @@ export default function CredentialsPanel() {
     try {
       const newCredential = buildCredential(values, stripMaskedSecrets(withoutRestrictedFields(values)));
       await credentialUpdateCall(accessToken, values.credential_name as string, newCredential);
-      toast.success("Credential updated successfully");
+      toast.success("Учётные данные обновлены");
       setIsUpdateModalOpen(false);
       await refetchCredentials();
     } catch (error) {
-      toast.error("Failed to update credential");
+      toast.error("Не удалось обновить учётные данные");
     }
   };
 
@@ -69,11 +69,11 @@ export default function CredentialsPanel() {
     try {
       const newCredential = buildCredential(values, withoutRestrictedFields(values));
       await credentialCreateCall(accessToken, newCredential);
-      toast.success("Credential added successfully");
+      toast.success("Учётные данные добавлены");
       setIsAddModalOpen(false);
       await refetchCredentials();
     } catch (error) {
-      toast.error("Failed to add credential");
+      toast.error("Не удалось добавить учётные данные");
     }
   };
 
@@ -84,10 +84,10 @@ export default function CredentialsPanel() {
     setIsCredentialDeleting(true);
     try {
       await credentialDeleteCall(accessToken, credentialToDelete.credential_name);
-      toast.success("Credential deleted successfully");
+      toast.success("Учётные данные удалены");
       await refetchCredentials();
     } catch (error) {
-      toast.error("Failed to delete credential");
+      toast.error("Не удалось удалить учётные данные");
     } finally {
       setCredentialToDelete(null);
       setIsDeleteModalOpen(false);
@@ -114,12 +114,12 @@ export default function CredentialsPanel() {
     <div className="mx-auto flex w-full flex-auto flex-col gap-4 overflow-y-auto p-2">
       <div className="flex items-center justify-between gap-4">
         <p className="text-sm text-muted-foreground">
-          Configured credentials for different AI providers. Add and manage your API credentials.
+          Настроенные учётные данные для разных AI-провайдеров. Добавляйте и управляйте своими API-ключами.
         </p>
         {canModifyCredentials && (
           <Button onClick={() => setIsAddModalOpen(true)}>
             <Plus className="size-4" />
-            Add Credential
+            Добавить учётные данные
           </Button>
         )}
       </div>
@@ -154,11 +154,11 @@ export default function CredentialsPanel() {
         isOpen={isDeleteModalOpen}
         onCancel={closeDeleteModal}
         onOk={handleDeleteCredential}
-        title="Delete Credential?"
+        title="Удалить учётные данные?"
         message="Are you sure you want to delete this credential? This action cannot be undone and may break existing integrations."
         resourceInformationTitle="Credential Information"
         resourceInformation={[
-          { label: "Credential Name", value: credentialToDelete?.credential_name },
+          { label: "Имя учётных данных", value: credentialToDelete?.credential_name },
           { label: "Провайдер", value: credentialToDelete?.credential_info?.custom_llm_provider || "-" },
         ]}
         confirmLoading={isCredentialDeleting}

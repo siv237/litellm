@@ -1,32 +1,32 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import EditFallbacks, { Fallbacks } from "./EditFallbacks";
-import * as fetchModelsModule from "@/components/llm_calls/fetch_models";
+import EditРезервные модели, { Резервные модели } from "./EditРезервные модели";
+import * as fetchРежимlsModule from "@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs";
 
-vi.mock("@/components/llm_calls/fetch_models", () => ({
-  fetchAvailableModels: vi.fn(),
+vi.mock("@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => ({
+  fetchAvailableРежимls: vi.fn(),
 }));
 
-const renderWithQueryClient = (ui: React.ReactElement) => {
-  const queryClient = new QueryClient({
+const renderWithЗапросClient = (ui: React.ReactElement) => {
+  const queryClient = new ЗапросClient({
     defaultOptions: { queries: { retry: false } },
   });
-  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+  return render(<ЗапросClientПровайдер client={queryClient}>{ui}</ЗапросClientПровайдер>);
 };
 
-describe("EditFallbacks", () => {
-  const accessToken = "test-token";
+describe("EditРезервные модели", () => {
+  const accessТокен = "test-token";
   const fallbackEntry = { "gpt-4": ["gpt-3.5-turbo", "claude-3-opus"] };
-  const value: Fallbacks = [{ "gpt-4": ["gpt-3.5-turbo", "claude-3-opus"] }, { "claude-3-opus": ["gpt-4"] }];
+  const value: Резервные модели = [{ "gpt-4": ["gpt-3.5-turbo", "claude-3-opus"] }, { "claude-3-opus": ["gpt-4"] }];
 
-  const setup = (overrides: Partial<React.ComponentProps<typeof EditFallbacks>> = {}) => {
-    const onChange = overrides.onChange ?? vi.fn().mockResolvedValue(undefined);
+  const setup = (overrides: Partial<React.ComponentProps<typeof EditРезервные модели>> = {}) => {
+    const onChange = overrides.onChange ?? vi.fn().mockResolvedЗначение(undefined);
     const onClose = overrides.onClose ?? vi.fn();
-    renderWithQueryClient(
-      <EditFallbacks
-        accessToken={accessToken}
+    renderWithЗапросClient(
+      <EditРезервные модели
+        accessТокен={accessТокен}
         fallbackEntry={fallbackEntry}
         value={value}
         onChange={onChange}
@@ -38,25 +38,25 @@ describe("EditFallbacks", () => {
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked(fetchModelsModule.fetchAvailableModels).mockResolvedValue([
-      { model_group: "gpt-4", mode: "chat" },
-      { model_group: "gpt-3.5-turbo", mode: "chat" },
-      { model_group: "claude-3-opus", mode: "chat" },
-      { model_group: "gemini-pro", mode: "chat" },
+    vi.clearВсеMocks();
+    vi.mocked(fetchРежимlsModule.fetchAvailableРежимls).mockResolvedЗначение([
+      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4", mode: "chat" },
+      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo", mode: "chat" },
+      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "claude-3-opus", mode: "chat" },
+      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gemini-pro", mode: "chat" },
     ]);
   });
 
-  it("prefills the existing fallback chain for the primary model", async () => {
+  it("prefills the existing fallback chain for the primary Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
     setup();
     const chain = await screen.findByRole("list", { name: "Fallback chain" });
     expect(within(chain).getByText("gpt-3.5-turbo")).toBeInTheDocument();
     expect(within(chain).getByText("claude-3-opus")).toBeInTheDocument();
   });
 
-  it("removes a fallback model and saves only the edited entry", async () => {
+  it("removes a fallback Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию and saves only the edited entry", async () => {
     const user = userEvent.setup();
-    const onChange = vi.fn().mockResolvedValue(undefined);
+    const onChange = vi.fn().mockResolvedЗначение(undefined);
     const onClose = vi.fn();
     setup({ onChange, onClose });
 
@@ -73,7 +73,7 @@ describe("EditFallbacks", () => {
 
   it("blocks saving with an empty fallback chain", async () => {
     const user = userEvent.setup();
-    const onChange = vi.fn().mockResolvedValue(undefined);
+    const onChange = vi.fn().mockResolvedЗначение(undefined);
     setup({ fallbackEntry: { "gpt-4": ["gpt-3.5-turbo"] }, onChange });
 
     const chain = await screen.findByRole("list", { name: "Fallback chain" });

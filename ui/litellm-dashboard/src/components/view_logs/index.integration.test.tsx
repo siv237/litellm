@@ -1,31 +1,31 @@
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import SpendLogsTable from "./index";
-import { renderWithProviders, testQueryClient } from "../../../tests/test-utils";
+import РасходЖурналыТаблица from "./index";
+import { renderWithПровайдерs, testЗапросClient } from "../../../tests/test-utils";
 
-const { useAuthorizedMock, useOrganizationsMock } = vi.hoisted(() => ({
-  useAuthorizedMock: vi.fn(),
-  useOrganizationsMock: vi.fn(),
+const { useАвторизованоMock, useОрганизацияsMock } = vi.hoisted(() => ({
+  useАвторизованоMock: vi.fn(),
+  useОрганизацияsMock: vi.fn(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({
-  default: useAuthorizedMock,
+vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
+  default: useАвторизованоMock,
 }));
 
-vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
-  useOrganizations: useOrganizationsMock,
+vi.mock("@/app/(dashboard)/hooks/organizations/useОрганизацияs", () => ({
+  useОрганизацияs: useОрганизацияsMock,
 }));
 
-vi.mock("./RequestLogsPanel", () => ({
-  default: function RequestLogsPanelMock() {
+vi.mock("./ЗапросЖурналыPanel", () => ({
+  default: function ЗапросЖурналыPanelMock() {
     return <div data-testid="request-logs-panel" />;
   },
 }));
 
 const fetchMock = vi.fn();
 
-const jsonResponse = (body: unknown) => ({
+const jsonОтвет = (body: unknown) => ({
   ok: true,
   status: 200,
   statusText: "OK",
@@ -34,10 +34,10 @@ const jsonResponse = (body: unknown) => ({
 
 const requestedUrls = () => fetchMock.mock.calls.map(([url]) => String(url));
 
-const emptyAuditLogs = { audit_logs: [], total: 0, page: 1, page_size: 50, total_pages: 0 };
+const emptyAuditЖурналы = { audit_logs: [], total: 0, page: 1, page_size: 50, total_pages: 0 };
 
 const defaultProps = {
-  accessToken: "sk-test",
+  accessТокен: "sk-test",
   token: "jwt-test",
   userRole: "Admin",
   userID: "user-1",
@@ -47,43 +47,43 @@ const defaultProps = {
 const ORG_ADMIN_MEMBERSHIPS = [{ organization_id: "org-1", members: [{ user_id: "user-1", user_role: "org_admin" }] }];
 
 const renderAs = (sessionRole: string, organizations: unknown[] = []) => {
-  useAuthorizedMock.mockReturnValue({
-    accessToken: "sk-test",
+  useАвторизованоMock.mockReturnЗначение({
+    accessТокен: "sk-test",
     userId: "user-1",
     userRole: sessionRole,
     premiumUser: true,
   });
-  useOrganizationsMock.mockReturnValue({ data: organizations });
-  return renderWithProviders(<SpendLogsTable {...defaultProps} userRole={sessionRole} />);
+  useОрганизацияsMock.mockReturnЗначение({ data: organizations });
+  return renderWithПровайдерs(<РасходЖурналыТаблица {...defaultProps} userRole={sessionRole} />);
 };
 
-describe("SpendLogsTable network access by role", () => {
+describe("РасходЖурналыТаблица network access by role", () => {
   beforeEach(() => {
-    testQueryClient.clear();
-    vi.clearAllMocks();
-    useOrganizationsMock.mockReturnValue({ data: [] });
+    testЗапросClient.clear();
+    vi.clearВсеMocks();
+    useОрганизацияsMock.mockReturnЗначение({ data: [] });
     fetchMock.mockImplementation(async (url: string) => {
       if (String(url).includes("/audit")) {
-        return jsonResponse(emptyAuditLogs);
+        return jsonОтвет(emptyAuditЖурналы);
       }
       if (String(url).includes("/v2/team/list")) {
-        return jsonResponse({ teams: [] });
+        return jsonОтвет({ teams: [] });
       }
-      return jsonResponse({ keys: [], total_count: 0 });
+      return jsonОтвет({ keys: [], total_count: 0 });
     });
-    vi.stubGlobal("fetch", fetchMock);
+    vi.stubГлобально("fetch", fetchMock);
   });
 
   it("fires neither the audit nor the deleted-teams request for an internal user", async () => {
     const user = userEvent.setup();
     renderAs("Internal User");
 
-    // Liveness gate: the sibling Deleted Keys panel does reach the network, so a
+    // Liveness gate: the sibling Deleted Ключи panel does reach the network, so a
     // silent absence below means the gate worked, not that nothing rendered.
     await waitFor(() => expect(requestedUrls().some((url) => url.includes("/key/list"))).toBe(true));
 
-    await user.click(screen.getByRole("tab", { name: "Deleted Keys" }));
-    await user.click(screen.getByRole("tab", { name: "Request Logs" }));
+    await user.click(screen.getByRole("tab", { name: "Deleted Ключи" }));
+    await user.click(screen.getByRole("tab", { name: "Запрос Журналы" }));
 
     expect(requestedUrls().filter((url) => url.includes("/audit"))).toEqual([]);
     expect(requestedUrls().filter((url) => url.includes("/v2/team/list"))).toEqual([]);
@@ -109,21 +109,21 @@ describe("SpendLogsTable network access by role", () => {
 
     expect(requestedUrls().filter((url) => url.includes("/audit"))).toEqual([]);
 
-    await user.click(screen.getByRole("tab", { name: "Audit Logs" }));
+    await user.click(screen.getByRole("tab", { name: "Audit Журналы" }));
 
     await waitFor(() => expect(requestedUrls().some((url) => url.includes("/audit"))).toBe(true));
   });
 
-  it("leaves the audit request unsent when an admin selects a tab after Audit Logs", async () => {
+  it("leaves the audit request unsent when an admin selects a tab after Audit Журналы", async () => {
     const user = userEvent.setup();
     renderAs("Admin");
 
-    await user.click(screen.getByRole("tab", { name: "Deleted Teams" }));
+    await user.click(screen.getByRole("tab", { name: "Deleted Команды" }));
 
-    expect(screen.getByRole("tab", { name: "Deleted Teams" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tab", { name: "Deleted Команды" })).toHaveAttribute("aria-selected", "true");
     expect(requestedUrls().filter((url) => url.includes("/audit"))).toEqual([]);
 
-    await user.click(screen.getByRole("tab", { name: "Audit Logs" }));
+    await user.click(screen.getByRole("tab", { name: "Audit Журналы" }));
 
     await waitFor(() => expect(requestedUrls().some((url) => url.includes("/audit"))).toBe(true));
   });

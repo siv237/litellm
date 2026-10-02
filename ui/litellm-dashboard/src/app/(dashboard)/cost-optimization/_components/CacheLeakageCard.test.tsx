@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import type { DailyData, KeyMetricWithMetadata, SpendMetrics } from "@/components/UsagePage/types";
-import type { DailyActivityRange } from "./useDailyActivityRange";
+import type { Каждый деньData, КлючМетрикаWithМетаданные, РасходМетрикаs } from "@/components/ИспользованиеPage/types";
+import type { Каждый деньActivityRange } from "./useКаждый деньActivityRange";
 
 vi.mock("@/components/shared/advanced_date_picker", () => ({
   __esModule: true,
@@ -11,7 +11,7 @@ vi.mock("@/components/shared/advanced_date_picker", () => ({
 
 import CacheLeakageCard from "./CacheLeakageCard";
 
-const baseMetrics = (overrides: Partial<SpendMetrics>): SpendMetrics => ({
+const baseМетрикаs = (overrides: Partial<РасходМетрикаs>): РасходМетрикаs => ({
   spend: 0,
   prompt_tokens: 0,
   completion_tokens: 0,
@@ -24,35 +24,35 @@ const baseMetrics = (overrides: Partial<SpendMetrics>): SpendMetrics => ({
   ...overrides,
 });
 
-const key = (alias: string, metrics: Partial<SpendMetrics>): KeyMetricWithMetadata => ({
-  metrics: baseMetrics(metrics),
+const key = (alias: string, metrics: Partial<РасходМетрикаs>): КлючМетрикаWithМетаданные => ({
+  metrics: baseМетрикаs(metrics),
   metadata: { key_alias: alias, team_id: null },
 });
 
-const dayWithKeys = (date: string, apiKeys: Record<string, KeyMetricWithMetadata>): DailyData => ({
+const dayWithКлючи = (date: string, apiКлючи: Record<string, КлючМетрикаWithМетаданные>): Каждый деньData => ({
   date,
-  metrics: baseMetrics({}),
+  metrics: baseМетрикаs({}),
   breakdown: {
-    models: {},
-    model_groups: {},
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {},
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups: {},
     mcp_servers: {},
     providers: {},
-    api_keys: apiKeys,
+    api_keys: apiКлючи,
     entities: {},
   },
 });
 
-const dayWithModels = (date: string, models: Record<string, Partial<SpendMetrics>>): DailyData => ({
+const dayWithРежимls = (date: string, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: Record<string, Partial<РасходМетрикаs>>): Каждый деньData => ({
   date,
-  metrics: baseMetrics({}),
+  metrics: baseМетрикаs({}),
   breakdown: {
-    models: Object.fromEntries(
-      Object.entries(models).map(([name, m]) => [
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: Object.fromEntries(
+      Object.entries(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs).map(([name, m]) => [
         name,
-        { metrics: baseMetrics(m), metadata: {}, api_key_breakdown: {} },
+        { metrics: baseМетрикаs(m), metadata: {}, api_key_breakdown: {} },
       ]),
     ),
-    model_groups: {},
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups: {},
     mcp_servers: {},
     providers: {},
     api_keys: {},
@@ -60,11 +60,11 @@ const dayWithModels = (date: string, models: Record<string, Partial<SpendMetrics
   },
 });
 
-const renderWith = (results: DailyData[], overrides: Partial<DailyActivityRange> = {}) =>
+const renderWith = (results: Каждый деньData[], overrides: Partial<Каждый деньActivityRange> = {}) =>
   render(
     <CacheLeakageCard
       activity={{
-        dateValue: {},
+        dateЗначение: {},
         onDateChange: vi.fn(),
         results,
         loading: false,
@@ -80,7 +80,7 @@ const renderWith = (results: DailyData[], overrides: Partial<DailyActivityRange>
 describe("CacheLeakageCard", () => {
   it("ranks leaking keys by uncached prompt tokens and shows cache hit ratio", () => {
     renderWith([
-      dayWithKeys("2026-07-12", {
+      dayWithКлючи("2026-07-12", {
         "hash-caching": key("caching-key", { prompt_tokens: 1000, cache_read_input_tokens: 900 }),
         "hash-leaky": key("leaky-key", { prompt_tokens: 10000, cache_read_input_tokens: 0 }),
       }),
@@ -90,15 +90,15 @@ describe("CacheLeakageCard", () => {
     expect(screen.getByText("0.0%")).toBeInTheDocument();
     expect(screen.getByText("90.0%")).toBeInTheDocument();
     [
-      "Input tokens you sent in this range that weren't served from or written to the cache",
+      "Вход tokens you sent in this range that weren't served from or written to the cache",
       "Share of your input tokens that were served from the cache",
-      "About how much you'd save if this uncached input used prompt caching. Estimated as uncached input tokens times what your cached traffic already nets per cached token (realized cache savings, after write premiums, ÷ cache read and write tokens). Blank when caching is not currently saving anything overall.",
+      "Abвыход how much you'd save if this uncached input used prompt caching. Estimated as uncached input tokens times what your cached traffic already nets per cached token (realized cache savings, after write premiums, ÷ cache read and write tokens). Blank when caching is not currently saving anything overall.",
     ].forEach((info) => expect(screen.getByLabelText(info)).toBeInTheDocument());
   });
 
   it("sorts by the clicked column, worst cache hit rate first", () => {
     renderWith([
-      dayWithKeys("2026-07-12", {
+      dayWithКлючи("2026-07-12", {
         "hash-a": key("alpha", {
           prompt_tokens: 10000,
           cache_read_input_tokens: 9000,
@@ -111,7 +111,7 @@ describe("CacheLeakageCard", () => {
         }),
       }),
     ]);
-    const firstDataRow = () => screen.getAllByRole("row")[1];
+    const firstDataRow = () => screen.getВсеByRole("row")[1];
 
     expect(firstDataRow()).toHaveTextContent("alpha");
 
@@ -122,30 +122,30 @@ describe("CacheLeakageCard", () => {
     expect(firstDataRow()).toHaveTextContent("alpha");
   });
 
-  it("switches to the model view and lists only Anthropic models", () => {
+  it("switches to the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию view and lists only Anthropic Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => {
     renderWith([
-      dayWithModels("2026-07-12", {
+      dayWithРежимls("2026-07-12", {
         "claude-sonnet-5": { prompt_tokens: 5000, cache_read_input_tokens: 0 },
         "gpt-4o": { prompt_tokens: 8000, cache_read_input_tokens: 0 },
       }),
     ]);
 
-    fireEvent.click(screen.getByText("By model"));
+    fireEvent.click(screen.getByText("By Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию"));
 
-    expect(screen.getByText("Cache leakage by model")).toBeInTheDocument();
+    expect(screen.getByText("Cache leakage by Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию")).toBeInTheDocument();
     expect(screen.getByText("claude-sonnet-5")).toBeInTheDocument();
     expect(screen.queryByText("gpt-4o")).not.toBeInTheDocument();
   });
 
   it("shows an empty state when no key used tokens in the range", () => {
-    renderWith([dayWithKeys("2026-07-12", {})]);
+    renderWith([dayWithКлючи("2026-07-12", {})]);
 
     expect(screen.getByText("No key usage in this range.")).toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 
   it("tells the user the table is still filling in while fallback pages stream", () => {
-    const day = dayWithKeys("2026-07-12", {
+    const day = dayWithКлючи("2026-07-12", {
       "hash-leaky": key("leaky-key", { prompt_tokens: 10000, cache_read_input_tokens: 0 }),
     });
     renderWith([day], { isFetchingMore: true });
@@ -157,7 +157,7 @@ describe("CacheLeakageCard", () => {
   });
 
   it("keeps the streaming note off while a fresh range loads over the previous range's rows", () => {
-    const day = dayWithKeys("2026-07-12", {
+    const day = dayWithКлючи("2026-07-12", {
       "hash-leaky": key("leaky-key", { prompt_tokens: 10000, cache_read_input_tokens: 0 }),
     });
     renderWith([day], { loading: true });
@@ -168,7 +168,7 @@ describe("CacheLeakageCard", () => {
   });
 
   it("drops the streaming note once the range has settled", () => {
-    const day = dayWithKeys("2026-07-12", {
+    const day = dayWithКлючи("2026-07-12", {
       "hash-leaky": key("leaky-key", { prompt_tokens: 10000, cache_read_input_tokens: 0 }),
     });
     renderWith([day]);

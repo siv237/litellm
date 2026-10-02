@@ -1,9 +1,9 @@
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders, screen, waitFor } from "../../../../../../tests/test-utils";
+import { renderWithПровайдерs, screen, waitFor } from "../../../../../../tests/test-utils";
 import MultiExportDropdown from "./multi_export_dropdown";
-import type { MultiModelResult } from "./types";
+import type { MultiРежимlРезультат } from "./types";
 
 vi.mock("./multi_export_utils", () => ({
   exportMultiToPDF: vi.fn(),
@@ -12,32 +12,32 @@ vi.mock("./multi_export_utils", () => ({
 
 import { exportMultiToPDF, exportMultiToCSV } from "./multi_export_utils";
 
-function makeMultiResult(hasResult: boolean): MultiModelResult {
+function makeMultiРезультат(hasРезультат: boolean): MultiРежимlРезультат {
   return {
     entries: [
       {
-        entry: { id: "e1", model: "gpt-4", input_tokens: 1000, output_tokens: 500 },
-        result: hasResult
+        entry: { id: "e1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", input_tokens: 1000, выходput_tokens: 500 },
+        result: hasРезультат
           ? {
-              model: "gpt-4",
+              Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
               input_tokens: 1000,
-              output_tokens: 500,
+              выходput_tokens: 500,
               num_requests_per_day: null,
               num_requests_per_month: null,
               cost_per_request: 0.05,
               input_cost_per_request: 0.03,
-              output_cost_per_request: 0.02,
+              выходput_cost_per_request: 0.02,
               margin_cost_per_request: 0,
               daily_cost: null,
               daily_input_cost: null,
-              daily_output_cost: null,
+              daily_выходput_cost: null,
               daily_margin_cost: null,
               monthly_cost: null,
               monthly_input_cost: null,
-              monthly_output_cost: null,
+              monthly_выходput_cost: null,
               monthly_margin_cost: null,
               input_cost_per_token: null,
-              output_cost_per_token: null,
+              выходput_cost_per_token: null,
               provider: "openai",
             }
           : null,
@@ -46,7 +46,7 @@ function makeMultiResult(hasResult: boolean): MultiModelResult {
       },
     ],
     totals: {
-      cost_per_request: hasResult ? 0.05 : 0,
+      cost_per_request: hasРезультат ? 0.05 : 0,
       daily_cost: null,
       monthly_cost: null,
       margin_per_request: 0,
@@ -58,22 +58,22 @@ function makeMultiResult(hasResult: boolean): MultiModelResult {
 
 describe("MultiExportDropdown", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should not render anything when no entries have results", () => {
-    const { container } = renderWithProviders(<MultiExportDropdown multiResult={makeMultiResult(false)} />);
+    const { container } = renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(false)} />);
     expect(container).toBeEmptyDOMElement();
   });
 
   it("should render the Export button when at least one entry has a result", () => {
-    renderWithProviders(<MultiExportDropdown multiResult={makeMultiResult(true)} />);
+    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
     expect(screen.getByRole("button", { name: /^export$/i })).toBeInTheDocument();
   });
 
   it("should show the export menu when the Export button is clicked", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<MultiExportDropdown multiResult={makeMultiResult(true)} />);
+    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     await user.click(screen.getByRole("button", { name: /^export$/i }));
 
@@ -83,7 +83,7 @@ describe("MultiExportDropdown", () => {
 
   it("should hide the export menu when the Export button is clicked again", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<MultiExportDropdown multiResult={makeMultiResult(true)} />);
+    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     const trigger = screen.getByRole("button", { name: /^export$/i });
     await user.click(trigger);
@@ -95,45 +95,45 @@ describe("MultiExportDropdown", () => {
 
   it("should call exportMultiToPDF and close the menu when Export as PDF is clicked", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<MultiExportDropdown multiResult={makeMultiResult(true)} />);
+    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     const trigger = screen.getByRole("button", { name: /^export$/i });
     await user.click(trigger);
     await user.click(await screen.findByRole("menuitem", { name: "Export as PDF" }));
 
-    expect(exportMultiToPDF).toHaveBeenCalledTimes(1);
+    expect(exportMultiToPDF).toHaveBeenCalledВремяs(1);
     await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "false"));
   });
 
   it("should call exportMultiToCSV and close the menu when Export as CSV is clicked", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<MultiExportDropdown multiResult={makeMultiResult(true)} />);
+    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     const trigger = screen.getByRole("button", { name: /^export$/i });
     await user.click(trigger);
     await user.click(await screen.findByRole("menuitem", { name: "Export as CSV" }));
 
-    expect(exportMultiToCSV).toHaveBeenCalledTimes(1);
+    expect(exportMultiToCSV).toHaveBeenCalledВремяs(1);
     await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "false"));
   });
 
-  it("should pass the multiResult to the export functions", async () => {
+  it("should pass the multiРезультат to the export functions", async () => {
     const user = userEvent.setup();
-    const multiResult = makeMultiResult(true);
-    renderWithProviders(<MultiExportDropdown multiResult={multiResult} />);
+    const multiРезультат = makeMultiРезультат(true);
+    renderWithПровайдерs(<MultiExportDropdown multiРезультат={multiРезультат} />);
 
     await user.click(screen.getByRole("button", { name: /^export$/i }));
     await user.click(await screen.findByRole("menuitem", { name: "Export as PDF" }));
 
-    expect(exportMultiToPDF).toHaveBeenCalledWith(multiResult);
+    expect(exportMultiToPDF).toHaveBeenCalledWith(multiРезультат);
   });
 
-  it("should close the menu when clicking outside", async () => {
+  it("should close the menu when clicking выходside", async () => {
     const user = userEvent.setup();
-    renderWithProviders(
+    renderWithПровайдерs(
       <div>
-        <MultiExportDropdown multiResult={makeMultiResult(true)} />
-        <div data-testid="outside">Outside</div>
+        <MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />
+        <div data-testid="выходside">Выходside</div>
       </div>,
     );
 
@@ -141,13 +141,13 @@ describe("MultiExportDropdown", () => {
     await user.click(trigger);
     await screen.findByRole("menuitem", { name: "Export as PDF" });
 
-    await user.click(screen.getByTestId("outside"));
+    await user.click(screen.getByTestId("выходside"));
     await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "false"));
   });
 
   it("should focus and navigate export options with the keyboard", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<MultiExportDropdown multiResult={makeMultiResult(true)} />);
+    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     const trigger = screen.getByRole("button", { name: /^export$/i });
     trigger.focus();
@@ -162,7 +162,7 @@ describe("MultiExportDropdown", () => {
 
   it("should close the menu and restore trigger focus when Escape is pressed", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<MultiExportDropdown multiResult={makeMultiResult(true)} />);
+    renderWithПровайдерs(<MultiExportDropdown multiРезультат={makeMultiРезультат(true)} />);
 
     const trigger = screen.getByRole("button", { name: /^export$/i });
     trigger.focus();

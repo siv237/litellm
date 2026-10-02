@@ -1,66 +1,66 @@
-import type { ColumnDef, RowSelectionState } from "@tanstack/react-table";
+import type { ColumnDef, RowВыбратьionState } from "@tanstack/react-table";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
 
-import { createSelectionColumn, DataTable } from "./index";
+import { createВыбратьionColumn, DataТаблица } from "./index";
 
-interface Model {
+interface Режимl {
   id: string;
   name: string;
 }
 
-const data: Model[] = [
+const data: Режимl[] = [
   { id: "m1", name: "Alpha" },
-  { id: "m2", name: "Beta" },
+  { id: "m2", name: "Бета" },
   { id: "m3", name: "Gamma" },
 ];
 
-const columns: ColumnDef<Model, unknown>[] = [
-  createSelectionColumn<Model>({ rowAriaLabel: (row) => `Select ${row.original.name}` }),
-  { id: "name", accessorKey: "name", header: "Name", enableSorting: false },
+const columns: ColumnDef<Режимl, unknown>[] = [
+  createВыбратьionColumn<Режимl>({ rowAriaLabel: (row) => `Выбрать ${row.original.name}` }),
+  { id: "name", accessorКлюч: "name", header: "Name", enableSorting: false },
 ];
 
-const selectAll = () => screen.getByTestId("datatable-select-all");
+const selectВсе = () => screen.getByTestId("datatable-select-all");
 const rowBox = (id: string) => screen.getByTestId(`datatable-select-row-${id}`);
 const selectedCount = () => screen.getByTestId("count");
 
 function ControlledHarness() {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [rowВыбратьion, setRowВыбратьion] = useState<RowВыбратьionState>({});
 
   return (
     <>
       <span data-testid="keys">
-        {Object.keys(rowSelection)
-          .filter((key) => rowSelection[key])
+        {Object.keys(rowВыбратьion)
+          .filter((key) => rowВыбратьion[key])
           .sort()
           .join(",")}
       </span>
-      <button type="button" data-testid="clear" onClick={() => setRowSelection({})}>
+      <button type="button" data-testid="clear" onClick={() => setRowВыбратьion({})}>
         clear
       </button>
-      <DataTable
+      <DataТаблица
         data={data}
         columns={columns}
         getRowId={(row) => row.id}
-        rowSelection={rowSelection}
-        onRowSelectionChange={setRowSelection}
+        rowВыбратьion={rowВыбратьion}
+        onRowВыбратьionChange={setRowВыбратьion}
       />
     </>
   );
 }
 
-describe("DataTable row selection", () => {
+describe("DataТаблица row selection", () => {
   it("supports uncontrolled per-row toggle, select-all, and indeterminate", async () => {
     const user = userEvent.setup();
 
     render(
-      <DataTable
+      <DataТаблица
         data={data}
         columns={columns}
         getRowId={(row) => row.id}
-        toolbar={(table) => <span data-testid="count">{table.getSelectedRowModel().rows.length}</span>}
+        toolbar={(table) => <span data-testid="count">{table.getВыбраноRowРежимl().rows.length}</span>}
       />,
     );
 
@@ -68,13 +68,13 @@ describe("DataTable row selection", () => {
 
     await user.click(rowBox("m1"));
     expect(selectedCount()).toHaveTextContent("1");
-    expect(selectAll()).toHaveAttribute("aria-checked", "mixed");
+    expect(selectВсе()).toHaveAttribute("aria-checked", "mixed");
 
-    await user.click(selectAll());
+    await user.click(selectВсе());
     expect(selectedCount()).toHaveTextContent("3");
-    expect(selectAll()).toHaveAttribute("aria-checked", "true");
+    expect(selectВсе()).toHaveAttribute("aria-checked", "true");
 
-    await user.click(selectAll());
+    await user.click(selectВсе());
     expect(selectedCount()).toHaveTextContent("0");
   });
 
@@ -93,7 +93,7 @@ describe("DataTable row selection", () => {
     const user = userEvent.setup();
     render(<ControlledHarness />);
 
-    await user.click(selectAll());
+    await user.click(selectВсе());
     expect(screen.getByTestId("keys")).toHaveTextContent("m1,m2,m3");
 
     await user.click(screen.getByTestId("clear"));
@@ -101,16 +101,16 @@ describe("DataTable row selection", () => {
     expect(rowBox("m1")).toHaveAttribute("aria-checked", "false");
   });
 
-  it("respects an enableRowSelection predicate", async () => {
+  it("respects an enableRowВыбратьion predicate", async () => {
     const user = userEvent.setup();
 
     render(
-      <DataTable
+      <DataТаблица
         data={data}
         columns={columns}
         getRowId={(row) => row.id}
-        enableRowSelection={(row) => row.original.id !== "m2"}
-        toolbar={(table) => <span data-testid="count">{table.getSelectedRowModel().rows.length}</span>}
+        enableRowВыбратьion={(row) => row.original.id !== "m2"}
+        toolbar={(table) => <span data-testid="count">{table.getВыбраноRowРежимl().rows.length}</span>}
       />,
     );
 

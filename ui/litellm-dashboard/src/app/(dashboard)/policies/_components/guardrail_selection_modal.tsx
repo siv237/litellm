@@ -98,11 +98,11 @@ const GuardrailSelectionModal: React.FC<GuardrailSelectionModalProps> = ({
             {template?.title}
             {progressInfo && (
               <Badge variant="secondary">
-                Template {progressInfo.current} of {progressInfo.total}
+                Шаблон {progressInfo.current} из {progressInfo.total}
               </Badge>
             )}
           </DialogTitle>
-          <DialogDescription>Review and select guardrails to create for this template</DialogDescription>
+          <DialogDescription>Проверьте и выберите гардрейлы, которые будут созданы для этого шаблона</DialogDescription>
         </DialogHeader>
 
         <div className="py-4">
@@ -125,10 +125,10 @@ const GuardrailSelectionModal: React.FC<GuardrailSelectionModalProps> = ({
             {newGuardrailsCount > 0 && (
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={handleSelectAll}>
-                  Select All New
+                  Выбрать все новые
                 </Button>
                 <Button variant="outline" size="sm" onClick={handleDeselectAll}>
-                  Deselect All
+                  Снять выделение
                 </Button>
               </div>
             )}
@@ -157,7 +157,7 @@ const GuardrailSelectionModal: React.FC<GuardrailSelectionModalProps> = ({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-mono text-sm font-medium">{guardrail.guardrail_name}</span>
-                      {guardrail.alreadyExists && <Badge variant="secondary">Already exists</Badge>}
+                      {guardrail.alreadyExists && <Badge variant="secondary">Уже существует</Badge>}
                     </div>
                     <p className="text-sm text-muted-foreground">{guardrail.description}</p>
 
@@ -169,7 +169,7 @@ const GuardrailSelectionModal: React.FC<GuardrailSelectionModalProps> = ({
                       </Badge>
                       {guardrail.definition?.litellm_params?.patterns && (
                         <Badge variant="secondary">
-                          {guardrail.definition.litellm_params.patterns.length} pattern(s)
+                          {guardrail.definition.litellm_params.patterns.length} паттернов
                         </Badge>
                       )}
                       {guardrail.definition?.litellm_params?.categories && (
@@ -186,8 +186,8 @@ const GuardrailSelectionModal: React.FC<GuardrailSelectionModalProps> = ({
 
           {guardrailsInfo.length === 0 && (
             <div className="py-8 text-center text-muted-foreground">
-              <p>No guardrails defined for this template.</p>
-              <p className="text-sm mt-2">This template will use existing guardrails in your system.</p>
+              <p>Для этого шаблона гардрейлы не заданы.</p>
+              <p className="text-sm mt-2">Этот шаблон будет использовать существующие гардрейлы вашей системы.</p>
             </div>
           )}
 
@@ -199,7 +199,7 @@ const GuardrailSelectionModal: React.FC<GuardrailSelectionModalProps> = ({
                 <div className="mb-2 flex items-center gap-2">
                   <span className="text-lg">✨</span>
                   <span className="text-sm font-medium">
-                    AI-Discovered Competitors ({template.discoveredCompetitors.length})
+                    Конкуренты, найденные ИИ ({template.discoveredCompetitors.length})
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
@@ -210,7 +210,7 @@ const GuardrailSelectionModal: React.FC<GuardrailSelectionModalProps> = ({
                   ))}
                 </div>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  These competitor names will be automatically blocked by the competitor-name-blocker guardrail.
+                  Эти названия конкурентов будут автоматически блокироваться гардрейлом competitor-name-blocker.
                 </p>
               </div>
             </>
@@ -222,15 +222,15 @@ const GuardrailSelectionModal: React.FC<GuardrailSelectionModalProps> = ({
           <div className="text-sm text-muted-foreground">
             {selectedCount > 0 ? (
               <p>
-                <span className="font-medium text-foreground">{selectedCount}</span> guardrail
-                {selectedCount > 1 ? "s" : ""} will be created
+                <span className="font-medium text-foreground">{selectedCount}</span> гардрейлов
+                 будет создано
               </p>
             ) : existingCount > 0 ? (
-              <p className="text-success">All guardrails already exist. You can proceed to use this template.</p>
+              <p className="text-success">Все гардрейлы уже существуют. Можно использовать этот шаблон.</p>
             ) : (
               <p className="text-warning">
-                Select at least one guardrail to create, or click &quot;Use Template&quot; to proceed without creating
-                new guardrails.
+                Выберите хотя бы один гардрейл для создания или нажмите &quot;Использовать шаблон&quot;, чтобы продолжить без
+                создания новых гардрейлов.
               </p>
             )}
           </div>

@@ -1,18 +1,18 @@
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders, screen, waitFor } from "../../../../tests/test-utils";
+import { renderWithПровайдерs, screen, waitFor } from "../../../../tests/test-utils";
 import {
-  makeBedrockResponse,
+  makeBedrockОтвет,
   makeEntity,
-  makeGuardrailInformation,
+  makeGuardrailИнформация,
 } from "@/components/view_logs/GuardrailViewer/__tests__/fixtures";
 import GuardrailViewer from "@/components/view_logs/GuardrailViewer/GuardrailViewer";
 
 // We will mock child components selectively for some tests to assert prop passthrough,
-// but also run an integration-style render without mocks.
-const PresidioPath = "@/components/view_logs/GuardrailViewer/PresidioDetectedEntities";
-const BedrockPath = "@/components/view_logs/GuardrailViewer/BedrockGuardrailDetails";
+// but also run an integration-style render withвыход mocks.
+const PresidioПуть = "@/components/view_logs/GuardrailViewer/PresidioОбнаруженоEntities";
+const BedrockПуть = "@/components/view_logs/GuardrailViewer/BedrockGuardrailDetails";
 
 describe("GuardrailViewer", () => {
   beforeEach(() => {
@@ -20,8 +20,8 @@ describe("GuardrailViewer", () => {
   });
 
   it("shows header, status pill, and duration", () => {
-    const data = makeGuardrailInformation({ duration: 1.23456, guardrail_status: "success" });
-    renderWithProviders(<GuardrailViewer data={data} />);
+    const data = makeGuardrailИнформация({ duration: 1.23456, гардрейлов_status: "success" });
+    renderWithПровайдерs(<GuardrailViewer data={data} />);
 
     expect(screen.getByText("Гардрейлы и соответствие политикам")).toBeInTheDocument();
     // header shows passed count
@@ -33,17 +33,17 @@ describe("GuardrailViewer", () => {
     expect(screen.getByText("1235ms")).toBeInTheDocument();
   });
 
-  it("renders guardrail_flagged as FLAGGED (warning), not FAILED", () => {
-    const data = makeGuardrailInformation({
-      guardrail_name: "cc-flag",
-      guardrail_status: "guardrail_flagged",
-      guardrail_provider: "custom_code",
+  it("renders гардрейлов_flagged as FLAGGED (warning), not FAILED", () => {
+    const data = makeGuardrailИнформация({
+      гардрейлов_name: "cc-flag",
+      гардрейлов_status: "гардрейлов_flagged",
+      гардрейлов_provider: "custom_code",
     });
-    renderWithProviders(<GuardrailViewer data={data} />);
+    renderWithПровайдерs(<GuardrailViewer data={data} />);
 
     expect(screen.getByText(/0 пройдено/)).toBeInTheDocument();
     expect(screen.getByText(/1 с флагом/)).toBeInTheDocument();
-    const badges = screen.getAllByText("ФЛАГ");
+    const badges = screen.getВсеByText("ФЛАГ");
     expect(badges.length).toBeGreaterThan(0);
     expect(badges[0]).toHaveClass("text-warning");
     expect(screen.queryByText("СБОЙ")).not.toBeInTheDocument();
@@ -51,10 +51,10 @@ describe("GuardrailViewer", () => {
 
   it("calculates and displays masked entity totals", async () => {
     const user = userEvent.setup();
-    const data = makeGuardrailInformation({
+    const data = makeGuardrailИнформация({
       masked_entity_count: { EMAIL_ADDRESS: 2, PHONE_NUMBER: 1 },
     });
-    renderWithProviders(<GuardrailViewer data={data} />);
+    renderWithПровайдерs(<GuardrailViewer data={data} />);
 
     // In collapsed state, the match count badge is visible
     expect(screen.getByText("3 matched")).toBeInTheDocument();
@@ -67,18 +67,18 @@ describe("GuardrailViewer", () => {
   });
 
   it("hides matched badge when count is zero/empty", () => {
-    const data = makeGuardrailInformation({ masked_entity_count: {} });
-    renderWithProviders(<GuardrailViewer data={data} />);
+    const data = makeGuardrailИнформация({ masked_entity_count: {} });
+    renderWithПровайдерs(<GuardrailViewer data={data} />);
 
     expect(screen.queryByText(/matched/)).not.toBeInTheDocument();
   });
 
   it("toggles evaluation card open/closed on click", async () => {
     const user = userEvent.setup();
-    const data = makeGuardrailInformation({
+    const data = makeGuardrailИнформация({
       masked_entity_count: { EMAIL_ADDRESS: 2 },
     });
-    renderWithProviders(<GuardrailViewer data={data} />);
+    renderWithПровайдерs(<GuardrailViewer data={data} />);
 
     // Initially collapsed — masked entity details not visible
     expect(screen.queryByText("EMAIL_ADDRESS: 2")).not.toBeInTheDocument();
@@ -94,18 +94,18 @@ describe("GuardrailViewer", () => {
     });
   });
 
-  it("defaults to presidio provider when guardrail_provider is undefined", async () => {
-    vi.doMock(PresidioPath, () => ({
+  it("defaults to presidio provider when гардрейлов_provider is undefined", async () => {
+    vi.doMock(PresidioПуть, () => ({
       __esModule: true,
       default: ({ entities }: any) => <div data-testid="presidio-mock">presidio {entities?.length}</div>,
     }));
     const { default: Component } = await import("@/components/view_logs/GuardrailViewer/GuardrailViewer");
 
-    const data = makeGuardrailInformation({
-      guardrail_provider: undefined,
-      guardrail_response: [makeEntity(), makeEntity()],
+    const data = makeGuardrailИнформация({
+      гардрейлов_provider: undefined,
+      гардрейлов_response: [makeEntity(), makeEntity()],
     });
-    renderWithProviders(<Component data={data} />);
+    renderWithПровайдерs(<Component data={data} />);
 
     // Expand the card to see provider-specific content
     const user = userEvent.setup();
@@ -113,18 +113,18 @@ describe("GuardrailViewer", () => {
     expect(screen.getByTestId("presidio-mock")).toHaveTextContent("presidio 2");
   });
 
-  it('renders PresidioDetectedEntities when provider="presidio" and response has entities', async () => {
-    vi.doMock(PresidioPath, () => ({
+  it('renders PresidioОбнаруженоEntities when provider="presidio" and response has entities', async () => {
+    vi.doMock(PresidioПуть, () => ({
       __esModule: true,
       default: ({ entities }: any) => <div data-testid="presidio-mock">count:{entities?.length}</div>,
     }));
     const { default: Component } = await import("@/components/view_logs/GuardrailViewer/GuardrailViewer");
 
-    const data = makeGuardrailInformation({
-      guardrail_provider: "presidio",
-      guardrail_response: [makeEntity()],
+    const data = makeGuardrailИнформация({
+      гардрейлов_provider: "presidio",
+      гардрейлов_response: [makeEntity()],
     });
-    renderWithProviders(<Component data={data} />);
+    renderWithПровайдерs(<Component data={data} />);
 
     // Expand the card to see provider-specific content
     const user = userEvent.setup();
@@ -133,17 +133,17 @@ describe("GuardrailViewer", () => {
   });
 
   it('renders BedrockGuardrailDetails when provider="bedrock"', async () => {
-    vi.doMock(BedrockPath, () => ({
+    vi.doMock(BedrockПуть, () => ({
       __esModule: true,
       default: ({ response }: any) => <div data-testid="bedrock-mock">{response?.action ?? "no-action"}</div>,
     }));
     const { default: Component } = await import("@/components/view_logs/GuardrailViewer/GuardrailViewer");
 
-    const data = makeGuardrailInformation({
-      guardrail_provider: "bedrock",
-      guardrail_response: makeBedrockResponse({ action: "GUARDRAIL_INTERVENED" }),
+    const data = makeGuardrailИнформация({
+      гардрейлов_provider: "bedrock",
+      гардрейлов_response: makeBedrockОтвет({ action: "GUARDRAIL_INTERVENED" }),
     });
-    renderWithProviders(<Component data={data} />);
+    renderWithПровайдерs(<Component data={data} />);
 
     // Expand the card to see provider-specific content
     const user = userEvent.setup();
@@ -153,63 +153,63 @@ describe("GuardrailViewer", () => {
 
   it("unknown provider renders neither Presidio nor Bedrock details", async () => {
     const user = userEvent.setup();
-    const data = makeGuardrailInformation({
-      guardrail_provider: "unknown",
+    const data = makeGuardrailИнформация({
+      гардрейлов_provider: "unknown",
     });
-    renderWithProviders(<GuardrailViewer data={data} />);
+    renderWithПровайдерs(<GuardrailViewer data={data} />);
     // Header still present
     expect(screen.getByText("Гардрейлы и соответствие политикам")).toBeInTheDocument();
 
     // Expand the card
     await user.click(screen.getByText("pii-rail"));
     // No Presidio or Bedrock sections
-    expect(screen.queryByText(/Detected Entities/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Raw Bedrock Guardrail Response/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Обнаруженные сущности/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Raw Bedrock Guardrail Ответ/)).not.toBeInTheDocument();
   });
 
-  it("renders without crashing when guardrail_mode is null", () => {
-    const data = makeGuardrailInformation({ guardrail_mode: null });
-    renderWithProviders(<GuardrailViewer data={data} />);
+  it("renders withвыход crashing when гардрейлов_mode is null", () => {
+    const data = makeGuardrailИнформация({ гардрейлов_mode: null });
+    renderWithПровайдерs(<GuardrailViewer data={data} />);
 
     expect(screen.getByText("Гардрейлы и соответствие политикам")).toBeInTheDocument();
     // Null mode should display as dash
     expect(screen.getByText("—")).toBeInTheDocument();
   });
 
-  it("renders without crashing when guardrail_mode is an object", () => {
-    const data = makeGuardrailInformation({
-      guardrail_mode: { default: "pre_call", tags: {} },
+  it("renders withвыход crashing when гардрейлов_mode is an object", () => {
+    const data = makeGuardrailИнформация({
+      гардрейлов_mode: { default: "pre_call", tags: {} },
     });
-    renderWithProviders(<GuardrailViewer data={data} />);
+    renderWithПровайдерs(<GuardrailViewer data={data} />);
 
     expect(screen.getByText("Гардрейлы и соответствие политикам")).toBeInTheDocument();
     expect(screen.getByText("PRE-CALL")).toBeInTheDocument();
   });
 
-  it("renders without crashing when guardrail_mode is an array and shows in both timeline buckets", () => {
-    const data = makeGuardrailInformation({
-      guardrail_mode: ["pre_call", "post_call"],
+  it("renders withвыход crashing when гардрейлов_mode is an array and shows in both timeline buckets", () => {
+    const data = makeGuardrailИнформация({
+      гардрейлов_mode: ["pre_call", "post_call"],
     });
-    renderWithProviders(<GuardrailViewer data={data} />);
+    renderWithПровайдерs(<GuardrailViewer data={data} />);
 
     expect(screen.getByText("Гардрейлы и соответствие политикам")).toBeInTheDocument();
-    // Mode badge shows first element formatted
+    // Режим badge shows first element formatted
     expect(screen.getByText("PRE-CALL")).toBeInTheDocument();
     // Entry should appear in both pre-call and post-call timeline sections
     expect(screen.getByText(/Гардрейл до вызова:/)).toBeInTheDocument();
     expect(screen.getByText(/Гардрейл после вызова:/)).toBeInTheDocument();
   });
 
-  it("integration: renders with real Bedrock details without mocks", async () => {
+  it("integration: renders with real Bedrock details withвыход mocks", async () => {
     const user = userEvent.setup();
-    const data = makeGuardrailInformation({
-      guardrail_provider: "bedrock",
-      guardrail_response: makeBedrockResponse({
+    const data = makeGuardrailИнформация({
+      гардрейлов_provider: "bedrock",
+      гардрейлов_response: makeBedrockОтвет({
         action: "NONE",
-        outputs: [{ text: "ok" }],
+        выходputs: [{ text: "ok" }],
       }),
     });
-    renderWithProviders(<GuardrailViewer data={data} />);
+    renderWithПровайдерs(<GuardrailViewer data={data} />);
 
     // Expand the card to reveal Bedrock details
     await user.click(screen.getByText("pii-rail"));

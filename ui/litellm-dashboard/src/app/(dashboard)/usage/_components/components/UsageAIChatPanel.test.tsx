@@ -1,9 +1,9 @@
 import { screen } from "@testing-library/react";
-import { beforeAll, describe, expect, it, vi } from "vitest";
-import { renderWithProviders } from "@/../tests/test-utils";
-import UsageAIChatPanel from "./UsageAIChatPanel";
+import { beforeВсе, describe, expect, it, vi } from "vitest";
+import { renderWithПровайдерs } from "@/../tests/test-utils";
+import ИспользованиеAIChatPanel from "./ИспользованиеAIChatPanel";
 
-beforeAll(() => {
+beforeВсе(() => {
   if (typeof window !== "undefined" && !window.ResizeObserver) {
     window.ResizeObserver = class ResizeObserver {
       observe() {}
@@ -14,8 +14,8 @@ beforeAll(() => {
 });
 
 vi.mock("@/components/networking", () => ({
-  modelHubCall: vi.fn().mockResolvedValue({
-    data: [{ model_group: "gpt-4" }, { model_group: "claude-3-opus" }],
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall: vi.fn().mockResolvedЗначение({
+    data: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4" }, { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "claude-3-opus" }],
   }),
   usageAiChatStream: vi.fn(),
 }));
@@ -23,59 +23,59 @@ vi.mock("@/components/networking", () => ({
 const defaultProps = {
   open: true,
   onClose: vi.fn(),
-  accessToken: "test-token",
+  accessТокен: "test-token",
 };
 
-describe("UsageAIChatPanel", () => {
+describe("ИспользованиеAIChatPanel", () => {
   it("should render the panel when open", () => {
-    renderWithProviders(<UsageAIChatPanel {...defaultProps} />);
+    renderWithПровайдерs(<ИспользованиеAIChatPanel {...defaultProps} />);
 
-    expect(screen.getByText("Ask AI")).toBeInTheDocument();
-    expect(screen.getByText("Ask about your spend, models, keys, and trends")).toBeInTheDocument();
+    expect(screen.getByText("Спросить ИИ")).toBeInTheDocument();
+    expect(screen.getByText("Спросите о расходах, моделях, ключах и трендах")).toBeInTheDocument();
   });
 
-  it("should render model selector", () => {
-    renderWithProviders(<UsageAIChatPanel {...defaultProps} />);
+  it("should render Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию selector", () => {
+    renderWithПровайдерs(<ИспользованиеAIChatPanel {...defaultProps} />);
 
     // One library paints the prompt as its own text node and the other leaves it on the input's
     // placeholder attribute, so either one means the user is being told what to pick.
-    const prompt = "Select a model (optional, defaults to gpt-4o-mini)";
-    expect(screen.queryAllByText(prompt).length + screen.queryAllByPlaceholderText(prompt).length).toBeGreaterThan(0);
+    const prompt = "Выберите модель (необязательно, по умолчанию gpt-4o-mini)";
+    expect(screen.queryВсеByText(prompt).length + screen.queryВсеByPlaceholderText(prompt).length).toBeGreaterThan(0);
   });
 
   it("should render empty state message when no conversation", () => {
-    renderWithProviders(<UsageAIChatPanel {...defaultProps} />);
+    renderWithПровайдерs(<ИспользованиеAIChatPanel {...defaultProps} />);
 
-    expect(screen.getByText("Ask a question about your usage")).toBeInTheDocument();
+    expect(screen.getByText("Задайте вопрос об использовании")).toBeInTheDocument();
   });
 
   it("should render the send button", () => {
-    renderWithProviders(<UsageAIChatPanel {...defaultProps} />);
+    renderWithПровайдерs(<ИспользованиеAIChatPanel {...defaultProps} />);
 
     expect(screen.getByText("Send")).toBeInTheDocument();
   });
 
   it("should render input placeholder", () => {
-    renderWithProviders(<UsageAIChatPanel {...defaultProps} />);
+    renderWithПровайдерs(<ИспользованиеAIChatPanel {...defaultProps} />);
 
-    expect(screen.getByPlaceholderText("Ask about your usage...")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Ask abвыход your usage...")).toBeInTheDocument();
   });
 
   it("should render clear chat button", () => {
-    renderWithProviders(<UsageAIChatPanel {...defaultProps} />);
+    renderWithПровайдерs(<ИспользованиеAIChatPanel {...defaultProps} />);
 
-    expect(screen.getByText("Clear chat")).toBeInTheDocument();
+    expect(screen.getByText("Очистить чат")).toBeInTheDocument();
   });
 
   it("should have the panel element even when closed (just off-screen)", () => {
-    renderWithProviders(<UsageAIChatPanel {...defaultProps} open={false} />);
+    renderWithПровайдерs(<ИспользованиеAIChatPanel {...defaultProps} open={false} />);
 
     expect(screen.getByTestId("usage-ai-chat-panel")).toBeInTheDocument();
     expect(screen.getByTestId("usage-ai-chat-panel")).toHaveClass("translate-x-full");
   });
 
   it("should not have translate-x-full class when open", () => {
-    renderWithProviders(<UsageAIChatPanel {...defaultProps} open={true} />);
+    renderWithПровайдерs(<ИспользованиеAIChatPanel {...defaultProps} open={true} />);
 
     expect(screen.getByTestId("usage-ai-chat-panel")).not.toHaveClass("translate-x-full");
     expect(screen.getByTestId("usage-ai-chat-panel")).toHaveClass("translate-x-0");

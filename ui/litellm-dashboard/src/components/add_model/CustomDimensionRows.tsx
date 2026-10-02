@@ -9,8 +9,8 @@ import { Slider } from "@/components/ui/slider";
 import type { CustomDimensionRow } from "./custom_dimensions";
 
 const SCORING_MODES = [
-  { value: "binary", label: "Binary" },
-  { value: "match_count", label: "Match count" },
+  { value: "binary", label: "Бинарный" },
+  { value: "match_count", label: "Количество совпадений" },
 ] as const;
 
 interface Props {
@@ -34,7 +34,7 @@ export default function CustomDimensionRows({ rows, disabled, onChange, onWeight
     <div className="space-y-4">
       {rows.map((row, index) => (
         <fieldset key={row.id} className="min-w-0 space-y-3 rounded-md border p-3">
-          <legend className="float-left text-sm font-semibold">Custom dimension {index + 1}</legend>
+          <legend className="float-left text-sm font-semibold">Своё измерение {index + 1}</legend>
           <div className="flex items-center gap-2">
             <Button
               type="button"
@@ -59,7 +59,7 @@ export default function CustomDimensionRows({ rows, disabled, onChange, onWeight
             />
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <Label htmlFor={`${row.id}-weight`}>Weight</Label>
+            <Label htmlFor={`${row.id}-weight`}>Вес</Label>
             <Slider
               min={0}
               max={1}
@@ -84,7 +84,7 @@ export default function CustomDimensionRows({ rows, disabled, onChange, onWeight
             {(["keywords", "patterns"] as const).map((field) => (
               <div key={field} className="min-w-0 space-y-1">
                 <Label htmlFor={`${row.id}-${field}`}>
-                  {field === "keywords" ? "Keywords" : "Regex patterns"} (one per line)
+                  {field === "keywords" ? "Ключевые слова" : "Regex-паттерны"} (по одному в строке)
                 </Label>
                 <Textarea
                   id={`${row.id}-${field}`}
@@ -98,7 +98,7 @@ export default function CustomDimensionRows({ rows, disabled, onChange, onWeight
             ))}
           </div>
           <div className="space-y-1">
-            <Label htmlFor={`${row.id}-scoring`}>Scoring</Label>
+            <Label htmlFor={`${row.id}-scoring`}>Оценивание</Label>
             <Select
               items={SCORING_MODES}
               value={row.scoring_mode ?? "binary"}
@@ -118,18 +118,16 @@ export default function CustomDimensionRows({ rows, disabled, onChange, onWeight
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              Binary uses the full weight for any hit. Match count uses half for one distinct matcher and full weight
-              for two or more.
+              Бинарный режим использует полный вес при любом совпадении. Количество совпадений — половину при одном совпадении и полный вес при двух и более.
             </p>
           </div>
         </fieldset>
       ))}
       <Button type="button" variant="outline" size="sm" disabled={disabled || rows.length >= 16} onClick={onAdd}>
-        Add custom dimension
+        Добавить своё измерение
       </Button>
       <p className="text-xs text-muted-foreground">
-        Keywords match the current ask. Regex scans its first 2,048 characters and permits bounded single-character
-        repeats up to 64. The proxy validates patterns on save.
+        Ключевые слова сопоставляются с текущим запросом. Regex проверяет первые 2048 символов и допускает повторы одного символа до 64 раз. Прокси проверяет паттерны при сохранении.
       </p>
     </div>
   );

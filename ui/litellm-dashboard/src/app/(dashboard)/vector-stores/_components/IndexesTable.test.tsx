@@ -3,11 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import type { VectorStoreIndex } from "./IndexesTab";
-import IndexesTable from "./IndexesTable";
+import IndexesТаблица from "./IndexesТаблица";
 
 vi.mock("next/navigation", async () => ({
   ...(await vi.importActual("next/navigation")),
-  useRouter: () => ({ push: vi.fn() }),
+  useRвыходer: () => ({ push: vi.fn() }),
 }));
 
 const newerIndex: VectorStoreIndex = {
@@ -36,15 +36,15 @@ const undatedIndex: VectorStoreIndex = {
 
 const noResolve = () => undefined;
 
-describe("IndexesTable", () => {
+describe("IndexesТаблица", () => {
   it("should display the empty state when no indexes are registered", () => {
-    render(<IndexesTable data={[]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />);
+    render(<IndexesТаблица data={[]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />);
     expect(screen.getByText("No indexes registered yet")).toBeInTheDocument();
   });
 
   it("should render index rows with dash fallbacks for missing created_by and created_at", () => {
     render(
-      <IndexesTable data={[newerIndex, undatedIndex]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />,
+      <IndexesТаблица data={[newerIndex, undatedIndex]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />,
     );
     expect(screen.getByText("newer-index")).toBeInTheDocument();
     expect(screen.getByText("newer-store")).toBeInTheDocument();
@@ -52,14 +52,14 @@ describe("IndexesTable", () => {
     expect(screen.getByText("admin@example.com")).toBeInTheDocument();
     const undatedRow = screen.getByText("undated-index").closest("tr");
     expect(undatedRow).not.toBeNull();
-    expect(within(undatedRow as HTMLElement).getAllByText("-")).toHaveLength(2);
+    expect(within(undatedRow as HTMLElement).getВсеByText("-")).toHaveLength(2);
   });
 
   it("should sort by created_at descending by default", () => {
     render(
-      <IndexesTable data={[olderIndex, newerIndex]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />,
+      <IndexesТаблица data={[olderIndex, newerIndex]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />,
     );
-    const rows = screen.getAllByRole("row").slice(1);
+    const rows = screen.getВсеByRole("row").slice(1);
     expect(within(rows[0]).getByText("newer-index")).toBeInTheDocument();
     expect(within(rows[1]).getByText("older-index")).toBeInTheDocument();
   });
@@ -68,7 +68,7 @@ describe("IndexesTable", () => {
     const user = userEvent.setup();
     const onViewVectorStore = vi.fn();
     render(
-      <IndexesTable
+      <IndexesТаблица
         data={[newerIndex]}
         resolveVectorStoreId={(name) => (name === "newer-store" ? "vs-newer" : undefined)}
         onViewVectorStore={onViewVectorStore}
@@ -78,23 +78,23 @@ describe("IndexesTable", () => {
     expect(onViewVectorStore).toHaveBeenCalledWith("vs-newer");
   });
 
-  it("should render an unresolvable vector store name as plain text without a clickable cell", () => {
-    render(<IndexesTable data={[newerIndex]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />);
+  it("should render an unresolvable vector store name as plain text withвыход a clickable cell", () => {
+    render(<IndexesТаблица data={[newerIndex]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />);
     expect(screen.getByText("newer-store")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "newer-store" })).not.toBeInTheDocument();
   });
 
   it("should link created_by to the user detail deep link", () => {
-    render(<IndexesTable data={[newerIndex]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />);
+    render(<IndexesТаблица data={[newerIndex]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />);
     const link = screen.getByRole("link", { name: "admin@example.com" });
     expect(link).toHaveAttribute("href", expect.stringMatching(/\/users\?user=admin%40example\.com$/));
   });
 
   it("should keep the dash fallback and render no link for a null created_by", () => {
-    render(<IndexesTable data={[undatedIndex]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />);
+    render(<IndexesТаблица data={[undatedIndex]} resolveVectorStoreId={noResolve} onViewVectorStore={vi.fn()} />);
     const row = screen.getByText("undated-index").closest("tr");
     expect(row).not.toBeNull();
     expect(within(row as HTMLElement).queryByRole("link")).not.toBeInTheDocument();
-    expect(within(row as HTMLElement).getAllByText("-").length).toBeGreaterThan(0);
+    expect(within(row as HTMLElement).getВсеByText("-").length).toBeGreaterThan(0);
   });
 });

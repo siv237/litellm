@@ -1,7 +1,7 @@
 import React from "react";
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders } from "@/../tests/test-utils";
+import { renderWithПровайдерs } from "@/../tests/test-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import PoliciesPanel from "./index";
 
@@ -13,9 +13,9 @@ import PoliciesPanel from "./index";
 const EXPECTED_ATTACHMENT_ID = "att-11111111-2222-3333-4444-555555555555" as const;
 
 const networkingMocks = vi.hoisted(() => ({
-  deletePolicyAttachmentCall: vi.fn().mockResolvedValue(undefined),
-  getPoliciesList: vi.fn().mockResolvedValue({ policies: [] }),
-  getPolicyAttachmentsList: vi.fn().mockResolvedValue({
+  deleteПолитикаAttachmentCall: vi.fn().mockResolvedЗначение(undefined),
+  getPoliciesList: vi.fn().mockResolvedЗначение({ policies: [] }),
+  getПолитикаAttachmentsList: vi.fn().mockResolvedЗначение({
     attachments: [
       {
         attachment_id: "att-11111111-2222-3333-4444-555555555555",
@@ -23,19 +23,19 @@ const networkingMocks = vi.hoisted(() => ({
         scope: null,
         teams: [],
         keys: [],
-        models: [],
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
         tags: [],
       },
     ],
   }),
-  getGuardrailsList: vi.fn().mockResolvedValue({ guardrails: [] }),
-  getPolicyInfo: vi.fn().mockResolvedValue({}),
-  deletePolicyCall: vi.fn().mockResolvedValue(undefined),
-  createPolicyCall: vi.fn(),
-  updatePolicyCall: vi.fn(),
-  createPolicyAttachmentCall: vi.fn(),
+  getГардрейлыList: vi.fn().mockResolvedЗначение({ гардрейловs: [] }),
+  getПолитикаInfo: vi.fn().mockResolvedЗначение({}),
+  deleteПолитикаCall: vi.fn().mockResolvedЗначение(undefined),
+  createПолитикаCall: vi.fn(),
+  updateПолитикаCall: vi.fn(),
+  createПолитикаAttachmentCall: vi.fn(),
   createGuardrailCall: vi.fn(),
-  enrichPolicyTemplate: vi.fn(),
+  enrichПолитикаTemplate: vi.fn(),
 }));
 
 vi.mock("@/components/networking", () => ({
@@ -43,7 +43,7 @@ vi.mock("@/components/networking", () => ({
 }));
 
 vi.mock("./impact_popover", () => ({
-  default: () => <button type="button" aria-label="View blast radius" />,
+  default: () => <button type="button" aria-label="Показать зону влияния" />,
 }));
 
 vi.mock("./policy_templates", () => ({
@@ -69,7 +69,7 @@ vi.mock("./add_policy_form", () => ({
   default: () => null,
 }));
 
-vi.mock("./guardrail_selection_modal", () => ({
+vi.mock("./гардрейлов_selection_modal", () => ({
   __esModule: true,
   default: () => null,
 }));
@@ -96,15 +96,15 @@ vi.mock("./add_attachment_form", () => ({
 
 describe("PoliciesPanel attachment delete", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
-  it("should call deletePolicyAttachmentCall after the user confirms delete in the attachment modal", async () => {
+  it("should call deleteПолитикаAttachmentCall after the user confirms delete in the attachment modal", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<PoliciesPanel accessToken="test-token" userRole="Admin" />);
+    renderWithПровайдерs(<PoliciesPanel accessТокен="test-token" userRole="Admin" />);
 
     await waitFor(() => {
-      expect(networkingMocks.getPolicyAttachmentsList).toHaveBeenCalled();
+      expect(networkingMocks.getПолитикаAttachmentsList).toHaveBeenCalled();
     });
 
     await user.click(screen.getByRole("tab", { name: /^attachments$/i }));
@@ -116,15 +116,15 @@ describe("PoliciesPanel attachment delete", () => {
     await user.click(screen.getByTestId(`attachment-actions-${EXPECTED_ATTACHMENT_ID}`));
     await user.click(await screen.findByTestId("attachment-action-delete"));
 
-    const dialog = await screen.findByRole("dialog", {}, { timeout: 5000 });
+    const dialog = await screen.findByRole("dialog", {}, { timeвыход: 5000 });
     expect(within(dialog).getByText(/Are you sure you want to delete this attachment/i)).toBeInTheDocument();
 
     await user.click(within(dialog).getByRole("button", { name: /^delete$/i }));
 
     await waitFor(() => {
-      expect(networkingMocks.deletePolicyAttachmentCall).toHaveBeenCalledTimes(1);
+      expect(networkingMocks.deleteПолитикаAttachmentCall).toHaveBeenCalledВремяs(1);
     });
-    expect(networkingMocks.deletePolicyAttachmentCall).toHaveBeenCalledWith("test-token", EXPECTED_ATTACHMENT_ID);
+    expect(networkingMocks.deleteПолитикаAttachmentCall).toHaveBeenCalledWith("test-token", EXPECTED_ATTACHMENT_ID);
   });
 
   it("should show mutation pending state while attachment delete is in flight", async () => {
@@ -132,13 +132,13 @@ describe("PoliciesPanel attachment delete", () => {
     const deletePromise = new Promise<void>((resolve) => {
       resolveDelete = resolve;
     });
-    networkingMocks.deletePolicyAttachmentCall.mockImplementationOnce(() => deletePromise);
+    networkingMocks.deleteПолитикаAttachmentCall.mockImplementationOnce(() => deletePromise);
 
     const user = userEvent.setup();
-    renderWithProviders(<PoliciesPanel accessToken="test-token" userRole="Admin" />);
+    renderWithПровайдерs(<PoliciesPanel accessТокен="test-token" userRole="Admin" />);
 
     await waitFor(() => {
-      expect(networkingMocks.getPolicyAttachmentsList).toHaveBeenCalled();
+      expect(networkingMocks.getПолитикаAttachmentsList).toHaveBeenCalled();
     });
 
     await user.click(screen.getByRole("tab", { name: /^attachments$/i }));
@@ -148,7 +148,7 @@ describe("PoliciesPanel attachment delete", () => {
 
     await user.click(screen.getByTestId(`attachment-actions-${EXPECTED_ATTACHMENT_ID}`));
     await user.click(await screen.findByTestId("attachment-action-delete"));
-    const dialog = await screen.findByRole("dialog", {}, { timeout: 5000 });
+    const dialog = await screen.findByRole("dialog", {}, { timeвыход: 5000 });
 
     const deleteButton = within(dialog).getByRole("button", { name: /^delete$/i });
     await user.click(deleteButton);
@@ -168,16 +168,16 @@ describe("PoliciesPanel flow builder", () => {
   const POLICY_ID = "pol-11111111-2222-3333-4444-555555555555";
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    networkingMocks.getPoliciesList.mockResolvedValue({
+    vi.clearВсеMocks();
+    networkingMocks.getPoliciesList.mockResolvedЗначение({
       policies: [
         {
           policy_id: POLICY_ID,
           policy_name: "pii-policy",
           inherit: null,
           description: null,
-          guardrails_add: [],
-          guardrails_remove: [],
+          гардрейловs_add: [],
+          гардрейловs_remove: [],
           condition: null,
           definition_location: "db",
         },
@@ -186,12 +186,12 @@ describe("PoliciesPanel flow builder", () => {
   });
 
   afterEach(() => {
-    networkingMocks.getPoliciesList.mockResolvedValue({ policies: [] });
+    networkingMocks.getPoliciesList.mockResolvedЗначение({ policies: [] });
   });
 
   it("replaces the tabs and policy table with the flow builder while editing, then restores them on back", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<PoliciesPanel accessToken="test-token" userRole="Admin" />);
+    renderWithПровайдерs(<PoliciesPanel accessТокен="test-token" userRole="Admin" />);
 
     await user.click(screen.getByRole("tab", { name: /^policies$/i }));
     await user.click(await screen.findByTestId(`policy-actions-${POLICY_ID}`));

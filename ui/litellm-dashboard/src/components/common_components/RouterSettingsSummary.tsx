@@ -28,18 +28,18 @@ export default function RouterSettingsSummary({
     <div className="space-y-1 text-sm">
       {settings.routing_strategy != null && (
         <div>
-          Routing Strategy: <Badge variant="secondary">{String(settings.routing_strategy)}</Badge>
+          Стратегия маршрутизации: <Badge variant="secondary">{String(settings.routing_strategy)}</Badge>
         </div>
       )}
-      {settings.num_retries != null && <div>Number of Retries: {String(settings.num_retries)}</div>}
-      {settings.allowed_fails != null && <div>Allowed Failures: {String(settings.allowed_fails)}</div>}
-      {settings.cooldown_time != null && <div>Cooldown Time: {String(settings.cooldown_time)}s</div>}
-      {settings.timeout != null && <div>Timeout: {String(settings.timeout)}s</div>}
-      {settings.retry_after != null && <div>Retry After: {String(settings.retry_after)}s</div>}
-      {Boolean(settings.enable_tag_filtering) && <div>Tag Filtering: Enabled</div>}
+      {settings.num_retries != null && <div>Число повторов: {String(settings.num_retries)}</div>}
+      {settings.allowed_fails != null && <div>Допустимые сбои: {String(settings.allowed_fails)}</div>}
+      {settings.cooldown_time != null && <div>Время охлаждения: {String(settings.cooldown_time)} с</div>}
+      {settings.timeout != null && <div>Таймаут: {String(settings.timeout)} с</div>}
+      {settings.retry_after != null && <div>Пауза перед повтором: {String(settings.retry_after)} с</div>}
+      {Boolean(settings.enable_tag_filtering) && <div>Фильтрация по тегам: включена</div>}
       {fallbacks.length > 0 && (
         <div>
-          <div>Fallbacks:</div>
+          <div>Резервные модели:</div>
           <div className="mt-1 space-y-1">
             {fallbacks.map(([model, targets]) => (
               <div key={model} className="text-xs text-muted-foreground">

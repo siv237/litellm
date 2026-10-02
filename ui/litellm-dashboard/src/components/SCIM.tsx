@@ -50,7 +50,7 @@ const SCIMConfig: React.FC<SCIMConfigProps> = ({ accessToken, userID, proxySetti
 
   const handleCreateSCIMToken = async (values: SCIMTokenFormValues) => {
     if (!accessToken || !userID) {
-      toast.fromError("You need to be logged in to create a SCIM token");
+      toast.fromError("Для создания SCIM-токена нужно войти в систему");
       return;
     }
 
@@ -96,15 +96,15 @@ const SCIMConfig: React.FC<SCIMConfigProps> = ({ accessToken, userID, proxySetti
                 <div className="flex items-center justify-center w-6 h-6 rounded-full bg-info/15 text-info mr-2">1</div>
                 <h3 className="text-lg font-medium flex items-center">
                   <Link className="h-5 w-5 mr-2" />
-                  SCIM Tenant URL
+                  URL тенанта SCIM
                 </h3>
               </div>
               <p className="text-muted-foreground mb-3">
-                Use this URL in your identity provider SCIM integration settings.
+                Используйте этот URL в настройках SCIM-интеграции вашего провайдера идентификации.
               </p>
               <div className="flex items-center">
                 <Input value={scimBaseUrl} disabled={true} readOnly className="grow" />
-                <CopyToClipboard text={scimBaseUrl} onCopy={() => toast.success("URL copied to clipboard")}>
+                <CopyToClipboard text={scimBaseUrl} onCopy={() => toast.success("URL скопирован в буфер")}>
                   <Button type="button" className="ml-2 flex items-center">
                     <Copy />
                     Скопировать
@@ -119,16 +119,15 @@ const SCIMConfig: React.FC<SCIMConfigProps> = ({ accessToken, userID, proxySetti
                 <div className="flex items-center justify-center w-6 h-6 rounded-full bg-info/15 text-info mr-2">2</div>
                 <h3 className="text-lg font-medium flex items-center">
                   <KeyRound className="h-5 w-5 mr-2" />
-                  Authentication Token
+                  Токен аутентификации
                 </h3>
               </div>
 
               <Alert variant="info" className="mb-4">
                 <Info />
-                <AlertTitle>Using SCIM</AlertTitle>
+                <AlertTitle>Использование SCIM</AlertTitle>
                 <AlertDescription>
-                  You need a SCIM token to authenticate with the SCIM API. Create one below and use it in your SCIM
-                  provider configuration.
+                  Для аутентификации в SCIM API нужен SCIM-токен. Создайте его ниже и используйте в настройках вашего SCIM-провайдера.
                 </AlertDescription>
               </Alert>
 
@@ -136,8 +135,8 @@ const SCIMConfig: React.FC<SCIMConfigProps> = ({ accessToken, userID, proxySetti
                 <div className="bg-muted p-4 rounded-lg">
                   <form onSubmit={form.handleSubmit(handleCreateSCIMToken)}>
                     <FieldGroup>
-                      <FormField control={form.control} name="key_alias" label="Token Name">
-                        {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="SCIM Access Token" />}
+                      <FormField control={form.control} name="key_alias" label="Имя токена">
+                        {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="SCIM-токен доступа" />}
                       </FormField>
                       <div>
                         <Button
@@ -157,14 +156,14 @@ const SCIMConfig: React.FC<SCIMConfigProps> = ({ accessToken, userID, proxySetti
                 <Card className="block p-6 border border-warning/30 bg-warning/10">
                   <div className="flex items-center mb-2 text-warning">
                     <CircleAlert className="h-5 w-5 mr-2" />
-                    <h4 className="text-lg font-medium text-warning">Your SCIM Token</h4>
+                    <h4 className="text-lg font-medium text-warning">Ваш SCIM-токен</h4>
                   </div>
                   <p className="text-warning mb-4 font-medium">
-                    Make sure to copy this token now. You will not be able to see it again.
+                    Скопируйте токен сейчас — больше вы его не увидите.
                   </p>
                   <div className="flex items-center">
                     <Input value={tokenData.key} className="grow mr-2" type="password" disabled={true} readOnly />
-                    <CopyToClipboard text={tokenData.key} onCopy={() => toast.success("Token copied to clipboard")}>
+                    <CopyToClipboard text={tokenData.key} onCopy={() => toast.success("Токен скопирован в буфер")}>
                       <Button type="button" className="flex items-center">
                         <Copy />
                         Скопировать
@@ -178,7 +177,7 @@ const SCIMConfig: React.FC<SCIMConfigProps> = ({ accessToken, userID, proxySetti
                     onClick={() => setTokenData(null)}
                   >
                     <CirclePlus />
-                    Create Another Token
+                    Создать ещё токен
                   </Button>
                 </Card>
               )}

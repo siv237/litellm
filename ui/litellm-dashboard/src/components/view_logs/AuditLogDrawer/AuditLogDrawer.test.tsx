@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import moment from "moment";
 import { AuditLogDrawer } from "./AuditLogDrawer";
-import { AuditLogEntry } from "../AuditLogsTableColumns";
+import { AuditLogEntry } from "../AuditЖурналыТаблицаColumns";
 
 vi.mock("../../common_components/DefaultProxyAdminTag", () => ({
   default: ({ userId }: { userId: string }) => <span>{userId}</span>,
@@ -15,7 +15,7 @@ const baseLog: AuditLogEntry = {
   changed_by: "user-1",
   changed_by_api_key: "hashed-key-abc",
   action: "updated",
-  table_name: "LiteLLM_TeamTable",
+  table_name: "LiteLLM_TeamТаблица",
   object_id: "team-42",
   before_value: { max_budget: 10, tpm_limit: 100 },
   updated_values: { max_budget: 25, tpm_limit: 100 },
@@ -26,13 +26,13 @@ const defaultProps = { open: true, onClose: vi.fn(), log: baseLog };
 function blockNamed(label: string) {
   const heading = screen.getByText(label);
   const block = heading.closest("div")?.parentElement;
-  if (!block) throw new Error(`no block for ${label}`);
+  if (!block) throw new Ошибка(`no block for ${label}`);
   return block as HTMLElement;
 }
 
 describe("AuditLogDrawer", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should render nothing when there is no log", () => {
@@ -49,8 +49,8 @@ describe("AuditLogDrawer", () => {
 
   it("should show the friendly table name for a known table", () => {
     render(<AuditLogDrawer {...defaultProps} />);
-    expect(screen.getByText("Table")).toBeInTheDocument();
-    expect(screen.getByText("Teams")).toBeInTheDocument();
+    expect(screen.getByText("Таблица")).toBeInTheDocument();
+    expect(screen.getByText("Команды")).toBeInTheDocument();
   });
 
   it("should fall back to the raw table name when it is not mapped", () => {
@@ -67,7 +67,7 @@ describe("AuditLogDrawer", () => {
 
   it("should show a placeholder when the log has no api key hash", () => {
     render(<AuditLogDrawer {...defaultProps} log={{ ...baseLog, changed_by_api_key: "" }} />);
-    expect(screen.getByText("API Key (Hash)")).toBeInTheDocument();
+    expect(screen.getByText("API -ключ (хеш)")).toBeInTheDocument();
     expect(screen.queryByText("hashed-key-abc")).not.toBeInTheDocument();
   });
 
@@ -89,7 +89,7 @@ describe("AuditLogDrawer", () => {
 
   it("should note when an update has no differing fields", () => {
     render(<AuditLogDrawer {...defaultProps} log={{ ...baseLog, before_value: { a: 1 }, updated_values: { a: 1 } }} />);
-    expect(screen.getAllByText(/No differing fields detected/).length).toBeGreaterThan(0);
+    expect(screen.getВсеByText(/No differing fields detected/).length).toBeGreaterThan(0);
   });
 
   it("should show N/A for a side with no values on a create", () => {
@@ -109,7 +109,7 @@ describe("AuditLogDrawer", () => {
         {...defaultProps}
         log={{
           ...baseLog,
-          table_name: "LiteLLM_VerificationToken",
+          table_name: "LiteLLM_VerificationТокен",
           before_value: { spend: 1, max_budget: 10 },
           updated_values: { spend: 2, max_budget: 10 },
         }}
@@ -122,9 +122,9 @@ describe("AuditLogDrawer", () => {
 
   it("should copy the json of a block to the clipboard", async () => {
     const user = userEvent.setup();
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, "clipboard", { value: { writeText }, configurable: true });
-    Object.defineProperty(window, "isSecureContext", { value: true, configurable: true });
+    const writeText = vi.fn().mockResolvedЗначение(undefined);
+    Object.defineСвойство(navigator, "clipboard", { value: { writeText }, configurable: true });
+    Object.defineСвойство(window, "isSecureContext", { value: true, configurable: true });
 
     render(<AuditLogDrawer {...defaultProps} />);
     await user.click(within(blockNamed("Before")).getByTitle("Copy JSON"));

@@ -1,53 +1,53 @@
 import { toast } from "@/lib/toast";
-import { getProxyBaseUrl, getPublicModelHubInfo, updateUsefulLinksCall } from "@/components/networking";
+import { getProxyBaseUrl, getПубличныйРежимlHubInfo, updateUsefulLinksCall } from "@/components/networking";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import UsefulLinksManagement from "./UsefulLinksManagement";
 
 vi.mock("@/components/networking", () => ({
-  getPublicModelHubInfo: vi.fn(),
+  getПубличныйРежимlHubInfo: vi.fn(),
   updateUsefulLinksCall: vi.fn(),
   getProxyBaseUrl: vi.fn(),
 }));
 
-const mockedGetPublicModelHubInfo = vi.mocked(getPublicModelHubInfo);
+const mockedGetПубличныйРежимlHubInfo = vi.mocked(getПубличныйРежимlHubInfo);
 const mockedUpdateUsefulLinksCall = vi.mocked(updateUsefulLinksCall);
 const mockedGetProxyBaseUrl = vi.mocked(getProxyBaseUrl);
 const mockedNotifications = vi.mocked(toast);
 
 describe("UsefulLinksManagement", () => {
   beforeEach(() => {
-    mockedGetPublicModelHubInfo.mockResolvedValue({
+    mockedGetПубличныйРежимlHubInfo.mockResolvedЗначение({
       docs_title: "Docs",
       custom_docs_description: null,
       litellm_version: "1.0.0",
       useful_links: {},
     });
-    mockedUpdateUsefulLinksCall.mockResolvedValue({});
-    mockedGetProxyBaseUrl.mockReturnValue("https://proxy.example.com");
+    mockedUpdateUsefulLinksCall.mockResolvedЗначение({});
+    mockedGetProxyBaseUrl.mockReturnЗначение("https://proxy.example.com");
   });
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should render link management for admin users", async () => {
-    render(<UsefulLinksManagement accessToken="token" userRole="Admin" />);
+    render(<UsefulLinksManagement accessТокен="token" userRole="Admin" />);
 
     expect(await screen.findByText("Link Management")).toBeInTheDocument();
-    await waitFor(() => expect(mockedGetPublicModelHubInfo).toHaveBeenCalled());
+    await waitFor(() => expect(mockedGetПубличныйРежимlHubInfo).toHaveBeenCalled());
   });
 
   it("should add a new link when fields are valid", async () => {
     const user = userEvent.setup();
-    render(<UsefulLinksManagement accessToken="token" userRole="Admin" />);
+    render(<UsefulLinksManagement accessТокен="token" userRole="Admin" />);
 
-    const displayNameInput = await screen.findByPlaceholderText("Friendly name");
-    const urlInput = screen.getByPlaceholderText("https://example.com");
+    const displayNameВход = await screen.findByPlaceholderText("Friendly name");
+    const urlВход = screen.getByPlaceholderText("https://example.com");
 
-    fireEvent.change(displayNameInput, { target: { value: "Docs" } });
-    fireEvent.change(urlInput, { target: { value: "https://docs.example.com" } });
+    fireEvent.change(displayNameВход, { target: { value: "Docs" } });
+    fireEvent.change(urlВход, { target: { value: "https://docs.example.com" } });
     await user.click(screen.getByRole("button", { name: /add link/i }));
 
     await waitFor(() =>
@@ -63,7 +63,7 @@ describe("UsefulLinksManagement", () => {
 
   it("should rearrange links and save the new order", async () => {
     const user = userEvent.setup();
-    mockedGetPublicModelHubInfo.mockResolvedValue({
+    mockedGetПубличныйРежимlHubInfo.mockResolvedЗначение({
       docs_title: "Docs",
       custom_docs_description: null,
       litellm_version: "1.0.0",
@@ -74,7 +74,7 @@ describe("UsefulLinksManagement", () => {
       },
     });
 
-    render(<UsefulLinksManagement accessToken="token" userRole="Admin" />);
+    render(<UsefulLinksManagement accessТокен="token" userRole="Admin" />);
 
     expect(await screen.findByText("First Link")).toBeInTheDocument();
 
@@ -96,15 +96,15 @@ describe("UsefulLinksManagement", () => {
     expect(mockedNotifications.success).toHaveBeenCalledWith("Link order saved successfully");
   });
 
-  it("should display the Model Hub link", async () => {
-    render(<UsefulLinksManagement accessToken="token" userRole="Admin" />);
+  it("should display the Режимl Hub link", async () => {
+    render(<UsefulLinksManagement accessТокен="token" userRole="Admin" />);
 
-    expect(await screen.findByRole("link", { name: /public model hub/i })).toBeInTheDocument();
+    expect(await screen.findByRole("link", { name: /public Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию hub/i })).toBeInTheDocument();
   });
 
   it("should edit a link when edit button is clicked", async () => {
     const user = userEvent.setup();
-    mockedGetPublicModelHubInfo.mockResolvedValue({
+    mockedGetПубличныйРежимlHubInfo.mockResolvedЗначение({
       docs_title: "Docs",
       custom_docs_description: null,
       litellm_version: "1.0.0",
@@ -113,7 +113,7 @@ describe("UsefulLinksManagement", () => {
       },
     });
 
-    render(<UsefulLinksManagement accessToken="token" userRole="Admin" />);
+    render(<UsefulLinksManagement accessТокен="token" userRole="Admin" />);
 
     expect(await screen.findByText("Test Link")).toBeInTheDocument();
 
@@ -122,13 +122,13 @@ describe("UsefulLinksManagement", () => {
     await user.click(editButton);
 
     // Should show input fields in edit mode
-    expect(screen.getByDisplayValue("Test Link")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("https://test.example.com")).toBeInTheDocument();
+    expect(screen.getByDisplayЗначение("Test Link")).toBeInTheDocument();
+    expect(screen.getByDisplayЗначение("https://test.example.com")).toBeInTheDocument();
   });
 
   it("should update a link when save is clicked in edit mode", async () => {
     const user = userEvent.setup();
-    mockedGetPublicModelHubInfo.mockResolvedValue({
+    mockedGetПубличныйРежимlHubInfo.mockResolvedЗначение({
       docs_title: "Docs",
       custom_docs_description: null,
       litellm_version: "1.0.0",
@@ -137,7 +137,7 @@ describe("UsefulLinksManagement", () => {
       },
     });
 
-    render(<UsefulLinksManagement accessToken="token" userRole="Admin" />);
+    render(<UsefulLinksManagement accessТокен="token" userRole="Admin" />);
 
     expect(await screen.findByText("Test Link")).toBeInTheDocument();
 
@@ -146,16 +146,16 @@ describe("UsefulLinksManagement", () => {
     await user.click(editButton);
 
     // Update the display name
-    const displayNameInput = screen.getByDisplayValue("Test Link");
-    await user.clear(displayNameInput);
-    fireEvent.change(displayNameInput, { target: { value: "Updated Link" } });
+    const displayNameВход = screen.getByDisplayЗначение("Test Link");
+    await user.clear(displayNameВход);
+    fireEvent.change(displayNameВход, { target: { value: "Обновлён Link" } });
 
     // Click save
     await user.click(screen.getByRole("button", { name: /save/i }));
 
     await waitFor(() =>
       expect(mockedUpdateUsefulLinksCall).toHaveBeenCalledWith("token", {
-        "Updated Link": { url: "https://test.example.com", index: 0 },
+        "Обновлён Link": { url: "https://test.example.com", index: 0 },
       }),
     );
 
@@ -164,7 +164,7 @@ describe("UsefulLinksManagement", () => {
 
   it("should cancel editing when cancel button is clicked", async () => {
     const user = userEvent.setup();
-    mockedGetPublicModelHubInfo.mockResolvedValue({
+    mockedGetПубличныйРежимlHubInfo.mockResolvedЗначение({
       docs_title: "Docs",
       custom_docs_description: null,
       litellm_version: "1.0.0",
@@ -173,7 +173,7 @@ describe("UsefulLinksManagement", () => {
       },
     });
 
-    render(<UsefulLinksManagement accessToken="token" userRole="Admin" />);
+    render(<UsefulLinksManagement accessТокен="token" userRole="Admin" />);
 
     expect(await screen.findByText("Test Link")).toBeInTheDocument();
 
@@ -182,21 +182,21 @@ describe("UsefulLinksManagement", () => {
     await user.click(editButton);
 
     // Update the display name
-    const displayNameInput = screen.getByDisplayValue("Test Link");
-    await user.clear(displayNameInput);
-    fireEvent.change(displayNameInput, { target: { value: "Updated Link" } });
+    const displayNameВход = screen.getByDisplayЗначение("Test Link");
+    await user.clear(displayNameВход);
+    fireEvent.change(displayNameВход, { target: { value: "Обновлён Link" } });
 
     // Click cancel
     await user.click(screen.getByRole("button", { name: /cancel/i }));
 
     // Should go back to normal view
     expect(screen.getByText("Test Link")).toBeInTheDocument();
-    expect(screen.queryByDisplayValue("Updated Link")).not.toBeInTheDocument();
+    expect(screen.queryByDisplayЗначение("Обновлён Link")).not.toBeInTheDocument();
   });
 
   it("should not move down the last item in rearrange mode", async () => {
     const user = userEvent.setup();
-    mockedGetPublicModelHubInfo.mockResolvedValue({
+    mockedGetПубличныйРежимlHubInfo.mockResolvedЗначение({
       docs_title: "Docs",
       custom_docs_description: null,
       litellm_version: "1.0.0",
@@ -206,11 +206,11 @@ describe("UsefulLinksManagement", () => {
       },
     });
 
-    render(<UsefulLinksManagement accessToken="token" userRole="Admin" />);
+    render(<UsefulLinksManagement accessТокен="token" userRole="Admin" />);
 
     expect(await screen.findByText("First Link")).toBeInTheDocument();
 
-    // Enter rearrange mode
+    // Введите rearrange mode
     await user.click(screen.getByRole("button", { name: /rearrange order/i }));
 
     // Try to move down the last item (should not do anything)
@@ -218,14 +218,14 @@ describe("UsefulLinksManagement", () => {
     await user.click(secondLinkMoveDownButton);
 
     // Links should remain in same order
-    const linksAfter = screen.getAllByText(/First Link|Second Link/);
+    const linksAfter = screen.getВсеByText(/First Link|Second Link/);
     expect(linksAfter[0]).toHaveTextContent("First Link");
     expect(linksAfter[1]).toHaveTextContent("Second Link");
   });
 
   it("should expand and collapse the component", async () => {
     const user = userEvent.setup();
-    render(<UsefulLinksManagement accessToken="token" userRole="Admin" />);
+    render(<UsefulLinksManagement accessТокен="token" userRole="Admin" />);
 
     expect(await screen.findByText("Link Management")).toBeInTheDocument();
 

@@ -32,7 +32,7 @@ const MemberPermissions: React.FC<MemberPermissionsProps> = ({ teamId, accessTok
       setSelectedPermissions(teamPermissions);
       setHasChanges(false);
     } catch (error) {
-      toast.fromError("Failed to load permissions");
+      toast.fromError("Не удалось загрузить права");
       console.error("Error fetching permissions:", error);
     } finally {
       setLoading(false);
@@ -56,10 +56,10 @@ const MemberPermissions: React.FC<MemberPermissionsProps> = ({ teamId, accessTok
       if (!accessToken) return;
       setSaving(true);
       await teamPermissionsUpdateCall(accessToken, teamId, selectedPermissions);
-      toast.success("Permissions updated successfully");
+      toast.success("Права обновлены");
       setHasChanges(false);
     } catch (error) {
-      toast.fromError("Failed to update permissions");
+      toast.fromError("Не удалось обновить права");
       console.error("Error updating permissions:", error);
     } finally {
       setSaving(false);
@@ -79,7 +79,7 @@ const MemberPermissions: React.FC<MemberPermissionsProps> = ({ teamId, accessTok
   return (
     <Card className="block bg-card shadow-md rounded-md p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4 mb-6">
-        <h3 className="text-lg font-medium text-foreground mb-2 sm:mb-0">Member Permissions</h3>
+        <h3 className="text-lg font-medium text-foreground mb-2 sm:mb-0">Права участника</h3>
         {canEditTeam && hasChanges && (
           <div className="flex gap-3">
             <Button variant="outline" onClick={handleReset}>
@@ -95,7 +95,7 @@ const MemberPermissions: React.FC<MemberPermissionsProps> = ({ teamId, accessTok
       </div>
 
       <p className="mb-6 text-sm text-muted-foreground">
-        Control what team members can do when they are not team admins.
+        Настройте, что могут делать участники, не являясь администраторами команды.
       </p>
 
       {hasPermissions ? (
@@ -103,11 +103,11 @@ const MemberPermissions: React.FC<MemberPermissionsProps> = ({ teamId, accessTok
           <Table className="min-w-full">
             <TableHeader>
               <TableRow>
-                <TableHead>Method</TableHead>
-                <TableHead>Endpoint</TableHead>
+                <TableHead>Метод</TableHead>
+                <TableHead>Эндпоинт</TableHead>
                 <TableHead>Описание</TableHead>
                 <TableHead className="sticky right-0 bg-card shadow-[-4px_0_4px_-4px_rgba(0,0,0,0.1)] text-center">
-                  Allow Access
+                  Разрешить доступ
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -145,7 +145,7 @@ const MemberPermissions: React.FC<MemberPermissionsProps> = ({ teamId, accessTok
         </div>
       ) : (
         <div className="py-12">
-          <p className="text-center text-sm text-muted-foreground">No permissions available</p>
+          <p className="text-center text-sm text-muted-foreground">Нет доступных прав</p>
         </div>
       )}
     </Card>

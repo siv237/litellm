@@ -65,8 +65,8 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Users className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No users found</div>
-      <div className="text-sm text-muted-foreground">Try adjusting your search or filters.</div>
+      <div className="text-sm font-medium text-foreground">Пользователи не найдены</div>
+      <div className="text-sm text-muted-foreground">Попробуйте изменить поиск или фильтры.</div>
     </div>
   );
 }
@@ -176,16 +176,16 @@ export function UsersTable({
             table={table}
             open={filtersOpen}
             onOpenChange={setFiltersOpen}
-            title="Filters"
-            description="Narrow down your users"
+            title="Фильтры"
+            description="Сузьте выборку пользователей"
           >
             {({ get, set }) => (
               <>
-                <DataTableFilterField label="User ID">
+                <DataTableFilterField label="ID пользователя">
                   <Input
                     value={(get("user_id") as string) ?? ""}
                     onChange={(event) => set("user_id", event.target.value)}
-                    placeholder="Enter user ID…"
+                    placeholder="Введите ID пользователя…"
                     data-testid="users-filter-user-id"
                   />
                 </DataTableFilterField>
@@ -193,7 +193,7 @@ export function UsersTable({
                   <Input
                     value={(get("sso_user_id") as string) ?? ""}
                     onChange={(event) => set("sso_user_id", event.target.value)}
-                    placeholder="Enter SSO ID…"
+                    placeholder="Введите SSO ID…"
                     data-testid="users-filter-sso-id"
                   />
                 </DataTableFilterField>
@@ -202,8 +202,8 @@ export function UsersTable({
                     options={roleOptions}
                     value={(get("user_role") as string) || undefined}
                     onValueChange={(value) => set("user_role", value ?? undefined)}
-                    placeholder="Select a role…"
-                    emptyText="No roles found"
+                    placeholder="Выберите роль…"
+                    emptyText="Роли не найдены"
                   />
                 </DataTableFilterField>
                 <DataTableFilterField label="Команда">
@@ -211,8 +211,8 @@ export function UsersTable({
                     options={teamOptions}
                     value={(get("team") as string) || undefined}
                     onValueChange={(value) => set("team", value ?? undefined)}
-                    placeholder="Select a team…"
-                    emptyText="No teams found"
+                    placeholder="Выберите команду…"
+                    emptyText="Команды не найдены"
                   />
                 </DataTableFilterField>
               </>

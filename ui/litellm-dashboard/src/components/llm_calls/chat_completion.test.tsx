@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { makeOpenAIChatCompletionRequest } from "./chat_completion";
-import type { TokenUsage } from "../chat_ui/ResponseMetrics";
+import { makeOpenAIChatCompletionЗапрос } from "./chat_completion";
+import type { ТокенИспользование } from "../chat_ui/ОтветМетрикаs";
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: vi.fn(() => "https://example.com"),
@@ -26,28 +26,28 @@ vi.mock("openai", () => ({
   },
 }));
 
-const nonStreamingResponse = (data: unknown, headers: Record<string, string> = {}) => ({
-  withResponse: async () => ({ data, response: { headers: new Headers(headers) } }),
+const nonStreamingОтвет = (data: unknown, headers: Record<string, string> = {}) => ({
+  withОтвет: async () => ({ data, response: { headers: new Заголовки(headers) } }),
 });
 
 describe("chat_completion", () => {
   const mockUpdateUI = vi.fn();
-  const mockChatHistory = [{ role: "user", content: "Hello" }];
+  const mockChatИстория = [{ role: "user", content: "Hello" }];
 
   beforeEach(() => {
     // Create a mock async iterator for streaming response
     const mockChunks = [
       {
         choices: [{ delta: { content: "Hello" }, index: 0 }],
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
       },
       {
         choices: [{ delta: { content: " there" }, index: 0 }],
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
       },
       {
         choices: [{ delta: {}, index: 0 }],
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
         usage: {
           completion_tokens: 2,
           prompt_tokens: 5,
@@ -62,25 +62,25 @@ describe("chat_completion", () => {
       }
     }
 
-    mockCreate.mockResolvedValue(mockStream());
+    mockCreate.mockResolvedЗначение(mockStream());
   });
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should make a basic chat completion request", async () => {
-    await makeOpenAIChatCompletionRequest(mockChatHistory, mockUpdateUI, "gpt-4", "test-token");
+    await makeOpenAIChatCompletionЗапрос(mockChatИстория, mockUpdateUI, "gpt-4", "test-token");
 
-    expect(mockCreate).toHaveBeenCalledTimes(1);
+    expect(mockCreate).toHaveBeenCalledВремяs(1);
     expect(mockCreate).toHaveBeenCalledWith(
       {
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
         stream: true,
         stream_options: {
           include_usage: true,
         },
-        messages: mockChatHistory,
+        messages: mockChatИстория,
       },
       { signal: undefined },
     );
@@ -89,8 +89,8 @@ describe("chat_completion", () => {
   });
 
   it("should include temperature and max_tokens when provided", async () => {
-    await makeOpenAIChatCompletionRequest(
-      mockChatHistory,
+    await makeOpenAIChatCompletionЗапрос(
+      mockChatИстория,
       mockUpdateUI,
       "gpt-4",
       "test-token",
@@ -98,35 +98,35 @@ describe("chat_completion", () => {
       undefined, // signal
       undefined, // onReasoningContent
       undefined, // onTimingData
-      undefined, // onUsageData
+      undefined, // onИспользованиеData
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      undefined, // selectedMCPServers
+      undefined, // selectedMCP-серверы
       undefined, // onImageGenerated
-      undefined, // onSearchResults
+      undefined, // onSearchРезультатs
       0.7, // temperature
       100, // max_tokens
     );
 
-    expect(mockCreate).toHaveBeenCalledTimes(1);
+    expect(mockCreate).toHaveBeenCalledВремяs(1);
     const callArgs = mockCreate.mock.calls[0][0];
     expect(callArgs).toMatchObject({
-      model: "gpt-4",
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
       stream: true,
       stream_options: {
         include_usage: true,
       },
-      messages: mockChatHistory,
+      messages: mockChatИстория,
       temperature: 0.7,
       max_tokens: 100,
     });
   });
 
   it("should configure MCP tools per server with restrictions", async () => {
-    const selectedMCPServers = ["server-1", "server-2"];
-    const mcpServers = [
+    const selectedMCP-серверы = ["server-1", "server-2"];
+    const mcp-серверы = [
       {
         server_id: "server-1",
         alias: "alpha",
@@ -139,7 +139,7 @@ describe("chat_completion", () => {
       },
       {
         server_id: "server-2",
-        server_name: "Beta",
+        server_name: "Бета",
         url: "http://example.com",
         created_at: "2024-01-01",
         created_by: "test",
@@ -147,13 +147,13 @@ describe("chat_completion", () => {
         updated_by: "test",
       },
     ];
-    const mcpServerToolRestrictions = {
+    const mcpСерверToolRestrictions = {
       "server-1": ["toolA", "toolB"],
       "server-2": ["toolC"],
     } as Record<string, string[]>;
 
-    await makeOpenAIChatCompletionRequest(
-      mockChatHistory,
+    await makeOpenAIChatCompletionЗапрос(
+      mockChatИстория,
       mockUpdateUI,
       "gpt-4",
       "test-token",
@@ -161,20 +161,20 @@ describe("chat_completion", () => {
       undefined, // signal
       undefined, // onReasoningContent
       undefined, // onTimingData
-      undefined, // onUsageData
+      undefined, // onИспользованиеData
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      selectedMCPServers,
+      selectedMCP-серверы,
       undefined, // onImageGenerated
-      undefined, // onSearchResults
+      undefined, // onSearchРезультатs
       undefined, // temperature
       undefined, // max_tokens
       undefined, // onTotalLatency
       undefined, // customBaseUrl
-      mcpServers,
-      mcpServerToolRestrictions,
+      mcp-серверы,
+      mcpСерверToolRestrictions,
     );
 
     const callArgs = mockCreate.mock.calls[0][0];
@@ -193,14 +193,14 @@ describe("chat_completion", () => {
     const secondTool = callArgs.tools[1];
     expect(secondTool.type).toBe("mcp");
     expect(secondTool.server_label).toBe("litellm");
-    expect(secondTool.server_url).toBe("litellm_proxy/mcp/Beta");
+    expect(secondTool.server_url).toBe("litellm_proxy/mcp/Бета");
     expect(secondTool.require_approval).toBe("never");
     expect(secondTool.allowed_tools).toEqual(["toolC"]);
   });
 
-  it("should include mock_testing_fallbacks in request body when mockTestFallbacks is true", async () => {
-    await makeOpenAIChatCompletionRequest(
-      mockChatHistory,
+  it("should include mock_testing_fallbacks in request body when mockTestРезервные модели is true", async () => {
+    await makeOpenAIChatCompletionЗапрос(
+      mockChatИстория,
       mockUpdateUI,
       "gpt-4",
       "test-token",
@@ -208,36 +208,36 @@ describe("chat_completion", () => {
       undefined, // signal
       undefined, // onReasoningContent
       undefined, // onTimingData
-      undefined, // onUsageData
+      undefined, // onИспользованиеData
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      undefined, // selectedMCPServers
+      undefined, // selectedMCP-серверы
       undefined, // onImageGenerated
-      undefined, // onSearchResults
+      undefined, // onSearchРезультатs
       undefined, // temperature
       undefined, // max_tokens
       undefined, // onTotalLatency
       undefined, // customBaseUrl
-      undefined, // mcpServers
-      undefined, // mcpServerToolRestrictions
+      undefined, // mcp-серверы
+      undefined, // mcpСерверToolRestrictions
       undefined, // onMCPEvent
-      true, // mockTestFallbacks
+      true, // mockTestРезервные модели
     );
 
-    expect(mockCreate).toHaveBeenCalledTimes(1);
+    expect(mockCreate).toHaveBeenCalledВремяs(1);
     const callArgs = mockCreate.mock.calls[0][0];
     expect(callArgs.mock_testing_fallbacks).toBe(true);
   });
 
   it("should send a non-streaming request and render the whole message at once when streaming is disabled", async () => {
-    mockCreate.mockReturnValueOnce(
-      nonStreamingResponse({
+    mockCreate.mockReturnЗначениеOnce(
+      nonStreamingОтвет({
         id: "chatcmpl-1",
         object: "chat.completion",
         created: 1,
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
         choices: [
           {
             index: 0,
@@ -255,11 +255,11 @@ describe("chat_completion", () => {
     );
 
     const onTimingData = vi.fn();
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
     const onTotalLatency = vi.fn();
 
-    await makeOpenAIChatCompletionRequest(
-      mockChatHistory,
+    await makeOpenAIChatCompletionЗапрос(
+      mockChatИстория,
       mockUpdateUI,
       "gpt-4",
       "test-token",
@@ -267,38 +267,38 @@ describe("chat_completion", () => {
       undefined, // signal
       undefined, // onReasoningContent
       onTimingData,
-      onUsageData,
+      onИспользованиеData,
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      undefined, // selectedMCPServers
+      undefined, // selectedMCP-серверы
       undefined, // onImageGenerated
-      undefined, // onSearchResults
+      undefined, // onSearchРезультатs
       undefined, // temperature
       undefined, // max_tokens
       onTotalLatency,
       undefined, // customBaseUrl
-      undefined, // mcpServers
-      undefined, // mcpServerToolRestrictions
+      undefined, // mcp-серверы
+      undefined, // mcpСерверToolRestrictions
       undefined, // onMCPEvent
-      undefined, // mockTestFallbacks
-      undefined, // mcpToolsets
+      undefined, // mockTestРезервные модели
+      undefined, // mcpИнструментыets
       false, // streamingEnabled
     );
 
-    expect(mockCreate).toHaveBeenCalledTimes(1);
+    expect(mockCreate).toHaveBeenCalledВремяs(1);
     const callArgs = mockCreate.mock.calls[0][0];
     expect(callArgs.stream).toBe(false);
-    expect(callArgs).not.toHaveProperty("stream_options");
+    expect(callArgs).not.toHaveСвойство("stream_options");
 
-    expect(mockUpdateUI).toHaveBeenCalledTimes(1);
+    expect(mockUpdateUI).toHaveBeenCalledВремяs(1);
     expect(mockUpdateUI).toHaveBeenCalledWith("Hello there", "gpt-4");
 
-    expect(onUsageData).toHaveBeenCalledWith({
-      completionTokens: 2,
-      promptTokens: 5,
-      totalTokens: 7,
+    expect(onИспользованиеData).toHaveBeenCalledWith({
+      completionТокенs: 2,
+      promptТокенs: 5,
+      totalТокенs: 7,
       cost: 0.25,
     });
     expect(onTimingData).not.toHaveBeenCalled();
@@ -306,9 +306,9 @@ describe("chat_completion", () => {
   });
 
   it("should surface reasoning content and MCP metadata from a non-streaming response", async () => {
-    mockCreate.mockReturnValueOnce(
-      nonStreamingResponse({
-        model: "gpt-4",
+    mockCreate.mockReturnЗначениеOnce(
+      nonStreamingОтвет({
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
         choices: [
           {
             index: 0,
@@ -330,8 +330,8 @@ describe("chat_completion", () => {
     const onReasoningContent = vi.fn();
     const onMCPEvent = vi.fn();
 
-    await makeOpenAIChatCompletionRequest(
-      mockChatHistory,
+    await makeOpenAIChatCompletionЗапрос(
+      mockChatИстория,
       mockUpdateUI,
       "gpt-4",
       "test-token",
@@ -339,42 +339,42 @@ describe("chat_completion", () => {
       undefined, // signal
       onReasoningContent,
       undefined, // onTimingData
-      undefined, // onUsageData
+      undefined, // onИспользованиеData
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      undefined, // selectedMCPServers
+      undefined, // selectedMCP-серверы
       undefined, // onImageGenerated
-      undefined, // onSearchResults
+      undefined, // onSearchРезультатs
       undefined, // temperature
       undefined, // max_tokens
       undefined, // onTotalLatency
       undefined, // customBaseUrl
-      undefined, // mcpServers
-      undefined, // mcpServerToolRestrictions
+      undefined, // mcp-серверы
+      undefined, // mcpСерверToolRestrictions
       onMCPEvent,
-      undefined, // mockTestFallbacks
-      undefined, // mcpToolsets
+      undefined, // mockTestРезервные модели
+      undefined, // mcpИнструментыets
       false, // streamingEnabled
     );
 
     expect(onReasoningContent).toHaveBeenCalledWith("thinking");
     expect(onMCPEvent).toHaveBeenCalledWith(
       expect.objectContaining({
-        type: "response.output_item.done",
+        type: "response.выходput_item.done",
         item: expect.objectContaining({
           type: "mcp_call",
           name: "search_docs",
-          output: "found it",
+          выходput: "found it",
         }),
       }),
     );
   });
 
-  it("should not include mock_testing_fallbacks in request body when mockTestFallbacks is false or undefined", async () => {
-    await makeOpenAIChatCompletionRequest(
-      mockChatHistory,
+  it("should not include mock_testing_fallbacks in request body when mockTestРезервные модели is false or undefined", async () => {
+    await makeOpenAIChatCompletionЗапрос(
+      mockChatИстория,
       mockUpdateUI,
       "gpt-4",
       "test-token",
@@ -382,43 +382,43 @@ describe("chat_completion", () => {
       undefined, // signal
       undefined, // onReasoningContent
       undefined, // onTimingData
-      undefined, // onUsageData
+      undefined, // onИспользованиеData
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      undefined, // selectedMCPServers
+      undefined, // selectedMCP-серверы
       undefined, // onImageGenerated
-      undefined, // onSearchResults
+      undefined, // onSearchРезультатs
       undefined, // temperature
       undefined, // max_tokens
       undefined, // onTotalLatency
       undefined, // customBaseUrl
-      undefined, // mcpServers
-      undefined, // mcpServerToolRestrictions
+      undefined, // mcp-серверы
+      undefined, // mcpСерверToolRestrictions
       undefined, // onMCPEvent
-      false, // mockTestFallbacks
+      false, // mockTestРезервные модели
     );
 
-    expect(mockCreate).toHaveBeenCalledTimes(1);
+    expect(mockCreate).toHaveBeenCalledВремяs(1);
     const callArgs = mockCreate.mock.calls[0][0];
-    expect(callArgs).not.toHaveProperty("mock_testing_fallbacks");
+    expect(callArgs).not.toHaveСвойство("mock_testing_fallbacks");
   });
 });
 
 describe("chat_completion prompt cache usage", () => {
-  const captureUsage = async (usage: Record<string, unknown>): Promise<TokenUsage> => {
+  const captureИспользование = async (usage: Record<string, unknown>): Promise<ТокенИспользование> => {
     async function* mockStream() {
       yield {
         choices: [{ delta: {}, index: 0 }],
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
         usage: { completion_tokens: 2, prompt_tokens: 5000, total_tokens: 5002, ...usage },
       };
     }
-    mockCreate.mockResolvedValue(mockStream());
+    mockCreate.mockResolvedЗначение(mockStream());
 
-    const onUsageData = vi.fn();
-    await makeOpenAIChatCompletionRequest(
+    const onИспользованиеData = vi.fn();
+    await makeOpenAIChatCompletionЗапрос(
       [{ role: "user", content: "Hello" }],
       vi.fn(),
       "gpt-4",
@@ -427,56 +427,56 @@ describe("chat_completion prompt cache usage", () => {
       undefined,
       undefined,
       undefined,
-      onUsageData,
+      onИспользованиеData,
     );
 
-    expect(onUsageData).toHaveBeenCalledTimes(1);
-    return onUsageData.mock.calls[0][0] as TokenUsage;
+    expect(onИспользованиеData).toHaveBeenCalledВремяs(1);
+    return onИспользованиеData.mock.calls[0][0] as ТокенИспользование;
   };
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("surfaces read and creation tokens from Anthropic-shape usage", async () => {
     await expect(
-      captureUsage({ cache_read_input_tokens: 4695, cache_creation_input_tokens: 1234 }),
-    ).resolves.toMatchObject({ cacheReadTokens: 4695, cacheCreationTokens: 1234 });
+      captureИспользование({ cache_read_input_tokens: 4695, cache_creation_input_tokens: 1234 }),
+    ).resolves.toMatchObject({ cacheReadТокенs: 4695, cacheCreationТокенs: 1234 });
   });
 
   it("surfaces read tokens from OpenAI-shape prompt_tokens_details", async () => {
     await expect(
-      captureUsage({ prompt_tokens_details: { cached_tokens: 4695, cache_write_tokens: 0 } }),
-    ).resolves.toMatchObject({ cacheReadTokens: 4695, promptTokens: 5000 });
+      captureИспользование({ prompt_tokens_details: { cached_tokens: 4695, cache_write_tokens: 0 } }),
+    ).resolves.toMatchObject({ cacheReadТокенs: 4695, promptТокенs: 5000 });
   });
 
   it("omits cache fields entirely for a provider that reports none", async () => {
-    const usageData = await captureUsage({});
+    const usageData = await captureИспользование({});
 
-    expect(usageData).not.toHaveProperty("cacheReadTokens");
-    expect(usageData).not.toHaveProperty("cacheCreationTokens");
-    expect(usageData.promptTokens).toBe(5000);
+    expect(usageData).not.toHaveСвойство("cacheReadТокенs");
+    expect(usageData).not.toHaveСвойство("cacheCreationТокенs");
+    expect(usageData.promptТокенs).toBe(5000);
   });
 
   it("omits cache fields when the provider reports zeroes", async () => {
-    const usageData = await captureUsage({
+    const usageData = await captureИспользование({
       cache_read_input_tokens: 0,
       cache_creation_input_tokens: 0,
       prompt_tokens_details: { cached_tokens: 0 },
     });
 
-    expect(usageData).not.toHaveProperty("cacheReadTokens");
-    expect(usageData).not.toHaveProperty("cacheCreationTokens");
+    expect(usageData).not.toHaveСвойство("cacheReadТокенs");
+    expect(usageData).not.toHaveСвойство("cacheCreationТокенs");
   });
 
   it("omits cost when the provider reports a non-numeric value", async () => {
-    const usageData = await captureUsage({ cost: "not-a-number" });
+    const usageData = await captureИспользование({ cost: "not-a-number" });
 
     expect(usageData).toEqual(expect.not.objectContaining({ cost: expect.anything() }));
   });
 
   it("omits cost when the provider reports a blank value", async () => {
-    const usageData = await captureUsage({ cost: "  " });
+    const usageData = await captureИспользование({ cost: "  " });
 
     expect(usageData).toEqual(expect.not.objectContaining({ cost: expect.anything() }));
   });
@@ -484,18 +484,18 @@ describe("chat_completion prompt cache usage", () => {
 
 describe("chat_completion response cache", () => {
   const mockUpdateUI = vi.fn();
-  const mockChatHistory = [{ role: "user", content: "Hello" }];
+  const mockChatИстория = [{ role: "user", content: "Hello" }];
 
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("flags a non-streaming response-cache hit even though it replays provider prompt-cache usage", async () => {
-    mockCreate.mockReturnValueOnce(
-      nonStreamingResponse(
+    mockCreate.mockReturnЗначениеOnce(
+      nonStreamingОтвет(
         {
           id: "chatcmpl-replayed",
-          model: "gpt-4",
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
           choices: [{ index: 0, finish_reason: "stop", message: { role: "assistant", content: "Hello there" } }],
           usage: {
             completion_tokens: 2,
@@ -508,10 +508,10 @@ describe("chat_completion response cache", () => {
       ),
     );
 
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
 
-    await makeOpenAIChatCompletionRequest(
-      mockChatHistory,
+    await makeOpenAIChatCompletionЗапрос(
+      mockChatИстория,
       mockUpdateUI,
       "gpt-4",
       "test-token",
@@ -519,45 +519,45 @@ describe("chat_completion response cache", () => {
       undefined, // signal
       undefined, // onReasoningContent
       undefined, // onTimingData
-      onUsageData,
+      onИспользованиеData,
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // guardrails
+      undefined, // гардрейловs
       undefined, // policies
-      undefined, // selectedMCPServers
+      undefined, // selectedMCP-серверы
       undefined, // onImageGenerated
-      undefined, // onSearchResults
+      undefined, // onSearchРезультатs
       undefined, // temperature
       undefined, // max_tokens
       undefined, // onTotalLatency
       undefined, // customBaseUrl
-      undefined, // mcpServers
-      undefined, // mcpServerToolRestrictions
+      undefined, // mcp-серверы
+      undefined, // mcpСерверToolRestrictions
       undefined, // onMCPEvent
-      undefined, // mockTestFallbacks
-      undefined, // mcpToolsets
+      undefined, // mockTestРезервные модели
+      undefined, // mcpИнструментыets
       false, // streamingEnabled
     );
 
-    expect(onUsageData).toHaveBeenCalledWith(
-      expect.objectContaining({ cacheReadTokens: 4695, servedFromResponseCache: true }),
+    expect(onИспользованиеData).toHaveBeenCalledWith(
+      expect.objectContaining({ cacheReadТокенs: 4695, servedFromОтветCache: true }),
     );
   });
 
   it("does not flag a non-streaming response that missed the response cache", async () => {
-    mockCreate.mockReturnValueOnce(
-      nonStreamingResponse({
+    mockCreate.mockReturnЗначениеOnce(
+      nonStreamingОтвет({
         id: "chatcmpl-fresh",
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
         choices: [{ index: 0, finish_reason: "stop", message: { role: "assistant", content: "Hello there" } }],
         usage: { completion_tokens: 2, prompt_tokens: 5, total_tokens: 7 },
       }),
     );
 
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
 
-    await makeOpenAIChatCompletionRequest(
-      mockChatHistory,
+    await makeOpenAIChatCompletionЗапрос(
+      mockChatИстория,
       mockUpdateUI,
       "gpt-4",
       "test-token",
@@ -565,7 +565,7 @@ describe("chat_completion response cache", () => {
       undefined,
       undefined,
       undefined,
-      onUsageData,
+      onИспользованиеData,
       undefined,
       undefined,
       undefined,
@@ -585,23 +585,23 @@ describe("chat_completion response cache", () => {
       false, // streamingEnabled
     );
 
-    expect(onUsageData).toHaveBeenCalledWith(expect.not.objectContaining({ servedFromResponseCache: true }));
+    expect(onИспользованиеData).toHaveBeenCalledWith(expect.not.objectContaining({ servedFromОтветCache: true }));
   });
 
   it("never flags a streaming response, even when the proxy reports a cache key", async () => {
     async function* mockStream() {
       yield {
         choices: [{ delta: {}, index: 0 }],
-        model: "gpt-4",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
         usage: { completion_tokens: 2, prompt_tokens: 5, total_tokens: 7 },
       };
     }
-    mockCreate.mockResolvedValueOnce(mockStream());
+    mockCreate.mockResolvedЗначениеOnce(mockStream());
 
-    const onUsageData = vi.fn();
+    const onИспользованиеData = vi.fn();
 
-    await makeOpenAIChatCompletionRequest(
-      mockChatHistory,
+    await makeOpenAIChatCompletionЗапрос(
+      mockChatИстория,
       mockUpdateUI,
       "gpt-4",
       "test-token",
@@ -609,9 +609,9 @@ describe("chat_completion response cache", () => {
       undefined,
       undefined,
       undefined,
-      onUsageData,
+      onИспользованиеData,
     );
 
-    expect(onUsageData).toHaveBeenCalledWith(expect.not.objectContaining({ servedFromResponseCache: true }));
+    expect(onИспользованиеData).toHaveBeenCalledWith(expect.not.objectContaining({ servedFromОтветCache: true }));
   });
 });

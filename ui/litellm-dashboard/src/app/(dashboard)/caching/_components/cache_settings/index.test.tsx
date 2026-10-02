@@ -3,30 +3,30 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CacheSettings from "./index";
 
-const { getCacheSettingsCall, testCacheConnectionCall, updateCacheSettingsCall } = vi.hoisted(() => ({
+const { getCacheSettingsCall, testCacheПодключениеCall, updateCacheSettingsCall } = vi.hoisted(() => ({
   getCacheSettingsCall: vi.fn(),
-  testCacheConnectionCall: vi.fn(),
+  testCacheПодключениеCall: vi.fn(),
   updateCacheSettingsCall: vi.fn(),
 }));
 
 vi.mock("@/components/networking", () => ({
   getCacheSettingsCall,
-  testCacheConnectionCall,
+  testCacheПодключениеCall,
   updateCacheSettingsCall,
 }));
 
-vi.mock("@/components/llm_calls/fetch_models", () => ({
-  fetchAvailableModels: vi.fn().mockResolvedValue([]),
+vi.mock("@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => ({
+  fetchAvailableРежимls: vi.fn().mockResolvedЗначение([]),
 }));
 
-const renderSettings = () => render(<CacheSettings accessToken="sk-test" userRole="Admin" userID="u1" />);
+const renderSettings = () => render(<CacheSettings accessТокен="sk-test" userRole="Admin" userID="u1" />);
 
 describe("CacheSettings", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    getCacheSettingsCall.mockResolvedValue({ current_values: {} });
-    updateCacheSettingsCall.mockResolvedValue({ status: "success" });
-    testCacheConnectionCall.mockResolvedValue({ status: "success" });
+    vi.clearВсеMocks();
+    getCacheSettingsCall.mockResolvedЗначение({ current_values: {} });
+    updateCacheSettingsCall.mockResolvedЗначение({ status: "success" });
+    testCacheПодключениеCall.mockResolvedЗначение({ status: "success" });
   });
 
   it("should render the connection fields once current values load", async () => {
@@ -48,7 +48,7 @@ describe("CacheSettings", () => {
 
   describe("when the redis type is cluster", () => {
     it("should reveal the cluster startup nodes field", async () => {
-      getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "cluster" } });
+      getCacheSettingsCall.mockResolvedЗначение({ current_values: { redis_type: "cluster" } });
       renderSettings();
       expect(await screen.findByText("Startup-узлы")).toBeInTheDocument();
     });
@@ -56,7 +56,7 @@ describe("CacheSettings", () => {
 
   describe("when the redis type is sentinel", () => {
     it("should reveal the sentinel fields", async () => {
-      getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "sentinel" } });
+      getCacheSettingsCall.mockResolvedЗначение({ current_values: { redis_type: "sentinel" } });
       renderSettings();
       expect(await screen.findByText("Узлы Sentinel")).toBeInTheDocument();
       expect(screen.getByText("Имя сервиса")).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe("CacheSettings", () => {
 
   describe("when the redis type is semantic", () => {
     it("should reveal the semantic fields", async () => {
-      getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "semantic" } });
+      getCacheSettingsCall.mockResolvedЗначение({ current_values: { redis_type: "semantic" } });
       renderSettings();
       expect(await screen.findByText("Порог схожести")).toBeInTheDocument();
       expect(screen.getByText("Модель эмбеддингов")).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe("CacheSettings", () => {
 
     it("should block save when a list field holds malformed JSON instead of silently dropping it", async () => {
       const user = userEvent.setup();
-      getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "cluster" } });
+      getCacheSettingsCall.mockResolvedЗначение({ current_values: { redis_type: "cluster" } });
       renderSettings();
 
       const startupNodes = await screen.findByLabelText("Startup-узлы");

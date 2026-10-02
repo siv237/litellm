@@ -1,15 +1,15 @@
 import { describe, expect, it } from "vitest";
 import {
-  mountedCreateFieldNames,
-  mountedEditFieldNames,
-  projectMountedCreateValues,
-  projectMountedEditValues,
-} from "./mountedServerFields";
+  mountedCreateПолеNames,
+  mountedEditПолеNames,
+  projectMountedCreateЗначениеs,
+  projectMountedEditЗначениеs,
+} from "./mountedСерверПолеs";
 
-const editRoot = (values: Record<string, unknown>) => mountedEditFieldNames(values).root;
-const editCreds = (values: Record<string, unknown>) => mountedEditFieldNames(values).credentials;
-const createRoot = (values: Record<string, unknown>) => mountedCreateFieldNames(values).root;
-const createCreds = (values: Record<string, unknown>) => mountedCreateFieldNames(values).credentials;
+const editRoot = (values: Record<string, unknown>) => mountedEditПолеNames(values).root;
+const editCreds = (values: Record<string, unknown>) => mountedEditПолеNames(values).credentials;
+const createRoot = (values: Record<string, unknown>) => mountedCreateПолеNames(values).root;
+const createCreds = (values: Record<string, unknown>) => mountedCreateПолеNames(values).credentials;
 
 const HTTP_NONE = { transport: "http", auth_type: "none" };
 
@@ -474,31 +474,31 @@ describe("create root: exact mounted set per configuration", () => {
 
 describe("projection shape", () => {
   it("EMITS a mounted-but-unset field as a key holding undefined, matching antd onFinish", () => {
-    const projected = projectMountedEditValues({ transport: "http", auth_type: "none", server_name: "s" });
+    const projected = projectMountedEditЗначениеs({ transport: "http", auth_type: "none", server_name: "s" });
     expect("description" in projected).toBe(true);
     expect(projected.description).toBeUndefined();
     expect(Object.keys(projected)).toContain("max_concurrent_requests");
   });
 
   it("emits mounted-but-unset CREDENTIAL keys as undefined rather than omitting them", () => {
-    const projected = projectMountedEditValues({ transport: "http", auth_type: "api_key" });
+    const projected = projectMountedEditЗначениеs({ transport: "http", auth_type: "api_key" });
     expect(Object.keys(projected.credentials as object)).toStrictEqual(["auth_value"]);
     expect((projected.credentials as Record<string, unknown>).auth_value).toBeUndefined();
   });
 
   it("omits the credentials key entirely when no credential field is mounted", () => {
-    expect("credentials" in projectMountedEditValues(HTTP_NONE)).toBe(false);
+    expect("credentials" in projectMountedEditЗначениеs(HTTP_NONE)).toBe(false);
   });
 
   it("drops an unmounted field even when the store still holds a value for it", () => {
-    const storeWithStaleHttpValues = {
+    const storeWithStaleHttpЗначениеs = {
       transport: "stdio",
       auth_type: "oauth2",
       url: "https://kept-in-store.example",
       issuer: "https://kept-in-store.example",
       command: "npx",
     };
-    const projected = projectMountedEditValues(storeWithStaleHttpValues);
+    const projected = projectMountedEditЗначениеs(storeWithStaleHttpЗначениеs);
     expect("url" in projected).toBe(false);
     expect("issuer" in projected).toBe(false);
     expect(projected.command).toBe("npx");
@@ -506,14 +506,14 @@ describe("projection shape", () => {
 
   it("passes list rows through whole, since a list field is projected as one key and not per mounted sub-field", () => {
     const row = { name: "N", value: "V", scope: "user", description: "D" };
-    const projected = projectMountedEditValues({ ...HTTP_NONE, env_vars: [row] });
+    const projected = projectMountedEditЗначениеs({ ...HTTP_NONE, env_vars: [row] });
     expect(projected.env_vars).toStrictEqual([row]);
   });
 
   it("keeps static_headers rows whole", () => {
     const rows = [{ header: "X-A", value: "1" }];
     expect(
-      projectMountedCreateValues({ transport: "http", auth_type: "none", static_headers: rows }).static_headers,
+      projectMountedCreateЗначениеs({ transport: "http", auth_type: "none", static_headers: rows }).static_headers,
     ).toStrictEqual(rows);
   });
 });

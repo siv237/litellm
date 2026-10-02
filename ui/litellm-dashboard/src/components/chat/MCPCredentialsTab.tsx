@@ -83,7 +83,7 @@ const MCPCredentialsTab: React.FC<Props> = ({ accessToken }) => {
         (prev ?? []).filter((c) => c.server_id !== serverId),
       );
     } catch {
-      toast.error("Failed to revoke connection. Please try again.");
+      toast.error("Не удалось отозвать подключение. Попробуйте снова.");
     } finally {
       setRevoking((prev) => {
         const n = new Set(prev);
@@ -98,7 +98,7 @@ const MCPCredentialsTab: React.FC<Props> = ({ accessToken }) => {
   return (
     <div className="w-full">
       <div className="mb-4">
-        <h2 className="text-base font-semibold text-foreground mb-0.5">App Credentials</h2>
+        <h2 className="text-base font-semibold text-foreground mb-0.5">Учётные данные приложения</h2>
         <p className="text-sm text-muted-foreground m-0">Your stored OAuth connections; used automatically in chat</p>
       </div>
 
@@ -108,10 +108,10 @@ const MCPCredentialsTab: React.FC<Props> = ({ accessToken }) => {
             <TableHeader>
               <TableRow className="bg-muted/50">
                 <TableHead className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                  App
+                  Приложение
                 </TableHead>
                 <TableHead className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                  Connected
+                  Подключено
                 </TableHead>
                 <TableHead className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                   Статус
@@ -144,10 +144,10 @@ const MCPCredentialsTab: React.FC<Props> = ({ accessToken }) => {
       ) : credentials.length === 0 ? (
         <div className="text-center text-muted-foreground text-sm py-12 border border-dashed rounded-lg">
           <Link className="h-6 w-6 mb-3 mx-auto text-muted-foreground/50" />
-          <p className="m-0">No connections yet</p>
+          <p className="m-0">Подключений пока нет</p>
           <p className="m-0 mt-1 text-xs">
-            Go to <span className="font-medium">Integrations</span> and click{" "}
-            <span className="font-medium">Connect</span> to authorize an MCP server
+            Перейдите в <span className="font-medium">Интеграции</span> and click{" "}
+            <span className="font-medium">Подключить</span> , чтобы авторизовать MCP-сервер
           </p>
         </div>
       ) : (
@@ -156,10 +156,10 @@ const MCPCredentialsTab: React.FC<Props> = ({ accessToken }) => {
             <TableHeader>
               <TableRow className="bg-muted/50">
                 <TableHead className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                  App
+                  Приложение
                 </TableHead>
                 <TableHead className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                  Connected
+                  Подключено
                 </TableHead>
                 <TableHead className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                   Статус
@@ -190,7 +190,7 @@ const MCPCredentialsTab: React.FC<Props> = ({ accessToken }) => {
                               variant="outline"
                               size="icon-sm"
                               disabled={isRevoking}
-                              title="Revoke connection"
+                              title="Отозвать подключение"
                               className="text-muted-foreground hover:text-destructive hover:border-destructive/50"
                             >
                               {isRevoking ? (
@@ -203,16 +203,16 @@ const MCPCredentialsTab: React.FC<Props> = ({ accessToken }) => {
                         />
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Revoke connection?</AlertDialogTitle>
+                            <AlertDialogTitle>Отозвать подключение?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              This removes the stored OAuth credential for {displayName(cred)}. You&apos;ll need to
-                              reconnect to use it in chat again.
+                              Это удалит сохранённые учётные данные OAuth для {displayName(cred)}. Для повторного
+                              использования в чате нужно подключиться заново.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Отмена</AlertDialogCancel>
                             <AlertDialogAction variant="destructive" onClick={() => handleRevoke(cred.server_id)}>
-                              Revoke
+                              Отозвать
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>

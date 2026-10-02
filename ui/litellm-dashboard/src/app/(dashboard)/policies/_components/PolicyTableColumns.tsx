@@ -53,7 +53,7 @@ function PolicyRowActions({ policy, onEditClick, onDeleteClick }: PolicyRowActio
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open policy actions"
+        aria-label="Действия с политикой"
         data-testid={`policy-actions-${policy.policy_id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -67,7 +67,7 @@ function PolicyRowActions({ policy, onEditClick, onDeleteClick }: PolicyRowActio
           onClick={() => onEditClick(policy)}
         >
           <Pencil />
-          Edit policy
+          Изменить политику
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -78,7 +78,7 @@ function PolicyRowActions({ policy, onEditClick, onDeleteClick }: PolicyRowActio
           onClick={() => onDeleteClick(policy.policy_id, policy.policy_name || "Unnamed Policy")}
         >
           <Trash2 />
-          Delete policy
+          Удалить политику
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -116,7 +116,7 @@ export const getPolicyTableColumns = ({
           title={row.original.policy_name}
           titleClassName="max-w-60"
           badge={
-            isConfigPolicy ? <StatusBadge tone="neutral" label="Config" tooltip={CONFIG_POLICY_HINT} /> : versionBadge
+            isConfigPolicy ? <StatusBadge tone="neutral" label="Конфигурация" tooltip={CONFIG_POLICY_HINT} /> : versionBadge
           }
           onClick={isConfigPolicy ? undefined : () => onViewClick(row.original.primaryPolicy.policy_id)}
         />
@@ -145,8 +145,8 @@ export const getPolicyTableColumns = ({
   {
     id: "inherit",
     accessorFn: (row) => row.primaryPolicy.inherit ?? "",
-    meta: { title: "Inherits From", skeleton: "badge" },
-    header: "Inherits From",
+    meta: { title: "Наследует от", skeleton: "badge" },
+    header: "Наследует от",
     size: 150,
     enableSorting: false,
     cell: ({ row }) => {
@@ -159,24 +159,24 @@ export const getPolicyTableColumns = ({
   },
   {
     id: "guardrails_add",
-    meta: { title: "Guardrails (Add)", skeleton: "chips" },
-    header: "Guardrails (Add)",
+    meta: { title: "Гардрейлы (добавить)", skeleton: "chips" },
+    header: "Гардрейлы (добавить)",
     size: 180,
     enableSorting: false,
     cell: ({ row }) => <GuardrailChips guardrails={row.original.primaryPolicy.guardrails_add ?? []} tone="success" />,
   },
   {
     id: "guardrails_remove",
-    meta: { title: "Guardrails (Remove)", skeleton: "chips" },
-    header: "Guardrails (Remove)",
+    meta: { title: "Гардрейлы (убрать)", skeleton: "chips" },
+    header: "Гардрейлы (убрать)",
     size: 180,
     enableSorting: false,
     cell: ({ row }) => <GuardrailChips guardrails={row.original.primaryPolicy.guardrails_remove ?? []} tone="error" />,
   },
   {
     id: "model_condition",
-    meta: { title: "Model Condition" },
-    header: "Model Condition",
+    meta: { title: "Условие по модели" },
+    header: "Условие по модели",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => {
@@ -194,8 +194,8 @@ export const getPolicyTableColumns = ({
   {
     id: "created_at",
     accessorFn: (row) => row.primaryPolicy.created_at ?? "",
-    meta: { title: "Created At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created At" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 150,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.primaryPolicy.created_at} />,

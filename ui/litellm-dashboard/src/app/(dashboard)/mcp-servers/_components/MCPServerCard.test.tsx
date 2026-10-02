@@ -1,24 +1,24 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach } from "vitest";
-import MCPServerCard from "./MCPServerCard";
-import type { MCPServer } from "@/components/mcp_tools/types";
-import { setServerRootPath } from "@/lib/serverRootPath";
+import MCPСерверCard from "./MCPСерверCard";
+import type { MCPСервер } from "@/components/mcp_tools/types";
+import { setСерверRootПуть } from "@/lib/serverRootПуть";
 
-const baseServer: MCPServer = {
+const baseСервер: MCPСервер = {
   server_id: "srv-1",
   server_name: "demo_server",
   alias: "demo_server",
   transport: "http",
   url: "https://example.com/mcp",
   auth_type: "oauth2",
-} as MCPServer;
+} as MCPСервер;
 
-function renderCard(overrides: Partial<MCPServer>) {
-  render(<MCPServerCard server={{ ...baseServer, ...overrides } as MCPServer} onClick={vi.fn()} />);
+function renderCard(overrides: Partial<MCPСервер>) {
+  render(<MCPСерверCard server={{ ...baseСервер, ...overrides } as MCPСервер} onClick={vi.fn()} />);
 }
 
-describe("MCPServerCard OAuth flow indicator", () => {
+describe("MCPСерверCard OAuth flow indicator", () => {
   it("shows the 'OAuth flow not set' badge for an oauth2 server with no oauth2_flow", () => {
     renderCard({ auth_type: "oauth2", oauth2_flow: null });
     expect(screen.getByText("OAuth flow not set")).toBeInTheDocument();
@@ -45,9 +45,9 @@ describe("MCPServerCard OAuth flow indicator", () => {
   });
 });
 
-describe("MCPServerCard logo", () => {
+describe("MCPСерверCard logo", () => {
   afterEach(() => {
-    setServerRootPath("/");
+    setСерверRootПуть("/");
   });
 
   it("passes an external logo_url through untouched", () => {
@@ -56,7 +56,7 @@ describe("MCPServerCard logo", () => {
   });
 
   it("prefixes a stored asset path with the server root path under a non-root mount", () => {
-    setServerRootPath("/litellm");
+    setСерверRootПуть("/litellm");
     renderCard({ mcp_info: { server_name: "demo_server", logo_url: "/ui/assets/logos/github.svg" } });
     expect(screen.getByAltText("demo_server logo")).toHaveAttribute("src", "/litellm/ui/assets/logos/github.svg");
   });

@@ -44,7 +44,7 @@ function OrganizationRowActions({ organization, onEditClick, onDeleteClick }: Or
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open organization actions"
+        aria-label="Действия с организацией"
         data-testid={`organization-actions-${organization.organization_id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -87,8 +87,8 @@ export const getOrganizationsTableColumns = ({
   {
     id: "organization_id",
     accessorKey: "organization_id",
-    meta: { title: "Organization ID" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Organization ID" />,
+    meta: { title: "ID организации" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="ID организации" />,
     size: 220,
     enableSorting: true,
     cell: ({ row }) => (
@@ -103,8 +103,8 @@ export const getOrganizationsTableColumns = ({
   {
     id: "organization_alias",
     accessorKey: "organization_alias",
-    meta: { title: "Organization Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Organization Name" />,
+    meta: { title: "Название организации" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Название организации" />,
     size: 200,
     enableSorting: true,
     cell: ({ row }) => {
@@ -120,8 +120,8 @@ export const getOrganizationsTableColumns = ({
     id: "created_at",
     accessorKey: "created_at",
     sortingFn: "datetime",
-    meta: { title: "Created" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 130,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.created_at} precision="date" />,
@@ -137,12 +137,12 @@ export const getOrganizationsTableColumns = ({
   },
   {
     id: "max_budget",
-    meta: { title: "Budget (USD)" },
-    header: "Budget (USD)",
+    meta: { title: "Бюджет (USD)" },
+    header: "Бюджет (USD)",
     size: 120,
     enableSorting: false,
     cell: ({ row }) => (
-      <MoneyCell value={getOrganizationBudget(row.original).max_budget} decimals={2} emptyText="Unlimited" showZero />
+      <MoneyCell value={getOrganizationBudget(row.original).max_budget} decimals={2} emptyText="Без ограничений" showZero />
     ),
   },
   {
@@ -155,19 +155,19 @@ export const getOrganizationsTableColumns = ({
   },
   {
     id: "limits",
-    meta: { title: "TPM / RPM Limits" },
-    header: "TPM / RPM Limits",
+    meta: { title: "Лимиты TPM / RPM" },
+    header: "Лимиты TPM / RPM",
     size: 150,
     enableSorting: false,
     cell: ({ row }) => <OrganizationLimitsCell organization={row.original} />,
   },
   {
     id: "members",
-    meta: { title: "Members" },
-    header: "Members",
+    meta: { title: "Участники" },
+    header: "Участники",
     size: 100,
     enableSorting: false,
-    cell: ({ row }) => <span className="text-sm">{row.original.members?.length ?? 0} Members</span>,
+    cell: ({ row }) => <span className="text-sm">{row.original.members?.length ?? 0} участников</span>,
   },
   {
     id: "actions",

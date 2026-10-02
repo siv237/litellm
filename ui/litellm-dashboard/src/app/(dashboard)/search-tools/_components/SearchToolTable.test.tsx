@@ -1,9 +1,9 @@
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { renderWithProviders } from "@/../tests/test-utils";
-import SearchToolTable from "./SearchToolTable";
-import { AvailableSearchProvider, SearchTool } from "./types";
+import { renderWithПровайдерs } from "@/../tests/test-utils";
+import SearchToolТаблица from "./SearchToolТаблица";
+import { AvailableSearchПровайдер, SearchTool } from "./types";
 
 const makeSearchTool = (overrides: Partial<SearchTool> = {}): SearchTool => ({
   search_tool_id: "tool-1",
@@ -16,26 +16,26 @@ const makeSearchTool = (overrides: Partial<SearchTool> = {}): SearchTool => ({
   ...overrides,
 });
 
-const availableProviders: AvailableSearchProvider[] = [
+const availableПровайдерs: AvailableSearchПровайдер[] = [
   { provider_name: "perplexity", ui_friendly_name: "Perplexity AI" },
 ];
 
 const defaultProps = {
-  searchTools: [makeSearchTool()],
+  searchИнструменты: [makeSearchTool()],
   isLoading: false,
-  availableProviders,
+  availableПровайдерs,
   onView: vi.fn(),
   onEdit: vi.fn(),
   onDelete: vi.fn(),
 };
 
-describe("SearchToolTable", () => {
+describe("SearchToolТаблица", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should display search tool information with the friendly provider name", () => {
-    renderWithProviders(<SearchToolTable {...defaultProps} />);
+    renderWithПровайдерs(<SearchToolТаблица {...defaultProps} />);
     expect(screen.getByText("Perplexity Search")).toBeInTheDocument();
     expect(screen.getByText("tool-1")).toBeInTheDocument();
     expect(screen.getByText("Perplexity AI")).toBeInTheDocument();
@@ -44,14 +44,14 @@ describe("SearchToolTable", () => {
 
   it("should call onView when the search tool ID is clicked", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<SearchToolTable {...defaultProps} />);
+    renderWithПровайдерs(<SearchToolТаблица {...defaultProps} />);
     await user.click(screen.getByRole("button", { name: /tool-1/ }));
     expect(defaultProps.onView).toHaveBeenCalledWith("tool-1");
   });
 
   it("should call onEdit and onDelete from the actions menu for a DB tool", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<SearchToolTable {...defaultProps} />);
+    renderWithПровайдерs(<SearchToolТаблица {...defaultProps} />);
 
     await user.click(screen.getByTestId("search-tool-actions-tool-1"));
     await user.click(await screen.findByTestId("search-tool-action-edit"));
@@ -64,14 +64,14 @@ describe("SearchToolTable", () => {
 
   it("should show a dash instead of a clickable ID for config tools", () => {
     const configTool = makeSearchTool({ search_tool_id: "config-tool", is_from_config: true });
-    renderWithProviders(<SearchToolTable {...defaultProps} searchTools={[configTool]} />);
+    renderWithПровайдерs(<SearchToolТаблица {...defaultProps} searchИнструменты={[configTool]} />);
     expect(screen.queryByRole("button", { name: /config-tool/ })).not.toBeInTheDocument();
   });
 
   it("should disable Edit and Delete for config tools and suppress their callbacks", async () => {
     const user = userEvent.setup();
     const configTool = makeSearchTool({ search_tool_id: "config-tool", is_from_config: true });
-    renderWithProviders(<SearchToolTable {...defaultProps} searchTools={[configTool]} />);
+    renderWithПровайдерs(<SearchToolТаблица {...defaultProps} searchИнструменты={[configTool]} />);
 
     await user.click(screen.getByTestId("search-tool-actions-config-tool"));
 
@@ -99,19 +99,19 @@ describe("SearchToolTable", () => {
         created_at: "2024-06-01T00:00:00Z",
       }),
     ];
-    renderWithProviders(<SearchToolTable {...defaultProps} searchTools={tools} />);
-    const rows = screen.getAllByRole("row").slice(1);
+    renderWithПровайдерs(<SearchToolТаблица {...defaultProps} searchИнструменты={tools} />);
+    const rows = screen.getВсеByRole("row").slice(1);
     expect(within(rows[0]).getByText("newer-tool")).toBeInTheDocument();
     expect(within(rows[1]).getByText("older-tool")).toBeInTheDocument();
   });
 
   it("should show skeleton rows when loading", () => {
-    renderWithProviders(<SearchToolTable {...defaultProps} searchTools={[]} isLoading />);
-    expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
+    renderWithПровайдерs(<SearchToolТаблица {...defaultProps} searchИнструменты={[]} isLoading />);
+    expect(screen.getВсеByTestId("skeleton-row").length).toBeGreaterThan(0);
   });
 
   it("should show the empty state when there are no search tools", () => {
-    renderWithProviders(<SearchToolTable {...defaultProps} searchTools={[]} />);
+    renderWithПровайдерs(<SearchToolТаблица {...defaultProps} searchИнструменты={[]} />);
     expect(screen.getByText("No search tools configured")).toBeInTheDocument();
   });
 });

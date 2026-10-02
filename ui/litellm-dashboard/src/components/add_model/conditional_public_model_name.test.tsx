@@ -3,91 +3,91 @@ import userEvent from "@testing-library/user-event";
 import React, { useEffect, useRef } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { describe, expect, it } from "vitest";
-import { MountedFormHost } from "../../../tests/mounted-form-host";
-import type { MountedFormValues } from "../common_components/MountedFormField";
-import ConditionalPublicModelName from "./conditional_public_model_name";
+import { MountedFormХост } from "../../../tests/mounted-form-host";
+import type { MountedFormЗначениеs } from "../common_components/MountedFormПоле";
+import ConditionalПубличныйРежимlName from "./conditional_public_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name";
 
 const WRITE_BUDGET = 20;
 
 const LoopGuard: React.FC = () => {
-  const form = useFormContext<MountedFormValues>();
-  const mappings = useWatch({ control: form.control, name: "model_mappings" });
+  const form = useFormContext<MountedFormЗначениеs>();
+  const mappings = useWatch({ control: form.control, name: "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_mappings" });
   const writes = useRef(0);
 
   useEffect(() => {
     writes.current += 1;
     if (writes.current > WRITE_BUDGET) {
-      throw new Error(`model_mappings changed ${WRITE_BUDGET}+ times: the mapping effects are looping`);
+      throw new Ошибка(`Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_mappings changed ${WRITE_BUDGET}+ times: the mapping effects are looping`);
     }
   }, [mappings]);
 
   return null;
 };
 
-describe("ConditionalPublicModelName", () => {
+describe("ConditionalПубличныйРежимlName", () => {
   it("should render", () => {
     render(
-      <MountedFormHost
-        defaultValues={{
-          model: ["gpt-4"],
-          model_mappings: [
+      <MountedFormХост
+        defaultЗначениеs={{
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: ["gpt-4"],
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_mappings: [
             {
               public_name: "gpt-4",
-              litellm_model: "gpt-4",
+              litellm_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
             },
           ],
         }}
       >
-        <ConditionalPublicModelName />
-      </MountedFormHost>,
+        <ConditionalПубличныйРежимlName />
+      </MountedFormХост>,
     );
 
-    expect(screen.getByText("Model Mappings")).toBeInTheDocument();
-    expect(screen.getByText("Public Model Name")).toBeInTheDocument();
-    expect(screen.getByText("LiteLLM Model Name")).toBeInTheDocument();
+    expect(screen.getByText("Маппинги моделей")).toBeInTheDocument();
+    expect(screen.getByText("Публичное название модели")).toBeInTheDocument();
+    expect(screen.getByText("Название модели ruLiteLLM")).toBeInTheDocument();
   });
 
-  it("settles after rewriting the custom placeholder mapping to the entered model name", () => {
+  it("settles after rewriting the custom placeholder mapping to the entered Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name", () => {
     render(
-      <MountedFormHost
-        defaultValues={{
-          model: ["custom"],
-          custom_model_name: "my-custom-model",
-          model_mappings: [
+      <MountedFormХост
+        defaultЗначениеs={{
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: ["custom"],
+          custom_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "my-custom-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_mappings: [
             {
               public_name: "custom",
-              litellm_model: "custom",
+              litellm_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "custom",
             },
           ],
         }}
       >
-        <ConditionalPublicModelName />
+        <ConditionalПубличныйРежимlName />
         <LoopGuard />
-      </MountedFormHost>,
+      </MountedFormХост>,
     );
 
-    expect(screen.getByDisplayValue("my-custom-model")).toBeInTheDocument();
-    expect(screen.getByText("my-custom-model")).toBeInTheDocument();
-    expect(screen.queryByDisplayValue("custom")).not.toBeInTheDocument();
+    expect(screen.getByDisplayЗначение("my-custom-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию")).toBeInTheDocument();
+    expect(screen.getByText("my-custom-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию")).toBeInTheDocument();
+    expect(screen.queryByDisplayЗначение("custom")).not.toBeInTheDocument();
   });
 
   it("keeps the public name input focused across keystrokes", async () => {
     const user = userEvent.setup();
     render(
-      <MountedFormHost
-        defaultValues={{
-          model: ["gpt-4"],
-          model_mappings: [{ public_name: "gpt-4", litellm_model: "gpt-4" }],
+      <MountedFormХост
+        defaultЗначениеs={{
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: ["gpt-4"],
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_mappings: [{ public_name: "gpt-4", litellm_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }],
         }}
       >
-        <ConditionalPublicModelName />
-      </MountedFormHost>,
+        <ConditionalПубличныйРежимlName />
+      </MountedFormХост>,
     );
 
-    const input = screen.getByDisplayValue("gpt-4");
+    const input = screen.getByDisplayЗначение("gpt-4");
     await user.type(input, "-prod");
 
-    expect(input).toHaveValue("gpt-4-prod");
+    expect(input).toHaveЗначение("gpt-4-prod");
     expect(input).toHaveFocus();
   });
 });

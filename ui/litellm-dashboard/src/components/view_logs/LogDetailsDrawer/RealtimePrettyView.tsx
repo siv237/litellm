@@ -114,7 +114,7 @@ export function RealtimePrettyView({ response, metrics }: RealtimePrettyViewProp
             fontSize: 13,
           }}
         >
-          No recognized realtime events found
+          Распознанных событий реального времени не найдено
         </div>
       )}
     </div>
@@ -162,7 +162,7 @@ function SessionCard({ session, turnCount }: { session: RealtimeSession; turnCou
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <Settings className="size-3.5 text-muted-foreground" />
-            <span style={{ fontWeight: 500, fontSize: 14 }}>Session</span>
+            <span style={{ fontWeight: 500, fontSize: 14 }}>Сессия</span>
           </div>
           <span className="text-muted-foreground" style={{ fontSize: 12 }}>
             {session.model}
@@ -207,14 +207,14 @@ function SessionCard({ session, turnCount }: { session: RealtimeSession; turnCou
             }}
           >
             <ConfigRow label="Модель" value={session.model} />
-            <ConfigRow label="Voice" value={session.voice} />
-            <ConfigRow label="Temperature" value={session.temperature} />
-            <ConfigRow label="Max Output Tokens" value={session.max_response_output_tokens} />
-            <ConfigRow label="Input Audio Format" value={session.input_audio_format} />
-            <ConfigRow label="Output Audio Format" value={session.output_audio_format} />
-            {session.turn_detection && <ConfigRow label="Turn Detection" value={session.turn_detection.type} />}
+            <ConfigRow label="Голос" value={session.voice} />
+            <ConfigRow label="Температура" value={session.temperature} />
+            <ConfigRow label="Макс. выходных токенов" value={session.max_response_output_tokens} />
+            <ConfigRow label="Формат входного аудио" value={session.input_audio_format} />
+            <ConfigRow label="Формат выходного аудио" value={session.output_audio_format} />
+            {session.turn_detection && <ConfigRow label="Определение реплик" value={session.turn_detection.type} />}
             {session.tools && session.tools.length > 0 && (
-              <ConfigRow label="Tools" value={`${session.tools.length} tool(s)`} />
+              <ConfigRow label="Инструменты" value={`${session.tools.length} tool(s)`} />
             )}
           </div>
 
@@ -230,7 +230,7 @@ function SessionCard({ session, turnCount }: { session: RealtimeSession; turnCou
                   marginBottom: 4,
                 }}
               >
-                Instructions
+                Инструкции
               </span>
               <div
                 style={{
@@ -364,8 +364,8 @@ function ResponseTurn({ response, index }: { response: RealtimeResponse; index: 
       ))}
 
       {/* Token breakdown if available */}
-      {usage?.input_token_details && <TokenBreakdown label="Input" details={usage.input_token_details} />}
-      {usage?.output_token_details && <TokenBreakdown label="Output" details={usage.output_token_details} />}
+      {usage?.input_token_details && <TokenBreakdown label="Вход" details={usage.input_token_details} />}
+      {usage?.output_token_details && <TokenBreakdown label="Выход" details={usage.output_token_details} />}
     </div>
   );
 }
@@ -452,7 +452,7 @@ function TokenBreakdown({ label, details }: { label: string; details: Record<str
         className="text-muted-foreground"
         style={{ fontSize: 10, letterSpacing: "0.5px", textTransform: "uppercase" }}
       >
-        {label} Token Breakdown
+        {label} Разбивка по токенам
       </span>
       <div
         style={{

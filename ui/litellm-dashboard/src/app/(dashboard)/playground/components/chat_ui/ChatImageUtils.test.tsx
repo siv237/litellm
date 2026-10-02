@@ -1,15 +1,15 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import {
   convertImageToBase64,
-  createChatMultimodalMessage,
-  createChatDisplayMessage,
+  createChatMultimodalСообщение,
+  createChatDisplayСообщение,
   shouldShowChatAttachedImage,
 } from "./ChatImageUtils";
-import { MessageType } from "@/components/chat_ui/types";
+import { СообщениеType } from "@/components/chat_ui/types";
 
 describe("ChatImageUtils", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   describe("convertImageToBase64", () => {
@@ -30,9 +30,9 @@ describe("ChatImageUtils", () => {
       const originalReadAsDataURL = FileReader.prototype.readAsDataURL;
 
       FileReader.prototype.readAsDataURL = vi.fn(function (this: FileReader) {
-        setTimeout(() => {
+        setВремявыход(() => {
           if (this.onerror) {
-            this.onerror(new Error("Read error") as any);
+            this.onerror(new Ошибка("Read error") as any);
           }
         }, 0);
       });
@@ -43,16 +43,16 @@ describe("ChatImageUtils", () => {
     });
   });
 
-  describe("createChatMultimodalMessage", () => {
+  describe("createChatMultimodalСообщение", () => {
     it("should create multimodal message with text and image", async () => {
       const file = new File(["test content"], "test.png", { type: "image/png" });
-      const inputMessage = "What is in this image?";
+      const inputСообщение = "What is in this image?";
 
-      const result = await createChatMultimodalMessage(inputMessage, file);
+      const result = await createChatMultimodalСообщение(inputСообщение, file);
 
       expect(result.role).toBe("user");
       expect(result.content).toHaveLength(2);
-      expect(result.content[0]).toEqual({ type: "text", text: inputMessage });
+      expect(result.content[0]).toEqual({ type: "text", text: inputСообщение });
       expect(result.content[1]).toMatchObject({
         type: "image_url",
         image_url: {
@@ -63,7 +63,7 @@ describe("ChatImageUtils", () => {
 
     it("should include base64 data URI in image_url", async () => {
       const file = new File(["test content"], "test.png", { type: "image/png" });
-      const result = await createChatMultimodalMessage("test", file);
+      const result = await createChatMultimodalСообщение("test", file);
 
       const imageContent = result.content[1];
       expect(imageContent.type).toBe("image_url");
@@ -73,100 +73,100 @@ describe("ChatImageUtils", () => {
     });
   });
 
-  describe("createChatDisplayMessage", () => {
-    it("should create display message without file", () => {
-      const result = createChatDisplayMessage("Hello world", false);
+  describe("createChatDisplayСообщение", () => {
+    it("should create display message withвыход file", () => {
+      const result = createChatDisplayСообщение("Hello world", false);
 
       expect(result.role).toBe("user");
       expect(result.content).toBe("Hello world");
-      expect(result.imagePreviewUrl).toBeUndefined();
+      expect(result.image-предпросмотрUrl).toBeUndefined();
     });
 
     it("should create display message with PDF file", () => {
-      const filePreviewUrl = "blob:test-url";
-      const result = createChatDisplayMessage("Read this", true, filePreviewUrl, "document.pdf");
+      const file-предпросмотрUrl = "blob:test-url";
+      const result = createChatDisplayСообщение("Read this", true, file-предпросмотрUrl, "document.pdf");
 
       expect(result.content).toBe("Read this [PDF attached]");
-      expect(result.imagePreviewUrl).toBe(filePreviewUrl);
+      expect(result.image-предпросмотрUrl).toBe(file-предпросмотрUrl);
     });
 
     it("should create display message with image file", () => {
-      const filePreviewUrl = "blob:test-url";
-      const result = createChatDisplayMessage("Look at this", true, filePreviewUrl, "photo.jpg");
+      const file-предпросмотрUrl = "blob:test-url";
+      const result = createChatDisplayСообщение("Look at this", true, file-предпросмотрUrl, "photo.jpg");
 
       expect(result.content).toBe("Look at this [Image attached]");
-      expect(result.imagePreviewUrl).toBe(filePreviewUrl);
+      expect(result.image-предпросмотрUrl).toBe(file-предпросмотрUrl);
     });
 
     it("should create display message with file but no fileName", () => {
-      const filePreviewUrl = "blob:test-url";
-      const result = createChatDisplayMessage("Check this", true, filePreviewUrl);
+      const file-предпросмотрUrl = "blob:test-url";
+      const result = createChatDisplayСообщение("Check this", true, file-предпросмотрUrl);
 
       expect(result.content).toBe("Check this ");
-      expect(result.imagePreviewUrl).toBe(filePreviewUrl);
+      expect(result.image-предпросмотрUrl).toBe(file-предпросмотрUrl);
     });
 
     it("should create display message with file but no preview URL", () => {
-      const result = createChatDisplayMessage("See this", true, undefined, "image.png");
+      const result = createChatDisplayСообщение("See this", true, undefined, "image.png");
 
       expect(result.content).toBe("See this [Image attached]");
-      expect(result.imagePreviewUrl).toBeUndefined();
+      expect(result.image-предпросмотрUrl).toBeUndefined();
     });
   });
 
   describe("shouldShowChatAttachedImage", () => {
     it("should return true for user message with image attachment", () => {
-      const message: MessageType = {
+      const message: СообщениеType = {
         role: "user",
         content: "Check this [Image attached]",
-        imagePreviewUrl: "blob:test-url",
+        image-предпросмотрUrl: "blob:test-url",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(true);
     });
 
     it("should return true for user message with PDF attachment", () => {
-      const message: MessageType = {
+      const message: СообщениеType = {
         role: "user",
         content: "Read this [PDF attached]",
-        imagePreviewUrl: "blob:test-url",
+        image-предпросмотрUrl: "blob:test-url",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(true);
     });
 
     it("should return false for assistant message", () => {
-      const message: MessageType = {
+      const message: СообщениеType = {
         role: "assistant",
         content: "Here is the image [Image attached]",
-        imagePreviewUrl: "blob:test-url",
+        image-предпросмотрUrl: "blob:test-url",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(false);
     });
 
     it("should return false when content is not a string", () => {
-      const message: MessageType = {
+      const message: СообщениеType = {
         role: "user",
         content: [{ type: "input_text", text: "test" }],
-        imagePreviewUrl: "blob:test-url",
+        image-предпросмотрUrl: "blob:test-url",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(false);
     });
 
     it("should return false when content does not include attachment marker", () => {
-      const message: MessageType = {
+      const message: СообщениеType = {
         role: "user",
         content: "Just regular text",
-        imagePreviewUrl: "blob:test-url",
+        image-предпросмотрUrl: "blob:test-url",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(false);
     });
 
-    it("should return false when imagePreviewUrl is missing", () => {
-      const message: MessageType = {
+    it("should return false when image-предпросмотрUrl is missing", () => {
+      const message: СообщениеType = {
         role: "user",
         content: "Check this [Image attached]",
       };
@@ -174,11 +174,11 @@ describe("ChatImageUtils", () => {
       expect(shouldShowChatAttachedImage(message)).toBe(false);
     });
 
-    it("should return false when imagePreviewUrl is empty string", () => {
-      const message: MessageType = {
+    it("should return false when image-предпросмотрUrl is empty string", () => {
+      const message: СообщениеType = {
         role: "user",
         content: "Check this [Image attached]",
-        imagePreviewUrl: "",
+        image-предпросмотрUrl: "",
       };
 
       expect(shouldShowChatAttachedImage(message)).toBe(false);

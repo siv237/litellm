@@ -1,23 +1,23 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NuqsTestingAdapter, OnUrlUpdateFunction } from "nuqs/adapters/testing";
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { useTeamMetadataSchema } from "@/app/(dashboard)/hooks/teams/useTeamMetadataSchema";
+import { useTeamМетаданныеSchema } from "@/app/(dashboard)/hooks/teams/useTeamМетаданныеSchema";
 import { toast } from "@/lib/toast";
-import { fetchAvailableModelsForTeamOrKey } from "./key_team_helpers/fetch_available_models_team_key";
+import { fetchAvailableРежимlsForTeamOrКлюч } from "./key_team_helpers/fetch_available_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs_team_key";
 import {
   fetchMCPAccessGroups,
   getDefaultTeamSettings,
-  getGuardrailsList,
+  getГардрейлыList,
   getPoliciesList,
   teamCreateCall,
 } from "./networking";
-import Teams from "./Teams";
-import { chooseSelectOption } from "../../tests/test-utils";
+import Команды from "./Команды";
+import { chooseВыбратьOption } from "../../tests/test-utils";
 
-vi.mock("./mcp_server_management/MCPServerSelector", () => ({
+vi.mock("./mcp_server_management/MCPСерверВыбратьor", () => ({
   default: ({
     onChange,
   }: {
@@ -28,15 +28,15 @@ vi.mock("./mcp_server_management/MCPServerSelector", () => ({
       data-testid="select-mcp-toolset"
       onClick={() => onChange({ servers: [], accessGroups: [], toolsets: ["ts-1"] })}
     >
-      Select MCP toolset
+      Выбрать MCP toolset
     </button>
   ),
 }));
 
-vi.mock("./skills/SkillSelector", () => ({
+vi.mock("./skills/SkillВыбратьor", () => ({
   default: ({ onChange }: { onChange: (selected: string[]) => void }) => (
     <button type="button" data-testid="select-private-skill" onClick={() => onChange(["private-skill"])}>
-      Select private skill
+      Выбрать private skill
     </button>
   ),
 }));
@@ -47,14 +47,14 @@ vi.mock("@/app/(dashboard)/hooks/useCan", () => ({
 }));
 
 const mockTeamInfoView = vi.fn();
-const mockUseOrganizations = vi.fn();
+const mockUseОрганизацияs = vi.fn();
 
-// The teams grid is unit-tested in TeamsPage/TeamsTable.test.tsx. Here we stub it and drive its callbacks
-// directly so we can test the Teams shell wiring (delete modal, detail view) without the real DataTable.
-let mockTeamsTableProps: any = null;
-vi.mock("./TeamsPage/TeamsTable", () => ({
-  TeamsTable: (props: any) => {
-    mockTeamsTableProps = props;
+// The teams grid is unit-tested in КомандыPage/КомандыТаблица.test.tsx. Here we stub it and drive its callbacks
+// directly so we can test the Команды shell wiring (delete modal, detail view) withвыход the real DataТаблица.
+let mockКомандыТаблицаProps: any = null;
+vi.mock("./КомандыPage/КомандыТаблица", () => ({
+  КомандыТаблица: (props: any) => {
+    mockКомандыТаблицаProps = props;
     return <div data-testid="teams-table-stub" />;
   },
 }));
@@ -64,39 +64,39 @@ vi.mock("./networking", () => ({
   teamDeleteCall: vi.fn(),
   fetchMCPAccessGroups: vi.fn(),
   v2TeamListCall: vi.fn(),
-  getGuardrailsList: vi.fn().mockResolvedValue({ guardrails: [] }),
-  getPoliciesList: vi.fn().mockResolvedValue({ policies: [] }),
-  getDefaultTeamSettings: vi.fn().mockResolvedValue({ values: {} }),
+  getГардрейлыList: vi.fn().mockResolvedЗначение({ гардрейловs: [] }),
+  getPoliciesList: vi.fn().mockResolvedЗначение({ policies: [] }),
+  getDefaultTeamSettings: vi.fn().mockResolvedЗначение({ values: {} }),
 }));
 
-// Teams invalidates teamsTableKeys on mutations; the selected team is passed up from the table.
-vi.mock("@/app/(dashboard)/hooks/teams/useTeams", () => ({
-  teamsTableKeys: { all: ["teamsTable"] },
+// Команды invalidates teamsТаблицаКлючи on mutations; the selected team is passed up from the table.
+vi.mock("@/app/(dashboard)/hooks/teams/useКоманды", () => ({
+  teamsТаблицаКлючи: { all: ["teamsТаблица"] },
 }));
 
-vi.mock("@/app/(dashboard)/hooks/teams/useTeamMetadataSchema", () => ({
-  useTeamMetadataSchema: vi.fn(() => ({ data: [], isLoading: false })),
+vi.mock("@/app/(dashboard)/hooks/teams/useTeamМетаданныеSchema", () => ({
+  useTeamМетаданныеSchema: vi.fn(() => ({ data: [], isLoading: false })),
 }));
 
-vi.mock("./key_team_helpers/fetch_available_models_team_key", () => ({
-  fetchAvailableModelsForTeamOrKey: vi.fn(),
-  getModelDisplayName: vi.fn((model: string) => model),
-  unfurlWildcardModelsInList: vi.fn((teamModels: string[], allModels: string[]) => {
+vi.mock("./key_team_helpers/fetch_available_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs_team_key", () => ({
+  fetchAvailableРежимlsForTeamOrКлюч: vi.fn(),
+  getРежимlDisplayName: vi.fn((Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: string) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию),
+  unfurlWildcardРежимlsInList: vi.fn((teamРежимls: string[], allРежимls: string[]) => {
     const wildcardDisplayNames: string[] = [];
-    const expandedModels: string[] = [];
+    const expandedРежимls: string[] = [];
 
-    teamModels.forEach((teamModel) => {
-      if (teamModel.endsWith("/*")) {
-        const provider = teamModel.replace("/*", "");
-        const matchingModels = allModels.filter((model) => model.startsWith(provider + "/"));
-        expandedModels.push(...matchingModels);
-        wildcardDisplayNames.push(teamModel);
+    teamРежимls.forEach((teamРежимl) => {
+      if (teamРежимl.endsWith("/*")) {
+        const provider = teamРежимl.replace("/*", "");
+        const matchingРежимls = allРежимls.filter((Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию.startsWith(provider + "/"));
+        expandedРежимls.push(...matchingРежимls);
+        wildcardDisplayNames.push(teamРежимl);
       } else {
-        expandedModels.push(teamModel);
+        expandedРежимls.push(teamРежимl);
       }
     });
 
-    return [...wildcardDisplayNames, ...expandedModels].filter((item, index, array) => array.indexOf(item) === index);
+    return [...wildcardDisplayNames, ...expandedРежимls].filter((item, index, array) => array.indexOf(item) === index);
   }),
 }));
 
@@ -108,14 +108,14 @@ vi.mock("@/components/team/TeamInfo", () => ({
   },
 }));
 
-vi.mock("./ModelSelect/ModelSelect", () => {
-  const ModelSelect = React.forwardRef(({ value, onChange, dataTestId, id }: any, ref: any) => {
+vi.mock("./РежимlВыбрать/РежимlВыбрать", () => {
+  const РежимlВыбрать = React.forwardRef(({ value, onChange, dataTestId, id }: any, ref: any) => {
     return (
       <input
         ref={ref}
         id={id}
         type="text"
-        data-testid={dataTestId || "model-select"}
+        data-testid={dataTestId || "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-select"}
         value={Array.isArray(value) ? value.join(", ") : ""}
         onChange={(e) => {
           if (onChange) {
@@ -131,28 +131,28 @@ vi.mock("./ModelSelect/ModelSelect", () => {
       />
     );
   });
-  ModelSelect.displayName = "ModelSelect";
+  РежимlВыбрать.displayName = "РежимlВыбрать";
   return {
-    ModelSelect,
+    РежимlВыбрать,
   };
 });
 
-vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
-  useOrganizations: () => mockUseOrganizations(),
+vi.mock("@/app/(dashboard)/hooks/organizations/useОрганизацияs", () => ({
+  useОрганизацияs: () => mockUseОрганизацияs(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/accessGroups/useAccessGroups", () => ({
-  useAccessGroups: vi.fn().mockReturnValue({
+  useAccessGroups: vi.fn().mockReturnЗначение({
     data: [
       { access_group_id: "ag-1", access_group_name: "Group 1" },
       { access_group_id: "ag-2", access_group_name: "Group 2" },
     ],
     isLoading: false,
-    isError: false,
+    isОшибка: false,
   }),
 }));
 
-vi.mock("./common_components/AccessGroupSelector", () => ({
+vi.mock("./common_components/AccessGroupВыбратьor", () => ({
   default: ({ value = [], onChange }: { value?: string[]; onChange?: (v: string[]) => void }) => (
     <input
       data-testid="access-group-selector"
@@ -162,11 +162,11 @@ vi.mock("./common_components/AccessGroupSelector", () => ({
   ),
 }));
 
-const baseTableTeam = {
+const baseТаблицаTeam = {
   team_id: "1",
   team_alias: "Test Team",
   organization_id: "org-123",
-  models: ["gpt-4"],
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4"],
   max_budget: 100,
   budget_duration: "1d",
   tpm_limit: 1000,
@@ -177,8 +177,8 @@ const baseTableTeam = {
   spend: 0,
 };
 
-const createQueryClient = () => {
-  return new QueryClient({
+const createЗапросClient = () => {
+  return new ЗапросClient({
     defaultOptions: {
       queries: {
         retry: false,
@@ -187,172 +187,172 @@ const createQueryClient = () => {
   });
 };
 
-const renderWithQueryClient = (
+const renderWithЗапросClient = (
   component: React.ReactElement,
   options?: { searchParams?: string; onUrlUpdate?: OnUrlUpdateFunction },
 ) => {
-  const queryClient = createQueryClient();
+  const queryClient = createЗапросClient();
   return render(
-    <NuqsTestingAdapter searchParams={options?.searchParams} onUrlUpdate={options?.onUrlUpdate} hasMemory>
-      <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>
+    <NuqsTestingAdapter searchParams={options?.searchParams} onUrlUpdate={options?.onUrlUpdate} hasПамять>
+      <ЗапросClientПровайдер client={queryClient}>{component}</ЗапросClientПровайдер>
     </NuqsTestingAdapter>,
   );
 };
 
-// Re-establish safe defaults before every test (clearAllMocks keeps return values, so restore them here).
+// Re-establish safe defaults before every test (clearВсеMocks keeps return values, so restore them here).
 beforeEach(() => {
-  mockTeamsTableProps = null;
-  can.mockReturnValue(true);
+  mockКомандыТаблицаProps = null;
+  can.mockReturnЗначение(true);
 });
 
-describe("Teams - handleCreate organization handling", () => {
+describe("Команды - handleCreate organization handling", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
     mockTeamInfoView.mockClear();
-    mockTeamsTableProps = null;
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue([]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    mockUseOrganizations.mockReturnValue({ data: null });
+    mockКомандыТаблицаProps = null;
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение([]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    mockUseОрганизацияs.mockReturnЗначение({ data: null });
   });
 
   it("should not include organization_id when it's an empty string", async () => {
-    const formValues: Record<string, any> = {
+    const formЗначениеs: Record<string, any> = {
       team_alias: "Test Team",
       organization_id: "", // Empty string
-      models: [],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
     };
 
     // Simulate the handleCreate logic
-    const organizationId = formValues?.organization_id || null;
+    const organizationId = formЗначениеs?.organization_id || null;
     if (organizationId === "" || typeof organizationId !== "string") {
-      formValues.organization_id = null;
+      formЗначениеs.organization_id = null;
     } else {
-      formValues.organization_id = organizationId.trim();
+      formЗначениеs.organization_id = organizationId.trim();
     }
 
-    expect(formValues.organization_id).toBeNull();
-    expect(formValues.organization_id).not.toBe("");
+    expect(formЗначениеs.organization_id).toBeNull();
+    expect(formЗначениеs.organization_id).not.toBe("");
   });
 
   it("should set organization_id to null when it's not a string type", async () => {
-    const formValues: Record<string, any> = {
+    const formЗначениеs: Record<string, any> = {
       team_alias: "Test Team",
       organization_id: undefined,
-      models: [],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
     };
 
-    const organizationId = formValues?.organization_id || null;
+    const organizationId = formЗначениеs?.organization_id || null;
     if (organizationId === "" || typeof organizationId !== "string") {
-      formValues.organization_id = null;
+      formЗначениеs.organization_id = null;
     } else {
-      formValues.organization_id = organizationId.trim();
+      formЗначениеs.organization_id = organizationId.trim();
     }
 
-    expect(formValues.organization_id).toBeNull();
+    expect(formЗначениеs.organization_id).toBeNull();
   });
 
   it("should trim and keep valid organization_id string", async () => {
-    const formValues: Record<string, any> = {
+    const formЗначениеs: Record<string, any> = {
       team_alias: "Test Team",
       organization_id: "  org-123  ",
-      models: [],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
     };
 
-    const organizationId = formValues?.organization_id || null;
+    const organizationId = formЗначениеs?.organization_id || null;
     if (organizationId === "" || typeof organizationId !== "string") {
-      formValues.organization_id = null;
+      formЗначениеs.organization_id = null;
     } else {
-      formValues.organization_id = organizationId.trim();
+      formЗначениеs.organization_id = organizationId.trim();
     }
 
-    expect(formValues.organization_id).toBe("org-123");
+    expect(formЗначениеs.organization_id).toBe("org-123");
   });
 
-  it("should keep valid organization_id without modification", async () => {
-    const formValues: Record<string, any> = {
+  it("should keep valid organization_id withвыход modification", async () => {
+    const formЗначениеs: Record<string, any> = {
       team_alias: "Test Team",
       organization_id: "f874bb43-b898-4813-beca-4054d224eafc",
-      models: [],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
     };
 
-    const organizationId = formValues?.organization_id || null;
+    const organizationId = formЗначениеs?.organization_id || null;
     if (organizationId === "" || typeof organizationId !== "string") {
-      formValues.organization_id = null;
+      formЗначениеs.organization_id = null;
     } else {
-      formValues.organization_id = organizationId.trim();
+      formЗначениеs.organization_id = organizationId.trim();
     }
 
-    expect(formValues.organization_id).toBe("f874bb43-b898-4813-beca-4054d224eafc");
+    expect(formЗначениеs.organization_id).toBe("f874bb43-b898-4813-beca-4054d224eafc");
   });
 
   it("should not send organization_id field when converting empty string to null", async () => {
-    const formValues: Record<string, any> = {
+    const formЗначениеs: Record<string, any> = {
       team_alias: "Test Team",
       organization_id: "",
-      models: ["gpt-4"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4"],
       max_budget: 100,
     };
 
-    const organizationId = formValues?.organization_id || null;
+    const organizationId = formЗначениеs?.organization_id || null;
     if (organizationId === "" || typeof organizationId !== "string") {
-      formValues.organization_id = null;
+      formЗначениеs.organization_id = null;
     } else {
-      formValues.organization_id = organizationId.trim();
+      formЗначениеs.organization_id = organizationId.trim();
     }
 
-    expect(formValues).toEqual({
+    expect(formЗначениеs).toEqual({
       team_alias: "Test Team",
       organization_id: null,
-      models: ["gpt-4"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4"],
       max_budget: 100,
     });
-    expect(formValues.organization_id).not.toBe("");
-    expect(formValues.organization_id).toBeNull();
+    expect(formЗначениеs.organization_id).not.toBe("");
+    expect(formЗначениеs.organization_id).toBeNull();
   });
 
   it("should handle when currentOrg is used as fallback", async () => {
     const currentOrg = {
       organization_id: "fallback-org-id",
       organization_alias: "Fallback Org",
-      models: [],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
       members: [],
     };
 
-    const formValues: Record<string, any> = {
+    const formЗначениеs: Record<string, any> = {
       team_alias: "Test Team",
-      models: [],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
     };
 
-    const organizationId = formValues?.organization_id || currentOrg?.organization_id;
+    const organizationId = formЗначениеs?.organization_id || currentOrg?.organization_id;
     if (organizationId === "" || typeof organizationId !== "string") {
-      formValues.organization_id = null;
+      formЗначениеs.organization_id = null;
     } else {
-      formValues.organization_id = organizationId.trim();
+      formЗначениеs.organization_id = organizationId.trim();
     }
 
-    expect(formValues.organization_id).toBe("fallback-org-id");
+    expect(formЗначениеs.organization_id).toBe("fallback-org-id");
   });
 
   it("opens the delete modal when the table's delete action fires", async () => {
-    mockUseOrganizations.mockReturnValue({ data: [] });
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    mockUseОрганизацияs.mockReturnЗначение({ data: [] });
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
 
-    await waitFor(() => expect(mockTeamsTableProps).not.toBeNull());
+    await waitFor(() => expect(mockКомандыТаблицаProps).not.toBeNull());
     await act(async () => {
-      mockTeamsTableProps.onDeleteTeam(baseTableTeam);
+      mockКомандыТаблицаProps.onDeleteTeam(baseТаблицаTeam);
     });
 
     expect(screen.getByText("Delete Team?")).toBeInTheDocument();
   });
 });
 
-describe("Teams - helper functions", () => {
-  describe("getAdminOrganizations", () => {
+describe("Команды - helper functions", () => {
+  describe("getAdminОрганизацияs", () => {
     it("should return all organizations for Admin role", () => {
       const organizations = [
-        { organization_id: "org-1", organization_alias: "Org 1", models: [], members: [] },
-        { organization_id: "org-2", organization_alias: "Org 2", models: [], members: [] },
+        { organization_id: "org-1", organization_alias: "Org 1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [], members: [] },
+        { organization_id: "org-2", organization_alias: "Org 2", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [], members: [] },
       ];
 
       const userRole = "Admin";
@@ -368,19 +368,19 @@ describe("Teams - helper functions", () => {
         {
           organization_id: "org-1",
           organization_alias: "Org 1",
-          models: [],
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
           members: [{ user_id: "user-123", user_role: "org_admin" }],
         },
         {
           organization_id: "org-2",
           organization_alias: "Org 2",
-          models: [],
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
           members: [{ user_id: "user-456", user_role: "org_admin" }],
         },
         {
           organization_id: "org-3",
           organization_alias: "Org 3",
-          models: [],
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
           members: [{ user_id: "user-123", user_role: "member" }],
         },
       ];
@@ -399,7 +399,7 @@ describe("Teams - helper functions", () => {
         {
           organization_id: "org-1",
           organization_alias: "Org 1",
-          models: [],
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
           members: [{ user_id: "user-123", user_role: "org_admin" }],
         },
       ];
@@ -412,7 +412,7 @@ describe("Teams - helper functions", () => {
     });
   });
 
-  describe("canCreateOrManageTeams", () => {
+  describe("canCreateOrManageКоманды", () => {
     it("should return true for Admin role", () => {
       const userRole = "Admin";
       expect(userRole === "Admin").toBe(true);
@@ -424,7 +424,7 @@ describe("Teams - helper functions", () => {
         {
           organization_id: "org-1",
           organization_alias: "Org 1",
-          models: [],
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
           members: [{ user_id: "user-123", user_role: "org_admin" }],
         },
       ];
@@ -443,7 +443,7 @@ describe("Teams - helper functions", () => {
         {
           organization_id: "org-1",
           organization_alias: "Org 1",
-          models: [],
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
           members: [{ user_id: "user-123", user_role: "member" }],
         },
       ];
@@ -458,44 +458,44 @@ describe("Teams - helper functions", () => {
   });
 });
 
-describe("Teams - premium props", () => {
+describe("Команды - premium props", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
     mockTeamInfoView.mockClear();
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue([]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    mockUseOrganizations.mockReturnValue({ data: [] });
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение([]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    mockUseОрганизацияs.mockReturnЗначение({ data: [] });
   });
 
   it("passes premiumUser flag to TeamInfoView when a team is opened", async () => {
-    const premiumTeam = { ...baseTableTeam, team_id: "team-123456789", team_alias: "Premium Team" };
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" premiumUser={true} />);
+    const premiumTeam = { ...baseТаблицаTeam, team_id: "team-123456789", team_alias: "Premium Team" };
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" premiumUser={true} />);
 
-    await waitFor(() => expect(mockTeamsTableProps).not.toBeNull());
-    act(() => mockTeamsTableProps.onSelectTeam(premiumTeam));
+    await waitFor(() => expect(mockКомандыТаблицаProps).not.toBeNull());
+    act(() => mockКомандыТаблицаProps.onВыбратьTeam(premiumTeam));
 
     await waitFor(() => expect(mockTeamInfoView).toHaveBeenCalled());
     expect(mockTeamInfoView).toHaveBeenLastCalledWith(expect.objectContaining({ premiumUser: true }));
   });
 });
 
-describe("Teams - team detail deep link (?team=)", () => {
+describe("Команды - team detail deep link (?team=)", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
     mockTeamInfoView.mockClear();
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue([]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    mockUseOrganizations.mockReturnValue({ data: [] });
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение([]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    mockUseОрганизацияs.mockReturnЗначение({ data: [] });
   });
 
   it("selecting a team pushes ?team= to the URL", async () => {
     const onUrlUpdate = vi.fn();
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />, { onUrlUpdate });
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />, { onUrlUpdate });
 
-    await waitFor(() => expect(mockTeamsTableProps).not.toBeNull());
-    act(() => mockTeamsTableProps.onSelectTeam({ ...baseTableTeam, team_id: "team-deep-link" }));
+    await waitFor(() => expect(mockКомандыТаблицаProps).not.toBeNull());
+    act(() => mockКомандыТаблицаProps.onВыбратьTeam({ ...baseТаблицаTeam, team_id: "team-deep-link" }));
 
     await waitFor(() => expect(onUrlUpdate).toHaveBeenCalled());
     const lastUpdate = onUrlUpdate.mock.calls.at(-1)![0];
@@ -507,7 +507,7 @@ describe("Teams - team detail deep link (?team=)", () => {
   });
 
   it("opens the team detail view directly from a ?team= deep link", async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />, {
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />, {
       searchParams: "?team=team-from-url",
     });
 
@@ -517,7 +517,7 @@ describe("Teams - team detail deep link (?team=)", () => {
 
   it("closing the team detail view removes ?team= from the URL", async () => {
     const onUrlUpdate = vi.fn();
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />, {
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />, {
       searchParams: "?team=team-from-url",
       onUrlUpdate,
     });
@@ -531,7 +531,7 @@ describe("Teams - team detail deep link (?team=)", () => {
   });
 
   it("should preserve the legacy inset for the team detail view", async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />, {
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />, {
       searchParams: "?team=team-from-url",
     });
 
@@ -540,82 +540,82 @@ describe("Teams - team detail deep link (?team=)", () => {
   });
 });
 
-describe("Teams - Create Team CTA is grouped with the tabs on the left", () => {
+describe("Команды - Create Team CTA is grouped with the tabs on the left", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockUseOrganizations.mockReturnValue({ data: [] });
+    vi.clearВсеMocks();
+    mockUseОрганизацияs.mockReturnЗначение({ data: [] });
   });
 
   it("should render the Create Team button inside the tab bar, ahead of the tabs", () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
 
     const tabNav = screen.getByRole("tablist");
     const createButton = within(tabNav).getByTestId("create-team-button");
-    const firstTab = within(tabNav).getByRole("tab", { name: "Your Teams" });
+    const firstTab = within(tabNav).getByRole("tab", { name: "Your Команды" });
 
     expect(screen.getByRole("main")).toHaveClass("p-8");
     expect(within(tabNav).getByRole("separator")).toBeInTheDocument();
-    expect(createButton.compareDocumentPosition(firstTab) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(createButton.compareDocumentПозиция(firstTab) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("should omit the Create Team CTA for a role that cannot manage teams", () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin Viewer" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin Viewer" />);
     expect(screen.queryByTestId("create-team-button")).not.toBeInTheDocument();
   });
 });
 
-describe("Teams - Default Team Settings tab visibility", () => {
+describe("Команды - Default Team Settings tab visibility", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockUseOrganizations.mockReturnValue({ data: [] });
+    vi.clearВсеMocks();
+    mockUseОрганизацияs.mockReturnЗначение({ data: [] });
   });
 
   it("should show Default Team Settings tab for Admin role", () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
     expect(screen.getByRole("tab", { name: "Default Team Settings" })).toBeInTheDocument();
   });
 
   it("should show Default Team Settings tab for proxy_admin role", () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="proxy_admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="proxy_admin" />);
     expect(screen.getByRole("tab", { name: "Default Team Settings" })).toBeInTheDocument();
   });
 
   it("should not show Default Team Settings tab for proxy_admin_viewer role", () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="proxy_admin_viewer" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="proxy_admin_viewer" />);
     expect(screen.queryByRole("tab", { name: "Default Team Settings" })).not.toBeInTheDocument();
   });
 
   it("should not show Default Team Settings tab for Admin Viewer role", () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin Viewer" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin Viewer" />);
     expect(screen.queryByRole("tab", { name: "Default Team Settings" })).not.toBeInTheDocument();
   });
 });
 
-describe("Teams - access_group_ids in team create", () => {
+describe("Команды - access_group_ids in team create", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
     mockTeamInfoView.mockClear();
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue(["gpt-4", "gpt-3.5-turbo"]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    vi.mocked(teamCreateCall).mockResolvedValue({
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение(["gpt-4", "gpt-3.5-turbo"]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    vi.mocked(teamCreateCall).mockResolvedЗначение({
       team_id: "new-team-1",
       team_alias: "Test Team",
-      models: ["gpt-4"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4"],
       organization_id: null,
       keys: [],
       members_with_roles: [],
       spend: 0,
     });
-    mockUseOrganizations.mockReturnValue({
-      data: [{ organization_id: "org-1", organization_alias: "Org 1", models: [], members: [] }],
+    mockUseОрганизацияs.mockReturnЗначение({
+      data: [{ organization_id: "org-1", organization_alias: "Org 1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [], members: [] }],
     });
   });
 
   it("should pass access_group_ids to teamCreateCall when creating team", async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
 
-    const createButton = screen.getAllByRole("button", { name: /create team/i })[0];
+    const createButton = screen.getВсеByRole("button", { name: /create team/i })[0];
     act(() => {
       fireEvent.click(createButton);
     });
@@ -625,7 +625,7 @@ describe("Teams - access_group_ids in team create", () => {
     });
 
     fireEvent.change(screen.getByLabelText(/team name/i), { target: { value: "Test Team" } });
-    fireEvent.change(screen.getByTestId("create-team-models-select"), { target: { value: "gpt-4" } });
+    fireEvent.change(screen.getByTestId("create-team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-select"), { target: { value: "gpt-4" } });
 
     fireEvent.click(screen.getByText("Additional Settings"));
 
@@ -635,7 +635,7 @@ describe("Teams - access_group_ids in team create", () => {
 
     fireEvent.change(screen.getByTestId("access-group-selector"), { target: { value: "ag-1,ag-2" } });
 
-    const createTeamSubmitButtons = screen.getAllByRole("button", { name: /create team/i });
+    const createTeamSubmitButtons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(createTeamSubmitButtons[createTeamSubmitButtons.length - 1]);
 
     await waitFor(() => {
@@ -643,17 +643,17 @@ describe("Teams - access_group_ids in team create", () => {
         "test-token",
         expect.objectContaining({
           team_alias: "Test Team",
-          models: ["gpt-4"],
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4"],
           access_group_ids: ["ag-1", "ag-2"],
         }),
       );
     });
   });
 
-  it("creates a team with no models selected, sending the no-default-models sentinel instead of an empty list", async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+  it("creates a team with no Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs selected, sending the no-default-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs sentinel instead of an empty list", async () => {
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
 
-    const createButton = screen.getAllByRole("button", { name: /create team/i })[0];
+    const createButton = screen.getВсеByRole("button", { name: /create team/i })[0];
     act(() => {
       fireEvent.click(createButton);
     });
@@ -664,7 +664,7 @@ describe("Teams - access_group_ids in team create", () => {
 
     fireEvent.change(screen.getByLabelText(/team name/i), { target: { value: "Group Only Team" } });
 
-    const createTeamSubmitButtons = screen.getAllByRole("button", { name: /create team/i });
+    const createTeamSubmitButtons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(createTeamSubmitButtons[createTeamSubmitButtons.length - 1]);
 
     await waitFor(() => {
@@ -672,37 +672,37 @@ describe("Teams - access_group_ids in team create", () => {
         "test-token",
         expect.objectContaining({
           team_alias: "Group Only Team",
-          models: ["no-default-models"],
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["no-default-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs"],
         }),
       );
     });
   });
 });
 
-describe("Teams - Reset Budget in team create", () => {
+describe("Команды - Сбросить бюджет in team create", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
     mockTeamInfoView.mockClear();
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue(["gpt-4"]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    vi.mocked(getDefaultTeamSettings).mockResolvedValue({ values: { budget_duration: "30d" } });
-    vi.mocked(teamCreateCall).mockResolvedValue({
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение(["gpt-4"]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    vi.mocked(getDefaultTeamSettings).mockResolvedЗначение({ values: { budget_duration: "30d" } });
+    vi.mocked(teamCreateCall).mockResolvedЗначение({
       team_id: "new-team-1",
       team_alias: "Test Team",
-      models: ["gpt-4"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4"],
       organization_id: null,
       keys: [],
       members_with_roles: [],
       spend: 0,
     });
-    mockUseOrganizations.mockReturnValue({ data: null });
+    mockUseОрганизацияs.mockReturnЗначение({ data: null });
   });
 
   const openCreateModal = async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
 
-    const createButton = screen.getAllByRole("button", { name: /create team/i })[0];
+    const createButton = screen.getВсеByRole("button", { name: /create team/i })[0];
     act(() => {
       fireEvent.click(createButton);
     });
@@ -712,12 +712,12 @@ describe("Teams - Reset Budget in team create", () => {
     });
   };
 
-  const resetBudgetSelect = () => screen.getByLabelText("Reset Budget");
+  const resetБюджетВыбрать = () => screen.getByLabelText("Сбросить бюджет");
 
   const submitCreateModal = async () => {
     fireEvent.change(screen.getByLabelText(/team name/i), { target: { value: "Test Team" } });
 
-    const createTeamSubmitButtons = screen.getAllByRole("button", { name: /create team/i });
+    const createTeamSubmitButtons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(createTeamSubmitButtons[createTeamSubmitButtons.length - 1]);
 
     await waitFor(() => {
@@ -730,7 +730,7 @@ describe("Teams - Reset Budget in team create", () => {
   it("should send an explicit null budget_duration when Never resets is selected", async () => {
     await openCreateModal();
 
-    await userEvent.click(resetBudgetSelect());
+    await userEvent.click(resetБюджетВыбрать());
     await userEvent.click(await screen.findByText("Never resets"));
 
     const payload = await submitCreateModal();
@@ -739,7 +739,7 @@ describe("Teams - Reset Budget in team create", () => {
     expect(JSON.stringify(payload)).toContain('"budget_duration":null');
   });
 
-  it("should omit budget_duration entirely when Reset Budget is left untouched", async () => {
+  it("should omit budget_duration entirely when Сбросить бюджет is left untouched", async () => {
     await openCreateModal();
 
     const payload = await submitCreateModal();
@@ -751,7 +751,7 @@ describe("Teams - Reset Budget in team create", () => {
   it("should send the picked duration when one is selected", async () => {
     await openCreateModal();
 
-    await userEvent.click(resetBudgetSelect());
+    await userEvent.click(resetБюджетВыбрать());
     await userEvent.click(await screen.findByText("weekly"));
 
     const payload = await submitCreateModal();
@@ -759,7 +759,7 @@ describe("Teams - Reset Budget in team create", () => {
     expect(payload.budget_duration).toBe("7d");
   });
 
-  it("should show the configured server default as the Reset Budget placeholder", async () => {
+  it("should show the configured server default as the Сбросить бюджет placeholder", async () => {
     await openCreateModal();
 
     await waitFor(() => {
@@ -768,7 +768,7 @@ describe("Teams - Reset Budget in team create", () => {
   });
 
   it("should fall back to the n/a placeholder when the default settings fetch fails", async () => {
-    vi.mocked(getDefaultTeamSettings).mockRejectedValue(new Error("Unauthorized"));
+    vi.mocked(getDefaultTeamSettings).mockRejectedЗначение(new Ошибка("Unauthorized"));
 
     await openCreateModal();
 
@@ -778,31 +778,31 @@ describe("Teams - Reset Budget in team create", () => {
   });
 });
 
-describe("Teams - metadata key-value pairs in team create", () => {
+describe("Команды - metadata key-value pairs in team create", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
     mockTeamInfoView.mockClear();
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue(["gpt-4"]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    vi.mocked(teamCreateCall).mockResolvedValue({
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение(["gpt-4"]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    vi.mocked(teamCreateCall).mockResolvedЗначение({
       team_id: "new-team-1",
       team_alias: "Test Team",
-      models: ["gpt-4"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4"],
       organization_id: null,
       keys: [],
       members_with_roles: [],
       spend: 0,
     });
-    mockUseOrganizations.mockReturnValue({
-      data: [{ organization_id: "org-1", organization_alias: "Org 1", models: [], members: [] }],
+    mockUseОрганизацияs.mockReturnЗначение({
+      data: [{ organization_id: "org-1", organization_alias: "Org 1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [], members: [] }],
     });
   });
 
   const openCreateModal = async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
 
-    const createButton = screen.getAllByRole("button", { name: /create team/i })[0];
+    const createButton = screen.getВсеByRole("button", { name: /create team/i })[0];
     act(() => {
       fireEvent.click(createButton);
     });
@@ -812,7 +812,7 @@ describe("Teams - metadata key-value pairs in team create", () => {
     });
   };
 
-  it("renders the metadata editor in the main form without opening Additional Settings", async () => {
+  it("renders the metadata editor in the main form withвыход opening Additional Settings", async () => {
     await openCreateModal();
 
     expect(screen.getByRole("button", { name: /add key-value pair/i })).toBeInTheDocument();
@@ -822,40 +822,40 @@ describe("Teams - metadata key-value pairs in team create", () => {
     await openCreateModal();
 
     fireEvent.change(screen.getByLabelText(/team name/i), { target: { value: "Test Team" } });
-    fireEvent.change(screen.getByTestId("create-team-models-select"), { target: { value: "gpt-4" } });
+    fireEvent.change(screen.getByTestId("create-team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-select"), { target: { value: "gpt-4" } });
 
     fireEvent.click(screen.getByRole("button", { name: /add key-value pair/i }));
     await waitFor(() => {
-      expect(screen.getByPlaceholderText("Key")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Ключ")).toBeInTheDocument();
     });
-    fireEvent.change(screen.getByPlaceholderText("Key"), { target: { value: "cost_center" } });
-    fireEvent.change(screen.getByPlaceholderText("Value"), { target: { value: "eng-42" } });
+    fireEvent.change(screen.getByPlaceholderText("Ключ"), { target: { value: "cost_center" } });
+    fireEvent.change(screen.getByPlaceholderText("Значение"), { target: { value: "eng-42" } });
 
     fireEvent.click(screen.getByRole("button", { name: /add key-value pair/i }));
     await waitFor(() => {
-      expect(screen.getAllByPlaceholderText("Key")).toHaveLength(2);
+      expect(screen.getВсеByPlaceholderText("Ключ")).toHaveLength(2);
     });
-    fireEvent.change(screen.getAllByPlaceholderText("Key")[1], { target: { value: "tier" } });
-    fireEvent.change(screen.getAllByPlaceholderText("Value")[1], { target: { value: "3" } });
+    fireEvent.change(screen.getВсеByPlaceholderText("Ключ")[1], { target: { value: "tier" } });
+    fireEvent.change(screen.getВсеByPlaceholderText("Значение")[1], { target: { value: "3" } });
 
-    const createTeamSubmitButtons = screen.getAllByRole("button", { name: /create team/i });
+    const createTeamSubmitButtons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(createTeamSubmitButtons[createTeamSubmitButtons.length - 1]);
 
     await waitFor(() => {
       expect(teamCreateCall).toHaveBeenCalled();
     });
 
-    const submittedValues = vi.mocked(teamCreateCall).mock.calls[0][1];
-    expect(JSON.parse(submittedValues.metadata)).toEqual({ cost_center: "eng-42", tier: 3 });
+    const submittedЗначениеs = vi.mocked(teamCreateCall).mock.calls[0][1];
+    expect(JSON.parse(submittedЗначениеs.metadata)).toEqual({ cost_center: "eng-42", tier: 3 });
   });
 
   it("omits metadata entirely when no pairs are added", async () => {
     await openCreateModal();
 
     fireEvent.change(screen.getByLabelText(/team name/i), { target: { value: "Test Team" } });
-    fireEvent.change(screen.getByTestId("create-team-models-select"), { target: { value: "gpt-4" } });
+    fireEvent.change(screen.getByTestId("create-team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-select"), { target: { value: "gpt-4" } });
 
-    const createTeamSubmitButtons = screen.getAllByRole("button", { name: /create team/i });
+    const createTeamSubmitButtons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(createTeamSubmitButtons[createTeamSubmitButtons.length - 1]);
 
     await waitFor(() => {
@@ -866,33 +866,33 @@ describe("Teams - metadata key-value pairs in team create", () => {
   });
 });
 
-describe("Teams - schema-declared metadata fields in team create", () => {
+describe("Команды - schema-declared metadata fields in team create", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
     mockTeamInfoView.mockClear();
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue(["gpt-4"]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    vi.mocked(teamCreateCall).mockResolvedValue({
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение(["gpt-4"]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    vi.mocked(teamCreateCall).mockResolvedЗначение({
       team_id: "new-team-1",
       team_alias: "Test Team",
-      models: ["gpt-4"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4"],
       organization_id: null,
       keys: [],
       members_with_roles: [],
       spend: 0,
     });
-    mockUseOrganizations.mockReturnValue({ data: null });
-    vi.mocked(useTeamMetadataSchema).mockReturnValue({
-      data: [{ key: "cost_center", label: "Cost Center" }],
+    mockUseОрганизацияs.mockReturnЗначение({ data: null });
+    vi.mocked(useTeamМетаданныеSchema).mockReturnЗначение({
+      data: [{ key: "cost_center", label: "Стоимость Center" }],
       isLoading: false,
     } as any);
   });
 
   const openCreateModal = async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
 
-    const createButton = screen.getAllByRole("button", { name: /create team/i })[0];
+    const createButton = screen.getВсеByRole("button", { name: /create team/i })[0];
     act(() => {
       fireEvent.click(createButton);
     });
@@ -906,49 +906,49 @@ describe("Teams - schema-declared metadata fields in team create", () => {
     await openCreateModal();
 
     fireEvent.change(screen.getByLabelText(/team name/i), { target: { value: "Test Team" } });
-    fireEvent.change(screen.getByTestId("create-team-models-select"), { target: { value: "gpt-4" } });
+    fireEvent.change(screen.getByTestId("create-team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-select"), { target: { value: "gpt-4" } });
 
     await waitFor(() => {
-      expect((screen.getByPlaceholderText("Key") as HTMLInputElement).value).toBe("cost_center");
+      expect((screen.getByPlaceholderText("Ключ") as HTMLВходElement).value).toBe("cost_center");
     });
-    fireEvent.change(screen.getByPlaceholderText("Value"), { target: { value: "CC-1001" } });
+    fireEvent.change(screen.getByPlaceholderText("Значение"), { target: { value: "CC-1001" } });
 
-    const createTeamSubmitButtons = screen.getAllByRole("button", { name: /create team/i });
+    const createTeamSubmitButtons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(createTeamSubmitButtons[createTeamSubmitButtons.length - 1]);
 
     await waitFor(() => {
       expect(teamCreateCall).toHaveBeenCalled();
     });
 
-    const submittedValues = vi.mocked(teamCreateCall).mock.calls[0][1];
-    expect(JSON.parse(submittedValues.metadata)).toEqual({ cost_center: "CC-1001" });
+    const submittedЗначениеs = vi.mocked(teamCreateCall).mock.calls[0][1];
+    expect(JSON.parse(submittedЗначениеs.metadata)).toEqual({ cost_center: "CC-1001" });
   });
 
   it("should toast only the validator's own message when the backend rejects the create", async () => {
-    vi.mocked(teamCreateCall).mockRejectedValue(
-      new Error("{'error': 'Cost center CC-9999 is not recognized. Contact the FinOps team.'}"),
+    vi.mocked(teamCreateCall).mockRejectedЗначение(
+      new Ошибка("{'error': 'Стоимость center CC-9999 is not recognized. Contact the FinOps team.'}"),
     );
     await openCreateModal();
 
     fireEvent.change(screen.getByLabelText(/team name/i), { target: { value: "Test Team" } });
-    fireEvent.change(screen.getByTestId("create-team-models-select"), { target: { value: "gpt-4" } });
+    fireEvent.change(screen.getByTestId("create-team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-select"), { target: { value: "gpt-4" } });
     await waitFor(() => {
-      expect((screen.getByPlaceholderText("Key") as HTMLInputElement).value).toBe("cost_center");
+      expect((screen.getByPlaceholderText("Ключ") as HTMLВходElement).value).toBe("cost_center");
     });
-    fireEvent.change(screen.getByPlaceholderText("Value"), { target: { value: "CC-9999" } });
+    fireEvent.change(screen.getByPlaceholderText("Значение"), { target: { value: "CC-9999" } });
 
-    const createTeamSubmitButtons = screen.getAllByRole("button", { name: /create team/i });
+    const createTeamSubmitButtons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(createTeamSubmitButtons[createTeamSubmitButtons.length - 1]);
 
     await waitFor(() => {
-      expect(toast.fromError).toHaveBeenCalledWith(
-        "Error creating the team: Cost center CC-9999 is not recognized. Contact the FinOps team.",
+      expect(toast.fromОшибка).toHaveBeenCalledWith(
+        "Ошибка creating the team: Стоимость center CC-9999 is not recognized. Contact the FinOps team.",
       );
     });
   });
 
   it("should show a skeleton in the metadata section while the schema is loading", async () => {
-    vi.mocked(useTeamMetadataSchema).mockReturnValue({ data: undefined, isLoading: true } as any);
+    vi.mocked(useTeamМетаданныеSchema).mockReturnЗначение({ data: undefined, isLoading: true } as any);
     await openCreateModal();
 
     expect(screen.getByTestId("metadata-schema-skeleton")).toBeInTheDocument();
@@ -959,11 +959,11 @@ describe("Teams - schema-declared metadata fields in team create", () => {
     await openCreateModal();
 
     await waitFor(() => {
-      expect((screen.getByPlaceholderText("Key") as HTMLInputElement).value).toBe("cost_center");
+      expect((screen.getByPlaceholderText("Ключ") as HTMLВходElement).value).toBe("cost_center");
     });
     fireEvent.click(screen.getByLabelText("Remove key-value pair"));
     await waitFor(() => {
-      expect(screen.queryByPlaceholderText("Key")).not.toBeInTheDocument();
+      expect(screen.queryByPlaceholderText("Ключ")).not.toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByRole("button", { name: /^close$/i }));
@@ -971,104 +971,104 @@ describe("Teams - schema-declared metadata fields in team create", () => {
       expect(screen.queryByLabelText(/team name/i)).not.toBeInTheDocument();
     });
 
-    const createButton = screen.getAllByRole("button", { name: /create team/i })[0];
+    const createButton = screen.getВсеByRole("button", { name: /create team/i })[0];
     act(() => {
       fireEvent.click(createButton);
     });
 
     await waitFor(() => {
-      expect((screen.getByPlaceholderText("Key") as HTMLInputElement).value).toBe("cost_center");
+      expect((screen.getByPlaceholderText("Ключ") as HTMLВходElement).value).toBe("cost_center");
     });
   });
 });
 
-describe("Teams - models dropdown options", () => {
+describe("Команды - Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs dropdown options", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue(["gpt-4", "gpt-3.5-turbo"]);
-    mockUseOrganizations.mockReturnValue({ data: [] });
+    vi.clearВсеMocks();
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение(["gpt-4", "gpt-3.5-turbo"]);
+    mockUseОрганизацияs.mockReturnЗначение({ data: [] });
   });
 
-  it("should not render all-proxy-models option in models select", async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+  it("should not render all-proxy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs option in Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs select", async () => {
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
 
     await waitFor(() => {
-      expect(fetchAvailableModelsForTeamOrKey).toHaveBeenCalled();
+      expect(fetchAvailableРежимlsForTeamOrКлюч).toHaveBeenCalled();
     });
 
-    const createButton = screen.getAllByRole("button", { name: /create team/i })[0];
+    const createButton = screen.getВсеByRole("button", { name: /create team/i })[0];
     act(() => {
       fireEvent.click(createButton);
     });
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/models/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/i)).toBeInTheDocument();
     });
-    expect(screen.queryByText("All Proxy Models")).not.toBeInTheDocument();
+    expect(screen.queryByText("Все Proxy Режимls")).not.toBeInTheDocument();
   });
 });
 
-describe("Teams - delete team warning copy", () => {
+describe("Команды - delete team warning copy", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockUseOrganizations.mockReturnValue({ data: [] });
+    vi.clearВсеMocks();
+    mockUseОрганизацияs.mockReturnЗначение({ data: [] });
   });
 
   const openDeleteModal = async (team: any) => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
-    await waitFor(() => expect(mockTeamsTableProps).not.toBeNull());
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
+    await waitFor(() => expect(mockКомандыТаблицаProps).not.toBeNull());
     await act(async () => {
-      mockTeamsTableProps.onDeleteTeam(team);
+      mockКомандыТаблицаProps.onDeleteTeam(team);
     });
     expect(screen.getByText("Delete Team?")).toBeInTheDocument();
   };
 
-  it("warns that the team's models are deleted when the team has keys", async () => {
-    await openDeleteModal({ ...baseTableTeam, keys: [], keys_count: 5 });
+  it("warns that the team's Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs are deleted when the team has keys", async () => {
+    await openDeleteModal({ ...baseТаблицаTeam, keys: [], keys_count: 5 });
 
     expect(screen.getByText(/Warning: This team has 5 keys associated with it/i)).toHaveTextContent(
-      /along with any models created for this team/i,
+      /along with any Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs created for this team/i,
     );
     expect(screen.getByText(/Are you sure you want to delete this team/i)).toHaveTextContent(
-      /any models created for it/i,
+      /any Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs created for it/i,
     );
   });
 
-  it("still warns about model deletion in the confirmation message when the team has no keys", async () => {
-    await openDeleteModal({ ...baseTableTeam, keys: [], keys_count: 0 });
+  it("still warns abвыход Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию deletion in the confirmation message when the team has no keys", async () => {
+    await openDeleteModal({ ...baseТаблицаTeam, keys: [], keys_count: 0 });
 
     expect(screen.queryByText(/Warning: This team has/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Are you sure you want to delete this team/i)).toHaveTextContent(
-      /any models created for it/i,
+      /any Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs created for it/i,
     );
   });
 });
 
-describe("Teams - LIT-2530 organization stays optional for proxy admin with a single org", () => {
+describe("Команды - LIT-2530 organization stays необязательно for proxy admin with a single org", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
     mockTeamInfoView.mockClear();
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue(["gpt-4"]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    vi.mocked(teamCreateCall).mockResolvedValue({
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение(["gpt-4"]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    vi.mocked(teamCreateCall).mockResolvedЗначение({
       team_id: "new-team-1",
       team_alias: "No Org Team",
-      models: ["gpt-4"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4"],
       organization_id: null,
       keys: [],
       members_with_roles: [],
       spend: 0,
     });
-    mockUseOrganizations.mockReturnValue({
-      data: [{ organization_id: "org-1", organization_alias: "Org 1", models: [], members: [] }],
+    mockUseОрганизацияs.mockReturnЗначение({
+      data: [{ organization_id: "org-1", organization_alias: "Org 1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [], members: [] }],
     });
   });
 
   it("creates a team with no organization when exactly one organization exists", async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
 
-    const createButton = screen.getAllByRole("button", { name: /create team/i })[0];
+    const createButton = screen.getВсеByRole("button", { name: /create team/i })[0];
     act(() => {
       fireEvent.click(createButton);
     });
@@ -1078,9 +1078,9 @@ describe("Teams - LIT-2530 organization stays optional for proxy admin with a si
     });
 
     fireEvent.change(screen.getByLabelText(/team name/i), { target: { value: "No Org Team" } });
-    fireEvent.change(screen.getByTestId("create-team-models-select"), { target: { value: "gpt-4" } });
+    fireEvent.change(screen.getByTestId("create-team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-select"), { target: { value: "gpt-4" } });
 
-    const submitButtons = screen.getAllByRole("button", { name: /create team/i });
+    const submitButtons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(submitButtons[submitButtons.length - 1]);
 
     await waitFor(() => {
@@ -1092,22 +1092,22 @@ describe("Teams - LIT-2530 organization stays optional for proxy admin with a si
   });
 });
 
-describe("Teams - policies field is gated on the viewPolicies capability", () => {
+describe("Команды - policies field is gated on the viewPolicies capability", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
     mockTeamInfoView.mockClear();
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue(["gpt-4"]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    vi.mocked(getPoliciesList).mockResolvedValue({ policies: [] });
-    mockUseOrganizations.mockReturnValue({ data: null });
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение(["gpt-4"]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    vi.mocked(getPoliciesList).mockResolvedЗначение({ policies: [] });
+    mockUseОрганизацияs.mockReturnЗначение({ data: null });
   });
 
   const openAdditionalSettings = async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
 
     act(() => {
-      fireEvent.click(screen.getAllByRole("button", { name: /create team/i })[0]);
+      fireEvent.click(screen.getВсеByRole("button", { name: /create team/i })[0]);
     });
 
     await waitFor(() => {
@@ -1129,8 +1129,8 @@ describe("Teams - policies field is gated on the viewPolicies capability", () =>
     expect(screen.getByText("Policies")).toBeInTheDocument();
   });
 
-  it("should omit the policies field and skip the admin-only list without the capability", async () => {
-    can.mockReturnValue(false);
+  it("should omit the policies field and skip the admin-only list withвыход the capability", async () => {
+    can.mockReturnЗначение(false);
 
     await openAdditionalSettings();
 
@@ -1139,23 +1139,23 @@ describe("Teams - policies field is gated on the viewPolicies capability", () =>
   });
 });
 
-describe("Teams - which fields reach the create payload depends on the open sections", () => {
+describe("Команды - which fields reach the create payload depends on the open sections", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
     mockTeamInfoView.mockClear();
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue(["gpt-4"]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    vi.mocked(getPoliciesList).mockResolvedValue({ policies: [] });
-    vi.mocked(getDefaultTeamSettings).mockResolvedValue({ values: {} });
-    vi.mocked(teamCreateCall).mockResolvedValue({ team_id: "new-team-1" });
-    mockUseOrganizations.mockReturnValue({ data: null });
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение(["gpt-4"]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    vi.mocked(getPoliciesList).mockResolvedЗначение({ policies: [] });
+    vi.mocked(getDefaultTeamSettings).mockResolvedЗначение({ values: {} });
+    vi.mocked(teamCreateCall).mockResolvedЗначение({ team_id: "new-team-1" });
+    mockUseОрганизацияs.mockReturnЗначение({ data: null });
   });
 
   const openCreateModal = async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
     act(() => {
-      fireEvent.click(screen.getAllByRole("button", { name: /create team/i })[0]);
+      fireEvent.click(screen.getВсеByRole("button", { name: /create team/i })[0]);
     });
     await waitFor(() => {
       expect(screen.getByLabelText(/team name/i)).toBeInTheDocument();
@@ -1163,7 +1163,7 @@ describe("Teams - which fields reach the create payload depends on the open sect
   };
 
   const submit = async () => {
-    const buttons = screen.getAllByRole("button", { name: /create team/i });
+    const buttons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(buttons[buttons.length - 1]);
     await waitFor(() => {
       expect(teamCreateCall).toHaveBeenCalled();
@@ -1183,7 +1183,7 @@ describe("Teams - which fields reach the create payload depends on the open sect
       "budget_duration",
       "max_budget",
       "metadata",
-      "models",
+      "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs",
       "organization_id",
       "rpm_limit",
       "team_alias",
@@ -1198,17 +1198,17 @@ describe("Teams - which fields reach the create payload depends on the open sect
 
     toggleAdditionalSettings();
     await waitFor(() => {
-      expect(screen.getByLabelText("Team ID")).toBeInTheDocument();
+      expect(screen.getByLabelText("ID команды")).toBeInTheDocument();
     });
-    fireEvent.change(screen.getByLabelText("Team ID"), { target: { value: "tid-open" } });
-    fireEvent.change(screen.getByLabelText("Team Member Budget (USD)"), { target: { value: "12.5" } });
+    fireEvent.change(screen.getByLabelText("ID команды"), { target: { value: "tid-open" } });
+    fireEvent.change(screen.getByLabelText("Team Member Бюджет (USD)"), { target: { value: "12.5" } });
 
     const payload = await submit();
 
     expect(payload.team_id).toBe("tid-open");
     expect(payload.team_member_budget).toBe(12.5);
     expect(Object.keys(payload)).toEqual(
-      expect.arrayContaining(["access_group_ids", "guardrails", "secret_manager_settings", "team_member_key_duration"]),
+      expect.arrayContaining(["access_group_ids", "гардрейловs", "secret_manager_settings", "team_member_key_duration"]),
     );
   });
 
@@ -1218,17 +1218,17 @@ describe("Teams - which fields reach the create payload depends on the open sect
 
     toggleAdditionalSettings();
     await waitFor(() => {
-      expect(screen.getByLabelText("Team ID")).toBeInTheDocument();
+      expect(screen.getByLabelText("ID команды")).toBeInTheDocument();
     });
-    fireEvent.change(screen.getByLabelText("Team ID"), { target: { value: "tid-dropped" } });
+    fireEvent.change(screen.getByLabelText("ID команды"), { target: { value: "tid-dropped" } });
     toggleAdditionalSettings();
     await waitFor(() => {
-      expect(screen.queryByLabelText("Team ID")).not.toBeInTheDocument();
+      expect(screen.queryByLabelText("ID команды")).not.toBeInTheDocument();
     });
 
     const payload = await submit();
 
-    expect(payload).not.toHaveProperty("team_id");
+    expect(payload).not.toHaveСвойство("team_id");
   });
 
   it("restores and sends the typed value when Additional Settings is reopened before saving", async () => {
@@ -1237,45 +1237,45 @@ describe("Teams - which fields reach the create payload depends on the open sect
 
     toggleAdditionalSettings();
     await waitFor(() => {
-      expect(screen.getByLabelText("Team ID")).toBeInTheDocument();
+      expect(screen.getByLabelText("ID команды")).toBeInTheDocument();
     });
-    fireEvent.change(screen.getByLabelText("Team ID"), { target: { value: "tid-kept" } });
+    fireEvent.change(screen.getByLabelText("ID команды"), { target: { value: "tid-kept" } });
     toggleAdditionalSettings();
     await waitFor(() => {
-      expect(screen.queryByLabelText("Team ID")).not.toBeInTheDocument();
+      expect(screen.queryByLabelText("ID команды")).not.toBeInTheDocument();
     });
     toggleAdditionalSettings();
     await waitFor(() => {
-      expect(screen.getByLabelText("Team ID")).toBeInTheDocument();
+      expect(screen.getByLabelText("ID команды")).toBeInTheDocument();
     });
 
-    expect(screen.getByLabelText("Team ID")).toHaveValue("tid-kept");
+    expect(screen.getByLabelText("ID команды")).toHaveЗначение("tid-kept");
     const payload = await submit();
 
     expect(payload.team_id).toBe("tid-kept");
   });
 });
 
-describe("Teams - the exact bytes the create call sends", () => {
+describe("Команды - the exact bytes the create call sends", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    can.mockReturnValue(true);
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue(["gpt-4"]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    vi.mocked(getPoliciesList).mockResolvedValue({ policies: [] });
-    vi.mocked(getDefaultTeamSettings).mockResolvedValue({ values: {} });
-    vi.mocked(teamCreateCall).mockResolvedValue({ team_id: "new-team-1" });
-    vi.mocked(useTeamMetadataSchema).mockReturnValue({ data: [], isLoading: false } as any);
-    mockUseOrganizations.mockReturnValue({ data: null });
+    vi.clearВсеMocks();
+    can.mockReturnЗначение(true);
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение(["gpt-4"]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    vi.mocked(getPoliciesList).mockResolvedЗначение({ policies: [] });
+    vi.mocked(getDefaultTeamSettings).mockResolvedЗначение({ values: {} });
+    vi.mocked(teamCreateCall).mockResolvedЗначение({ team_id: "new-team-1" });
+    vi.mocked(useTeamМетаданныеSchema).mockReturnЗначение({ data: [], isLoading: false } as any);
+    mockUseОрганизацияs.mockReturnЗначение({ data: null });
   });
 
   const openCreateModal = async (options?: { premiumUser?: boolean }) => {
-    renderWithQueryClient(
-      <Teams accessToken="test-token" userID="user-123" userRole="Admin" premiumUser={options?.premiumUser ?? false} />,
+    renderWithЗапросClient(
+      <Команды accessТокен="test-token" userID="user-123" userRole="Admin" premiumUser={options?.premiumUser ?? false} />,
     );
     act(() => {
-      fireEvent.click(screen.getAllByRole("button", { name: /create team/i })[0]);
+      fireEvent.click(screen.getВсеByRole("button", { name: /create team/i })[0]);
     });
     await waitFor(() => {
       expect(screen.getByLabelText(/team name/i)).toBeInTheDocument();
@@ -1284,7 +1284,7 @@ describe("Teams - the exact bytes the create call sends", () => {
   };
 
   const submit = async () => {
-    const buttons = screen.getAllByRole("button", { name: /create team/i });
+    const buttons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(buttons[buttons.length - 1]);
     await waitFor(() => {
       expect(teamCreateCall).toHaveBeenCalled();
@@ -1297,7 +1297,7 @@ describe("Teams - the exact bytes the create call sends", () => {
   const openSection = async (title: string, mountedProbe: RegExp | string) => {
     fireEvent.click(screen.getByText(title));
     await waitFor(() => {
-      expect(screen.getAllByText(mountedProbe).length).toBeGreaterThan(0);
+      expect(screen.getВсеByText(mountedProbe).length).toBeGreaterThan(0);
     });
   };
 
@@ -1309,7 +1309,7 @@ describe("Teams - the exact bytes the create call sends", () => {
     expect(payload).toStrictEqual({
       team_alias: "Byte Contract Team",
       organization_id: null,
-      models: ["no-default-models"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["no-default-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs"],
       max_budget: undefined,
       budget_duration: undefined,
       tpm_limit: undefined,
@@ -1319,24 +1319,24 @@ describe("Teams - the exact bytes the create call sends", () => {
     expect(wireBody(payload)).toStrictEqual({
       team_alias: "Byte Contract Team",
       organization_id: null,
-      models: ["no-default-models"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["no-default-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs"],
     });
   });
 
-  it("keeps every newly mounted but untouched field out of the request body", async () => {
+  it("keeps every newly mounted but untouched field выход of the request body", async () => {
     await openCreateModal();
 
-    await openSection("Additional Settings", /Team Member Key Duration/);
-    await openSection("MCP Settings", /Allowed MCP Servers/);
-    await openSection("Agent Settings", /Allowed Agents/);
-    await openSection("Search Tool Settings", /Allowed Search Tools/);
+    await openSection("Additional Settings", /Team Member Ключ Длительность/);
+    await openSection("MCP Settings", /Разрешённые MCP-серверы/);
+    await openSection("Agent Settings", /Разрешённые агенты/);
+    await openSection("Search Tool Settings", /Всеowed Search Инструменты/);
 
     const payload = await submit();
 
     expect(payload).toStrictEqual({
       team_alias: "Byte Contract Team",
       organization_id: null,
-      models: ["no-default-models"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["no-default-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs"],
       max_budget: undefined,
       budget_duration: undefined,
       tpm_limit: undefined,
@@ -1348,12 +1348,12 @@ describe("Teams - the exact bytes the create call sends", () => {
       team_member_rpm_limit: undefined,
       team_member_tpm_limit: undefined,
       secret_manager_settings: undefined,
-      guardrails: undefined,
-      disable_global_guardrails: undefined,
+      гардрейловs: undefined,
+      disable_global_гардрейловs: undefined,
       policies: undefined,
       access_group_ids: undefined,
       allowed_vector_store_ids: undefined,
-      allowed_passthrough_routes: undefined,
+      allowed_passthrough_rвыходes: undefined,
       allowed_mcp_servers_and_groups: undefined,
       mcp_tool_permissions: {},
       allowed_agents_and_groups: undefined,
@@ -1362,35 +1362,35 @@ describe("Teams - the exact bytes the create call sends", () => {
     expect(wireBody(payload)).toStrictEqual({
       team_alias: "Byte Contract Team",
       organization_id: null,
-      models: ["no-default-models"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["no-default-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs"],
       mcp_tool_permissions: {},
     });
   });
 
   it("puts the selected skills into object_permission.skills and drops the form key", async () => {
     await openCreateModal();
-    await openSection("Skill Settings", /Allowed Skills/);
+    await openSection("Skill Settings", /Всеowed Скиллы/);
     fireEvent.click(screen.getByTestId("select-private-skill"));
 
     const payload = await submit();
 
     expect(payload.object_permission).toStrictEqual({ skills: ["private-skill"] });
-    expect(payload).not.toHaveProperty("object_permission_skills");
+    expect(payload).not.toHaveСвойство("object_permission_skills");
   });
 
   it("sends no object_permission when Skill Settings is opened but nothing is selected", async () => {
     await openCreateModal();
-    await openSection("Skill Settings", /Allowed Skills/);
+    await openSection("Skill Settings", /Всеowed Скиллы/);
 
     const payload = await submit();
 
-    expect(payload).not.toHaveProperty("object_permission");
-    expect(payload).not.toHaveProperty("object_permission_skills");
+    expect(payload).not.toHaveСвойство("object_permission");
+    expect(payload).not.toHaveСвойство("object_permission_skills");
   });
 
   it("includes selected MCP toolsets in the create object permission", async () => {
     await openCreateModal();
-    await openSection("MCP Settings", /Allowed MCP Servers/);
+    await openSection("MCP Settings", /Разрешённые MCP-серверы/);
     fireEvent.click(screen.getByTestId("select-mcp-toolset"));
 
     const payload = await submit();
@@ -1399,32 +1399,32 @@ describe("Teams - the exact bytes the create call sends", () => {
   });
 
   it.each([
-    ["MCP Settings", /Allowed MCP Servers/, ["allowed_mcp_servers_and_groups", "mcp_tool_permissions"]],
-    ["Agent Settings", /Allowed Agents/, ["allowed_agents_and_groups"]],
-    ["Search Tool Settings", /Allowed Search Tools/, ["object_permission_search_tools"]],
+    ["MCP Settings", /Разрешённые MCP-серверы/, ["allowed_mcp_servers_and_groups", "mcp_tool_permissions"]],
+    ["Agent Settings", /Разрешённые агенты/, ["allowed_agents_and_groups"]],
+    ["Search Tool Settings", /Всеowed Search Инструменты/, ["object_permission_search_tools"]],
   ])("registers %s fields only while that one section is open", async (title, probe, keys) => {
     await openCreateModal();
 
     const closedPayload = await submit();
     for (const key of keys as string[]) {
-      expect(closedPayload).not.toHaveProperty(key);
+      expect(closedPayload).not.toHaveСвойство(key);
     }
   });
 
   it("carries every typed value to the payload at the type antd sends today", async () => {
     await openCreateModal();
 
-    fireEvent.change(screen.getByLabelText("Max Budget (USD)"), { target: { value: "150.75" } });
-    fireEvent.change(screen.getByLabelText("Tokens per minute Limit (TPM)"), { target: { value: "900" } });
-    fireEvent.change(screen.getByLabelText("Requests per minute Limit (RPM)"), { target: { value: "800" } });
+    fireEvent.change(screen.getByLabelText("Макс. бюджет (USD)"), { target: { value: "150.75" } });
+    fireEvent.change(screen.getByLabelText("Лимит токенов в минуту (TPM)"), { target: { value: "900" } });
+    fireEvent.change(screen.getByLabelText("Лимит запросов в минуту (RPM)"), { target: { value: "800" } });
 
-    await openSection("Additional Settings", /Team Member Key Duration/);
+    await openSection("Additional Settings", /Team Member Ключ Длительность/);
 
-    fireEvent.change(screen.getByLabelText("Team ID"), { target: { value: "tid-1" } });
-    fireEvent.change(screen.getByLabelText("Team Member Budget (USD)"), { target: { value: "12.5" } });
-    fireEvent.change(screen.getByLabelText(/Team Member Key Duration/), { target: { value: "30d" } });
-    fireEvent.change(screen.getByLabelText("Team Member RPM Limit"), { target: { value: "7" } });
-    fireEvent.change(screen.getByLabelText("Team Member TPM Limit"), { target: { value: "8" } });
+    fireEvent.change(screen.getByLabelText("ID команды"), { target: { value: "tid-1" } });
+    fireEvent.change(screen.getByLabelText("Team Member Бюджет (USD)"), { target: { value: "12.5" } });
+    fireEvent.change(screen.getByLabelText(/Team Member Ключ Длительность/), { target: { value: "30d" } });
+    fireEvent.change(screen.getByLabelText("Team Member Лимит RPM"), { target: { value: "7" } });
+    fireEvent.change(screen.getByLabelText("Team Member Лимит TPM"), { target: { value: "8" } });
     fireEvent.change(screen.getByLabelText("Secret Manager Settings"), {
       target: { value: '{"namespace":"admin"}' },
     });
@@ -1444,11 +1444,11 @@ describe("Teams - the exact bytes the create call sends", () => {
 
   it("blocks the create on an invalid secret manager config, with the rule message suppressed by help", async () => {
     await openCreateModal();
-    await openSection("Additional Settings", /Team Member Key Duration/);
+    await openSection("Additional Settings", /Team Member Ключ Длительность/);
 
     fireEvent.change(screen.getByLabelText("Secret Manager Settings"), { target: { value: "   " } });
 
-    const buttons = screen.getAllByRole("button", { name: /create team/i });
+    const buttons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(buttons[buttons.length - 1]);
 
     await waitFor(() => {
@@ -1458,34 +1458,34 @@ describe("Teams - the exact bytes the create call sends", () => {
     expect(screen.queryByText("Please enter valid JSON")).not.toBeInTheDocument();
   });
 
-  it("turns the disable-global-guardrails switch into a boolean for a premium user", async () => {
+  it("turns the disable-global-гардрейловs switch into a boolean for a premium user", async () => {
     await openCreateModal({ premiumUser: true });
-    await openSection("Additional Settings", /Team Member Key Duration/);
+    await openSection("Additional Settings", /Team Member Ключ Длительность/);
 
-    const switches = screen.getAllByRole("switch");
+    const switches = screen.getВсеByRole("switch");
     fireEvent.click(switches[switches.length - 1]);
 
     const payload = await submit();
 
-    expect(payload.disable_global_guardrails).toBe(true);
+    expect(payload.disable_global_гардрейловs).toBe(true);
   });
 
-  it("leaves the disable-global-guardrails switch inert for a non-premium user", async () => {
+  it("leaves the disable-global-гардрейловs switch inert for a non-premium user", async () => {
     await openCreateModal();
-    await openSection("Additional Settings", /Team Member Key Duration/);
+    await openSection("Additional Settings", /Team Member Ключ Длительность/);
 
-    const switches = screen.getAllByRole("switch");
+    const switches = screen.getВсеByRole("switch");
     fireEvent.click(switches[switches.length - 1]);
 
     const payload = await submit();
 
-    expect(payload.disable_global_guardrails).toBeUndefined();
+    expect(payload.disable_global_гардрейловs).toBeUndefined();
   });
 
   it.each([
-    ["MCP Settings", /Allowed MCP Servers/, ["allowed_mcp_servers_and_groups", "mcp_tool_permissions"]],
-    ["Agent Settings", /Allowed Agents/, ["allowed_agents_and_groups"]],
-    ["Search Tool Settings", /Allowed Search Tools/, ["object_permission_search_tools"]],
+    ["MCP Settings", /Разрешённые MCP-серверы/, ["allowed_mcp_servers_and_groups", "mcp_tool_permissions"]],
+    ["Agent Settings", /Разрешённые агенты/, ["allowed_agents_and_groups"]],
+    ["Search Tool Settings", /Всеowed Search Инструменты/, ["object_permission_search_tools"]],
   ])("adds the %s keys as soon as that one section is opened", async (title, probe, keys) => {
     await openCreateModal();
 
@@ -1493,22 +1493,22 @@ describe("Teams - the exact bytes the create call sends", () => {
     const payload = await submit();
 
     for (const key of keys as string[]) {
-      expect(payload).toHaveProperty(key);
+      expect(payload).toHaveСвойство(key);
     }
   });
 
-  it("leaves policies out of the request body for a caller without the viewPolicies capability", async () => {
-    can.mockReturnValue(false);
+  it("leaves policies выход of the request body for a caller withвыход the viewPolicies capability", async () => {
+    can.mockReturnЗначение(false);
 
     await openCreateModal();
-    await openSection("Additional Settings", /Team Member Key Duration/);
+    await openSection("Additional Settings", /Team Member Ключ Длительность/);
 
     const payload = await submit();
 
     expect(payload).toStrictEqual({
       team_alias: "Byte Contract Team",
       organization_id: null,
-      models: ["no-default-models"],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["no-default-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs"],
       max_budget: undefined,
       budget_duration: undefined,
       tpm_limit: undefined,
@@ -1520,24 +1520,24 @@ describe("Teams - the exact bytes the create call sends", () => {
       team_member_rpm_limit: undefined,
       team_member_tpm_limit: undefined,
       secret_manager_settings: undefined,
-      guardrails: undefined,
-      disable_global_guardrails: undefined,
+      гардрейловs: undefined,
+      disable_global_гардрейловs: undefined,
       access_group_ids: undefined,
       allowed_vector_store_ids: undefined,
-      allowed_passthrough_routes: undefined,
+      allowed_passthrough_rвыходes: undefined,
     });
   });
 
   it("blocks the create on an empty team name and names the rule", async () => {
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
     act(() => {
-      fireEvent.click(screen.getAllByRole("button", { name: /create team/i })[0]);
+      fireEvent.click(screen.getВсеByRole("button", { name: /create team/i })[0]);
     });
     await waitFor(() => {
       expect(screen.getByLabelText(/team name/i)).toBeInTheDocument();
     });
 
-    const buttons = screen.getAllByRole("button", { name: /create team/i });
+    const buttons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(buttons[buttons.length - 1]);
 
     expect(await screen.findByText("Please input a team name")).toBeInTheDocument();
@@ -1545,107 +1545,107 @@ describe("Teams - the exact bytes the create call sends", () => {
   });
 });
 
-describe("Teams - the create form keeps the organization and models picks while it is open", () => {
+describe("Команды - the create form keeps the organization and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs picks while it is open", () => {
   const ORGS = [
-    { organization_id: "org-1", organization_alias: "Org 1", models: [], members: [] },
-    { organization_id: "org-2", organization_alias: "Org 2", models: [], members: [] },
+    { organization_id: "org-1", organization_alias: "Org 1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [], members: [] },
+    { organization_id: "org-2", organization_alias: "Org 2", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [], members: [] },
   ];
 
-  const orgField = () => screen.getByRole("combobox", { name: /organization/i });
-  const modelsField = () => screen.getByTestId("create-team-models-select");
+  const orgПоле = () => screen.getByRole("combobox", { name: /organization/i });
+  const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsПоле = () => screen.getByTestId("create-team-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-select");
 
   const openCreateModal = async () => {
     act(() => {
-      fireEvent.click(screen.getAllByRole("button", { name: /create team/i })[0]);
+      fireEvent.click(screen.getВсеByRole("button", { name: /create team/i })[0]);
     });
     await screen.findByLabelText(/team name/i);
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
     mockTeamInfoView.mockClear();
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockResolvedValue(["gpt-4", "gpt-3.5-turbo"]);
-    vi.mocked(fetchMCPAccessGroups).mockResolvedValue([]);
-    vi.mocked(getGuardrailsList).mockResolvedValue({ guardrails: [] });
-    vi.mocked(getDefaultTeamSettings).mockResolvedValue({ values: {} });
-    mockUseOrganizations.mockReturnValue({ data: ORGS });
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockResolvedЗначение(["gpt-4", "gpt-3.5-turbo"]);
+    vi.mocked(fetchMCPAccessGroups).mockResolvedЗначение([]);
+    vi.mocked(getГардрейлыList).mockResolvedЗначение({ гардрейловs: [] });
+    vi.mocked(getDefaultTeamSettings).mockResolvedЗначение({ values: {} });
+    mockUseОрганизацияs.mockReturnЗначение({ data: ORGS });
   });
 
   it("keeps both picks when the organizations list comes back changed from a refetch", async () => {
     const user = userEvent.setup();
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
     await openCreateModal();
 
-    await chooseSelectOption(user, orgField(), /Org 1/);
-    fireEvent.change(modelsField(), { target: { value: "gpt-4" } });
+    await chooseВыбратьOption(user, orgПоле(), /Org 1/);
+    fireEvent.change(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsПоле(), { target: { value: "gpt-4" } });
 
-    mockUseOrganizations.mockReturnValue({ data: ORGS.map((org) => ({ ...org, spend: 1 })) });
+    mockUseОрганизацияs.mockReturnЗначение({ data: ORGS.map((org) => ({ ...org, spend: 1 })) });
     fireEvent.click(screen.getByText("Additional Settings"));
 
-    expect(orgField()).toHaveValue("Org 1");
-    expect(modelsField()).toHaveValue("gpt-4");
+    expect(orgПоле()).toHaveЗначение("Org 1");
+    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsПоле()).toHaveЗначение("gpt-4");
   });
 
-  it("keeps models picked before the available models finish loading", async () => {
-    let resolveModels: (models: string[]) => void = () => {};
-    vi.mocked(fetchAvailableModelsForTeamOrKey).mockReturnValue(
+  it("keeps Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs picked before the available Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs finish loading", async () => {
+    let resolveРежимls: (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: string[]) => void = () => {};
+    vi.mocked(fetchAvailableРежимlsForTeamOrКлюч).mockReturnЗначение(
       new Promise<string[]>((resolve) => {
-        resolveModels = resolve;
+        resolveРежимls = resolve;
       }),
     );
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
     await openCreateModal();
 
-    fireEvent.change(modelsField(), { target: { value: "gpt-4" } });
+    fireEvent.change(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsПоле(), { target: { value: "gpt-4" } });
     await act(async () => {
-      resolveModels(["gpt-4", "gpt-3.5-turbo"]);
+      resolveРежимls(["gpt-4", "gpt-3.5-turbo"]);
     });
 
-    expect(modelsField()).toHaveValue("gpt-4");
+    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsПоле()).toHaveЗначение("gpt-4");
   });
 
-  it("clears the models pick when the organization is changed, since models are org scoped", async () => {
+  it("clears the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs pick when the organization is changed, since Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs are org scoped", async () => {
     const user = userEvent.setup();
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
     await openCreateModal();
 
-    await chooseSelectOption(user, orgField(), /Org 1/);
-    fireEvent.change(modelsField(), { target: { value: "gpt-4" } });
-    await chooseSelectOption(user, orgField(), /Org 2/);
+    await chooseВыбратьOption(user, orgПоле(), /Org 1/);
+    fireEvent.change(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsПоле(), { target: { value: "gpt-4" } });
+    await chooseВыбратьOption(user, orgПоле(), /Org 2/);
 
-    await waitFor(() => expect(orgField()).toHaveValue("Org 2"));
-    expect(modelsField()).toHaveValue("");
+    await waitFor(() => expect(orgПоле()).toHaveЗначение("Org 2"));
+    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsПоле()).toHaveЗначение("");
   });
 
-  it("keeps the models pick when the same organization is chosen again", async () => {
+  it("keeps the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs pick when the same organization is chosen again", async () => {
     const user = userEvent.setup();
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
     await openCreateModal();
 
-    await chooseSelectOption(user, orgField(), /Org 1/);
-    fireEvent.change(modelsField(), { target: { value: "gpt-4" } });
-    await chooseSelectOption(user, orgField(), /Org 1/);
+    await chooseВыбратьOption(user, orgПоле(), /Org 1/);
+    fireEvent.change(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsПоле(), { target: { value: "gpt-4" } });
+    await chooseВыбратьOption(user, orgПоле(), /Org 1/);
 
-    expect(orgField()).toHaveValue("Org 1");
-    expect(modelsField()).toHaveValue("gpt-4");
+    expect(orgПоле()).toHaveЗначение("Org 1");
+    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsПоле()).toHaveЗначение("gpt-4");
   });
 
   it("still preselects the only organization an org admin can create teams in", async () => {
-    mockUseOrganizations.mockReturnValue({
+    mockUseОрганизацияs.mockReturnЗначение({
       data: [
         {
           organization_id: "org-1",
           organization_alias: "Org 1",
-          models: [],
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
           members: [{ user_id: "user-123", user_role: "org_admin" }],
         },
       ],
     });
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Internal User" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Internal User" />);
     await openCreateModal();
 
-    expect(orgField()).toHaveValue("Org 1");
-    expect(orgField()).toBeDisabled();
+    expect(orgПоле()).toHaveЗначение("Org 1");
+    expect(orgПоле()).toBeDisabled();
   });
 
   it("leaves an org admin able to pick when their admin orgs narrow to one while the form is open", async () => {
@@ -1653,41 +1653,41 @@ describe("Teams - the create form keeps the organization and models picks while 
       {
         organization_id: "org-1",
         organization_alias: "Org 1",
-        models: [],
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
         members: [{ user_id: "user-123", user_role: "org_admin" }],
       },
       {
         organization_id: "org-2",
         organization_alias: "Org 2",
-        models: [],
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
         members: [{ user_id: "user-123", user_role: "org_admin" }],
       },
     ];
-    mockUseOrganizations.mockReturnValue({ data: orgAdminOrgs });
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Internal User" />);
+    mockUseОрганизацияs.mockReturnЗначение({ data: orgAdminOrgs });
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Internal User" />);
     await openCreateModal();
-    expect(orgField()).toHaveValue("");
+    expect(orgПоле()).toHaveЗначение("");
 
-    mockUseOrganizations.mockReturnValue({ data: [orgAdminOrgs[0]] });
+    mockUseОрганизацияs.mockReturnЗначение({ data: [orgAdminOrgs[0]] });
     fireEvent.click(screen.getByText("Additional Settings"));
 
-    expect(orgField()).toBeEnabled();
+    expect(orgПоле()).toBeEnabled();
   });
 
   it("refuses to create the team in an organization the admin has lost access to", async () => {
     const user = userEvent.setup();
     const orgAdminOrgs = ORGS.map((org) => ({ ...org, members: [{ user_id: "user-123", user_role: "org_admin" }] }));
-    mockUseOrganizations.mockReturnValue({ data: orgAdminOrgs });
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Internal User" />);
+    mockUseОрганизацияs.mockReturnЗначение({ data: orgAdminOrgs });
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Internal User" />);
     await openCreateModal();
 
-    fireEvent.change(screen.getByTestId("team-name-input"), { target: { value: "Revoked Team" } });
-    await chooseSelectOption(user, orgField(), /Org 1/);
+    fireEvent.change(screen.getByTestId("team-name-input"), { target: { value: "Отозватьd Team" } });
+    await chooseВыбратьOption(user, orgПоле(), /Org 1/);
 
-    mockUseOrganizations.mockReturnValue({ data: [orgAdminOrgs[1]] });
+    mockUseОрганизацияs.mockReturnЗначение({ data: [orgAdminOrgs[1]] });
     fireEvent.click(screen.getByText("Additional Settings"));
 
-    const submitButtons = screen.getAllByRole("button", { name: /create team/i });
+    const submitButtons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(submitButtons[submitButtons.length - 1]);
 
     await screen.findByText(/no longer create teams in this organization/i);
@@ -1697,29 +1697,29 @@ describe("Teams - the create form keeps the organization and models picks while 
   it("lets the admin switch to the one organization left after losing access to their pick", async () => {
     const user = userEvent.setup();
     const orgAdminOrgs = ORGS.map((org) => ({ ...org, members: [{ user_id: "user-123", user_role: "org_admin" }] }));
-    mockUseOrganizations.mockReturnValue({ data: orgAdminOrgs });
+    mockUseОрганизацияs.mockReturnЗначение({ data: orgAdminOrgs });
     const createdTeam = {
       team_id: "new-team-1",
       team_alias: "Recovered Team",
-      models: [],
+      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
       organization_id: "org-2",
       keys: [],
       members_with_roles: [],
       spend: 0,
     };
-    vi.mocked(teamCreateCall).mockResolvedValue(createdTeam);
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Internal User" />);
+    vi.mocked(teamCreateCall).mockResolvedЗначение(createdTeam);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Internal User" />);
     await openCreateModal();
 
     fireEvent.change(screen.getByTestId("team-name-input"), { target: { value: "Recovered Team" } });
-    await chooseSelectOption(user, orgField(), /Org 1/);
+    await chooseВыбратьOption(user, orgПоле(), /Org 1/);
 
-    mockUseOrganizations.mockReturnValue({ data: [orgAdminOrgs[1]] });
+    mockUseОрганизацияs.mockReturnЗначение({ data: [orgAdminOrgs[1]] });
     fireEvent.click(screen.getByText("Additional Settings"));
 
-    expect(orgField()).toBeEnabled();
-    await chooseSelectOption(user, orgField(), /Org 2/);
-    const submitButtons = screen.getAllByRole("button", { name: /create team/i });
+    expect(orgПоле()).toBeEnabled();
+    await chooseВыбратьOption(user, orgПоле(), /Org 2/);
+    const submitButtons = screen.getВсеByRole("button", { name: /create team/i });
     fireEvent.click(submitButtons[submitButtons.length - 1]);
 
     await waitFor(() =>
@@ -1732,16 +1732,16 @@ describe("Teams - the create form keeps the organization and models picks while 
 
   it("starts the form clean again when the modal is closed and reopened", async () => {
     const user = userEvent.setup();
-    renderWithQueryClient(<Teams accessToken="test-token" userID="user-123" userRole="Admin" />);
+    renderWithЗапросClient(<Команды accessТокен="test-token" userID="user-123" userRole="Admin" />);
     await openCreateModal();
 
-    await chooseSelectOption(user, orgField(), /Org 1/);
-    fireEvent.change(modelsField(), { target: { value: "gpt-4" } });
+    await chooseВыбратьOption(user, orgПоле(), /Org 1/);
+    fireEvent.change(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsПоле(), { target: { value: "gpt-4" } });
     fireEvent.click(screen.getByRole("button", { name: /^close$/i }));
     await waitFor(() => expect(screen.queryByLabelText(/team name/i)).not.toBeInTheDocument());
 
     await openCreateModal();
-    expect(orgField()).toHaveValue("");
-    expect(modelsField()).toHaveValue("");
+    expect(orgПоле()).toHaveЗначение("");
+    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsПоле()).toHaveЗначение("");
   });
 });

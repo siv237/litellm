@@ -148,29 +148,27 @@ export default function PluginSettings() {
   return (
     <Card>
       <CardHeader>
-        <h4 className="text-base font-semibold text-foreground">Plugins</h4>
+        <h4 className="text-base font-semibold text-foreground">Плагины</h4>
         <p className="text-sm text-foreground">
-          Register external services as plugins. Once added, users can toggle to the plugin from the mode switcher in
-          the top-left of the sidebar.
+          Зарегистрируйте внешние сервисы как плагины. После добавления пользователи смогут переключаться на плагин в переключателе режимов в левом верхнем углу панели.
         </p>
         <p className="text-xs text-muted-foreground">
-          Each plugin must expose <code className={INLINE_CODE_CLASS}>GET /api/plugin-manifest</code> returning nav
-          items and capabilities.
+          Каждый плагин должен предоставлять <code className={INLINE_CODE_CLASS}>GET /api/plugin-manifest</code> , возвращая пункты навигации и возможности.
         </p>
       </CardHeader>
       <CardContent>
         <Button className="mb-4" onClick={openAdd}>
           <Plus />
-          Add Plugin
+          Добавить плагин
         </Button>
 
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Название</TableHead>
-              <TableHead>Display Name</TableHead>
+              <TableHead>Отображаемое название</TableHead>
               <TableHead>URL</TableHead>
-              <TableHead>Plugin Key</TableHead>
+              <TableHead>Ключ плагина</TableHead>
               <TableHead>Действия</TableHead>
             </TableRow>
           </TableHeader>
@@ -188,22 +186,22 @@ export default function PluginSettings() {
               <FormField
                 control={form.control}
                 name="name"
-                label="Name (identifier)"
-                description="Used in URLs and config. No spaces. E.g. litellm-platform-plugin"
+                label="Имя (идентификатор)"
+                description="Используется в URL и конфиге. Без пробелов. Напр. litellm-platform-plugin"
               >
                 {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="litellm-platform-plugin" />}
               </FormField>
-              <FormField control={form.control} name="display_name" label="Display Name">
-                {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="Agent Control Plane" />}
+              <FormField control={form.control} name="display_name" label="Отображаемое название">
+                {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="Плоскость управления агентами" />}
               </FormField>
-              <FormField control={form.control} name="url" label="URL" description="Base URL of the plugin service">
+              <FormField control={form.control} name="url" label="URL" description="Базовый URL сервиса плагина">
                 {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="https://your-plugin.example.com" />}
               </FormField>
               <FormField
                 control={form.control}
                 name="plugin_key"
-                label="Plugin Key"
-                description="Optional. The plugin's own credential, injected as Authorization: Bearer <key> only when litellm reverse-proxies API calls to the plugin's backend (/plugin-proxy/<name>/*). Leave blank for plugins that use the forwarded litellm user token (e.g. iframe plugins) — that path uses the user's token, not this key."
+                label="Ключ плагина"
+                description="Optional. The plugin's own credential, injected as Authorization: Bearer <key> только когда ruLiteLLM реверс-проксирует вызовы API в бэкенд плагина (/plugin-proxy/<name>/*). Leave blank for plugins that use the forwarded litellm user token (e.g. iframe plugins) — that path uses the user's token, not this key."
               >
                 {({ ref, ...field }) => (
                   <InputGroup>

@@ -358,7 +358,7 @@ const MCPAppsPanel: React.FC<Props> = ({ accessToken, selectedServers, onChange,
         return <span className="text-[13px] text-muted-foreground py-2.5 shrink-0">{unavailabilityLabel}</span>;
       }
       if (getMcpOAuthMode(detailServer) === "m2m") {
-        return <span className="text-[13px] text-muted-foreground">Authorized</span>;
+        return <span className="text-[13px] text-muted-foreground">Авторизовано</span>;
       }
       if (getMcpOAuthMode(detailServer) !== "authorization_code") {
         return (
@@ -392,7 +392,7 @@ const MCPAppsPanel: React.FC<Props> = ({ accessToken, selectedServers, onChange,
             }}
             className="font-semibold h-[38px] min-w-[110px]"
           >
-            Disconnect
+            Отключить
           </Button>
         );
       }
@@ -442,7 +442,7 @@ const MCPAppsPanel: React.FC<Props> = ({ accessToken, selectedServers, onChange,
           {renderDetailAction()}
         </div>
 
-        <h3 className="m-0 mb-3 text-[15px] font-semibold text-foreground">Information</h3>
+        <h3 className="m-0 mb-3 text-[15px] font-semibold text-foreground">Информация</h3>
         <div className="border rounded-lg overflow-hidden mb-7">
           {[
             ["Server ID", detailServer.server_id],
@@ -459,7 +459,7 @@ const MCPAppsPanel: React.FC<Props> = ({ accessToken, selectedServers, onChange,
         </div>
 
         <div className="flex items-center gap-2 mb-3">
-          <h3 className="m-0 text-[15px] font-semibold text-foreground">Available Tools</h3>
+          <h3 className="m-0 text-[15px] font-semibold text-foreground">Доступные инструменты</h3>
           {!loadingTools && (
             <span className="text-[11px] font-semibold text-muted-foreground bg-muted rounded px-1.5 py-0.5">
               {detailTools.length}
@@ -476,7 +476,7 @@ const MCPAppsPanel: React.FC<Props> = ({ accessToken, selectedServers, onChange,
             ))}
           </div>
         ) : detailTools.length === 0 ? (
-          <div className="text-muted-foreground text-[13px] py-2">No tools available</div>
+          <div className="text-muted-foreground text-[13px] py-2">Нет доступных инструментов</div>
         ) : (
           <div className="flex flex-col gap-2">
             {detailTools.map((tool) => (
@@ -499,18 +499,18 @@ const MCPAppsPanel: React.FC<Props> = ({ accessToken, selectedServers, onChange,
       <div className="flex items-center justify-between mb-5 gap-4 flex-wrap">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <h2 className="m-0 text-lg font-semibold text-foreground">MCP Servers</h2>
+            <h2 className="m-0 text-lg font-semibold text-foreground">MCP-серверы</h2>
             {!connectMode && (
               <span className="text-[10px] font-semibold text-primary bg-primary/10 rounded px-1.5 py-0.5 uppercase tracking-wider">
-                Beta
+                Бета
               </span>
             )}
           </div>
           {connectMode ? (
-            <p className="m-0 text-[13px] text-muted-foreground">Click a server to see its tools and connect</p>
+            <p className="m-0 text-[13px] text-muted-foreground">Нажмите на сервер, чтобы увидеть его инструменты и подключиться</p>
           ) : (
             <div className="flex items-center gap-3">
-              <p className="m-0 text-[13px] text-muted-foreground">Browse tools, authenticate once, use in chat</p>
+              <p className="m-0 text-[13px] text-muted-foreground">Просматривайте инструменты, авторизуйтесь один раз — используйте в чате</p>
               {loadingCounts ? (
                 <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <Loader2 className="h-3 w-3 animate-spin" />
@@ -539,10 +539,10 @@ const MCPAppsPanel: React.FC<Props> = ({ accessToken, selectedServers, onChange,
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabKey)} className="mb-4">
         <TabsList variant="line" className="border-b rounded-none w-full justify-start h-auto p-0">
           <TabsTrigger value="all" className="rounded-none px-4 py-2 text-[13px]">
-            All
+            Все
           </TabsTrigger>
           <TabsTrigger value="connected" className="rounded-none px-4 py-2 text-[13px]">
-            Connected{connectedCount > 0 ? ` (${connectedCount})` : ""}
+            Подключено{connectedCount > 0 ? ` (${connectedCount})` : ""}
           </TabsTrigger>
         </TabsList>
       </Tabs>

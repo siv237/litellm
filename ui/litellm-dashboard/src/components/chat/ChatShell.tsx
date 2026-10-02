@@ -63,7 +63,7 @@ const ChatShell: React.FC<ChatShellProps> = ({ children }) => {
   return (
     <div className="flex h-full w-full flex-col bg-background overflow-hidden">
       <div className="shrink-0 border-b border-warning/20 bg-warning/10 px-4 py-1.5 text-center text-[13px] text-warning">
-        This is a pre-v0 feature. Do not use in production, it may change unexpectedly. Please share feedback{" "}
+        Это функция pre-v0. Не используйте в продакшене — она может неожиданно измениться. Делитесь обратной связью{" "}
         <a
           href="https://github.com/BerriAI/litellm/discussions/32085"
           target="_blank"
@@ -79,7 +79,7 @@ const ChatShell: React.FC<ChatShellProps> = ({ children }) => {
           <div className="px-2 pt-3 pb-1 shrink-0">
             <Button onClick={() => router.push(routes.chats)} className="w-full justify-start gap-2.5">
               <Plus className="h-4 w-4" />
-              New Chat
+              Новый чат
             </Button>
           </div>
 
@@ -88,37 +88,37 @@ const ChatShell: React.FC<ChatShellProps> = ({ children }) => {
           <div className="px-2 py-1 shrink-0">
             <NavItem
               icon={<MessageSquare className="h-4 w-4" />}
-              label="Chats"
+              label="Чаты"
               onClick={() => router.push(routes.chats)}
               active={isChatsRoute}
             />
             <NavItem
               icon={<LayoutGrid className="h-4 w-4" />}
-              label="Integrations"
+              label="Интеграции"
               onClick={() => router.push(routes.integrations)}
               active={pathname === routes.integrations}
             />
             <NavItem
               icon={<KeyRound className="h-4 w-4" />}
-              label="Credentials"
+              label="Учётные данные"
               onClick={() => router.push(routes.credentials)}
               active={pathname === routes.credentials}
             />
             <NavItem
               icon={<Lock className="h-4 w-4" />}
-              label="API Keys"
+              label="API-ключи"
               onClick={() => router.push(routes.apiKeys)}
               active={pathname === routes.apiKeys}
             />
             <NavItem
               icon={<ScrollText className="h-4 w-4" />}
-              label="Logs"
+              label="Журналы"
               onClick={() => router.push(routes.logs)}
               active={pathname === routes.logs}
             />
             <NavItem
               icon={<BarChart3 className="h-4 w-4" />}
-              label="Usage"
+              label="Использование"
               onClick={() => router.push(routes.usage)}
               active={pathname === routes.usage}
             />

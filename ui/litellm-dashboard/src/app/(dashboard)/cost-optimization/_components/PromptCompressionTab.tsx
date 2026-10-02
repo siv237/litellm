@@ -64,7 +64,7 @@ const PromptCompressionTab: React.FC<PromptCompressionTabProps> = ({ accessToken
       .then((response) => setGuardrails(compressionGuardrailsOf(response as GuardrailListResponse)))
       .catch((error) => {
         console.error("Failed to load compression guardrails:", error);
-        toast.fromError("Failed to load compression guardrails");
+        toast.fromError("Не удалось загрузить гардрейлы сжатия");
       })
       .finally(() => setIsLoading(false));
   }, [accessToken]);
@@ -87,12 +87,12 @@ const PromptCompressionTab: React.FC<PromptCompressionTabProps> = ({ accessToken
           defaultOn: values.defaultOn ?? true,
         }),
       );
-      toast.success("Compression guardrail created");
+      toast.success("Гардрейл сжатия создан");
       form.reset(EMPTY_VALUES);
       await loadGuardrails();
     } catch (error) {
       console.error("Failed to create compression guardrail:", error);
-      toast.fromError("Failed to create compression guardrail");
+      toast.fromError("Не удалось создать гардрейл сжатия");
     } finally {
       setIsSaving(false);
     }
@@ -102,25 +102,24 @@ const PromptCompressionTab: React.FC<PromptCompressionTabProps> = ({ accessToken
     <div className="w-full space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Headroom prompt compression</CardTitle>
+          <CardTitle>Сжатие промптов Headroom</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="mb-4 text-sm text-muted-foreground">
-            Headroom is a native LiteLLM guardrail that compresses your prompts before they reach the model, so you pay
-            for fewer input tokens. The tokens it removes are priced and shown on the Usage tab as compression savings.{" "}
+            Headroom — встроенный гардрейл ruLiteLLM: сжимает промпты до попадания в модель, и вы платите за меньшее число входных токенов. Убранные токены тарифицируются и отображаются во вкладке «Использование» как экономия на сжатии.{" "}
             <a
               href="https://docs.litellm.ai/docs/proxy/headroom"
               target="_blank"
               rel="noopener noreferrer"
               className="text-info underline"
             >
-              Headroom setup docs
+              Документация по настройке Headroom
             </a>
           </p>
           {isLoading && <p className="text-sm text-muted-foreground">Загрузка…</p>}
           {!isLoading && guardrails.length === 0 && (
             <p className="text-sm text-muted-foreground">
-              No prompt compression guardrails configured yet. Add one below to start saving on input tokens
+              Гардрейлы сжатия промптов ещё не настроены. Добавьте их ниже, чтобы экономить на входных токенах
             </p>
           )}
           {!isLoading && guardrails.length > 0 && (
@@ -149,7 +148,7 @@ const PromptCompressionTab: React.FC<PromptCompressionTabProps> = ({ accessToken
 
       <Card>
         <CardHeader>
-          <CardTitle>Add Headroom compression guardrail</CardTitle>
+          <CardTitle>Добавить гардрейл сжатия Headroom</CardTitle>
         </CardHeader>
         <CardContent>
           <TooltipProvider>
@@ -165,11 +164,11 @@ const PromptCompressionTab: React.FC<PromptCompressionTabProps> = ({ accessToken
                     "Headroom API base",
                     "Base URL of your Headroom compression service (LiteLLM calls its /v1/compress endpoint)",
                   )}
-                  description="The URL where your Headroom compression service is hosted"
+                  description="URL вашего сервиса сжатия Headroom"
                 >
                   {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="https://your-headroom-endpoint" />}
                 </FormField>
-                <FormField control={form.control} name="defaultOn" label="Apply to all requests">
+                <FormField control={form.control} name="defaultOn" label="Применять ко всем запросам">
                   {({ value, onChange, ref: _ref, ...field }) => (
                     <Switch
                       {...field}
@@ -183,8 +182,7 @@ const PromptCompressionTab: React.FC<PromptCompressionTabProps> = ({ accessToken
               </FieldGroup>
               <div className="mt-6 mb-4 rounded-lg border border-warning/20 bg-warning/10 p-3">
                 <p className="text-sm text-warning">
-                  Applying compression to all requests is available to all users. Enabling it selectively per key or
-                  team is a LiteLLM Enterprise feature. Get a trial key{" "}
+                  Сжатие всех запросов доступно всем пользователям. Выборочное включение по ключу или команде — функция ruLiteLLM Enterprise. Получите пробный ключ{" "}
                   <a
                     href="https://www.litellm.ai/#pricing"
                     target="_blank"

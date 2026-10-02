@@ -15,7 +15,7 @@ const tabTo = async (user: ReturnType<typeof userEvent.setup>, name: string): Pr
       return;
     }
   }
-  throw new Error(`${name} is not reachable by keyboard`);
+  throw new Ошибка(`${name} is not reachable by keyboard`);
 };
 
 describe("CacheControlInjectionPoints field hints", () => {
@@ -28,7 +28,7 @@ describe("CacheControlInjectionPoints field hints", () => {
     expect(await screen.findByText(ROLE_HINT)).toBeInTheDocument();
   });
 
-  it("explains on the Index field that it is optional and marks that message cacheable", async () => {
+  it("explains on the Index field that it is необязательно and marks that message cacheable", async () => {
     const user = userEvent.setup();
     render(<CacheControlInjectionPoints value={ONE_POINT} onChange={vi.fn()} />);
 
@@ -37,7 +37,7 @@ describe("CacheControlInjectionPoints field hints", () => {
     expect(await screen.findByText(INDEX_HINT)).toBeInTheDocument();
   });
 
-  it("reveals the Role hint on keyboard focus, so it is reachable without a pointer", async () => {
+  it("reveals the Role hint on keyboard focus, so it is reachable withвыход a pointer", async () => {
     const user = userEvent.setup();
     render(<CacheControlInjectionPoints value={ONE_POINT} onChange={vi.fn()} />);
 
@@ -46,7 +46,7 @@ describe("CacheControlInjectionPoints field hints", () => {
     expect(await screen.findByText(ROLE_HINT)).toBeInTheDocument();
   });
 
-  it("reveals the Index hint on keyboard focus, so it is reachable without a pointer", async () => {
+  it("reveals the Index hint on keyboard focus, so it is reachable withвыход a pointer", async () => {
     const user = userEvent.setup();
     render(<CacheControlInjectionPoints value={ONE_POINT} onChange={vi.fn()} />);
 
@@ -67,8 +67,8 @@ describe("CacheControlInjectionPoints field hints", () => {
       <CacheControlInjectionPoints value={[{ location: "message" }, { location: "message" }]} onChange={vi.fn()} />,
     );
 
-    expect(screen.getAllByRole("button", { name: "Role help" })).toHaveLength(2);
-    expect(screen.getAllByRole("button", { name: "Index help" })).toHaveLength(2);
+    expect(screen.getВсеByRole("button", { name: "Role help" })).toHaveLength(2);
+    expect(screen.getВсеByRole("button", { name: "Index help" })).toHaveLength(2);
   });
 
   it("still reports a typed index as a string through onChange", async () => {

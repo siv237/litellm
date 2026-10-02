@@ -188,7 +188,7 @@ export function RoutingDecisionCard({
 
   return (
     <div className={cn("mb-6 w-full max-w-full overflow-hidden rounded-lg bg-card shadow-sm", className)}>
-      <div className="border-b px-4 py-2.5 text-sm font-medium">Routing</div>
+      <div className="border-b px-4 py-2.5 text-sm font-medium">Маршрутизация</div>
       <div className="px-4 py-3">
         {routerModelName && (
           <div className="mb-2 flex items-center gap-2 text-sm font-medium">
@@ -203,22 +203,22 @@ export function RoutingDecisionCard({
         )}
 
         {tier && (
-          <Row label="Tier">
+          <Row label="Уровень">
             <Badge variant="secondary" className="font-normal">
               {tierLabel ?? tier}
             </Badge>
           </Row>
         )}
 
-        {requestType && <Row label="Request type">{requestType}</Row>}
+        {requestType && <Row label="Тип запроса">{requestType}</Row>}
 
-        <Row label="Decided by">{describeCause(decision)}</Row>
-        {decision.classifier_model && <Row label="Classifier model">{decision.classifier_model}</Row>}
+        <Row label="Определил">{describeCause(decision)}</Row>
+        {decision.classifier_model && <Row label="Модель классификатора">{decision.classifier_model}</Row>}
         {decision.classifier_confidence != null && (
-          <Row label="Confidence">{(decision.classifier_confidence * 100).toFixed(1)}%</Row>
+          <Row label="Уверенность">{(decision.classifier_confidence * 100).toFixed(1)}%</Row>
         )}
         {decision.classifier_probabilities && (
-          <Row label="Probabilities">
+          <Row label="Вероятности">
             {Object.entries(decision.classifier_probabilities).map(([name, probability]) => (
               <div key={name}>
                 {name}: {(probability * 100).toFixed(1)}%
@@ -226,21 +226,21 @@ export function RoutingDecisionCard({
             ))}
           </Row>
         )}
-        {decision.classifier_cost != null && <Row label="Classifier cost">${decision.classifier_cost.toFixed(8)}</Row>}
+        {decision.classifier_cost != null && <Row label="Стоимость классификатора">${decision.classifier_cost.toFixed(8)}</Row>}
 
         {score !== undefined && (
-          <Row label="Score">
+          <Row label="Оценка">
             <span className="tabular-nums">{score.toFixed(2)}</span>
             {scoreExplanation && <span className="ml-2 text-muted-foreground">({scoreExplanation})</span>}
           </Row>
         )}
 
-        {routedModel && <Row label="Routed to">{routedModel}</Row>}
+        {routedModel && <Row label="Направлено в">{routedModel}</Row>}
 
-        {escalated !== undefined && <Row label="Escalated">{describeEscalation(escalated, escalationKeyword)}</Row>}
+        {escalated !== undefined && <Row label="Эскалировано">{describeEscalation(escalated, escalationKeyword)}</Row>}
 
         {signals && signals.length > 0 && (
-          <Row label="Signals">
+          <Row label="Сигналы">
             <span className="flex flex-wrap gap-1">
               {signals.map((signal) => (
                 <Badge key={signal} variant="outline" className="font-normal">

@@ -51,19 +51,19 @@ const KeywordTierRules: React.FC<KeywordTierRulesProps> = ({ rules, onChange, ti
     <div className="w-full max-w-none">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <h4 className="m-0 text-xl font-semibold text-foreground">Keyword Tier Overrides</h4>
-          <SimpleTooltip content="Match known terms and force the request straight to a chosen complexity tier, bypassing rule-based scoring.">
+          <h4 className="m-0 text-xl font-semibold text-foreground">Переопределение уровня по ключевым словам</h4>
+          <SimpleTooltip content="Совпадение с известными терминами отправляет запрос прямо в выбранный уровень сложности, минуя оценку по правилам.">
             <Info className="size-4 text-muted-foreground" />
           </SimpleTooltip>
         </div>
         <Button variant="outline" onClick={addRule}>
           <Plus />
-          Add keyword rule
+          Добавить правило ключевых слов
         </Button>
       </div>
       <span className="mb-4 block text-muted-foreground">
-        Optional: route requests containing specific keywords directly to a tier, e.g. route &quot;invoice, refund,
-        billing&quot; to the medium tier.
+        Необязательно: отправлять запросы с определёнными словами напрямую в уровень, напр. invoice, refund,
+        billing — в средний уровень.
       </span>
 
       {rules.length === 0 ? (
@@ -71,7 +71,7 @@ const KeywordTierRules: React.FC<KeywordTierRulesProps> = ({ rules, onChange, ti
           <CardContent>
             <div className="py-2 text-center">
               <Inbox className="mx-auto mb-2 size-6 text-muted-foreground" aria-hidden="true" />
-              <p className="text-sm text-muted-foreground">No keyword tier overrides configured</p>
+              <p className="text-sm text-muted-foreground">Переопределения уровня по ключевым словам не настроены</p>
             </div>
           </CardContent>
         </Card>
@@ -82,22 +82,22 @@ const KeywordTierRules: React.FC<KeywordTierRulesProps> = ({ rules, onChange, ti
               <CardContent>
                 <div className="flex items-end gap-3">
                   <div className="flex-1">
-                    <strong className="mb-2 block font-semibold">Keywords {index + 1}</strong>
+                    <strong className="mb-2 block font-semibold">Ключевые слова {index + 1}</strong>
                     <MultiSelect
                       options={rule.keywords.map((keyword) => ({ label: keyword, value: keyword }))}
                       value={rule.keywords}
                       onValueChange={replaceKeywords(rule)}
-                      placeholder="e.g., invoice, refund, billing"
-                      emptyText="Type to add a keyword"
+                      placeholder="напр. invoice, refund, billing"
+                      emptyText="Введите слово, чтобы добавить"
                       allowCustomValues
                       className={emptyRuleIndexes.has(index) ? "w-full border-destructive" : "w-full"}
                     />
                     {emptyRuleIndexes.has(index) && (
-                      <span className="text-xs text-destructive">At least one keyword is required</span>
+                      <span className="text-xs text-destructive">Требуется хотя бы одно ключевое слово</span>
                     )}
                   </div>
                   <div style={{ width: 220 }}>
-                    <strong className="mb-2 block font-semibold">Route to tier</strong>
+                    <strong className="mb-2 block font-semibold">Маршрутизировать в уровень</strong>
                     <Select
                       items={tierOptions(tierLabels, tierNames)}
                       value={rule.tier}

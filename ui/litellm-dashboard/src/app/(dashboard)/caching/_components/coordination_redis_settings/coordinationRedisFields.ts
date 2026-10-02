@@ -68,7 +68,7 @@ export const COORDINATION_FIELDS: readonly CoordinationField[] = [
   },
   {
     name: "host",
-    label: "Host",
+    label: "Хост",
     type: "string",
     section: "connection",
     helpText: "Redis server hostname or IP address",
@@ -77,7 +77,7 @@ export const COORDINATION_FIELDS: readonly CoordinationField[] = [
   },
   {
     name: "port",
-    label: "Port",
+    label: "Порт",
     type: "integer",
     section: "connection",
     helpText: "Redis server port number",
@@ -88,7 +88,7 @@ export const COORDINATION_FIELDS: readonly CoordinationField[] = [
   },
   {
     name: "username",
-    label: "Username",
+    label: "Пользователь",
     type: "string",
     section: "connection",
     helpText: "Redis server username (if required)",
@@ -97,7 +97,7 @@ export const COORDINATION_FIELDS: readonly CoordinationField[] = [
   },
   {
     name: "password",
-    label: "Password",
+    label: "Пароль",
     type: "password",
     section: "connection",
     helpText: "Redis server password",
@@ -106,7 +106,7 @@ export const COORDINATION_FIELDS: readonly CoordinationField[] = [
   },
   {
     name: "startup_nodes",
-    label: "Startup Nodes",
+    label: "Узлы запуска",
     type: "list",
     section: "cluster",
     helpText: 'List of startup nodes for Redis Cluster (e.g., [{"host": "127.0.0.1", "port": 7001}])',
@@ -116,7 +116,7 @@ export const COORDINATION_FIELDS: readonly CoordinationField[] = [
   },
   {
     name: "sentinel_nodes",
-    label: "Sentinel Nodes",
+    label: "Узлы Sentinel",
     type: "list",
     section: "sentinel",
     helpText: 'List of Sentinel nodes (e.g., [["localhost", 26379]])',
@@ -126,7 +126,7 @@ export const COORDINATION_FIELDS: readonly CoordinationField[] = [
   },
   {
     name: "service_name",
-    label: "Service Name",
+    label: "Имя сервиса",
     type: "string",
     section: "sentinel",
     helpText: "Master service name for Redis Sentinel",
@@ -135,7 +135,7 @@ export const COORDINATION_FIELDS: readonly CoordinationField[] = [
   },
   {
     name: "sentinel_password",
-    label: "Sentinel Password",
+    label: "Пароль Sentinel",
     type: "password",
     section: "sentinel",
     helpText: "Password for Redis Sentinel authentication",

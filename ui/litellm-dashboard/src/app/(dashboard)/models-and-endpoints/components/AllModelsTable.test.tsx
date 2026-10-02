@@ -2,36 +2,36 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
-import { ModelData } from "@/components/model_dashboard/types";
+import { РежимlData } from "@/components/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_dashboard/types";
 
-import { AllModelsTable } from "./AllModelsTable";
+import { ВсеРежимlsТаблица } from "./ВсеРежимlsТаблица";
 
-const makeModel = (overrides: Partial<ModelData> = {}): ModelData =>
+const makeРежимl = (overrides: Partial<РежимlData> = {}): РежимlData =>
   ({
-    model_name: "gpt-4-public",
-    litellm_model_name: "openai/gpt-4",
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4-public",
+    litellm_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "openai/gpt-4",
     provider: "openai",
     input_cost: 30 as unknown as number,
-    output_cost: 60 as unknown as number,
+    выходput_cost: 60 as unknown as number,
     max_tokens: 8192,
     max_input_tokens: 8192,
-    litellm_params: { model: "openai/gpt-4" },
+    litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "openai/gpt-4" },
     cleanedLitellmParams: {},
     ...overrides,
-    model_info: {
-      id: "model-1",
+    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: {
+      id: "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1",
       created_at: "2024-01-02T00:00:00Z",
       updated_at: "2024-03-04T00:00:00Z",
       created_by: "alice",
       team_id: "team-1",
-      db_model: true,
+      db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: true,
       access_groups: null,
-      ...(overrides.model_info ?? {}),
+      ...(overrides.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info ?? {}),
     },
-  }) as ModelData;
+  }) as РежимlData;
 
 const baseProps = {
-  data: [makeModel()],
+  data: [makeРежимl()],
   rowCount: 1,
   isLoading: false,
   isRefreshing: false,
@@ -40,44 +40,44 @@ const baseProps = {
   onSortingChange: vi.fn(),
   pagination: { pageIndex: 0, pageSize: 50 },
   onPaginationChange: vi.fn(),
-  columnFilters: [],
-  onColumnFiltersChange: vi.fn(),
-  onResetFilters: vi.fn(),
-  searchValue: "",
+  columnФильтры: [],
+  onColumnФильтрыChange: vi.fn(),
+  onResetФильтры: vi.fn(),
+  searchЗначение: "",
   onSearchChange: vi.fn(),
   teamOptions: [
-    { value: "personal", label: "Personal" },
+    { value: "personal", label: "Личная" },
     { value: "team-1", label: "Engineering" },
   ],
-  selectedTeamValue: "personal",
+  selectedTeamЗначение: "personal",
   onTeamChange: vi.fn(),
-  isLoadingTeams: false,
-  viewMode: "current_team" as const,
-  onViewModeChange: vi.fn(),
-  onOpenModelSettings: vi.fn(),
-  availableModelGroups: ["gpt-4", "gpt-3.5-turbo"],
-  availableModelAccessGroups: ["sales-team"],
+  isLoadingКоманды: false,
+  viewРежим: "current_team" as const,
+  onViewРежимChange: vi.fn(),
+  onOpenРежимlSettings: vi.fn(),
+  availableРежимlGroups: ["gpt-4", "gpt-3.5-turbo"],
+  availableРежимlAccessGroups: ["sales-team"],
   userRole: "Admin",
   userID: "alice",
-  onModelIdClick: vi.fn(),
+  onРежимlIdClick: vi.fn(),
   onTeamIdClick: vi.fn(),
   onDeleteClick: vi.fn(),
   onTogglePauseClick: vi.fn(),
-  pausingModelId: null,
+  pausingРежимlId: null,
 };
 
-const row = (modelId: string): HTMLElement => {
-  const element = document.querySelector(`[data-row-id="${modelId}"]`);
+const row = (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId: string): HTMLElement => {
+  const element = document.queryВыбратьor(`[data-row-id="${Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId}"]`);
   if (!(element instanceof HTMLElement)) {
-    throw new Error(`row ${modelId} not rendered`);
+    throw new Ошибка(`row ${Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId} not rendered`);
   }
   return element;
 };
 
-describe("AllModelsTable", () => {
-  it("renders the nine design columns and hides Source behind the Columns menu", async () => {
+describe("ВсеРежимlsТаблица", () => {
+  it("renders the nine design columns and hides Источник behind the Columns menu", async () => {
     const user = userEvent.setup();
-    render(<AllModelsTable {...baseProps} />);
+    render(<ВсеРежимlsТаблица {...baseProps} />);
 
     for (const header of [
       "ID модели",
@@ -105,79 +105,79 @@ describe("AllModelsTable", () => {
     expect(await screen.findByText("Модель из БД")).toBeInTheDocument();
   });
 
-  it("opens the model detail from the model ID cell", async () => {
+  it("opens the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию detail from the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию ID cell", async () => {
     const user = userEvent.setup();
-    const onModelIdClick = vi.fn();
-    render(<AllModelsTable {...baseProps} onModelIdClick={onModelIdClick} />);
+    const onРежимlIdClick = vi.fn();
+    render(<ВсеРежимlsТаблица {...baseProps} onРежимlIdClick={onРежимlIdClick} />);
 
-    await user.click(screen.getByTestId("model-id-model-1"));
+    await user.click(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1"));
 
-    expect(onModelIdClick).toHaveBeenCalledWith("model-1");
+    expect(onРежимlIdClick).toHaveBeenCalledWith("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1");
   });
 
   it("opens the team detail from the team ID cell", async () => {
     const user = userEvent.setup();
     const onTeamIdClick = vi.fn();
-    render(<AllModelsTable {...baseProps} onTeamIdClick={onTeamIdClick} />);
+    render(<ВсеРежимlsТаблица {...baseProps} onTeamIdClick={onTeamIdClick} />);
 
-    await user.click(screen.getByTestId("model-team-id-model-1"));
+    await user.click(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-team-id-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1"));
 
     expect(onTeamIdClick).toHaveBeenCalledWith("team-1");
   });
 
-  it("shows a dash when the model has no team", () => {
+  it("shows a dash when the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию has no team", () => {
     render(
-      <AllModelsTable {...baseProps} data={[makeModel({ model_info: { team_id: "" } as ModelData["model_info"] })]} />,
+      <ВсеРежимlsТаблица {...baseProps} data={[makeРежимl({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { team_id: "" } as РежимlData["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info"] })]} />,
     );
 
-    expect(within(row("model-1")).getAllByText("-").length).toBeGreaterThan(0);
-    expect(screen.queryByTestId("model-team-id-model-1")).not.toBeInTheDocument();
+    expect(within(row("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1")).getВсеByText("-").length).toBeGreaterThan(0);
+    expect(screen.queryByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-team-id-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1")).not.toBeInTheDocument();
   });
 
-  it("renders the model name over the litellm model name", () => {
-    render(<AllModelsTable {...baseProps} />);
+  it("renders the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name over the litellm Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name", () => {
+    render(<ВсеРежимlsТаблица {...baseProps} />);
 
-    const cell = screen.getByTestId("model-information-model-1");
+    const cell = screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-information-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1");
     expect(within(cell).getByText("gpt-4-public")).toBeInTheDocument();
     expect(within(cell).getByText("openai/gpt-4")).toBeInTheDocument();
   });
 
   it("renders a reusable credential by name and falls back to Manual", () => {
     const { rerender } = render(
-      <AllModelsTable
+      <ВсеРежимlsТаблица
         {...baseProps}
-        data={[makeModel({ litellm_params: { model: "openai/gpt-4", litellm_credential_name: "openai-prod" } })]}
+        data={[makeРежимl({ litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "openai/gpt-4", litellm_credential_name: "openai-prod" } })]}
       />,
     );
     expect(screen.getByText("openai-prod")).toBeInTheDocument();
     expect(screen.queryByText("Вручную")).not.toBeInTheDocument();
 
-    rerender(<AllModelsTable {...baseProps} data={[makeModel()]} />);
+    rerender(<ВсеРежимlsТаблица {...baseProps} data={[makeРежимl()]} />);
     expect(screen.getByText("Вручную")).toBeInTheDocument();
   });
 
-  it("shows 'Defined in config' for a config model and the creator for a DB model", () => {
-    const { rerender } = render(<AllModelsTable {...baseProps} />);
+  it("shows 'Defined in config' for a config Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию and the creator for a DB Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
+    const { rerender } = render(<ВсеРежимlsТаблица {...baseProps} />);
     expect(screen.getByText("alice")).toBeInTheDocument();
 
     rerender(
-      <AllModelsTable
+      <ВсеРежимlsТаблица
         {...baseProps}
-        data={[makeModel({ model_info: { db_model: false } as ModelData["model_info"] })]}
+        data={[makeРежимl({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: false } as РежимlData["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info"] })]}
       />,
     );
     expect(screen.getByText("Задана в конфигурации")).toBeInTheDocument();
   });
 
-  it("renders input and output costs and a dash when both are missing", () => {
-    const { rerender } = render(<AllModelsTable {...baseProps} />);
+  it("renders input and выходput costs and a dash when both are missing", () => {
+    const { rerender } = render(<ВсеРежимlsТаблица {...baseProps} />);
     expect(screen.getByText("$30")).toBeInTheDocument();
     expect(screen.getByText("$60")).toBeInTheDocument();
 
     rerender(
-      <AllModelsTable
+      <ВсеРежимlsТаблица
         {...baseProps}
-        data={[makeModel({ input_cost: null as unknown as number, output_cost: null as unknown as number })]}
+        data={[makeРежимl({ input_cost: null as unknown as number, выходput_cost: null as unknown as number })]}
       />,
     );
     expect(screen.queryByText(/^\$/)).not.toBeInTheDocument();
@@ -185,11 +185,11 @@ describe("AllModelsTable", () => {
 
   it("collapses extra access groups behind a +N more badge", () => {
     render(
-      <AllModelsTable
+      <ВсеРежимlsТаблица
         {...baseProps}
         data={[
-          makeModel({
-            model_info: { access_groups: ["sales-team", "eng-team", "growth"] } as ModelData["model_info"],
+          makeРежимl({
+            Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { access_groups: ["sales-team", "eng-team", "growth"] } as РежимlData["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info"],
           }),
         ]}
       />,
@@ -200,127 +200,127 @@ describe("AllModelsTable", () => {
   });
 
   it("renders the toolbar divider centered rather than stretched to the top of the row", () => {
-    const { container } = render(<AllModelsTable {...baseProps} />);
+    const { container } = render(<ВсеРежимlsТаблица {...baseProps} />);
 
-    const separators = container.querySelectorAll('[data-slot="separator"][data-orientation="vertical"]');
+    const separators = container.queryВыбратьorВсе('[data-slot="separator"][data-orientation="vertical"]');
     expect(separators).toHaveLength(1);
     expect(separators[0].className).not.toMatch(/self-stretch/);
     expect(separators[0].className).toContain("data-vertical:self-center");
   });
 
   describe("pause / resume", () => {
-    it("renders the toggle on for an active DB model and off for a blocked one", () => {
-      const { rerender } = render(<AllModelsTable {...baseProps} />);
-      expect(screen.getByTestId("model-pause-toggle-model-1")).toBeChecked();
+    it("renders the toggle on for an active DB Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию and off for a blocked one", () => {
+      const { rerender } = render(<ВсеРежимlsТаблица {...baseProps} />);
+      expect(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-pause-toggle-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1")).toBeChecked();
 
       rerender(
-        <AllModelsTable
+        <ВсеРежимlsТаблица
           {...baseProps}
-          data={[makeModel({ model_info: { blocked: true } as ModelData["model_info"] })]}
+          data={[makeРежимl({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { blocked: true } as РежимlData["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info"] })]}
         />,
       );
-      expect(screen.getByTestId("model-pause-toggle-model-1")).not.toBeChecked();
+      expect(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-pause-toggle-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1")).not.toBeChecked();
     });
 
-    it("pauses an active model and resumes a blocked one", async () => {
+    it("pauses an active Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию and resumes a blocked one", async () => {
       const user = userEvent.setup();
       const onTogglePauseClick = vi.fn();
-      const { rerender } = render(<AllModelsTable {...baseProps} onTogglePauseClick={onTogglePauseClick} />);
+      const { rerender } = render(<ВсеРежимlsТаблица {...baseProps} onTogglePauseClick={onTogglePauseClick} />);
 
-      await user.click(screen.getByTestId("model-pause-toggle-model-1"));
-      expect(onTogglePauseClick).toHaveBeenCalledWith("model-1", true);
+      await user.click(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-pause-toggle-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1"));
+      expect(onTogglePauseClick).toHaveBeenCalledWith("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1", true);
 
       onTogglePauseClick.mockClear();
       rerender(
-        <AllModelsTable
+        <ВсеРежимlsТаблица
           {...baseProps}
           onTogglePauseClick={onTogglePauseClick}
-          data={[makeModel({ model_info: { blocked: true } as ModelData["model_info"] })]}
+          data={[makeРежимl({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { blocked: true } as РежимlData["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info"] })]}
         />,
       );
 
-      await user.click(screen.getByTestId("model-pause-toggle-model-1"));
-      expect(onTogglePauseClick).toHaveBeenCalledWith("model-1", false);
+      await user.click(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-pause-toggle-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1"));
+      expect(onTogglePauseClick).toHaveBeenCalledWith("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1", false);
     });
 
-    it("does not let a non-admin toggle a model", async () => {
+    it("does not let a non-admin toggle a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
       const user = userEvent.setup();
       const onTogglePauseClick = vi.fn();
-      render(<AllModelsTable {...baseProps} userRole="Internal User" onTogglePauseClick={onTogglePauseClick} />);
+      render(<ВсеРежимlsТаблица {...baseProps} userRole="Internal User" onTogglePauseClick={onTogglePauseClick} />);
 
-      const toggle = screen.getByTestId("model-pause-toggle-model-1");
+      const toggle = screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-pause-toggle-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1");
       expect(toggle).toHaveAttribute("data-disabled");
       await user.click(toggle);
       expect(onTogglePauseClick).not.toHaveBeenCalled();
     });
 
-    it("does not let anyone toggle a config model", async () => {
+    it("does not let anyone toggle a config Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
       const user = userEvent.setup();
       const onTogglePauseClick = vi.fn();
       render(
-        <AllModelsTable
+        <ВсеРежимlsТаблица
           {...baseProps}
           onTogglePauseClick={onTogglePauseClick}
-          data={[makeModel({ model_info: { db_model: false } as ModelData["model_info"] })]}
+          data={[makeРежимl({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: false } as РежимlData["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info"] })]}
         />,
       );
 
-      const toggle = screen.getByTestId("model-pause-toggle-model-1");
+      const toggle = screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-pause-toggle-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1");
       expect(toggle).toHaveAttribute("data-disabled");
       await user.click(toggle);
       expect(onTogglePauseClick).not.toHaveBeenCalled();
     });
 
     it("replaces the toggle with a pending indicator while a PATCH is in flight", () => {
-      render(<AllModelsTable {...baseProps} pausingModelId="model-1" />);
+      render(<ВсеРежимlsТаблица {...baseProps} pausingРежимlId="Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1" />);
 
-      expect(screen.getByTestId("model-pause-pending-model-1")).toBeInTheDocument();
-      expect(screen.queryByTestId("model-pause-toggle-model-1")).not.toBeInTheDocument();
+      expect(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-pause-pending-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1")).toBeInTheDocument();
+      expect(screen.queryByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-pause-toggle-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1")).not.toBeInTheDocument();
     });
   });
 
   describe("delete", () => {
-    it("lets an admin delete a DB model", async () => {
+    it("lets an admin delete a DB Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
       const user = userEvent.setup();
       const onDeleteClick = vi.fn();
-      render(<AllModelsTable {...baseProps} userID="someone-else" onDeleteClick={onDeleteClick} />);
+      render(<ВсеРежимlsТаблица {...baseProps} userID="someone-else" onDeleteClick={onDeleteClick} />);
 
-      await user.click(screen.getByTestId("model-delete-model-1"));
-      expect(onDeleteClick).toHaveBeenCalledWith("model-1");
+      await user.click(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-delete-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1"));
+      expect(onDeleteClick).toHaveBeenCalledWith("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1");
     });
 
-    it("lets the creator delete their own DB model", async () => {
+    it("lets the creator delete their own DB Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
       const user = userEvent.setup();
       const onDeleteClick = vi.fn();
-      render(<AllModelsTable {...baseProps} userRole="Internal User" userID="alice" onDeleteClick={onDeleteClick} />);
+      render(<ВсеРежимlsТаблица {...baseProps} userRole="Internal User" userID="alice" onDeleteClick={onDeleteClick} />);
 
-      await user.click(screen.getByTestId("model-delete-model-1"));
-      expect(onDeleteClick).toHaveBeenCalledWith("model-1");
+      await user.click(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-delete-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1"));
+      expect(onDeleteClick).toHaveBeenCalledWith("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1");
     });
 
-    it("blocks deleting a model the user did not create", async () => {
+    it("blocks deleting a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию the user did not create", async () => {
       const user = userEvent.setup();
       const onDeleteClick = vi.fn();
-      render(<AllModelsTable {...baseProps} userRole="Internal User" userID="bob" onDeleteClick={onDeleteClick} />);
+      render(<ВсеРежимlsТаблица {...baseProps} userRole="Internal User" userID="bob" onDeleteClick={onDeleteClick} />);
 
-      const deleteButton = screen.getByTestId("model-delete-model-1");
+      const deleteButton = screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-delete-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1");
       expect(deleteButton).toBeDisabled();
       await user.click(deleteButton);
       expect(onDeleteClick).not.toHaveBeenCalled();
     });
 
-    it("blocks deleting a config model", async () => {
+    it("blocks deleting a config Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
       const user = userEvent.setup();
       const onDeleteClick = vi.fn();
       render(
-        <AllModelsTable
+        <ВсеРежимlsТаблица
           {...baseProps}
           onDeleteClick={onDeleteClick}
-          data={[makeModel({ model_info: { db_model: false } as ModelData["model_info"] })]}
+          data={[makeРежимl({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: false } as РежимlData["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info"] })]}
         />,
       );
 
-      const deleteButton = screen.getByTestId("model-delete-model-1");
+      const deleteButton = screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-delete-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1");
       expect(deleteButton).toBeDisabled();
       await user.click(deleteButton);
       expect(onDeleteClick).not.toHaveBeenCalled();
@@ -328,17 +328,17 @@ describe("AllModelsTable", () => {
   });
 
   describe("toolbar", () => {
-    it("wires search, refresh, team, view and model settings", async () => {
+    it("wires search, refresh, team, view and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию settings", async () => {
       const user = userEvent.setup();
       const onSearchChange = vi.fn();
       const onRefresh = vi.fn();
-      const onOpenModelSettings = vi.fn();
+      const onOpenРежимlSettings = vi.fn();
       render(
-        <AllModelsTable
+        <ВсеРежимlsТаблица
           {...baseProps}
           onSearchChange={onSearchChange}
           onRefresh={onRefresh}
-          onOpenModelSettings={onOpenModelSettings}
+          onOpenРежимlSettings={onOpenРежимlSettings}
         />,
       );
 
@@ -348,19 +348,19 @@ describe("AllModelsTable", () => {
       await user.click(screen.getByTestId("datatable-refresh"));
       expect(onRefresh).toHaveBeenCalled();
 
-      await user.click(screen.getByTestId("models-settings-trigger"));
-      expect(onOpenModelSettings).toHaveBeenCalled();
+      await user.click(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-settings-trigger"));
+      expect(onOpenРежимlSettings).toHaveBeenCalled();
 
-      expect(screen.getByTestId("models-team-select")).toHaveTextContent("Personal");
-      expect(screen.getByTestId("models-view-select")).toHaveTextContent("Модели текущей команды");
+      expect(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-team-select")).toHaveTextContent("Личная");
+      expect(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-view-select")).toHaveTextContent("Модели текущей команды");
     });
 
     it("switches the current team", async () => {
       const user = userEvent.setup();
       const onTeamChange = vi.fn();
-      render(<AllModelsTable {...baseProps} onTeamChange={onTeamChange} />);
+      render(<ВсеРежимlsТаблица {...baseProps} onTeamChange={onTeamChange} />);
 
-      await user.click(screen.getByTestId("models-team-select"));
+      await user.click(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-team-select"));
       await user.click(await screen.findByRole("option", { name: "Engineering" }));
 
       expect(onTeamChange).toHaveBeenCalledWith("team-1");
@@ -370,19 +370,19 @@ describe("AllModelsTable", () => {
       const user = userEvent.setup();
       const longLabel = "db29687d-0ca2-4bbe-a0f1-9c5f0f7c2a11";
       render(
-        <AllModelsTable
+        <ВсеРежимlsТаблица
           {...baseProps}
           teamOptions={[
-            { value: "personal", label: "Personal" },
+            { value: "personal", label: "Личная" },
             { value: "team-long", label: longLabel },
           ]}
         />,
       );
 
-      await user.click(screen.getByTestId("models-team-select"));
+      await user.click(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-team-select"));
 
       const option = await screen.findByRole("option", { name: longLabel });
-      const label = option.querySelector("[data-slot='select-item-label']");
+      const label = option.queryВыбратьor("[data-slot='select-item-label']");
 
       expect(label).not.toBeNull();
       expect(label).toHaveClass("truncate");
@@ -392,43 +392,43 @@ describe("AllModelsTable", () => {
 
     it("runs the full reset from the filter drawer", async () => {
       const user = userEvent.setup();
-      const onResetFilters = vi.fn();
-      render(<AllModelsTable {...baseProps} onResetFilters={onResetFilters} />);
+      const onResetФильтры = vi.fn();
+      render(<ВсеРежимlsТаблица {...baseProps} onResetФильтры={onResetФильтры} />);
 
       await user.click(screen.getByTestId("datatable-filters-trigger"));
       await user.click(await screen.findByTestId("filter-drawer-reset"));
 
-      expect(onResetFilters).toHaveBeenCalled();
+      expect(onResetФильтры).toHaveBeenCalled();
     });
 
     it("renders active filters as removable chips", async () => {
       const user = userEvent.setup();
-      const onColumnFiltersChange = vi.fn();
+      const onColumnФильтрыChange = vi.fn();
       render(
-        <AllModelsTable
+        <ВсеРежимlsТаблица
           {...baseProps}
-          columnFilters={[{ id: "model_name", value: "wildcard" }]}
-          onColumnFiltersChange={onColumnFiltersChange}
+          columnФильтры={[{ id: "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name", value: "wildcard" }]}
+          onColumnФильтрыChange={onColumnФильтрыChange}
         />,
       );
 
-      const chip = screen.getByTestId("filter-chip-model_name");
+      const chip = screen.getByTestId("filter-chip-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name");
       expect(chip).toHaveTextContent("Публичное название модели");
       expect(chip).toHaveTextContent("Модели с маской (*)");
 
-      await user.click(screen.getByTestId("filter-chip-remove-model_name"));
-      expect(onColumnFiltersChange).toHaveBeenCalled();
+      await user.click(screen.getByTestId("filter-chip-remove-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name"));
+      expect(onColumnФильтрыChange).toHaveBeenCalled();
     });
   });
 
   it("shows the server row count in the pagination footer", () => {
-    render(<AllModelsTable {...baseProps} rowCount={137} />);
+    render(<ВсеРежимlsТаблица {...baseProps} rowCount={137} />);
 
     expect(screen.getByTestId("pagination-range")).toHaveTextContent("Показано 1-50 из 137");
   });
 
-  it("shows the empty state when there are no models", () => {
-    render(<AllModelsTable {...baseProps} data={[]} rowCount={0} />);
+  it("shows the empty state when there are no Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => {
+    render(<ВсеРежимlsТаблица {...baseProps} data={[]} rowCount={0} />);
 
     expect(screen.getByText("Модели не найдены")).toBeInTheDocument();
   });

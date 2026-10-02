@@ -40,7 +40,7 @@ const OPTIONAL_FIELDS: readonly OptionalField[] = [
   {
     name: GeneralSettingsFieldName.MAXIMUM_SPEND_LOGS_RETENTION_PERIOD,
     kind: "duration",
-    label: "Maximum Spend Logs Retention Period (Optional)",
+    label: "Макс. срок хранения журналов расходов (необязательно)",
     placeholder: "e.g., 7d, 30d",
     fallbackTooltip:
       "Set the maximum retention period for spend logs (e.g., '7d' for 7 days, '30d' for 30 days). Leave empty for no limit.",
@@ -48,14 +48,14 @@ const OPTIONAL_FIELDS: readonly OptionalField[] = [
   {
     name: GeneralSettingsFieldName.MAXIMUM_SPEND_LOGS_CLEANUP_BATCH_SIZE,
     kind: "count",
-    label: "Spend Logs Cleanup Batch Size (Optional)",
+    label: "Размер пачки очистки журналов расходов (необязательно)",
     placeholder: "e.g., 1000",
     fallbackTooltip: "Rows deleted per DELETE statement during cleanup. Leave empty to use the default of 1000.",
   },
   {
     name: GeneralSettingsFieldName.MAXIMUM_SPEND_LOGS_CLEANUP_MAX_BATCHES,
     kind: "count",
-    label: "Spend Logs Cleanup Max Batches (Optional)",
+    label: "Макс. пачек очистки журналов расходов (необязательно)",
     placeholder: "e.g., 500",
     fallbackTooltip:
       "Maximum number of DELETE statements run per table per cleanup run. Leave empty to use the default of 500.",
@@ -63,7 +63,7 @@ const OPTIONAL_FIELDS: readonly OptionalField[] = [
   {
     name: GeneralSettingsFieldName.MAXIMUM_SPEND_LOGS_CLEANUP_RUN_BUDGET,
     kind: "duration",
-    label: "Spend Logs Cleanup Run Budget (Optional)",
+    label: "Бюджет запуска очистки журналов расходов (необязательно)",
     placeholder: "e.g., 5m",
     fallbackTooltip:
       "Wall-clock budget for a whole cleanup run, shared across every table it cleans (e.g., '5m'). Leave empty to use the default of 5m.",
@@ -71,7 +71,7 @@ const OPTIONAL_FIELDS: readonly OptionalField[] = [
   {
     name: GeneralSettingsFieldName.MAXIMUM_SPEND_LOGS_CLEANUP_BATCH_TIMEOUT,
     kind: "duration",
-    label: "Spend Logs Cleanup Batch Timeout (Optional)",
+    label: "Таймаут пачки очистки журналов расходов (необязательно)",
     placeholder: "e.g., 30s",
     fallbackTooltip:
       "Postgres statement and lock timeout applied to each cleanup batch, so cleanup never monopolizes a connection (e.g., '30s'). Leave empty to use the default of 30s.",
@@ -295,8 +295,8 @@ const LoggingSettings: React.FC = () => {
     const updateParams = buildUpdateParams(formValues);
     const submitUpdate = () =>
       mutate(updateParams, {
-        onSuccess: () => toast.success("Spend logs settings updated successfully"),
-        onError: (error) => toast.fromError("Failed to save spend logs settings: " + parseErrorMessage(error)),
+        onSuccess: () => toast.success("Настройки журналов расходов обновлены"),
+        onError: (error) => toast.fromError("Не удалось сохранить настройки журналов расходов: " + parseErrorMessage(error)),
       });
 
     const fieldsToClear = omittedFieldNames(updateParams, isStored);
@@ -319,12 +319,12 @@ const LoggingSettings: React.FC = () => {
   return (
     <Card>
       <CardHeader className="border-b">
-        <CardTitle>Logging Settings</CardTitle>
+        <CardTitle>Настройки логирования</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex w-full flex-col gap-6">
           <p className="mb-0 text-muted-foreground">
-            Proxy-wide settings that control how request and response data are written to spend logs.
+            Общие настройки прокси: как данные запросов и ответов записываются в журналы расходов.
           </p>
 
           {isLoadingConfig ? (

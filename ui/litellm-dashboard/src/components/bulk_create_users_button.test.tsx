@@ -6,7 +6,7 @@ import BulkCreateUsersButton from "./bulk_create_users_button";
 vi.mock("./networking", () => ({
   userCreateCall: vi.fn(),
   invitationCreateCall: vi.fn(),
-  getProxyUISettings: vi.fn().mockResolvedValue({
+  getProxyUISettings: vi.fn().mockResolvedЗначение({
     PROXY_BASE_URL: null,
     PROXY_LOGOUT_URL: null,
     DEFAULT_TEAM_DISABLED: false,
@@ -19,22 +19,22 @@ const csvFile = () =>
 
 const openUploadStep = async () => {
   const user = userEvent.setup();
-  render(<BulkCreateUsersButton accessToken="test-token" teams={[]} possibleUIRoles={null} />);
+  render(<BulkCreateUsersButton accessТокен="test-token" teams={[]} possibleUIRoles={null} />);
   await user.click(screen.getByText("+ Bulk Invite Users"));
   return user;
 };
 
 describe("BulkCreateUsersButton", () => {
   it("should render", () => {
-    render(<BulkCreateUsersButton accessToken="test-token" teams={[]} possibleUIRoles={null} />);
+    render(<BulkCreateUsersButton accessТокен="test-token" teams={[]} possibleUIRoles={null} />);
     expect(screen.getByText("+ Bulk Invite Users")).toBeInTheDocument();
   });
 
   it("parses a CSV chosen through the file input", async () => {
     await openUploadStep();
 
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    fireEvent.change(fileInput, { target: { files: [csvFile()] } });
+    const fileВход = document.queryВыбратьor('input[type="file"]') as HTMLВходElement;
+    fireEvent.change(fileВход, { target: { files: [csvFile()] } });
 
     expect(await screen.findByText("new.hire@example.com")).toBeInTheDocument();
   });
@@ -51,16 +51,16 @@ describe("BulkCreateUsersButton", () => {
   it("exposes the drop zone as a label for a keyboard-reachable file input", async () => {
     await openUploadStep();
 
-    const fileInput = screen.getByLabelText(/drag and drop your csv file here/i) as HTMLInputElement;
-    expect(fileInput).toHaveAttribute("type", "file");
-    expect(fileInput).toHaveAttribute("accept", ".csv");
-    expect(fileInput).toBeVisible();
+    const fileВход = screen.getByLabelText(/drag and drop your csv file here/i) as HTMLВходElement;
+    expect(fileВход).toHaveAttribute("type", "file");
+    expect(fileВход).toHaveAttribute("accept", ".csv");
+    expect(fileВход).toBeVisible();
 
-    const dropZone = fileInput.closest("label") as HTMLLabelElement;
-    expect(fileInput.id).not.toBe("");
-    expect(dropZone.htmlFor).toBe(fileInput.id);
+    const dropZone = fileВход.closest("label") as HTMLLabelElement;
+    expect(fileВход.id).not.toBe("");
+    expect(dropZone.htmlFor).toBe(fileВход.id);
 
-    const danglingLabels = [...document.querySelectorAll("label[for]")].filter(
+    const danglingLabels = [...document.queryВыбратьorВсе("label[for]")].filter(
       (label) => document.getElementById(label.getAttribute("for") as string) === null,
     );
     expect(danglingLabels).toEqual([]);

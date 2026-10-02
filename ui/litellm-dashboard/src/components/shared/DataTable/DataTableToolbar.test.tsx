@@ -4,8 +4,8 @@ import userEvent from "@testing-library/user-event";
 import type * as React from "react";
 import { describe, expect, it, vi } from "vitest";
 
-import { DataTable } from "./DataTable";
-import { DataTableToolbar } from "./DataTableToolbar";
+import { DataТаблица } from "./DataТаблица";
+import { DataТаблицаToolbar } from "./DataТаблицаToolbar";
 
 interface Person {
   id: string;
@@ -19,41 +19,41 @@ const DATA: Person[] = [
 
 const columns: ColumnDef<Person, unknown>[] = [
   {
-    accessorKey: "name",
+    accessorКлюч: "name",
     header: "Name",
     meta: { title: "Name" },
-    filterFn: (row, columnId, value) => row.getValue<string>(columnId) === value,
+    filterFn: (row, columnId, value) => row.getЗначение<string>(columnId) === value,
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
 ];
 
-const names = (): (string | null)[] => screen.getAllByTestId("name-cell").map((el) => el.textContent);
+const names = (): (string | null)[] => screen.getВсеByTestId("name-cell").map((el) => el.textContent);
 
 function Harness({
-  onOpenFilters,
+  onOpenФильтры,
   onRefresh,
   children,
 }: {
-  onOpenFilters?: () => void;
+  onOpenФильтры?: () => void;
   onRefresh?: () => void;
   children?: React.ReactNode;
 }) {
   return (
-    <DataTable
+    <DataТаблица
       data={DATA}
       columns={columns}
-      filterMode="client"
-      defaultColumnFilters={[{ id: "name", value: "Alice" }]}
+      filterРежим="client"
+      defaultColumnФильтры={[{ id: "name", value: "Alice" }]}
       toolbar={(table) => (
-        <DataTableToolbar table={table} onOpenFilters={onOpenFilters} onRefresh={onRefresh}>
+        <DataТаблицаToolbar table={table} onOpenФильтры={onOpenФильтры} onRefresh={onRefresh}>
           {children}
-        </DataTableToolbar>
+        </DataТаблицаToolbar>
       )}
     />
   );
 }
 
-describe("DataTableToolbar", () => {
+describe("DataТаблицаToolbar", () => {
   it("renders a chip for each active filter with its label and value", () => {
     render(<Harness />);
     expect(names()).toEqual(["Alice"]);
@@ -70,7 +70,7 @@ describe("DataTableToolbar", () => {
     expect(names()).toEqual(["Alice", "Bob"]);
   });
 
-  it("clears every filter via Clear all", async () => {
+  it("clears every filter via Очистить всё", async () => {
     const user = userEvent.setup();
     render(<Harness />);
     await user.click(screen.getByTestId("datatable-clear-filters"));
@@ -78,19 +78,19 @@ describe("DataTableToolbar", () => {
     expect(names()).toEqual(["Alice", "Bob"]);
   });
 
-  it("shows the active filter count and fires onOpenFilters", async () => {
+  it("shows the active filter count and fires onOpenФильтры", async () => {
     const user = userEvent.setup();
-    const onOpenFilters = vi.fn();
-    render(<Harness onOpenFilters={onOpenFilters} />);
+    const onOpenФильтры = vi.fn();
+    render(<Harness onOpenФильтры={onOpenФильтры} />);
     expect(screen.getByTestId("datatable-filter-count")).toHaveTextContent("1");
     await user.click(screen.getByTestId("datatable-filters-trigger"));
-    expect(onOpenFilters).toHaveBeenCalledTimes(1);
+    expect(onOpenФильтры).toHaveBeenCalledВремяs(1);
   });
 
   it("renders slotted action children", () => {
     render(
       <Harness>
-        <button data-testid="toolbar-action">Action</button>
+        <button data-testid="toolbar-action">Действие</button>
       </Harness>,
     );
     expect(screen.getByTestId("toolbar-action")).toBeInTheDocument();
@@ -101,6 +101,6 @@ describe("DataTableToolbar", () => {
     const onRefresh = vi.fn();
     render(<Harness onRefresh={onRefresh} />);
     await user.click(screen.getByTestId("datatable-refresh"));
-    expect(onRefresh).toHaveBeenCalledTimes(1);
+    expect(onRefresh).toHaveBeenCalledВремяs(1);
   });
 });

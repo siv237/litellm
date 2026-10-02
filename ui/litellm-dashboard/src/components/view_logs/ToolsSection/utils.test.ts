@@ -3,11 +3,11 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { parseToolsFromLog, hasTools } from "./utils";
+import { parseИнструментыFromLog, hasИнструменты } from "./utils";
 import { LogEntry } from "../columns";
 
-describe("ToolsSection utils", () => {
-  describe("parseToolsFromLog", () => {
+describe("ИнструментыSection utils", () => {
+  describe("parseИнструментыFromLog", () => {
     it("should return empty array when no tools in request", () => {
       const log: Partial<LogEntry> = {
         request_id: "test-1",
@@ -15,7 +15,7 @@ describe("ToolsSection utils", () => {
         response: {},
       };
 
-      const result = parseToolsFromLog(log as LogEntry);
+      const result = parseИнструментыFromLog(log as LogEntry);
 
       expect(result).toEqual([]);
     });
@@ -44,7 +44,7 @@ describe("ToolsSection utils", () => {
         response: {},
       } as any;
 
-      const result = parseToolsFromLog(log as LogEntry);
+      const result = parseИнструментыFromLog(log as LogEntry);
 
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject({
@@ -72,7 +72,7 @@ describe("ToolsSection utils", () => {
         response: {},
       } as any;
 
-      const result = parseToolsFromLog(log as LogEntry);
+      const result = parseИнструментыFromLog(log as LogEntry);
 
       expect(result).toHaveLength(1);
       expect(result[0].name).toBe("search_web");
@@ -119,7 +119,7 @@ describe("ToolsSection utils", () => {
         },
       } as any;
 
-      const result = parseToolsFromLog(log as LogEntry);
+      const result = parseИнструментыFromLog(log as LogEntry);
 
       expect(result).toHaveLength(2);
       expect(result[0].called).toBe(true);
@@ -164,7 +164,7 @@ describe("ToolsSection utils", () => {
         }),
       } as any;
 
-      const result = parseToolsFromLog(log as LogEntry);
+      const result = parseИнструментыFromLog(log as LogEntry);
 
       expect(result).toHaveLength(1);
       expect(result[0].called).toBe(true);
@@ -186,7 +186,7 @@ describe("ToolsSection utils", () => {
         response: {},
       } as any;
 
-      const result = parseToolsFromLog(log as LogEntry);
+      const result = parseИнструментыFromLog(log as LogEntry);
 
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject({
@@ -231,7 +231,7 @@ describe("ToolsSection utils", () => {
         },
       } as any;
 
-      const result = parseToolsFromLog(log as LogEntry);
+      const result = parseИнструментыFromLog(log as LogEntry);
 
       expect(result).toHaveLength(1);
       expect(result[0].called).toBe(true);
@@ -251,7 +251,7 @@ describe("ToolsSection utils", () => {
         response: {},
       } as any;
 
-      const result = parseToolsFromLog(log as LogEntry);
+      const result = parseИнструментыFromLog(log as LogEntry);
 
       expect(result).toHaveLength(3);
       expect(result[0].index).toBe(1);
@@ -287,7 +287,7 @@ describe("ToolsSection utils", () => {
         },
       } as any;
 
-      const result = parseToolsFromLog(log as LogEntry);
+      const result = parseИнструментыFromLog(log as LogEntry);
 
       expect(result).toHaveLength(1);
       expect(result[0].name).toBe("get_weather");
@@ -313,7 +313,7 @@ describe("ToolsSection utils", () => {
             {
               type: "response.done",
               response: {
-                output: [
+                выходput: [
                   {
                     type: "function_call",
                     call_id: "call_xyz",
@@ -328,7 +328,7 @@ describe("ToolsSection utils", () => {
         },
       } as any;
 
-      const result = parseToolsFromLog(log as LogEntry);
+      const result = parseИнструментыFromLog(log as LogEntry);
 
       expect(result).toHaveLength(1);
       expect(result[0].name).toBe("get_weather");
@@ -337,7 +337,7 @@ describe("ToolsSection utils", () => {
     });
   });
 
-  describe("hasTools", () => {
+  describe("hasИнструменты", () => {
     it("should return false when no tools in request", () => {
       const log: Partial<LogEntry> = {
         request_id: "test-9",
@@ -345,7 +345,7 @@ describe("ToolsSection utils", () => {
         response: {},
       };
 
-      expect(hasTools(log as LogEntry)).toBe(false);
+      expect(hasИнструменты(log as LogEntry)).toBe(false);
     });
 
     it("should return true when tools present in request", () => {
@@ -364,7 +364,7 @@ describe("ToolsSection utils", () => {
         response: {},
       } as any;
 
-      expect(hasTools(log as LogEntry)).toBe(true);
+      expect(hasИнструменты(log as LogEntry)).toBe(true);
     });
   });
 });

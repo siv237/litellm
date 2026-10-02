@@ -39,7 +39,7 @@ const MakeAgentPublicForm: React.FC<MakeAgentPublicFormProps> = ({
   const handleNext = () => {
     if (currentStep === 0) {
       if (selectedAgents.size === 0) {
-        toast.fromError("Please select at least one agent to make public");
+        toast.fromError("Выберите хотя бы одного агента для публикации");
         return;
       }
       setCurrentStep(1);
@@ -85,7 +85,7 @@ const MakeAgentPublicForm: React.FC<MakeAgentPublicFormProps> = ({
 
   const handleSubmit = async () => {
     if (selectedAgents.size === 0) {
-      toast.fromError("Please select at least one agent to make public");
+      toast.fromError("Выберите хотя бы одного агента для публикации");
       return;
     }
 
@@ -101,7 +101,7 @@ const MakeAgentPublicForm: React.FC<MakeAgentPublicFormProps> = ({
       onSuccess();
     } catch (error) {
       console.error("Error making agents public:", error);
-      toast.fromError("Failed to make agents public. Please try again.");
+      toast.fromError("Не удалось опубликовать агентов. Попробуйте снова.");
     } finally {
       setLoading(false);
     }
@@ -115,7 +115,7 @@ const MakeAgentPublicForm: React.FC<MakeAgentPublicFormProps> = ({
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Select Agents to Make Public</h3>
+          <h3 className="text-lg font-semibold">Выберите агентов для публикации</h3>
           <div className="flex items-center space-x-2">
             <label className="flex items-center gap-2 text-sm">
               <Checkbox
@@ -124,21 +124,20 @@ const MakeAgentPublicForm: React.FC<MakeAgentPublicFormProps> = ({
                 onCheckedChange={(checked) => handleSelectAll(checked === true)}
                 disabled={agentHubData.length === 0}
               />
-              Select All {agentHubData.length > 0 && `(${agentHubData.length})`}
+              Выбрать всё {agentHubData.length > 0 && `(${agentHubData.length})`}
             </label>
           </div>
         </div>
 
         <p className="text-sm text-muted-foreground">
-          Select the agents you want to be visible on the public model hub. Users will still require a valid Virtual Key
-          to use these agents.
+          Выберите агентов, которых вы хотите видеть в публичном хабе. Пользователям по-прежнему понадобится действующий виртуальный ключ.
         </p>
 
         <div className="max-h-96 overflow-y-auto border rounded-lg p-4">
           <div className="space-y-3">
             {agentHubData.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                <p>No agents available.</p>
+                <p>Нет доступных агентов.</p>
               </div>
             ) : (
               agentHubData.map((agent) => {
@@ -163,7 +162,7 @@ const MakeAgentPublicForm: React.FC<MakeAgentPublicFormProps> = ({
                             </Badge>
                           ))}
                           {agent.skills.length > 3 && (
-                            <p className="text-xs text-muted-foreground">+{agent.skills.length - 3} more</p>
+                            <p className="text-xs text-muted-foreground">ещё +{agent.skills.length - 3}</p>
                           )}
                         </div>
                       )}
@@ -189,17 +188,17 @@ const MakeAgentPublicForm: React.FC<MakeAgentPublicFormProps> = ({
   const renderStep2Content = () => {
     return (
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Confirm Making Agents Public</h3>
+        <h3 className="text-lg font-semibold">Подтвердите публикацию агентов</h3>
 
         <div className="bg-warning/10 border border-warning/20 rounded-lg p-4">
           <p className="text-sm text-warning">
-            <strong>Warning:</strong> Once you make these agents public, anyone who can go to the{" "}
-            <code>/ui/model_hub_table</code> will be able to know they exist on the proxy.
+            <strong>Внимание:</strong> Как только эти агенты станут публичными, все, кто зайдёт на{" "}
+            <code>/ui/model_hub_table</code> смогут узнать об их существовании на прокси.
           </p>
         </div>
 
         <div className="space-y-3">
-          <p className="font-medium">Agents to be made public:</p>
+          <p className="font-medium">Агенты для публикации:</p>
           <div className="max-h-48 overflow-y-auto border rounded-lg p-3">
             <div className="space-y-2">
               {Array.from(selectedAgents).map((agentId) => {
@@ -224,7 +223,7 @@ const MakeAgentPublicForm: React.FC<MakeAgentPublicFormProps> = ({
 
         <div className="bg-info/10 border border-info/20 rounded-lg p-3">
           <p className="text-sm text-info">
-            Total: <strong>{selectedAgents.size}</strong> agent{selectedAgents.size !== 1 ? "s" : ""} will be made
+            Всего: <strong>{selectedAgents.size}</strong> agent{selectedAgents.size !== 1 ? "s" : ""} will be made
             public
           </p>
         </div>
@@ -272,7 +271,7 @@ const MakeAgentPublicForm: React.FC<MakeAgentPublicFormProps> = ({
     <Dialog open={visible} onOpenChange={(open) => !open && handleClose()} disablePointerDismissal>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[1200px]">
         <DialogHeader>
-          <DialogTitle>Make Agents Public</DialogTitle>
+          <DialogTitle>Сделать агентов публичными</DialogTitle>
         </DialogHeader>
 
         <div>

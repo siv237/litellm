@@ -2,42 +2,42 @@ import React from "react";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent, { PointerEventsCheckLevel } from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
 import UserEnvVarsModal from "./UserEnvVarsModal";
 import * as networking from "@/components/networking";
-import { MCPServer, MCPUserEnvVarsStatus } from "@/components/mcp_tools/types";
+import { MCPСервер, MCPUserEnvVarsStatus } from "@/components/mcp_tools/types";
 
 vi.mock("@/components/networking", () => ({
   getMCPUserEnvVars: vi.fn(),
   storeMCPUserEnvVars: vi.fn(),
 }));
 
-const createQueryClient = () => new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
+const createЗапросClient = () => new ЗапросClient({ defaultOptions: { queries: { retry: false, gcВремя: 0 } } });
 
 const setup = () => userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
 
-const server = { server_id: "srv-1", server_name: "Payments", alias: "payments" } as MCPServer;
+const server = { server_id: "srv-1", server_name: "Payments", alias: "payments" } as MCPСервер;
 
 const statusWith = (required: MCPUserEnvVarsStatus["required"]): MCPUserEnvVarsStatus =>
   ({ required }) as MCPUserEnvVarsStatus;
 
 const renderModal = (status: MCPUserEnvVarsStatus, onSaved = vi.fn(), onClose = vi.fn()) => {
-  vi.mocked(networking.getMCPUserEnvVars).mockResolvedValue(status);
+  vi.mocked(networking.getMCPUserEnvVars).mockResolvedЗначение(status);
   const view = render(
-    <QueryClientProvider client={createQueryClient()}>
-      <UserEnvVarsModal server={server} open accessToken="sk-test" onClose={onClose} onSaved={onSaved} />
-    </QueryClientProvider>,
+    <ЗапросClientПровайдер client={createЗапросClient()}>
+      <UserEnvVarsModal server={server} open accessТокен="sk-test" onClose={onClose} onSaved={onSaved} />
+    </ЗапросClientПровайдер>,
   );
   const setOpen = (open: boolean) =>
     view.rerender(
-      <QueryClientProvider client={createQueryClient()}>
-        <UserEnvVarsModal server={server} open={open} accessToken="sk-test" onClose={onClose} onSaved={onSaved} />
-      </QueryClientProvider>,
+      <ЗапросClientПровайдер client={createЗапросClient()}>
+        <UserEnvVarsModal server={server} open={open} accessТокен="sk-test" onClose={onClose} onSaved={onSaved} />
+      </ЗапросClientПровайдер>,
     );
   return { onSaved, onClose, setOpen };
 };
 
-const save = (user: ReturnType<typeof setup>) => user.click(screen.getByRole("button", { name: "Save Credentials" }));
+const save = (user: ReturnType<typeof setup>) => user.click(screen.getByRole("button", { name: "Save Учётные данные" }));
 
 // Opening the modal remounts the form so nothing carries over from the last time it was open.
 // Settle that remount before handing back a node, or the caller holds a detached one.
@@ -49,12 +49,12 @@ const fieldAfterOpen = async (label: RegExp): Promise<HTMLElement> => {
 
 describe("UserEnvVarsModal", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("submits every declared field, trimmed, keyed by env var name", async () => {
     const user = setup();
-    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedValue(statusWith([]));
+    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedЗначение(statusWith([]));
     renderModal(
       statusWith([
         { name: "API_KEY", description: "Your API key", is_set: false },
@@ -72,12 +72,12 @@ describe("UserEnvVarsModal", () => {
         REGION: "us-east-1",
       });
     });
-    expect(networking.storeMCPUserEnvVars).toHaveBeenCalledTimes(1);
+    expect(networking.storeMCPUserEnvVars).toHaveBeenCalledВремяs(1);
   });
 
   it("sends an empty string for an already-set field left blank", async () => {
     const user = setup();
-    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedValue(statusWith([]));
+    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedЗначение(statusWith([]));
     renderModal(
       statusWith([
         { name: "API_KEY", description: null, is_set: true },
@@ -114,7 +114,7 @@ describe("UserEnvVarsModal", () => {
 
   it("does not require an already-set field", async () => {
     const user = setup();
-    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedValue(statusWith([]));
+    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedЗначение(statusWith([]));
     renderModal(statusWith([{ name: "API_KEY", description: null, is_set: true }]));
 
     await fieldAfterOpen(/^API_KEY/);
@@ -134,7 +134,7 @@ describe("UserEnvVarsModal", () => {
   it("renders the overwrite placeholder and a Set marker for an already-set field", async () => {
     renderModal(statusWith([{ name: "API_KEY", description: "Grab it from the console", is_set: true }]));
 
-    expect(await screen.findByPlaceholderText("Enter a new value to overwrite")).toBeInTheDocument();
+    expect(await screen.findByPlaceholderText("Введите a new value to overwrite")).toBeInTheDocument();
     expect(screen.getByText("Set")).toBeInTheDocument();
   });
 
@@ -160,7 +160,7 @@ describe("UserEnvVarsModal", () => {
 
     const input = await fieldAfterOpen(/^API_KEY/);
     fireEvent.change(input, { target: { value: "hunter2" } });
-    expect(screen.getByLabelText(/^API_KEY/)).toHaveValue("hunter2");
+    expect(screen.getByLabelText(/^API_KEY/)).toHaveЗначение("hunter2");
 
     setOpen(false);
     await waitFor(() => {
@@ -168,20 +168,20 @@ describe("UserEnvVarsModal", () => {
     });
 
     setOpen(true);
-    expect(await fieldAfterOpen(/^API_KEY/)).toHaveValue("");
+    expect(await fieldAfterOpen(/^API_KEY/)).toHaveЗначение("");
   });
 
   it("reports the empty state instead of a form when nothing is required", async () => {
     renderModal(statusWith([]));
 
     expect(await screen.findByText("No per-user fields configured for this server.")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Save Credentials" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Save Учётные данные" })).not.toBeInTheDocument();
   });
 
   it("closes and reports the saved status on success", async () => {
     const user = setup();
     const saved = statusWith([{ name: "API_KEY", description: null, is_set: true }]);
-    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedValue(saved);
+    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedЗначение(saved);
     const { onSaved, onClose } = renderModal(statusWith([{ name: "API_KEY", description: null, is_set: false }]));
 
     fireEvent.change(await fieldAfterOpen(/^API_KEY/), { target: { value: "abc" } });
@@ -200,7 +200,7 @@ describe("UserEnvVarsModal", () => {
     fireEvent.change(await fieldAfterOpen(/^API_KEY/), { target: { value: "hunter2" } });
     await user.click(screen.getByRole("button", { name: "Show password" }));
     expect(screen.getByLabelText(/^API_KEY/)).toHaveAttribute("type", "text");
-    expect(screen.getByLabelText(/^API_KEY/)).toHaveValue("hunter2");
+    expect(screen.getByLabelText(/^API_KEY/)).toHaveЗначение("hunter2");
 
     await user.click(screen.getByRole("button", { name: "Hide password" }));
     expect(screen.getByLabelText(/^API_KEY/)).toHaveAttribute("type", "password");
@@ -216,16 +216,16 @@ describe("UserEnvVarsModal", () => {
     expect(networking.storeMCPUserEnvVars).not.toHaveBeenCalled();
   });
 
-  it("surfaces a save failure without closing", async () => {
+  it("surfaces a save failure withвыход closing", async () => {
     const user = setup();
-    vi.mocked(networking.storeMCPUserEnvVars).mockRejectedValue(new Error("boom"));
+    vi.mocked(networking.storeMCPUserEnvVars).mockRejectedЗначение(new Ошибка("boom"));
     const { onSaved, onClose } = renderModal(statusWith([{ name: "API_KEY", description: null, is_set: false }]));
 
     fireEvent.change(await fieldAfterOpen(/^API_KEY/), { target: { value: "abc" } });
     await save(user);
 
     await waitFor(() => {
-      expect(networking.storeMCPUserEnvVars).toHaveBeenCalledTimes(1);
+      expect(networking.storeMCPUserEnvVars).toHaveBeenCalledВремяs(1);
     });
     expect(onSaved).not.toHaveBeenCalled();
     expect(onClose).not.toHaveBeenCalled();

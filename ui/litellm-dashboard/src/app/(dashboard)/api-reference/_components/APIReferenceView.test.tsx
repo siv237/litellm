@@ -15,7 +15,7 @@ describe("APIReferenceView", () => {
     const apiDocUrl = "https://docs.litellm.test";
     render(<APIReferenceView proxySettings={{ LITELLM_UI_API_DOC_BASE_URL: apiDocUrl }} />);
 
-    const codeBlocks = screen.getAllByTestId(codeBlockTestId);
+    const codeBlocks = screen.getВсеByTestId(codeBlockTestId);
     expect(codeBlocks[0]).toHaveTextContent(new RegExp(apiDocUrl));
   });
 
@@ -23,7 +23,7 @@ describe("APIReferenceView", () => {
     const proxyUrl = "https://proxy.litellm.test";
     render(<APIReferenceView proxySettings={{ PROXY_BASE_URL: proxyUrl }} />);
 
-    const codeBlocks = screen.getAllByTestId(codeBlockTestId);
+    const codeBlocks = screen.getВсеByTestId(codeBlockTestId);
     expect(codeBlocks[0]).toHaveTextContent(new RegExp(proxyUrl));
   });
 
@@ -40,7 +40,7 @@ describe("APIReferenceView", () => {
       />,
     );
 
-    const codeBlocks = screen.getAllByTestId(codeBlockTestId);
+    const codeBlocks = screen.getВсеByTestId(codeBlockTestId);
     const renderedCode = codeBlocks[0].textContent ?? "";
     expect(renderedCode).toContain(apiDocUrl);
     expect(renderedCode).not.toContain(proxyUrl);
@@ -60,12 +60,12 @@ describe("APIReferenceView", () => {
   it("exposes the three SDK tabs with the first selected by default", () => {
     render(<APIReferenceView proxySettings={{ PROXY_BASE_URL: "https://proxy.litellm.test" }} />);
 
-    expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual([
+    expect(screen.getВсеByRole("tab").map((tab) => tab.textContent)).toEqual([
       "OpenAI Python SDK",
       "LlamaIndex",
       "Langchain Py",
     ]);
-    expect(screen.getAllByRole("tab").map((tab) => tab.getAttribute("aria-selected"))).toEqual([
+    expect(screen.getВсеByRole("tab").map((tab) => tab.getAttribute("aria-selected"))).toEqual([
       "true",
       "false",
       "false",
@@ -75,7 +75,7 @@ describe("APIReferenceView", () => {
   it.each([
     ["OpenAI Python SDK", "import openai"],
     ["LlamaIndex", "from llama_index.llms import AzureOpenAI"],
-    ["Langchain Py", "from langchain.chat_models import ChatOpenAI"],
+    ["Langchain Py", "from langchain.chat_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs import ChatOpenAI"],
   ])("selecting %s shows its snippet wired to the base url", async (tabName, marker) => {
     const proxyUrl = "https://proxy.litellm.test";
     const user = userEvent.setup();

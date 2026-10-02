@@ -1,22 +1,22 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import Fallbacks from "./Fallbacks";
+import Резервные модели from "./Резервные модели";
 import * as networkingModule from "../../../networking";
-import * as fetchModelsModule from "@/components/llm_calls/fetch_models";
+import * as fetchРежимlsModule from "@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs";
 
 vi.mock("../../../networking", () => ({
   getCallbacksCall: vi.fn(),
   setCallbacksCall: vi.fn(),
 }));
 
-vi.mock("@/components/llm_calls/fetch_models", () => ({
-  fetchAvailableModels: vi.fn(),
+vi.mock("@/components/llm_calls/fetch_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => ({
+  fetchAvailableРежимls: vi.fn(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/models/useModelCostMap", () => ({
-  useModelCostMap: vi.fn().mockReturnValue({ data: null }),
+vi.mock("@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useРежимlСтоимостьMap", () => ({
+  useРежимlСтоимостьMap: vi.fn().mockReturnЗначение({ data: null }),
 }));
 
 vi.mock("openai", () => ({
@@ -33,13 +33,13 @@ vi.mock("openai", () => ({
 
 vi.mock("../../../common_components/DeleteResourceModal", () => ({
   __esModule: true,
-  default: ({ isOpen, onOk, onCancel, title, message, resourceInformation, confirmLoading }: any) => {
+  default: ({ isOpen, onOk, onCancel, title, message, resourceИнформация, confirmLoading }: any) => {
     if (!isOpen) return null;
     return (
       <div data-testid="delete-modal">
         <div>{title}</div>
         <div>{message}</div>
-        {resourceInformation?.map((info: any, idx: number) => (
+        {resourceИнформация?.map((info: any, idx: number) => (
           <div key={idx}>
             {info.label}: {info.value}
           </div>
@@ -55,132 +55,132 @@ vi.mock("../../../common_components/DeleteResourceModal", () => ({
   },
 }));
 
-vi.mock("./AddFallbacks", () => ({
+vi.mock("./AddРезервные модели", () => ({
   __esModule: true,
   default: ({ value, onChange }: any) => {
     const handleClick = async () => {
       if (onChange) {
         try {
-          const newFallbacks = [...(value || []), { "test-model": ["test-fallback"] }];
-          await onChange(newFallbacks);
+          const newРезервные модели = [...(value || []), { "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию": ["test-fallback"] }];
+          await onChange(newРезервные модели);
         } catch (error) {
-          // Error is handled by the component
+          // Ошибка is handled by the component
         }
       }
     };
     return (
       <button onClick={handleClick} data-testid="add-fallbacks-button">
-        Add Fallbacks
+        Add Резервные модели
       </button>
     );
   },
 }));
 
-describe("Fallbacks", () => {
-  const mockAccessToken = "test-token";
+describe("Резервные модели", () => {
+  const mockAccessТокен = "test-token";
   const mockUserRole = "Admin";
   const mockUserID = "user-123";
-  const mockRouterSettings = {
+  const mockRвыходerSettings = {
     fallbacks: [{ "gpt-4": ["gpt-3.5-turbo", "claude-3-opus"] }, { "claude-3-opus": ["gpt-4"] }],
   };
 
   const defaultProps = {
-    accessToken: mockAccessToken,
+    accessТокен: mockAccessТокен,
     userRole: mockUserRole,
     userID: mockUserID,
   };
 
   const getFirstRowDeleteButton = () => {
-    const deleteButtons = screen.getAllByTestId("delete-fallback-button");
+    const deleteButtons = screen.getВсеByTestId("delete-fallback-button");
     return deleteButtons.length > 0 ? deleteButtons[0] : null;
   };
 
-  const renderWithQueryClient = (ui: React.ReactElement) => {
-    const queryClient = new QueryClient({
+  const renderWithЗапросClient = (ui: React.ReactElement) => {
+    const queryClient = new ЗапросClient({
       defaultOptions: { queries: { retry: false } },
     });
-    return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
+    return render(<ЗапросClientПровайдер client={queryClient}>{ui}</ЗапросClientПровайдер>);
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked(networkingModule.getCallbacksCall).mockResolvedValue({
-      router_settings: mockRouterSettings,
+    vi.clearВсеMocks();
+    vi.mocked(networkingModule.getCallbacksCall).mockResolvedЗначение({
+      rвыходer_settings: mockRвыходerSettings,
     });
-    vi.mocked(networkingModule.setCallbacksCall).mockResolvedValue(undefined);
-    vi.mocked(fetchModelsModule.fetchAvailableModels).mockResolvedValue([
-      { model_group: "gpt-4", mode: "chat" },
-      { model_group: "gpt-3.5-turbo", mode: "chat" },
-      { model_group: "claude-3-opus", mode: "chat" },
+    vi.mocked(networkingModule.setCallbacksCall).mockResolvedЗначение(undefined);
+    vi.mocked(fetchРежимlsModule.fetchAvailableРежимls).mockResolvedЗначение([
+      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4", mode: "chat" },
+      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo", mode: "chat" },
+      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "claude-3-opus", mode: "chat" },
     ]);
   });
 
   it("should render the component", async () => {
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByTestId("add-fallbacks-button")).toBeInTheDocument();
     });
   });
 
-  it("should not render when accessToken is null", () => {
-    const { container } = renderWithQueryClient(<Fallbacks {...defaultProps} accessToken={null} />);
+  it("should not render when accessТокен is null", () => {
+    const { container } = renderWithЗапросClient(<Резервные модели {...defaultProps} accessТокен={null} />);
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("should fetch router settings on mount", async () => {
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+  it("should fetch rвыходer settings on mount", async () => {
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
-      expect(networkingModule.getCallbacksCall).toHaveBeenCalledWith(mockAccessToken, mockUserID, mockUserRole);
+      expect(networkingModule.getCallbacksCall).toHaveBeenCalledWith(mockAccessТокен, mockUserID, mockUserRole);
     });
   });
 
   it("should display fallback entries in table", async () => {
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("gpt-4").length).toBeGreaterThan(0);
-      expect(screen.getAllByText(/gpt-3\.5-turbo/).length).toBeGreaterThan(0);
-      expect(screen.getAllByText(/claude-3-opus/).length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("gpt-4").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText(/gpt-3\.5-turbo/).length).toBeGreaterThan(0);
+      expect(screen.getВсеByText(/claude-3-opus/).length).toBeGreaterThan(0);
     });
   });
 
   it("should show delete button for each fallback row when fallbacks exist", async () => {
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("gpt-4").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("gpt-4").length).toBeGreaterThan(0);
     });
 
-    const deleteButtons = screen.getAllByTestId("delete-fallback-button");
+    const deleteButtons = screen.getВсеByTestId("delete-fallback-button");
     expect(deleteButtons.length).toBe(2);
   });
 
   it("should show an edit button for each fallback row and open the edit modal", async () => {
     const user = userEvent.setup();
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("gpt-4").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("gpt-4").length).toBeGreaterThan(0);
     });
 
-    const editButtons = screen.getAllByTestId("edit-fallback-button");
+    const editButtons = screen.getВсеByTestId("edit-fallback-button");
     expect(editButtons.length).toBe(2);
 
     await user.click(editButtons[0]);
 
     await waitFor(() => {
-      expect(screen.getByText("Configure Model Fallbacks")).toBeInTheDocument();
+      expect(screen.getByText("Конфигурацияure Режимl Резервные модели")).toBeInTheDocument();
     });
   });
 
   it("should open delete modal when delete icon is clicked", async () => {
     const user = userEvent.setup();
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("gpt-4").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("gpt-4").length).toBeGreaterThan(0);
     });
 
     const deleteButton = getFirstRowDeleteButton();
@@ -190,16 +190,16 @@ describe("Fallbacks", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("delete-modal")).toBeInTheDocument();
-      expect(screen.getByText("Delete Fallback?")).toBeInTheDocument();
+      expect(screen.getByText("Удалить резерв?")).toBeInTheDocument();
     });
   });
 
   it("should delete fallback when confirmed", async () => {
     const user = userEvent.setup();
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("gpt-4").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("gpt-4").length).toBeGreaterThan(0);
     });
 
     const deleteButton = getFirstRowDeleteButton();
@@ -217,17 +217,17 @@ describe("Fallbacks", () => {
     await waitFor(() => {
       expect(networkingModule.setCallbacksCall).toHaveBeenCalled();
       const callArgs = (networkingModule.setCallbacksCall as any).mock.calls[0];
-      expect(callArgs[0]).toBe(mockAccessToken);
-      expect(callArgs[1].router_settings.fallbacks).toHaveLength(1);
+      expect(callArgs[0]).toBe(mockAccessТокен);
+      expect(callArgs[1].rвыходer_settings.fallbacks).toHaveLength(1);
     });
   });
 
   it("should close delete modal when cancel is clicked", async () => {
     const user = userEvent.setup();
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("gpt-4").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("gpt-4").length).toBeGreaterThan(0);
     });
 
     const deleteButton = getFirstRowDeleteButton();
@@ -249,12 +249,12 @@ describe("Fallbacks", () => {
 
   it("should show error notification on delete failure", async () => {
     const user = userEvent.setup();
-    const error = new Error("Delete failed");
-    vi.mocked(networkingModule.setCallbacksCall).mockRejectedValueOnce(error);
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    const error = new Ошибка("Delete failed");
+    vi.mocked(networkingModule.setCallbacksCall).mockRejectedЗначениеOnce(error);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("gpt-4").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("gpt-4").length).toBeGreaterThan(0);
     });
 
     const deleteButton = getFirstRowDeleteButton();
@@ -276,12 +276,12 @@ describe("Fallbacks", () => {
 
   it("should handle delete error gracefully", async () => {
     const user = userEvent.setup();
-    const error = new Error("Delete failed");
-    vi.mocked(networkingModule.setCallbacksCall).mockRejectedValueOnce(error);
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    const error = new Ошибка("Delete failed");
+    vi.mocked(networkingModule.setCallbacksCall).mockRejectedЗначениеOnce(error);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getAllByText("gpt-4").length).toBeGreaterThan(0);
+      expect(screen.getВсеByText("gpt-4").length).toBeGreaterThan(0);
     });
 
     const deleteButton = getFirstRowDeleteButton();
@@ -303,52 +303,52 @@ describe("Fallbacks", () => {
   });
 
   it("should handle empty fallbacks array", async () => {
-    vi.mocked(networkingModule.getCallbacksCall).mockResolvedValueOnce({
-      router_settings: { fallbacks: [] },
+    vi.mocked(networkingModule.getCallbacksCall).mockResolvedЗначениеOnce({
+      rвыходer_settings: { fallbacks: [] },
     });
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByTestId("add-fallbacks-button")).toBeInTheDocument();
       expect(
-        screen.getByText(/No fallbacks configured. Add fallbacks to automatically try another model/),
+        screen.getByText(/No fallbacks configured. Add fallbacks to automatically try another Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/),
       ).toBeInTheDocument();
     });
 
     expect(screen.queryByText("gpt-4")).not.toBeInTheDocument();
   });
 
-  it("should handle router settings without fallbacks property", async () => {
-    vi.mocked(networkingModule.getCallbacksCall).mockResolvedValueOnce({
-      router_settings: {},
+  it("should handle rвыходer settings withвыход fallbacks property", async () => {
+    vi.mocked(networkingModule.getCallbacksCall).mockResolvedЗначениеOnce({
+      rвыходer_settings: {},
     });
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByTestId("add-fallbacks-button")).toBeInTheDocument();
       expect(
-        screen.getByText(/No fallbacks configured. Add fallbacks to automatically try another model/),
+        screen.getByText(/No fallbacks configured. Add fallbacks to automatically try another Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/),
       ).toBeInTheDocument();
     });
   });
 
-  it("should remove model_group_retry_policy from router settings", async () => {
-    vi.mocked(networkingModule.getCallbacksCall).mockResolvedValueOnce({
-      router_settings: {
-        ...mockRouterSettings,
-        model_group_retry_policy: { some: "policy" },
+  it("should remove Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group_retry_policy from rвыходer settings", async () => {
+    vi.mocked(networkingModule.getCallbacksCall).mockResolvedЗначениеOnce({
+      rвыходer_settings: {
+        ...mockRвыходerSettings,
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group_retry_policy: { some: "policy" },
       },
     });
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
       expect(networkingModule.getCallbacksCall).toHaveBeenCalled();
     });
   });
 
-  it("should update fallbacks when AddFallbacks onChange is called", async () => {
+  it("should update fallbacks when AddРезервные модели onChange is called", async () => {
     const user = userEvent.setup();
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByTestId("add-fallbacks-button")).toBeInTheDocument();
@@ -364,12 +364,12 @@ describe("Fallbacks", () => {
 
   it("should handle fallbacks change error and refetch", async () => {
     const user = userEvent.setup();
-    const error = new Error("Update failed");
-    vi.mocked(networkingModule.setCallbacksCall).mockRejectedValueOnce(error);
-    vi.mocked(networkingModule.getCallbacksCall).mockResolvedValue({
-      router_settings: mockRouterSettings,
+    const error = new Ошибка("Update failed");
+    vi.mocked(networkingModule.setCallbacksCall).mockRejectedЗначениеOnce(error);
+    vi.mocked(networkingModule.getCallbacksCall).mockResolvedЗначение({
+      rвыходer_settings: mockRвыходerSettings,
     });
-    renderWithQueryClient(<Fallbacks {...defaultProps} />);
+    renderWithЗапросClient(<Резервные модели {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByTestId("add-fallbacks-button")).toBeInTheDocument();
@@ -384,9 +384,9 @@ describe("Fallbacks", () => {
 
     await waitFor(
       () => {
-        expect(networkingModule.getCallbacksCall).toHaveBeenCalledTimes(2);
+        expect(networkingModule.getCallbacksCall).toHaveBeenCalledВремяs(2);
       },
-      { timeout: 3000 },
+      { timeвыход: 3000 },
     );
   });
 });

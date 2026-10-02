@@ -7,7 +7,7 @@ import * as networking from "@/components/networking";
 
 vi.mock("@/components/networking", () => ({
   getPromptInfo: vi.fn(),
-  getPromptVersions: vi.fn(),
+  getPromptВерсияs: vi.fn(),
   deletePromptCall: vi.fn(),
 }));
 
@@ -17,7 +17,7 @@ vi.mock("./prompt_editor_view/PromptCodeSnippets", () => ({
   ),
 }));
 
-const promptWithoutTemplate = {
+const promptWithвыходTemplate = {
   prompt_spec: {
     prompt_id: "support-reply",
     version: 1,
@@ -33,17 +33,17 @@ const promptWithoutTemplate = {
 
 describe("PromptInfoView environment scoping", () => {
   beforeEach(() => {
-    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedValue(promptWithoutTemplate);
-    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedValue({ prompts: [] });
+    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedЗначение(promptWithвыходTemplate);
+    vi.mocked(networking.getPromptВерсияs).mockReset().mockResolvedЗначение({ prompts: [] });
   });
 
   it("fetches the initial environment it was opened with", async () => {
     render(
       <PromptInfoView
         promptId="support-reply"
-        initialEnvironment="staging"
+        initialОкружение="staging"
         onClose={vi.fn()}
-        accessToken="sk-test"
+        accessТокен="sk-test"
         isAdmin={true}
       />,
     );
@@ -52,8 +52,8 @@ describe("PromptInfoView environment scoping", () => {
     expect(networking.getPromptInfo).toHaveBeenCalledWith("sk-test", "support-reply", "staging");
   });
 
-  it("fetches the serve default when opened without an environment", async () => {
-    render(<PromptInfoView promptId="support-reply" onClose={vi.fn()} accessToken="sk-test" isAdmin={true} />);
+  it("fetches the serve default when opened withвыход an environment", async () => {
+    render(<PromptInfoView promptId="support-reply" onClose={vi.fn()} accessТокен="sk-test" isAdmin={true} />);
 
     await screen.findByRole("tab", { name: "Raw JSON" });
     expect(networking.getPromptInfo).toHaveBeenCalledWith("sk-test", "support-reply", undefined);
@@ -62,7 +62,7 @@ describe("PromptInfoView environment scoping", () => {
 
 describe("PromptInfoView code snippets", () => {
   beforeEach(() => {
-    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedValue({ prompts: [] });
+    vi.mocked(networking.getPromptВерсияs).mockReset().mockResolvedЗначение({ prompts: [] });
   });
 
   it.each([
@@ -71,18 +71,18 @@ describe("PromptInfoView code snippets", () => {
   ])("hands the viewed environment of %s to the code snippets", async (_label, environment, environments) => {
     vi.mocked(networking.getPromptInfo)
       .mockReset()
-      .mockResolvedValue({
-        ...promptWithoutTemplate,
-        prompt_spec: { ...promptWithoutTemplate.prompt_spec, environment },
+      .mockResolvedЗначение({
+        ...promptWithвыходTemplate,
+        prompt_spec: { ...promptWithвыходTemplate.prompt_spec, environment },
         environments,
       });
 
     render(
       <PromptInfoView
         promptId="support-reply"
-        initialEnvironment={environment}
+        initialОкружение={environment}
         onClose={vi.fn()}
-        accessToken="sk-test"
+        accessТокен="sk-test"
         isAdmin={true}
       />,
     );
@@ -94,20 +94,20 @@ describe("PromptInfoView code snippets", () => {
 
 describe("PromptInfoView tabs", () => {
   beforeEach(() => {
-    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedValue(promptWithoutTemplate);
-    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedValue({ prompts: [] });
+    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedЗначение(promptWithвыходTemplate);
+    vi.mocked(networking.getPromptВерсияs).mockReset().mockResolvedЗначение({ prompts: [] });
   });
 
   it("shows the raw API response for a prompt that has no template", async () => {
     const user = userEvent.setup();
-    render(<PromptInfoView promptId="support-reply" onClose={vi.fn()} accessToken="sk-test" isAdmin={true} />);
+    render(<PromptInfoView promptId="support-reply" onClose={vi.fn()} accessТокен="sk-test" isAdmin={true} />);
 
     expect(await screen.findByRole("tab", { name: "Raw JSON" })).toBeInTheDocument();
     expect(screen.queryByRole("tab", { name: "Prompt Template" })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("tab", { name: "Raw JSON" }));
 
-    expect(screen.getByText("Raw API Response")).toBeVisible();
+    expect(screen.getByText("Raw API Ответ")).toBeVisible();
     expect(screen.getByText(/"prompt_id": "support-reply"/)).toBeVisible();
   });
 });

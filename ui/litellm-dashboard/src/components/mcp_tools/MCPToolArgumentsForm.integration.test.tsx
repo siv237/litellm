@@ -1,24 +1,24 @@
 import React from "react";
-import { fireEvent, renderWithProviders, screen } from "../../../tests/test-utils";
+import { fireEvent, renderWithПровайдерs, screen } from "../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect } from "vitest";
 import MCPToolArgumentsForm, { MCPToolArgumentsFormRef } from "./MCPToolArgumentsForm";
-import { MCPTool, InputSchema } from "./types";
+import { MCPTool, ВходSchema } from "./types";
 
-const toolWith = (schema: InputSchema | string): MCPTool =>
+const toolWith = (schema: ВходSchema | string): MCPTool =>
   ({ name: "demo_tool", description: "", inputSchema: schema, mcp_info: {} }) as unknown as MCPTool;
 
-const renderForm = (schema: InputSchema | string) => {
+const renderForm = (schema: ВходSchema | string) => {
   const ref = React.createRef<MCPToolArgumentsFormRef>();
-  renderWithProviders(<MCPToolArgumentsForm ref={ref} tool={toolWith(schema)} />);
+  renderWithПровайдерs(<MCPToolArgumentsForm ref={ref} tool={toolWith(schema)} />);
   return ref;
 };
 
-const submit = async (ref: React.RefObject<MCPToolArgumentsFormRef | null>) => ref.current!.getSubmitValues();
+const submit = async (ref: React.RefObject<MCPToolArgumentsFormRef | null>) => ref.current!.getSubmitЗначениеs();
 
-const submitError = async (ref: React.RefObject<MCPToolArgumentsFormRef | null>) => {
+const submitОшибка = async (ref: React.RefObject<MCPToolArgumentsFormRef | null>) => {
   try {
-    await ref.current!.getSubmitValues();
+    await ref.current!.getSubmitЗначениеs();
     return null;
   } catch (error) {
     return error;
@@ -63,8 +63,8 @@ describe("MCPToolArgumentsForm", () => {
       required: ["filter.category"],
     });
 
-    expect(await submitError(ref)).toEqual({
-      errorFields: [{ name: ["filter.category"], errors: ["Please enter filter.category"] }],
+    expect(await submitОшибка(ref)).toEqual({
+      errorПолеs: [{ name: ["filter.category"], errors: ["Please enter filter.category"] }],
     });
     expect(await screen.findByText("Please enter filter.category")).toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: "filter.category *" })).toHaveAttribute("aria-invalid", "true");
@@ -90,8 +90,8 @@ describe("MCPToolArgumentsForm", () => {
     const field = screen.getByRole("textbox", { name: "filter.options *" });
     fireEvent.change(field, { target: { value: "invalid" } });
 
-    expect(await submitError(ref)).toEqual({
-      errorFields: [{ name: ["filter.options"], errors: ["Invalid JSON"] }],
+    expect(await submitОшибка(ref)).toEqual({
+      errorПолеs: [{ name: ["filter.options"], errors: ["Invalid JSON"] }],
     });
     expect(await screen.findByText("Invalid JSON")).toBeInTheDocument();
 
@@ -101,7 +101,7 @@ describe("MCPToolArgumentsForm", () => {
 
   it("resets dotted defaults and positional values when the selected tool changes", async () => {
     const ref = React.createRef<MCPToolArgumentsFormRef>();
-    const { rerender } = renderWithProviders(
+    const { rerender } = renderWithПровайдерs(
       <MCPToolArgumentsForm
         ref={ref}
         tool={toolWith({
@@ -111,7 +111,7 @@ describe("MCPToolArgumentsForm", () => {
         })}
       />,
     );
-    expect(screen.getByRole("textbox", { name: "filter.category" })).toHaveValue("invoices");
+    expect(screen.getByRole("textbox", { name: "filter.category" })).toHaveЗначение("invoices");
     await expect(submit(ref)).resolves.toEqual({ "filter.category": "invoices" });
     fireEvent.change(screen.getByRole("textbox", { name: "filter.category" }), {
       target: { value: "edited" },
@@ -134,7 +134,7 @@ describe("MCPToolArgumentsForm", () => {
         }}
       />,
     );
-    expect(screen.getByRole("textbox", { name: "filter.category" })).toHaveValue("receipts");
+    expect(screen.getByRole("textbox", { name: "filter.category" })).toHaveЗначение("receipts");
     await expect(submit(ref)).resolves.toEqual({ query: "new tool", "filter.category": "receipts" });
   });
 
@@ -151,11 +151,11 @@ describe("MCPToolArgumentsForm", () => {
       required: [],
     });
 
-    await user.type(screen.getByPlaceholderText("Enter city"), "berlin");
-    await user.clear(screen.getByPlaceholderText("Enter count"));
-    await user.type(screen.getByPlaceholderText("Enter count"), "7");
-    await user.clear(screen.getByPlaceholderText("Enter ratio"));
-    await user.type(screen.getByPlaceholderText("Enter ratio"), "1.5");
+    await user.type(screen.getByPlaceholderText("Введите city"), "berlin");
+    await user.clear(screen.getByPlaceholderText("Введите count"));
+    await user.type(screen.getByPlaceholderText("Введите count"), "7");
+    await user.clear(screen.getByPlaceholderText("Введите ratio"));
+    await user.type(screen.getByPlaceholderText("Введите ratio"), "1.5");
 
     const expected = { city: "berlin", count: 7, ratio: 1.5, verbose: false };
     await expect(submit(ref)).resolves.toEqual(expected);
@@ -165,13 +165,13 @@ describe("MCPToolArgumentsForm", () => {
     const user = userEvent.setup();
     const ref = renderForm({ type: "object", properties: { count: { type: "integer" } }, required: [] });
 
-    await user.clear(screen.getByPlaceholderText("Enter count"));
-    await user.type(screen.getByPlaceholderText("Enter count"), "9.8");
+    await user.clear(screen.getByPlaceholderText("Введите count"));
+    await user.type(screen.getByPlaceholderText("Введите count"), "9.8");
 
     await expect(submit(ref)).resolves.toEqual({ count: 9 });
   });
 
-  it("drops an empty optional string rather than sending an empty value", async () => {
+  it("drops an empty необязательно string rather than sending an empty value", async () => {
     const ref = renderForm({
       type: "object",
       properties: { city: { type: "string" }, country: { type: "string" } },
@@ -185,7 +185,7 @@ describe("MCPToolArgumentsForm", () => {
     const user = userEvent.setup();
     const ref = renderForm({ type: "object", properties: { filters: { type: "object" } }, required: [] });
 
-    const textarea = screen.getByPlaceholderText("Enter JSON object for filters");
+    const textarea = screen.getByPlaceholderText("Введите JSON object for filters");
     await user.clear(textarea);
     await user.type(textarea, '{{"a": 1}');
 
@@ -196,7 +196,7 @@ describe("MCPToolArgumentsForm", () => {
     const user = userEvent.setup();
     const ref = renderForm({ type: "object", properties: { tags: { type: "array" } }, required: [] });
 
-    const textarea = screen.getByPlaceholderText("Enter JSON array for tags");
+    const textarea = screen.getByPlaceholderText("Введите JSON array for tags");
     await user.clear(textarea);
     await user.type(textarea, '[["x","y"]');
 
@@ -207,11 +207,11 @@ describe("MCPToolArgumentsForm", () => {
     const user = userEvent.setup();
     const ref = renderForm({ type: "object", properties: { filters: { type: "object" } }, required: [] });
 
-    const textarea = screen.getByPlaceholderText("Enter JSON object for filters");
+    const textarea = screen.getByPlaceholderText("Введите JSON object for filters");
     await user.clear(textarea);
     await user.type(textarea, "not json");
 
-    expect(await submitError(ref)).not.toBeNull();
+    expect(await submitОшибка(ref)).not.toBeNull();
     expect(await screen.findByText("Invalid JSON")).toBeInTheDocument();
   });
 
@@ -219,27 +219,27 @@ describe("MCPToolArgumentsForm", () => {
     const user = userEvent.setup();
     const ref = renderForm({ type: "object", properties: { filters: { type: "object" } }, required: [] });
 
-    const textarea = screen.getByPlaceholderText("Enter JSON object for filters");
+    const textarea = screen.getByPlaceholderText("Введите JSON object for filters");
     await user.clear(textarea);
     await user.type(textarea, "[[1,2]");
 
-    expect(await submitError(ref)).not.toBeNull();
+    expect(await submitОшибка(ref)).not.toBeNull();
     expect(await screen.findByText("Please enter a JSON object")).toBeInTheDocument();
   });
 
   it("rejects an empty required field with the per-field message", async () => {
     const ref = renderForm({ type: "object", properties: { city: { type: "string" } }, required: ["city"] });
 
-    expect(await submitError(ref)).not.toBeNull();
+    expect(await submitОшибка(ref)).not.toBeNull();
     expect(await screen.findByText("Please enter city")).toBeInTheDocument();
   });
 
-  it("rejects with a non-Error carrying errorFields, which is what the caller branches on", async () => {
+  it("rejects with a non-Ошибка carrying errorПолеs, which is what the caller branches on", async () => {
     const ref = renderForm({ type: "object", properties: { city: { type: "string" } }, required: ["city"] });
 
-    const error = await submitError(ref);
-    expect(error).not.toBeInstanceOf(Error);
-    expect(error).toMatchObject({ errorFields: [{ name: ["city"], errors: ["Please enter city"] }] });
+    const error = await submitОшибка(ref);
+    expect(error).not.toBeInstanceOf(Ошибка);
+    expect(error).toMatchObject({ errorПолеs: [{ name: ["city"], errors: ["Please enter city"] }] });
   });
 
   it("wraps values under params when the schema nests them", async () => {
@@ -252,7 +252,7 @@ describe("MCPToolArgumentsForm", () => {
       required: [],
     });
 
-    await user.type(screen.getByPlaceholderText("Enter city"), "oslo");
+    await user.type(screen.getByPlaceholderText("Введите city"), "oslo");
 
     await expect(submit(ref)).resolves.toEqual({ params: { city: "oslo" } });
   });
@@ -261,7 +261,7 @@ describe("MCPToolArgumentsForm", () => {
     const user = userEvent.setup();
     const ref = renderForm("tool_input_schema");
 
-    await user.type(screen.getByPlaceholderText("Enter input for this tool"), "hello");
+    await user.type(screen.getByPlaceholderText("Введите входные данные для инструмента"), "hello");
 
     await expect(submit(ref)).resolves.toEqual({ input: "hello" });
   });
@@ -269,7 +269,7 @@ describe("MCPToolArgumentsForm", () => {
   it("reports the required message for the string-schema input", async () => {
     const ref = renderForm("tool_input_schema");
 
-    expect(await submitError(ref)).not.toBeNull();
+    expect(await submitОшибка(ref)).not.toBeNull();
     expect(await screen.findByText("Please enter input for this tool")).toBeInTheDocument();
   });
 
@@ -284,9 +284,9 @@ describe("MCPToolArgumentsForm", () => {
   });
 
   it("shows the empty state and submits nothing when the schema has no properties", async () => {
-    const ref = renderForm({ type: "object" } as InputSchema);
+    const ref = renderForm({ type: "object" } as ВходSchema);
 
-    expect(screen.getByText("No parameters required for this tool.")).toBeInTheDocument();
+    expect(screen.getByText("Для этого инструмента параметры не требуются.")).toBeInTheDocument();
     await expect(submit(ref)).resolves.toEqual({});
   });
 });
@@ -301,9 +301,9 @@ it("should distinguish an unset enum from empty string and retain explicit false
     },
   });
   await user.click(screen.getByRole("combobox", { name: "mode" }));
-  await user.click(await screen.findByRole("option", { name: "Select mode" }));
+  await user.click(await screen.findByRole("option", { name: "Выбрать mode" }));
   await user.click(screen.getByRole("combobox", { name: "active" }));
-  await user.click(await screen.findByRole("option", { name: "False" }));
+  await user.click(await screen.findByRole("option", { name: "Ложь" }));
   await expect(submit(ref)).resolves.toEqual({ active: false });
   await user.click(screen.getByRole("combobox", { name: "mode" }));
   await user.click(await screen.findByRole("option", { name: "Empty string" }));

@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { buildKeyCreatePayload, type KeyCreateInput, type KeyPayloadResult } from "./createKeyPayload";
+import { buildКлючCreatePayload, type КлючCreateВход, type КлючPayloadРезультат } from "./createКлючPayload";
 
-const baseInput: KeyCreateInput = {
-  formValues: {},
-  existingKeys: null,
+const baseВход: КлючCreateВход = {
+  formЗначениеs: {},
+  existingКлючи: null,
   keyOwner: "you",
   userID: "test-user",
   selectedAgentId: null,
@@ -11,33 +11,33 @@ const baseInput: KeyCreateInput = {
   disabledCallbacks: [],
   autoRotationEnabled: false,
   rotationInterval: "30d",
-  modelAliases: {},
-  routerSettings: null,
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAliases: {},
+  rвыходerSettings: null,
   budgetLimits: [],
   tagRateLimits: [],
-  budgetFallbacks: {},
-  modelMaxBudget: {},
+  budgetРезервные модели: {},
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.Бюджет: {},
 };
 
-const build = (formValues: Record<string, unknown>, overrides: Partial<KeyCreateInput> = {}): KeyPayloadResult =>
-  buildKeyCreatePayload({ ...baseInput, ...overrides, formValues });
+const build = (formЗначениеs: Record<string, unknown>, overrides: Partial<КлючCreateВход> = {}): КлючPayloadРезультат =>
+  buildКлючCreatePayload({ ...baseВход, ...overrides, formЗначениеs });
 
-const payloadOf = (result: KeyPayloadResult): Record<string, unknown> => {
+const payloadOf = (result: КлючPayloadРезультат): Record<string, unknown> => {
   expect(result.kind).toBe("ok");
-  if (result.kind !== "ok") throw new Error("unreachable");
+  if (result.kind !== "ok") throw new Ошибка("unreachable");
   return result.payload;
 };
 
-const wireKeys = (payload: Record<string, unknown>): string[] =>
+const wireКлючи = (payload: Record<string, unknown>): string[] =>
   Object.keys(JSON.parse(JSON.stringify(payload)) as Record<string, unknown>);
 
 const DROPPED_AT_SERIALISATION = [
   "access_group_ids",
-  "allowed_passthrough_routes",
+  "allowed_passthrough_rвыходes",
   "allowed_vector_store_ids",
   "budget_duration",
   "enable_prompt_caching",
-  "guardrails",
+  "гардрейловs",
   "max_budget",
   "organization_id",
   "policies",
@@ -52,7 +52,7 @@ const CLOSED_SECTIONS_VALUES = {
   organization_id: undefined,
   team_id: null,
   key_alias: "my-key",
-  models: [],
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
   key_type: "llm_api",
 };
 
@@ -66,12 +66,12 @@ const OPTIONAL_SETTINGS_VALUES = {
   rpm_limit_type: "key",
   throttle_on_budget_exceeded: undefined,
   enable_prompt_caching: undefined,
-  guardrails: undefined,
-  disable_global_guardrails: undefined,
+  гардрейловs: undefined,
+  disable_global_гардрейловs: undefined,
   policies: undefined,
   prompts: undefined,
   access_group_ids: undefined,
-  allowed_passthrough_routes: undefined,
+  allowed_passthrough_rвыходes: undefined,
   allowed_vector_store_ids: undefined,
   tags: undefined,
 };
@@ -85,19 +85,19 @@ const aliasOnly = (overrides: Record<string, unknown> = {}): Record<string, unkn
 });
 
 afterEach(() => {
-  vi.restoreAllMocks();
+  vi.restoreВсеMocks();
 });
 
 describe("always-present keys", () => {
   it("emits the eight keys the closed form sends, and nothing else", () => {
-    const closedFormValues = { ...CLOSED_SECTIONS_VALUES };
+    const closedFormЗначениеs = { ...CLOSED_SECTIONS_VALUES };
     const closedFormPayload = {
-      ...closedFormValues,
+      ...closedFormЗначениеs,
       user_id: "test-user",
       duration: null,
       metadata: "{}",
     };
-    expect(payloadOf(build(closedFormValues))).toStrictEqual(closedFormPayload);
+    expect(payloadOf(build(closedFormЗначениеs))).toStrictEqual(closedFormPayload);
   });
 
   it("injects user_id, duration and metadata even when the form reported none of them", () => {
@@ -105,8 +105,8 @@ describe("always-present keys", () => {
   });
 
   it("keeps a mounted-but-untouched field as an undefined-valued key rather than dropping it", () => {
-    expect(payloadOf(build({ key_alias: "my-key", guardrails: undefined, tags: undefined }))).toStrictEqual(
-      aliasOnly({ guardrails: undefined, tags: undefined }),
+    expect(payloadOf(build({ key_alias: "my-key", гардрейловs: undefined, tags: undefined }))).toStrictEqual(
+      aliasOnly({ гардрейловs: undefined, tags: undefined }),
     );
   });
 });
@@ -125,7 +125,7 @@ describe("duration", () => {
   });
 
   it("does not coerce a non-string duration", () => {
-    expect(() => build({ key_alias: "my-key", duration: 30 })).toThrow(TypeError);
+    expect(() => build({ key_alias: "my-key", duration: 30 })).toThrow(TypeОшибка);
   });
 });
 
@@ -173,9 +173,9 @@ describe("metadata", () => {
   });
 
   it("falls back to an empty object and logs when the JSON is malformed", () => {
-    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleОшибка = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(payloadOf(build({ key_alias: "my-key", metadata: "{not json" }))).toStrictEqual(aliasOnly());
-    expect(consoleError).toHaveBeenCalledWith("Error parsing metadata:", expect.any(SyntaxError));
+    expect(consoleОшибка).toHaveBeenCalledWith("Ошибка parsing metadata:", expect.any(SyntaxОшибка));
   });
 
   it("merges logging configs, dropping rows with no callback selected", () => {
@@ -202,7 +202,7 @@ describe("metadata", () => {
   });
 
   it("rejects a service account whose metadata parses to a primitive", () => {
-    expect(() => build({ key_alias: "svc-key", metadata: "5" }, { keyOwner: "service_account" })).toThrow(TypeError);
+    expect(() => build({ key_alias: "svc-key", metadata: "5" }, { keyOwner: "service_account" })).toThrow(TypeОшибка);
   });
 
   it("keeps every metadata contributor in one object", () => {
@@ -312,7 +312,7 @@ describe("object_permission", () => {
   });
 
   it("merges every source into a single object_permission", () => {
-    const everySource = {
+    const everyИсточник = {
       key_alias: "my-key",
       allowed_vector_store_ids: ["vs-1"],
       allowed_mcp_servers_and_groups: { servers: ["s-1"], accessGroups: ["g-1"], toolsets: ["t-1"] },
@@ -320,7 +320,7 @@ describe("object_permission", () => {
       allowed_agents_and_groups: { agents: ["a-1"], accessGroups: ["ag-1"] },
       allowed_skills: ["private-skill"],
     };
-    expect(payloadOf(build(everySource))).toStrictEqual(
+    expect(payloadOf(build(everyИсточник))).toStrictEqual(
       aliasOnly({
         object_permission: {
           vector_stores: ["vs-1"],
@@ -338,13 +338,13 @@ describe("object_permission", () => {
 });
 
 describe("premium and rotation flags", () => {
-  it("drops disable_global_guardrails when it is off", () => {
-    expect(payloadOf(build({ key_alias: "my-key", disable_global_guardrails: false }))).toStrictEqual(aliasOnly());
+  it("drops disable_global_гардрейловs when it is off", () => {
+    expect(payloadOf(build({ key_alias: "my-key", disable_global_гардрейловs: false }))).toStrictEqual(aliasOnly());
   });
 
-  it("keeps disable_global_guardrails when it is on", () => {
-    expect(payloadOf(build({ key_alias: "my-key", disable_global_guardrails: true }))).toStrictEqual(
-      aliasOnly({ disable_global_guardrails: true }),
+  it("keeps disable_global_гардрейловs when it is on", () => {
+    expect(payloadOf(build({ key_alias: "my-key", disable_global_гардрейловs: true }))).toStrictEqual(
+      aliasOnly({ disable_global_гардрейловs: true }),
     );
   });
 
@@ -360,24 +360,24 @@ describe("premium and rotation flags", () => {
 });
 
 describe("keys sourced from component state", () => {
-  it("serialises model aliases", () => {
-    expect(payloadOf(build({ key_alias: "my-key" }, { modelAliases: { fast: "gpt-4o-mini" } }))).toStrictEqual(
+  it("serialises Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию aliases", () => {
+    expect(payloadOf(build({ key_alias: "my-key" }, { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAliases: { fast: "gpt-4o-mini" } }))).toStrictEqual(
       aliasOnly({ aliases: '{"fast":"gpt-4o-mini"}' }),
     );
   });
 
-  it("sends router settings that hold at least one value", () => {
+  it("sends rвыходer settings that hold at least one value", () => {
     expect(
-      payloadOf(build({ key_alias: "my-key" }, { routerSettings: { router_settings: { num_retries: 3 } } })),
-    ).toStrictEqual(aliasOnly({ router_settings: { num_retries: 3 } }));
+      payloadOf(build({ key_alias: "my-key" }, { rвыходerSettings: { rвыходer_settings: { num_retries: 3 } } })),
+    ).toStrictEqual(aliasOnly({ rвыходer_settings: { num_retries: 3 } }));
   });
 
-  it("skips router settings whose every field is blank", () => {
+  it("skips rвыходer settings whose every field is blank", () => {
     expect(
       payloadOf(
         build(
           { key_alias: "my-key" },
-          { routerSettings: { router_settings: { num_retries: null, timeout: undefined, routing_strategy: "" } } },
+          { rвыходerSettings: { rвыходer_settings: { num_retries: null, timeвыход: undefined, rвыходing_strategy: "" } } },
         ),
       ),
     ).toStrictEqual(aliasOnly());
@@ -436,7 +436,7 @@ describe("keys sourced from component state", () => {
   });
 
   it("sends configured budget fallbacks", () => {
-    expect(payloadOf(build({ key_alias: "my-key" }, { budgetFallbacks: { "gpt-4": ["gpt-4o"] } }))).toStrictEqual(
+    expect(payloadOf(build({ key_alias: "my-key" }, { budgetРезервные модели: { "gpt-4": ["gpt-4o"] } }))).toStrictEqual(
       aliasOnly({ budget_fallbacks: { "gpt-4": ["gpt-4o"] } }),
     );
   });
@@ -462,7 +462,7 @@ describe("purity", () => {
       key_alias: "my-key",
       mcp_tool_permissions: { "s-1": ["read"] },
       allowed_vector_store_ids: ["vs-1"],
-      disable_global_guardrails: false,
+      disable_global_гардрейловs: false,
       duration: "",
     };
     const before = structuredClone(values);
@@ -475,10 +475,10 @@ describe("serialised wire shape", () => {
   it("keeps an untouched closed form at eight object keys and seven wire keys", () => {
     const payload = payloadOf(build(CLOSED_SECTIONS_VALUES));
     expect(Object.keys(payload)).toHaveLength(8);
-    expect(wireKeys(payload)).toStrictEqual([
+    expect(wireКлючи(payload)).toStrictEqual([
       "team_id",
       "key_alias",
-      "models",
+      "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs",
       "key_type",
       "user_id",
       "duration",
@@ -491,21 +491,21 @@ describe("serialised wire shape", () => {
     const payload = payloadOf(build(CLOSED_SECTIONS_VALUES));
     expect(payload.organization_id).toBeUndefined();
     expect(payload.team_id).toBeNull();
-    expect(wireKeys(payload)).not.toContain("organization_id");
-    expect(wireKeys(payload)).toContain("team_id");
+    expect(wireКлючи(payload)).not.toContain("organization_id");
+    expect(wireКлючи(payload)).toContain("team_id");
   });
 
   it("forwards a selected team by value", () => {
     expect(payloadOf(build({ ...CLOSED_SECTIONS_VALUES, team_id: "team-1" })).team_id).toBe("team-1");
   });
 
-  it("adds fifteen keys to the object and only the two limit types to the wire when Optional Settings opens", () => {
+  it("adds fifteen keys to the object and only the two limit types to the wire when Дополнительные параметры opens", () => {
     const payload = payloadOf(build(OPTIONAL_SETTINGS_VALUES));
     expect(Object.keys(payload)).toHaveLength(23);
-    expect(wireKeys(payload)).toStrictEqual([
+    expect(wireКлючи(payload)).toStrictEqual([
       "team_id",
       "key_alias",
-      "models",
+      "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs",
       "key_type",
       "tpm_limit_type",
       "rpm_limit_type",
@@ -520,27 +520,27 @@ describe("serialised wire shape", () => {
     DROPPED_AT_SERIALISATION.forEach((key) => {
       expect(payload[key]).toBeUndefined();
     });
-    expect(wireKeys(payload)).toEqual(expect.not.arrayContaining(DROPPED_AT_SERIALISATION));
+    expect(wireКлючи(payload)).toEqual(expect.not.arrayContaining(DROPPED_AT_SERIALISATION));
   });
 });
 
 describe("duplicate alias", () => {
   it("reports the clash instead of building a payload", () => {
     expect(
-      build({ key_alias: "taken", team_id: "team-1" }, { existingKeys: [{ team_id: "team-1", key_alias: "taken" }] }),
+      build({ key_alias: "taken", team_id: "team-1" }, { existingКлючи: [{ team_id: "team-1", key_alias: "taken" }] }),
     ).toStrictEqual({ kind: "duplicate_alias", alias: "taken", teamId: "team-1" });
   });
 
   it("scopes the clash to the same team", () => {
     expect(
       payloadOf(
-        build({ key_alias: "taken", team_id: "team-2" }, { existingKeys: [{ team_id: "team-1", key_alias: "taken" }] }),
+        build({ key_alias: "taken", team_id: "team-2" }, { existingКлючи: [{ team_id: "team-1", key_alias: "taken" }] }),
       ).key_alias,
     ).toBe("taken");
   });
 
   it("treats a keyless form and a teamless key as the same bucket", () => {
-    expect(build({}, { existingKeys: [{ team_id: null, key_alias: "" }] })).toStrictEqual({
+    expect(build({}, { existingКлючи: [{ team_id: null, key_alias: "" }] })).toStrictEqual({
       kind: "duplicate_alias",
       alias: "",
       teamId: null,
@@ -551,7 +551,7 @@ describe("duplicate alias", () => {
     expect(
       build(
         { key_alias: "taken" },
-        { existingKeys: [{ team_id: null, key_alias: "taken" }], keyOwner: "agent", selectedAgentId: null },
+        { existingКлючи: [{ team_id: null, key_alias: "taken" }], keyOwner: "agent", selectedAgentId: null },
       ).kind,
     ).toBe("duplicate_alias");
   });
@@ -559,35 +559,35 @@ describe("duplicate alias", () => {
 
 describe("endpoint", () => {
   it.each([
-    ["you", "standard"],
-    ["another_user", "standard"],
+    ["you", "стандарт"],
+    ["another_user", "стандарт"],
     ["service_account", "service_account"],
-  ])("routes a %s key to the %s endpoint", (keyOwner, endpoint) => {
+  ])("rвыходes a %s key to the %s endpoint", (keyOwner, endpoint) => {
     const result = build({ key_alias: "my-key" }, { keyOwner });
     expect(result.kind === "ok" && result.endpoint).toBe(endpoint);
   });
 });
 
-describe("model_max_budget", () => {
-  it("sends the per-model budgets in the shape the API stores", () => {
+describe("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget", () => {
+  it("sends the per-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию budgets in the shape the API stores", () => {
     const payload = payloadOf(
       build(
         {},
         {
-          modelMaxBudget: {
+          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.Бюджет: {
             "claude-opus-4-8": { budget_limit: 200, time_period: "1mo" },
             "gpt-4o": { budget_limit: 0.5, time_period: "30d" },
           },
         },
       ),
     );
-    expect(payload.model_max_budget).toEqual({
+    expect(payload.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget).toEqual({
       "claude-opus-4-8": { budget_limit: 200, time_period: "1mo" },
       "gpt-4o": { budget_limit: 0.5, time_period: "30d" },
     });
   });
 
-  it("omits model_max_budget entirely when no model budget is set", () => {
-    expect(payloadOf(build({}))).not.toHaveProperty("model_max_budget");
+  it("omits Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget entirely when no Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию budget is set", () => {
+    expect(payloadOf(build({}))).not.toHaveСвойство("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget");
   });
 });

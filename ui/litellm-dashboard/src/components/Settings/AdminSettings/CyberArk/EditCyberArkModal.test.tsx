@@ -2,25 +2,25 @@ import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { renderWithProviders } from "../../../../../tests/test-utils";
+import { renderWithПровайдерs } from "../../../../../tests/test-utils";
 import EditCyberArkModal from "./EditCyberArkModal";
-import { useCyberArkConfig } from "@/app/(dashboard)/hooks/configOverrides/useCyberArkConfig";
-import { useUpdateCyberArkConfig } from "@/app/(dashboard)/hooks/configOverrides/useUpdateCyberArkConfig";
+import { useCyberArkКонфигурация } from "@/app/(dashboard)/hooks/configOverrides/useCyberArkКонфигурация";
+import { useUpdateCyberArkКонфигурация } from "@/app/(dashboard)/hooks/configOverrides/useUpdateCyberArkКонфигурация";
 
-vi.mock("@/app/(dashboard)/hooks/configOverrides/useCyberArkConfig", () => ({
-  useCyberArkConfig: vi.fn(),
+vi.mock("@/app/(dashboard)/hooks/configOverrides/useCyberArkКонфигурация", () => ({
+  useCyberArkКонфигурация: vi.fn(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/configOverrides/useUpdateCyberArkConfig", () => ({
-  useUpdateCyberArkConfig: vi.fn(),
+vi.mock("@/app/(dashboard)/hooks/configOverrides/useUpdateCyberArkКонфигурация", () => ({
+  useUpdateCyberArkКонфигурация: vi.fn(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/useAuthorized", () => ({
-  default: () => ({ accessToken: "sk-access-token" }),
+vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
+  default: () => ({ accessТокен: "sk-access-token" }),
 }));
 
 vi.mock("@/lib/toast", () => ({
-  toast: { success: vi.fn(), fromError: vi.fn() },
+  toast: { success: vi.fn(), fromОшибка: vi.fn() },
 }));
 
 const ALL_FIELDS = [
@@ -40,28 +40,28 @@ const propertiesFor = (fields: readonly string[]) =>
 const mutate = vi.fn();
 
 const setup = (options?: { values?: Record<string, unknown>; fields?: readonly string[] }) => {
-  vi.mocked(useCyberArkConfig).mockReturnValue({
+  vi.mocked(useCyberArkКонфигурация).mockReturnЗначение({
     data: {
       field_schema: { properties: propertiesFor(options?.fields ?? ALL_FIELDS) },
       values: options?.values ?? {},
     },
-  } as unknown as ReturnType<typeof useCyberArkConfig>);
+  } as unknown as ReturnType<typeof useCyberArkКонфигурация>);
 
-  vi.mocked(useUpdateCyberArkConfig).mockReturnValue({
+  vi.mocked(useUpdateCyberArkКонфигурация).mockReturnЗначение({
     mutate,
     isPending: false,
-  } as unknown as ReturnType<typeof useUpdateCyberArkConfig>);
+  } as unknown as ReturnType<typeof useUpdateCyberArkКонфигурация>);
 };
 
 const renderModal = (onSuccess = vi.fn(), onCancel = vi.fn()) =>
-  renderWithProviders(<EditCyberArkModal isVisible={true} onCancel={onCancel} onSuccess={onSuccess} />);
+  renderWithПровайдерs(<EditCyberArkModal isVisible={true} onCancel={onCancel} onSuccess={onSuccess} />);
 
 const save = async (user: ReturnType<typeof userEvent.setup>) =>
   user.click(screen.getByRole("button", { name: "Save" }));
 
 describe("EditCyberArkModal", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("clears untouched non-sensitive fields and omits untouched sensitive fields", async () => {
@@ -79,7 +79,7 @@ describe("EditCyberArkModal", () => {
     await save(user);
 
     await waitFor(() => {
-      expect(mutate).toHaveBeenCalledTimes(1);
+      expect(mutate).toHaveBeenCalledВремяs(1);
     });
     const expectedPayload = {
       cyberark_api_base: "https://conjur.example.com",
@@ -97,11 +97,11 @@ describe("EditCyberArkModal", () => {
     const user = userEvent.setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("API Key"), { target: { value: "rotated-key" } });
+    fireEvent.change(screen.getByLabelText("API Ключ"), { target: { value: "rotated-key" } });
     await save(user);
 
     await waitFor(() => {
-      expect(mutate).toHaveBeenCalledTimes(1);
+      expect(mutate).toHaveBeenCalledВремяs(1);
     });
     expect(mutate.mock.calls[0][0]).toMatchObject({ cyberark_api_key: "rotated-key" });
   });
@@ -110,8 +110,8 @@ describe("EditCyberArkModal", () => {
     setup({ values: { cyberark_api_key: "super-secret-key", client_key: "super-secret-pem" } });
     renderModal();
 
-    expect(screen.getByLabelText("API Key")).toHaveValue("");
-    expect(screen.getByLabelText("Client Key")).toHaveValue("");
+    expect(screen.getByLabelText("API Ключ")).toHaveЗначение("");
+    expect(screen.getByLabelText("Client Ключ")).toHaveЗначение("");
   });
 
   it("renders only the fields the schema declares, and sends only those", async () => {
@@ -123,12 +123,12 @@ describe("EditCyberArkModal", () => {
     renderModal();
 
     expect(screen.queryByLabelText("Account")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Client Key")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Client Ключ")).not.toBeInTheDocument();
 
     await save(user);
 
     await waitFor(() => {
-      expect(mutate).toHaveBeenCalledTimes(1);
+      expect(mutate).toHaveBeenCalledВремяs(1);
     });
     expect(mutate.mock.calls[0][0]).toEqual({ cyberark_api_base: "https://conjur.example.com" });
   });
@@ -138,7 +138,7 @@ describe("EditCyberArkModal", () => {
     const user = userEvent.setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("Conjur Server URL"), { target: { value: "conjur.example.com" } });
+    fireEvent.change(screen.getByLabelText("URL сервера Conjur"), { target: { value: "conjur.example.com" } });
     await save(user);
 
     expect(await screen.findByText("Must start with http:// or https://")).toBeInTheDocument();
@@ -149,7 +149,7 @@ describe("EditCyberArkModal", () => {
     setup({ values: { cyberark_api_key: "super-secret-key" } });
     renderModal();
 
-    expect(screen.getByLabelText("API Key")).toHaveAttribute(
+    expect(screen.getByLabelText("API Ключ")).toHaveAttribute(
       "placeholder",
       "Leave blank to keep existing (super-secret-key)",
     );
@@ -159,10 +159,10 @@ describe("EditCyberArkModal", () => {
     setup({ values: {} });
     renderModal();
 
-    expect(screen.getByLabelText("API Key")).toHaveAttribute("placeholder", "cyberark_api_key description");
+    expect(screen.getByLabelText("API Ключ")).toHaveAttribute("placeholder", "cyberark_api_key description");
   });
 
-  it("closes without saving when cancelled", async () => {
+  it("closes withвыход saving when cancelled", async () => {
     setup({ values: {} });
     const onCancel = vi.fn();
     const user = userEvent.setup();
@@ -170,7 +170,7 @@ describe("EditCyberArkModal", () => {
 
     await user.click(screen.getByRole("button", { name: "Cancel" }));
 
-    expect(onCancel).toHaveBeenCalledTimes(1);
+    expect(onCancel).toHaveBeenCalledВремяs(1);
     expect(mutate).not.toHaveBeenCalled();
   });
 });

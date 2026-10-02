@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
-import type { MountedFieldControlProps } from "@/components/common_components/MountedFormField";
-import { tagsControl } from "./mcpFieldRules";
+import type { MountedПолеControlProps } from "@/components/common_components/MountedFormПоле";
+import { tagsControl } from "./mcpПолеRules";
 
-const controlWith = (value: unknown, onChange = vi.fn()): MountedFieldControlProps =>
-  ({ id: "field", name: "field", value, onChange, onBlur: vi.fn() }) as unknown as MountedFieldControlProps;
+const controlWith = (value: unknown, onChange = vi.fn()): MountedПолеControlProps =>
+  ({ id: "field", name: "field", value, onChange, onBlur: vi.fn() }) as unknown as MountedПолеControlProps;
 
-// These fields were antd Selects with tokenSeparators={[","]}, so a comma commits a tag as an admin
-// types. MultiSelect owns that rule now, which leaves this adapter one job: hand the stored value to
-// the input and the edited value back, without rewriting either. Stdio args are process argv, so a
+// These fields were antd Выбратьs with tokenSeparators={[","]}, so a comma commits a tag as an admin
+// types. MultiВыбрать owns that rule now, which leaves this adapter one job: hand the stored value to
+// the input and the edited value back, withвыход rewriting either. Stdio args are process argv, so a
 // comma inside one and a deliberately repeated flag both have to survive a round trip.
 describe("tagsControl", () => {
   it("keeps a stored argument that contains a comma as one argument", () => {
@@ -24,7 +24,7 @@ describe("tagsControl", () => {
 
   it("stores the edited tags exactly as the input committed them", () => {
     const onChange = vi.fn();
-    tagsControl(controlWith(["npx"], onChange)).onValueChange(["npx", "--header=X-Trace: on"]);
+    tagsControl(controlWith(["npx"], onChange)).onЗначениеChange(["npx", "--header=X-Trace: on"]);
 
     expect(onChange).toHaveBeenCalledWith(["npx", "--header=X-Trace: on"]);
   });

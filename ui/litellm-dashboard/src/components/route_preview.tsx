@@ -28,45 +28,43 @@ const RoutePreview: React.FC<RoutePreviewProps> = ({ pathValue, targetValue, inc
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Route Preview</CardTitle>
-        <CardDescription>How your requests will be routed</CardDescription>
+        <CardTitle className="text-lg">Предпросмотр маршрутизации</CardTitle>
+        <CardDescription>Как будут маршрутизироваться ваши запросы</CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
         <div>
-          <h4 className="mb-3 text-base font-semibold">Basic routing:</h4>
+          <h4 className="mb-3 text-base font-semibold">Базовая маршрутизация:</h4>
           <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
-            <Endpoint label="Your endpoint">{`${proxyBaseUrl}${pathValue}`}</Endpoint>
+            <Endpoint label="Ваш эндпоинт">{`${proxyBaseUrl}${pathValue}`}</Endpoint>
             <ArrowRight className="size-5 shrink-0 self-center text-muted-foreground max-sm:rotate-90" />
-            <Endpoint label="Forwards to">{targetValue}</Endpoint>
+            <Endpoint label="Перенаправляет в">{targetValue}</Endpoint>
           </div>
         </div>
 
         {includeSubpath ? (
           <div>
-            <h4 className="mb-3 text-base font-semibold">With subpaths:</h4>
+            <h4 className="mb-3 text-base font-semibold">С подпутями:</h4>
             <div className="flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
-              <Endpoint label="Your endpoint + subpath">
+              <Endpoint label="Ваш эндпоинт + подпуть">
                 {`${proxyBaseUrl}${pathValue}`}
                 <span className="text-primary">/v1/text-to-image/base/model</span>
               </Endpoint>
               <ArrowRight className="size-5 shrink-0 self-center text-muted-foreground max-sm:rotate-90" />
-              <Endpoint label="Forwards to">
+              <Endpoint label="Перенаправляет в">
                 {targetValue}
                 <span className="text-primary">/v1/text-to-image/base/model</span>
               </Endpoint>
             </div>
             <p className="mt-3 text-sm text-muted-foreground">
-              Any path after {pathValue} will be appended to the target URL
+              Любой путь после {pathValue} будет добавлен к целевому URL
             </p>
           </div>
         ) : (
           <div className="flex items-start gap-2 rounded-md border border-primary/20 bg-primary/5 p-3 text-sm">
             <Info className="mt-0.5 size-4 shrink-0 text-primary" />
             <p>
-              <span className="font-medium">Not seeing the routing you wanted?</span> Try enabling - Include Subpaths -
-              above - this allows subroutes like{" "}
-              <code className="rounded-sm bg-primary/10 px-1 py-0.5 font-mono text-xs">/api/v1/models</code> to be
-              forwarded automatically.
+              <span className="font-medium">Не видите нужной маршрутизации?</span> Попробуйте включить «Include Subpaths» выше — это разрешит подмаршруты вроде{" "}
+              <code className="rounded-sm bg-primary/10 px-1 py-0.5 font-mono text-xs">/api/v1/models</code> на автоматическое перенаправление.
             </p>
           </div>
         )}

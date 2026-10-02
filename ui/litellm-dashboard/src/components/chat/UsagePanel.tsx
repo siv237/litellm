@@ -109,15 +109,15 @@ const UsagePanel: React.FC<Props> = ({ accessToken, userId }) => {
 
   const statCards: Array<{ label: string; value: string; sub?: string; subVariant?: "error" }> = meta
     ? [
-        { label: "Total Spend", value: `$${meta.total_spend.toFixed(2)}` },
-        { label: "API Requests", value: formatNumber(meta.total_api_requests) },
+        { label: "Общий расход", value: `$${meta.total_spend.toFixed(2)}` },
+        { label: "Запросы к API", value: formatNumber(meta.total_api_requests) },
         {
-          label: "Tokens Used",
+          label: "Использовано токенов",
           value: formatNumber(meta.total_tokens),
           sub: `${formatNumber(meta.total_prompt_tokens)} in / ${formatNumber(meta.total_completion_tokens)} out`,
         },
         {
-          label: "Success Rate",
+          label: "Успешность",
           value:
             meta.total_api_requests > 0
               ? `${((meta.total_successful_requests / meta.total_api_requests) * 100).toFixed(1)}%`
@@ -132,8 +132,8 @@ const UsagePanel: React.FC<Props> = ({ accessToken, userId }) => {
     <div className="w-full">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-base font-semibold text-foreground mb-0.5">Your Usage</h2>
-          <p className="text-sm text-muted-foreground m-0">Spend and request activity</p>
+          <h2 className="text-base font-semibold text-foreground mb-0.5">Ваше использование</h2>
+          <p className="text-sm text-muted-foreground m-0">Расходы и активность запросов</p>
         </div>
         <div className="flex gap-1">
           {TIME_RANGE_OPTIONS.map((opt) => (
@@ -161,7 +161,7 @@ const UsagePanel: React.FC<Props> = ({ accessToken, userId }) => {
       ) : !meta || meta.total_api_requests === 0 ? (
         <div className="text-center text-muted-foreground text-sm py-12 border border-dashed rounded-lg">
           <BarChart3 className="h-6 w-6 mb-3 mx-auto text-muted-foreground/50" />
-          No usage data for this period
+          Нет данных об использовании за этот период
         </div>
       ) : (
         <div>
@@ -186,11 +186,11 @@ const UsagePanel: React.FC<Props> = ({ accessToken, userId }) => {
           {dailyData.length > 1 && (
             <div className="grid grid-cols-2 gap-3">
               <div className="border rounded-lg p-4 bg-card">
-                <div className="text-xs text-muted-foreground mb-2">Daily Spend</div>
+                <div className="text-xs text-muted-foreground mb-2">Дневной расход</div>
                 <SparklineBar data={dailySpend} maxVal={maxSpend} />
               </div>
               <div className="border rounded-lg p-4 bg-card">
-                <div className="text-xs text-muted-foreground mb-2">Daily Requests</div>
+                <div className="text-xs text-muted-foreground mb-2">Запросов в день</div>
                 <SparklineBar data={dailyRequests} maxVal={maxRequests} />
               </div>
             </div>

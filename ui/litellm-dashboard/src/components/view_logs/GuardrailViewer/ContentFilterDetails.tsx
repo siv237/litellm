@@ -95,7 +95,7 @@ const ContentFilterDetails: React.FC<ContentFilterDetailsProps> = ({ response })
   if (detections.length === 0) {
     return (
       <div className="bg-card rounded-lg border border-border p-4">
-        <div className="text-muted-foreground text-sm">No detections found</div>
+        <div className="text-muted-foreground text-sm">Обнаружений нет</div>
       </div>
     );
   }
@@ -118,10 +118,10 @@ const ContentFilterDetails: React.FC<ContentFilterDetailsProps> = ({ response })
       <div className="bg-card rounded-lg border border-border p-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <KV label="Total Detections:">
+            <KV label="Всего обнаружений:">
               <span className="font-semibold">{totalDetections}</span>
             </KV>
-            <KV label="Actions:">
+            <KV label="Действия:">
               <div className="flex flex-wrap gap-2">
                 {blockedCount > 0 && chip(`${blockedCount} blocked`, "red")}
                 {maskedCount > 0 && chip(`${maskedCount} masked`, "blue")}
@@ -130,7 +130,7 @@ const ContentFilterDetails: React.FC<ContentFilterDetailsProps> = ({ response })
             </KV>
           </div>
           <div className="space-y-2">
-            <KV label="By Type:">
+            <KV label="По типу:">
               <div className="flex flex-wrap gap-2">
                 {patterns.length > 0 && chip(`${patterns.length} patterns`, "slate")}
                 {blockedWords.length > 0 && chip(`${blockedWords.length} keywords`, "slate")}
@@ -143,16 +143,16 @@ const ContentFilterDetails: React.FC<ContentFilterDetailsProps> = ({ response })
 
       {/* Patterns Section */}
       {patterns.length > 0 && (
-        <Section title="Patterns Matched" count={patterns.length} defaultOpen={true}>
+        <Section title="Совпавшие паттерны" count={patterns.length} defaultOpen={true}>
           <div className="space-y-2">
             {patterns.map((detection, idx) => (
               <div key={idx} className="p-3 bg-muted rounded-md">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <KV label="Pattern:">{detection.pattern_name || "unknown"}</KV>
+                    <KV label="Паттерн:">{detection.pattern_name || "unknown"}</KV>
                   </div>
                   <div className="space-y-1">
-                    <KV label="Action:">{chip(detection.action, detection.action === "BLOCK" ? "red" : "blue")}</KV>
+                    <KV label="Действие:">{chip(detection.action, detection.action === "BLOCK" ? "red" : "blue")}</KV>
                   </div>
                 </div>
               </div>
@@ -163,19 +163,19 @@ const ContentFilterDetails: React.FC<ContentFilterDetailsProps> = ({ response })
 
       {/* Blocked Words Section */}
       {blockedWords.length > 0 && (
-        <Section title="Blocked Words Detected" count={blockedWords.length} defaultOpen={true}>
+        <Section title="Обнаруженные блокируемые слова" count={blockedWords.length} defaultOpen={true}>
           <div className="space-y-2">
             {blockedWords.map((detection, idx) => (
               <div key={idx} className="p-3 bg-muted rounded-md">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <KV label="Keyword:" mono>
+                    <KV label="Ключевое слово:" mono>
                       {detection.keyword || "unknown"}
                     </KV>
-                    {detection.description && <KV label="Description:">{detection.description}</KV>}
+                    {detection.description && <KV label="Описание:">{detection.description}</KV>}
                   </div>
                   <div className="space-y-1">
-                    <KV label="Action:">{chip(detection.action, detection.action === "BLOCK" ? "red" : "blue")}</KV>
+                    <KV label="Действие:">{chip(detection.action, detection.action === "BLOCK" ? "red" : "blue")}</KV>
                   </div>
                 </div>
               </div>
@@ -186,18 +186,18 @@ const ContentFilterDetails: React.FC<ContentFilterDetailsProps> = ({ response })
 
       {/* Category Keywords Section */}
       {categoryKeywords.length > 0 && (
-        <Section title="Category Keywords Detected" count={categoryKeywords.length} defaultOpen={true}>
+        <Section title="Обнаруженные слова категории" count={categoryKeywords.length} defaultOpen={true}>
           <div className="space-y-2">
             {categoryKeywords.map((detection, idx) => (
               <div key={idx} className="p-3 bg-muted rounded-md">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <KV label="Category:">{detection.category || "unknown"}</KV>
-                    <KV label="Keyword:" mono>
+                    <KV label="Категория:">{detection.category || "unknown"}</KV>
+                    <KV label="Ключевое слово:" mono>
                       {detection.keyword || "unknown"}
                     </KV>
                     {detection.severity && (
-                      <KV label="Severity:">
+                      <KV label="Критичность:">
                         {chip(
                           detection.severity,
                           detection.severity === "high" ? "red" : detection.severity === "medium" ? "amber" : "slate",
@@ -206,7 +206,7 @@ const ContentFilterDetails: React.FC<ContentFilterDetailsProps> = ({ response })
                     )}
                   </div>
                   <div className="space-y-1">
-                    <KV label="Action:">{chip(detection.action, detection.action === "BLOCK" ? "red" : "blue")}</KV>
+                    <KV label="Действие:">{chip(detection.action, detection.action === "BLOCK" ? "red" : "blue")}</KV>
                   </div>
                 </div>
               </div>
@@ -216,7 +216,7 @@ const ContentFilterDetails: React.FC<ContentFilterDetailsProps> = ({ response })
       )}
 
       {/* Raw JSON (for debugging) */}
-      <Section title="Raw Detection Data" defaultOpen={false}>
+      <Section title="Сырые данные обнаружения" defaultOpen={false}>
         <pre className="bg-muted rounded-sm p-3 text-xs overflow-x-auto">{JSON.stringify(detections, null, 2)}</pre>
       </Section>
     </div>

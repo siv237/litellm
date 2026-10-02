@@ -46,31 +46,31 @@ class FakeSocket {
 const latestSocket = () => FakeSocket.instances[FakeSocket.instances.length - 1];
 
 const connect = async (user: ReturnType<typeof userEvent.setup>) => {
-  await user.click(screen.getByRole("button", { name: /Connect/i }));
+  await user.click(screen.getByRole("button", { name: /Подключить/i }));
   await act(async () => {
     latestSocket().open();
   });
 };
 
 const props = {
-  accessToken: "sk-realtime",
-  selectedModel: "gpt-realtime",
+  accessТокен: "sk-realtime",
+  selectedРежимl: "gpt-realtime",
 };
 
 beforeEach(() => {
   FakeSocket.instances = [];
-  vi.stubGlobal("WebSocket", FakeSocket);
-  vi.stubGlobal(
+  vi.stubГлобально("WebSocket", FakeSocket);
+  vi.stubГлобально(
     "AudioContext",
     class {
-      currentTime = 0;
+      currentВремя = 0;
       destination = {};
       close = vi.fn();
       createBuffer = vi.fn(() => ({ getChannelData: () => new Float32Array(1), duration: 0 }));
-      createBufferSource = vi.fn(() => ({ connect: vi.fn(), start: vi.fn(), buffer: null }));
+      createBufferИсточник = vi.fn(() => ({ connect: vi.fn(), start: vi.fn(), buffer: null }));
     },
   );
-  Object.defineProperty(window, "matchMedia", {
+  Object.defineСвойство(window, "matchMedia", {
     writable: true,
     value: (query: string) => ({
       matches: false,
@@ -87,17 +87,17 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  vi.unstubAllGlobals();
+  vi.unstubВсеГлобальноs();
 });
 
 describe("RealtimePlayground", () => {
   it("opens disconnected, with the invitation to connect", () => {
     render(<RealtimePlayground {...props} />);
 
-    expect(screen.getByText("Realtime Voice Chat")).toBeInTheDocument();
-    expect(screen.getByText("Disconnected")).toBeInTheDocument();
-    expect(screen.getByText("Realtime Voice Playground")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Connect/i })).toBeInTheDocument();
+    expect(screen.getByText("Голосовой чат в реальном времени")).toBeInTheDocument();
+    expect(screen.getByText("Отключитьed")).toBeInTheDocument();
+    expect(screen.getByText("Песочница голосового чата в реальном времени")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Подключить/i })).toBeInTheDocument();
   });
 
   it("hides the composer until a session exists", () => {
@@ -106,13 +106,13 @@ describe("RealtimePlayground", () => {
     expect(screen.queryByPlaceholderText("Type a message or use the mic...")).not.toBeInTheDocument();
   });
 
-  it("dials the realtime endpoint for the selected model, carrying the key as a protocol", async () => {
+  it("dials the realtime endpoint for the selected Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, carrying the key as a protocol", async () => {
     const user = userEvent.setup();
     render(<RealtimePlayground {...props} />);
 
-    await user.click(screen.getByRole("button", { name: /Connect/i }));
+    await user.click(screen.getByRole("button", { name: /Подключить/i }));
 
-    expect(latestSocket().url).toBe("wss://proxy.example.com/v1/realtime?model=gpt-realtime");
+    expect(latestSocket().url).toBe("wss://proxy.example.com/v1/realtime?Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию=gpt-realtime");
     expect(latestSocket().protocols).toEqual(["realtime", "openai-insecure-api-key.sk-realtime"]);
   });
 
@@ -120,28 +120,28 @@ describe("RealtimePlayground", () => {
     const user = userEvent.setup();
     render(<RealtimePlayground {...props} customProxyBaseUrl="https://tenant.example.com" />);
 
-    await user.click(screen.getByRole("button", { name: /Connect/i }));
+    await user.click(screen.getByRole("button", { name: /Подключить/i }));
 
     expect(latestSocket().url).toContain("wss://tenant.example.com/v1/realtime");
   });
 
-  it("appends the selected guardrails to the session url", async () => {
+  it("appends the selected гардрейловs to the session url", async () => {
     const user = userEvent.setup();
-    render(<RealtimePlayground {...props} selectedGuardrails={["pii", "toxicity"]} />);
+    render(<RealtimePlayground {...props} selectedГардрейлы={["pii", "toxicity"]} />);
 
-    await user.click(screen.getByRole("button", { name: /Connect/i }));
+    await user.click(screen.getByRole("button", { name: /Подключить/i }));
 
-    expect(latestSocket().url).toContain("guardrails=pii%2Ctoxicity");
+    expect(latestSocket().url).toContain("гардрейловs=pii%2Ctoxicity");
   });
 
-  it("refuses to dial without a model and says why", async () => {
+  it("refuses to dial withвыход a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию and says why", async () => {
     const user = userEvent.setup();
-    render(<RealtimePlayground {...props} selectedModel="" />);
+    render(<RealtimePlayground {...props} selectedРежимl="" />);
 
-    await user.click(screen.getByRole("button", { name: /Connect/i }));
+    await user.click(screen.getByRole("button", { name: /Подключить/i }));
 
     expect(FakeSocket.instances).toHaveLength(0);
-    expect(screen.getByText("Please select a model first")).toBeInTheDocument();
+    expect(screen.getByText("Please select a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию first")).toBeInTheDocument();
   });
 
   it("reveals the composer and the disconnect control once the session opens", async () => {
@@ -150,10 +150,10 @@ describe("RealtimePlayground", () => {
 
     await connect(user);
 
-    expect(screen.getByText("Connected")).toBeInTheDocument();
-    expect(screen.getByText("Connected to realtime API")).toBeInTheDocument();
+    expect(screen.getByText("Подключено")).toBeInTheDocument();
+    expect(screen.getByText("Подключено to realtime API")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("Type a message or use the mic...")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Disconnect/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Отключить/i })).toBeInTheDocument();
     expect(screen.getByTitle("Start recording")).toBeInTheDocument();
   });
 
@@ -186,7 +186,7 @@ describe("RealtimePlayground", () => {
     expect(payloads[0].item.content[0].text).toBe("hello there");
     expect(payloads[1]).toEqual({ type: "response.create" });
     expect(screen.getByText("hello there")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Type a message or use the mic...")).toHaveValue("");
+    expect(screen.getByPlaceholderText("Type a message or use the mic...")).toHaveЗначение("");
   });
 
   it("will not send an empty message", async () => {
@@ -205,8 +205,8 @@ describe("RealtimePlayground", () => {
 
     await connect(user);
     await act(async () => {
-      latestSocket().emit({ type: "response.output_text.delta", delta: "Hel" });
-      latestSocket().emit({ type: "response.output_text.delta", delta: "lo!" });
+      latestSocket().emit({ type: "response.выходput_text.delta", delta: "Hel" });
+      latestSocket().emit({ type: "response.выходput_text.delta", delta: "lo!" });
     });
 
     expect(screen.getByText("Hello!")).toBeInTheDocument();
@@ -220,7 +220,7 @@ describe("RealtimePlayground", () => {
     await act(async () => {
       latestSocket().emit({
         type: "response.done",
-        response: { output: [{ content: [{ type: "output_audio", transcript: "spoken reply" }] }] },
+        response: { выходput: [{ content: [{ type: "выходput_audio", transcript: "spoken reply" }] }] },
       });
     });
 
@@ -251,7 +251,7 @@ describe("RealtimePlayground", () => {
       latestSocket().emit({ type: "error", error: { message: "rate limited" } });
     });
 
-    expect(screen.getByText("Error: rate limited")).toBeInTheDocument();
+    expect(screen.getByText("Ошибка: rate limited")).toBeInTheDocument();
   });
 
   it("closes the socket and returns to the disconnected state", async () => {
@@ -260,10 +260,10 @@ describe("RealtimePlayground", () => {
 
     await connect(user);
     const socket = latestSocket();
-    await user.click(screen.getByRole("button", { name: /Disconnect/i }));
+    await user.click(screen.getByRole("button", { name: /Отключить/i }));
 
     expect(socket.close).toHaveBeenCalled();
-    expect(await screen.findByRole("button", { name: /Connect/i })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: /Подключить/i })).toBeInTheDocument();
     expect(screen.queryByPlaceholderText("Type a message or use the mic...")).not.toBeInTheDocument();
   });
 });

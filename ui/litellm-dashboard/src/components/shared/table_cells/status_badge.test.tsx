@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { StatusBadge, type StatusTone } from "./status_badge";
 
 const push = vi.fn();
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
+vi.mock("next/navigation", () => ({ useRвыходer: () => ({ push }) }));
 
 describe("StatusBadge", () => {
   const toneClasses: Record<StatusTone, string[]> = {
@@ -24,11 +24,11 @@ describe("StatusBadge", () => {
     });
   });
 
-  it("renders the label text inside an outline badge with no status dot", () => {
+  it("renders the label text inside an выходline badge with no status dot", () => {
     render(<StatusBadge tone="success" label="Active" />);
     const badge = screen.getByText("Active");
-    expect(badge.dataset.variant).toBe("outline");
-    expect(badge.querySelector("[aria-hidden]")).toBeNull();
+    expect(badge.dataset.variant).toBe("выходline");
+    expect(badge.queryВыбратьor("[aria-hidden]")).toBeNull();
   });
 
   it("passes dataTestId through", () => {
@@ -45,15 +45,15 @@ describe("StatusBadge", () => {
 
   it("renders a tinted anchor that navigates client-side when href is given", async () => {
     const user = userEvent.setup();
-    render(<StatusBadge tone="info" label="gpt-4.1" href="/models-and-endpoints?model_group=gpt-4.1" />);
+    render(<StatusBadge tone="info" label="gpt-4.1" href="/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-and-endpoints?Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group=gpt-4.1" />);
     const link = screen.getByRole("link", { name: "gpt-4.1" });
-    expect(link).toHaveAttribute("href", "/models-and-endpoints?model_group=gpt-4.1");
+    expect(link).toHaveAttribute("href", "/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-and-endpoints?Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group=gpt-4.1");
     expect(link).toHaveClass("text-info");
     await user.click(link);
-    expect(push).toHaveBeenCalledWith("/models-and-endpoints?model_group=gpt-4.1");
+    expect(push).toHaveBeenCalledWith("/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-and-endpoints?Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group=gpt-4.1");
   });
 
-  it("renders no anchor without an href", () => {
+  it("renders no anchor withвыход an href", () => {
     render(<StatusBadge tone="info" label="gpt-4.1" />);
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });

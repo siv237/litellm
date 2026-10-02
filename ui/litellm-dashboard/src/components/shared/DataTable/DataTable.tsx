@@ -332,8 +332,8 @@ function DefaultEmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <SearchX className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No results</div>
-      <div className="text-sm text-muted-foreground">No rows match your search or filters.</div>
+      <div className="text-sm font-medium text-foreground">Нет результатов</div>
+      <div className="text-sm text-muted-foreground">Ни одна строка не подходит под поиск или фильтры.</div>
     </div>
   );
 }

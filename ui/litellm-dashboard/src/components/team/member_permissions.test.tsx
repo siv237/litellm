@@ -1,6 +1,6 @@
 import * as networking from "@/components/networking";
 import { act, fireEvent, screen, waitFor, within } from "@testing-library/react";
-import { renderWithProviders } from "../../../tests/test-utils";
+import { renderWithПровайдерs } from "../../../tests/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import MemberPermissions from "./member_permissions";
 
@@ -14,62 +14,62 @@ const checkboxFor = (endpoint: string) =>
 
 describe("MemberPermissions", () => {
   afterEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should render", async () => {
-    vi.mocked(networking.getTeamPermissionsCall).mockResolvedValue({
+    vi.mocked(networking.getTeamPermissionsCall).mockResolvedЗначение({
       all_available_permissions: ["/key/generate", "/key/list"],
       team_member_permissions: ["/key/generate"],
     });
 
-    renderWithProviders(<MemberPermissions teamId="team-123" accessToken="token-123" canEditTeam={true} />);
+    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Member Permissions")).toBeInTheDocument();
+      expect(screen.getByText("Права участника")).toBeInTheDocument();
     });
   });
 
   it("should display permissions table when permissions are available", async () => {
-    vi.mocked(networking.getTeamPermissionsCall).mockResolvedValue({
+    vi.mocked(networking.getTeamPermissionsCall).mockResolvedЗначение({
       all_available_permissions: ["/key/generate", "/key/list"],
       team_member_permissions: ["/key/generate"],
     });
 
-    renderWithProviders(<MemberPermissions teamId="team-123" accessToken="token-123" canEditTeam={true} />);
+    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Method")).toBeInTheDocument();
-      expect(screen.getByText("Endpoint")).toBeInTheDocument();
-      expect(screen.getByText("Description")).toBeInTheDocument();
-      expect(screen.getByText("Allow Access")).toBeInTheDocument();
+      expect(screen.getByText("Метод")).toBeInTheDocument();
+      expect(screen.getByText("Эндпоинт")).toBeInTheDocument();
+      expect(screen.getByText("Описание")).toBeInTheDocument();
+      expect(screen.getByText("Разрешить доступ")).toBeInTheDocument();
     });
   });
 
   it("should display empty state when no permissions are available", async () => {
-    vi.mocked(networking.getTeamPermissionsCall).mockResolvedValue({
+    vi.mocked(networking.getTeamPermissionsCall).mockResolvedЗначение({
       all_available_permissions: [],
       team_member_permissions: [],
     });
 
-    renderWithProviders(<MemberPermissions teamId="team-123" accessToken="token-123" canEditTeam={true} />);
+    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
-      expect(screen.getByText("No permissions available")).toBeInTheDocument();
+      expect(screen.getByText("Нет доступных прав")).toBeInTheDocument();
     });
   });
 
   it("should save permissions when save button is clicked", async () => {
-    vi.mocked(networking.getTeamPermissionsCall).mockResolvedValue({
+    vi.mocked(networking.getTeamPermissionsCall).mockResolvedЗначение({
       all_available_permissions: ["/key/generate", "/key/list"],
       team_member_permissions: ["/key/generate"],
     });
-    vi.mocked(networking.teamPermissionsUpdateCall).mockResolvedValue({});
+    vi.mocked(networking.teamPermissionsUpdateCall).mockResolvedЗначение({});
 
-    renderWithProviders(<MemberPermissions teamId="team-123" accessToken="token-123" canEditTeam={true} />);
+    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Member Permissions")).toBeInTheDocument();
+      expect(screen.getByText("Права участника")).toBeInTheDocument();
     });
 
     expect(checkboxFor("/key/generate")).toBeChecked();
@@ -96,12 +96,12 @@ describe("MemberPermissions", () => {
   });
 
   it("should render team daily activity permission with correct method and description", async () => {
-    vi.mocked(networking.getTeamPermissionsCall).mockResolvedValue({
+    vi.mocked(networking.getTeamPermissionsCall).mockResolvedЗначение({
       all_available_permissions: ["/key/generate", "/team/daily/activity"],
       team_member_permissions: [],
     });
 
-    renderWithProviders(<MemberPermissions teamId="team-123" accessToken="token-123" canEditTeam={true} />);
+    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
       expect(screen.getByText("/team/daily/activity")).toBeInTheDocument();
@@ -110,15 +110,15 @@ describe("MemberPermissions", () => {
   });
 
   it("should not show save button when canEditTeam is false", async () => {
-    vi.mocked(networking.getTeamPermissionsCall).mockResolvedValue({
+    vi.mocked(networking.getTeamPermissionsCall).mockResolvedЗначение({
       all_available_permissions: ["/key/generate", "/key/list"],
       team_member_permissions: ["/key/generate"],
     });
 
-    renderWithProviders(<MemberPermissions teamId="team-123" accessToken="token-123" canEditTeam={false} />);
+    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={false} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Member Permissions")).toBeInTheDocument();
+      expect(screen.getByText("Права участника")).toBeInTheDocument();
     });
 
     expect(checkboxFor("/key/list")).not.toBeChecked();
@@ -132,15 +132,15 @@ describe("MemberPermissions", () => {
   });
 
   it("should handle reset button click", async () => {
-    vi.mocked(networking.getTeamPermissionsCall).mockResolvedValue({
+    vi.mocked(networking.getTeamPermissionsCall).mockResolvedЗначение({
       all_available_permissions: ["/key/generate", "/key/list"],
       team_member_permissions: ["/key/generate"],
     });
 
-    renderWithProviders(<MemberPermissions teamId="team-123" accessToken="token-123" canEditTeam={true} />);
+    renderWithПровайдерs(<MemberPermissions teamId="team-123" accessТокен="token-123" canEditTeam={true} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Member Permissions")).toBeInTheDocument();
+      expect(screen.getByText("Права участника")).toBeInTheDocument();
     });
 
     await act(async () => {
@@ -149,7 +149,7 @@ describe("MemberPermissions", () => {
 
     expect(checkboxFor("/key/list")).toBeChecked();
 
-    vi.mocked(networking.getTeamPermissionsCall).mockResolvedValueOnce({
+    vi.mocked(networking.getTeamPermissionsCall).mockResolvedЗначениеOnce({
       all_available_permissions: ["/key/generate", "/key/list"],
       team_member_permissions: ["/key/generate"],
     });
@@ -160,7 +160,7 @@ describe("MemberPermissions", () => {
     });
 
     await waitFor(() => {
-      expect(networking.getTeamPermissionsCall).toHaveBeenCalledTimes(2);
+      expect(networking.getTeamPermissionsCall).toHaveBeenCalledВремяs(2);
     });
 
     expect(checkboxFor("/key/list")).not.toBeChecked();

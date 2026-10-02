@@ -4,18 +4,18 @@ import {
   OAUTH_FLOW,
   MCP_OAUTH2_FLOW_M2M,
   TRANSPORT,
-  handleTransport,
+  handleТранспорт,
   handleAuth,
-  getMcpOAuthMode,
-  gatewayMintsClientFor,
+  getMcpOAuthРежим,
+  gatewayМин.tsClientFor,
   getOAuthAuthorizationIdentity,
-  isHeldOAuthTokenStale,
-  preservedAdminCredentials,
-  oauth2FlowToFormValue,
-  preservedDeclaredAppCredentials,
-  withoutMintedTokenCredentials,
+  isHeldOAuthТокенStale,
+  preservedAdminУчётные данные,
+  oauth2FlowToFormЗначение,
+  preservedDeclaredПриложениеУчётные данные,
+  withвыходМин.tedТокенУчётные данные,
   credentialAuthClass,
-  isUnsupportedOnGatewayConnect,
+  isUnsupportedOnGatewayПодключить,
 } from "./types";
 
 describe("getOAuthAuthorizationIdentity", () => {
@@ -26,7 +26,7 @@ describe("getOAuthAuthorizationIdentity", () => {
     const authorized = { auth_type: AUTH_TYPE.OAUTH2, spec_path: "https://a.example.com/openapi.json" };
     const edited = { auth_type: AUTH_TYPE.OAUTH2, spec_path: "https://b.example.com/openapi.json" };
     expect(getOAuthAuthorizationIdentity(edited)).not.toBe(getOAuthAuthorizationIdentity(authorized));
-    expect(isHeldOAuthTokenStale(edited, getOAuthAuthorizationIdentity(authorized))).toBe(true);
+    expect(isHeldOAuthТокенStale(edited, getOAuthAuthorizationIdentity(authorized))).toBe(true);
   });
 
   it("changes when url changes", () => {
@@ -56,36 +56,36 @@ describe("getOAuthAuthorizationIdentity", () => {
     };
     expect(getOAuthAuthorizationIdentity(retargeted)).not.toBe(getOAuthAuthorizationIdentity(authorized));
     expect(getOAuthAuthorizationIdentity(unset)).not.toBe(getOAuthAuthorizationIdentity(authorized));
-    expect(isHeldOAuthTokenStale(retargeted, getOAuthAuthorizationIdentity(authorized))).toBe(true);
+    expect(isHeldOAuthТокенStale(retargeted, getOAuthAuthorizationIdentity(authorized))).toBe(true);
   });
 
   it("is stable across non-mint fields", () => {
     const authorized = { auth_type: AUTH_TYPE.OAUTH2, url: "https://a.example.com/mcp", server_name: "one" };
     const renamed = { auth_type: AUTH_TYPE.OAUTH2, url: "https://a.example.com/mcp", server_name: "two" };
     expect(getOAuthAuthorizationIdentity(renamed)).toBe(getOAuthAuthorizationIdentity(authorized));
-    expect(isHeldOAuthTokenStale(renamed, getOAuthAuthorizationIdentity(authorized))).toBe(false);
+    expect(isHeldOAuthТокенStale(renamed, getOAuthAuthorizationIdentity(authorized))).toBe(false);
   });
 });
 
-describe("handleTransport", () => {
+describe("handleТранспорт", () => {
   it("should default to SSE when transport is null", () => {
-    expect(handleTransport(null)).toBe(TRANSPORT.SSE);
+    expect(handleТранспорт(null)).toBe(TRANSPORT.SSE);
   });
 
   it("should default to SSE when transport is undefined", () => {
-    expect(handleTransport(undefined)).toBe(TRANSPORT.SSE);
+    expect(handleТранспорт(undefined)).toBe(TRANSPORT.SSE);
   });
 
-  it("should return openapi when specPath is present and transport is not stdio", () => {
-    expect(handleTransport("http", "/spec.yaml")).toBe(TRANSPORT.OPENAPI);
+  it("should return openapi when specПуть is present and transport is not stdio", () => {
+    expect(handleТранспорт("http", "/spec.yaml")).toBe(TRANSPORT.OPENAPI);
   });
 
-  it("should keep stdio even when specPath is present", () => {
-    expect(handleTransport(TRANSPORT.STDIO, "/spec.yaml")).toBe(TRANSPORT.STDIO);
+  it("should keep stdio even when specПуть is present", () => {
+    expect(handleТранспорт(TRANSPORT.STDIO, "/spec.yaml")).toBe(TRANSPORT.STDIO);
   });
 
-  it("should return the transport as-is when no specPath", () => {
-    expect(handleTransport("http")).toBe("http");
+  it("should return the transport as-is when no specПуть", () => {
+    expect(handleТранспорт("http")).toBe("http");
   });
 });
 
@@ -128,7 +128,7 @@ describe("constants", () => {
   });
 });
 
-describe("gatewayMintsClientFor", () => {
+describe("gatewayМин.tsClientFor", () => {
   // The authoritative client-acquisition matrix: for each (auth_type, dcr_bridge) cell, does the
   // gateway mint the OAuth client at /authorize (browser skips its own register) or not (browser
   // registers)? This MUST equal the backend resolve_ephemeral_dcr_client mint set exactly, which
@@ -158,26 +158,26 @@ describe("gatewayMintsClientFor", () => {
   it.each(MATRIX)(
     "mints=$mints for auth_type=$auth_type dcr_bridge=$dcr_bridge",
     ({ auth_type, dcr_bridge, mints }) => {
-      expect(gatewayMintsClientFor({ auth_type, dcr_bridge })).toBe(mints);
+      expect(gatewayМин.tsClientFor({ auth_type, dcr_bridge })).toBe(mints);
     },
   );
 });
 
-describe("getMcpOAuthMode", () => {
+describe("getMcpOAuthРежим", () => {
   it("returns null for non-OAuth2 servers", () => {
-    expect(getMcpOAuthMode({ auth_type: AUTH_TYPE.API_KEY })).toBeNull();
-    expect(getMcpOAuthMode({ auth_type: AUTH_TYPE.NONE })).toBeNull();
-    expect(getMcpOAuthMode({})).toBeNull();
+    expect(getMcpOAuthРежим({ auth_type: AUTH_TYPE.API_KEY })).toBeNull();
+    expect(getMcpOAuthРежим({ auth_type: AUTH_TYPE.NONE })).toBeNull();
+    expect(getMcpOAuthРежим({})).toBeNull();
   });
 
   it("classifies client_credentials as m2m", () => {
-    expect(getMcpOAuthMode({ auth_type: AUTH_TYPE.OAUTH2, oauth2_flow: MCP_OAUTH2_FLOW_M2M })).toBe("m2m");
+    expect(getMcpOAuthРежим({ auth_type: AUTH_TYPE.OAUTH2, oauth2_flow: MCP_OAUTH2_FLOW_M2M })).toBe("m2m");
   });
 
   it("classifies oauth2_token_exchange as token_exchange regardless of the oauth2 secondary fields", () => {
-    expect(getMcpOAuthMode({ auth_type: AUTH_TYPE.OAUTH2_TOKEN_EXCHANGE })).toBe("token_exchange");
+    expect(getMcpOAuthРежим({ auth_type: AUTH_TYPE.OAUTH2_TOKEN_EXCHANGE })).toBe("token_exchange");
     expect(
-      getMcpOAuthMode({
+      getMcpOAuthРежим({
         auth_type: AUTH_TYPE.OAUTH2_TOKEN_EXCHANGE,
         oauth2_flow: MCP_OAUTH2_FLOW_M2M,
         delegate_auth_to_upstream: true,
@@ -187,7 +187,7 @@ describe("getMcpOAuthMode", () => {
 
   it("treats m2m as m2m even when delegate_auth_to_upstream is true", () => {
     expect(
-      getMcpOAuthMode({
+      getMcpOAuthРежим({
         auth_type: AUTH_TYPE.OAUTH2,
         oauth2_flow: MCP_OAUTH2_FLOW_M2M,
         delegate_auth_to_upstream: true,
@@ -196,24 +196,24 @@ describe("getMcpOAuthMode", () => {
   });
 
   it("classifies an interactive server with delegate_auth_to_upstream as passthrough", () => {
-    expect(getMcpOAuthMode({ auth_type: AUTH_TYPE.OAUTH2, oauth2_flow: null, delegate_auth_to_upstream: true })).toBe(
+    expect(getMcpOAuthРежим({ auth_type: AUTH_TYPE.OAUTH2, oauth2_flow: null, delegate_auth_to_upstream: true })).toBe(
       "passthrough",
     );
   });
 
-  it("classifies an interactive server without delegation as authorization_code", () => {
-    expect(getMcpOAuthMode({ auth_type: AUTH_TYPE.OAUTH2, oauth2_flow: null, delegate_auth_to_upstream: false })).toBe(
+  it("classifies an interactive server withвыход delegation as authorization_code", () => {
+    expect(getMcpOAuthРежим({ auth_type: AUTH_TYPE.OAUTH2, oauth2_flow: null, delegate_auth_to_upstream: false })).toBe(
       "authorization_code",
     );
   });
 
   it("defaults to authorization_code when delegate_auth_to_upstream is undefined", () => {
-    expect(getMcpOAuthMode({ auth_type: AUTH_TYPE.OAUTH2 })).toBe("authorization_code");
+    expect(getMcpOAuthРежим({ auth_type: AUTH_TYPE.OAUTH2 })).toBe("authorization_code");
   });
 
   it("treats explicit authorization_code as interactive, not m2m", () => {
     expect(
-      getMcpOAuthMode({
+      getMcpOAuthРежим({
         auth_type: AUTH_TYPE.OAUTH2,
         oauth2_flow: "authorization_code",
         delegate_auth_to_upstream: false,
@@ -222,50 +222,50 @@ describe("getMcpOAuthMode", () => {
   });
 
   // Regression: the old heuristic labeled any OAuth2 server with a token endpoint
-  // as M2M. getMcpOAuthMode ignores token_url, so an interactive server that
+  // as M2M. getMcpOAuthРежим ignores token_url, so an interactive server that
   // legitimately carries one is classified by oauth2_flow + delegate, never M2M.
   it("does not treat an interactive server with a token endpoint as m2m", () => {
-    expect(getMcpOAuthMode({ auth_type: AUTH_TYPE.OAUTH2, oauth2_flow: null, delegate_auth_to_upstream: false })).toBe(
+    expect(getMcpOAuthРежим({ auth_type: AUTH_TYPE.OAUTH2, oauth2_flow: null, delegate_auth_to_upstream: false })).toBe(
       "authorization_code",
     );
   });
 });
 
-describe("oauth2FlowToFormValue", () => {
+describe("oauth2FlowToFormЗначение", () => {
   it("maps client_credentials to the M2M select value", () => {
-    expect(oauth2FlowToFormValue(MCP_OAUTH2_FLOW_M2M)).toBe(OAUTH_FLOW.M2M);
+    expect(oauth2FlowToFormЗначение(MCP_OAUTH2_FLOW_M2M)).toBe(OAUTH_FLOW.M2M);
   });
 
   it("maps authorization_code to the Interactive select value", () => {
-    expect(oauth2FlowToFormValue("authorization_code")).toBe(OAUTH_FLOW.INTERACTIVE);
+    expect(oauth2FlowToFormЗначение("authorization_code")).toBe(OAUTH_FLOW.INTERACTIVE);
   });
 
   it("returns undefined for a null/unset flow so the select shows its placeholder", () => {
-    expect(oauth2FlowToFormValue(null)).toBeUndefined();
-    expect(oauth2FlowToFormValue(undefined)).toBeUndefined();
+    expect(oauth2FlowToFormЗначение(null)).toBeUndefined();
+    expect(oauth2FlowToFormЗначение(undefined)).toBeUndefined();
   });
 });
 
-describe("preservedDeclaredAppCredentials", () => {
+describe("preservedDeclaredПриложениеУчётные данные", () => {
   it("keeps only non-empty string declared-app keys and never token-shaped keys", () => {
-    expect(preservedDeclaredAppCredentials(undefined)).toBeUndefined();
-    expect(preservedDeclaredAppCredentials({})).toBeUndefined();
-    expect(preservedDeclaredAppCredentials({ client_id: 123 })).toBeUndefined();
-    expect(preservedDeclaredAppCredentials({ client_id: "" })).toBeUndefined();
-    expect(preservedDeclaredAppCredentials({ client_id: "a", access_token: "t", scopes: ["s"] })).toEqual({
+    expect(preservedDeclaredПриложениеУчётные данные(undefined)).toBeUndefined();
+    expect(preservedDeclaredПриложениеУчётные данные({})).toBeUndefined();
+    expect(preservedDeclaredПриложениеУчётные данные({ client_id: 123 })).toBeUndefined();
+    expect(preservedDeclaredПриложениеУчётные данные({ client_id: "" })).toBeUndefined();
+    expect(preservedDeclaredПриложениеУчётные данные({ client_id: "a", access_token: "t", scopes: ["s"] })).toEqual({
       client_id: "a",
     });
-    expect(preservedDeclaredAppCredentials({ client_secret: "s" })).toEqual({ client_secret: "s" });
-    expect(preservedDeclaredAppCredentials({ client_id: "a", client_secret: "b", refresh_token: "r" })).toEqual({
+    expect(preservedDeclaredПриложениеУчётные данные({ client_secret: "s" })).toEqual({ client_secret: "s" });
+    expect(preservedDeclaredПриложениеУчётные данные({ client_id: "a", client_secret: "b", refresh_token: "r" })).toEqual({
       client_id: "a",
       client_secret: "b",
     });
   });
 });
 
-describe("withoutMintedTokenCredentials", () => {
+describe("withвыходМин.tedТокенУчётные данные", () => {
   it("drops token keys and keeps the declared app and other config", () => {
-    expect(withoutMintedTokenCredentials(undefined)).toBeUndefined();
+    expect(withвыходМин.tedТокенУчётные данные(undefined)).toBeUndefined();
     const mixed = {
       client_id: "a",
       client_secret: "b",
@@ -275,13 +275,13 @@ describe("withoutMintedTokenCredentials", () => {
       scope: "read",
       scopes: ["read"],
     };
-    expect(withoutMintedTokenCredentials(mixed)).toEqual({ client_id: "a", client_secret: "b", scopes: ["read"] });
+    expect(withвыходМин.tedТокенУчётные данные(mixed)).toEqual({ client_id: "a", client_secret: "b", scopes: ["read"] });
   });
 
   it("returns undefined (not {}) when only minted keys are present, so a restore never blanks the fields", () => {
-    expect(withoutMintedTokenCredentials({ access_token: "t", refresh_token: "r", expires_in: 3600 })).toBeUndefined();
+    expect(withвыходМин.tedТокенУчётные данные({ access_token: "t", refresh_token: "r", expires_in: 3600 })).toBeUndefined();
     // A declared client is always kept, so a stored client_id can never be overwritten with empty.
-    expect(withoutMintedTokenCredentials({ client_id: "x", access_token: "t" })).toEqual({ client_id: "x" });
+    expect(withвыходМин.tedТокенУчётные данные({ client_id: "x", access_token: "t" })).toEqual({ client_id: "x" });
   });
 });
 
@@ -294,55 +294,55 @@ describe("credentialAuthClass", () => {
   });
 });
 
-describe("isUnsupportedOnGatewayConnect", () => {
+describe("isUnsupportedOnGatewayПодключить", () => {
   it("flags the modes that need a caller-supplied upstream token or subject", () => {
     // client-forwarded: caller presents the upstream Authorization per call
-    expect(isUnsupportedOnGatewayConnect(AUTH_TYPE.TRUE_PASSTHROUGH)).toBe(true);
-    expect(isUnsupportedOnGatewayConnect(AUTH_TYPE.OAUTH_DELEGATE)).toBe(true);
+    expect(isUnsupportedOnGatewayПодключить(AUTH_TYPE.TRUE_PASSTHROUGH)).toBe(true);
+    expect(isUnsupportedOnGatewayПодключить(AUTH_TYPE.OAUTH_DELEGATE)).toBe(true);
     // OBO: caller's own IdP token is the exchange subject, which the session bearer is not
-    expect(isUnsupportedOnGatewayConnect(AUTH_TYPE.OAUTH2_TOKEN_EXCHANGE)).toBe(true);
+    expect(isUnsupportedOnGatewayПодключить(AUTH_TYPE.OAUTH2_TOKEN_EXCHANGE)).toBe(true);
   });
 
   it("does not flag modes the gateway can serve from server-side state or interactive vaulting", () => {
     // interactive authorization_code is the one mode the connect grid vaults per user
-    expect(isUnsupportedOnGatewayConnect(AUTH_TYPE.OAUTH2)).toBe(false);
+    expect(isUnsupportedOnGatewayПодключить(AUTH_TYPE.OAUTH2)).toBe(false);
     // server-configured credentials need no per-user connect
-    expect(isUnsupportedOnGatewayConnect(AUTH_TYPE.API_KEY)).toBe(false);
-    expect(isUnsupportedOnGatewayConnect(AUTH_TYPE.NONE)).toBe(false);
-    expect(isUnsupportedOnGatewayConnect(null)).toBe(false);
-    expect(isUnsupportedOnGatewayConnect(undefined)).toBe(false);
+    expect(isUnsupportedOnGatewayПодключить(AUTH_TYPE.API_KEY)).toBe(false);
+    expect(isUnsupportedOnGatewayПодключить(AUTH_TYPE.NONE)).toBe(false);
+    expect(isUnsupportedOnGatewayПодключить(null)).toBe(false);
+    expect(isUnsupportedOnGatewayПодключить(undefined)).toBe(false);
   });
 });
 
-describe("preservedAdminCredentials vs preservedDeclaredAppCredentials", () => {
+describe("preservedAdminУчётные данные vs preservedDeclaredПриложениеУчётные данные", () => {
   // Regression: upstream_resource is admin-typed config living in `credentials`, and the invalidation
   // reset wipes that whole object. If it is not preserved, editing an unrelated field like the URL
-  // silently discards the admin's resource indicator and the server goes back to sending none.
+  // silently discards the admin's resource indicator and the server goes back — отправитьing none.
   it("preserves upstream_resource across an invalidation reset", () => {
     const credentials = { client_id: "cid", client_secret: "csec", upstream_resource: "api://audience" };
-    expect(preservedAdminCredentials(credentials)).toEqual(credentials);
+    expect(preservedAdminУчётные данные(credentials)).toEqual(credentials);
   });
 
   it("preserves upstream_resource even when no OAuth app is declared", () => {
     // A dynamic-client-registration server has no client_id/client_secret but can still pin a resource.
-    expect(preservedAdminCredentials({ upstream_resource: "auto" })).toEqual({ upstream_resource: "auto" });
+    expect(preservedAdminУчётные данные({ upstream_resource: "auto" })).toEqual({ upstream_resource: "auto" });
   });
 
   it("strips minted token material", () => {
     const credentials = { client_id: "cid", upstream_resource: "auto", access_token: "tok", refresh_token: "r" };
-    expect(preservedAdminCredentials(credentials)).toEqual({ client_id: "cid", upstream_resource: "auto" });
+    expect(preservedAdminУчётные данные(credentials)).toEqual({ client_id: "cid", upstream_resource: "auto" });
   });
 
   // The two helpers answer different questions and must not be collapsed: "has the admin declared an
   // OAuth app" gates the app-may-not-match-upstream warning, so a resource-only server must read as
   // having no declared app.
   it("does not report a declared app for a resource-only server", () => {
-    expect(preservedDeclaredAppCredentials({ upstream_resource: "auto" })).toBeUndefined();
-    expect(preservedAdminCredentials({ upstream_resource: "auto" })).toBeDefined();
+    expect(preservedDeclaredПриложениеУчётные данные({ upstream_resource: "auto" })).toBeUndefined();
+    expect(preservedAdminУчётные данные({ upstream_resource: "auto" })).toBeDefined();
   });
 
   it("still reports a declared app when client keys are present", () => {
-    expect(preservedDeclaredAppCredentials({ client_id: "cid", upstream_resource: "auto" })).toEqual({
+    expect(preservedDeclaredПриложениеУчётные данные({ client_id: "cid", upstream_resource: "auto" })).toEqual({
       client_id: "cid",
     });
   });

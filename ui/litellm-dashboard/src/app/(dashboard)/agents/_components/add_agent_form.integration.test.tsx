@@ -5,22 +5,22 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import AddAgentForm from "./add_agent_form";
 import * as networking from "@/components/networking";
 import type { AgentCreateInfo } from "@/components/networking";
-import { chooseSelectOption, renderWithProviders as render } from "../../../../../tests/test-utils";
+import { chooseВыбратьOption, renderWithПровайдерs as render } from "../../../../../tests/test-utils";
 
 vi.mock("@/components/networking", () => ({
   createAgentCall: vi.fn(),
-  getAgentCreateMetadata: vi.fn(),
-  getAgentsList: vi.fn(),
+  getAgentCreateМетаданные: vi.fn(),
+  getАгентыList: vi.fn(),
   keyCreateForAgentCall: vi.fn(),
   keyListCall: vi.fn(),
   keyUpdateCall: vi.fn(),
-  modelAvailableCall: vi.fn(),
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAvailableCall: vi.fn(),
 }));
 
 vi.mock("./agent_card_discovery", () => ({ default: () => <div data-testid="agent-card-discovery" /> }));
-vi.mock("@/components/mcp_server_management/MCPServerSelector", () => ({ default: () => <div /> }));
+vi.mock("@/components/mcp_server_management/MCPСерверВыбратьor", () => ({ default: () => <div /> }));
 vi.mock("@/components/mcp_server_management/MCPToolPermissions", () => ({ default: () => <div /> }));
-vi.mock("@/components/guardrails/GuardrailSelector", () => ({ default: () => <div /> }));
+vi.mock("@/components/гардрейловs/GuardrailВыбратьor", () => ({ default: () => <div /> }));
 vi.mock("@/components/common_components/team_dropdown", () => ({ default: () => <div /> }));
 
 const a2aInfo: AgentCreateInfo = {
@@ -39,21 +39,21 @@ const langgraphInfo: AgentCreateInfo = {
   logo_url: "/ui/assets/logos/langgraph.png",
   use_a2a_form_fields: false,
   litellm_params_template: { custom_llm_provider: "langgraph" },
-  model_template: "langgraph/{assistant_id}",
+  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_template: "langgraph/{assistant_id}",
   credential_fields: [
     { key: "api_base", label: "API Base", field_type: "text", required: true, placeholder: "https://host" },
     { key: "assistant_id", label: "Assistant ID", field_type: "text", required: true, default_value: "" },
-    { key: "api_key", label: "API Key", field_type: "password", required: false },
+    { key: "api_key", label: "API Ключ", field_type: "password", required: false },
   ],
 };
 
 const renderForm = () =>
-  render(<AddAgentForm visible={true} onClose={vi.fn()} accessToken="tok" onSuccess={vi.fn()} />);
+  render(<AddAgentForm visible={true} onClose={vi.fn()} accessТокен="tok" onSuccess={vi.fn()} />);
 
 const panel = (name: RegExp) => screen.findByRole("button", { name });
 
 const openAgentTypeMenu = async (user: ReturnType<typeof userEvent.setup>) => {
-  await user.click(screen.getAllByRole("combobox")[0]);
+  await user.click(screen.getВсеByRole("combobox")[0]);
 };
 
 const createdPayload = () => vi.mocked(networking.createAgentCall).mock.calls[0][1] as Record<string, unknown>;
@@ -63,7 +63,7 @@ const goToLastStepAndCreate = async (user: ReturnType<typeof userEvent.setup>) =
   await user.click(await screen.findByRole("button", { name: /^Next/ }));
   await user.click(await screen.findByRole("button", { name: /^Next/ }));
   await user.click(await screen.findByRole("button", { name: /Create Agent/ }));
-  await waitFor(() => expect(networking.createAgentCall).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(networking.createAgentCall).toHaveBeenCalledВремяs(1));
 };
 
 const selectAgentType = async (user: ReturnType<typeof userEvent.setup>, label: string) => {
@@ -73,79 +73,79 @@ const selectAgentType = async (user: ReturnType<typeof userEvent.setup>, label: 
 
 describe("AddAgentForm submit payload", () => {
   beforeEach(() => {
-    vi.mocked(networking.getAgentCreateMetadata).mockReset().mockResolvedValue([a2aInfo, langgraphInfo]);
-    vi.mocked(networking.getAgentsList)
+    vi.mocked(networking.getAgentCreateМетаданные).mockReset().mockResolvedЗначение([a2aInfo, langgraphInfo]);
+    vi.mocked(networking.getАгентыList)
       .mockReset()
-      .mockResolvedValue({ agents: [{ agent_id: "sub-1", agent_name: "Sub Agent One" }] });
-    vi.mocked(networking.keyListCall).mockReset().mockResolvedValue({ keys: [] });
-    vi.mocked(networking.modelAvailableCall)
+      .mockResolvedЗначение({ agents: [{ agent_id: "sub-1", agent_name: "Sub Agent One" }] });
+    vi.mocked(networking.keyListCall).mockReset().mockResolvedЗначение({ keys: [] });
+    vi.mocked(networking.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAvailableCall)
       .mockReset()
-      .mockResolvedValue({ data: [{ id: "gpt-4o" }] });
+      .mockResolvedЗначение({ data: [{ id: "gpt-4o" }] });
     vi.mocked(networking.createAgentCall)
       .mockReset()
-      .mockResolvedValue({ agent_id: "agent-1", agent_name: "created-agent" } as never);
+      .mockResolvedЗначение({ agent_id: "agent-1", agent_name: "created-agent" } as never);
     vi.mocked(networking.keyCreateForAgentCall)
       .mockReset()
-      .mockResolvedValue({ key: "sk-new" } as never);
+      .mockResolvedЗначение({ key: "sk-new" } as never);
     vi.mocked(networking.keyUpdateCall)
       .mockReset()
-      .mockResolvedValue({} as never);
+      .mockResolvedЗначение({} as never);
   });
 
   it("sends every a2a field the user filled across all collapsible panels", async () => {
     const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
     renderForm();
 
-    await user.type(await screen.findByLabelText("Agent Name"), "support-agent");
+    await user.type(await screen.findByLabelText("Название агента"), "support-agent");
     await user.type(screen.getByLabelText("Display Name"), "Support Agent");
     await user.type(screen.getByPlaceholderText("Describe what this agent does..."), "answers questions");
     await user.type(screen.getByLabelText("URL"), "http://localhost:9999/");
-    await user.clear(screen.getByLabelText("Version"));
-    await user.type(screen.getByLabelText("Version"), "2.0.0");
+    await user.clear(screen.getByLabelText("Версия"));
+    await user.type(screen.getByLabelText("Версия"), "2.0.0");
 
-    await user.click(await panel(/Skills/));
-    await user.click(screen.getByRole("button", { name: /Add Skill/ }));
+    await user.click(await panel(/Скиллы/));
+    await user.click(screen.getByRole("button", { name: /Добавить скилл/ }));
     await user.type(await screen.findByLabelText("Skill ID"), "hello");
     await user.type(screen.getByLabelText("Skill Name"), "Hello");
     await user.type(screen.getByPlaceholderText("What this skill does"), "greets");
-    await user.type(screen.getByLabelText("Tags"), "greeting,polite");
-    await user.type(screen.getByLabelText("Examples"), "say hi");
-    await user.click(screen.getByLabelText("Agent Name"));
+    await user.type(screen.getByLabelText("Теги"), "greeting,polite");
+    await user.type(screen.getByLabelText("Примеры"), "say hi");
+    await user.click(screen.getByLabelText("Название агента"));
 
-    await user.click(await panel(/Capabilities/));
+    await user.click(await panel(/Возможности/));
     await user.click(await screen.findByRole("switch", { name: "Streaming" }));
     await user.click(screen.getByRole("switch", { name: "Push Notifications" }));
 
-    await user.click(await panel(/Optional Settings/));
+    await user.click(await panel(/Дополнительные параметры/));
     await user.type(await screen.findByLabelText("Icon URL"), "https://example.com/icon.png");
 
-    await user.click(await panel(/Cost Configuration/));
-    await user.type(await screen.findByLabelText("Cost Per Query ($)"), "0.25");
-    await user.type(screen.getByLabelText("Input Cost Per Token ($)"), "0.000002");
+    await user.click(await panel(/Стоимость Конфигурацияuration/));
+    await user.type(await screen.findByLabelText("Стоимость Per Запрос ($)"), "0.25");
+    await user.type(screen.getByLabelText("Вход Стоимость Per Токен ($)"), "0.000002");
 
     await user.click(await panel(/LiteLLM Parameters/));
-    await user.type(await screen.findByLabelText("Model (Optional)"), "gpt-4o");
-    await user.click(screen.getByRole("switch", { name: "Make Public" }));
+    await user.type(await screen.findByLabelText("Режимl (Optional)"), "gpt-4o");
+    await user.click(screen.getByRole("switch", { name: "Make Публичный" }));
 
-    await user.click(await panel(/Authentication Headers/));
-    await user.click(await screen.findByRole("button", { name: /Add Static Header/ }));
-    await user.type(await screen.findByPlaceholderText("Header name (e.g. Authorization)"), "X-Tenant");
-    await user.type(screen.getByPlaceholderText("Value (e.g. Bearer token123)"), "acme");
-    await user.type(screen.getByLabelText("Forward Client Headers"), "x-api-key,");
-    await user.click(screen.getByLabelText("Agent Name"));
+    await user.click(await panel(/Заголовки аутентификации/));
+    await user.click(await screen.findByRole("button", { name: /Добавить статический заголовок/ }));
+    await user.type(await screen.findByPlaceholderText("Имя заголовка (напр. Authorization)"), "X-Tenant");
+    await user.type(screen.getByPlaceholderText("Значение (напр. Bearer token123)"), "acme");
+    await user.type(screen.getByLabelText("Forward Client Заголовки"), "x-api-key,");
+    await user.click(screen.getByLabelText("Название агента"));
 
     await goToLastStepAndCreate(user);
 
     expect(createdPayload()).toEqual({
       agent_name: "support-agent",
       agent_card_params: {
-        protocolVersion: "1.0",
+        protocolВерсия: "1.0",
         name: "Support Agent",
         description: "answers questions",
         url: "http://localhost:9999/",
         version: "2.0.0",
-        defaultInputModes: ["text"],
-        defaultOutputModes: ["text"],
+        defaultВходРежимs: ["text"],
+        defaultВыходРежимs: ["text"],
         capabilities: { streaming: true, pushNotifications: true },
         skills: [
           {
@@ -159,7 +159,7 @@ describe("AddAgentForm submit payload", () => {
         iconUrl: "https://example.com/icon.png",
       },
       litellm_params: {
-        model: "gpt-4o",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o",
         make_public: true,
         cost_per_query: 0.25,
         input_cost_per_token: 0.000002,
@@ -173,13 +173,13 @@ describe("AddAgentForm submit payload", () => {
     const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
     renderForm();
 
-    await user.type(await screen.findByLabelText("Agent Name"), "collapsed-agent");
+    await user.type(await screen.findByLabelText("Название агента"), "collapsed-agent");
     await user.type(screen.getByLabelText("Display Name"), "Collapsed");
     await user.type(screen.getByPlaceholderText("Describe what this agent does..."), "d");
 
-    await user.click(await panel(/Cost Configuration/));
-    await user.type(await screen.findByLabelText("Cost Per Query ($)"), "0.75");
-    await user.click(await panel(/Cost Configuration/));
+    await user.click(await panel(/Стоимость Конфигурацияuration/));
+    await user.type(await screen.findByLabelText("Стоимость Per Запрос ($)"), "0.75");
+    await user.click(await panel(/Стоимость Конфигурацияuration/));
 
     await goToLastStepAndCreate(user);
 
@@ -190,34 +190,34 @@ describe("AddAgentForm submit payload", () => {
     const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
     renderForm();
 
-    await user.click(await panel(/Cost Configuration/));
-    await user.type(await screen.findByLabelText("Cost Per Query ($)"), "0.75");
-    await user.click(await panel(/Cost Configuration/));
-    await user.click(await panel(/Cost Configuration/));
+    await user.click(await panel(/Стоимость Конфигурацияuration/));
+    await user.type(await screen.findByLabelText("Стоимость Per Запрос ($)"), "0.75");
+    await user.click(await panel(/Стоимость Конфигурацияuration/));
+    await user.click(await panel(/Стоимость Конфигурацияuration/));
 
-    expect(await screen.findByLabelText("Cost Per Query ($)")).toHaveValue(0.75);
+    expect(await screen.findByLabelText("Стоимость Per Запрос ($)")).toHaveЗначение(0.75);
   });
 
   it("blocks the first step until the required agent name is filled", async () => {
     const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
     renderForm();
 
-    await screen.findByLabelText("Agent Name");
+    await screen.findByLabelText("Название агента");
     await user.click(screen.getByRole("button", { name: /^Next/ }));
 
     expect(await screen.findByText("Please enter a unique agent name")).toBeInTheDocument();
-    expect(screen.getByLabelText("Agent Name")).toBeInTheDocument();
+    expect(screen.getByLabelText("Название агента")).toBeInTheDocument();
   });
 
   it("sends the custom agent shape when the custom type is picked", async () => {
     const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
     renderForm();
 
-    await screen.findByLabelText("Agent Name");
+    await screen.findByLabelText("Название агента");
     await openAgentTypeMenu(user);
     await user.click(await screen.findByText("Custom / Other"));
 
-    await user.type(await screen.findByLabelText("Agent Name"), "my-custom-agent");
+    await user.type(await screen.findByLabelText("Название агента"), "my-custom-agent");
     await user.type(screen.getByPlaceholderText("Describe what this agent does\u2026"), "custom thing");
 
     await goToLastStepAndCreate(user);
@@ -225,44 +225,44 @@ describe("AddAgentForm submit payload", () => {
     expect(createdPayload()).toEqual({
       agent_name: "my-custom-agent",
       agent_card_params: {
-        protocolVersion: "1.0",
+        protocolВерсия: "1.0",
         name: "my-custom-agent",
         description: "custom thing",
         url: "",
         version: "1.0.0",
-        defaultInputModes: ["text"],
-        defaultOutputModes: ["text"],
+        defaultВходРежимs: ["text"],
+        defaultВыходРежимs: ["text"],
         capabilities: { streaming: false },
         skills: [],
       },
     });
   });
 
-  it("sends credential fields and the model template for a dynamic agent type", async () => {
+  it("sends credential fields and the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию template for a dynamic agent type", async () => {
     const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
     renderForm();
 
-    await screen.findByLabelText("Agent Name");
+    await screen.findByLabelText("Название агента");
     await selectAgentType(user, "LangGraph");
 
-    await user.type(await screen.findByLabelText("Agent Name"), "lg-agent");
+    await user.type(await screen.findByLabelText("Название агента"), "lg-agent");
     await user.type(screen.getByPlaceholderText("Describe what this agent does..."), "graph agent");
     await user.type(screen.getByLabelText("API Base"), "https://lg.example.com");
     await user.type(screen.getByLabelText("Assistant ID"), "asst_1");
-    await user.type(screen.getByLabelText("API Key"), "secret-value");
+    await user.type(screen.getByLabelText("API Ключ"), "secret-value");
 
     await goToLastStepAndCreate(user);
 
     expect(createdPayload()).toEqual({
       agent_name: "lg-agent",
       agent_card_params: {
-        protocolVersion: "1.0",
+        protocolВерсия: "1.0",
         name: "lg-agent",
         description: "graph agent",
         url: "https://lg.example.com",
         version: "1.0.0",
-        defaultInputModes: ["text"],
-        defaultOutputModes: ["text"],
+        defaultВходРежимs: ["text"],
+        defaultВыходРежимs: ["text"],
         capabilities: { streaming: true },
         skills: [
           {
@@ -278,7 +278,7 @@ describe("AddAgentForm submit payload", () => {
         api_base: "https://lg.example.com",
         assistant_id: "asst_1",
         api_key: "secret-value",
-        model: "langgraph/asst_1",
+        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "langgraph/asst_1",
       },
     });
   });
@@ -287,8 +287,8 @@ describe("AddAgentForm submit payload", () => {
     const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
     renderForm();
 
-    await screen.findByLabelText("Agent Name");
-    expect(screen.getByLabelText("Version")).toHaveValue("1.0.0");
+    await screen.findByLabelText("Название агента");
+    expect(screen.getByLabelText("Версия")).toHaveЗначение("1.0.0");
 
     await openAgentTypeMenu(user);
     await user.click(await screen.findByText("Custom / Other"));
@@ -296,37 +296,37 @@ describe("AddAgentForm submit payload", () => {
 
     await selectAgentType(user, "A2A Agent");
 
-    expect(await screen.findByLabelText("Version")).toHaveValue("");
+    expect(await screen.findByLabelText("Версия")).toHaveЗначение("");
   });
 
   it("sends entitlements and rate limits gathered on the later steps", async () => {
     const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
     renderForm();
 
-    await user.type(await screen.findByLabelText("Agent Name"), "entitled-agent");
+    await user.type(await screen.findByLabelText("Название агента"), "entitled-agent");
     await user.type(screen.getByLabelText("Display Name"), "Entitled");
     await user.type(screen.getByPlaceholderText("Describe what this agent does..."), "d");
     await user.click(screen.getByRole("button", { name: /^Next/ }));
 
-    await user.type(await screen.findByLabelText("Allowed Models"), "gpt-4o,");
+    await user.type(await screen.findByLabelText("Разрешённые модели"), "gpt-4o,");
     await user.keyboard("{Escape}");
-    await chooseSelectOption(user, screen.getByLabelText("Allowed Agents (Sub-Agents)"), "Sub Agent One");
+    await chooseВыбратьOption(user, screen.getByLabelText("Разрешённые агенты (Sub-Агенты)"), "Sub Agent One");
     await user.keyboard("{Escape}");
-    await user.click(screen.getByText(/Configure which models, agents, and MCP tools/));
+    await user.click(screen.getByText(/Конфигурацияure which Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs, agents, and MCP tools/));
     await user.click(screen.getByRole("button", { name: /^Next/ }));
 
-    await user.click((await screen.findAllByRole("switch"))[1]);
-    await user.type(screen.getByLabelText("TPM Limit"), "1000");
-    await user.type(screen.getByLabelText("Session RPM Limit"), "20");
+    await user.click((await screen.findВсеByRole("switch"))[1]);
+    await user.type(screen.getByLabelText("Лимит TPM"), "1000");
+    await user.type(screen.getByLabelText("Сессия Лимит RPM"), "20");
     await user.click(screen.getByRole("button", { name: /^Next/ }));
 
     await user.click(await screen.findByRole("button", { name: /Create Agent/ }));
-    await waitFor(() => expect(networking.createAgentCall).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(networking.createAgentCall).toHaveBeenCalledВремяs(1));
 
     const payload = createdPayload();
     expect(payload.tpm_limit).toBe(1000);
     expect(payload.session_rpm_limit).toBe(20);
-    expect(payload.object_permission).toEqual({ models: ["gpt-4o"], agents: ["sub-1"] });
+    expect(payload.object_permission).toEqual({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o"], agents: ["sub-1"] });
     expect(payload.litellm_params).toEqual({ require_trace_id_on_calls_by_agent: true });
   });
 
@@ -334,8 +334,8 @@ describe("AddAgentForm submit payload", () => {
     const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
     renderForm();
 
-    await user.type(await screen.findByLabelText("Agent Name"), "keyed-agent");
-    await user.type(screen.getByLabelText("Display Name"), "Keyed");
+    await user.type(await screen.findByLabelText("Название агента"), "keyed-agent");
+    await user.type(screen.getByLabelText("Display Name"), "Ключed");
     await user.type(screen.getByPlaceholderText("Describe what this agent does..."), "d");
 
     await goToLastStepAndCreate(user);
@@ -348,29 +348,29 @@ describe("AddAgentForm submit payload", () => {
       undefined,
       null,
     );
-    expect(await screen.findByText("Agent Created!")).toBeInTheDocument();
-    expect(within(screen.getByText("Agent Created!").parentElement!).getByText("created-agent")).toBeInTheDocument();
+    expect(await screen.findByText("Agent Создан!")).toBeInTheDocument();
+    expect(within(screen.getByText("Agent Создан!").parentElement!).getByText("created-agent")).toBeInTheDocument();
   });
   it("blocks creation after clearing the existing key and assigns the reselected key", async () => {
-    vi.mocked(networking.keyListCall).mockResolvedValue({
+    vi.mocked(networking.keyListCall).mockResolvedЗначение({
       keys: [{ token: "key-maple", key_alias: "Maple key" }],
     });
     const user = userEvent.setup();
     renderForm();
-    await user.type(await screen.findByLabelText("Agent Name"), "key-selection-agent");
-    await user.type(screen.getByLabelText("Display Name"), "Key selection");
+    await user.type(await screen.findByLabelText("Название агента"), "key-selection-agent");
+    await user.type(screen.getByLabelText("Display Name"), "Ключ selection");
     await user.type(screen.getByPlaceholderText("Describe what this agent does..."), "d");
     for (let step = 0; step < 3; step++) {
       await user.click(screen.getByRole("button", { name: /^Next/ }));
     }
     await user.click(screen.getByRole("radio", { name: "Assign an existing key" }));
-    const keySelector = await screen.findByPlaceholderText("Search by key name…");
-    await chooseSelectOption(user, keySelector, "Maple key");
+    const keyВыбратьor = await screen.findByPlaceholderText("Search by key name…");
+    await chooseВыбратьOption(user, keyВыбратьor, "Maple key");
     await user.click(screen.getByRole("button", { name: "Clear" }));
     await user.click(screen.getByRole("button", { name: /Create Agent/ }));
     expect(networking.createAgentCall).not.toHaveBeenCalled();
     expect(networking.keyUpdateCall).not.toHaveBeenCalled();
-    await chooseSelectOption(user, keySelector, "Maple key");
+    await chooseВыбратьOption(user, keyВыбратьor, "Maple key");
     await user.click(screen.getByRole("button", { name: /Create Agent/ }));
     await waitFor(() =>
       expect(networking.keyUpdateCall).toHaveBeenCalledWith("tok", {
@@ -378,6 +378,6 @@ describe("AddAgentForm submit payload", () => {
         agent_id: "agent-1",
       }),
     );
-    expect(networking.createAgentCall).toHaveBeenCalledTimes(1);
+    expect(networking.createAgentCall).toHaveBeenCalledВремяs(1);
   });
 });

@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders, screen, waitFor } from "../../../tests/test-utils";
-import { RegenerateKeyModal } from "./RegenerateKeyModal";
-import { KeyResponse } from "../key_team_helpers/key_list";
+import { renderWithПровайдерs, screen, waitFor } from "../../../tests/test-utils";
+import { ПерегенерироватьКлючModal } from "./ПерегенерироватьКлючModal";
+import { КлючОтвет } from "../key_team_helpers/key_list";
 
-const mockRegenerateKeyCall = vi.fn();
+const mockПерегенерироватьКлючCall = vi.fn();
 vi.mock("../networking", () => ({
-  regenerateKeyCall: (...args: unknown[]) => mockRegenerateKeyCall(...args),
+  regenerateКлючCall: (...args: unknown[]) => mockПерегенерироватьКлючCall(...args),
 }));
 
-const makeToken = (overrides: Partial<KeyResponse> = {}): KeyResponse =>
+const makeТокен = (overrides: Partial<КлючОтвет> = {}): КлючОтвет =>
   ({
     token: "token-hash-123",
     token_id: "token-id-123",
@@ -21,24 +21,24 @@ const makeToken = (overrides: Partial<KeyResponse> = {}): KeyResponse =>
     duration: "30d",
     expires: "2026-12-31T00:00:00Z",
     ...overrides,
-  }) as KeyResponse;
+  }) as КлючОтвет;
 
-const renderModal = (token: KeyResponse | null = makeToken(), onKeyUpdate = vi.fn()) => {
-  renderWithProviders(<RegenerateKeyModal selectedToken={token} visible onClose={vi.fn()} onKeyUpdate={onKeyUpdate} />);
-  return { onKeyUpdate };
+const renderModal = (token: КлючОтвет | null = makeТокен(), onКлючUpdate = vi.fn()) => {
+  renderWithПровайдерs(<ПерегенерироватьКлючModal selectedТокен={token} visible onClose={vi.fn()} onКлючUpdate={onКлючUpdate} />);
+  return { onКлючUpdate };
 };
 
 const regenerate = async (user: ReturnType<typeof userEvent.setup>) => {
-  await user.click(screen.getByRole("button", { name: /Regenerate/ }));
+  await user.click(screen.getByRole("button", { name: /Перегенерировать/ }));
 };
 
 const submittedPayload = (): Record<string, unknown> =>
-  mockRegenerateKeyCall.mock.calls[0][2] as Record<string, unknown>;
+  mockПерегенерироватьКлючCall.mock.calls[0][2] as Record<string, unknown>;
 
-describe("RegenerateKeyModal submit payload", () => {
+describe("ПерегенерироватьКлючModal submit payload", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    mockRegenerateKeyCall.mockResolvedValue({ key: "sk-new-regenerated-key", token: "new-token-hash" });
+    vi.clearВсеMocks();
+    mockПерегенерироватьКлючCall.mockResolvedЗначение({ key: "sk-new-regenerated-key", token: "new-token-hash" });
   });
 
   it("sends the seeded key fields untouched, with grace_period blank", async () => {
@@ -47,7 +47,7 @@ describe("RegenerateKeyModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
     expect(submittedPayload()).toStrictEqual({
       key_alias: "my-test-key",
       max_budget: 100,
@@ -64,7 +64,7 @@ describe("RegenerateKeyModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
     expect(JSON.stringify(submittedPayload())).toBe(
       '{"key_alias":"my-test-key","max_budget":100,"tpm_limit":5000,"rpm_limit":500,"duration":"30d","grace_period":""}',
     );
@@ -74,13 +74,13 @@ describe("RegenerateKeyModal submit payload", () => {
     const user = userEvent.setup();
     renderModal();
 
-    const budget = screen.getByLabelText("Max Budget (USD)");
+    const budget = screen.getByLabelText("Макс. бюджет (USD)");
     await user.clear(budget);
     await user.type(budget, "42.567");
-    const tpm = screen.getByLabelText("TPM Limit");
+    const tpm = screen.getByLabelText("Лимит TPM");
     await user.clear(tpm);
     await user.type(tpm, "1234");
-    const rpm = screen.getByLabelText("RPM Limit");
+    const rpm = screen.getByLabelText("Лимит RPM");
     await user.clear(rpm);
     await user.type(rpm, "56");
     const duration = screen.getByPlaceholderText("e.g. 30s, 30h, 30d");
@@ -90,7 +90,7 @@ describe("RegenerateKeyModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
     expect(submittedPayload()).toStrictEqual({
       key_alias: "my-test-key",
       max_budget: 42.57,
@@ -111,19 +111,19 @@ describe("RegenerateKeyModal submit payload", () => {
     const user = userEvent.setup();
     renderModal();
 
-    const budget = screen.getByLabelText("Max Budget (USD)");
+    const budget = screen.getByLabelText("Макс. бюджет (USD)");
     await user.clear(budget);
     await user.type(budget, typed);
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
     expect(submittedPayload().max_budget).toBe(expected);
   });
 
   it.each([
-    ["TPM Limit", "tpm_limit"],
-    ["RPM Limit", "rpm_limit"],
+    ["Лимит TPM", "tpm_limit"],
+    ["Лимит RPM", "rpm_limit"],
   ])("still submits a fractional %s rather than letting a step constraint block it", async (label, key) => {
     const user = userEvent.setup();
     renderModal();
@@ -134,7 +134,7 @@ describe("RegenerateKeyModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
     expect(submittedPayload()[key]).toBe(12.7);
   });
 
@@ -142,14 +142,14 @@ describe("RegenerateKeyModal submit payload", () => {
     const user = userEvent.setup();
     renderModal();
 
-    await user.clear(screen.getByLabelText("Max Budget (USD)"));
-    await user.clear(screen.getByLabelText("TPM Limit"));
-    await user.clear(screen.getByLabelText("RPM Limit"));
+    await user.clear(screen.getByLabelText("Макс. бюджет (USD)"));
+    await user.clear(screen.getByLabelText("Лимит TPM"));
+    await user.clear(screen.getByLabelText("Лимит RPM"));
     await user.clear(screen.getByPlaceholderText("e.g. 30s, 30h, 30d"));
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
     expect(submittedPayload()).toStrictEqual({
       key_alias: "my-test-key",
       max_budget: null,
@@ -163,7 +163,7 @@ describe("RegenerateKeyModal submit payload", () => {
   it("keeps unset key fields undefined so JSON omits them", async () => {
     const user = userEvent.setup();
     renderModal(
-      makeToken({
+      makeТокен({
         key_alias: undefined,
         max_budget: undefined,
         tpm_limit: undefined,
@@ -174,7 +174,7 @@ describe("RegenerateKeyModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
     expect(submittedPayload()).toStrictEqual({
       key_alias: undefined,
       max_budget: undefined,
@@ -189,18 +189,18 @@ describe("RegenerateKeyModal submit payload", () => {
   it("regenerates a key whose fields the API returned as null", async () => {
     const user = userEvent.setup();
     renderModal(
-      makeToken({
+      makeТокен({
         key_alias: null,
         max_budget: null,
         tpm_limit: null,
         rpm_limit: null,
         duration: null,
-      } as unknown as Partial<KeyResponse>),
+      } as unknown as Partial<КлючОтвет>),
     );
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
+    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
     expect(submittedPayload()).toStrictEqual({
       key_alias: null,
       max_budget: null,
@@ -217,8 +217,8 @@ describe("RegenerateKeyModal submit payload", () => {
 
     await regenerate(user);
 
-    await waitFor(() => expect(mockRegenerateKeyCall).toHaveBeenCalledOnce());
-    expect(mockRegenerateKeyCall.mock.calls[0].slice(0, 2)).toStrictEqual(["123", "token-hash-123"]);
+    await waitFor(() => expect(mockПерегенерироватьКлючCall).toHaveBeenCalledOnce());
+    expect(mockПерегенерироватьКлючCall.mock.calls[0].slice(0, 2)).toStrictEqual(["123", "token-hash-123"]);
   });
 
   it("blocks submission and sends nothing when the duration is unparseable", async () => {
@@ -232,18 +232,18 @@ describe("RegenerateKeyModal submit payload", () => {
     await regenerate(user);
 
     expect(await screen.findByText("Must be a duration like 30s, 30m, 24h, 2d, 1w, or 1mo")).toBeInTheDocument();
-    expect(mockRegenerateKeyCall).not.toHaveBeenCalled();
+    expect(mockПерегенерироватьКлючCall).not.toHaveBeenCalled();
   });
 
-  it("blocks submission when an expired key is regenerated without a new duration", async () => {
-    vi.spyOn(Date, "now").mockReturnValue(Date.parse("2026-06-06T12:00:00Z"));
+  it("blocks submission when an expired key is regenerated withвыход a new duration", async () => {
+    vi.spyOn(Date, "now").mockReturnЗначение(Date.parse("2026-06-06T12:00:00Z"));
     const user = userEvent.setup();
-    renderModal(makeToken({ expires: "2026-06-01T12:00:00Z", duration: "" }));
+    renderModal(makeТокен({ expires: "2026-06-01T12:00:00Z", duration: "" }));
 
     await regenerate(user);
 
     expect(await screen.findByText("Expiration is required for expired keys")).toBeInTheDocument();
-    expect(mockRegenerateKeyCall).not.toHaveBeenCalled();
+    expect(mockПерегенерироватьКлючCall).not.toHaveBeenCalled();
   });
 
   it("rejects an unparseable grace period", async () => {
@@ -255,19 +255,19 @@ describe("RegenerateKeyModal submit payload", () => {
     await regenerate(user);
 
     expect(await screen.findByText("Must be a duration like 30s, 30m, 24h, 2d, 1w, or 1mo")).toBeInTheDocument();
-    expect(mockRegenerateKeyCall).not.toHaveBeenCalled();
+    expect(mockПерегенерироватьКлючCall).not.toHaveBeenCalled();
   });
 
   it("reveals the new key only after the call resolves and hands the parent the submitted limits", async () => {
     const user = userEvent.setup();
-    const { onKeyUpdate } = renderModal();
+    const { onКлючUpdate } = renderModal();
 
     expect(screen.queryByText("sk-new-regenerated-key")).not.toBeInTheDocument();
 
     await regenerate(user);
 
     expect(await screen.findByText("sk-new-regenerated-key")).toBeInTheDocument();
-    expect(onKeyUpdate).toHaveBeenCalledWith({
+    expect(onКлючUpdate).toHaveBeenCalledWith({
       key: "sk-new-regenerated-key",
       token: "new-token-hash",
       key_name: "sk-new-regenerated-key",

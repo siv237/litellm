@@ -2,7 +2,7 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import React from "react";
 import { describe, it, expect, vi } from "vitest";
-import { renderWithProviders, screen } from "../../../tests/test-utils";
+import { renderWithПровайдерs, screen } from "../../../tests/test-utils";
 import PremiumLoggingSettings from "./PremiumLoggingSettings";
 
 const SOURCE_PATH = resolve(process.cwd(), "src/components/common_components/PremiumLoggingSettings.tsx");
@@ -23,17 +23,17 @@ describe("PremiumLoggingSettings", () => {
   });
 
   it("shows the enterprise notice and withholds the editor from a free user", () => {
-    renderWithProviders(<PremiumLoggingSettings value={[]} onChange={vi.fn()} />);
+    renderWithПровайдерs(<PremiumLoggingSettings value={[]} onChange={vi.fn()} />);
 
-    expect(screen.getByText(/LiteLLM Enterprise feature/)).toBeInTheDocument();
+    expect(screen.getByText(/LiteLLM Введитеprise feature/)).toBeInTheDocument();
     expect(screen.getByText("✨ langfuse-logging")).toBeInTheDocument();
-    expect(screen.queryByText("Logging Integrations")).not.toBeInTheDocument();
+    expect(screen.queryByText("Logging Интеграции")).not.toBeInTheDocument();
   });
 
   it("renders the editor for a premium user", () => {
-    renderWithProviders(<PremiumLoggingSettings value={[]} onChange={vi.fn()} premiumUser />);
+    renderWithПровайдерs(<PremiumLoggingSettings value={[]} onChange={vi.fn()} premiumUser />);
 
-    expect(screen.getByText("Logging Integrations")).toBeInTheDocument();
-    expect(screen.queryByText(/LiteLLM Enterprise feature/)).not.toBeInTheDocument();
+    expect(screen.getByText("Logging Интеграции")).toBeInTheDocument();
+    expect(screen.queryByText(/LiteLLM Введитеprise feature/)).not.toBeInTheDocument();
   });
 });

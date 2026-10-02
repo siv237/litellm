@@ -17,8 +17,8 @@ const argumentValues = (schema: InputSchema, values: ToolFormValues): Record<str
 const STRING_SCHEMA_MESSAGES: Readonly<Record<string, string>> = { input: "Please enter input for this tool" };
 
 const BOOLEAN_ITEMS = [
-  { value: true, label: "True" },
-  { value: false, label: "False" },
+  { value: true, label: "Истина" },
+  { value: false, label: "Ложь" },
 ];
 
 const isBlank = (value: unknown): boolean => value === undefined || value === null || value === "";
@@ -239,7 +239,7 @@ const MCPToolArgumentsForm = forwardRef<MCPToolArgumentsFormRef, MCPToolArgument
           properties: {
             input: {
               type: "string",
-              description: "Input for this tool",
+              description: "Входные данные для этого инструмента",
             },
           },
           required: ["input"],
@@ -308,12 +308,12 @@ const MCPToolArgumentsForm = forwardRef<MCPToolArgumentsFormRef, MCPToolArgument
               name="args.0"
               label={
                 <span>
-                  Input <span className="text-destructive">*</span>
+                  Вход <span className="text-destructive">*</span>
                 </span>
               }
             >
               {(field) => (
-                <Input {...field} value={(field.value as string) ?? ""} placeholder="Enter input for this tool" />
+                <Input {...field} value={(field.value as string) ?? ""} placeholder="Введите входные данные для инструмента" />
               )}
             </FormField>
           </FieldGroup>
@@ -324,7 +324,7 @@ const MCPToolArgumentsForm = forwardRef<MCPToolArgumentsFormRef, MCPToolArgument
     if (!actualSchema.properties) {
       return (
         <form onSubmit={(event) => event.preventDefault()} className={className}>
-          <div className="py-4 text-center text-sm text-muted-foreground">No parameters required for this tool.</div>
+          <div className="py-4 text-center text-sm text-muted-foreground">Для этого инструмента параметры не требуются.</div>
         </form>
       );
     }
@@ -363,7 +363,7 @@ const MCPToolArgumentsForm = forwardRef<MCPToolArgumentsFormRef, MCPToolArgument
                             </SelectValue>
                           </SelectTrigger>
                           <SelectContent>
-                            {!required && <SelectItem value={null}>Select {key}</SelectItem>}
+                            {!required && <SelectItem value={null}>Выбрать {key}</SelectItem>}
                             {prop.enum.map((v) => (
                               <SelectItem key={v} value={v}>
                                 {v === "" ? "Empty string" : v}
@@ -389,9 +389,9 @@ const MCPToolArgumentsForm = forwardRef<MCPToolArgumentsFormRef, MCPToolArgument
                             <SelectValue placeholder={`Select ${key}`} />
                           </SelectTrigger>
                           <SelectContent>
-                            {!required && <SelectItem value={null}>Select {key}</SelectItem>}
-                            <SelectItem value={true}>True</SelectItem>
-                            <SelectItem value={false}>False</SelectItem>
+                            {!required && <SelectItem value={null}>Выбрать {key}</SelectItem>}
+                            <SelectItem value={true}>Истина</SelectItem>
+                            <SelectItem value={false}>Ложь</SelectItem>
                           </SelectContent>
                         </Select>
                       );

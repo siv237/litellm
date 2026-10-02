@@ -244,7 +244,7 @@ const TemplateParameterModal: React.FC<TemplateParameterModalProps> = ({
       <DialogContent className="sm:max-w-175">
         <DialogHeader>
           <DialogTitle className="text-lg">{template?.title}</DialogTitle>
-          <DialogDescription>Configure competitor blocking for your brand</DialogDescription>
+          <DialogDescription>Настройка блокировки конкурентов для вашего бренда</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
@@ -253,18 +253,18 @@ const TemplateParameterModal: React.FC<TemplateParameterModalProps> = ({
           {hasEnrichment && (
             <>
               <div>
-                <label className="mb-2 block text-sm font-medium">Competitor Discovery</label>
+                <label className="mb-2 block text-sm font-medium">Поиск конкурентов</label>
                 <RadioGroup
                   value={competitorMode}
                   onValueChange={(value) => setCompetitorMode(value as "ai" | "manual")}
                   className="grid-cols-2"
                 >
                   <label className="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-input px-3 py-2 text-sm">
-                    <RadioGroupItem value="ai" />✨ Use AI
+                    <RadioGroupItem value="ai" />✨ ИИ
                   </label>
                   <label className="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-input px-3 py-2 text-sm">
                     <RadioGroupItem value="manual" />
-                    Enter Manually
+                    Ввести вручную
                   </label>
                 </RadioGroup>
               </div>
@@ -272,11 +272,11 @@ const TemplateParameterModal: React.FC<TemplateParameterModalProps> = ({
               {/* Brand Name */}
               <div>
                 <label className="mb-1 block text-sm font-medium">
-                  Your Brand Name
+                  Название вашего бренда
                   <span className="ml-1 text-destructive">*</span>
                 </label>
                 <Input
-                  placeholder="e.g. Acme Airlines"
+                  placeholder="напр. Acme Airlines"
                   value={parameterValues[enrichmentParam || "brand_name"] || ""}
                   onChange={(e) =>
                     setParameterValues((prev) => ({
@@ -291,7 +291,7 @@ const TemplateParameterModal: React.FC<TemplateParameterModalProps> = ({
                 <>
                   <div>
                     <label className="mb-1 block text-sm font-medium">
-                      Select Model
+                      Выберите модель
                       <span className="ml-1 text-destructive">*</span>
                     </label>
                     <SearchSelect
@@ -299,7 +299,7 @@ const TemplateParameterModal: React.FC<TemplateParameterModalProps> = ({
                       value={selectedModel}
                       onValueChange={setSelectedModel}
                       placeholder={isLoadingModels ? "Loading models..." : "Select a model to generate names"}
-                      emptyText="No models found"
+                      emptyText="Модели не найдены"
                       disabled={isLoadingModels}
                     />
                   </div>
@@ -337,14 +337,14 @@ const TemplateParameterModal: React.FC<TemplateParameterModalProps> = ({
                   ))}
                   <input
                     className="min-w-40 flex-1 bg-transparent text-sm outline-none"
-                    placeholder="Type a name and press Enter to add"
+                    placeholder="Введите название и нажмите Enter для добавления"
                     value={tagDraft}
                     onChange={(e) => setTagDraft(e.target.value)}
                     onKeyDown={handleTagDraftKeyDown}
                   />
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Type a name and press Enter to add. Click ✕ to remove.
+                  Введите название и нажмите Enter. Нажмите ✕, чтобы удалить.
                 </p>
                 {statusMessage && (
                   <div className="mt-2 flex items-center gap-2 rounded-sm border border-border bg-muted p-2">
@@ -354,8 +354,8 @@ const TemplateParameterModal: React.FC<TemplateParameterModalProps> = ({
                 )}
                 {Object.keys(variationsMap).length > 0 && !statusMessage && (
                   <p className="mt-1 text-xs text-success">
-                    ✓ {Object.values(variationsMap).flat().length} alternate spellings &amp; variations auto-generated
-                    for guardrail matching
+                    ✓ {Object.values(variationsMap).flat().length} вариантов написания созданы автоматически
+                    для сопоставления гардрейлов
                   </p>
                 )}
               </div>
@@ -363,7 +363,7 @@ const TemplateParameterModal: React.FC<TemplateParameterModalProps> = ({
               {/* Refinement input — shown after initial generation in AI mode */}
               {competitorMode === "ai" && hasGenerated && competitorTags.length > 0 && (
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Refine List</label>
+                  <label className="mb-1 block text-sm font-medium">Уточнить список</label>
                   <div className="flex gap-2">
                     <Input
                       placeholder="e.g. add 10 more from Asia, increase to 50 total..."
@@ -381,7 +381,7 @@ const TemplateParameterModal: React.FC<TemplateParameterModalProps> = ({
                     </Button>
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Give instructions to add, remove, or change competitors. Press Enter to send.
+                    Укажите, что добавить, убрать или изменить в списке конкурентов. Нажмите Enter для отправки.
                   </p>
                 </div>
               )}

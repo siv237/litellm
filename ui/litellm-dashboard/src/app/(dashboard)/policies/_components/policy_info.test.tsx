@@ -1,23 +1,23 @@
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { renderWithProviders } from "@/../tests/test-utils";
+import { renderWithПровайдерs } from "@/../tests/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as networking from "@/components/networking";
-import PolicyInfoView from "./policy_info";
-import { Policy } from "@/components/policies/types";
+import ПолитикаInfoView from "./policy_info";
+import { Политика } from "@/components/policies/types";
 
 vi.mock("@/components/networking");
 vi.mock("./pipeline_flow_builder", () => ({
   PipelineInfoDisplay: () => <div data-testid="pipeline-info" />,
 }));
 
-const basePolicy: Policy = {
+const baseПолитика: Политика = {
   policy_id: "policy-uuid-1",
-  policy_name: "My Test Policy",
+  policy_name: "My Test Политика",
   inherit: null,
   description: "A test description",
-  guardrails_add: ["guardrail-a"],
-  guardrails_remove: [],
+  гардрейловs_add: ["гардрейлов-a"],
+  гардрейловs_remove: [],
   condition: null,
 };
 
@@ -25,108 +25,108 @@ const defaultProps = {
   policyId: "policy-uuid-1",
   onClose: vi.fn(),
   onEdit: vi.fn(),
-  accessToken: "test-token",
+  accessТокен: "test-token",
   isAdmin: true,
-  getPolicy: vi.fn(),
+  getПолитика: vi.fn(),
 };
 
-describe("PolicyInfoView", () => {
+describe("ПолитикаInfoView", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.clearВсеMocks();
   });
 
   it("should not show policy content while the fetch is in flight", () => {
-    defaultProps.getPolicy.mockReturnValue(new Promise(() => {}));
-    vi.mocked(networking.getResolvedGuardrails).mockReturnValue(new Promise(() => {}));
-    renderWithProviders(<PolicyInfoView {...defaultProps} />);
-    expect(screen.queryByText("My Test Policy")).not.toBeInTheDocument();
+    defaultProps.getПолитика.mockReturnЗначение(new Promise(() => {}));
+    vi.mocked(networking.getResolvedГардрейлы).mockReturnЗначение(new Promise(() => {}));
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} />);
+    expect(screen.queryByText("My Test Политика")).not.toBeInTheDocument();
   });
 
-  it("should show a 'Policy not found' message when getPolicy resolves null", async () => {
-    defaultProps.getPolicy.mockResolvedValue(null);
-    vi.mocked(networking.getResolvedGuardrails).mockResolvedValue({ resolved_guardrails: [] });
-    renderWithProviders(<PolicyInfoView {...defaultProps} />);
+  it("should show a 'Политика not found' message when getПолитика resolves null", async () => {
+    defaultProps.getПолитика.mockResolvedЗначение(null);
+    vi.mocked(networking.getResolvedГардрейлы).mockResolvedЗначение({ resolved_гардрейловs: [] });
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} />);
     expect(await screen.findByText(/policy not found/i)).toBeInTheDocument();
   });
 
   it("should render the policy name after loading", async () => {
-    defaultProps.getPolicy.mockResolvedValue(basePolicy);
-    vi.mocked(networking.getResolvedGuardrails).mockResolvedValue({ resolved_guardrails: [] });
-    renderWithProviders(<PolicyInfoView {...defaultProps} />);
-    expect(await screen.findByText("My Test Policy")).toBeInTheDocument();
+    defaultProps.getПолитика.mockResolvedЗначение(baseПолитика);
+    vi.mocked(networking.getResolvedГардрейлы).mockResolvedЗначение({ resolved_гардрейловs: [] });
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} />);
+    expect(await screen.findByText("My Test Политика")).toBeInTheDocument();
   });
 
   it("should render the policy ID", async () => {
-    defaultProps.getPolicy.mockResolvedValue(basePolicy);
-    vi.mocked(networking.getResolvedGuardrails).mockResolvedValue({ resolved_guardrails: [] });
-    renderWithProviders(<PolicyInfoView {...defaultProps} />);
+    defaultProps.getПолитика.mockResolvedЗначение(baseПолитика);
+    vi.mocked(networking.getResolvedГардрейлы).mockResolvedЗначение({ resolved_гардрейловs: [] });
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} />);
     expect(await screen.findByText("policy-uuid-1")).toBeInTheDocument();
   });
 
-  it("should render guardrails_add tags", async () => {
-    defaultProps.getPolicy.mockResolvedValue(basePolicy);
-    vi.mocked(networking.getResolvedGuardrails).mockResolvedValue({ resolved_guardrails: [] });
-    renderWithProviders(<PolicyInfoView {...defaultProps} />);
-    expect(await screen.findByText("guardrail-a")).toBeInTheDocument();
+  it("should render гардрейловs_add tags", async () => {
+    defaultProps.getПолитика.mockResolvedЗначение(baseПолитика);
+    vi.mocked(networking.getResolvedГардрейлы).mockResolvedЗначение({ resolved_гардрейловs: [] });
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} />);
+    expect(await screen.findByText("гардрейлов-a")).toBeInTheDocument();
   });
 
   it("should call onClose when the Back to Policies button is clicked", async () => {
-    defaultProps.getPolicy.mockResolvedValue(basePolicy);
-    vi.mocked(networking.getResolvedGuardrails).mockResolvedValue({ resolved_guardrails: [] });
+    defaultProps.getПолитика.mockResolvedЗначение(baseПолитика);
+    vi.mocked(networking.getResolvedГардрейлы).mockResolvedЗначение({ resolved_гардрейловs: [] });
     const user = userEvent.setup();
-    renderWithProviders(<PolicyInfoView {...defaultProps} />);
-    await screen.findByText("My Test Policy");
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} />);
+    await screen.findByText("My Test Политика");
     await user.click(screen.getByRole("button", { name: /back to policies/i }));
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
 
-  it("should call onEdit with the policy when the Edit Policy button is clicked", async () => {
-    defaultProps.getPolicy.mockResolvedValue(basePolicy);
-    vi.mocked(networking.getResolvedGuardrails).mockResolvedValue({ resolved_guardrails: [] });
+  it("should call onEdit with the policy when the Edit Политика button is clicked", async () => {
+    defaultProps.getПолитика.mockResolvedЗначение(baseПолитика);
+    vi.mocked(networking.getResolvedГардрейлы).mockResolvedЗначение({ resolved_гардрейловs: [] });
     const user = userEvent.setup();
-    renderWithProviders(<PolicyInfoView {...defaultProps} isAdmin />);
-    await screen.findByText("My Test Policy");
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} isAdmin />);
+    await screen.findByText("My Test Политика");
     await user.click(screen.getByRole("button", { name: /edit policy/i }));
-    expect(defaultProps.onEdit).toHaveBeenCalledWith(basePolicy);
+    expect(defaultProps.onEdit).toHaveBeenCalledWith(baseПолитика);
   });
 
-  it("should not show the Edit Policy button for non-admins", async () => {
-    defaultProps.getPolicy.mockResolvedValue(basePolicy);
-    vi.mocked(networking.getResolvedGuardrails).mockResolvedValue({ resolved_guardrails: [] });
-    renderWithProviders(<PolicyInfoView {...defaultProps} isAdmin={false} />);
-    await screen.findByText("My Test Policy");
+  it("should not show the Edit Политика button for non-admins", async () => {
+    defaultProps.getПолитика.mockResolvedЗначение(baseПолитика);
+    vi.mocked(networking.getResolvedГардрейлы).mockResolvedЗначение({ resolved_гардрейловs: [] });
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} isAdmin={false} />);
+    await screen.findByText("My Test Политика");
     expect(screen.queryByRole("button", { name: /edit policy/i })).not.toBeInTheDocument();
   });
 
-  it("should display resolved guardrails when returned from the API", async () => {
-    defaultProps.getPolicy.mockResolvedValue(basePolicy);
-    vi.mocked(networking.getResolvedGuardrails).mockResolvedValue({
-      resolved_guardrails: ["resolved-guardrail-x"],
+  it("should display resolved гардрейловs when returned from the API", async () => {
+    defaultProps.getПолитика.mockResolvedЗначение(baseПолитика);
+    vi.mocked(networking.getResolvedГардрейлы).mockResolvedЗначение({
+      resolved_гардрейловs: ["resolved-гардрейлов-x"],
     });
-    renderWithProviders(<PolicyInfoView {...defaultProps} />);
-    expect(await screen.findByText("resolved-guardrail-x")).toBeInTheDocument();
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} />);
+    expect(await screen.findByText("resolved-гардрейлов-x")).toBeInTheDocument();
   });
 
-  it("should display the model condition tag when present", async () => {
-    const policyWithCondition = { ...basePolicy, condition: { model: "gpt-4" } };
-    defaultProps.getPolicy.mockResolvedValue(policyWithCondition);
-    vi.mocked(networking.getResolvedGuardrails).mockResolvedValue({ resolved_guardrails: [] });
-    renderWithProviders(<PolicyInfoView {...defaultProps} />);
+  it("should display the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию condition tag when present", async () => {
+    const policyWithCondition = { ...baseПолитика, condition: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" } };
+    defaultProps.getПолитика.mockResolvedЗначение(policyWithCondition);
+    vi.mocked(networking.getResolvedГардрейлы).mockResolvedЗначение({ resolved_гардрейловs: [] });
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} />);
     expect(await screen.findByText("gpt-4")).toBeInTheDocument();
   });
 
-  it("should show 'No model condition' when condition is null", async () => {
-    defaultProps.getPolicy.mockResolvedValue(basePolicy);
-    vi.mocked(networking.getResolvedGuardrails).mockResolvedValue({ resolved_guardrails: [] });
-    renderWithProviders(<PolicyInfoView {...defaultProps} />);
-    expect(await screen.findByText(/no model condition/i)).toBeInTheDocument();
+  it("should show 'No Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию condition' when condition is null", async () => {
+    defaultProps.getПолитика.mockResolvedЗначение(baseПолитика);
+    vi.mocked(networking.getResolvedГардрейлы).mockResolvedЗначение({ resolved_гардрейловs: [] });
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} />);
+    expect(await screen.findByText(/no Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию condition/i)).toBeInTheDocument();
   });
 
   it("should show the formatted created_at date", async () => {
-    const policy = { ...basePolicy, created_at: "2024-06-15T12:00:00Z" };
-    defaultProps.getPolicy.mockResolvedValue(policy);
-    vi.mocked(networking.getResolvedGuardrails).mockResolvedValue({ resolved_guardrails: [] });
-    renderWithProviders(<PolicyInfoView {...defaultProps} />);
+    const policy = { ...baseПолитика, created_at: "2024-06-15T12:00:00Z" };
+    defaultProps.getПолитика.mockResolvedЗначение(policy);
+    vi.mocked(networking.getResolvedГардрейлы).mockResolvedЗначение({ resolved_гардрейловs: [] });
+    renderWithПровайдерs(<ПолитикаInfoView {...defaultProps} />);
     await waitFor(() => {
       expect(screen.getByText(/2024-06-15/)).toBeInTheDocument();
     });

@@ -1,205 +1,205 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  hydrateTierModelParams,
-  normalizeTierModels,
-  pruneTierModelParams,
-  serializeTierModelConfigs,
+  hydrateУровеньРежимlParams,
+  normalizeУровеньРежимls,
+  pruneУровеньРежимlParams,
+  serializeУровеньРежимlКонфигурацияs,
   tierRowLabel,
-  setTierModelReasoningEffort,
-} from "./complexity_router_tiers";
-import { resolveComplexityDefaultModel } from "./tier_rows";
+  setУровеньРежимlReasoningEffort,
+} from "./complexity_rвыходer_tiers";
+import { resolve— сложностьDefaultРежимl } from "./tier_rows";
 
-import type { ComplexityTiers } from "./ComplexityRouterConfig";
+import type { — сложностьУровеньs } from "./— сложностьRвыходerКонфигурация";
 
 // The backend types a tier as `str | list[str]` and widens with
-// `models if isinstance(models, list) else [models]`
-// (litellm/router_strategy/complexity_router/config.py:255, :441). These cases assert the
+// `Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs if isinstance(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs, list) else [Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs]`
+// (litellm/rвыходer_strategy/complexity_rвыходer/config.py:255, :441). These cases assert the
 // expected verdict per input rather than just agreement between call sites, so the test still
 // has teeth if every reader were changed at once.
-describe("normalizeTierModels", () => {
-  it("widens a pinned single model to a one-element pool", () => {
-    expect(normalizeTierModels("gpt-4o-mini")).toEqual(["gpt-4o-mini"]);
+describe("normalizeУровеньРежимls", () => {
+  it("widens a pinned single Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию to a one-element pool", () => {
+    expect(normalizeУровеньРежимls("gpt-4o-mini")).toEqual(["gpt-4o-mini"]);
   });
 
   it("passes a pool through in order", () => {
-    expect(normalizeTierModels(["a", "b"])).toEqual(["a", "b"]);
+    expect(normalizeУровеньРежимls(["a", "b"])).toEqual(["a", "b"]);
   });
 
-  it("treats an empty string as no models, not a pool containing an empty name", () => {
-    expect(normalizeTierModels("")).toEqual([]);
+  it("treats an empty string as no Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs, not a pool containing an empty name", () => {
+    expect(normalizeУровеньРежимls("")).toEqual([]);
   });
 
-  it("drops non-string entries rather than typing them as models", () => {
-    expect(normalizeTierModels(["a", 3, null, "b"])).toEqual(["a", "b"]);
+  it("drops non-string entries rather than typing them as Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => {
+    expect(normalizeУровеньРежимls(["a", 3, null, "b"])).toEqual(["a", "b"]);
   });
 
-  it.each([[undefined], [null], [{}], [42]])("returns no models for %s", (value) => {
-    expect(normalizeTierModels(value)).toEqual([]);
+  it.each([[undefined], [null], [{}], [42]])("returns no Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs for %s", (value) => {
+    expect(normalizeУровеньРежимls(value)).toEqual([]);
   });
 });
 
-// router.py derives the default as `MEDIUM or SIMPLE` and raises when neither holds a model, so
+// rвыходer.py derives the default as `MEDIUM or SIMPLE` and raises when neither holds a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, so
 // the resolver must not invent a COMPLEX/REASONING fallthrough the backend would never take.
-describe("resolveComplexityDefaultModel", () => {
-  const tiers: ComplexityTiers = {
-    SIMPLE: ["simple-model"],
-    MEDIUM: ["medium-model"],
-    COMPLEX: ["complex-model"],
-    REASONING: ["reasoning-model"],
+describe("resolve— сложностьDefaultРежимl", () => {
+  const tiers: — сложностьУровеньs = {
+    SIMPLE: ["simple-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию"],
+    MEDIUM: ["medium-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию"],
+    COMPLEX: ["complex-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию"],
+    REASONING: ["reasoning-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию"],
   };
-  const noTiers: ComplexityTiers = { SIMPLE: [], MEDIUM: [], COMPLEX: [], REASONING: [] };
+  const noУровеньs: — сложностьУровеньs = { SIMPLE: [], MEDIUM: [], COMPLEX: [], REASONING: [] };
 
   it("derives from MEDIUM first when nothing is pinned", () => {
-    expect(resolveComplexityDefaultModel({ tiers: tiers })).toBe("medium-model");
+    expect(resolve— сложностьDefaultРежимl({ tiers: tiers })).toBe("medium-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
   });
 
   it("falls back to SIMPLE when MEDIUM is empty", () => {
-    expect(resolveComplexityDefaultModel({ tiers: { ...tiers, MEDIUM: [] } })).toBe("simple-model");
+    expect(resolve— сложностьDefaultРежимl({ tiers: { ...tiers, MEDIUM: [] } })).toBe("simple-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
   });
 
   it("derives nothing from COMPLEX or REASONING, which the backend never falls through to", () => {
-    expect(resolveComplexityDefaultModel({ tiers: { ...tiers, MEDIUM: [], SIMPLE: [] } })).toBeUndefined();
+    expect(resolve— сложностьDefaultРежимl({ tiers: { ...tiers, MEDIUM: [], SIMPLE: [] } })).toBeUndefined();
   });
 
   it("lets a pin beat the tiers rather than merely filling in for them", () => {
-    expect(resolveComplexityDefaultModel({ tiers: tiers }, "pinned-model")).toBe("pinned-model");
+    expect(resolve— сложностьDefaultРежимl({ tiers: tiers }, "pinned-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию")).toBe("pinned-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
   });
 
-  it("stands alone as the default when no tier holds a model", () => {
-    expect(resolveComplexityDefaultModel({ tiers: noTiers }, "pinned-model")).toBe("pinned-model");
+  it("stands alone as the default when no tier holds a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
+    expect(resolve— сложностьDefaultРежимl({ tiers: noУровеньs }, "pinned-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию")).toBe("pinned-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
   });
 
   it.each([[""], ["   "], [undefined]])("reads %o as no pin and goes back to the tiers", (pinned) => {
-    expect(resolveComplexityDefaultModel({ tiers: tiers }, pinned)).toBe("medium-model");
+    expect(resolve— сложностьDefaultРежимl({ tiers: tiers }, pinned)).toBe("medium-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
   });
 
-  it("resolves to nothing when neither a pin nor a tier offers a model", () => {
-    expect(resolveComplexityDefaultModel({ tiers: noTiers })).toBeUndefined();
+  it("resolves to nothing when neither a pin nor a tier offers a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
+    expect(resolve— сложностьDefaultРежимl({ tiers: noУровеньs })).toBeUndefined();
   });
 });
 
-// The backend also accepts `{model_name, litellm_params}` entries and splits them into the
-// sibling tier_model_configs key at validation (config.py `_normalize_tier_model_configs`).
+// The backend also accepts `{Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name, litellm_params}` entries and splits them into the
+// sibling tier_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_configs key at validation (config.py `_normalize_tier_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_configs`).
 // Before this widening, an object entry was silently dropped here, so opening the edit modal on
 // a yaml-authored config rendered the tier empty and the next save destroyed it.
-describe("normalizeTierModels object entries", () => {
-  it("reads model_name from an object entry the way the backend does", () => {
-    expect(normalizeTierModels([{ model_name: "opus", litellm_params: { reasoning_effort: "high" } }, "mini"])).toEqual(
+describe("normalizeУровеньРежимls object entries", () => {
+  it("reads Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name from an object entry the way the backend does", () => {
+    expect(normalizeУровеньРежимls([{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus", litellm_params: { reasoning_effort: "high" } }, "mini"])).toEqual(
       ["opus", "mini"],
     );
   });
 
   it("widens a single object entry to a one-element pool", () => {
-    expect(normalizeTierModels({ model_name: "opus" })).toEqual(["opus"]);
+    expect(normalizeУровеньРежимls({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus" })).toEqual(["opus"]);
   });
 
-  it("drops an object without a model_name", () => {
-    expect(normalizeTierModels([{ litellm_params: { reasoning_effort: "high" } }])).toEqual([]);
+  it("drops an object withвыход a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name", () => {
+    expect(normalizeУровеньРежимls([{ litellm_params: { reasoning_effort: "high" } }])).toEqual([]);
   });
 });
 
-describe("hydrateTierModelParams", () => {
-  it("reads the sibling tier_model_configs key", () => {
+describe("hydrateУровеньРежимlParams", () => {
+  it("reads the sibling tier_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_configs key", () => {
     expect(
-      hydrateTierModelParams(
+      hydrateУровеньРежимlParams(
         { MEDIUM: ["opus"] },
-        { MEDIUM: [{ model_name: "opus", litellm_params: { reasoning_effort: "medium" } }] },
+        { MEDIUM: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus", litellm_params: { reasoning_effort: "medium" } }] },
       ),
     ).toEqual({ MEDIUM: { opus: { reasoning_effort: "medium" } } });
   });
 
-  it("reads inline object entries out of tiers", () => {
+  it("reads inline object entries выход of tiers", () => {
     expect(
-      hydrateTierModelParams(
-        { COMPLEX: [{ model_name: "opus", litellm_params: { reasoning_effort: "high" } }] },
+      hydrateУровеньРежимlParams(
+        { COMPLEX: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus", litellm_params: { reasoning_effort: "high" } }] },
         undefined,
       ),
     ).toEqual({ COMPLEX: { opus: { reasoning_effort: "high" } } });
   });
 
-  // config.py merges the two sources with tier_model_configs winning per (tier, model); hydrating
-  // the other way round would show the operator a value the router never uses.
-  it("lets tier_model_configs beat an inline entry for the same tier and model", () => {
+  // config.py merges the two sources with tier_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_configs winning per (tier, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию); hydrating
+  // the other way round would show the operator a value the rвыходer never uses.
+  it("lets tier_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_configs beat an inline entry for the same tier and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
     expect(
-      hydrateTierModelParams(
-        { MEDIUM: [{ model_name: "opus", litellm_params: { reasoning_effort: "low" } }] },
-        { MEDIUM: [{ model_name: "opus", litellm_params: { reasoning_effort: "medium" } }] },
+      hydrateУровеньРежимlParams(
+        { MEDIUM: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus", litellm_params: { reasoning_effort: "low" } }] },
+        { MEDIUM: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus", litellm_params: { reasoning_effort: "medium" } }] },
       ),
     ).toEqual({ MEDIUM: { opus: { reasoning_effort: "medium" } } });
   });
 
   it("hydrates to undefined when nothing carries params, so an untouched save stays byte-identical", () => {
     expect(
-      hydrateTierModelParams({ SIMPLE: ["mini"], MEDIUM: [{ model_name: "opus", litellm_params: {} }] }, undefined),
+      hydrateУровеньРежимlParams({ SIMPLE: ["mini"], MEDIUM: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus", litellm_params: {} }] }, undefined),
     ).toBeUndefined();
   });
 });
 
-describe("serializeTierModelConfigs", () => {
-  const tiers: ComplexityTiers = { SIMPLE: ["mini"], MEDIUM: ["opus"], COMPLEX: ["opus"], REASONING: [] };
+describe("serializeУровеньРежимlКонфигурацияs", () => {
+  const tiers: — сложностьУровеньs = { SIMPLE: ["mini"], MEDIUM: ["opus"], COMPLEX: ["opus"], REASONING: [] };
 
-  it("emits the sibling wire shape per tier and model", () => {
+  it("emits the sibling wire shape per tier and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
     expect(
-      serializeTierModelConfigs(tiers, {
+      serializeУровеньРежимlКонфигурацияs(tiers, {
         MEDIUM: { opus: { reasoning_effort: "medium" } },
         COMPLEX: { opus: { reasoning_effort: "high" } },
       }),
     ).toEqual({
-      MEDIUM: [{ model_name: "opus", litellm_params: { reasoning_effort: "medium" } }],
-      COMPLEX: [{ model_name: "opus", litellm_params: { reasoning_effort: "high" } }],
+      MEDIUM: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus", litellm_params: { reasoning_effort: "medium" } }],
+      COMPLEX: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus", litellm_params: { reasoning_effort: "high" } }],
     });
   });
 
-  it("prunes params for a model no longer selected in the tier", () => {
+  it("prunes params for a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию no longer selected in the tier", () => {
     expect(
-      serializeTierModelConfigs(tiers, { MEDIUM: { "removed-model": { reasoning_effort: "low" } } }),
+      serializeУровеньРежимlКонфигурацияs(tiers, { MEDIUM: { "removed-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию": { reasoning_effort: "low" } } }),
     ).toBeUndefined();
   });
 
   // Params authored in config.yaml alongside reasoning_effort must survive an edit round-trip.
   it("carries params keys this editor has no control for", () => {
     expect(
-      serializeTierModelConfigs(tiers, { MEDIUM: { opus: { reasoning_effort: "medium", max_tokens: 512 } } }),
+      serializeУровеньРежимlКонфигурацияs(tiers, { MEDIUM: { opus: { reasoning_effort: "medium", max_tokens: 512 } } }),
     ).toEqual({
-      MEDIUM: [{ model_name: "opus", litellm_params: { reasoning_effort: "medium", max_tokens: 512 } }],
+      MEDIUM: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus", litellm_params: { reasoning_effort: "medium", max_tokens: 512 } }],
     });
   });
 
   // This modal renders only the four built-in tiers; params stored under an operator-defined tier
   // must pass through rather than being dropped the moment the key became managed.
   it("passes tiers this editor does not render through untouched", () => {
-    expect(serializeTierModelConfigs(tiers, { DEEP_RESEARCH: { opus: { reasoning_effort: "xhigh" } } })).toEqual({
-      DEEP_RESEARCH: [{ model_name: "opus", litellm_params: { reasoning_effort: "xhigh" } }],
+    expect(serializeУровеньРежимlКонфигурацияs(tiers, { DEEP_RESEARCH: { opus: { reasoning_effort: "xhigh" } } })).toEqual({
+      DEEP_RESEARCH: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus", litellm_params: { reasoning_effort: "xhigh" } }],
     });
   });
 
   it("round-trips what hydration produced", () => {
-    const stored = { MEDIUM: [{ model_name: "opus", litellm_params: { reasoning_effort: "medium" } }] };
-    expect(serializeTierModelConfigs(tiers, hydrateTierModelParams(tiers, stored))).toEqual(stored);
+    const stored = { MEDIUM: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "opus", litellm_params: { reasoning_effort: "medium" } }] };
+    expect(serializeУровеньРежимlКонфигурацияs(tiers, hydrateУровеньРежимlParams(tiers, stored))).toEqual(stored);
   });
 
   it("serializes to undefined when nothing is set", () => {
-    expect(serializeTierModelConfigs(tiers, undefined)).toBeUndefined();
-    expect(serializeTierModelConfigs(tiers, { MEDIUM: {} })).toBeUndefined();
+    expect(serializeУровеньРежимlКонфигурацияs(tiers, undefined)).toBeUndefined();
+    expect(serializeУровеньРежимlКонфигурацияs(tiers, { MEDIUM: {} })).toBeUndefined();
   });
 });
 
-describe("setTierModelReasoningEffort", () => {
-  it("sets an effort for a tier and model", () => {
-    expect(setTierModelReasoningEffort(undefined, "MEDIUM", "opus", "medium")).toEqual({
+describe("setУровеньРежимlReasoningEffort", () => {
+  it("sets an effort for a tier and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
+    expect(setУровеньРежимlReasoningEffort(undefined, "MEDIUM", "opus", "medium")).toEqual({
       MEDIUM: { opus: { reasoning_effort: "medium" } },
     });
   });
 
   it("unsetting removes the key and collapses empties back to undefined", () => {
-    const set = setTierModelReasoningEffort(undefined, "MEDIUM", "opus", "medium");
-    expect(setTierModelReasoningEffort(set, "MEDIUM", "opus", undefined)).toBeUndefined();
+    const set = setУровеньРежимlReasoningEffort(undefined, "MEDIUM", "opus", "medium");
+    expect(setУровеньРежимlReasoningEffort(set, "MEDIUM", "opus", undefined)).toBeUndefined();
   });
 
   it("unsetting the effort keeps params keys it does not own", () => {
     expect(
-      setTierModelReasoningEffort(
+      setУровеньРежимlReasoningEffort(
         { MEDIUM: { opus: { reasoning_effort: "medium", max_tokens: 512 } } },
         "MEDIUM",
         "opus",
@@ -208,9 +208,9 @@ describe("setTierModelReasoningEffort", () => {
     ).toEqual({ MEDIUM: { opus: { max_tokens: 512 } } });
   });
 
-  it("leaves other tiers and models alone", () => {
+  it("leaves other tiers and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs alone", () => {
     expect(
-      setTierModelReasoningEffort({ COMPLEX: { opus: { reasoning_effort: "high" } } }, "MEDIUM", "opus", "low"),
+      setУровеньРежимlReasoningEffort({ COMPLEX: { opus: { reasoning_effort: "high" } } }, "MEDIUM", "opus", "low"),
     ).toEqual({
       COMPLEX: { opus: { reasoning_effort: "high" } },
       MEDIUM: { opus: { reasoning_effort: "low" } },
@@ -218,21 +218,21 @@ describe("setTierModelReasoningEffort", () => {
   });
 });
 
-describe("pruneTierModelParams", () => {
-  it("drops params for models deselected from the tier", () => {
+describe("pruneУровеньРежимlParams", () => {
+  it("drops params for Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs deselected from the tier", () => {
     expect(
-      pruneTierModelParams({ MEDIUM: { opus: { reasoning_effort: "medium" } } }, "MEDIUM", ["mini"]),
+      pruneУровеньРежимlParams({ MEDIUM: { opus: { reasoning_effort: "medium" } } }, "MEDIUM", ["mini"]),
     ).toBeUndefined();
   });
 
-  it("keeps params for models still selected", () => {
+  it("keeps params for Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs still selected", () => {
     const current = { MEDIUM: { opus: { reasoning_effort: "medium" } } };
-    expect(pruneTierModelParams(current, "MEDIUM", ["opus", "mini"])).toEqual(current);
+    expect(pruneУровеньРежимlParams(current, "MEDIUM", ["opus", "mini"])).toEqual(current);
   });
 
   it("returns the input unchanged when the tier holds no params", () => {
     const current = { COMPLEX: { opus: { reasoning_effort: "high" } } };
-    expect(pruneTierModelParams(current, "MEDIUM", [])).toBe(current);
+    expect(pruneУровеньРежимlParams(current, "MEDIUM", [])).toBe(current);
   });
 });
 
