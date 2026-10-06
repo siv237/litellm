@@ -39,6 +39,7 @@ import {
   FileText,
   FlaskConical,
   Folder,
+  Gauge,
   HeartPulse,
   KeyRound,
   LayoutGrid,
@@ -198,6 +199,13 @@ const menuGroups: MenuGroup[] = [
   {
     groupLabel: "Наблюдаемость",
     items: [
+      {
+        key: "monitoring",
+        page: "monitoring",
+        label: "Мониторинг",
+        roles: [...all_admin_roles, ...internalUserRoles],
+        icon: <Gauge {...ICON} />,
+      },
       {
         key: "new_usage",
         page: "new_usage",

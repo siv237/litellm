@@ -2154,6 +2154,15 @@ class CustomStreamWrapper:
                         else:
                             self.response_uptil_now += ""
                     self.rules.post_call_rules(input=self.response_uptil_now, model=self.model)
+                    # fork: live-мониторинг — уведомить подписчиков о каждом чанке
+                    # (duck-typed on_stream_chunk; no-op, если таких нет)
+                    for _cb in litellm.callbacks:
+                        _on_chunk = getattr(_cb, "on_stream_chunk", None)
+                        if _on_chunk is not None:
+                            try:
+                                _on_chunk(self.logging_obj.model_call_details, processed_chunk)
+                            except Exception:
+                                pass
                     # Add mcp_list_tools to first chunk if present
                     if not self.sent_first_chunk and processed_chunk.choices:
                         processed_chunk = self._add_mcp_list_tools_to_first_chunk(processed_chunk)
