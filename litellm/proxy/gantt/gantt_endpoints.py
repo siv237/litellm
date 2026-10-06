@@ -12,9 +12,17 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Response
 
 from litellm.proxy._types import LitellmUserRoles, UserAPIKeyAuth
 from litellm.proxy.auth.user_api_key_auth import user_api_key_auth
+from litellm.proxy.gantt.inflight import register as _register_inflight, registry as _inflight
 from litellm.proxy.utils import PrismaClient
 
 router: Final = APIRouter()
+
+# импорт этого модуля в proxy_server происходит ДО создания ProxyLogging —
+# реестр незавершённых запросов успевает встать в litellm.callbacks
+_register_inflight()
+
+# user_id -> display (email local-part), общий для строк и in-flight; TTL 60 с
+_names_cache: Dict[str, Any] = {"ts": 0.0, "map": {}}
 
 _ALLOWED_ROLES: Final = {
     LitellmUserRoles.PROXY_ADMIN,
@@ -110,7 +118,17 @@ async def get_gantt_feed(
     for r in rows:
         email = r.get("email") or ""
         r["display"] = email.split("@")[0] if email else (r.get("u") or "—")
-    payload: Dict[str, Any] = {"max_rows": _MAX_ROWS, "total": len(rows), "rows": rows}
+    inflight = _inflight.snapshot()
+    if inflight:
+        names = await _user_names(prisma_client)
+        for e in inflight:
+            e["display"] = names.get(e["u"]) or (e["u"] or "—")
+    payload: Dict[str, Any] = {
+        "max_rows": _MAX_ROWS,
+        "total": len(rows),
+        "rows": rows,
+        "inflight": inflight,
+    }
     if rng:
         payload["from"], payload["to"] = rng
     else:
@@ -131,6 +149,21 @@ async def _load_rows(
     if isinstance(data, str):
         data = json.loads(data)
     return [dict(row) for row in (data or [])]
+
+
+async def _user_names(client: PrismaClient) -> Dict[str, str]:
+    """user_id -> display с кэшем 60 с (таблица маленькая, опрос Gantt каждые 5 с)."""
+    import time as _time
+
+    now = _time.monotonic()
+    if now - _names_cache["ts"] > 60:
+        result = await client.db.query_raw(_SQL_USERS)
+        data = result[0].get("data") if result and isinstance(result[0], dict) else []
+        if isinstance(data, str):
+            data = json.loads(data)
+        _names_cache["map"] = {row["user_id"]: row["display"] for row in (data or [])}
+        _names_cache["ts"] = now
+    return _names_cache["map"]
 
 
 _SQL_USERS: Final = """

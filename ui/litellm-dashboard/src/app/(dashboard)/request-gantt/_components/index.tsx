@@ -20,6 +20,15 @@ interface GanttRowT {
   key_short: string;
 }
 
+interface GanttInflightT {
+  t0: number;
+  u: string;
+  display: string;
+  model: string;
+  key_alias: string;
+  key_short: string;
+}
+
 interface GanttResponse {
   window?: number;
   from?: number;
@@ -27,6 +36,7 @@ interface GanttResponse {
   max_rows: number;
   total: number;
   rows: GanttRowT[];
+  inflight?: GanttInflightT[];
 }
 
 const WINDOWS: { sec: number; label: string }[] = [
@@ -62,6 +72,10 @@ function toLocalInput(d: Date): string {
   const p = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
 }
+
+// модель нормализуется: failed-запросы пишутся в SpendLogs без провайдер-префикса,
+// без нормализации группа одного человека рвётся на две строки
+const normModel = (m: string) => (m.includes("/") ? m.slice(m.indexOf("/") + 1) : m);
 
 function spanLabel(a: number, b: number): string {
   const p = (n: number) => String(n).padStart(2, "0");
@@ -141,18 +155,16 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
 
   const svg = useMemo(() => {
     geomRef.current = null;
-    if (!data || !data.rows.length) return null;
+    if (!data || (!data.rows.length && !(data.inflight ?? []).length)) return null;
     const byUser = selected.length ? data.rows.filter((r) => selected.includes(r.display)) : data.rows;
     const all = zoom ? byUser.filter((r) => r.t1 >= zoom[0] && r.t0 <= zoom[1]) : byUser;
-    type Line = { who: string; model: string; key: string; items: GanttRowT[] };
+    type Line = { who: string; model: string; key: string; items: GanttRowT[]; live: GanttInflightT[] };
     const keyOf = (r: GanttRowT) => r.key_alias || (r.key_short ? `key ${r.key_short}` : "");
+    const inflAll = data.inflight ?? [];
     let lines: Line[];
     if (grouped) {
       // строка = дорожка группы чело·модель·ключ; новая строка только при реальном
       // пересечении по времени (упаковка интервалов, без порога разрыва).
-      // модель нормализуется: failed-запросы пишутся в SpendLogs без провайдер-префикса,
-      // без нормализации группа одного человека рвётся на две строки
-      const normModel = (m: string) => (m.includes("/") ? m.slice(m.indexOf("/") + 1) : m);
       const groups: Record<string, GanttRowT[]> = {};
       all.forEach((r) => {
         const k = `${r.display}|${normModel(r.model)}|${keyOf(r)}`;
@@ -180,7 +192,7 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
             row.lastEnd = Math.max(row.lastEnd, r.t1);
             row.tmax = Math.max(row.tmax, r.t1);
           } else {
-            const row = { line: { who, model, key: keyOf(r), items: [r] }, lastEnd: r.t1, tmax: r.t1 };
+            const row = { line: { who, model, key: keyOf(r), items: [r], live: [] }, lastEnd: r.t1, tmax: r.t1 };
             lanes.push(row);
             rowsOut.push(row);
           }
@@ -191,9 +203,8 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
     } else {
       lines = all
         .slice(0, MAX_SHOWN)
-        .map((r) => ({ who: r.display, model: r.model, key: keyOf(r), items: [r] }));
+        .map((r) => ({ who: r.display, model: r.model, key: keyOf(r), items: [r], live: [] }));
     }
-    if (!lines.length) return null;
     let tmin: number;
     let tmax: number;
     if (zoom) {
@@ -203,12 +214,33 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
       tmin = custom[0];
       tmax = custom[1];
     } else {
-      tmin = Math.min(...lines.map((l) => Math.min(...l.items.map((r) => r.t0))));
-      tmax = Math.max(...lines.map((l) => Math.max(...l.items.map((r) => r.t1))), Date.now());
+      const rowT0 = lines.map((l) => Math.min(...l.items.map((r) => r.t0)));
+      const rowT1 = lines.map((l) => Math.max(...l.items.map((r) => r.t1)));
+      const infT0 = inflAll.map((i) => i.t0);
+      tmin = Math.min(...(rowT0.length ? rowT0 : infT0));
+      tmax = Math.max(...(rowT1.length ? rowT1 : [0]), ...(infT0.length ? infT0 : [0]), Date.now());
     }
     const pad = (tmax - tmin) * 0.04 + 1;
     tmin -= pad;
     tmax += pad;
+    // in-flight: приклеиваем к существующей дорожке (grouped), иначе — новая сверху
+    const infl = inflAll.filter(
+      (i) => i.t0 >= tmin && i.t0 <= tmax && (!selected.length || selected.includes(i.display)),
+    );
+    if (infl.length) {
+      const idx = new Map<string, Line>();
+      if (grouped) lines.forEach((l) => idx.set(`${l.who}|${normModel(l.model)}|${l.key}`, l));
+      const extra: Line[] = [];
+      infl.forEach((i) => {
+        const key = i.key_alias || (i.key_short ? `key ${i.key_short}` : "");
+        const lane = grouped ? idx.get(`${i.display}|${normModel(i.model)}|${key}`) : undefined;
+        if (lane) lane.live.push(i);
+        else extra.push({ who: i.display, model: i.model, key, items: [], live: [i] });
+      });
+      extra.sort((a, b) => (b.live[0]?.t0 ?? 0) - (a.live[0]?.t0 ?? 0));
+      lines = [...extra, ...lines];
+    }
+    if (!lines.length) return null;
     const L = 250;
     const R = 48;
     const T = 26;
@@ -244,7 +276,8 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
       const barY = y + (ROW_H - BH) / 2;
       const modelShort = l.model.replace(/^openai\//, "");
       const line1 = cut(l.key ? `${l.who} · ${l.key}` : l.who, 34);
-      const line2 = cut(modelShort, 40) + (l.items.length > 1 ? ` ×${l.items.length}` : "");
+      const liveSuffix = l.live.length ? ` · live${l.live.length > 1 ? `×${l.live.length}` : ""}` : "";
+      const line2 = cut(modelShort, 40) + (l.items.length > 1 ? ` ×${l.items.length}` : "") + liveSuffix;
       const col = colorOf(l.who);
       const totTok = l.items.reduce((a, r) => a + (r.p || 0) + (r.c || 0), 0);
       const spanEnd = Math.max(...l.items.map((r) => r.t1));
@@ -280,6 +313,20 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
           el += `<rect x="${x0}" y="${barY}" width="${x1 - x0}" height="${BH}" fill="${r.c ? col : "var(--muted-foreground)"}"${r.c ? "" : ' opacity="0.35"'} rx="2"/>`;
         }
         el += "</g>";
+      });
+      l.live.forEach((iv) => {
+        const secs = Math.max((Date.now() - iv.t0) / 1000, 0);
+        const x0 = X(iv.t0);
+        const x1 = Math.max(X(Math.min(Date.now(), tmax)), x0 + 2);
+        const ltip =
+          `${l.who}\nвыполняется ${secs.toFixed(0)} с\nмодель: ${iv.model}` +
+          (iv.key_alias ? `\nключ: ${iv.key_alias}` : iv.key_short ? `\nключ (hash): ${iv.key_short}…` : "");
+        const ltipAttr = ltip.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g, "&#10;");
+        el +=
+          `<g data-tip="${ltipAttr}"><title>${ltip.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</title>` +
+          `<rect x="${x0}" y="${barY}" width="${x1 - x0}" height="${BH}" fill="${col}" rx="2" opacity="0.45">` +
+          `<animate attributeName="opacity" values="0.25;0.55;0.25" dur="1.6s" repeatCount="indefinite"/>` +
+          `</rect></g>`;
       });
       return el;
     });
@@ -473,6 +520,7 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
               : data.rows.length) > MAX_SHOWN
               ? ` (показаны последние ${MAX_SHOWN})`
               : ""}
+            {data.inflight?.length ? ` · выполняется: ${data.inflight.length}` : ""}
           </span>
         )}
       </div>
