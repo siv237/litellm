@@ -22,6 +22,7 @@ interface GanttRowT {
 
 interface GanttInflightT {
   t0: number;
+  t1: number | null;
   u: string;
   display: string;
   model: string;
@@ -233,7 +234,17 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
       const extra: Line[] = [];
       infl.forEach((i) => {
         const key = i.key_alias || (i.key_short ? `key ${i.key_short}` : "");
-        const lane = grouped ? idx.get(`${i.display}|${normModel(i.model)}|${key}`) : undefined;
+        let lane = grouped ? idx.get(`${i.display}|${normModel(i.model)}|${key}`) : undefined;
+        if (grouped && !lane) {
+          // алиас может быть префиксом разыменённого имени деployment'а (или наоборот)
+          const nm = normModel(i.model);
+          lane =
+            lines.find(
+              (l) => l.who === i.display && l.key === key && (normModel(l.model).startsWith(nm) || nm.startsWith(normModel(l.model))),
+            ) ?? extra.find(
+              (l) => l.who === i.display && l.key === key && (normModel(l.model).startsWith(nm) || nm.startsWith(normModel(l.model))),
+            );
+        }
         if (lane) lane.live.push(i);
         else extra.push({ who: i.display, model: i.model, key, items: [], live: [i] });
       });
@@ -276,12 +287,15 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
       const barY = y + (ROW_H - BH) / 2;
       const modelShort = l.model.replace(/^openai\//, "");
       const line1 = cut(l.key ? `${l.who} · ${l.key}` : l.who, 34);
-      const liveSuffix = l.live.length ? ` · live${l.live.length > 1 ? `×${l.live.length}` : ""}` : "";
+      const running = l.live.filter((i) => i.t1 == null).length;
+      const liveSuffix = running ? ` · live${running > 1 ? `×${running}` : ""}` : "";
       const line2 = cut(modelShort, 40) + (l.items.length > 1 ? ` ×${l.items.length}` : "") + liveSuffix;
       const col = colorOf(l.who);
       const totTok = l.items.reduce((a, r) => a + (r.p || 0) + (r.c || 0), 0);
-      const spanEnd = Math.max(...l.items.map((r) => r.t1));
-      const rowTipRaw = `${l.who}\nмодель: ${l.model}\nключ: ${l.key || "— (без имени)"}\nзапросов: ${l.items.length}\nтокенов: ${fnum(totTok)}\n${fmtTime(l.items[0].t0)} — ${fmtTime(spanEnd)}`;
+      const keyLine = `ключ: ${l.key || "— (без имени)"}`;
+      const rowTipRaw = l.items.length
+        ? `${l.who}\nмодель: ${l.model}\n${keyLine}\nзапросов: ${l.items.length}\nтокенов: ${fnum(totTok)}\n${fmtTime(l.items[0].t0)} — ${fmtTime(Math.max(...l.items.map((r) => r.t1)))}`
+        : `${l.who}\nмодель: ${l.model}\n${keyLine}\nвыполняется: ${l.live.length}`;
       const rowTipAttr = rowTipRaw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g, "&#10;");
       let el =
         `<g data-tip="${rowTipAttr}">` +
@@ -315,17 +329,18 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
         el += "</g>";
       });
       l.live.forEach((iv) => {
-        const secs = Math.max((Date.now() - iv.t0) / 1000, 0);
+        const finished = iv.t1 != null;
+        const secs = Math.max(((finished ? iv.t1! : Date.now()) - iv.t0) / 1000, 0);
         const x0 = X(iv.t0);
-        const x1 = Math.max(X(Math.min(Date.now(), tmax)), x0 + 2);
+        const x1 = Math.max(X(Math.min(finished ? iv.t1! : Date.now(), tmax)), x0 + 2);
         const ltip =
-          `${l.who}\nвыполняется ${secs.toFixed(0)} с\nмодель: ${iv.model}` +
+          `${l.who}\n${finished ? `завершён ${secs.toFixed(1)} с, ждёт записи в журнал` : `выполняется ${secs.toFixed(0)} с`}\nмодель: ${iv.model}` +
           (iv.key_alias ? `\nключ: ${iv.key_alias}` : iv.key_short ? `\nключ (hash): ${iv.key_short}…` : "");
         const ltipAttr = ltip.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g, "&#10;");
         el +=
           `<g data-tip="${ltipAttr}"><title>${ltip.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</title>` +
-          `<rect x="${x0}" y="${barY}" width="${x1 - x0}" height="${BH}" fill="${col}" rx="2" opacity="0.45">` +
-          `<animate attributeName="opacity" values="0.25;0.55;0.25" dur="1.6s" repeatCount="indefinite"/>` +
+          `<rect x="${x0}" y="${barY}" width="${x1 - x0}" height="${BH}" fill="${col}" rx="2" opacity="${finished ? 0.75 : 0.45}">` +
+          (finished ? "" : `<animate attributeName="opacity" values="0.25;0.55;0.25" dur="1.6s" repeatCount="indefinite"/>`) +
           `</rect></g>`;
       });
       return el;
@@ -520,7 +535,9 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
               : data.rows.length) > MAX_SHOWN
               ? ` (показаны последние ${MAX_SHOWN})`
               : ""}
-            {data.inflight?.length ? ` · выполняется: ${data.inflight.length}` : ""}
+            {data.inflight?.some((i) => i.t1 == null)
+              ? ` · выполняется: ${data.inflight.filter((i) => i.t1 == null).length}`
+              : ""}
           </span>
         )}
       </div>

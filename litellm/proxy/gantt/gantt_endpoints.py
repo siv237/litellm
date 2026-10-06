@@ -119,6 +119,21 @@ async def get_gantt_feed(
         email = r.get("email") or ""
         r["display"] = email.split("@")[0] if email else (r.get("u") or "—")
     inflight = _inflight.snapshot()
+    if inflight and rows:
+        # строка уже в SpendLogs — live/завершённая запись больше не нужна.
+        # модель не сравниваем: SpendLogs пишет разыменованное имя деployment
+        # (openai/...-uncensored), а в реестре — запрошенный алиас; привязка
+        # по (u, key) + t0 с точностью мс (замерено: Δ=9 мс)
+        buckets: Dict[tuple, List[int]] = {}
+        for r in rows:
+            buckets.setdefault((r["u"], r["key_short"]), []).append(r["t0"])
+        inflight = [
+            e
+            for e in inflight
+            if not any(
+                abs(t0 - e["t0"]) <= 1500 for t0 in buckets.get((e["u"], e["key_short"]), [])
+            )
+        ]
     if inflight:
         names = await _user_names(prisma_client)
         for e in inflight:
