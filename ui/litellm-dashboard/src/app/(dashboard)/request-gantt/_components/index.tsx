@@ -209,14 +209,15 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
     const pad = (tmax - tmin) * 0.04 + 1;
     tmin -= pad;
     tmax += pad;
-    const L = 240;
+    const L = 250;
     const R = 48;
     const T = 26;
-    const BH = 16;
-    const GAP = 5;
+    const ROW_H = 26;
+    const BH = 14;
+    const GAP = 6;
     const width = 1000;
     const plotW = width - L - R;
-    const height = T + lines.length * (BH + GAP) + 14;
+    const height = T + lines.length * (ROW_H + GAP) + 14;
     const X = (t: number) => L + ((t - tmin) / (tmax - tmin)) * plotW;
     geomRef.current = { tmin, tmax, L, plotW, viewW: width };
 
@@ -224,9 +225,9 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
     for (let g = 0; g <= 8; g += 1) {
       const t = tmin + ((tmax - tmin) * g) / 8;
       const x = X(t);
-      grid.push(`<line x1="${x}" y1="${T - 6}" x2="${x}" y2="${height - 8}" stroke="#e2e8f0"/>`);
+      grid.push(`<line x1="${x}" y1="${T - 6}" x2="${x}" y2="${height - 8}" stroke="var(--border)"/>`);
       grid.push(
-        `<text x="${x}" y="${T - 10}" text-anchor="middle" font-size="10" fill="#64748b">${fmtAxis(t, tmax - tmin)}</text>`,
+        `<text x="${x}" y="${T - 10}" text-anchor="middle" font-size="10" fill="var(--muted-foreground)">${fmtAxis(t, tmax - tmin)}</text>`,
       );
     }
     const nowMs = Date.now();
@@ -236,19 +237,24 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
       );
     }
 
+    const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const cut = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
     const bars = lines.map((l, i) => {
-      const y = T + i * (BH + GAP);
+      const y = T + i * (ROW_H + GAP);
+      const barY = y + (ROW_H - BH) / 2;
       const modelShort = l.model.replace(/^openai\//, "");
-      const full = l.key ? `${l.who} · ${modelShort} · ${l.key}` : `${l.who} · ${modelShort}`;
-      const MAXL = 38;
-      const base = full.length > MAXL ? `${full.slice(0, MAXL - 1)}…` : full;
-      const label = l.items.length > 1 ? `${base} ×${l.items.length}` : base;
+      const line1 = cut(l.key ? `${l.who} · ${l.key}` : l.who, 34);
+      const line2 = cut(modelShort, 40) + (l.items.length > 1 ? ` ×${l.items.length}` : "");
       const col = colorOf(l.who);
       const totTok = l.items.reduce((a, r) => a + (r.p || 0) + (r.c || 0), 0);
       const spanEnd = Math.max(...l.items.map((r) => r.t1));
       const rowTipRaw = `${l.who}\nмодель: ${l.model}\nключ: ${l.key || "— (без имени)"}\nзапросов: ${l.items.length}\nтокенов: ${fnum(totTok)}\n${fmtTime(l.items[0].t0)} — ${fmtTime(spanEnd)}`;
       const rowTipAttr = rowTipRaw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;").replace(/\n/g, "&#10;");
-      let el = `<g data-tip="${rowTipAttr}"><text x="6" y="${y + BH - 4}" text-anchor="start" font-size="10" fill="#334155">${label.replace(/</g, "&lt;")}</text></g>`;
+      let el =
+        `<g data-tip="${rowTipAttr}">` +
+        `<text x="6" y="${y + 11}" text-anchor="start" font-size="11" font-weight="600" fill="var(--foreground)">${esc(line1)}</text>` +
+        `<text x="6" y="${y + 23}" text-anchor="start" font-size="9.5" fill="var(--muted-foreground)">${esc(line2)}</text>` +
+        `</g>`;
       l.items.forEach((r) => {
         const dur = (r.t1 - r.t0) / 1000;
         const ttft = r.tf ? (r.tf - r.t0) / 1000 : null;
@@ -268,10 +274,10 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
         el += `<g data-tip="${tipAttr}"><title>${tipTxtEsc}</title>`;
         if (r.tf && r.tf > r.t0 && r.tf < r.t1) {
           const xf = X(r.tf);
-          el += `<rect x="${x0}" y="${y}" width="${Math.max(xf - x0, 1)}" height="${BH}" fill="#cbd5e1" rx="2"/>`;
-          el += `<rect x="${xf}" y="${y}" width="${Math.max(x1 - xf, 1)}" height="${BH}" fill="${col}" rx="2"/>`;
+          el += `<rect x="${x0}" y="${barY}" width="${Math.max(xf - x0, 1)}" height="${BH}" fill="var(--muted-foreground)" opacity="0.35" rx="2"/>`;
+          el += `<rect x="${xf}" y="${barY}" width="${Math.max(x1 - xf, 1)}" height="${BH}" fill="${col}" rx="2"/>`;
         } else {
-          el += `<rect x="${x0}" y="${y}" width="${x1 - x0}" height="${BH}" fill="${r.c ? col : "#cbd5e1"}" rx="2"/>`;
+          el += `<rect x="${x0}" y="${barY}" width="${x1 - x0}" height="${BH}" fill="${r.c ? col : "var(--muted-foreground)"}"${r.c ? "" : ' opacity="0.35"'} rx="2"/>`;
         }
         el += "</g>";
       });
@@ -280,7 +286,7 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
 
     return (
       `<svg viewBox="0 0 ${width} ${height}" ` +
-      'style="width:100%;background:#fff;border:1px solid #e2e8f0;border-radius:8px">' +
+      'style="width:100%;background:var(--background);border:1px solid var(--border);border-radius:8px">' +
       `${grid.join("")}${bars.join("")}</svg>`
     );
   }, [data, colorOf, selected, grouped, windowSec, zoom, custom]);
@@ -364,7 +370,7 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
   return (
     <div className="space-y-3 p-2">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm text-gray-600">Окно:</span>
+        <span className="text-sm text-muted-foreground">Окно:</span>
         {WINDOWS.map((w) => (
           <button
             key={w.sec}
@@ -378,7 +384,7 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
             className={`rounded border px-2.5 py-1 text-sm ${
               !custom && windowSec === w.sec
                 ? "border-blue-600 bg-blue-600 text-white"
-                : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                : "border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
             }`}
           >
             {w.label}
@@ -396,8 +402,8 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
           title="задать произвольный период"
           className={`rounded border px-2.5 py-1 text-sm ${
             custom
-              ? "border-blue-600 bg-blue-50 text-blue-800"
-              : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+              ? "border-blue-600 bg-blue-500/10 text-blue-600 dark:text-blue-400"
+              : "border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
           }`}
         >
           {custom ? spanLabel((zoom || custom)[0], (zoom || custom)[1]) : "свой интервал…"}
@@ -409,15 +415,15 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
               step={1}
               value={cfrom}
               onChange={(e) => setCfrom(e.target.value)}
-              className="rounded border border-gray-300 px-1.5 py-0.5 text-sm"
+              className="rounded border border-input bg-background px-1.5 py-0.5 text-sm"
             />
-            <span className="text-gray-400">—</span>
+            <span className="text-muted-foreground">—</span>
             <input
               type="datetime-local"
               step={1}
               value={cto}
               onChange={(e) => setCto(e.target.value)}
-              className="rounded border border-gray-300 px-1.5 py-0.5 text-sm"
+              className="rounded border border-input bg-background px-1.5 py-0.5 text-sm"
             />
             <button
               type="button"
@@ -436,7 +442,7 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
             <button
               type="button"
               onClick={() => setCform(false)}
-              className="rounded border border-gray-300 px-2 py-0.5 text-sm text-gray-600 hover:bg-gray-50"
+              className="rounded border border-input px-2 py-0.5 text-sm text-muted-foreground hover:bg-accent"
             >
               отмена
             </button>
@@ -447,17 +453,17 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
             type="button"
             onClick={() => setZoom(null)}
             title="двойной клик по графику — тоже сброс"
-            className="rounded border border-gray-300 bg-white px-2.5 py-1 text-sm text-gray-700 hover:bg-gray-50"
+            className="rounded border border-input bg-background px-2.5 py-1 text-sm text-foreground hover:bg-accent"
           >
             ⤺ сбросить масштаб
           </button>
         )}
-        <label className="ml-3 flex cursor-pointer items-center gap-1.5 text-sm text-gray-600">
+        <label className="ml-3 flex cursor-pointer items-center gap-1.5 text-sm text-muted-foreground">
           <input type="checkbox" checked={grouped} onChange={(e) => setGrouped(e.target.checked)} />
           группировать (строка=дорожка)
         </label>
         {data && (
-          <span className="ml-auto text-sm text-gray-500">
+          <span className="ml-auto text-sm text-muted-foreground">
             {selected.length ? "выбрано: " : "запросов: "}
             {selected.length
               ? `${data.rows.filter((r) => selected.includes(r.display)).length} из ${data.total}`
@@ -471,8 +477,8 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
         )}
       </div>
       {chips.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
-          <span className="text-xs text-gray-400">фильтр по людям:</span>
+        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <span className="text-xs text-muted-foreground">фильтр по людям:</span>
           {chips.map(([name, v]) => {
             const on = selected.includes(name);
             return (
@@ -482,10 +488,10 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
                 onClick={() => toggleUser(name)}
                 className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 transition ${
                   on
-                    ? "border-blue-600 bg-blue-50 text-blue-800"
+                    ? "border-blue-600 bg-blue-500/10 text-blue-600 dark:text-blue-400"
                     : selected.length
-                      ? "border-gray-200 bg-white text-gray-400 hover:bg-gray-50"
-                      : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                      ? "border-border bg-background text-muted-foreground/60 hover:bg-accent"
+                      : "border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground"
                 }`}
               >
                 <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: v.color }} />
@@ -498,19 +504,19 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
             <button
               type="button"
               onClick={() => setSelected([])}
-              className="rounded border border-gray-300 px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-50"
+              className="rounded border border-input px-2 py-0.5 text-xs text-muted-foreground hover:bg-accent"
             >
               сбросить
             </button>
           )}
         </div>
       )}
-      {error && <div className="text-sm text-red-600">ошибка загрузки: {error}</div>}
+      {error && <div className="text-sm text-destructive">ошибка загрузки: {error}</div>}
       {typeof svg === "string" ? (
         <div ref={chartRef} className="relative cursor-crosshair" dangerouslySetInnerHTML={{ __html: svg }} />
       ) : (
         !error && (
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-muted-foreground">
             {zoom || custom
               ? "нет запросов в выбранном интервале"
               : selected.length
@@ -521,7 +527,7 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
       )}
       {tip && (
         <div
-          className="pointer-events-none fixed z-50 max-w-[480px] whitespace-pre-line rounded border border-gray-300 bg-white px-2 py-1 text-xs shadow-lg"
+          className="pointer-events-none fixed z-50 max-w-[480px] whitespace-pre-line rounded border border-border bg-popover px-2 py-1 text-xs text-popover-foreground shadow-lg"
           style={{ left: tip.x, top: tip.y }}
         >
           {tip.text}
