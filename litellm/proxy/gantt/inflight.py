@@ -32,14 +32,22 @@ class InFlightRegistry(CustomLogger):
         self._lock = threading.Lock()
         self._items: Dict[str, Dict[str, Any]] = {}
         self.started_at = time.time()
+        # бэкенды пакетируют несколько токенов в один SSE-чанк (упаковка нестабильна),
+        # поэтому живая оценка идёт по СИМВОЛАМ стрима: tokens_per_char калибруется
+        # по точным completion_tokens/символы завершённых запросов (EMA).
+        # Словарь по алиасам моделей: у каждого бэкенда свой токенизатор и своя
+        # «плотность» токенов в символах (источников будет десятки).
+        self.tokens_per_char: Dict[str, float] = {}
         # накопительные счёты процесса (с момента запуска, Redis нет)
-        self.counters: Dict[str, int] = {
+        self.counters: Dict[str, float] = {
             "requests": 0,
             "success": 0,
             "failure": 0,
             "stream": 0,
             "prompt_tokens": 0,
             "completion_tokens": 0,
+            "prefill_peak_tok_s": 0.0,  # пик скорости префилла с момента запуска
+            "gen_peak_tok_s": 0.0,  # пик скорости генерации с момента запуска
         }
 
     async def async_pre_call_hook(
@@ -56,12 +64,16 @@ class InFlightRegistry(CustomLogger):
                 "t0": time.time(),
                 "t1": None,
                 "tf": None,  # время первого content-чанка (live TTFT)
-                "ntok": 0,  # content-чанков получено (≈ токенов сгенерировано)
+                "ntok": 0,  # content-чанков получено
+                "nchars": 0,  # символов (content+reasoning) — база живой оценки токенов
                 "stream": is_stream,
                 "u": getattr(user_api_key_dict, "user_id", None) or "",
                 "token": getattr(user_api_key_dict, "token", None) or "",
                 "key_alias": getattr(user_api_key_dict, "key_alias", None) or "",
                 "model": str(data.get("model") or ""),
+                # запрошенный алиас НЕ перезаписывается разыменованием на FIN —
+                # по нему ключуется калибровка токенов/символ конкретной модели
+                "alias": str(data.get("model") or ""),
             }
             with self._lock:
                 self.counters["requests"] += 1
@@ -116,8 +128,32 @@ class InFlightRegistry(CustomLogger):
                         self.counters[outcome] = self.counters.get(outcome, 0) + 1
                         if isinstance(p_tok, int) and p_tok > 0:
                             self.counters["prompt_tokens"] += p_tok
+                            if entry is not None:
+                                entry["ptok"] = p_tok
+                                if entry.get("tf"):
+                                    dur = entry["tf"] - entry["t0"]
+                                    if dur > 0:
+                                        rate = p_tok / dur
+                                        if rate > self.counters["prefill_peak_tok_s"]:
+                                            self.counters["prefill_peak_tok_s"] = round(rate, 1)
                         if isinstance(c_tok, int) and c_tok > 0:
                             self.counters["completion_tokens"] += c_tok
+                            if entry is not None:
+                                entry["ctok"] = c_tok
+                                nchars = int(entry.get("nchars", 0))
+                                if nchars > 50:
+                                    key = entry.get("alias") or entry.get("model") or "?"
+                                    ratio = min(max(c_tok / nchars, 0.15), 1.5)
+                                    prev = self.tokens_per_char.get(key, 0.3)
+                                    if key not in self.tokens_per_char and len(self.tokens_per_char) >= 64:
+                                        self.tokens_per_char.pop(next(iter(self.tokens_per_char)))
+                                    self.tokens_per_char[key] = round(0.7 * prev + 0.3 * ratio, 4)
+                            if entry is not None and entry.get("tf"):
+                                gen_dur = entry["t1"] - entry["tf"]
+                                if gen_dur > 0:
+                                    grate = c_tok / gen_dur
+                                    if grate > self.counters["gen_peak_tok_s"]:
+                                        self.counters["gen_peak_tok_s"] = round(grate, 1)
                     return
         except Exception:
             pass
@@ -141,7 +177,7 @@ class InFlightRegistry(CustomLogger):
         return None
 
     @staticmethod
-    def _chunk_has_text(chunk: Any) -> bool:
+    def _chunk_text_len(chunk: Any) -> int:
         # Delta в этом апстриме — подкласс dict (в wrapper'е читают delta.get("content"));
         # reasoning-модели льют токены в reasoning_content — считаем и то, и то:
         # для «модель генерит N токенов» важны оба потока
@@ -150,16 +186,25 @@ class InFlightRegistry(CustomLogger):
             if not choices and isinstance(chunk, dict):
                 choices = chunk.get("choices")
             if not choices:
-                return False
+                return 0
             first = choices[0]
             delta = first.get("delta") if isinstance(first, dict) else getattr(first, "delta", None)
             if delta is None:
-                return False
+                return 0
             if isinstance(delta, dict):
-                return bool(delta.get("content")) or bool(delta.get("reasoning_content"))
-            return bool(getattr(delta, "content", None)) or bool(getattr(delta, "reasoning_content", None))
+                text = (delta.get("content") or "") + (delta.get("reasoning_content") or "")
+                tcs = delta.get("tool_calls")
+            else:
+                text = (getattr(delta, "content", None) or "") + (getattr(delta, "reasoning_content", None) or "")
+                tcs = getattr(delta, "tool_calls", None)
+            # tool-call'ы льются в delta.tool_calls — их токены тоже в completion_tokens
+            for tc in tcs or []:
+                fn = tc.get("function") if isinstance(tc, dict) else getattr(tc, "function", None)
+                if fn is not None:
+                    text += (fn.get("arguments") if isinstance(fn, dict) else getattr(fn, "arguments", None)) or ""
+            return len(text)
         except Exception:
-            return False
+            return 0
 
     def on_stream_chunk(self, request_data: Any, chunk: Any) -> None:
         # синхронный вызов из CustomStreamWrapper на КАЖДЫЙ чанк (патч форка
@@ -171,14 +216,15 @@ class InFlightRegistry(CustomLogger):
             rid = meta.get(_META_KEY)
             if not isinstance(rid, str):
                 return
-            has_content = self._chunk_has_text(chunk)
+            text_len = self._chunk_text_len(chunk)
             with self._lock:
                 entry = self._items.get(rid)
                 if entry is not None and entry.get("t1") is None:
-                    if entry.get("tf") is None:
+                    if entry.get("tf") is None and text_len > 0:
                         entry["tf"] = time.time()
-                    if has_content:
+                    if text_len > 0:
                         entry["ntok"] = int(entry.get("ntok", 0)) + 1
+                        entry["nchars"] = int(entry.get("nchars", 0)) + text_len
         except Exception:
             pass
 
@@ -198,14 +244,15 @@ class InFlightRegistry(CustomLogger):
             rid = meta.get(_META_KEY)
             if not isinstance(rid, str):
                 return None
-            has_content = self._chunk_has_text(response_chunk)
+            text_len = self._chunk_text_len(response_chunk)
             with self._lock:
                 entry = self._items.get(rid)
                 if entry is not None and entry.get("t1") is None:
-                    if entry.get("tf") is None:
+                    if entry.get("tf") is None and text_len > 0:
                         entry["tf"] = time.time()
-                    if has_content:
+                    if text_len > 0:
                         entry["ntok"] = int(entry.get("ntok", 0)) + 1
+                        entry["nchars"] = int(entry.get("nchars", 0)) + text_len
         except Exception:
             pass
         return None
@@ -235,12 +282,16 @@ class InFlightRegistry(CustomLogger):
                     "t0": int(e["t0"] * 1000),
                     "t1": int(e["t1"] * 1000) if e.get("t1") else None,
                     "tf": int(e["tf"] * 1000) if e.get("tf") else None,
+                    "ptok": int(e.get("ptok", 0)),
+                    "ctok": int(e.get("ctok", 0)),
                     "ntok": int(e.get("ntok", 0)),
+                    "nchars": int(e.get("nchars", 0)),
                     "stream": bool(e.get("stream")),
                     "u": e["u"],
                     "key_alias": e["key_alias"],
                     "key_short": e["token"][:12],
                     "model": e["model"],
+                    "alias": e.get("alias", ""),
                 }
                 for e in self._items.values()
             ]
@@ -249,6 +300,7 @@ class InFlightRegistry(CustomLogger):
         with self._lock:
             return {
                 "uptime_sec": int(time.time() - self.started_at),
+                "tokens_per_char": dict(self.tokens_per_char),
                 **self.counters,
             }
 
