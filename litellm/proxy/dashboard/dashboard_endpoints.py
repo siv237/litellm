@@ -90,7 +90,7 @@ def _prefill_series(items: List[Dict[str, Any]], now_ms: int) -> List[float]:
         # ячейки по АБСОЛЮТНОму времени: содержимое бакета не скользит вместе с
         # «сейчас» — график и максимум стабильны между опросами, меняются только
         # когда запрос завершился (дописался в SpendLogs) или выпал из окна
-        b_end = int(t1 or tf) // 1000 // _PREFILL_BUCKET_SEC
+        b_end = int(tf) // 1000 // _PREFILL_BUCKET_SEC
         b_start = int(t0) // 1000 // _PREFILL_BUCKET_SEC
         for b in range(b_start, b_end + 1):
             i = now_b - b
