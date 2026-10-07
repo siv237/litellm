@@ -203,7 +203,7 @@ const menuGroups: MenuGroup[] = [
         key: "monitoring",
         page: "monitoring",
         label: "Мониторинг",
-        roles: [...all_admin_roles, ...internalUserRoles],
+        roles: [...all_admin_roles],
         icon: <Gauge {...ICON} />,
       },
       {

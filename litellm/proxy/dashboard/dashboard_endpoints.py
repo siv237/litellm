@@ -14,12 +14,19 @@ from typing import Any, Dict, Final, List
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 
-from litellm.proxy._types import UserAPIKeyAuth
+from litellm.proxy._types import LitellmUserRoles, UserAPIKeyAuth
 from litellm.proxy.auth.user_api_key_auth import user_api_key_auth
 from litellm.proxy.gantt.gantt_endpoints import _ALLOWED_ROLES, _user_names
 from litellm.proxy.gantt.inflight import registry as _inflight
 
 router: Final = APIRouter()
+
+# дашборд чувствителен (IP, User-Agent, ключи, все юзеры) — только админы;
+# /gantt остаётся на общем наборе (_ALLOWED_ROLES) с internal-юзерами
+_DASHBOARD_ALLOWED_ROLES: Final = {
+    LitellmUserRoles.PROXY_ADMIN,
+    LitellmUserRoles.PROXY_ADMIN_VIEW_ONLY,
+}
 
 _RECENT_WINDOW_SEC: Final = 3600
 _RECENT_LIMIT: Final = 200
@@ -184,10 +191,10 @@ async def get_dashboard_state(
 ):
     from litellm.proxy.proxy_server import prisma_client
 
-    if user_api_key_dict.user_role not in _ALLOWED_ROLES:
+    if user_api_key_dict.user_role not in _DASHBOARD_ALLOWED_ROLES:
         raise HTTPException(
             status_code=403,
-            detail={"error": "Дашборд доступен только UI-пользователям прокси"},
+            detail={"error": "Дашборд доступен только администраторам прокси"},
         )
 
     now_ms = int(time.time() * 1000)
