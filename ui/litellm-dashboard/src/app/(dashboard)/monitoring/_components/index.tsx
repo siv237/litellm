@@ -74,10 +74,10 @@ interface StateResponse {
   recent: RecentT[];
   models: ModelStateT[];
   prefill?: { window_sec: number; series: number[] };
+  gen?: { window_sec: number; series: number[] };
 }
 
 const REFRESH_MS = 2000;
-const HISTORY_MAX = 1800;
 const COOL_WINDOW_SEC = 3600;
 
 function fnum(n: number): string {
@@ -226,7 +226,7 @@ export default function Monitoring({ accessToken }: { accessToken: string | null
   const [error, setError] = useState<string | null>(null);
   // клик по чипсу выделяет его строки, повторный клик — сброс
   const [selPair, setSelPair] = useState<string | null>(null);
-  const history = useRef<number[]>([]);
+
   // суммарное время в кулдауне за окно 60 мин: по каждому опросу засчитываем паузу
   // между опросами моделям, бывшим в кулдауне (накапливается, пока открыта страница)
   const coolRef = useRef<{ last: number; spans: Map<string, Array<[number, number]>> }>({ last: 0, spans: new Map() });
@@ -237,9 +237,6 @@ export default function Monitoring({ accessToken }: { accessToken: string | null
       const res = await apiClient.get<StateResponse>("/dashboard/state", { accessToken });
       setData(res);
       setError(null);
-      const tok = res.inflight.reduce((a, e) => a + (e.tok_s || 0), 0);
-      history.current.push(tok);
-      if (history.current.length > HISTORY_MAX) history.current.splice(0, history.current.length - HISTORY_MAX);
       const now = Date.now();
       const cr = coolRef.current;
       const dt = cr.last ? Math.min((now - cr.last) / 1000, 15) : 0;
@@ -271,6 +268,7 @@ export default function Monitoring({ accessToken }: { accessToken: string | null
   }, [load]);
 
   const liveTok = data ? data.inflight.reduce((a, e) => a + (e.tok_s || 0), 0) : 0;
+  const genSeries = data?.gen?.series || [];
   const counters = data?.counters;
   const prefillSeries = data?.prefill?.series || [];
   // суммы токенов завершённых запросов за окно (60 мин) — монотонно растут
@@ -396,7 +394,7 @@ export default function Monitoring({ accessToken }: { accessToken: string | null
               <div className="text-2xl font-bold leading-none tabular-nums">{liveTok.toFixed(1)} ток/с</div>
             </div>
           </div>
-          <Sparkline values={history.current} />
+          <Sparkline values={genSeries} />
           <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
             <span>пик с запуска: {fmtKtok(counters?.gen_peak_tok_s || 0)}</span>
             <span>оценка по символам стрима (калибруется по usage)</span>

@@ -129,6 +129,35 @@ def _resolved_map() -> Dict[str, str]:
     return out
 
 
+def _gen_series(items: List[Dict[str, Any]], live: List[Dict[str, Any]], now_ms: int) -> List[float]:
+    """Ряд исходящей генерации за 60 мин (300 ячеек × 12 с, абсолютные ячейки):
+    завершённые стримы дают completion_tokens / (первый токен → конец) на своё окно,
+    живые — текущую оценку tok_s от первого чанка до «сейчас»."""
+    buckets = [0.0] * _PREFILL_BUCKETS
+    now_b = now_ms // 1000 // _PREFILL_BUCKET_SEC
+    for it in items:
+        c = int(it.get("c") or 0)
+        tf = it.get("tf")
+        t1 = it.get("t1")
+        if c <= 0 or not tf or not t1 or t1 <= tf:
+            continue
+        dur_s = (t1 - tf) / 1000.0
+        if dur_s < 0.5:  # tf≈t1 (кэш/мгновенный ответ) дал бы миллионы ток/с
+            continue
+        rate = c / dur_s
+        for b in range(int(tf) // 1000 // _PREFILL_BUCKET_SEC, int(t1) // 1000 // _PREFILL_BUCKET_SEC + 1):
+            i = now_b - b
+            if 0 <= i < _PREFILL_BUCKETS:
+                buckets[i] += rate
+    for e in live:
+        if e["stream"] and e["tf"] and e.get("tok_s"):
+            for b in range(int(e["tf"]) // 1000 // _PREFILL_BUCKET_SEC, now_b + 1):
+                i = now_b - b
+                if 0 <= i < _PREFILL_BUCKETS:
+                    buckets[i] += e["tok_s"]
+    return [round(x, 1) for x in reversed(buckets)]
+
+
 def _models_state() -> List[Dict[str, Any]]:
     """Алиасы моделей и состояние их deployment'ов глазами роутера."""
     from litellm.proxy.proxy_server import llm_router
@@ -325,5 +354,9 @@ async def get_dashboard_state(
         "prefill": {
             "window_sec": _PREFILL_WINDOW_SEC,
             "series": _prefill_series(recent_rows, now_ms),
+        },
+        "gen": {
+            "window_sec": _PREFILL_WINDOW_SEC,
+            "series": _gen_series(recent_rows, live, now_ms),
         },
     }
