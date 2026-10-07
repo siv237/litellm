@@ -3,18 +3,18 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 
-import { Организация } from "@/components/networking";
+import { Organization } from "@/components/networking";
 
-import ОрганизацияsТаблица from "./ОрганизацияsТаблица";
+import OrganizationsTable from "./ОрганизацияsТаблица";
 
-const makeОрганизация = (overrides: Partial<Организация> = {}): Организация => ({
+const makeOrganization = (overrides: Partial<Organization> = {}): Organization => ({
   organization_id: "org-alpha",
   organization_alias: "Alpha",
   budget_id: "budget-1",
   metadata: {},
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+  models: [],
   spend: 0,
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_spend: {},
+  model_spend: {},
   created_at: "2023-01-01T00:00:00Z",
   created_by: "someone",
   updated_at: "2023-01-01T00:00:00Z",
@@ -37,16 +37,16 @@ const baseProps = {
 
 describe("ОрганизацияsТаблица", () => {
   it("renders every column header", () => {
-    render(<ОрганизацияsТаблица {...baseProps} organizations={[]} />);
+    render(<OrganizationsTable {...baseProps} organizations={[]} />);
     for (const header of [
       "ID организации",
       "Название организации",
       "Создан",
-      "Расход (USD)",
+      "Spend (USD)",
       "Бюджет (USD)",
       "Режимls",
       "Лимиты TPM / RPM",
-      "участников",
+      "Участники",
     ]) {
       expect(screen.getByText(header)).toBeInTheDocument();
     }
@@ -56,10 +56,10 @@ describe("ОрганизацияsТаблица", () => {
     const user = userEvent.setup();
     const onOrganizationClick = vi.fn();
     render(
-      <ОрганизацияsТаблица
+      <OrganizationsTable
         {...baseProps}
         onOrganizationClick={onOrganizationClick}
-        organizations={[makeОрганизация({ organization_id: "org-123" })]}
+        organizations={[makeOrganization({ organization_id: "org-123" })]}
       />,
     );
 
@@ -73,12 +73,12 @@ describe("ОрганизацияsТаблица", () => {
     const onEditClick = vi.fn();
     const onDeleteClick = vi.fn();
     render(
-      <ОрганизацияsТаблица
+      <OrganizationsTable
         {...baseProps}
         userRole="Admin"
         onEditClick={onEditClick}
         onDeleteClick={onDeleteClick}
-        organizations={[makeОрганизация({ organization_id: "org-9" })]}
+        organizations={[makeOrganization({ organization_id: "org-9" })]}
       />,
     );
 
@@ -93,10 +93,10 @@ describe("ОрганизацияsТаблица", () => {
 
   it("hides the row actions menu from non-admins", () => {
     render(
-      <ОрганизацияsТаблица
+      <OrganizationsTable
         {...baseProps}
         userRole="Internal User"
-        organizations={[makeОрганизация({ organization_id: "org-9" })]}
+        organizations={[makeOrganization({ organization_id: "org-9" })]}
       />,
     );
 
@@ -105,15 +105,15 @@ describe("ОрганизацияsТаблица", () => {
 
   it("sorts by created_at descending by default", () => {
     render(
-      <ОрганизацияsТаблица
+      <OrganizationsTable
         {...baseProps}
         organizations={[
-          makeОрганизация({
+          makeOrganization({
             organization_id: "org-old",
             organization_alias: "Older",
             created_at: "2023-01-01T00:00:00Z",
           }),
-          makeОрганизация({
+          makeOrganization({
             organization_id: "org-new",
             organization_alias: "Newer",
             created_at: "2024-06-01T00:00:00Z",
@@ -128,15 +128,15 @@ describe("ОрганизацияsТаблица", () => {
     expect(within(rows[2]).getByText("Older")).toBeInTheDocument();
   });
 
-  it("renders budget, limits, members, and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs for a fully-populated organization", () => {
+  it("renders budget, limits, members, and models for a fully-populated organization", () => {
     render(
-      <ОрганизацияsТаблица
+      <OrganizationsTable
         {...baseProps}
         organizations={[
-          makeОрганизация({
+          makeOrganization({
             litellm_budget_table: { max_budget: 100, tpm_limit: 1000, rpm_limit: 60 },
             members: [{ user_id: "a" }, { user_id: "b" }, { user_id: "c" }],
-            Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o", "claude-sonnet-4", "gemini-2.5-pro", "llama-3", "mistral-large"],
+            models: ["gpt-4o", "claude-sonnet-4", "gemini-2.5-pro", "llama-3", "mistral-large"],
           }),
         ]}
       />,
@@ -145,21 +145,21 @@ describe("ОрганизацияsТаблица", () => {
     expect(screen.getByText("$100.00")).toBeInTheDocument();
     expect(screen.getByText("TPM: 1000")).toBeInTheDocument();
     expect(screen.getByText("RPM: 60")).toBeInTheDocument();
-    expect(screen.getByText("3 участников")).toBeInTheDocument();
-    // Five Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs, three visible -> the shared РежимlsCell collapses the rest.
+    expect(screen.getByText("3 Участники")).toBeInTheDocument();
+    // Five models, three visible -> the shared ModelsCell collapses the rest.
     expect(screen.getByText("+2 more")).toBeInTheDocument();
   });
 
   it("shows Без ограничений budget and Все Proxy Режимls when unset", () => {
     render(
-      <ОрганизацияsТаблица
+      <OrganizationsTable
         {...baseProps}
-        organizations={[makeОрганизация({ organization_id: "org-empty", litellm_budget_table: {}, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [] })]}
+        organizations={[makeOrganization({ organization_id: "org-empty", litellm_budget_table: {}, models: [] })]}
       />,
     );
 
     expect(screen.getByText("Все Proxy Режимls")).toBeInTheDocument();
-    // Бюджет shows a standalone "Без ограничений"; the limits fall back inline.
+    // Budget shows a standalone "Без ограничений"; the limits fall back inline.
     expect(screen.getByText("Без ограничений")).toBeInTheDocument();
     expect(screen.getByText("TPM: Без ограничений")).toBeInTheDocument();
     expect(screen.getByText("RPM: Без ограничений")).toBeInTheDocument();
@@ -167,9 +167,9 @@ describe("ОрганизацияsТаблица", () => {
 
   it("renders a tpm/rpm limit of 0 as 0, never as Без ограничений", () => {
     render(
-      <ОрганизацияsТаблица
+      <OrganizationsTable
         {...baseProps}
-        organizations={[makeОрганизация({ litellm_budget_table: { max_budget: null, tpm_limit: 0, rpm_limit: 0 } })]}
+        organizations={[makeOrganization({ litellm_budget_table: { max_budget: null, tpm_limit: 0, rpm_limit: 0 } })]}
       />,
     );
 
@@ -181,10 +181,10 @@ describe("ОрганизацияsТаблица", () => {
 
   it("renders loading skeletons instead of rows while loading", () => {
     render(
-      <ОрганизацияsТаблица
+      <OrganizationsTable
         {...baseProps}
         isLoading
-        organizations={[makeОрганизация({ organization_alias: "ShouldNotShow" })]}
+        organizations={[makeOrganization({ organization_alias: "ShouldNotShow" })]}
       />,
     );
 
@@ -195,9 +195,9 @@ describe("ОрганизацияsТаблица", () => {
   it("pages long lists client-side with the shared size selector and footer", async () => {
     const user = userEvent.setup();
     const organizations = Array.from({ length: 30 }, (_, index) =>
-      makeОрганизация({ organization_id: `org-${index}`, organization_alias: `Org ${index}` }),
+      makeOrganization({ organization_id: `org-${index}`, organization_alias: `Org ${index}` }),
     );
-    render(<ОрганизацияsТаблица {...baseProps} organizations={organizations} />);
+    render(<OrganizationsTable {...baseProps} organizations={organizations} />);
 
     expect(screen.getAllByRole("row")).toHaveLength(26);
     expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-25 of 30");
@@ -210,10 +210,10 @@ describe("ОрганизацияsТаблица", () => {
   });
 
   it("uses a search-aware empty state", () => {
-    const { rerender } = render(<ОрганизацияsТаблица {...baseProps} searchActive={false} organizations={[]} />);
+    const { rerender } = render(<OrganizationsTable {...baseProps} searchActive={false} organizations={[]} />);
     expect(screen.getByText("No organizations yet")).toBeInTheDocument();
 
-    rerender(<ОрганизацияsТаблица {...baseProps} searchActive={true} organizations={[]} />);
+    rerender(<OrganizationsTable {...baseProps} searchActive={true} organizations={[]} />);
     expect(screen.getByText("No matching organizations")).toBeInTheDocument();
   });
 });

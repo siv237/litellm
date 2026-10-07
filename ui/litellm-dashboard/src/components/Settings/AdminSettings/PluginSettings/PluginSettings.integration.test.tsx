@@ -23,54 +23,54 @@ const REDACTED_PLUGIN = {
 
 const savedPayload = () => updateConfigFieldSettingMock.mock.calls[0];
 
-describe("PluginSettings config payload", () => {
+describe("PluginSettings Конфигурация payload", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    updateConfigFieldSettingMock.mockResolvedЗначение({});
+    updateConfigFieldSettingMock.mockResolvedValue({});
   });
 
-  it("sends a new plugin with no plugin_key when the key field is left blank", async () => {
+  it("sends a new plugin with Нет plugin_key when the Ключ Поле is left blank", async () => {
     const user = userEvent.setup();
-    getConfigFieldSettingMock.mockResolvedЗначение({ field_value: [] });
+    getConfigFieldSettingMock.mockResolvedValue({ field_value: [] });
     render(<PluginSettings />);
-    expect(await screen.findByText("No data", { ignore: "title" })).toBeInTheDocument();
+    expect(await screen.findByText("Нет данных", { ignore: "title" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /add plugin/i }));
-    fireEvent.change(await screen.findByLabelText(/Name \(identifier\)/), { target: { value: "beta" } });
-    fireEvent.change(screen.getByLabelText(/Display Name/), { target: { value: "Бета" } });
-    fireEvent.change(screen.getByLabelText(/^URL/), { target: { value: "https://beta.example.com" } });
-    await user.click(screen.getByRole("button", { name: "Save" }));
+    await user.click(screen.getByRole("button", { name: /Добавить плагин/i }));
+    fireEvent.change(await screen.findByLabelText(/Название \(identifier\)/), { target: { value: "Бета" } });
+    fireEvent.change(screen.getByLabelText(/Отображаемое название/), { target: { value: "Бета" } });
+    fireEvent.change(screen.getByLabelText(/^URL/), { target: { value: "https://Бета.example.com" } });
+    await user.click(screen.getByRole("button", { name: "Сохранить" }));
 
     await waitFor(() => expect(updateConfigFieldSettingMock).toHaveBeenCalledTimes(1));
     expect(savedPayload()).toStrictEqual([
       "123",
-      "plugins",
+      "Плагины",
       [
         {
-          name: "beta",
+          name: "Бета",
           display_name: "Бета",
-          url: "https://beta.example.com",
+          url: "https://Бета.example.com",
           plugin_key: undefined,
         },
       ],
     ]);
   });
 
-  it("seeds the key field blank on edit and sends a blank key when it is left untouched", async () => {
+  it("seeds the Ключ Поле blank on Изменить and sends a blank Ключ when it is left untouched", async () => {
     const user = userEvent.setup();
-    getConfigFieldSettingMock.mockResolvedЗначение({ field_value: [REDACTED_PLUGIN] });
+    getConfigFieldSettingMock.mockResolvedValue({ field_value: [REDACTED_PLUGIN] });
     render(<PluginSettings />);
     expect(await screen.findByText("Alpha")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Edit alpha" }));
-    expect(await screen.findByLabelText(/Plugin Ключ/)).toHaveЗначение("");
+    await user.click(screen.getByRole("button", { name: "Изменить alpha" }));
+    expect(await screen.findByLabelText(/Ключ плагина/)).toHaveValue("");
 
-    await user.click(screen.getByRole("button", { name: "Save" }));
+    await user.click(screen.getByRole("button", { name: "Сохранить" }));
 
     await waitFor(() => expect(updateConfigFieldSettingMock).toHaveBeenCalledTimes(1));
     expect(savedPayload()).toStrictEqual([
       "123",
-      "plugins",
+      "Плагины",
       [
         {
           name: "alpha",
@@ -82,20 +82,20 @@ describe("PluginSettings config payload", () => {
     ]);
   });
 
-  it("sends the typed key on edit when the key field is filled in", async () => {
+  it("sends the typed Ключ on Изменить when the Ключ Поле is filled in", async () => {
     const user = userEvent.setup();
-    getConfigFieldSettingMock.mockResolvedЗначение({ field_value: [REDACTED_PLUGIN] });
+    getConfigFieldSettingMock.mockResolvedValue({ field_value: [REDACTED_PLUGIN] });
     render(<PluginSettings />);
     expect(await screen.findByText("Alpha")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Edit alpha" }));
-    fireEvent.change(await screen.findByLabelText(/Plugin Ключ/), { target: { value: "sk-brand-new" } });
-    await user.click(screen.getByRole("button", { name: "Save" }));
+    await user.click(screen.getByRole("button", { name: "Изменить alpha" }));
+    fireEvent.change(await screen.findByLabelText(/Ключ плагина/), { target: { value: "sk-brand-new" } });
+    await user.click(screen.getByRole("button", { name: "Сохранить" }));
 
     await waitFor(() => expect(updateConfigFieldSettingMock).toHaveBeenCalledTimes(1));
     expect(savedPayload()).toStrictEqual([
       "123",
-      "plugins",
+      "Плагины",
       [
         {
           name: "alpha",
@@ -108,27 +108,27 @@ describe("PluginSettings config payload", () => {
   });
 });
 
-describe("PluginSettings plugin key reveal (post-migration shadcn affordance)", () => {
+describe("PluginSettings Ключ плагина reveal (post-migration shadcn affordance)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    getConfigFieldSettingMock.mockResolvedЗначение({ field_value: [REDACTED_PLUGIN] });
+    getConfigFieldSettingMock.mockResolvedValue({ field_value: [REDACTED_PLUGIN] });
   });
 
-  it("flips the key field between hidden and revealed and relabels the toggle", async () => {
+  it("flips the Ключ Поле between hidden and revealed and relabels the toggle", async () => {
     const user = userEvent.setup();
     render(<PluginSettings />);
     expect(await screen.findByText("Alpha")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Edit alpha" }));
-    const keyВход = await screen.findByLabelText(/Plugin Ключ/);
-    expect(keyВход).toHaveAttribute("type", "password");
+    await user.click(screen.getByRole("button", { name: "Изменить alpha" }));
+    const keyInput = await screen.findByLabelText(/Ключ плагина/);
+    expect(keyInput).toHaveAttribute("Тип", "Пароль");
 
-    await user.click(screen.getByRole("button", { name: "Show plugin key" }));
-    expect(keyВход).toHaveAttribute("type", "text");
-    expect(screen.queryByRole("button", { name: "Show plugin key" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Show Ключ плагина" }));
+    expect(keyInput).toHaveAttribute("Тип", "text");
+    expect(screen.queryByRole("button", { name: "Show Ключ плагина" })).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Hide plugin key" }));
-    expect(keyВход).toHaveAttribute("type", "password");
-    expect(screen.queryByRole("button", { name: "Hide plugin key" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Hide Ключ плагина" }));
+    expect(keyInput).toHaveAttribute("Тип", "Пароль");
+    expect(screen.queryByRole("button", { name: "Hide Ключ плагина" })).not.toBeInTheDocument();
   });
 });

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { VectorStore } from "./types";
-import VectorStoreSelector from "./VectorStoreSelector";
+import VectorStoreSelector from "./VectorStoreВыбратьor";
 
 const mockVectorStoreListCall = vi.fn();
 
@@ -10,12 +10,12 @@ vi.mock("../networking", () => ({
 }));
 
 vi.mock("@/components/shared/MultiВыбрать", () => ({
-  MultiВыбрать: vi.fn(),
+  MultiSelect: vi.fn(),
 }));
 
-import { MultiВыбрать as MockedMultiВыбрать } from "@/components/shared/MultiВыбрать";
+import { MultiSelect as MockedMultiSelect } from "@/components/shared/MultiВыбрать";
 
-(MockedMultiВыбрать as unknown as ReturnType<typeof vi.fn>).mockImplementation(
+(MockedMultiSelect as unknown as ReturnType<typeof vi.fn>).mockImplementation(
   (props: {
     onValueChange?: (value: string[]) => void;
     value?: string[];
@@ -62,7 +62,7 @@ import { MultiВыбрать as MockedMultiВыбрать } from "@/components/s
 );
 
 const mockOnChange = vi.fn();
-const mockAccessТокен = "test-token";
+const mockAccessToken = "test-token";
 
 const mockVectorStores: VectorStore[] = [
   {
@@ -84,7 +84,7 @@ const mockVectorStores: VectorStore[] = [
   {
     vector_store_id: "store-3",
     custom_llm_provider: "pg_vector",
-    vector_store_description: "Store withвыход name",
+    vector_store_description: "Store without name",
     created_at: "2024-01-03T00:00:00Z",
     updated_at: "2024-01-03T00:00:00Z",
   },
@@ -92,7 +92,7 @@ const mockVectorStores: VectorStore[] = [
 
 const defaultProps = {
   onChange: mockOnChange,
-  accessТокен: mockAccessТокен,
+  accessToken: mockAccessToken,
 };
 
 const renderComponent = (props = {}) => {
@@ -110,10 +110,10 @@ const getSelectElement = () => screen.getByTestId("vector-store-select");
 const getOptionElements = () =>
   screen.queryAllByTestId(/^option-/).filter((el) => el.hasAttribute("data-option-value"));
 
-describe("VectorStoreSelector", () => {
+describe("VectorStoreВыбратьor", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockVectorStoreListCall.mockResolvedЗначение({
+    mockVectorStoreListCall.mockResolvedValue({
       data: mockVectorStores,
     });
   });
@@ -151,32 +151,32 @@ describe("VectorStoreSelector", () => {
   });
 
   describe("Data fetching", () => {
-    it("should fetch vector stores on mount when accessТокен is provided", async () => {
+    it("should fetch vector stores on mount when accessToken is provided", async () => {
       renderComponent();
       await waitFor(() => {
-        expect(mockVectorStoreListCall).toHaveBeenCalledWith(mockAccessТокен);
+        expect(mockVectorStoreListCall).toHaveBeenCalledWith(mockAccessToken);
       });
     });
 
-    it("should not fetch vector stores when accessТокен is falsy", () => {
-      const { rerender } = render(<VectorStoreSelector {...defaultProps} accessТокен="" />);
+    it("should not fetch vector stores when accessToken is falsy", () => {
+      const { rerender } = render(<VectorStoreSelector {...defaultProps} accessToken="" />);
       expect(mockVectorStoreListCall).not.toHaveBeenCalled();
 
-      rerender(<VectorStoreSelector {...defaultProps} accessТокен={null as unknown as string} />);
+      rerender(<VectorStoreSelector {...defaultProps} accessToken={null as unknown as string} />);
       expect(mockVectorStoreListCall).not.toHaveBeenCalled();
 
-      rerender(<VectorStoreSelector {...defaultProps} accessТокен={undefined as unknown as string} />);
+      rerender(<VectorStoreSelector {...defaultProps} accessToken={undefined as unknown as string} />);
       expect(mockVectorStoreListCall).not.toHaveBeenCalled();
     });
 
-    it("should fetch vector stores again when accessТокен changes", async () => {
-      const { rerender } = render(<VectorStoreSelector {...defaultProps} accessТокен="token-1" />);
+    it("should fetch vector stores again when accessToken changes", async () => {
+      const { rerender } = render(<VectorStoreSelector {...defaultProps} accessToken="token-1" />);
       await waitFor(() => {
         expect(mockVectorStoreListCall).toHaveBeenCalledWith("token-1");
       });
 
       vi.clearAllMocks();
-      rerender(<VectorStoreSelector {...defaultProps} accessТокен="token-2" />);
+      rerender(<VectorStoreSelector {...defaultProps} accessToken="token-2" />);
       await waitFor(() => {
         expect(mockVectorStoreListCall).toHaveBeenCalledWith("token-2");
       });
@@ -187,7 +187,7 @@ describe("VectorStoreSelector", () => {
       const promise = new Promise((resolve) => {
         resolvePromise = resolve;
       });
-      mockVectorStoreListCall.mockReturnЗначение(promise);
+      mockVectorStoreListCall.mockReturnValue(promise);
 
       renderComponent();
       const select = getSelectElement();
@@ -207,7 +207,7 @@ describe("VectorStoreSelector", () => {
 
     it("should clear loading state after failed fetch", async () => {
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      mockVectorStoreListCall.mockRejectedValueOnce(new Ошибка("Network error"));
+      mockVectorStoreListCall.mockRejectedValueOnce(new Error("Network error"));
 
       renderComponent();
       await waitForDataFetch();
@@ -242,7 +242,7 @@ describe("VectorStoreSelector", () => {
 
       const option3 = screen.getByText("store-3 (store-3)");
       expect(option3).toBeInTheDocument();
-      expect(option3).toHaveAttribute("data-option-description", "Store withвыход name");
+      expect(option3).toHaveAttribute("data-option-description", "Store without name");
     });
 
     it("should use vector_store_description as description when available", async () => {
@@ -254,7 +254,7 @@ describe("VectorStoreSelector", () => {
     });
 
     it("should omit description when vector_store_description is missing", async () => {
-      const storesWithвыходОписание: VectorStore[] = [
+      const storesWithoutDescription: VectorStore[] = [
         {
           vector_store_id: "store-no-desc",
           custom_llm_provider: "openai",
@@ -263,7 +263,7 @@ describe("VectorStoreSelector", () => {
         },
       ];
       mockVectorStoreListCall.mockResolvedValueOnce({
-        data: storesWithвыходОписание,
+        data: storesWithoutDescription,
       });
 
       renderComponent();
@@ -292,7 +292,7 @@ describe("VectorStoreSelector", () => {
       expect(getOptionElements().length).toBe(0);
     });
 
-    it("should handle response withвыход data property", async () => {
+    it("should handle response without data property", async () => {
       mockVectorStoreListCall.mockResolvedValueOnce({});
 
       renderComponent();
@@ -360,33 +360,33 @@ describe("VectorStoreSelector", () => {
     });
   });
 
-  describe("Ошибка handling", () => {
+  describe("Error handling", () => {
     it("should handle fetch errors gracefully", async () => {
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      const error = new Ошибка("Network error");
+      const error = new Error("Network error");
       mockVectorStoreListCall.mockRejectedValueOnce(error);
 
       renderComponent();
       await waitForDataFetch();
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith("Ошибка fetching vector stores:", error);
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Error fetching vector stores:", error);
       consoleErrorSpy.mockRestore();
     });
 
-    it("should not crash when fetch throws non-Ошибка", async () => {
+    it("should not crash when fetch throws non-Error", async () => {
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       mockVectorStoreListCall.mockRejectedValueOnce("String error");
 
       renderComponent();
       await waitForDataFetch();
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith("Ошибка fetching vector stores:", "String error");
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Error fetching vector stores:", "String error");
       consoleErrorSpy.mockRestore();
     });
 
     it("should continue to work after error", async () => {
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      mockVectorStoreListCall.mockRejectedValueOnce(new Ошибка("Network error"));
+      mockVectorStoreListCall.mockRejectedValueOnce(new Error("Network error"));
 
       renderComponent();
       await waitForDataFetch();
@@ -397,7 +397,7 @@ describe("VectorStoreSelector", () => {
   });
 
   describe("Edge cases", () => {
-    it("should handle vector stores with all необязательно fields missing", async () => {
+    it("should handle vector stores with all optional fields missing", async () => {
       const minimalStores: VectorStore[] = [
         {
           vector_store_id: "minimal-store",

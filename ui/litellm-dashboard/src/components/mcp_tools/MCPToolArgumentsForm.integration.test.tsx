@@ -3,12 +3,12 @@ import { fireEvent, renderWithProviders, screen } from "../../../tests/test-util
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect } from "vitest";
 import MCPToolArgumentsForm, { MCPToolArgumentsFormRef } from "./MCPToolArgumentsForm";
-import { MCPTool, ВходSchema } from "./types";
+import { MCPTool, InputSchema } from "./types";
 
-const toolWith = (schema: ВходSchema | string): MCPTool =>
+const toolWith = (schema: InputSchema | string): MCPTool =>
   ({ name: "demo_tool", description: "", inputSchema: schema, mcp_info: {} }) as unknown as MCPTool;
 
-const renderForm = (schema: ВходSchema | string) => {
+const renderForm = (schema: InputSchema | string) => {
   const ref = React.createRef<MCPToolArgumentsFormRef>();
   renderWithProviders(<MCPToolArgumentsForm ref={ref} tool={toolWith(schema)} />);
   return ref;
@@ -16,7 +16,7 @@ const renderForm = (schema: ВходSchema | string) => {
 
 const submit = async (ref: React.RefObject<MCPToolArgumentsFormRef | null>) => ref.current!.getSubmitValues();
 
-const submitОшибка = async (ref: React.RefObject<MCPToolArgumentsFormRef | null>) => {
+const submitError = async (ref: React.RefObject<MCPToolArgumentsFormRef | null>) => {
   try {
     await ref.current!.getSubmitValues();
     return null;
@@ -42,7 +42,7 @@ describe("MCPToolArgumentsForm", () => {
       target: { value: "invoices" },
     });
     fireEvent.change(screen.getByRole("textbox", { name: "filter" }), {
-      target: { value: '{"category":"receipts","metadata":{"region":"eu"}}' },
+      target: { value: '{"category":"receipts","Метаданные":{"region":"eu"}}' },
     });
     fireEvent.change(screen.getByRole("spinbutton", { name: "page.limit" }), { target: { value: "7" } });
     fireEvent.change(screen.getByRole("textbox", { name: "query" }), { target: { value: "September" } });
@@ -56,18 +56,18 @@ describe("MCPToolArgumentsForm", () => {
     await expect(submit(ref)).resolves.toEqual(expected);
   });
 
-  it("shows required validation on the literal dotted field and accepts a correction", async () => {
+  it("shows Обязательно validation on the literal dotted Поле and accepts a correction", async () => {
     const ref = renderForm({
       type: "object",
       properties: { "filter.category": { type: "string" } },
       required: ["filter.category"],
     });
 
-    expect(await submitОшибка(ref)).toEqual({
+    expect(await submitError(ref)).toEqual({
       errorFields: [{ name: ["filter.category"], errors: ["Please enter filter.category"] }],
     });
     expect(await screen.findByText("Please enter filter.category")).toBeInTheDocument();
-    expect(screen.getByRole("textbox", { name: "filter.category *" })).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByRole("textbox", { name: "filter.category *" })).toHaveAttribute("aria-invalid", "Истина");
 
     fireEvent.change(screen.getByRole("textbox", { name: "filter.category *" }), {
       target: { value: "invoices" },
@@ -90,7 +90,7 @@ describe("MCPToolArgumentsForm", () => {
     const field = screen.getByRole("textbox", { name: "filter.options *" });
     fireEvent.change(field, { target: { value: "invalid" } });
 
-    expect(await submitОшибка(ref)).toEqual({
+    expect(await submitError(ref)).toEqual({
       errorFields: [{ name: ["filter.options"], errors: ["Invalid JSON"] }],
     });
     expect(await screen.findByText("Invalid JSON")).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe("MCPToolArgumentsForm", () => {
         })}
       />,
     );
-    expect(screen.getByRole("textbox", { name: "filter.category" })).toHaveЗначение("invoices");
+    expect(screen.getByRole("textbox", { name: "filter.category" })).toHaveValue("invoices");
     await expect(submit(ref)).resolves.toEqual({ "filter.category": "invoices" });
     fireEvent.change(screen.getByRole("textbox", { name: "filter.category" }), {
       target: { value: "edited" },
@@ -134,11 +134,11 @@ describe("MCPToolArgumentsForm", () => {
         }}
       />,
     );
-    expect(screen.getByRole("textbox", { name: "filter.category" })).toHaveЗначение("receipts");
+    expect(screen.getByRole("textbox", { name: "filter.category" })).toHaveValue("receipts");
     await expect(submit(ref)).resolves.toEqual({ query: "new tool", "filter.category": "receipts" });
   });
 
-  it("returns typed values for a string, integer, number and boolean field", async () => {
+  it("returns typed values for a string, integer, number and boolean Поле", async () => {
     const user = userEvent.setup();
     const ref = renderForm({
       type: "object",
@@ -151,27 +151,27 @@ describe("MCPToolArgumentsForm", () => {
       required: [],
     });
 
-    await user.type(screen.getByPlaceholderText("Введите city"), "berlin");
-    await user.clear(screen.getByPlaceholderText("Введите count"));
-    await user.type(screen.getByPlaceholderText("Введите count"), "7");
-    await user.clear(screen.getByPlaceholderText("Введите ratio"));
-    await user.type(screen.getByPlaceholderText("Введите ratio"), "1.5");
+    await user.type(screen.getByPlaceholderText("Enter city"), "berlin");
+    await user.clear(screen.getByPlaceholderText("Enter count"));
+    await user.type(screen.getByPlaceholderText("Enter count"), "7");
+    await user.clear(screen.getByPlaceholderText("Enter ratio"));
+    await user.type(screen.getByPlaceholderText("Enter ratio"), "1.5");
 
     const expected = { city: "berlin", count: 7, ratio: 1.5, verbose: false };
     await expect(submit(ref)).resolves.toEqual(expected);
   });
 
-  it("truncates a fractional value for an integer field", async () => {
+  it("truncates a fractional Значение for an integer Поле", async () => {
     const user = userEvent.setup();
     const ref = renderForm({ type: "object", properties: { count: { type: "integer" } }, required: [] });
 
-    await user.clear(screen.getByPlaceholderText("Введите count"));
-    await user.type(screen.getByPlaceholderText("Введите count"), "9.8");
+    await user.clear(screen.getByPlaceholderText("Enter count"));
+    await user.type(screen.getByPlaceholderText("Enter count"), "9.8");
 
     await expect(submit(ref)).resolves.toEqual({ count: 9 });
   });
 
-  it("drops an empty необязательно string rather than sending an empty value", async () => {
+  it("drops an empty Необязательно string rather than sending an empty Значение", async () => {
     const ref = renderForm({
       type: "object",
       properties: { city: { type: "string" }, country: { type: "string" } },
@@ -181,64 +181,64 @@ describe("MCPToolArgumentsForm", () => {
     await expect(submit(ref)).resolves.toEqual({});
   });
 
-  it("parses a JSON object field into an object", async () => {
+  it("parses a JSON object Поле into an object", async () => {
     const user = userEvent.setup();
     const ref = renderForm({ type: "object", properties: { filters: { type: "object" } }, required: [] });
 
-    const textarea = screen.getByPlaceholderText("Введите JSON object for filters");
+    const textarea = screen.getByPlaceholderText("Enter JSON object for Фильтры");
     await user.clear(textarea);
     await user.type(textarea, '{{"a": 1}');
 
     await expect(submit(ref)).resolves.toEqual({ filters: { a: 1 } });
   });
 
-  it("parses a JSON array field into an array", async () => {
+  it("parses a JSON array Поле into an array", async () => {
     const user = userEvent.setup();
     const ref = renderForm({ type: "object", properties: { tags: { type: "array" } }, required: [] });
 
-    const textarea = screen.getByPlaceholderText("Введите JSON array for tags");
+    const textarea = screen.getByPlaceholderText("Enter JSON array for Теги");
     await user.clear(textarea);
     await user.type(textarea, '[["x","y"]');
 
     await expect(submit(ref)).resolves.toEqual({ tags: ["x", "y"] });
   });
 
-  it("rejects and reports invalid JSON for an object field", async () => {
+  it("rejects and reports invalid JSON for an object Поле", async () => {
     const user = userEvent.setup();
     const ref = renderForm({ type: "object", properties: { filters: { type: "object" } }, required: [] });
 
-    const textarea = screen.getByPlaceholderText("Введите JSON object for filters");
+    const textarea = screen.getByPlaceholderText("Enter JSON object for Фильтры");
     await user.clear(textarea);
     await user.type(textarea, "not json");
 
-    expect(await submitОшибка(ref)).not.toBeNull();
+    expect(await submitError(ref)).not.toBeNull();
     expect(await screen.findByText("Invalid JSON")).toBeInTheDocument();
   });
 
-  it("rejects a JSON array typed into an object field", async () => {
+  it("rejects a JSON array typed into an object Поле", async () => {
     const user = userEvent.setup();
     const ref = renderForm({ type: "object", properties: { filters: { type: "object" } }, required: [] });
 
-    const textarea = screen.getByPlaceholderText("Введите JSON object for filters");
+    const textarea = screen.getByPlaceholderText("Enter JSON object for Фильтры");
     await user.clear(textarea);
     await user.type(textarea, "[[1,2]");
 
-    expect(await submitОшибка(ref)).not.toBeNull();
+    expect(await submitError(ref)).not.toBeNull();
     expect(await screen.findByText("Please enter a JSON object")).toBeInTheDocument();
   });
 
-  it("rejects an empty required field with the per-field message", async () => {
+  it("rejects an empty Обязательно Поле with the per-Поле Сообщение", async () => {
     const ref = renderForm({ type: "object", properties: { city: { type: "string" } }, required: ["city"] });
 
-    expect(await submitОшибка(ref)).not.toBeNull();
+    expect(await submitError(ref)).not.toBeNull();
     expect(await screen.findByText("Please enter city")).toBeInTheDocument();
   });
 
-  it("rejects with a non-Ошибка carrying errorFields, which is what the caller branches on", async () => {
+  it("rejects with a non-Ошибка carrying ОшибкаПолеs, which is what the caller branches on", async () => {
     const ref = renderForm({ type: "object", properties: { city: { type: "string" } }, required: ["city"] });
 
-    const error = await submitОшибка(ref);
-    expect(error).not.toBeInstanceOf(Ошибка);
+    const error = await submitError(ref);
+    expect(error).not.toBeInstanceOf(Error);
     expect(error).toMatchObject({ errorFields: [{ name: ["city"], errors: ["Please enter city"] }] });
   });
 
@@ -252,12 +252,12 @@ describe("MCPToolArgumentsForm", () => {
       required: [],
     });
 
-    await user.type(screen.getByPlaceholderText("Введите city"), "oslo");
+    await user.type(screen.getByPlaceholderText("Enter city"), "oslo");
 
     await expect(submit(ref)).resolves.toEqual({ params: { city: "oslo" } });
   });
 
-  it("renders a single input field when the schema is only a string", async () => {
+  it("renders a single Вход Поле when the schema is only a string", async () => {
     const user = userEvent.setup();
     const ref = renderForm("tool_input_schema");
 
@@ -266,11 +266,11 @@ describe("MCPToolArgumentsForm", () => {
     await expect(submit(ref)).resolves.toEqual({ input: "hello" });
   });
 
-  it("reports the required message for the string-schema input", async () => {
+  it("reports the Обязательно Сообщение for the string-schema Вход", async () => {
     const ref = renderForm("tool_input_schema");
 
-    expect(await submitОшибка(ref)).not.toBeNull();
-    expect(await screen.findByText("Please enter input for this tool")).toBeInTheDocument();
+    expect(await submitError(ref)).not.toBeNull();
+    expect(await screen.findByText("Please Введите входные данные для инструмента")).toBeInTheDocument();
   });
 
   it("seeds a schema default and sends it untouched", async () => {
@@ -283,15 +283,15 @@ describe("MCPToolArgumentsForm", () => {
     await expect(submit(ref)).resolves.toEqual({ city: "paris", count: 3 });
   });
 
-  it("shows the empty state and submits nothing when the schema has no properties", async () => {
-    const ref = renderForm({ type: "object" } as ВходSchema);
+  it("shows the empty state and submits nothing when the schema has Нет properties", async () => {
+    const ref = renderForm({ type: "object" } as InputSchema);
 
     expect(screen.getByText("Для этого инструмента параметры не требуются.")).toBeInTheDocument();
     await expect(submit(ref)).resolves.toEqual({});
   });
 });
 
-it("should distinguish an unset enum from empty string and retain explicit false", async () => {
+it("should distinguish an unset enum from empty string and retain explicit Ложь", async () => {
   const user = userEvent.setup();
   const ref = renderForm({
     type: "object",
@@ -300,13 +300,13 @@ it("should distinguish an unset enum from empty string and retain explicit false
       active: { type: "boolean", default: true },
     },
   });
-  await user.click(screen.getByRole("combobox", { name: "mode" }));
-  await user.click(await screen.findByRole("option", { name: "Выбрать mode" }));
-  await user.click(screen.getByRole("combobox", { name: "active" }));
+  await user.click(screen.getByRole("combobox", { name: "Режим" }));
+  await user.click(await screen.findByRole("option", { name: "Выбрать Режим" }));
+  await user.click(screen.getByRole("combobox", { name: "Активный" }));
   await user.click(await screen.findByRole("option", { name: "Ложь" }));
   await expect(submit(ref)).resolves.toEqual({ active: false });
-  await user.click(screen.getByRole("combobox", { name: "mode" }));
+  await user.click(screen.getByRole("combobox", { name: "Режим" }));
   await user.click(await screen.findByRole("option", { name: "Empty string" }));
-  expect(screen.getByRole("combobox", { name: "mode" })).toHaveTextContent("Empty string");
+  expect(screen.getByRole("combobox", { name: "Режим" })).toHaveTextContent("Empty string");
   await expect(submit(ref)).resolves.toEqual({ mode: "", active: false });
 });

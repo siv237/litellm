@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ToolРасходОтвет } from "@/components/networking";
+import type { ToolSpendResponse } from "@/components/networking";
 
-import type { Каждый деньData, РасходМетрикаs } from "@/components/ИспользованиеPage/types";
+import type { DailyData, SpendMetrics } from "@/components/ИспользованиеPage/types";
 
-const mockGetToolРасход = vi.fn();
+const mockGetToolSpend = vi.fn();
 
 const { useAuthorizedMock } = vi.hoisted(() => ({ useAuthorizedMock: vi.fn() }));
 
@@ -20,7 +20,7 @@ vi.mock("@/app/(dashboard)/hooks/useIsOrgAdmin", () => ({
 }));
 
 vi.mock("@/components/networking", () => ({
-  getToolРасход: (...args: unknown[]) => mockGetToolРасход(...args),
+  getToolSpend: (...args: unknown[]) => mockGetToolSpend(...args),
 }));
 
 vi.mock("@/components/shared/advanced_date_picker", () => ({
@@ -66,11 +66,11 @@ vi.mock("@/components/shared/charts", () => ({
   SEQUENTIAL_COLOR_RAMP: ["indigo", "blue", "sky", "cyan"],
 }));
 
-import ИспользованиеTab from "./ИспользованиеTab";
+import UsageTab from "./ИспользованиеTab";
 
-const emptyToolРасход: ToolРасходОтвет = { by_tool: [], daily: [], start_date: null, end_date: null };
+const emptyToolSpend: ToolSpendResponse = { by_tool: [], daily: [], start_date: null, end_date: null };
 
-const baseMetrics = (overrides: Partial<РасходМетрикаs>): РасходМетрикаs => ({
+const baseMetrics = (overrides: Partial<SpendMetrics>): SpendMetrics => ({
   spend: 0,
   prompt_tokens: 0,
   completion_tokens: 0,
@@ -83,12 +83,12 @@ const baseMetrics = (overrides: Partial<РасходМетрикаs>): Расх�
   ...overrides,
 });
 
-const day = (date: string, metrics: Partial<РасходМетрикаs>): Каждый деньData => ({
+const day = (date: string, metrics: Partial<SpendMetrics>): DailyData => ({
   date,
   metrics: baseMetrics(metrics),
   breakdown: {
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {},
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups: {},
+    models: {},
+    model_groups: {},
     mcp_servers: {},
     providers: {},
     api_keys: {},
@@ -97,26 +97,26 @@ const day = (date: string, metrics: Partial<РасходМетрикаs>): Ка�
 });
 
 interface RenderOptions {
-  toolРасход?: ToolРасходОтвет;
+  toolSpend?: ToolSpendResponse;
   from?: Date;
   to?: Date;
   userRole?: string;
 }
 
-const renderWith = (results: Каждый деньData[], options: RenderOptions = {}) => {
+const renderWith = (results: DailyData[], options: RenderOptions = {}) => {
   const {
-    toolРасход = emptyToolРасход,
+    toolSpend = emptyToolSpend,
     from = new Date(2026, 6, 1),
     to = new Date(2026, 6, 14),
     userRole = "Admin",
   } = options;
-  mockGetToolРасход.mockResolvedЗначение(toolРасход);
-  useAuthorizedMock.mockReturnЗначение({ accessТокен: "test-token", userId: "u1", userRole });
+  mockGetToolSpend.mockResolvedValue(toolSpend);
+  useAuthorizedMock.mockReturnValue({ accessToken: "test-token", userId: "u1", userRole });
   return render(
-    <ИспользованиеTab
-      accessТокен="test-token"
+    <UsageTab
+      accessToken="test-token"
       activity={{
-        dateЗначение: { from, to },
+        dateValue: { from, to },
         onDateChange: vi.fn(),
         results,
         loading: false,
@@ -133,20 +133,20 @@ const readSeries = (element: HTMLElement) => JSON.parse(element.getAttribute("da
 
 describe("ИспользованиеTab", () => {
   beforeEach(() => {
-    mockGetToolРасход.mockReset();
+    mockGetToolSpend.mockReset();
   });
 
   it("sums compression and caching dollars across days into the summary cards", () => {
     // Total caching and the LiteLLM-injected share deliberately differ so these
     // assertions pin which one each figure uses: the caching headline and the
     // Total-saved tile take the injected share, the secondary keeps the total.
-    const firstDay: Partial<РасходМетрикаs> = {
+    const firstDay: Partial<SpendMetrics> = {
       compression_savings_spend: 0.04,
       prompt_caching_savings_spend: 0.006,
       gateway_injected_caching_savings_spend: 0.004,
       compression_saved_tokens: 40000,
     };
-    const secondDay: Partial<РасходМетрикаs> = {
+    const secondDay: Partial<SpendMetrics> = {
       compression_savings_spend: 0.1,
       prompt_caching_savings_spend: 0.01,
       gateway_injected_caching_savings_spend: 0.006,
@@ -260,7 +260,7 @@ describe("ИспользованиеTab", () => {
 
   it("does not stack the per-day drivers, because one of them can be negative", async () => {
     // Stacking sums the series into one bar. Auto-router savings go negative when a
-    // Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию switch pays for a cold cache, and that segment would be drawn below the
+    // model switch pays for a cold cache, and that segment would be drawn below the
     // axis while the rest of the bar still read as the day's total.
     renderWith([
       day("2026-07-12", {
@@ -276,7 +276,7 @@ describe("ИспользованиеTab", () => {
     expect(readSeries(bars)[0]).toMatchObject({ "Auto-router": -0.05 });
   });
 
-  it("lays the savings header выход with the card's own slots so nothing shifts between tabs", async () => {
+  it("lays the savings header out with the card's own slots so nothing shifts between tabs", async () => {
     // The subtitle differs in length between the tabs ("Running total saved" vs "Saved
     // per day"). Hand-rolled rows made it compete with the legend and the toggle for
     // width, so the header grew a line on one tab and the chart moved with it. CardHeader
@@ -296,7 +296,7 @@ describe("ИспользованиеTab", () => {
     expect(before.description).toBeTruthy();
     // the toggle rides in the same action slot as the legend, so neither moves alone
     expect(before.action.contains(screen.getByRole("tablist"))).toBe(true);
-    // the subtitle lives выходside that slot, so its length cannot reposition the controls
+    // the subtitle lives outside that slot, so its length cannot reposition the controls
     expect(before.action.contains(before.description)).toBe(false);
     expect(before.description).toHaveTextContent(/Running total saved/);
 
@@ -310,8 +310,8 @@ describe("ИспользованиеTab", () => {
     expect(container).toHaveTextContent(/Savings/);
   });
 
-  it("subtracts a losing auto-router route from the total and keeps it выход of the donut", () => {
-    // Switching Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs leaves the new one with a cold cache, so a route can cost more
+  it("subtracts a losing auto-router route from the total and keeps it out of the donut", () => {
+    // Switching models leaves the new one with a cold cache, so a route can cost more
     // than the baseline would have. A negative slice is meaningless in a donut, but the
     // total has to keep the loss or the page can only ever report good news.
     renderWith([
@@ -362,7 +362,7 @@ describe("ИспользованиеTab", () => {
   });
 
   it("renders spend-by-tool bars from the tool spend endpoint", async () => {
-    const toolРасход = {
+    const toolSpend = {
       by_tool: [
         { tool_name: "search", spend: 4.0, call_count: 3, total_tokens: 150 },
         { tool_name: "read_file", spend: 1.0, call_count: 2, total_tokens: 50 },
@@ -371,7 +371,7 @@ describe("ИспользованиеTab", () => {
       start_date: "2026-07-12",
       end_date: "2026-07-12",
     };
-    renderWith([day("2026-07-12", {})], { toolРасход });
+    renderWith([day("2026-07-12", {})], { toolSpend });
 
     const bars = await screen.findAllByTestId("bar-chart");
     const series = JSON.parse(bars[0].getAttribute("data-series") ?? "[]");
@@ -381,8 +381,8 @@ describe("ИспользованиеTab", () => {
     expect(bars[0]).toHaveAttribute("data-max-bar-size", "64");
   });
 
-  it("renders the tool legend once выходside the charts, with both charts sharing the tool colors", async () => {
-    const toolРасход = {
+  it("renders the tool legend once outside the charts, with both charts sharing the tool colors", async () => {
+    const toolSpend = {
       by_tool: [
         { tool_name: "search", spend: 4.0, call_count: 3, total_tokens: 150 },
         { tool_name: "read_file", spend: 1.0, call_count: 2, total_tokens: 50 },
@@ -391,7 +391,7 @@ describe("ИспользованиеTab", () => {
       start_date: "2026-07-12",
       end_date: "2026-07-12",
     };
-    renderWith([day("2026-07-12", {})], { toolРасход });
+    renderWith([day("2026-07-12", {})], { toolSpend });
 
     const bars = await screen.findAllByTestId("bar-chart");
     const [totalByTool, dailyByTool] = bars.slice(-2);
@@ -407,7 +407,7 @@ describe("ИспользованиеTab", () => {
   // `/v1/tool/spend` is proxy-admin-only while the daily-activity charts around
   // it are not, so this one card is dropped rather than the whole tab.
   describe("proxy-admin-only spend-by-tool card", () => {
-    const toolРасход = {
+    const toolSpend = {
       by_tool: [{ tool_name: "search", spend: 4.0, call_count: 3, total_tokens: 150 }],
       daily: [{ date: "2026-07-12", tool_name: "search", spend: 4.0, call_count: 3 }],
       start_date: "2026-07-12",
@@ -418,23 +418,23 @@ describe("ИспользованиеTab", () => {
       "hides the card and never calls the endpoint for %s",
       async (userRole) => {
         renderWith([day("2026-07-12", { compression_savings_spend: 0.04 })], {
-          toolРасход,
+          toolSpend,
           userRole,
         });
 
         // Liveness gate: the daily-activity charts still render for this role,
         // so the absence below is the gate, not an empty tab.
         expect(screen.getByTestId("donut-chart")).toBeInTheDocument();
-        expect(screen.queryByText("Расход by tool")).not.toBeInTheDocument();
-        await vi.waitFor(() => expect(mockGetToolРасход).not.toHaveBeenCalled());
+        expect(screen.queryByText("Spend by tool")).not.toBeInTheDocument();
+        await vi.waitFor(() => expect(mockGetToolSpend).not.toHaveBeenCalled());
       },
     );
 
     it("keeps the card and the endpoint call for an admin", async () => {
-      renderWith([day("2026-07-12", { compression_savings_spend: 0.04 })], { toolРасход });
+      renderWith([day("2026-07-12", { compression_savings_spend: 0.04 })], { toolSpend });
 
-      expect(await screen.findByText("Расход by tool")).toBeInTheDocument();
-      expect(mockGetToolРасход).toHaveBeenCalled();
+      expect(await screen.findByText("Spend by tool")).toBeInTheDocument();
+      expect(mockGetToolSpend).toHaveBeenCalled();
     });
   });
 });

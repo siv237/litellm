@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import CodeInterpreterВыход from "./CodeInterpreterВыход";
+import CodeInterpreterOutput from "./CodeInterpreterВыход";
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: vi.fn(() => "https://example.com"),
@@ -22,7 +22,7 @@ describe("CodeInterpreterВыход", () => {
   });
 
   it("should render", () => {
-    render(<CodeInterpreterВыход code="print('hello')" accessТокен="test-token" />);
+    render(<CodeInterpreterOutput code="print('hello')" accessToken="test-token" />);
 
     expect(screen.getByText("Python Code Executed")).toBeInTheDocument();
   });
@@ -30,7 +30,7 @@ describe("CodeInterpreterВыход", () => {
   it("should display code in syntax highlighter", async () => {
     const user = userEvent.setup();
     const code = "print('hello world')";
-    const { container } = render(<CodeInterpreterВыход code={code} accessТокен="test-token" />);
+    const { container } = render(<CodeInterpreterOutput code={code} accessToken="test-token" />);
 
     expect(screen.getByText("Python Code Executed")).toBeInTheDocument();
 
@@ -46,12 +46,12 @@ describe("CodeInterpreterВыход", () => {
 
   it("should fetch and display images from annotations", async () => {
     const mockBlob = new Blob(["image data"], { type: "image/png" });
-    const mockОтвет = {
+    const mockResponse = {
       ok: true,
-      blob: vi.fn().mockResolvedЗначение(mockBlob),
+      blob: vi.fn().mockResolvedValue(mockBlob),
     };
 
-    (global.fetch as any).mockResolvedЗначение(mockОтвет);
+    (global.fetch as any).mockResolvedValue(mockResponse);
 
     const annotations = [
       {
@@ -65,10 +65,10 @@ describe("CodeInterpreterВыход", () => {
     ];
 
     render(
-      <CodeInterpreterВыход
+      <CodeInterpreterOutput
         code="import matplotlib.pyplot as plt"
         annotations={annotations}
-        accessТокен="test-token"
+        accessToken="test-token"
       />,
     );
 
@@ -95,12 +95,12 @@ describe("CodeInterpreterВыход", () => {
       resolveBlob = resolve;
     });
 
-    const mockОтвет = {
+    const mockResponse = {
       ok: true,
-      blob: vi.fn().mockReturnЗначение(blobPromise),
+      blob: vi.fn().mockReturnValue(blobPromise),
     };
 
-    (global.fetch as any).mockResolvedЗначение(mockОтвет);
+    (global.fetch as any).mockResolvedValue(mockResponse);
 
     const annotations = [
       {
@@ -114,10 +114,10 @@ describe("CodeInterpreterВыход", () => {
     ];
 
     render(
-      <CodeInterpreterВыход
+      <CodeInterpreterOutput
         code="import matplotlib.pyplot as plt"
         annotations={annotations}
-        accessТокен="test-token"
+        accessToken="test-token"
       />,
     );
 
@@ -134,12 +134,12 @@ describe("CodeInterpreterВыход", () => {
   it("should handle download for image files", async () => {
     const user = userEvent.setup();
     const mockBlob = new Blob(["image data"], { type: "image/png" });
-    const mockОтвет = {
+    const mockResponse = {
       ok: true,
-      blob: vi.fn().mockResolvedЗначение(mockBlob),
+      blob: vi.fn().mockResolvedValue(mockBlob),
     };
 
-    (global.fetch as any).mockResolvedЗначение(mockОтвет);
+    (global.fetch as any).mockResolvedValue(mockResponse);
 
     const annotations = [
       {
@@ -157,10 +157,10 @@ describe("CodeInterpreterВыход", () => {
     const removeChildSpy = vi.spyOn(document.body, "removeChild");
 
     render(
-      <CodeInterpreterВыход
+      <CodeInterpreterOutput
         code="import matplotlib.pyplot as plt"
         annotations={annotations}
-        accessТокен="test-token"
+        accessToken="test-token"
       />,
     );
 
@@ -190,12 +190,12 @@ describe("CodeInterpreterВыход", () => {
   it("should handle download for non-image files", async () => {
     const user = userEvent.setup();
     const mockBlob = new Blob(["file data"], { type: "text/plain" });
-    const mockОтвет = {
+    const mockResponse = {
       ok: true,
-      blob: vi.fn().mockResolvedЗначение(mockBlob),
+      blob: vi.fn().mockResolvedValue(mockBlob),
     };
 
-    (global.fetch as any).mockResolvedЗначение(mockОтвет);
+    (global.fetch as any).mockResolvedValue(mockResponse);
 
     const annotations = [
       {
@@ -208,7 +208,7 @@ describe("CodeInterpreterВыход", () => {
       },
     ];
 
-    render(<CodeInterpreterВыход code="import pandas as pd" annotations={annotations} accessТокен="test-token" />);
+    render(<CodeInterpreterOutput code="import pandas as pd" annotations={annotations} accessToken="test-token" />);
 
     await waitFor(() => {
       expect(screen.getByText("data.csv")).toBeInTheDocument();
@@ -233,19 +233,19 @@ describe("CodeInterpreterВыход", () => {
   });
 
   it("should return null when no code and no annotations", () => {
-    const { container } = render(<CodeInterpreterВыход accessТокен="test-token" />);
+    const { container } = render(<CodeInterpreterOutput accessToken="test-token" />);
 
     expect(container).toBeEmptyDOMElement();
   });
 
   it("should handle multiple image formats", async () => {
     const mockBlob = new Blob(["image data"], { type: "image/png" });
-    const mockОтвет = {
+    const mockResponse = {
       ok: true,
-      blob: vi.fn().mockResolvedЗначение(mockBlob),
+      blob: vi.fn().mockResolvedValue(mockBlob),
     };
 
-    (global.fetch as any).mockResolvedЗначение(mockОтвет);
+    (global.fetch as any).mockResolvedValue(mockResponse);
 
     const annotations = [
       {
@@ -283,10 +283,10 @@ describe("CodeInterpreterВыход", () => {
     ];
 
     render(
-      <CodeInterpreterВыход
+      <CodeInterpreterOutput
         code="import matplotlib.pyplot as plt"
         annotations={annotations}
-        accessТокен="test-token"
+        accessToken="test-token"
       />,
     );
 
@@ -297,7 +297,7 @@ describe("CodeInterpreterВыход", () => {
 
   it("should handle fetch errors gracefully", async () => {
     const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    (global.fetch as any).mockRejectedЗначение(new Ошибка("Network error"));
+    (global.fetch as any).mockRejectedValue(new Error("Network error"));
 
     const annotations = [
       {
@@ -311,10 +311,10 @@ describe("CodeInterpreterВыход", () => {
     ];
 
     render(
-      <CodeInterpreterВыход
+      <CodeInterpreterOutput
         code="import matplotlib.pyplot as plt"
         annotations={annotations}
-        accessТокен="test-token"
+        accessToken="test-token"
       />,
     );
 

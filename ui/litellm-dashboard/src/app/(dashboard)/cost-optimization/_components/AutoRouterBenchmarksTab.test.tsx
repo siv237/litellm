@@ -1,13 +1,13 @@
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { AutoRouterDeployment } from "@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useModels";
-import { ApiОшибка } from "@/lib/http/client";
+import type { AutoRouterDeployment } from "@/app/(dashboard)/hooks/models/useРежимls";
+import { ApiError } from "@/lib/http/client";
 
 vi.mock("./useAutoRouterBenchmarks", () => ({ useAutoRouterBenchmarks: vi.fn() }));
-vi.mock("@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useModels", () => ({ useAutoRouters: vi.fn() }));
+vi.mock("@/app/(dashboard)/hooks/models/useРежимls", () => ({ useAutoRouters: vi.fn() }));
 vi.mock("./ShadowEvalSection", () => ({ default: () => <div data-testid="shadow-eval-section" /> }));
 vi.mock("@/components/shared/advanced_date_picker", () => ({
   __esModule: true,
@@ -20,34 +20,34 @@ vi.mock("@/components/shared/advanced_date_picker", () => ({
   ),
 }));
 
-import { useAutoRouters } from "@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useModels";
+import { useAutoRouters } from "@/app/(dashboard)/hooks/models/useРежимls";
 
 import AutoRouterBenchmarksTab, { AutoRouterUsageView } from "./AutoRouterBenchmarksTab";
 import type {
   AutoRouterBenchmarkGroup,
-  AutoRouterBenchmarksОтвет,
+  AutoRouterBenchmarksResponse,
   AutoRouterCacheStats,
 } from "./autoRouterBenchmarks";
 import { useAutoRouterBenchmarks } from "./useAutoRouterBenchmarks";
 
-type HookРезультат = ReturnType<typeof useAutoRouterBenchmarks>;
+type HookResult = ReturnType<typeof useAutoRouterBenchmarks>;
 
 const mockAutoRouters = (deployments: AutoRouterDeployment[] = []) => {
-  vi.mocked(useAutoRouters).mockReturnЗначение({ data: deployments } as unknown as ReturnType<typeof useAutoRouters>);
+  vi.mocked(useAutoRouters).mockReturnValue({ data: deployments } as unknown as ReturnType<typeof useAutoRouters>);
 };
 
-const mockHook = (result: { data?: AutoRouterBenchmarksОтвет; isPending?: boolean; error?: Ошибка }) => {
-  vi.mocked(useAutoRouterBenchmarks).mockReturnЗначение({
+const mockHook = (result: { data?: AutoRouterBenchmarksResponse; isPending?: boolean; error?: Error }) => {
+  vi.mocked(useAutoRouterBenchmarks).mockReturnValue({
     data: result.data,
     isPending: result.isPending ?? false,
     error: result.error ?? null,
-  } as unknown as HookРезультат);
+  } as unknown as HookResult);
 };
 
 const cache = (overrides: Partial<AutoRouterCacheStats> = {}): AutoRouterCacheStats => ({
   coverage_pct: 99.6,
   hit_rate_pct: 93.3,
-  same_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: { turns: 400, hits: 391, hit_rate_pct: 97.7 },
+  same_model: { turns: 400, hits: 391, hit_rate_pct: 97.7 },
   first_visit: { turns: 37, hits: 9, hit_rate_pct: 24.3 },
   return_to_tier: { turns: 381, hits: 311, hit_rate_pct: 81.6 },
   unordered_turns: 0,
@@ -59,7 +59,7 @@ const cache = (overrides: Partial<AutoRouterCacheStats> = {}): AutoRouterCacheSt
   ...overrides,
 });
 
-type Totals = AutoRouterBenchmarksОтвет["totals"];
+type Totals = AutoRouterBenchmarksResponse["totals"];
 
 const totals = (overrides: Partial<Totals> = {}): Totals => ({
   sessions: 94,
@@ -82,7 +82,7 @@ const zeroBucket = { turns: 0, hits: 0, hit_rate_pct: 0 };
 const zeroCache: AutoRouterCacheStats = {
   coverage_pct: 0,
   hit_rate_pct: 0,
-  same_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: zeroBucket,
+  same_model: zeroBucket,
   first_visit: zeroBucket,
   return_to_tier: zeroBucket,
   unordered_turns: 0,
@@ -115,7 +115,7 @@ const group = (overrides: Partial<AutoRouterBenchmarkGroup> = {}): AutoRouterBen
   ...overrides,
 });
 
-const response = (groups: AutoRouterBenchmarkGroup[], shared: Totals = totals()): AutoRouterBenchmarksОтвет => ({
+const response = (groups: AutoRouterBenchmarkGroup[], shared: Totals = totals()): AutoRouterBenchmarksResponse => ({
   start_date: "2026-07-06",
   end_date: "2026-08-05",
   routers_in_scope: groups.length,
@@ -124,10 +124,10 @@ const response = (groups: AutoRouterBenchmarkGroup[], shared: Totals = totals())
 });
 
 const renderTab = () => {
-  const dateЗначение = { from: new Date(2026, 6, 6), to: new Date(2026, 7, 5) };
+  const dateValue = { from: new Date(2026, 6, 6), to: new Date(2026, 7, 5) };
   const onDateChange = vi.fn();
   const activity = {
-    dateЗначение,
+    dateValue,
     onDateChange,
     results: [],
     loading: false,
@@ -136,14 +136,14 @@ const renderTab = () => {
     cancelled: false,
     cancel: vi.fn(),
   };
-  const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return {
-    dateЗначение,
+    dateValue,
     onDateChange,
     ...render(
-      <ЗапросClientПровайдер client={queryClient}>
-        <AutoRouterBenchmarksTab accessТокен="sk-test" activity={activity} />
-      </ЗапросClientПровайдер>,
+      <QueryClientProvider client={queryClient}>
+        <AutoRouterBenchmarksTab accessToken="sk-test" activity={activity} />
+      </QueryClientProvider>,
     ),
   };
 };
@@ -179,7 +179,7 @@ describe("AutoRouterBenchmarksTab", () => {
     expect(screen.getByText("-86%")).toBeInTheDocument();
     expect(screen.getByText("Actual auto-router spend")).toBeInTheDocument();
     expect(screen.getByText("$359.86")).toBeInTheDocument();
-    expect(screen.getByText("Estimated spend at highest-tier Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию")).toBeInTheDocument();
+    expect(screen.getByText("Estimated spend at highest-tier model")).toBeInTheDocument();
     expect(screen.getByText("$2,534.45")).toBeInTheDocument();
     expect(screen.getByText("32.7")).toBeInTheDocument();
     expect(screen.getByText("2.1h")).toBeInTheDocument();
@@ -222,7 +222,7 @@ describe("AutoRouterBenchmarksTab", () => {
     renderTab();
 
     const tile = screen.getByText("Avg saved per session").closest('[data-slot="card"]');
-    if (!tile) throw new Ошибка("expected avg saved per session to render as a metric tile");
+    if (!tile) throw new Error("expected avg saved per session to render as a metric tile");
 
     expect(within(tile).getByText("$23.13")).toBeInTheDocument();
     expect(within(tile).getByText("· 94 sessions")).toBeInTheDocument();
@@ -238,7 +238,7 @@ describe("AutoRouterBenchmarksTab", () => {
       "Actual auto-router spend",
       "LLM spend",
       "Classification cost($2.00 / 1K turns)",
-      "Estimated spend at highest-tier Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
+      "Estimated spend at highest-tier model",
     ]);
     expect(values).toEqual(["$359.86", "$353.71", "$6.15", "$2,534.45"]);
   });
@@ -266,7 +266,7 @@ describe("AutoRouterBenchmarksTab", () => {
     mockHook({ data: response([group()]) });
     renderTab();
 
-    expect(screen.getByText("Same Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию")).toBeInTheDocument();
+    expect(screen.getByText("Same model")).toBeInTheDocument();
     expect(screen.getByText("previous turn → same tier")).toBeInTheDocument();
     expect(screen.getByText("First visit")).toBeInTheDocument();
     expect(screen.getByText("previous turn → a tier not used yet")).toBeInTheDocument();
@@ -323,7 +323,7 @@ describe("AutoRouterBenchmarksTab", () => {
   it("hides the expired-miss row only when no turns were measured at all", () => {
     const empty = { turns: 0, hits: 0, hit_rate_pct: 0 };
     const nothingMeasured = {
-      same_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: empty,
+      same_model: empty,
       first_visit: empty,
       return_to_tier: empty,
       return_misses_expired: 0,
@@ -335,12 +335,12 @@ describe("AutoRouterBenchmarksTab", () => {
     expect(screen.queryByText("Expired-miss")).not.toBeInTheDocument();
   });
 
-  it("mentions выход-of-order turns only when there are any", () => {
+  it("mentions out-of-order turns only when there are any", () => {
     const unordered = totals({ cache: cache({ unordered_turns: 12 }) });
     mockHook({ data: response([group(unordered)], unordered) });
     renderTab();
 
-    expect(screen.getByText(/12 turns arrived выход of order across pods and are not bucketed/)).toBeInTheDocument();
+    expect(screen.getByText(/12 turns arrived out of order across pods and are not bucketed/)).toBeInTheDocument();
   });
 
   it("labels the default selection instead of leaking the __all__ sentinel", () => {
@@ -359,14 +359,14 @@ describe("AutoRouterBenchmarksTab", () => {
   });
 
   it("names the admin requirement when the proxy answers 403", () => {
-    mockHook({ error: new ApiОшибка("forbidden", 403, {}) });
+    mockHook({ error: new ApiError("forbidden", 403, {}) });
     renderTab();
 
     expect(screen.getByText("Auto-router usage is visible to proxy admin roles only")).toBeInTheDocument();
   });
 
   it("degrades to a message when the endpoint is unavailable", () => {
-    mockHook({ error: new ApiОшибка("boom", 500, {}) });
+    mockHook({ error: new ApiError("boom", 500, {}) });
     renderTab();
 
     expect(screen.getByText("Auto-router usage is unavailable right now")).toBeInTheDocument();
@@ -395,9 +395,9 @@ describe("AutoRouterBenchmarksTab", () => {
 
   it("queries the shared picker's range and pushes picker changes back to the shared state", () => {
     mockHook({ data: response([group()]) });
-    const { dateЗначение, onDateChange } = renderTab();
+    const { dateValue, onDateChange } = renderTab();
 
-    expect(vi.mocked(useAutoRouterBenchmarks)).toHaveBeenCalledWith("sk-test", dateЗначение, undefined);
+    expect(vi.mocked(useAutoRouterBenchmarks)).toHaveBeenCalledWith("sk-test", dateValue, undefined);
     expect(screen.getByText("Jul 6 – Aug 5 (UTC)")).toBeInTheDocument();
 
     fireEvent.click(screen.getByTestId("date-picker"));
@@ -406,9 +406,9 @@ describe("AutoRouterBenchmarksTab", () => {
 
   it("scopes the query to one key when the usage view is mounted for a key", () => {
     mockHook({ data: response([group()]) });
-    const dateЗначение = { from: new Date(2026, 6, 6), to: new Date(2026, 7, 5) };
+    const dateValue = { from: new Date(2026, 6, 6), to: new Date(2026, 7, 5) };
     const activity = {
-      dateЗначение,
+      dateValue,
       onDateChange: vi.fn(),
       results: [],
       loading: false,
@@ -418,12 +418,12 @@ describe("AutoRouterBenchmarksTab", () => {
       cancel: vi.fn(),
     };
     render(
-      <ЗапросClientПровайдер client={new ЗапросClient()}>
-        <AutoRouterUsageView accessТокен="sk-test" activity={activity} apiКлюч="key-hash-1" />
-      </ЗапросClientПровайдер>,
+      <QueryClientProvider client={new QueryClient()}>
+        <AutoRouterUsageView accessToken="sk-test" activity={activity} apiKey="key-hash-1" />
+      </QueryClientProvider>,
     );
 
-    expect(vi.mocked(useAutoRouterBenchmarks)).toHaveBeenCalledWith("sk-test", dateЗначение, "key-hash-1");
+    expect(vi.mocked(useAutoRouterBenchmarks)).toHaveBeenCalledWith("sk-test", dateValue, "key-hash-1");
     expect(screen.getByText("Total estimated savings")).toBeInTheDocument();
     expect(screen.queryByRole("tab", { name: "Shadow Evals" })).not.toBeInTheDocument();
   });
@@ -446,7 +446,7 @@ describe("AutoRouterBenchmarksTab", () => {
   });
 
   it("keeps the shadow evals sub-tab reachable while the usage body is in its error state", () => {
-    mockHook({ error: new ApiОшибка("boom", 500, {}) });
+    mockHook({ error: new ApiError("boom", 500, {}) });
     renderTab();
 
     expect(screen.getByText("Auto-router usage is unavailable right now")).toBeInTheDocument();

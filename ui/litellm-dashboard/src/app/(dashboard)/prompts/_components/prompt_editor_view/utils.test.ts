@@ -12,10 +12,10 @@ describe("extractVariables", () => {
   it("should extract variables from messages", () => {
     const prompt: PromptType = {
       name: "test",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       config: {},
       tools: [],
-      developerСообщение: "",
+      developerMessage: "",
       messages: [
         { role: "user", content: "Hello {{name}}, how are you?" },
         { role: "assistant", content: "I am fine {{name}}" },
@@ -29,10 +29,10 @@ describe("extractVariables", () => {
   it("should extract variables from developer message", () => {
     const prompt: PromptType = {
       name: "test",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       config: {},
       tools: [],
-      developerСообщение: "You are {{role}} assistant",
+      developerMessage: "You are {{role}} assistant",
       messages: [{ role: "user", content: "Hello" }],
     };
 
@@ -43,10 +43,10 @@ describe("extractVariables", () => {
   it("should extract variables from both messages and developer message", () => {
     const prompt: PromptType = {
       name: "test",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       config: {},
       tools: [],
-      developerСообщение: "You are {{role}} assistant",
+      developerMessage: "You are {{role}} assistant",
       messages: [
         { role: "user", content: "Hello {{name}}" },
         { role: "assistant", content: "Hi {{name}}, I am {{role}}" },
@@ -60,10 +60,10 @@ describe("extractVariables", () => {
   it("should return empty array when no variables present", () => {
     const prompt: PromptType = {
       name: "test",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       config: {},
       tools: [],
-      developerСообщение: "You are an assistant",
+      developerMessage: "You are an assistant",
       messages: [{ role: "user", content: "Hello world" }],
     };
 
@@ -74,10 +74,10 @@ describe("extractVariables", () => {
   it("should handle duplicate variables", () => {
     const prompt: PromptType = {
       name: "test",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       config: {},
       tools: [],
-      developerСообщение: "",
+      developerMessage: "",
       messages: [
         { role: "user", content: "Hello {{name}}" },
         { role: "assistant", content: "Hi {{name}} again" },
@@ -93,36 +93,36 @@ describe("convertToDotPrompt", () => {
   it("should convert basic prompt to dot prompt format", () => {
     const prompt: PromptType = {
       name: "test",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       config: {},
       tools: [],
-      developerСообщение: "",
+      developerMessage: "",
       messages: [{ role: "user", content: "Hello world" }],
     };
 
     const result = convertToDotPrompt(prompt);
     expect(result).toContain("---");
-    expect(result).toContain("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4");
+    expect(result).toContain("model: gpt-4");
     expect(result).toContain("input:");
     expect(result).toContain("schema:");
-    expect(result).toContain("выходput:");
+    expect(result).toContain("output:");
     expect(result).toContain("format: text");
     expect(result).toContain("User: Hello world");
-    const cleared = convertToDotPrompt({ ...prompt, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: null });
-    expect(cleared).toBe(result.replace("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4\n", ""));
+    const cleared = convertToDotPrompt({ ...prompt, model: null });
+    expect(cleared).toBe(result.replace("model: gpt-4\n", ""));
   });
 
   it("should include config parameters when set", () => {
     const prompt: PromptType = {
       name: "test",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       config: {
         temperature: 0.7,
         max_tokens: 100,
         top_p: 0.9,
       },
       tools: [],
-      developerСообщение: "",
+      developerMessage: "",
       messages: [{ role: "user", content: "Hello" }],
     };
 
@@ -135,10 +135,10 @@ describe("convertToDotPrompt", () => {
   it("should include input schema with variables", () => {
     const prompt: PromptType = {
       name: "test",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       config: {},
       tools: [],
-      developerСообщение: "",
+      developerMessage: "",
       messages: [{ role: "user", content: "Hello {{name}}" }],
     };
 
@@ -151,10 +151,10 @@ describe("convertToDotPrompt", () => {
   it("should include developer message when present", () => {
     const prompt: PromptType = {
       name: "test",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       config: {},
       tools: [],
-      developerСообщение: "You are a helpful assistant",
+      developerMessage: "You are a helpful assistant",
       messages: [{ role: "user", content: "Hello" }],
     };
 
@@ -165,7 +165,7 @@ describe("convertToDotPrompt", () => {
   it("should include tools when present", () => {
     const prompt: PromptType = {
       name: "test",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       config: {},
       tools: [
         {
@@ -174,7 +174,7 @@ describe("convertToDotPrompt", () => {
           json: '{"type": "function", "function": {"name": "get_weather"}}',
         },
       ],
-      developerСообщение: "",
+      developerMessage: "",
       messages: [{ role: "user", content: "Hello" }],
     };
 
@@ -186,10 +186,10 @@ describe("convertToDotPrompt", () => {
   it("should handle multiple messages with different roles", () => {
     const prompt: PromptType = {
       name: "test",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       config: {},
       tools: [],
-      developerСообщение: "",
+      developerMessage: "",
       messages: [
         { role: "user", content: "Hello" },
         { role: "assistant", content: "Hi there" },
@@ -205,29 +205,29 @@ describe("convertToDotPrompt", () => {
 });
 
 describe("parseExistingPrompt", () => {
-  it("should keep saved prompts with missing or blank Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs unassigned", () => {
-    for (const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюLine of ["", "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: \n"]) {
+  it("should keep saved prompts with missing or blank models unassigned", () => {
+    for (const modelLine of ["", "model: \n"]) {
       const prompt = parseExistingPrompt({
         prompt_spec: {
           prompt_id: "unassigned-prompt",
-          litellm_params: { dotprompt_content: `---\n${Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюLine}temperature: 0\n---\nUser: Keep this message` },
+          litellm_params: { dotprompt_content: `---\n${modelLine}temperature: 0\n---\nUser: Keep this message` },
         },
       });
 
-      expect(prompt.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию).toBeNull();
-      expect(convertToDotPrompt(prompt)).not.toMatch(/^Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию:/m);
+      expect(prompt.model).toBeNull();
+      expect(convertToDotPrompt(prompt)).not.toMatch(/^model:/m);
     }
   });
 
   it("should parse basic dotprompt content", () => {
-    const apiОтвет = {
+    const apiResponse = {
       prompt_spec: {
         litellm_params: {
           dotprompt_content: `---
-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4
+model: gpt-4
 input:
   schema:
-выходput:
+output:
   format: text
 ---
 
@@ -237,24 +237,24 @@ User: Hello world`,
       },
     };
 
-    const result = parseExistingPrompt(apiОтвет);
+    const result = parseExistingPrompt(apiResponse);
     expect(result.name).toBe("test-prompt");
-    expect(result.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию).toBe("gpt-4");
+    expect(result.model).toBe("gpt-4");
     expect(result.messages).toEqual([{ role: "user", content: "Hello world" }]);
   });
 
   it("should parse with config parameters", () => {
-    const apiОтвет = {
+    const apiResponse = {
       prompt_spec: {
         litellm_params: {
           dotprompt_content: `---
-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4
+model: gpt-4
 temperature: 0.7
 max_tokens: 100
 top_p: 0.9
 input:
   schema:
-выходput:
+output:
   format: text
 ---
 
@@ -264,21 +264,21 @@ User: Hello`,
       },
     };
 
-    const result = parseExistingPrompt(apiОтвет);
+    const result = parseExistingPrompt(apiResponse);
     expect(result.config.temperature).toBe(0.7);
     expect(result.config.max_tokens).toBe(100);
     expect(result.config.top_p).toBe(0.9);
   });
 
   it("should parse with developer message", () => {
-    const apiОтвет = {
+    const apiResponse = {
       prompt_spec: {
         litellm_params: {
           dotprompt_content: `---
-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4
+model: gpt-4
 input:
   schema:
-выходput:
+output:
   format: text
 ---
 
@@ -290,19 +290,19 @@ User: Hello`,
       },
     };
 
-    const result = parseExistingPrompt(apiОтвет);
-    expect(result.developerСообщение).toBe("You are a helpful assistant");
+    const result = parseExistingPrompt(apiResponse);
+    expect(result.developerMessage).toBe("You are a helpful assistant");
   });
 
   it("should parse multiple messages", () => {
-    const apiОтвет = {
+    const apiResponse = {
       prompt_spec: {
         litellm_params: {
           dotprompt_content: `---
-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4
+model: gpt-4
 input:
   schema:
-выходput:
+output:
   format: text
 ---
 
@@ -318,7 +318,7 @@ User: Great!`,
       },
     };
 
-    const result = parseExistingPrompt(apiОтвет);
+    const result = parseExistingPrompt(apiResponse);
     expect(result.messages).toEqual([
       { role: "user", content: "Hello\nHow are you?" },
       { role: "assistant", content: "I am fine\nThank you for asking" },
@@ -327,14 +327,14 @@ User: Great!`,
   });
 
   it("should handle prompt with version suffix", () => {
-    const apiОтвет = {
+    const apiResponse = {
       prompt_spec: {
         litellm_params: {
           dotprompt_content: `---
-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4
+model: gpt-4
 input:
   schema:
-выходput:
+output:
   format: text
 ---
 
@@ -344,22 +344,22 @@ User: Hello`,
       },
     };
 
-    const result = parseExistingPrompt(apiОтвет);
+    const result = parseExistingPrompt(apiResponse);
     expect(result.name).toBe("test-prompt");
   });
 
   it("should throw error when no dotprompt_content", () => {
-    const apiОтвет = {
+    const apiResponse = {
       prompt_spec: {
         litellm_params: {},
       },
     };
 
-    expect(() => parseExistingPrompt(apiОтвет)).toThrow("No dotprompt_content found in API response");
+    expect(() => parseExistingPrompt(apiResponse)).toThrow("No dotprompt_content found in API response");
   });
 
   it("should throw error for invalid dotprompt format", () => {
-    const apiОтвет = {
+    const apiResponse = {
       prompt_spec: {
         litellm_params: {
           dotprompt_content: "invalid format",
@@ -367,18 +367,18 @@ User: Hello`,
       },
     };
 
-    expect(() => parseExistingPrompt(apiОтвет)).toThrow("Invalid dotprompt format");
+    expect(() => parseExistingPrompt(apiResponse)).toThrow("Invalid dotprompt format");
   });
 
   it("should provide default values when parsing fails", () => {
-    const apiОтвет = {
+    const apiResponse = {
       prompt_spec: {
         litellm_params: {
           dotprompt_content: `---
-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4
+model: gpt-4
 input:
   schema:
-выходput:
+output:
   format: text
 ---
 
@@ -388,20 +388,20 @@ input:
       },
     };
 
-    const result = parseExistingPrompt(apiОтвет);
+    const result = parseExistingPrompt(apiResponse);
     expect(result.messages).toEqual([
-      { role: "user", content: "Введите task specifics. Use {{template_variables}} for dynamic inputs" },
+      { role: "user", content: "Enter task specifics. Use {{template_variables}} for dynamic inputs" },
     ]);
   });
 });
 
-describe("getVersionNumber", () => {
+describe("getВерсияNumber", () => {
   it("should return '1' for undefined promptId", () => {
     const result = getVersionNumber(undefined);
     expect(result).toBe("1");
   });
 
-  it("should return '1' for promptId withвыход version", () => {
+  it("should return '1' for promptId without version", () => {
     const result = getVersionNumber("test-prompt");
     expect(result).toBe("1");
   });
@@ -427,7 +427,7 @@ describe("getVersionNumber", () => {
   });
 });
 
-describe("stripVersionFromPromptId", () => {
+describe("stripВерсияFromPromptId", () => {
   it("should return empty string for undefined promptId", () => {
     const result = stripVersionFromPromptId(undefined);
     expect(result).toBe("");

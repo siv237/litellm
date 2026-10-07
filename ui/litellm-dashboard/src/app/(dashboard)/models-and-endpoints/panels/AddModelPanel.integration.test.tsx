@@ -1,36 +1,36 @@
 import { renderWithProviders, screen, waitFor } from "../../../../../tests/test-utils";
 import userEvent, { PointerEventsCheckLevel } from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import AddModelPanel from "./AddModelPanel";
+import AddModelPanel from "./AddРежимlPanel";
 
-const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCreateCall = vi.fn();
+const modelCreateCall = vi.fn();
 const mockPtuEnabled = vi.fn();
-const mockАвторизовано = vi.fn();
+const mockAuthorized = vi.fn();
 
 vi.mock("@/components/networking", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/components/networking")>();
   return {
     ...actual,
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCreateCall: (accessТокен: string, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: unknown) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCreateCall(accessТокен, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию),
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAvailableCall: vi.fn().mockResolvedЗначение({ data: [{ id: "group-a" }] }),
+    modelCreateCall: (accessToken: string, model: unknown) => modelCreateCall(accessToken, model),
+    modelAvailableCall: vi.fn().mockResolvedValue({ data: [{ id: "group-a" }] }),
   };
 });
 
-vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({ default: () => mockАвторизовано() }));
+vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({ default: () => mockAuthorized() }));
 
-vi.mock("@/app/(dashboard)/hooks/uiSettings/usePtuCostAttributionEnabled", () => ({
+vi.mock("@/app/(dashboard)/hooks/uiSettings/usePtuСтоимостьAttributionEnabled", () => ({
   usePtuCostAttributionEnabled: () => mockPtuEnabled(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useModelCostMap", () => ({ useModelCostMap: () => ({ data: {} }) }));
+vi.mock("@/app/(dashboard)/hooks/models/useРежимlСтоимостьMap", () => ({ useModelCostMap: () => ({ data: {} }) }));
 
 vi.mock("@/app/(dashboard)/hooks/credentials/useУчётные данные", () => ({
-  useУчётные данные: () => ({ data: { credentials: [] } }),
+  useCredentials: () => ({ data: { credentials: [] } }),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/teams/useКоманды", () => ({
-  useКоманды: () => ({ data: [] }),
-  useInfiniteКоманды: () => ({
+  useTeams: () => ({ data: [] }),
+  useInfiniteTeams: () => ({
     data: { pages: [{ teams: [], total: 0, page: 1, page_size: 20, total_pages: 1 }] },
     fetchNextPage: vi.fn(),
     hasNextPage: false,
@@ -39,15 +39,15 @@ vi.mock("@/app/(dashboard)/hooks/teams/useКоманды", () => ({
   }),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/гардрейловs/useГардрейлы", () => ({
-  useГардрейлы: () => ({ data: { гардрейловs: [{ гардрейлов_name: "g-1" }] }, isLoading: false, error: null }),
+vi.mock("@/app/(dashboard)/hooks/guardrails/useГардрейлы", () => ({
+  useGuardrails: () => ({ data: { guardrails: [{ guardrail_name: "g-1" }] }, isLoading: false, error: null }),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/tags/useТеги", () => ({
-  useТеги: () => ({ data: {}, isLoading: false, error: null }),
+  useTags: () => ({ data: {}, isLoading: false, error: null }),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/providers/useProviderFields", () => ({
+vi.mock("@/app/(dashboard)/hooks/providers/useProviderПолеs", () => ({
   useProviderFields: () => ({
     data: [
       {
@@ -56,7 +56,7 @@ vi.mock("@/app/(dashboard)/hooks/providers/useProviderFields", () => ({
         litellm_provider: "openai",
         default_model_placeholder: "gpt-4o",
         credential_fields: [
-          { key: "api_key", label: "API Ключ", field_type: "password", required: false },
+          { key: "api_key", label: "API-ключ", field_type: "password", required: false },
           { key: "api_base", label: "API Base", field_type: "text", required: false },
         ],
       },
@@ -66,15 +66,15 @@ vi.mock("@/app/(dashboard)/hooks/providers/useProviderFields", () => ({
   }),
 }));
 
-vi.mock("@/components/vector_store_management/VectorStoreSelector", () => ({
+vi.mock("@/components/vector_store_management/VectorStoreВыбратьor", () => ({
   default: () => <div data-testid="vector-store-selector" />,
 }));
 
-const lastCreatedModel = () => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCreateCall.mock.calls.at(-1)?.[1];
+const lastCreatedModel = () => modelCreateCall.mock.calls.at(-1)?.[1];
 
 const PROXY_ADMIN = {
   token: "t",
-  accessТокен: "test-access-token",
+  accessToken: "test-access-token",
   userId: "user-1",
   userEmail: "a@b.c",
   userRole: "proxy_admin",
@@ -87,11 +87,11 @@ const alwaysMounted = {
   api_key: undefined,
   api_base: undefined,
   custom_llm_provider: "openai",
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o",
+  model: "gpt-4o",
 };
 
 const advancedOpenExtras = {
-  гардрейловs: undefined,
+  guardrails: undefined,
   tags: undefined,
   use_in_pass_through: undefined,
   vector_store_ids: undefined,
@@ -104,7 +104,7 @@ const { api_base: _omitted, ...ALWAYS_MOUNTED_WITHOUT_API_BASE } = alwaysMounted
 const setup = async () => {
   const user = userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
   renderWithProviders(<AddModelPanel />);
-  await screen.findByText("Провайдер");
+  await screen.findByText("Provider");
 
   const openAdvanced = async () => {
     await user.click(screen.getByText("Расширенные настройки"));
@@ -116,107 +116,107 @@ const setup = async () => {
     await waitFor(() => expect(screen.queryByText("Теги")).not.toBeInTheDocument());
   };
 
-  const fillОбязательно = async (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюName = "gpt-4o") => {
+  const fillRequired = async (modelName = "gpt-4o") => {
     await user.click(screen.getByRole("combobox", { name: /provider/i }));
     await user.click(await screen.findByText("OpenAI"));
-    await user.type(await screen.findByPlaceholderText("gpt-3.5-turbo"), Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюName);
+    await user.type(await screen.findByPlaceholderText("gpt-3.5-turbo"), modelName);
   };
 
   const submit = async () => {
-    await user.click(screen.getByTestId("add-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-btn"));
-    await waitFor(() => expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCreateCall).toHaveBeenCalled());
+    await user.click(screen.getByTestId("add-model-btn"));
+    await waitFor(() => expect(modelCreateCall).toHaveBeenCalled());
   };
 
   const submitExpectingRejection = async (message: string) => {
-    await user.click(screen.getByTestId("add-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-btn"));
+    await user.click(screen.getByTestId("add-model-btn"));
     await screen.findByText(message);
   };
 
-  return { user, openAdvanced, closeAdvanced, fillОбязательно, submit, submitExpectingRejection };
+  return { user, openAdvanced, closeAdvanced, fillRequired, submit, submitExpectingRejection };
 };
 
-describe("AddModelPanel submit payload contract", () => {
+describe("AddРежимlPanel submit payload contract", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockPtuEnabled.mockReturnЗначение(false);
-    mockАвторизовано.mockReturnЗначение(PROXY_ADMIN);
+    mockPtuEnabled.mockReturnValue(false);
+    mockAuthorized.mockReturnValue(PROXY_ADMIN);
   });
 
   it("sends only the always-mounted fields while Расширенные настройки stays closed", async () => {
-    const { fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { fillRequired, submit } = await setup();
+    await fillRequired();
     await submit();
 
     expect(lastCreatedModel()).toStrictEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
+      model_name: "gpt-4o",
       litellm_params: { ...alwaysMounted },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
+      model_info: { ...baseModelInfo },
     });
   });
 
   it("registers four more keys as undefined once Расширенные настройки opens", async () => {
-    const { openAdvanced, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { openAdvanced, fillRequired, submit } = await setup();
+    await fillRequired();
     await openAdvanced();
     await submit();
 
     expect(lastCreatedModel()).toStrictEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
+      model_name: "gpt-4o",
       litellm_params: { ...alwaysMounted, ...advancedOpenExtras },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
+      model_info: { ...baseModelInfo },
     });
   });
 
   it("merges typed LiteLLM Params into litellm_params", async () => {
-    const { user, openAdvanced, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { user, openAdvanced, fillRequired, submit } = await setup();
+    await fillRequired();
     await openAdvanced();
     await user.type(screen.getByLabelText("LiteLLM Params"), '{{"rpm": 7}');
     await submit();
 
     expect(lastCreatedModel()).toStrictEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
+      model_name: "gpt-4o",
       litellm_params: { ...alwaysMounted, ...advancedOpenExtras, rpm: 7 },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
+      model_info: { ...baseModelInfo },
     });
   });
 
   it("drops a collapsed section's keys and the value typed into it", async () => {
-    const { user, openAdvanced, closeAdvanced, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { user, openAdvanced, closeAdvanced, fillRequired, submit } = await setup();
+    await fillRequired();
     await openAdvanced();
     await user.type(screen.getByLabelText("LiteLLM Params"), '{{"rpm": 7}');
     await closeAdvanced();
     await submit();
 
     expect(lastCreatedModel()).toStrictEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
+      model_name: "gpt-4o",
       litellm_params: { ...alwaysMounted },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
+      model_info: { ...baseModelInfo },
     });
   });
 
   it("restores the typed value when the section is expanded again", async () => {
-    const { user, openAdvanced, closeAdvanced, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { user, openAdvanced, closeAdvanced, fillRequired, submit } = await setup();
+    await fillRequired();
     await openAdvanced();
     await user.type(screen.getByLabelText("LiteLLM Params"), '{{"rpm": 7}');
     await closeAdvanced();
     await openAdvanced();
-    expect(screen.getByLabelText("LiteLLM Params")).toHaveЗначение('{"rpm": 7}');
+    expect(screen.getByLabelText("LiteLLM Params")).toHaveValue('{"rpm": 7}');
 
     await submit();
 
     expect(lastCreatedModel()).toStrictEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
+      model_name: "gpt-4o",
       litellm_params: { ...alwaysMounted, ...advancedOpenExtras, rpm: 7 },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
+      model_info: { ...baseModelInfo },
     });
   });
 
   it("converts per-million pricing to per-token and falls back to input cost for cache reads", async () => {
-    const { user, openAdvanced, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { user, openAdvanced, fillRequired, submit } = await setup();
+    await fillRequired();
     await openAdvanced();
     await user.click(screen.getByRole("switch", { name: "Custom Pricing" }));
     await user.type(await screen.findByLabelText("Вход Стоимость (per 1M tokens)"), "3");
@@ -224,84 +224,84 @@ describe("AddModelPanel submit payload contract", () => {
     await submit();
 
     expect(lastCreatedModel()).toStrictEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
+      model_name: "gpt-4o",
       litellm_params: {
         ...alwaysMounted,
         ...advancedOpenExtras,
         input_cost_per_token: 0.000003,
-        выходput_cost_per_token: 0.000009,
+        output_cost_per_token: 0.000009,
         cache_read_input_token_cost: 0.000003,
       },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
+      model_info: { ...baseModelInfo },
     });
   });
 
   it("sends the seeded injection point when cache control is switched on", async () => {
-    const { user, openAdvanced, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { user, openAdvanced, fillRequired, submit } = await setup();
+    await fillRequired();
     await openAdvanced();
     await user.click(screen.getByRole("switch", { name: "Cache Control Injection Points" }));
     await screen.findByText("Add Injection Point");
     await submit();
 
     expect(lastCreatedModel()).toStrictEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
+      model_name: "gpt-4o",
       litellm_params: {
         ...alwaysMounted,
         ...advancedOpenExtras,
         cache_control_injection_points: [{ location: "message" }],
       },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
+      model_info: { ...baseModelInfo },
     });
   });
 
   it("carries a role picked inside the injection point editor, with the index kept a string", async () => {
-    const { user, openAdvanced, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { user, openAdvanced, fillRequired, submit } = await setup();
+    await fillRequired();
     await openAdvanced();
     await user.click(screen.getByRole("switch", { name: "Cache Control Injection Points" }));
     await screen.findByText("Add Injection Point");
-    await user.click(screen.getByText("Выберите роль"));
+    await user.click(screen.getByText("Выбрать a role"));
     await user.click(await screen.findByText("System"));
     await user.type(screen.getByPlaceholderText("Optional"), "3");
     await submit();
 
     expect(lastCreatedModel()).toStrictEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
+      model_name: "gpt-4o",
       litellm_params: {
         ...alwaysMounted,
         ...advancedOpenExtras,
         cache_control_injection_points: [{ location: "message", role: "system", index: "3" }],
       },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
+      model_info: { ...baseModelInfo },
     });
   });
 
   it("mounts team_id only once the Team-BYOK switch is on", async () => {
-    const { user, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { user, fillRequired, submit } = await setup();
+    await fillRequired();
     await user.click(screen.getByRole("switch", { name: "Team-BYOK Режимl" }));
     await screen.findByText("Выбрать Team");
     await submit();
 
     expect(lastCreatedModel()).toStrictEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
+      model_name: "gpt-4o",
       litellm_params: { ...alwaysMounted },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo, team_id: undefined },
+      model_info: { ...baseModelInfo, team_id: undefined },
     });
   });
 });
 
-describe("AddModelPanel empty-string skip", () => {
+describe("AddРежимlPanel empty-string skip", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockPtuEnabled.mockReturnЗначение(false);
-    mockАвторизовано.mockReturnЗначение(PROXY_ADMIN);
+    mockPtuEnabled.mockReturnValue(false);
+    mockAuthorized.mockReturnValue(PROXY_ADMIN);
   });
 
   it("sends a typed api_base, so the binding behind the next case is known to be live", async () => {
-    const { user, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { user, fillRequired, submit } = await setup();
+    await fillRequired();
     await user.type(screen.getByLabelText("API Base"), "https://example.test");
     await submit();
 
@@ -312,112 +312,112 @@ describe("AddModelPanel empty-string skip", () => {
   });
 
   it("omits api_base entirely once it is cleared, rather than sending an empty string", async () => {
-    const { user, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { user, fillRequired, submit } = await setup();
+    await fillRequired();
     const apiBase = screen.getByLabelText("API Base");
     await user.type(apiBase, "https://example.test");
     await user.clear(apiBase);
     await submit();
 
     const params = lastCreatedModel().litellm_params;
-    expect(params).not.toHaveСвойство("api_base");
+    expect(params).not.toHaveProperty("api_base");
     expect(params).toStrictEqual(ALWAYS_MOUNTED_WITHOUT_API_BASE);
   });
 });
 
-describe("AddModelPanel validation gates", () => {
+describe("AddРежимlPanel validation gates", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockPtuEnabled.mockReturnЗначение(true);
-    mockАвторизовано.mockReturnЗначение(PROXY_ADMIN);
+    mockPtuEnabled.mockReturnValue(true);
+    mockAuthorized.mockReturnValue(PROXY_ADMIN);
   });
 
   it("blocks the submit when a PTU count carries no effective-from date", async () => {
-    const { user, openAdvanced, fillОбязательно, submitExpectingRejection } = await setup();
-    await fillОбязательно();
+    const { user, openAdvanced, fillRequired, submitExpectingRejection } = await setup();
+    await fillRequired();
     await openAdvanced();
     await user.type(screen.getByLabelText("PTU Count"), "15");
     await user.type(screen.getByLabelText("Calculated Стоимость per PTU / Hour (USD)"), "2");
     await submitExpectingRejection("PTU Effective From is required when PTU Count is set");
 
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCreateCall).not.toHaveBeenCalled();
+    expect(modelCreateCall).not.toHaveBeenCalled();
   });
 
   it("hides the PTU fields entirely when the capability is off", async () => {
-    mockPtuEnabled.mockReturnЗначение(false);
-    const { openAdvanced, fillОбязательно } = await setup();
-    await fillОбязательно();
+    mockPtuEnabled.mockReturnValue(false);
+    const { openAdvanced, fillRequired } = await setup();
+    await fillRequired();
     await openAdvanced();
 
     expect(screen.queryByLabelText("PTU Count")).not.toBeInTheDocument();
   });
 
-  it("requires a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию before anything is sent", async () => {
+  it("requires a model before anything is sent", async () => {
     const { user, submitExpectingRejection } = await setup();
     await user.click(screen.getByRole("combobox", { name: /provider/i }));
     await user.click(await screen.findByText("OpenAI"));
-    await submitExpectingRejection("Please enter at least one Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию.");
+    await submitExpectingRejection("Please enter at least one model.");
 
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCreateCall).not.toHaveBeenCalled();
+    expect(modelCreateCall).not.toHaveBeenCalled();
   });
 
   it("blocks the submit when LiteLLM Params is not valid JSON", async () => {
-    mockPtuEnabled.mockReturnЗначение(false);
-    const { user, openAdvanced, fillОбязательно, submitExpectingRejection } = await setup();
-    await fillОбязательно();
+    mockPtuEnabled.mockReturnValue(false);
+    const { user, openAdvanced, fillRequired, submitExpectingRejection } = await setup();
+    await fillRequired();
     await openAdvanced();
     await user.type(screen.getByLabelText("LiteLLM Params"), "rpm: 7");
     await submitExpectingRejection("Please enter valid JSON");
 
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCreateCall).not.toHaveBeenCalled();
+    expect(modelCreateCall).not.toHaveBeenCalled();
   });
 });
 
-describe("AddModelPanel behaviours the removed Расширенные настройки form instance never drove", () => {
+describe("AddРежимlPanel behaviours the removed Расширенные настройки form instance never drove", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockPtuEnabled.mockReturnЗначение(false);
-    mockАвторизовано.mockReturnЗначение(PROXY_ADMIN);
+    mockPtuEnabled.mockReturnValue(false);
+    mockAuthorized.mockReturnValue(PROXY_ADMIN);
   });
 
   it("leaves LiteLLM Params untouched when pass through routes is switched on", async () => {
-    const { user, openAdvanced, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { user, openAdvanced, fillRequired, submit } = await setup();
+    await fillRequired();
     await openAdvanced();
     await user.click(screen.getByRole("switch", { name: "Use in pass through routes" }));
-    expect(screen.getByLabelText("LiteLLM Params")).toHaveЗначение("");
+    expect(screen.getByLabelText("LiteLLM Params")).toHaveValue("");
 
     await submit();
 
     expect(lastCreatedModel()).toStrictEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
+      model_name: "gpt-4o",
       litellm_params: { ...alwaysMounted, ...advancedOpenExtras, use_in_pass_through: true },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
+      model_info: { ...baseModelInfo },
     });
   });
 
   it("keeps a typed cost when custom pricing is switched off and back on", async () => {
-    const { user, openAdvanced, fillОбязательно, submit } = await setup();
-    await fillОбязательно();
+    const { user, openAdvanced, fillRequired, submit } = await setup();
+    await fillRequired();
     await openAdvanced();
     await user.click(screen.getByRole("switch", { name: "Custom Pricing" }));
     await user.type(await screen.findByLabelText("Вход Стоимость (per 1M tokens)"), "3");
     await user.click(screen.getByRole("switch", { name: "Custom Pricing" }));
     await waitFor(() => expect(screen.queryByLabelText("Вход Стоимость (per 1M tokens)")).not.toBeInTheDocument());
     await user.click(screen.getByRole("switch", { name: "Custom Pricing" }));
-    expect(await screen.findByLabelText("Вход Стоимость (per 1M tokens)")).toHaveЗначение("3");
+    expect(await screen.findByLabelText("Вход Стоимость (per 1M tokens)")).toHaveValue("3");
 
     await submit();
 
     expect(lastCreatedModel()).toStrictEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o",
+      model_name: "gpt-4o",
       litellm_params: {
         ...alwaysMounted,
         ...advancedOpenExtras,
         input_cost_per_token: 0.000003,
         cache_read_input_token_cost: 0.000003,
       },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...baseModelInfo },
+      model_info: { ...baseModelInfo },
     });
   });
 });

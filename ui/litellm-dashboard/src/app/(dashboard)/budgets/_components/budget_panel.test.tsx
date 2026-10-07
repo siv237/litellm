@@ -1,12 +1,12 @@
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ApiОшибка } from "@/lib/http/client";
+import { ApiError } from "@/lib/http/client";
 
-import БюджетPanel from "./budget_panel";
+import BudgetPanel from "./budget_panel";
 
 const { getMock, budgetDeleteMock } = vi.hoisted(() => ({
   getMock: vi.fn(),
@@ -21,17 +21,17 @@ vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: () => "",
 }));
 
-vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: () => ({ accessТокен: "sk-test", userRole: "Admin", userId: "u1" }),
+vi.mock("@/Приложение/(dashboard)/hooks/useАвторизовано", () => ({
+  default: () => ({ accessToken: "sk-test", userRole: "Admin", userId: "u1" }),
 }));
 
-interface БюджетSeed {
+interface BudgetSeed {
   budget_id: string;
   max_budget: number | null;
   budget_duration: string | null;
 }
 
-const budgetRow = (seed: БюджетSeed) => ({
+const budgetRow = (seed: BudgetSeed) => ({
   soft_budget: null,
   tpm_limit: 1000,
   rpm_limit: 10,
@@ -42,10 +42,10 @@ const budgetRow = (seed: БюджетSeed) => ({
 });
 
 const FORBIDDEN_PROBLEM = {
-  type: "abвыход:blank",
+  type: "about:blank",
   title: "Forbidden",
   status: 403,
-  detail: "Only proxy admins can view budgets",
+  detail: "Only proxy admins can view Бюджеты",
 };
 
 const DEFAULT_ROWS = [
@@ -53,29 +53,29 @@ const DEFAULT_ROWS = [
 ];
 
 const respondWith = (rows: ReturnType<typeof budgetRow>[], totalCount: number) => {
-  getMock.mockResolvedЗначение({
+  getMock.mockResolvedValue({
     data: rows,
     meta: { total_count: totalCount, page: 1, page_size: 50, total_pages: Math.ceil(totalCount / 50) },
   });
 };
 
-type ЗапросRecord = Record<string, string | number>;
+type QueryRecord = Record<string, string | number>;
 
-const queries = (): ЗапросRecord[] => getMock.mock.calls.map((call) => (call[1] as { query: ЗапросRecord }).query);
-const lastЗапрос = (): ЗапросRecord => queries()[queries().length - 1];
+const queries = (): QueryRecord[] => getMock.mock.calls.map((call) => (call[1] as { query: QueryRecord }).query);
+const lastQuery = (): QueryRecord => queries()[queries().length - 1];
 const paths = (): string[] => getMock.mock.calls.map((call) => String(call[0]));
 
 const renderPanel = () => {
-  const client = new ЗапросClient({ defaultOptions: { queries: { retry: false, gcВремя: 0 } } });
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
   return render(
-    <ЗапросClientПровайдер client={client}>
-      <БюджетPanel accessТокен="sk-test" />
-    </ЗапросClientПровайдер>,
+    <QueryClientProvider client={client}>
+      <BudgetPanel accessToken="sk-test" />
+    </QueryClientProvider>,
   );
 };
 
-const openФильтры = async (user: ReturnType<typeof userEvent.setup>) => {
-  await user.click(screen.getByTestId("datatable-filters-trigger"));
+const openFilters = async (user: ReturnType<typeof userEvent.setup>) => {
+  await user.click(screen.getByTestId("datatable-Фильтры-trigger"));
   await screen.findByTestId("filter-drawer-body");
 };
 
@@ -85,7 +85,7 @@ describe("Бюджет Panel", () => {
     respondWith(DEFAULT_ROWS, 1);
   });
 
-  it("renders the стандарт page header with the sidebar's Бюджеты icon", async () => {
+  it("renders the standard page header with the sidebar's Бюджеты icon", async () => {
     const { container } = renderPanel();
 
     expect(await screen.findByRole("heading", { level: 1, name: "Бюджеты" })).toBeInTheDocument();
@@ -93,10 +93,10 @@ describe("Бюджет Panel", () => {
     expect(container.querySelector(".lucide-wallet")).not.toBeNull();
   });
 
-  it("loads the first page of budgets, newest first", async () => {
+  it("loads the first page of Бюджеты, newest first", async () => {
     renderPanel();
     await waitFor(() => expect(getMock).toHaveBeenCalled());
-    expect(paths()[0]).toBe("/management/v1/budgets");
+    expect(paths()[0]).toBe("/management/v1/Бюджеты");
     expect(queries()[0]).toEqual({ page: 1, page_size: 50, sort: "-created_at" });
     expect(await screen.findByText("ecc1869c-6231-4380-a56d-1a0be457477d")).toBeInTheDocument();
   });
@@ -107,13 +107,13 @@ describe("Бюджет Panel", () => {
     await waitFor(() => expect(getMock).toHaveBeenCalled());
 
     await user.click(screen.getByTestId("sort-header-max_budget"));
-    await waitFor(() => expect(lastЗапрос().sort).toBe("-max_budget"));
+    await waitFor(() => expect(lastQuery().sort).toBe("-max_budget"));
 
     await user.click(screen.getByTestId("sort-header-max_budget"));
-    await waitFor(() => expect(lastЗапрос().sort).toBe("max_budget"));
+    await waitFor(() => expect(lastQuery().sort).toBe("max_budget"));
 
     await user.click(screen.getByTestId("sort-header-budget_id"));
-    await waitFor(() => expect(lastЗапрос().sort).toBe("budget_id"));
+    await waitFor(() => expect(lastQuery().sort).toBe("budget_id"));
   });
 
   it("searches on budget_id with a debounced q", async () => {
@@ -121,86 +121,86 @@ describe("Бюджет Panel", () => {
     renderPanel();
     await waitFor(() => expect(getMock).toHaveBeenCalled());
 
-    fireEvent.change(screen.getByTestId("datatable-search"), { target: { value: "ecc" } });
-    await waitFor(() => expect(lastЗапрос().q).toBe("ecc"));
+    fireEvent.change(screen.getByTestId("datatable-Поиск"), { target: { value: "ecc" } });
+    await waitFor(() => expect(lastQuery().q).toBe("ecc"));
     expect(queries().some((query) => query.q === "e" || query.q === "ec")).toBe(false);
   });
 
-  it("filters by reset duration and clears it again", async () => {
+  it("Фильтры by Сброс Длительность and clears it again", async () => {
     const user = userEvent.setup();
     renderPanel();
     await waitFor(() => expect(getMock).toHaveBeenCalled());
 
-    await openФильтры(user);
-    await user.click(screen.getByTestId("budget-filter-duration-7d"));
-    await user.click(screen.getByTestId("budget-filter-duration-30d"));
-    await user.click(screen.getByTestId("filter-drawer-apply"));
+    await openFilters(user);
+    await user.click(screen.getByTestId("Бюджет-filter-Длительность-7d"));
+    await user.click(screen.getByTestId("Бюджет-filter-Длительность-30d"));
+    await user.click(screen.getByTestId("filter-drawer-Применить"));
 
-    await waitFor(() => expect(lastЗапрос()["filter[budget_duration][in]"]).toBe("7d,30d"));
+    await waitFor(() => expect(lastQuery()["filter[budget_duration][in]"]).toBe("7d,30d"));
 
-    await user.click(screen.getByTestId("filter-chip-remove-budget_duration"));
-    await waitFor(() => expect(lastЗапрос()).not.toHaveСвойство("filter[budget_duration][in]"));
+    await user.click(screen.getByTestId("filter-chip-Убрать-budget_duration"));
+    await waitFor(() => expect(lastQuery()).not.toHaveProperty("filter[budget_duration][in]"));
   });
 
-  it("filters by budgets with no reset duration", async () => {
+  it("Фильтры by Бюджеты with Без сброса Длительность", async () => {
     const user = userEvent.setup();
     renderPanel();
     await waitFor(() => expect(getMock).toHaveBeenCalled());
 
-    await openФильтры(user);
-    await user.click(screen.getByTestId("budget-filter-duration-__unset__"));
-    await user.click(screen.getByTestId("filter-drawer-apply"));
+    await openFilters(user);
+    await user.click(screen.getByTestId("Бюджет-filter-Длительность-__unset__"));
+    await user.click(screen.getByTestId("filter-drawer-Применить"));
 
-    await waitFor(() => expect(lastЗапрос()["filter[budget_duration][is_null]"]).toBe("true"));
-    expect(lastЗапрос()).not.toHaveСвойство("filter[budget_duration][in]");
+    await waitFor(() => expect(lastQuery()["filter[budget_duration][is_null]"]).toBe("Истина"));
+    expect(lastQuery()).not.toHaveProperty("filter[budget_duration][in]");
   });
 
-  it("filters by a max budget range and clears it again", async () => {
+  it("Фильтры by a Макс. бюджет range and clears it again", async () => {
     const user = userEvent.setup();
     renderPanel();
     await waitFor(() => expect(getMock).toHaveBeenCalled());
 
-    await openФильтры(user);
-    fireEvent.change(screen.getByTestId("budget-filter-max-budget-min"), { target: { value: "10" } });
-    fireEvent.change(screen.getByTestId("budget-filter-max-budget-max"), { target: { value: "500" } });
-    await user.click(screen.getByTestId("filter-drawer-apply"));
+    await openFilters(user);
+    fireEvent.change(screen.getByTestId("Бюджет-filter-Макс.-Бюджет-Мин."), { target: { value: "10" } });
+    fireEvent.change(screen.getByTestId("Бюджет-filter-Макс.-Бюджет-Макс."), { target: { value: "500" } });
+    await user.click(screen.getByTestId("filter-drawer-Применить"));
 
-    await waitFor(() => expect(lastЗапрос()["filter[max_budget][gte]"]).toBe("10"));
-    expect(lastЗапрос()["filter[max_budget][lte]"]).toBe("500");
+    await waitFor(() => expect(lastQuery()["filter[max_budget][gte]"]).toBe("10"));
+    expect(lastQuery()["filter[max_budget][lte]"]).toBe("500");
 
-    await user.click(screen.getByTestId("datatable-clear-filters"));
-    await waitFor(() => expect(lastЗапрос()).not.toHaveСвойство("filter[max_budget][gte]"));
-    expect(lastЗапрос()).not.toHaveСвойство("filter[max_budget][lte]");
+    await user.click(screen.getByTestId("datatable-clear-Фильтры"));
+    await waitFor(() => expect(lastQuery()).not.toHaveProperty("filter[max_budget][gte]"));
+    expect(lastQuery()).not.toHaveProperty("filter[max_budget][lte]");
   });
 
-  it("filters to unlimited budgets only", async () => {
+  it("Фильтры to Без ограничений Бюджеты only", async () => {
     const user = userEvent.setup();
     renderPanel();
     await waitFor(() => expect(getMock).toHaveBeenCalled());
 
-    await openФильтры(user);
-    fireEvent.change(screen.getByTestId("budget-filter-max-budget-min"), { target: { value: "10" } });
-    await user.click(screen.getByTestId("budget-filter-max-budget-unlimited"));
-    await user.click(screen.getByTestId("filter-drawer-apply"));
+    await openFilters(user);
+    fireEvent.change(screen.getByTestId("Бюджет-filter-Макс.-Бюджет-Мин."), { target: { value: "10" } });
+    await user.click(screen.getByTestId("Бюджет-filter-Макс.-Бюджет-Без ограничений"));
+    await user.click(screen.getByTestId("filter-drawer-Применить"));
 
-    await waitFor(() => expect(lastЗапрос()["filter[max_budget][is_null]"]).toBe("true"));
-    expect(lastЗапрос()).not.toHaveСвойство("filter[max_budget][gte]");
+    await waitFor(() => expect(lastQuery()["filter[max_budget][is_null]"]).toBe("Истина"));
+    expect(lastQuery()).not.toHaveProperty("filter[max_budget][gte]");
   });
 
-  it("filters by a created date range covering whole local days", async () => {
+  it("Фильтры by a Создан date range covering whole local days", async () => {
     const user = userEvent.setup();
     renderPanel();
     await waitFor(() => expect(getMock).toHaveBeenCalled());
 
-    await openФильтры(user);
-    fireEvent.change(screen.getByTestId("budget-filter-created-from"), { target: { value: "2026-01-05" } });
-    fireEvent.change(screen.getByTestId("budget-filter-created-to"), { target: { value: "2026-01-06" } });
-    await user.click(screen.getByTestId("filter-drawer-apply"));
+    await openFilters(user);
+    fireEvent.change(screen.getByTestId("Бюджет-filter-Создан-from"), { target: { value: "2026-01-05" } });
+    fireEvent.change(screen.getByTestId("Бюджет-filter-Создан-to"), { target: { value: "2026-01-06" } });
+    await user.click(screen.getByTestId("filter-drawer-Применить"));
 
     await waitFor(() =>
-      expect(lastЗапрос()["filter[created_at][gte]"]).toBe(new Date("2026-01-05T00:00:00.000").toISOString()),
+      expect(lastQuery()["filter[created_at][gte]"]).toBe(new Date("2026-01-05T00:00:00.000").toISOString()),
     );
-    expect(lastЗапрос()["filter[created_at][lte]"]).toBe(new Date("2026-01-06T23:59:59.999").toISOString());
+    expect(lastQuery()["filter[created_at][lte]"]).toBe(new Date("2026-01-06T23:59:59.999").toISOString());
   });
 
   it("pages through the results and changes page size", async () => {
@@ -209,49 +209,49 @@ describe("Бюджет Panel", () => {
     renderPanel();
     await waitFor(() => expect(getMock).toHaveBeenCalled());
 
-    await user.click(screen.getByTestId("pagination-next"));
-    await waitFor(() => expect(lastЗапрос().page).toBe(2));
-    expect(lastЗапрос().page_size).toBe(50);
+    await user.click(screen.getByTestId("pagination-Далее"));
+    await waitFor(() => expect(lastQuery().page).toBe(2));
+    expect(lastQuery().page_size).toBe(50);
 
     await user.click(screen.getByTestId("pagination-page-size"));
     await user.click(await screen.findByRole("option", { name: "25" }));
-    await waitFor(() => expect(lastЗапрос().page_size).toBe(25));
+    await waitFor(() => expect(lastQuery().page_size).toBe(25));
   });
 
   it("renders an access-denied state when the route rejects the caller", async () => {
-    getMock.mockRejectedЗначение(new ApiОшибка("Only proxy admins can view budgets", 403, FORBIDDEN_PROBLEM));
+    getMock.mockRejectedValue(new ApiError("Only proxy admins can view Бюджеты", 403, FORBIDDEN_PROBLEM));
     renderPanel();
-    expect(await screen.findByText("You do not have access to budgets")).toBeInTheDocument();
-    expect(screen.queryByText("No budgets yet")).not.toBeInTheDocument();
+    expect(await screen.findByText("You do not have access to Бюджеты")).toBeInTheDocument();
+    expect(screen.queryByText("Нет Бюджеты yet")).not.toBeInTheDocument();
   });
 
-  it("deletes a budget from the actions menu", async () => {
+  it("deletes a Бюджет from the Действия menu", async () => {
     const user = userEvent.setup();
-    budgetDeleteMock.mockResolvedЗначение(undefined);
+    budgetDeleteMock.mockResolvedValue(undefined);
     renderPanel();
     await screen.findByText("ecc1869c-6231-4380-a56d-1a0be457477d");
 
-    await user.click(screen.getByTestId("budget-actions-ecc1869c-6231-4380-a56d-1a0be457477d"));
-    await user.click(await screen.findByTestId("budget-action-delete"));
+    await user.click(screen.getByTestId("Бюджет-Действия-ecc1869c-6231-4380-a56d-1a0be457477d"));
+    await user.click(await screen.findByTestId("Бюджет-Действие-Удалить"));
     await screen.findByText("Удалить бюджет?");
-    await user.click(screen.getByRole("button", { name: /^delete$/i }));
+    await user.click(screen.getByRole("button", { name: /^Удалить$/i }));
 
     await waitFor(() =>
       expect(budgetDeleteMock).toHaveBeenCalledWith("sk-test", "ecc1869c-6231-4380-a56d-1a0be457477d"),
     );
   });
 
-  it("refetches the current page after a delete", async () => {
+  it("refetches the current page after a Удалить", async () => {
     const user = userEvent.setup();
-    budgetDeleteMock.mockResolvedЗначение(undefined);
+    budgetDeleteMock.mockResolvedValue(undefined);
     renderPanel();
     await screen.findByText("ecc1869c-6231-4380-a56d-1a0be457477d");
     const before = getMock.mock.calls.length;
 
-    await user.click(screen.getByTestId("budget-actions-ecc1869c-6231-4380-a56d-1a0be457477d"));
-    await user.click(await screen.findByTestId("budget-action-delete"));
+    await user.click(screen.getByTestId("Бюджет-Действия-ecc1869c-6231-4380-a56d-1a0be457477d"));
+    await user.click(await screen.findByTestId("Бюджет-Действие-Удалить"));
     await screen.findByText("Удалить бюджет?");
-    await user.click(screen.getByRole("button", { name: /^delete$/i }));
+    await user.click(screen.getByRole("button", { name: /^Удалить$/i }));
 
     await waitFor(() => expect(getMock.mock.calls.length).toBeGreaterThan(before));
   });

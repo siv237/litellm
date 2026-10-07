@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import CloudZeroUpdateModal from "./CloudZeroUpdateModal";
 import { CloudZeroSettings } from "./types";
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
   __esModule: true,
   default: () => ({
-    accessТокен: "test-token",
+    accessToken: "test-token",
   }),
 }));
 
@@ -19,7 +19,7 @@ vi.mock("@/app/(dashboard)/hooks/cloudzero/useCloudZeroSettings", () => ({
 }));
 
 describe("CloudZeroUpdateModal", () => {
-  let queryClient: ЗапросClient;
+  let queryClient: QueryClient;
   const mockSettings: CloudZeroSettings = {
     connection_id: "test-connection-id",
     api_key_masked: "****",
@@ -28,7 +28,7 @@ describe("CloudZeroUpdateModal", () => {
   };
 
   beforeEach(() => {
-    queryClient = new ЗапросClient({
+    queryClient = new QueryClient({
       defaultOptions: {
         queries: { retry: false },
         mutations: { retry: false },
@@ -38,13 +38,13 @@ describe("CloudZeroUpdateModal", () => {
 
   it("should render", () => {
     render(
-      <ЗапросClientПровайдер client={queryClient}>
+      <QueryClientProvider client={queryClient}>
         <CloudZeroUpdateModal open={true} onOk={vi.fn()} onCancel={vi.fn()} settings={mockSettings} />
-      </ЗапросClientПровайдер>,
+      </QueryClientProvider>,
     );
 
     expect(screen.getByText("Edit CloudZero Integration")).toBeInTheDocument();
-    expect(screen.getByLabelText("CloudZero API Ключ")).toBeInTheDocument();
+    expect(screen.getByLabelText("CloudZero API-ключ")).toBeInTheDocument();
     expect(screen.getByLabelText("Подключение ID")).toBeInTheDocument();
     expect(screen.getByLabelText("Времяzone")).toBeInTheDocument();
   });

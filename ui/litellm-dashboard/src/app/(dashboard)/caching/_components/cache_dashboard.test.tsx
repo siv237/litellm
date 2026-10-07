@@ -45,22 +45,22 @@ const cacheActivity = {
   },
   filter_options: {
     key_aliases: ["my-key", "Unnamed Ключ"],
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-5.1", "text-embedding-3-large"],
+    models: ["gpt-5.1", "text-embedding-3-large"],
   },
   error_breakdown: [
-    { call_type: "acompletion", error_code: "429", error_class: "RateLimitОшибка", count: 150 },
-    { call_type: "acompletion", error_code: "401", error_class: "АутентификацияОшибка", count: 50 },
-    { call_type: "aembedding", error_code: "500", error_class: "InternalСерверОшибка", count: 50 },
+    { call_type: "acompletion", error_code: "429", error_class: "RateLimitError", count: 150 },
+    { call_type: "acompletion", error_code: "401", error_class: "АутентификацияError", count: 50 },
+    { call_type: "aembedding", error_code: "500", error_class: "InternalServerError", count: 50 },
   ],
 };
 
 const renderDashboard = () =>
   renderWithProviders(
-    <CacheDashboard accessТокен="sk-test" token="tok" userRole="Admin" userID="u1" premiumUser={false} />,
+    <CacheDashboard accessToken="sk-test" token="tok" userRole="Admin" userID="u1" premiumUser={false} />,
   );
 
 const REQUESTS_CHART_TITLE = "Cache Hits vs Запросы к API";
-const TOKENS_CHART_TITLE = "Cached Completion Токенs vs Generated Completion Токенs";
+const TOKENS_CHART_TITLE = "Cached Completion Tokens vs Generated Completion Tokens";
 
 // Anchored on each chart's own title rather than on a global card count, so
 // adding cards elsewhere on the page cannot silently repoint these assertions.
@@ -73,19 +73,19 @@ const cardTitled = (title: string): HTMLElement => {
 const findChartCards = async () => {
   await screen.findByText(REQUESTS_CHART_TITLE);
   await waitFor(() => {
-    expect(document.querySelectorВсе("path.recharts-rectangle").length).toBeGreaterThan(0);
+    expect(document.querySelectorAll("path.recharts-rectangle").length).toBeGreaterThan(0);
   });
   return { requestsCard: cardTitled(REQUESTS_CHART_TITLE), tokensCard: cardTitled(TOKENS_CHART_TITLE) };
 };
 
 const barFills = (card: HTMLElement) =>
-  Array.from(card.querySelectorВсе(".recharts-bar")).map((bar) =>
+  Array.from(card.querySelectorAll(".recharts-bar")).map((bar) =>
     bar.querySelector("path.recharts-rectangle")?.getAttribute("fill"),
   );
 
-const legendFillByКатегория = (card: HTMLElement) =>
+const legendFillByCategory = (card: HTMLElement) =>
   Object.fromEntries(
-    Array.from(card.querySelectorВсе('.recharts-legend-wrapper [style*="background-color"]')).map((swatch) => [
+    Array.from(card.querySelectorAll('.recharts-legend-wrapper [style*="background-color"]')).map((swatch) => [
       swatch.parentElement?.textContent,
       swatch.getAttribute("style")?.match(/background-color:\s*([^;]+);?/)?.[1],
     ]),
@@ -94,14 +94,14 @@ const legendFillByКатегория = (card: HTMLElement) =>
 describe("CacheDashboard cache analytics charts", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    useCacheActivity.mockReturnЗначение({ data: cacheActivity, refetch: vi.fn() });
+    useCacheActivity.mockReturnValue({ data: cacheActivity, refetch: vi.fn() });
   });
 
   it("renders both chart card titles", async () => {
     renderDashboard();
 
     expect(await screen.findByText("Cache Hits vs Запросы к API")).toBeInTheDocument();
-    expect(screen.getByText("Cached Completion Токенs vs Generated Completion Токенs")).toBeInTheDocument();
+    expect(screen.getByText("Cached Completion Tokens vs Generated Completion Tokens")).toBeInTheDocument();
   });
 
   it("scopes the analytics tab to the response cache, not provider prompt caching", async () => {
@@ -116,15 +116,15 @@ describe("CacheDashboard cache analytics charts", () => {
       "href",
       "https://docs.litellm.ai/docs/completion/prompt_caching",
     );
-    expect(screen.queryByText("Cached Токенs")).not.toBeInTheDocument();
-    expect(screen.getAllByText("Cached Completion Токенs").length).toBeGreaterThan(0);
+    expect(screen.queryByText("Cached Tokens")).not.toBeInTheDocument();
+    expect(screen.getAllByText("Cached Completion Tokens").length).toBeGreaterThan(0);
   });
 
   it("renders the requests chart with each category legend-bound to its fill and stacked in order", async () => {
     renderDashboard();
     const { requestsCard } = await findChartCards();
 
-    expect(legendFillByКатегория(requestsCard)).toEqual({
+    expect(legendFillByCategory(requestsCard)).toEqual({
       "LLM API requests": "var(--color-sky-500, #0ea5e9)",
       "Cache hit": "var(--color-teal-500, #14b8a6)",
       "Ошибка requests": "var(--color-red-500, #ef4444)",
@@ -140,9 +140,9 @@ describe("CacheDashboard cache analytics charts", () => {
     renderDashboard();
     const { tokensCard } = await findChartCards();
 
-    expect(legendFillByКатегория(tokensCard)).toEqual({
-      "Generated Completion Токенs": "var(--color-sky-500, #0ea5e9)",
-      "Cached Completion Токенs": "var(--color-teal-500, #14b8a6)",
+    expect(legendFillByCategory(tokensCard)).toEqual({
+      "Generated Completion Tokens": "var(--color-sky-500, #0ea5e9)",
+      "Cached Completion Tokens": "var(--color-teal-500, #14b8a6)",
     });
     expect(barFills(tokensCard)).toEqual(["var(--color-sky-500, #0ea5e9)", "var(--color-teal-500, #14b8a6)"]);
   });
@@ -166,7 +166,7 @@ describe("CacheDashboard cache analytics charts", () => {
       [requestsCard, expectedRects.requests],
       [tokensCard, expectedRects.tokens],
     ] as const) {
-      const rects = Array.from(card.querySelectorВсе("path.recharts-rectangle"));
+      const rects = Array.from(card.querySelectorAll("path.recharts-rectangle"));
       expect(rects).toHaveLength(rectCount);
       const xPositions = rects.map((rect) => rect.getAttribute("d")?.split(",")[0]);
       expect(new Set(xPositions).size).toBe(2);
@@ -186,7 +186,7 @@ describe("CacheDashboard cache analytics charts", () => {
       startDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
       endDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
       keyAliases: [],
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+      models: [],
     });
   });
 
@@ -194,13 +194,13 @@ describe("CacheDashboard cache analytics charts", () => {
     renderDashboard();
     const { requestsCard } = await findChartCards();
 
-    const redBar = Array.from(requestsCard.querySelectorВсе(".recharts-bar")).find((bar) =>
+    const redBar = Array.from(requestsCard.querySelectorAll(".recharts-bar")).find((bar) =>
       bar.querySelector("path.recharts-rectangle")?.getAttribute("fill")?.includes("red"),
     );
     expect(redBar).toBeDefined();
     expect(screen.queryByText(/Ошибка requests by error code/)).not.toBeInTheDocument();
 
-    fireEvent.click(redBar!.querySelectorВсе("path.recharts-rectangle")[0]);
+    fireEvent.click(redBar!.querySelectorAll("path.recharts-rectangle")[0]);
 
     const drilldownCard = cardTitled("Ошибка requests by error code: acompletion");
     expect(within(drilldownCard).getAllByText("429").length).toBeGreaterThan(0);
@@ -215,13 +215,13 @@ describe("CacheDashboard cache analytics charts", () => {
     const { rerender } = renderDashboard();
     const { requestsCard } = await findChartCards();
 
-    const redBar = Array.from(requestsCard.querySelectorВсе(".recharts-bar")).find((bar) =>
+    const redBar = Array.from(requestsCard.querySelectorAll(".recharts-bar")).find((bar) =>
       bar.querySelector("path.recharts-rectangle")?.getAttribute("fill")?.includes("red"),
     );
-    fireEvent.click(redBar!.querySelectorВсе("path.recharts-rectangle")[0]);
+    fireEvent.click(redBar!.querySelectorAll("path.recharts-rectangle")[0]);
     expect(screen.getByText("Ошибка requests by error code: acompletion")).toBeInTheDocument();
 
-    useCacheActivity.mockReturnЗначение({
+    useCacheActivity.mockReturnValue({
       data: {
         ...cacheActivity,
         groups: cacheActivity.groups.map((group) =>
@@ -231,7 +231,7 @@ describe("CacheDashboard cache analytics charts", () => {
       },
       refetch: vi.fn(),
     });
-    rerender(<CacheDashboard accessТокен="sk-test" token="tok" userRole="Admin" userID="u1" premiumUser={false} />);
+    rerender(<CacheDashboard accessToken="sk-test" token="tok" userRole="Admin" userID="u1" premiumUser={false} />);
 
     expect(screen.queryByText(/Ошибка requests by error code/)).not.toBeInTheDocument();
   });
@@ -241,7 +241,7 @@ describe("CacheDashboard cache analytics charts", () => {
     await screen.findByText(REQUESTS_CHART_TITLE);
     expect(screen.queryByText(/recorded no endpoint/)).not.toBeInTheDocument();
 
-    useCacheActivity.mockReturnЗначение({
+    useCacheActivity.mockReturnValue({
       data: {
         ...cacheActivity,
         groups: [
@@ -258,7 +258,7 @@ describe("CacheDashboard cache analytics charts", () => {
       },
       refetch: vi.fn(),
     });
-    rerender(<CacheDashboard accessТокен="sk-test" token="tok" userRole="Admin" userID="u1" premiumUser={false} />);
+    rerender(<CacheDashboard accessToken="sk-test" token="tok" userRole="Admin" userID="u1" premiumUser={false} />);
 
     expect(
       within(cardTitled(REQUESTS_CHART_TITLE)).getByText(/Unknown groups spend logs that recorded no endpoint/),

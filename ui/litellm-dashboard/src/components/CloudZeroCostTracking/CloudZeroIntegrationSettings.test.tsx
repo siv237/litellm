@@ -1,4 +1,4 @@
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CloudZeroIntegrationSettings } from "./CloudZeroIntegrationSettings";
@@ -7,7 +7,7 @@ import { CloudZeroSettings } from "./types";
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
   __esModule: true,
   default: () => ({
-    accessТокен: "test-token",
+    accessToken: "test-token",
   }),
 }));
 
@@ -27,7 +27,7 @@ vi.mock("@/app/(dashboard)/hooks/cloudzero/useCloudZeroExport", () => ({
 }));
 
 describe("CloudZeroIntegrationSettings", () => {
-  let queryClient: ЗапросClient;
+  let queryClient: QueryClient;
   const mockSettings: CloudZeroSettings = {
     connection_id: "test-connection-id",
     api_key_masked: "****",
@@ -36,7 +36,7 @@ describe("CloudZeroIntegrationSettings", () => {
   };
 
   beforeEach(() => {
-    queryClient = new ЗапросClient({
+    queryClient = new QueryClient({
       defaultOptions: {
         queries: { retry: false },
         mutations: { retry: false },
@@ -46,22 +46,22 @@ describe("CloudZeroIntegrationSettings", () => {
 
   it("should render", () => {
     render(
-      <ЗапросClientПровайдер client={queryClient}>
-        <CloudZeroIntegrationSettings settings={mockSettings} onSettingsОбновлён={vi.fn()} />
-      </ЗапросClientПровайдер>,
+      <QueryClientProvider client={queryClient}>
+        <CloudZeroIntegrationSettings settings={mockSettings} onSettingsUpdated={vi.fn()} />
+      </QueryClientProvider>,
     );
 
     expect(screen.getByText("CloudZero Конфигурацияuration")).toBeInTheDocument();
-    expect(screen.getByText("API Ключ (Redacted)")).toBeInTheDocument();
+    expect(screen.getByText("API-ключ (Redacted)")).toBeInTheDocument();
     expect(screen.getByText("Подключение ID")).toBeInTheDocument();
     expect(screen.getByText("Времяzone")).toBeInTheDocument();
   });
 
   it("should display the correct values from settings", () => {
     render(
-      <ЗапросClientПровайдер client={queryClient}>
-        <CloudZeroIntegrationSettings settings={mockSettings} onSettingsОбновлён={vi.fn()} />
-      </ЗапросClientПровайдер>,
+      <QueryClientProvider client={queryClient}>
+        <CloudZeroIntegrationSettings settings={mockSettings} onSettingsUpdated={vi.fn()} />
+      </QueryClientProvider>,
     );
 
     expect(screen.getByText(mockSettings.api_key_masked)).toBeInTheDocument();

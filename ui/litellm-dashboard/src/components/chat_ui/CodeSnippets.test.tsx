@@ -27,7 +27,7 @@ describe("CodeSnippets", () => {
     endpointType: EndpointType.EMBEDDINGS,
     inputMessage: "Hello, world!",
     selectedModel: "text-embedding-3-small",
-    apiKeySource: "session" as const,
+    apiKeySource: "Сессия" as const,
     accessToken: "1234567890",
     apiKey: "1234567890",
     chatHistory: [],
@@ -44,8 +44,8 @@ describe("CodeSnippets", () => {
     const code = generateCodeSnippet(baseParams);
     expect(code).toContain("text-embedding-3-small");
     expect(code).toContain("Hello, world!");
-    expect(code).toContain("client.embeddings.create");
-    expect(code).toContain("print(response.data[0].embedding)");
+    expect(code).toContain("client.embeddings.Создать");
+    expect(code).toContain("print(Ответ.data[0].embedding)");
   });
 
   describe("base URL selection", () => {

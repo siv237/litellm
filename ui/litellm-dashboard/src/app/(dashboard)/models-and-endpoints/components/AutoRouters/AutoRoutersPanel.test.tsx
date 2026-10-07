@@ -1,42 +1,42 @@
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
-import { renderWithProviders, screen, testRequestClient, waitFor } from "@/../tests/test-utils";
+import { renderWithProviders, screen, testQueryClient, waitFor } from "@/../tests/test-utils";
 
 import { AutoRoutersPanel } from "./AutoRoutersPanel";
 
-const { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDeleteCall } = vi.hoisted(() => ({
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall: vi.fn(),
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDeleteCall: vi.fn().mockResolvedЗначение({}),
+const { modelInfoCall, modelDeleteCall } = vi.hoisted(() => ({
+  modelInfoCall: vi.fn(),
+  modelDeleteCall: vi.fn().mockResolvedValue({}),
 }));
 
 vi.mock("@/components/networking", () => ({
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall,
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDeleteCall,
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall: vi.fn(),
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAvailableCall: vi.fn().mockResolvedЗначение({ data: [] }),
+  modelInfoCall,
+  modelDeleteCall,
+  modelHubCall: vi.fn(),
+  modelAvailableCall: vi.fn().mockResolvedValue({ data: [] }),
 }));
 
 vi.mock("@/components/llm_calls/fetch_models", () => ({
-  fetchAvailableModels: vi.fn().mockResolvedЗначение([]),
+  fetchAvailableModels: vi.fn().mockResolvedValue([]),
 }));
 
 const { openModel } = vi.hoisted(() => ({ openModel: vi.fn() }));
 
-vi.mock("@/app/(dashboard)/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-and-endpoints/detailNavigation", () => ({
-  useModelDetailМаршрутизация: () => ({ openModel, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId: null, teamId: null, openTeam: vi.fn(), close: vi.fn() }),
+vi.mock("@/app/(dashboard)/models-and-endpoints/detailNavigation", () => ({
+  useModelDetailRouting: () => ({ openModel, modelId: null, teamId: null, openTeam: vi.fn(), close: vi.fn() }),
 }));
 
 vi.mock("@/components/edit_auto_router/edit_auto_router_modal", () => ({
   __esModule: true,
-  default: ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData }: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name?: string; Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info?: { id?: string } } }) => (
+  default: ({ modelData }: { modelData: { model_name?: string; model_info?: { id?: string } } }) => (
     <div data-testid="edit-auto-router-modal">
-      edit:{Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData.model_name}:{Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData.model_info?.id}
+      edit:{modelData.model_name}:{modelData.model_info?.id}
     </div>
   ),
 }));
 
-vi.mock("@/components/add_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/add_auto_router_tab", () => ({
+vi.mock("@/components/add_model/add_auto_router_tab", () => ({
   __esModule: true,
   default: ({ handleOk }: { handleOk: () => void }) => (
     <button type="button" onClick={handleOk}>
@@ -45,53 +45,53 @@ vi.mock("@/components/add_Эвристический резерв по-преж�
   ),
 }));
 
-// A realistic /v2/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/info page: two auto-routers among ordinary deployments. The panel must
+// A realistic /v2/model/info page: two auto-routers among ordinary deployments. The panel must
 // render exactly the auto_router/* rows; a view that renders page.data unfiltered passes a
 // "renders a table" assertion but fails this one.
 const DEPLOYMENTS = [
   {
     // DB-created adaptive router: no editor for its shape, but it must stay deletable, since
-    // auto-routers are excluded from Режимls + Эндпоинтs and this tab is the only delete path.
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "adaptive-router",
-    litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/adaptive_router" },
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { id: "auto-3", db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: true },
+    // auto-routers are excluded from Models + Endpoints and this tab is the only delete path.
+    model_name: "adaptive-router",
+    litellm_params: { model: "auto_router/adaptive_router" },
+    model_info: { id: "auto-3", db_model: true },
   },
   {
     // config.yaml row: the API refuses both update and delete, so neither control may appear.
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "config-router",
+    model_name: "config-router",
     litellm_params: {
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/complexity_router",
+      model: "auto_router/complexity_router",
       complexity_router_config: { tiers: {}, classifier_type: "llm" },
     },
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { id: "auto-4", db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: false },
+    model_info: { id: "auto-4", db_model: false },
   },
   {
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-4o-mini",
-    litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "openai/gpt-4o-mini" },
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { id: "plain-1" },
+    model_name: "gpt-4o-mini",
+    litellm_params: { model: "openai/gpt-4o-mini" },
+    model_info: { id: "plain-1" },
   },
   {
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "tri-tier-router",
+    model_name: "tri-tier-router",
     litellm_params: {
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/complexity_router",
+      model: "auto_router/complexity_router",
       complexity_router_config: { tiers: { SIMPLE: ["gpt-4o-mini"] }, classifier_type: "heuristic" },
-      complexity_router_default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o-mini",
+      complexity_router_default_model: "gpt-4o-mini",
     },
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { id: "auto-1", db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: true, created_at: "2026-07-28T21:40:09.900000+00:00" },
+    model_info: { id: "auto-1", db_model: true, created_at: "2026-07-28T21:40:09.900000+00:00" },
   },
   {
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "anthropic-opus-4-6",
-    litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "anthropic/claude-opus-4-6" },
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { id: "plain-2" },
+    model_name: "anthropic-opus-4-6",
+    litellm_params: { model: "anthropic/claude-opus-4-6" },
+    model_info: { id: "plain-2" },
   },
   {
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "support-router",
+    model_name: "support-router",
     litellm_params: {
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/support-router",
+      model: "auto_router/support-router",
       auto_router_config: JSON.stringify({ routes: [{ name: "gpt-4o-mini" }] }),
-      auto_router_default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o-mini",
+      auto_router_default_model: "gpt-4o-mini",
     },
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { id: "auto-2", db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: true, created_at: "2026-07-27T10:00:00.000000+00:00" },
+    model_info: { id: "auto-2", db_model: true, created_at: "2026-07-27T10:00:00.000000+00:00" },
   },
 ];
 
@@ -104,7 +104,7 @@ const pageOf = (data: typeof DEPLOYMENTS) => ({
 });
 
 const mockDeploymentsPage = () => {
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall.mockResolvedЗначение(pageOf(DEPLOYMENTS));
+  modelInfoCall.mockResolvedValue(pageOf(DEPLOYMENTS));
 };
 
 // Oldest-first, as the proxy returns them, and two more than the ten-row first page holds.
@@ -115,14 +115,14 @@ const BULK_ROUTER_NAMES = [
 ];
 
 const A_FULL_PAGE_AND_TWO_MORE = Array.from({ length: 12 }, (_, index) => ({
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: BULK_ROUTER_NAMES[index],
+  model_name: BULK_ROUTER_NAMES[index],
   litellm_params: {
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/complexity_router",
+    model: "auto_router/complexity_router",
     complexity_router_config: { tiers: {}, classifier_type: "heuristic" },
   },
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: {
+  model_info: {
     id: `bulk-${index + 1}`,
-    db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: true,
+    db_model: true,
     created_at: `2026-08-${String(index + 1).padStart(2, "0")}T00:00:00.000000+00:00`,
   },
 }));
@@ -137,27 +137,27 @@ const routerNamesInOrder = () =>
 const renderPanel = (canModify = true) =>
   renderWithProviders(
     <AutoRoutersPanel
-      accessТокен="token"
+      accessToken="token"
       userRole="Admin"
       userID="u-admin"
       isViewOnly={false}
       teams={null}
-      createОбласть={canModify ? "unscoped-ok" : "forbidden"}
+      createScope={canModify ? "unscoped-ok" : "forbidden"}
     />,
   );
 
 describe("AutoRoutersPanel", () => {
   beforeEach(() => {
-    // The shared test client caches with staleВремя: Infinity and refetchOnMount: false, so
-    // withвыход this every test after the first reads the previous test's deployment page.
-    testRequestClient.clear();
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall.mockReset();
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDeleteCall.mockClear();
+    // The shared test client caches with staleTime: Infinity and refetchOnMount: false, so
+    // without this every test after the first reads the previous test's deployment page.
+    testQueryClient.clear();
+    modelInfoCall.mockReset();
+    modelDeleteCall.mockClear();
     openModel.mockClear();
     mockDeploymentsPage();
   });
 
-  it("lists only auto_router deployments, not every Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию on the proxy", async () => {
+  it("lists only auto_router deployments, not every model on the proxy", async () => {
     renderPanel();
 
     expect(await screen.findByText("tri-tier-router")).toBeInTheDocument();
@@ -173,9 +173,9 @@ describe("AutoRoutersPanel", () => {
     expect(await screen.findByText("Semantic")).toBeInTheDocument();
   });
 
-  // Reuses the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-page drill-in, so an auto router opens the full РежимlInfoView with
-  // Режимl Settings and Edit Settings, not a parallel detail view that reimplements part of it.
-  it("opens the shared Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию detail view on row click", async () => {
+  // Reuses the models-page drill-in, so an auto router opens the full ModelInfoView with
+  // Model Settings and Edit Settings, not a parallel detail view that reimplements part of it.
+  it("opens the shared model detail view on row click", async () => {
     const user = userEvent.setup();
     renderPanel();
 
@@ -189,7 +189,7 @@ describe("AutoRoutersPanel", () => {
     renderPanel();
 
     await screen.findByText("tri-tier-router");
-    const callsBeforeCreate = Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall.mock.calls.length;
+    const callsBeforeCreate = modelInfoCall.mock.calls.length;
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Add Auto Router" }));
@@ -202,9 +202,9 @@ describe("AutoRoutersPanel", () => {
     await user.click(await screen.findByRole("button", { name: "Submit auto router" }));
 
     // Back on the list, and the deployment query was invalidated so a new router shows up
-    // withвыход a manual page reload.
+    // without a manual page reload.
     expect(await screen.findByText("tri-tier-router")).toBeInTheDocument();
-    await waitFor(() => expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall.mock.calls.length).toBeGreaterThan(callsBeforeCreate));
+    await waitFor(() => expect(modelInfoCall.mock.calls.length).toBeGreaterThan(callsBeforeCreate));
   });
 
   // The page decides who may write (proxy admin or team admin); the panel just has to make
@@ -220,21 +220,21 @@ describe("AutoRoutersPanel", () => {
     expect(screen.getByRole("button", { name: "tri-tier-router" })).toBeInTheDocument();
   });
 
-  // Auto-routers are hidden from Режимls + Эндпоинтs, which used to be the only route to the
+  // Auto-routers are hidden from Models + Endpoints, which used to be the only route to the
   // delete action, so this tab is now the only place an auto router can be removed.
-  it("deletes the chosen router by its Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию id and refetches", async () => {
+  it("deletes the chosen router by its model id and refetches", async () => {
     const user = userEvent.setup();
     renderPanel();
 
     await screen.findByText("support-router");
-    const callsBeforeDelete = Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall.mock.calls.length;
+    const callsBeforeDelete = modelInfoCall.mock.calls.length;
 
     await user.click(screen.getByTestId("auto-router-actions-auto-2"));
     await user.click(await screen.findByTestId("auto-router-action-delete"));
     await user.click(await screen.findByRole("button", { name: /^delete$/i }));
 
-    await waitFor(() => expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDeleteCall).toHaveBeenCalledWith("token", "auto-2"));
-    await waitFor(() => expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall.mock.calls.length).toBeGreaterThan(callsBeforeDelete));
+    await waitFor(() => expect(modelDeleteCall).toHaveBeenCalledWith("token", "auto-2"));
+    await waitFor(() => expect(modelInfoCall.mock.calls.length).toBeGreaterThan(callsBeforeDelete));
   });
 
   it("does not delete when the confirmation is dismissed", async () => {
@@ -247,7 +247,7 @@ describe("AutoRoutersPanel", () => {
     await user.click(await screen.findByTestId("auto-router-action-delete"));
     await user.click(await screen.findByRole("button", { name: /cancel/i }));
 
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDeleteCall).not.toHaveBeenCalled();
+    expect(modelDeleteCall).not.toHaveBeenCalled();
   });
 
   it("gives a read-only caller no delete affordance", async () => {
@@ -257,9 +257,9 @@ describe("AutoRoutersPanel", () => {
     expect(screen.queryByTestId("auto-router-actions-auto-2")).not.toBeInTheDocument();
   });
 
-  it("renders an empty state when the proxy has Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs but no auto routers", async () => {
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall.mockResolvedЗначение(
-      pageOf(DEPLOYMENTS.filter((d) => !d.litellm_params.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию.startsWith("auto_router/"))),
+  it("renders an empty state when the proxy has models but no auto routers", async () => {
+    modelInfoCall.mockResolvedValue(
+      pageOf(DEPLOYMENTS.filter((d) => !d.litellm_params.model.startsWith("auto_router/"))),
     );
 
     renderPanel();
@@ -276,7 +276,7 @@ describe("AutoRoutersPanel", () => {
     await user.click(await screen.findByTestId("auto-router-action-delete"));
     await user.click(await screen.findByRole("button", { name: /^delete$/i }));
 
-    await waitFor(() => expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDeleteCall).toHaveBeenCalledWith("token", "auto-3"));
+    await waitFor(() => expect(modelDeleteCall).toHaveBeenCalledWith("token", "auto-3"));
   });
 
   it("offers no delete on a config-defined router, which the API would refuse", async () => {
@@ -286,7 +286,7 @@ describe("AutoRoutersPanel", () => {
     expect(screen.queryByTestId("auto-router-actions-auto-4")).not.toBeInTheDocument();
   });
 
-  // /v2/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/info returns an unordered Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_list, and created_at is absent on config routers
+  // /v2/model/info returns an unordered model_list, and created_at is absent on config routers
   // and on non-enterprise proxies, so both halves of the order have to be pinned here.
   it("orders newest first, then the undated routers by name", async () => {
     renderPanel();
@@ -304,7 +304,7 @@ describe("AutoRoutersPanel", () => {
   // The reported bug: the newest router was rendered last, so it landed on page 2 and read
   // as never created.
   it("puts a just-created router on the first page of a list longer than one page", async () => {
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall.mockResolvedЗначение(pageOf(A_FULL_PAGE_AND_TWO_MORE));
+    modelInfoCall.mockResolvedValue(pageOf(A_FULL_PAGE_AND_TWO_MORE));
 
     renderPanel();
 

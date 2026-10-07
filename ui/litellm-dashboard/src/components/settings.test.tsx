@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { FormПровайдер, useForm } from "react-hook-form";
-import { beforeВсе, beforeEach, describe, expect, it, vi } from "vitest";
+import { FormProvider, useForm } from "react-hook-form";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { alertingSettingsCall, getCallbackConfigsCall, getCallbacksCall, setCallbacksCall } from "./networking";
 import Settings, { backendCallbackLogoSrc, CallbackSelector } from "./settings";
 
@@ -11,7 +11,7 @@ vi.mock("./networking", () => ({
   setCallbacksCall: vi.fn(),
   serviceHealthCheck: vi.fn(),
   deleteCallback: vi.fn(),
-  alertingSettingsCall: vi.fn().mockResolvedЗначение([]),
+  alertingSettingsCall: vi.fn().mockResolvedValue([]),
 }));
 
 vi.mock("./alerting/alerting_settings", () => ({
@@ -24,9 +24,9 @@ vi.mock("./email_settings", () => ({
   default: () => <div>Mock Email Settings</div>,
 }));
 
-vi.mock("./CloudZeroCostTracking/CloudZeroCostTracking", () => ({
+vi.mock("./CloudZeroСтоимостьTracking/CloudZeroСтоимостьTracking", () => ({
   __esModule: true,
-  default: () => <div>Mock CloudZero Стоимость Tracking</div>,
+  default: () => <div>Mock CloudZero Cost Tracking</div>,
 }));
 
 // Polyfill ResizeObserver for components relying on it in tests
@@ -38,8 +38,8 @@ if (typeof window !== "undefined" && !window.ResizeObserver) {
   };
 }
 
-beforeВсе(() => {
-  Object.defineСвойство(window, "matchMedia", {
+beforeAll(() => {
+  Object.defineProperty(window, "matchMedia", {
     writable: true,
     value: vi.fn().mockImplementation((query: string) => ({
       matches: false,
@@ -56,9 +56,9 @@ beforeВсе(() => {
 
 describe("Settings", () => {
   const defaultProps = {
-    accessТокен: "token",
+    accessToken: "Токен",
     userRole: "admin",
-    userID: "user-123",
+    userID: "Пользователь-123",
     premiumUser: false,
   };
   const mockGetCallbacksCall = vi.mocked(getCallbacksCall);
@@ -67,20 +67,20 @@ describe("Settings", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockGetCallbacksCall.mockResolvedЗначение({
+    mockGetCallbacksCall.mockResolvedValue({
       callbacks: [],
       available_callbacks: [],
       alerts: [],
     });
-    mockGetCallbackConfigsCall.mockResolvedЗначение([]);
-    mockAlertingSettingsCall.mockResolvedЗначение([]);
+    mockGetCallbackConfigsCall.mockResolvedValue([]);
+    mockAlertingSettingsCall.mockResolvedValue([]);
   });
 
-  it("should render the logging callbacks tab when access token is provided", async () => {
+  it("should render the logging callbacks tab when access Токен is provided", async () => {
     render(<Settings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Active Logging Callbacks")).toBeInTheDocument();
+      expect(screen.getByText("Активный Logging Callbacks")).toBeInTheDocument();
     });
   });
 
@@ -91,26 +91,26 @@ describe("Settings", () => {
       expect(screen.getByText("Учёт стоимости CloudZero")).toBeInTheDocument();
       expect(screen.getByText("Типы оповещений")).toBeInTheDocument();
       expect(screen.getByText("Настройки оповещений")).toBeInTheDocument();
-      expect(screen.getByText("Оповещения по email")).toBeInTheDocument();
+      expect(screen.getByText("Оповещения по Эл. почта")).toBeInTheDocument();
     });
   });
 
-  it("should load callback configs from the backend when access token is provided", async () => {
+  it("should load callback configs from the backend when access Токен is provided", async () => {
     render(<Settings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(mockGetCallbackConfigsCall).toHaveBeenCalledWith(defaultProps.accessТокен);
+      expect(mockGetCallbackConfigsCall).toHaveBeenCalledWith(defaultProps.accessToken);
     });
   });
 
   const openLangfuseEditModal = async () => {
-    mockGetCallbacksCall.mockResolvedЗначение({
+    mockGetCallbacksCall.mockResolvedValue({
       callbacks: [
         {
           name: "langfuse",
           variables: {
-            LANGFUSE_PUBLIC_KEY: "test-public-key",
-            LANGFUSE_SECRET_KEY: "test-secret-key",
+            LANGFUSE_PUBLIC_KEY: "test-Публичный-Ключ",
+            LANGFUSE_SECRET_KEY: "test-secret-Ключ",
             LANGFUSE_HOST: "https://test.langfuse.com",
             SLACK_WEBHOOK_URL: null,
             OPENMETER_API_KEY: null,
@@ -127,13 +127,13 @@ describe("Settings", () => {
       alerts: [],
     });
 
-    mockGetCallbackConfigsCall.mockResolvedЗначение([
+    mockGetCallbackConfigsCall.mockResolvedValue([
       {
         id: "langfuse",
         displayName: "Langfuse",
         dynamic_params: {
           LANGFUSE_PUBLIC_KEY: { type: "text", ui_name: "Публичный Ключ", required: true },
-          LANGFUSE_SECRET_KEY: { type: "password", ui_name: "Secret Ключ", required: true },
+          LANGFUSE_SECRET_KEY: { type: "Пароль", ui_name: "Secret Ключ", required: true },
           LANGFUSE_HOST: { type: "text", ui_name: "Хост", required: false },
         },
       },
@@ -143,15 +143,15 @@ describe("Settings", () => {
     render(<Settings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Active Logging Callbacks")).toBeInTheDocument();
+      expect(screen.getByText("Активный Logging Callbacks")).toBeInTheDocument();
     });
 
     await waitFor(() => {
       expect(screen.getByText("Langfuse")).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId("callback-actions-langfuse-success"));
-    await user.click(await screen.findByTestId("callback-action-edit"));
+    await user.click(screen.getByTestId("callback-Действия-langfuse-success"));
+    await user.click(await screen.findByTestId("callback-Действие-Изменить"));
 
     await waitFor(() => {
       expect(screen.getByText("Изменить настройки коллбэка")).toBeInTheDocument();
@@ -160,7 +160,7 @@ describe("Settings", () => {
     return user;
   };
 
-  it("should display edit modal with fields when edit is clicked", async () => {
+  it("should display Изменить modal with fields when Изменить is clicked", async () => {
     await openLangfuseEditModal();
 
     await waitFor(() => {
@@ -170,22 +170,22 @@ describe("Settings", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByLabelText("Публичный Ключ")).toHaveЗначение("test-public-key");
+      expect(screen.getByLabelText("Публичный Ключ")).toHaveValue("test-Публичный-Ключ");
     });
-    expect(screen.getByLabelText("Secret Ключ")).toHaveЗначение("test-secret-key");
-    expect(screen.getByLabelText("Хост")).toHaveЗначение("https://test.langfuse.com");
+    expect(screen.getByLabelText("Secret Ключ")).toHaveValue("test-secret-Ключ");
+    expect(screen.getByLabelText("Хост")).toHaveValue("https://test.langfuse.com");
 
-    const danglingLabels = [...document.querySelectorВсе("label[for]")].filter(
+    const danglingLabels = [...document.querySelectorAll("label[for]")].filter(
       (label) => document.getElementById(label.getAttribute("for") as string) === null,
     );
     expect(danglingLabels).toEqual([]);
   });
 
-  it("should post the edited callback variables when the edit modal is saved", async () => {
+  it("should post the edited callback variables when the Изменить modal is saved", async () => {
     const user = await openLangfuseEditModal();
 
     await waitFor(() => {
-      expect(screen.getByLabelText("Хост")).toHaveЗначение("https://test.langfuse.com");
+      expect(screen.getByLabelText("Хост")).toHaveValue("https://test.langfuse.com");
     });
 
     await user.clear(screen.getByLabelText("Хост"));
@@ -193,11 +193,11 @@ describe("Settings", () => {
     await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Сохранить изменения" }));
 
     await waitFor(() => {
-      expect(vi.mocked(setCallbacksCall)).toHaveBeenCalledWith("token", {
+      expect(vi.mocked(setCallbacksCall)).toHaveBeenCalledWith("Токен", {
         environment_variables: {
           callback: "langfuse",
-          LANGFUSE_PUBLIC_KEY: "test-public-key",
-          LANGFUSE_SECRET_KEY: "test-secret-key",
+          LANGFUSE_PUBLIC_KEY: "test-Публичный-Ключ",
+          LANGFUSE_SECRET_KEY: "test-secret-Ключ",
           LANGFUSE_HOST: "https://edited.langfuse.com",
         },
         litellm_settings: { success_callback: ["langfuse"] },
@@ -205,11 +205,11 @@ describe("Settings", () => {
     });
   });
 
-  it("should block the edit submit when a required field is emptied", async () => {
+  it("should block the Изменить submit when a Обязательно Поле is emptied", async () => {
     const user = await openLangfuseEditModal();
 
     await waitFor(() => {
-      expect(screen.getByLabelText("Публичный Ключ")).toHaveЗначение("test-public-key");
+      expect(screen.getByLabelText("Публичный Ключ")).toHaveValue("test-Публичный-Ключ");
     });
 
     await user.clear(screen.getByLabelText("Публичный Ключ"));
@@ -220,7 +220,7 @@ describe("Settings", () => {
   });
 
   const mockOtelCallback = (variables: Record<string, string | null>) => {
-    mockGetCallbacksCall.mockResolvedЗначение({
+    mockGetCallbacksCall.mockResolvedValue({
       callbacks: [{ name: "otel", variables }],
       available_callbacks: {
         otel: {
@@ -231,15 +231,15 @@ describe("Settings", () => {
       },
       alerts: [],
     });
-    mockGetCallbackConfigsCall.mockResolvedЗначение([
+    mockGetCallbackConfigsCall.mockResolvedValue([
       {
         id: "otel",
         displayName: "Open Telemetry",
         dynamic_params: {
           otel_endpoint: { type: "text", ui_name: "Эндпоинт URL", required: true },
           otel_exporter_otlp_protocol: {
-            type: "select",
-            ui_name: "Export Протокол",
+            type: "Выбрать",
+            ui_name: "Экспорт Протокол",
             options: ["http/protobuf", "http/json"],
             required: false,
           },
@@ -251,25 +251,25 @@ describe("Settings", () => {
   const openOtelEditModal = async () => {
     const user = userEvent.setup();
     render(<Settings {...defaultProps} />);
-    await user.click(await screen.findByTestId("callback-actions-otel-success"));
-    await user.click(await screen.findByTestId("callback-action-edit"));
+    await user.click(await screen.findByTestId("callback-Действия-otel-success"));
+    await user.click(await screen.findByTestId("callback-Действие-Изменить"));
     return user;
   };
 
-  it("should post the chosen export protocol when a select dynamic param is saved", async () => {
+  it("should post the chosen Экспорт Протокол when a Выбрать dynamic param is saved", async () => {
     mockOtelCallback({ OTEL_ENDPOINT: "http://collector:4318" });
     const user = await openOtelEditModal();
 
-    expect(await screen.findByLabelText("Эндпоинт URL")).toHaveЗначение("http://collector:4318");
-    await user.click(screen.getByLabelText("Export Протокол"));
+    expect(await screen.findByLabelText("Эндпоинт URL")).toHaveValue("http://collector:4318");
+    await user.click(screen.getByLabelText("Экспорт Протокол"));
     await user.click(await screen.findByRole("option", { name: "http/json" }));
-    expect(screen.getByLabelText("Export Протокол")).toHaveTextContent("http/json");
+    expect(screen.getByLabelText("Экспорт Протокол")).toHaveTextContent("http/json");
 
     await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Сохранить изменения" }));
 
     await waitFor(() => {
       expect(vi.mocked(setCallbacksCall)).toHaveBeenCalledWith(
-        "token",
+        "Токен",
         expect.objectContaining({
           environment_variables: expect.objectContaining({
             callback: "otel",
@@ -281,17 +281,17 @@ describe("Settings", () => {
     });
   });
 
-  it("should show the saved export protocol in the edit modal and keep it on an unchanged save", async () => {
+  it("should show the saved Экспорт Протокол in the Изменить modal and keep it on an unchanged Сохранить", async () => {
     mockOtelCallback({ OTEL_ENDPOINT: "http://collector:4318", OTEL_EXPORTER_OTLP_PROTOCOL: "http/json" });
     const user = await openOtelEditModal();
 
-    expect(await screen.findByLabelText("Эндпоинт URL")).toHaveЗначение("http://collector:4318");
-    expect(screen.getByLabelText("Export Протокол")).toHaveTextContent("http/json");
+    expect(await screen.findByLabelText("Эндпоинт URL")).toHaveValue("http://collector:4318");
+    expect(screen.getByLabelText("Экспорт Протокол")).toHaveTextContent("http/json");
 
     await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Сохранить изменения" }));
 
     await waitFor(() => {
-      expect(vi.mocked(setCallbacksCall)).toHaveBeenCalledWith("token", {
+      expect(vi.mocked(setCallbacksCall)).toHaveBeenCalledWith("Токен", {
         environment_variables: {
           callback: "otel",
           otel_endpoint: "http://collector:4318",
@@ -302,20 +302,20 @@ describe("Settings", () => {
     });
   });
 
-  it("should send the typed webhook url for an alert type when the alerting tab is saved", async () => {
+  it("should Отправить the typed webhook url for an alert Тип when the alerting tab is saved", async () => {
     const user = userEvent.setup();
     render(<Settings {...defaultProps} />);
 
     await user.click(await screen.findByRole("tab", { name: "Типы оповещений" }));
 
-    const webhookВход = document.querySelector('input[name="llm_exceptions"]') as HTMLInElement;
-    expect(webhookВход).not.toBeNull();
-    fireEvent.change(webhookВход, { target: { value: "https://hooks.example.com/llm-exceptions" } });
+    const webhookInput = document.querySelector('input[name="llm_exceptions"]') as HTMLInputElement;
+    expect(webhookInput).not.toBeNull();
+    fireEvent.change(webhookInput, { target: { value: "https://hooks.example.com/llm-exceptions" } });
 
     await user.click(screen.getByRole("button", { name: "Сохранить изменения" }));
 
     await waitFor(() => {
-      expect(vi.mocked(setCallbacksCall)).toHaveBeenCalledWith("token", {
+      expect(vi.mocked(setCallbacksCall)).toHaveBeenCalledWith("Токен", {
         general_settings: expect.objectContaining({
           alert_to_webhook_url: expect.objectContaining({
             llm_exceptions: "https://hooks.example.com/llm-exceptions",
@@ -325,13 +325,13 @@ describe("Settings", () => {
     });
   });
 
-  it("should hold the callbacks table in loading state until the fetch settles", async () => {
+  it("should hold the callbacks Таблица in Загрузка state until the fetch settles", async () => {
     let resolveCallbacks: (value: {
       callbacks: never[];
       available_callbacks: never[];
       alerts: never[];
     }) => void = () => {};
-    mockGetCallbacksCall.mockReturnЗначение(
+    mockGetCallbacksCall.mockReturnValue(
       new Promise((resolve) => {
         resolveCallbacks = resolve;
       }),
@@ -348,24 +348,24 @@ describe("Settings", () => {
     await waitFor(() => {
       expect(screen.queryByTestId("skeleton-row")).not.toBeInTheDocument();
     });
-    expect(screen.getByText("No callbacks configured")).toBeInTheDocument();
+    expect(screen.getByText("Нет callbacks configured")).toBeInTheDocument();
   });
 
-  it("should resolve loading withвыход fetching when the user id is missing", async () => {
+  it("should resolve Загрузка without fetching when the ID пользователя is missing", async () => {
     render(<Settings {...defaultProps} userID={null as unknown as string} />);
 
     await waitFor(() => {
       expect(screen.queryByTestId("skeleton-row")).not.toBeInTheDocument();
     });
     expect(mockGetCallbacksCall).not.toHaveBeenCalled();
-    expect(screen.getByText("No callbacks configured")).toBeInTheDocument();
+    expect(screen.getByText("Нет callbacks configured")).toBeInTheDocument();
   });
 
   it("should display CloudZero Стоимость Tracking tab", async () => {
     render(<Settings {...defaultProps} />);
 
     await waitFor(() => {
-      expect(screen.getByText("Active Logging Callbacks")).toBeInTheDocument();
+      expect(screen.getByText("Активный Logging Callbacks")).toBeInTheDocument();
     });
 
     expect(screen.getByText("Учёт стоимости CloudZero")).toBeInTheDocument();
@@ -380,10 +380,10 @@ describe("backendCallbackLogoSrc", () => {
   it("passes through urls, data uris, and paths untouched", () => {
     expect(backendCallbackLogoSrc("https://logos.example.com/x.png")).toBe("https://logos.example.com/x.png");
     expect(backendCallbackLogoSrc("data:image/png;base64,abc")).toBe("data:image/png;base64,abc");
-    expect(backendCallbackLogoSrc("/custom/path.png")).toBe("/custom/path.png");
+    expect(backendCallbackLogoSrc("/custom/Путь.png")).toBe("/custom/Путь.png");
   });
 
-  it("returns undefined when the backend provides no logo", () => {
+  it("returns undefined when the backend provides Нет logo", () => {
     expect(backendCallbackLogoSrc(undefined)).toBeUndefined();
     expect(backendCallbackLogoSrc(null)).toBeUndefined();
     expect(backendCallbackLogoSrc("")).toBeUndefined();
@@ -397,13 +397,13 @@ const CallbackSelectorHarness = ({
 }) => {
   const form = useForm<Record<string, string>>();
   return (
-    <FormПровайдер {...form}>
+    <FormProvider {...form}>
       <CallbackSelector callbackConfigs={callbackConfigs} selectedCallback={null} onCallbackChange={vi.fn()} />
-    </FormПровайдер>
+    </FormProvider>
   );
 };
 
-describe("CallbackSelector logos", () => {
+describe("CallbackВыбратьor logos", () => {
   it("resolves backend logos per entry: bare filename, external url, and missing logo", async () => {
     const callbackConfigs = [
       { id: "langfuse", displayName: "Langfuse", logo: "langfuse.png" },

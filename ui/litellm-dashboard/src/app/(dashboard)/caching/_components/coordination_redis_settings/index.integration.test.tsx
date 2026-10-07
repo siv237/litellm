@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import userEvent from "@testing-library/user-event";
-import КоординационныйRedisSettings from "./index";
+import CoordinationRedisSettings from "./index";
 import * as networking from "@/components/networking";
 import { toast } from "@/lib/toast";
 
@@ -12,34 +12,34 @@ vi.mock("@/components/networking", () => ({
   updateCoordinationRedisSettingsCall: vi.fn(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: () => ({ accessТокен: "sk-test" }),
+vi.mock("@/Приложение/(dashboard)/hooks/useАвторизовано", () => ({
+  default: () => ({ accessToken: "sk-test" }),
 }));
 
 const getSettings = vi.mocked(networking.getCoordinationRedisSettingsCall);
 const updateSettings = vi.mocked(networking.updateCoordinationRedisSettingsCall);
-const testПодключение = vi.mocked(networking.testCoordinationRedisConnectionCall);
+const testConnection = vi.mocked(networking.testCoordinationRedisConnectionCall);
 const notifications = vi.mocked(toast);
 
-const settingsОтвет = (
+const settingsResponse = (
   values: Record<string, unknown>,
-  source: "coordination_redis" | "cache_backend" | "environment" | null = null,
+  source: "coordination_redis" | "cache_backend" | "Окружение" | null = null,
 ) => ({ values, fields: [], source });
 
 const wrapper = ({ children }: { children: React.ReactNode }) => {
-  const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
-  return <ЗапросClientПровайдер client={queryClient}>{children}</ЗапросClientПровайдер>;
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };
 
-const renderSettings = () => render(<КоординационныйRedisSettings />, { wrapper });
+const renderSettings = () => render(<CoordinationRedisSettings />, { wrapper });
 
 const clickSave = async (user: ReturnType<typeof userEvent.setup>) =>
-  user.click(screen.getByRole("button", { name: /save changes/i }));
-describe("КоординационныйRedisSettings value retention across redis types", () => {
+  user.click(screen.getByRole("button", { name: /Сохранить изменения/i }));
+describe("CoordinationRedisSettings Значение retention across redis types", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    getSettings.mockResolvedЗначение(settingsОтвет({}));
-    updateSettings.mockResolvedЗначение(undefined);
+    getSettings.mockResolvedValue(settingsResponse({}));
+    updateSettings.mockResolvedValue(undefined);
   });
 
   const pickRedisType = async (user: ReturnType<typeof userEvent.setup>, name: RegExp) => {
@@ -47,7 +47,7 @@ describe("КоординационныйRedisSettings value retention across red
     await user.click(await screen.findByRole("option", { name }));
   };
 
-  it("keeps a value typed into a sentinel-only field when the type is switched away and back", async () => {
+  it("keeps a Значение typed into a sentinel-only Поле when the Тип is switched away and Назад", async () => {
     const user = userEvent.setup();
     renderSettings();
     await screen.findByLabelText("Хост");
@@ -60,10 +60,10 @@ describe("КоординационныйRedisSettings value retention across red
 
     await pickRedisType(user, /sentinel/i);
 
-    expect(await screen.findByLabelText("Имя сервиса")).toHaveЗначение("mymaster");
+    expect(await screen.findByLabelText("Имя сервиса")).toHaveValue("mymaster");
   });
 
-  it("leaves a sentinel-only value выход of the payload once the type is no longer sentinel", async () => {
+  it("leaves a sentinel-only Значение out of the payload once the Тип is Нет longer sentinel", async () => {
     const user = userEvent.setup();
     renderSettings();
     await screen.findByLabelText("Хост");

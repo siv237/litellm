@@ -14,8 +14,8 @@ vi.mock("@/components/networking", () => ({
 
 vi.mock("@/components/organisms/create_key_button", () => ({
   fetchUserModels: vi.fn(
-    (_userID: string, _userRole: string, _accessТокен: string, setUserModels: (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: string[]) => void) => {
-      setUserModels(["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1", "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-2"]);
+    (_userID: string, _userRole: string, _accessToken: string, setUserModels: (models: string[]) => void) => {
+      setUserModels(["model-1", "model-2"]);
       return Promise.resolve();
     },
   ),
@@ -27,8 +27,8 @@ const mockTagUpdateCall = vi.mocked(tagUpdateCall);
 const tag: Tag = {
   name: "prod-tag",
   description: "original description",
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1", "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-2"],
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1": "GPT-4", "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-2": "Claude-3" },
+  models: ["model-1", "model-2"],
+  model_info: { "model-1": "GPT-4", "model-2": "Claude-3" },
   created_at: "2024-01-01T00:00:00Z",
   updated_at: "2024-01-02T00:00:00Z",
   litellm_budget_table: { max_budget: 10, budget_duration: "7d", tpm_limit: 1000, rpm_limit: 60 },
@@ -36,34 +36,34 @@ const tag: Tag = {
 
 const renderEditor = async () => {
   const user = userEvent.setup();
-  render(<TagInfoView tagId="prod-tag" onClose={vi.fn()} accessТокен="sk-test" is_admin editTag />);
-  const nameВход = await screen.findByLabelText("Имя тега");
-  return { user, nameВход };
+  render(<TagInfoView tagId="prod-tag" onClose={vi.fn()} accessToken="sk-test" is_admin editTag />);
+  const nameInput = await screen.findByLabelText("Имя тега");
+  return { user, nameInput };
 };
 
 describe("TagInfoView save payload", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockTagInfoCall.mockResolvedЗначение({ "prod-tag": tag });
-    mockTagUpdateCall.mockResolvedЗначение(undefined);
+    mockTagInfoCall.mockResolvedValue({ "prod-tag": tag });
+    mockTagUpdateCall.mockResolvedValue(undefined);
   });
 
   it("should send the edited fields and omit the budget fields while the budget section is collapsed", async () => {
-    const { user, nameВход } = await renderEditor();
+    const { user, nameInput } = await renderEditor();
 
-    await user.clear(nameВход);
-    fireEvent.change(nameВход, { target: { value: "renamed-tag" } });
+    await user.clear(nameInput);
+    fireEvent.change(nameInput, { target: { value: "renamed-tag" } });
 
-    const descriptionВход = screen.getByLabelText("Описание");
-    await user.clear(descriptionВход);
-    fireEvent.change(descriptionВход, { target: { value: "updated description" } });
+    const descriptionInput = screen.getByLabelText("Описание");
+    await user.clear(descriptionInput);
+    fireEvent.change(descriptionInput, { target: { value: "updated description" } });
 
     await user.click(screen.getByRole("button", { name: "Сохранить изменения" }));
 
     const expected = {
       name: "renamed-tag",
       description: "updated description",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1", "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-2"],
+      models: ["model-1", "model-2"],
       max_budget: undefined,
       tpm_limit: undefined,
       rpm_limit: undefined,
@@ -74,21 +74,21 @@ describe("TagInfoView save payload", () => {
   });
 
   it("should send the budget fields once the budget section is expanded", async () => {
-    const { user, nameВход } = await renderEditor();
-    expect(nameВход).toHaveЗначение("prod-tag");
+    const { user, nameInput } = await renderEditor();
+    expect(nameInput).toHaveValue("prod-tag");
 
     await user.click(screen.getByRole("button", { name: /Бюджет и лимиты/ }));
 
-    const maxБюджетВход = await screen.findByLabelText("Макс. бюджет (USD)");
-    await user.clear(maxБюджетВход);
-    fireEvent.change(maxБюджетВход, { target: { value: "150.75" } });
+    const maxBudgetInput = await screen.findByLabelText("Макс. бюджет (USD)");
+    await user.clear(maxBudgetInput);
+    fireEvent.change(maxBudgetInput, { target: { value: "150.75" } });
 
     await user.click(screen.getByRole("button", { name: "Сохранить изменения" }));
 
     const expected = {
       name: "prod-tag",
       description: "original description",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1", "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-2"],
+      models: ["model-1", "model-2"],
       max_budget: "150.75",
       tpm_limit: undefined,
       rpm_limit: undefined,
@@ -99,9 +99,9 @@ describe("TagInfoView save payload", () => {
   });
 
   it("should block the save when the tag name is cleared", async () => {
-    const { user, nameВход } = await renderEditor();
+    const { user, nameInput } = await renderEditor();
 
-    await user.clear(nameВход);
+    await user.clear(nameInput);
     await user.click(screen.getByRole("button", { name: "Сохранить изменения" }));
 
     expect(await screen.findByText("Please input a tag name")).toBeInTheDocument();
@@ -113,21 +113,21 @@ describe("TagInfoView save payload", () => {
     const toggle = () => screen.getByRole("button", { name: /Бюджет и лимиты/ });
 
     await user.click(toggle());
-    const maxБюджетВход = await screen.findByLabelText("Макс. бюджет (USD)");
-    await user.clear(maxБюджетВход);
-    fireEvent.change(maxБюджетВход, { target: { value: "150.75" } });
+    const maxBudgetInput = await screen.findByLabelText("Макс. бюджет (USD)");
+    await user.clear(maxBudgetInput);
+    fireEvent.change(maxBudgetInput, { target: { value: "150.75" } });
 
     await user.click(toggle());
     await user.click(toggle());
 
-    expect(await screen.findByLabelText("Макс. бюджет (USD)")).toHaveЗначение(150.75);
+    expect(await screen.findByLabelText("Макс. бюджет (USD)")).toHaveValue(150.75);
 
     await user.click(screen.getByRole("button", { name: "Сохранить изменения" }));
 
     const expected = {
       name: "prod-tag",
       description: "original description",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1", "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-2"],
+      models: ["model-1", "model-2"],
       max_budget: "150.75",
       tpm_limit: undefined,
       rpm_limit: undefined,
@@ -140,9 +140,9 @@ describe("TagInfoView save payload", () => {
   it("leaves the tag untouched and returns to the detail view when Cancel is clicked", async () => {
     const { user } = await renderEditor();
 
-    const descriptionВход = screen.getByLabelText("Описание");
-    await user.clear(descriptionВход);
-    fireEvent.change(descriptionВход, { target: { value: "abandoned description" } });
+    const descriptionInput = screen.getByLabelText("Описание");
+    await user.clear(descriptionInput);
+    fireEvent.change(descriptionInput, { target: { value: "abandoned description" } });
 
     await user.click(screen.getByRole("button", { name: "Отмена" }));
 

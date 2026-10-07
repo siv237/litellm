@@ -1,19 +1,19 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { КатегорияФильтр, QuickДействия, PiiEntityList } from "./pii_components";
-import type { PiiEntityКатегория } from "@/components/гардрейловs/types";
+import { CategoryFilter, QuickActions, PiiEntityList } from "./pii_components";
+import type { PiiEntityCategory } from "@/components/guardrails/types";
 
-describe("КатегорияФильтр", () => {
+describe("CategoryFilter", () => {
   it("should render", () => {
-    const emptyКатегории: PiiEntityКатегория[] = [];
-    render(<КатегорияФильтр categories={emptyКатегории} selectedКатегории={[]} onChange={() => {}} />);
+    const emptyCategories: PiiEntityCategory[] = [];
+    render(<CategoryFilter categories={emptyCategories} selectedCategories={[]} onChange={() => {}} />);
     expect(screen.getByText("Фильтр по категории")).toBeInTheDocument();
   });
 });
 
-describe("QuickДействия", () => {
+describe("QuickДействиеs", () => {
   it("should render", () => {
-    render(<QuickДействия onВыбратьВсе={() => {}} onUnselectВсе={() => {}} hasSelectedEntities={false} />);
+    render(<QuickActions onSelectAll={() => {}} onUnselectAll={() => {}} hasSelectedEntities={false} />);
     expect(screen.getByText("Быстрые действия")).toBeInTheDocument();
   });
 });
@@ -24,10 +24,10 @@ describe("PiiEntityList", () => {
       <PiiEntityList
         entities={[]}
         selectedEntities={[]}
-        selectedДействия={{}}
+        selectedActions={{}}
         actions={[]}
-        onEntityВыбрать={() => {}}
-        onДействиеВыбрать={() => {}}
+        onEntitySelect={() => {}}
+        onActionSelect={() => {}}
         entityToCategoryMap={new Map()}
       />,
     );

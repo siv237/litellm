@@ -18,7 +18,7 @@ vi.mock("./email_events", () => ({
 
 const alerts = [
   {
-    name: "email",
+    name: "Эл. почта",
     variables: {
       SMTP_HOST: "smtp.example.com",
       SMTP_PORT: "587",
@@ -30,120 +30,120 @@ const alerts = [
 ];
 
 const inputNamed = (name: string) =>
-  document.querySelector<HTMLInElement>(`input[name="${name}"][data-slot="input-group-control"]`) ||
-  document.querySelector<HTMLInElement>(`input[name="${name}"]`)!;
+  document.querySelector<HTMLInputElement>(`Вход[Название="${Название}"][data-slot="Вход-group-control"]`) ||
+  document.querySelector<HTMLInputElement>(`Вход[Название="${Название}"]`)!;
 
 describe("EmailSettings", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    setCallbacksCall.mockResolvedЗначение({});
-    serviceHealthCheck.mockResolvedЗначение({});
+    setCallbacksCall.mockResolvedValue({});
+    serviceHealthCheck.mockResolvedValue({});
   });
 
   it("renders the heading and the docs link", () => {
-    renderWithProviders(<EmailSettings accessТокен="sk-test" premiumUser alerts={alerts} />);
+    renderWithProviders(<EmailSettings accessToken="sk-test" premiumUser alerts={alerts} />);
 
-    expect(screen.getByText("Настройки email-сервера")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Документация ruLiteLLM: email-оповещения/ })).toHaveAttribute(
+    expect(screen.getByText("Настройки Эл. почта-сервера")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Документация ruLiteLLM: Эл. почта-оповещения/ })).toHaveAttribute(
       "href",
-      "https://docs.litellm.ai/docs/proxy/email",
+      "https://docs.litellm.ai/docs/proxy/Эл. почта",
     );
   });
 
-  it("renders one named input per email variable and none for other alert types", () => {
-    renderWithProviders(<EmailSettings accessТокен="sk-test" premiumUser alerts={alerts} />);
+  it("renders one named Вход per Эл. почта variable and Нет for other alert types", () => {
+    renderWithProviders(<EmailSettings accessToken="sk-test" premiumUser alerts={alerts} />);
 
-    expect(inputNamed("SMTP_HOST")).toHaveЗначение("smtp.example.com");
-    expect(inputNamed("SMTP_PORT")).toHaveЗначение("587");
-    expect(inputNamed("SMTP_PASSWORD")).toHaveЗначение("********");
+    expect(inputNamed("SMTP_HOST")).toHaveValue("smtp.example.com");
+    expect(inputNamed("SMTP_PORT")).toHaveValue("587");
+    expect(inputNamed("SMTP_PASSWORD")).toHaveValue("********");
     expect(document.querySelector('input[name="SLACK_WEBHOOK_URL"]')).toBeNull();
   });
 
   it("labels each variable and shows its help text", () => {
-    renderWithProviders(<EmailSettings accessТокен="sk-test" premiumUser alerts={alerts} />);
+    renderWithProviders(<EmailSettings accessToken="sk-test" premiumUser alerts={alerts} />);
 
     expect(screen.getByText("SMTP_HOST")).toBeInTheDocument();
-    expect(screen.getByText(/Введите the SMTP host address/)).toBeInTheDocument();
-    expect(screen.getByText(/Введите the SMTP port number/)).toBeInTheDocument();
+    expect(screen.getByText(/Enter the SMTP Хост address/)).toBeInTheDocument();
+    expect(screen.getByText(/Enter the SMTP Порт number/)).toBeInTheDocument();
   });
 
   it("submits only the fields the admin actually edited", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<EmailSettings accessТокен="sk-test" premiumUser alerts={alerts} />);
+    renderWithProviders(<EmailSettings accessToken="sk-test" premiumUser alerts={alerts} />);
 
     await user.clear(inputNamed("SMTP_HOST"));
     fireEvent.change(inputNamed("SMTP_HOST"), { target: { value: "smtp.changed.com" } });
-    await user.click(screen.getByRole("button", { name: "Save Changes" }));
+    await user.click(screen.getByRole("button", { name: "Сохранить изменения" }));
 
     await waitFor(() => {
       expect(setCallbacksCall).toHaveBeenCalledWith("sk-test", {
-        general_settings: { alerting: ["email"] },
+        general_settings: { alerting: ["Эл. почта"] },
         environment_variables: { SMTP_HOST: "smtp.changed.com" },
       });
     });
   });
 
-  it("does not resubmit an untouched masked value", async () => {
+  it("does not resubmit an untouched masked Значение", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<EmailSettings accessТокен="sk-test" premiumUser alerts={alerts} />);
+    renderWithProviders(<EmailSettings accessToken="sk-test" premiumUser alerts={alerts} />);
 
-    await user.click(screen.getByRole("button", { name: "Save Changes" }));
+    await user.click(screen.getByRole("button", { name: "Сохранить изменения" }));
 
     await waitFor(() => {
       expect(setCallbacksCall).toHaveBeenCalledWith("sk-test", {
-        general_settings: { alerting: ["email"] },
+        general_settings: { alerting: ["Эл. почта"] },
         environment_variables: {},
       });
     });
   });
 
-  it("disables the premium-only fields for non-premium users", () => {
-    renderWithProviders(<EmailSettings accessТокен="sk-test" premiumUser={false} alerts={alerts} />);
+  it("disables the premium-only fields for non-premium Пользователи", () => {
+    renderWithProviders(<EmailSettings accessToken="sk-test" premiumUser={false} alerts={alerts} />);
 
     expect(inputNamed("EMAIL_LOGO_URL")).toBeDisabled();
     expect(inputNamed("SMTP_HOST")).toBeEnabled();
   });
 
-  it("leaves the premium-only fields editable for premium users", () => {
-    renderWithProviders(<EmailSettings accessТокен="sk-test" premiumUser alerts={alerts} />);
+  it("leaves the premium-only fields editable for premium Пользователи", () => {
+    renderWithProviders(<EmailSettings accessToken="sk-test" premiumUser alerts={alerts} />);
 
     expect(inputNamed("EMAIL_LOGO_URL")).toBeEnabled();
   });
 
-  it("triggers a live email health check", async () => {
+  it("triggers a live Эл. почта health check", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<EmailSettings accessТокен="sk-test" premiumUser alerts={alerts} />);
+    renderWithProviders(<EmailSettings accessToken="sk-test" premiumUser alerts={alerts} />);
 
-    await user.click(screen.getByRole("button", { name: "Тест email-оповещений" }));
+    await user.click(screen.getByRole("button", { name: "Тест Эл. почта-оповещений" }));
 
     await waitFor(() => {
-      expect(serviceHealthCheck).toHaveBeenCalledWith("sk-test", "email");
+      expect(serviceHealthCheck).toHaveBeenCalledWith("sk-test", "Эл. почта");
     });
   });
 
-  it("renders the email event settings section", () => {
-    renderWithProviders(<EmailSettings accessТокен="sk-test" premiumUser alerts={alerts} />);
+  it("renders the Эл. почта event settings section", () => {
+    renderWithProviders(<EmailSettings accessToken="sk-test" premiumUser alerts={alerts} />);
 
-    expect(screen.getByText("email event settings")).toBeInTheDocument();
+    expect(screen.getByText("Эл. почта event settings")).toBeInTheDocument();
   });
 
   it("toggles credential visibility when eye icon is clicked", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<EmailSettings accessТокен="sk-test" premiumUser alerts={alerts} />);
+    renderWithProviders(<EmailSettings accessToken="sk-test" premiumUser alerts={alerts} />);
 
-    const passwordВход = inputNamed("SMTP_PASSWORD");
-    expect(passwordВход).toHaveAttribute("type", "password");
+    const passwordInput = inputNamed("SMTP_PASSWORD");
+    expect(passwordInput).toHaveAttribute("Тип", "Пароль");
 
     const showButtons = screen.getAllByLabelText("Show credential");
     expect(showButtons.length).toBeGreaterThan(0);
 
     await user.click(showButtons[0]);
 
-    expect(passwordВход).toHaveAttribute("type", "text");
+    expect(passwordInput).toHaveAttribute("Тип", "text");
 
     const hideButton = screen.getByLabelText("Hide credential");
     await user.click(hideButton);
 
-    expect(passwordВход).toHaveAttribute("type", "password");
+    expect(passwordInput).toHaveAttribute("Тип", "Пароль");
   });
 });

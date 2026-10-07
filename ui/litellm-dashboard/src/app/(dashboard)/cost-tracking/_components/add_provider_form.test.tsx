@@ -4,16 +4,16 @@ import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "../../../../../tests/test-utils";
 import AddProviderForm from "./add_provider_form";
-import { DiscountКонфигурация } from "./types";
-import { Провайдерs, providerLogoMap } from "@/components/provider_info_helpers";
+import { DiscountConfig } from "./types";
+import { Providers, providerLogoMap } from "@/components/provider_info_helpers";
 
 const DEFAULT_PROPS = {
-  discountКонфигурация: {} as DiscountКонфигурация,
-  selectedПровайдер: undefined,
+  discountConfig: {} as DiscountConfig,
+  selectedProvider: undefined,
   newDiscount: "",
   onProviderChange: vi.fn(),
   onDiscountChange: vi.fn(),
-  onAddПровайдер: vi.fn(),
+  onAddProvider: vi.fn(),
 };
 
 describe("AddProviderForm", () => {
@@ -37,29 +37,29 @@ describe("AddProviderForm", () => {
   });
 
   it("should disable the submit button when a provider is selected but no discount is entered", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" newDiscount="" />);
+    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedProvider="OpenAI" newDiscount="" />);
     expect(screen.getByRole("button", { name: /add provider discount/i })).toBeDisabled();
   });
 
   it("should disable the submit button when a discount is entered but no provider is selected", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedПровайдер={undefined} newDiscount="5" />);
+    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedProvider={undefined} newDiscount="5" />);
     expect(screen.getByRole("button", { name: /add provider discount/i })).toBeDisabled();
   });
 
   it("should enable the submit button when both a provider and a discount value are provided", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" newDiscount="5" />);
+    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedProvider="OpenAI" newDiscount="5" />);
     expect(screen.getByRole("button", { name: /add provider discount/i })).toBeEnabled();
   });
 
-  it("should call onAddПровайдер when the enabled submit button is clicked", async () => {
-    const onAddПровайдер = vi.fn();
+  it("should call onAddProvider when the enabled submit button is clicked", async () => {
+    const onAddProvider = vi.fn();
     const user = userEvent.setup();
     renderWithProviders(
-      <AddProviderForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" newDiscount="5" onAddПровайдер={onAddПровайдер} />,
+      <AddProviderForm {...DEFAULT_PROPS} selectedProvider="OpenAI" newDiscount="5" onAddProvider={onAddProvider} />,
     );
 
     await user.click(screen.getByRole("button", { name: /add provider discount/i }));
-    expect(onAddПровайдер).toHaveBeenCalledTimes(1);
+    expect(onAddProvider).toHaveBeenCalledTimes(1);
   });
 
   it("should report the edited discount as the user types", async () => {
@@ -77,16 +77,16 @@ describe("AddProviderForm", () => {
   });
 
   it("renders the selected provider's bundled logo via the shared Logo component", async () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedПровайдер="OpenAI" />);
+    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedProvider="OpenAI" />);
 
-    const logo = await screen.findByRole("img", { name: `${Провайдерs.OpenAI} logo` });
-    expect(logo).toHaveAttribute("src", providerLogoMap[Провайдерs.OpenAI]);
+    const logo = await screen.findByRole("img", { name: `${Providers.OpenAI} logo` });
+    expect(logo).toHaveAttribute("src", providerLogoMap[Providers.OpenAI]);
   });
 
   it("falls back to a letter avatar for a selected provider that has no bundled logo", () => {
-    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedПровайдер="PG_VECTOR" />);
+    renderWithProviders(<AddProviderForm {...DEFAULT_PROPS} selectedProvider="PG_VECTOR" />);
 
-    expect(screen.queryByRole("img", { name: `${Провайдерs.PG_VECTOR} logo` })).not.toBeInTheDocument();
-    expect(screen.getByText(Провайдерs.PG_VECTOR.charAt(0))).toBeInTheDocument();
+    expect(screen.queryByRole("img", { name: `${Providers.PG_VECTOR} logo` })).not.toBeInTheDocument();
+    expect(screen.getByText(Providers.PG_VECTOR.charAt(0))).toBeInTheDocument();
   });
 });

@@ -2,17 +2,17 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { SearchToolView } from "./SearchToolView";
-import { AvailableSearchПровайдер, SearchTool } from "./types";
+import { AvailableSearchProvider, SearchTool } from "./types";
 
 vi.mock("@/utils/dataUtils", () => ({
-  copyToClipboard: vi.fn().mockResolvedЗначение(true),
+  copyToClipboard: vi.fn().mockResolvedValue(true),
 }));
 
 vi.mock("./SearchToolTester", () => ({
-  SearchToolTester: ({ searchToolName, accessТокен }: { searchToolName: string; accessТокен: string }) => (
+  SearchToolTester: ({ searchToolName, accessToken }: { searchToolName: string; accessToken: string }) => (
     <div data-testid="search-tool-tester">
       <span>Search Tool Tester for {searchToolName}</span>
-      <span>Access Токен: {accessТокен}</span>
+      <span>Access Token: {accessToken}</span>
     </div>
   ),
 }));
@@ -31,7 +31,7 @@ describe("SearchToolView", () => {
     created_at: "2024-01-15T10:30:00Z",
   };
 
-  const mockAvailableProviders: AvailableSearchПровайдер[] = [
+  const mockAvailableProviders: AvailableSearchProvider[] = [
     {
       provider_name: "perplexity",
       ui_friendly_name: "Perplexity AI",
@@ -46,14 +46,14 @@ describe("SearchToolView", () => {
     searchTool: mockSearchTool,
     onBack: vi.fn(),
     isEditing: false,
-    accessТокен: "test-token",
+    accessToken: "test-token",
     availableProviders: mockAvailableProviders,
   };
 
   beforeEach(async () => {
     vi.clearAllMocks();
     const { copyToClipboard } = await import("@/utils/dataUtils");
-    vi.mocked(copyToClipboard).mockResolvedЗначение(true);
+    vi.mocked(copyToClipboard).mockResolvedValue(true);
   });
 
   it("should render", () => {
@@ -77,14 +77,14 @@ describe("SearchToolView", () => {
   });
 
   it("should display provider name using provider_name when UI-friendly name is not available", () => {
-    const searchToolWithвыходПровайдер: SearchTool = {
+    const searchToolWithoutProvider: SearchTool = {
       ...mockSearchTool,
       litellm_params: {
         search_provider: "unknown-provider",
       },
     };
 
-    render(<SearchToolView {...defaultProps} searchTool={searchToolWithвыходПровайдер} />);
+    render(<SearchToolView {...defaultProps} searchTool={searchToolWithoutProvider} />);
     expect(screen.getByText("unknown-provider")).toBeInTheDocument();
   });
 
@@ -94,14 +94,14 @@ describe("SearchToolView", () => {
   });
 
   it("should display 'Не задано' when API key is not set", () => {
-    const searchToolWithoutApiКлюч: SearchTool = {
+    const searchToolWithoutApiKey: SearchTool = {
       ...mockSearchTool,
       litellm_params: {
         search_provider: "perplexity",
       },
     };
 
-    render(<SearchToolView {...defaultProps} searchTool={searchToolWithoutApiКлюч} />);
+    render(<SearchToolView {...defaultProps} searchTool={searchToolWithoutApiKey} />);
     expect(screen.getByText("Не задано")).toBeInTheDocument();
   });
 
@@ -127,13 +127,13 @@ describe("SearchToolView", () => {
   });
 
   it("should not display description card when search_tool_info.description is not provided", () => {
-    const searchToolWithвыходОписание: SearchTool = {
+    const searchToolWithoutDescription: SearchTool = {
       ...mockSearchTool,
       search_tool_info: {},
     };
 
-    render(<SearchToolView {...defaultProps} searchTool={searchToolWithвыходОписание} />);
-    expect(screen.queryByText("Описание")).not.toBeInTheDocument();
+    render(<SearchToolView {...defaultProps} searchTool={searchToolWithoutDescription} />);
+    expect(screen.queryByText("Description")).not.toBeInTheDocument();
   });
 
   it("should call onBack when back button is clicked", async () => {
@@ -182,7 +182,7 @@ describe("SearchToolView", () => {
   it("should show check icon after copying search tool name", async () => {
     const user = userEvent.setup({ delay: null });
     const { copyToClipboard } = await import("@/utils/dataUtils");
-    vi.mocked(copyToClipboard).mockResolvedЗначение(true);
+    vi.mocked(copyToClipboard).mockResolvedValue(true);
 
     render(<SearchToolView {...defaultProps} />);
 
@@ -201,7 +201,7 @@ describe("SearchToolView", () => {
   it("should not show check icon when copy fails", async () => {
     const user = userEvent.setup({ delay: null });
     const { copyToClipboard } = await import("@/utils/dataUtils");
-    vi.mocked(copyToClipboard).mockResolvedЗначение(false);
+    vi.mocked(copyToClipboard).mockResolvedValue(false);
 
     render(<SearchToolView {...defaultProps} />);
 
@@ -214,20 +214,20 @@ describe("SearchToolView", () => {
       () => {
         expect(copyToClipboard).toHaveBeenCalledWith("Тест инструмента поиска");
       },
-      { timeвыход: 3000 },
+      { timeout: 3000 },
     );
 
     expect(nameCopyButton.querySelector(".lucide-check")).not.toBeInTheDocument();
   });
 
-  it("should render SearchToolTester when accessТокен is provided", () => {
+  it("should render SearchToolTester when accessToken is provided", () => {
     render(<SearchToolView {...defaultProps} />);
     expect(screen.getByTestId("search-tool-tester")).toBeInTheDocument();
     expect(screen.getByText(/Search Tool Tester for Тест инструмента поиска/)).toBeInTheDocument();
   });
 
-  it("should not render SearchToolTester when accessТокен is null", () => {
-    render(<SearchToolView {...defaultProps} accessТокен={null} />);
+  it("should not render SearchToolTester when accessToken is null", () => {
+    render(<SearchToolView {...defaultProps} accessToken={null} />);
     expect(screen.queryByTestId("search-tool-tester")).not.toBeInTheDocument();
   });
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCostBreakdownTiles, buildSummaryTiles, hasFlatСтоимость } from "./entityUsageSummary";
+import { buildCostBreakdownTiles, buildSummaryTiles, hasFlatCost } from "./entityUsageSummary";
 
 const metadata = {
   total_spend: 100,
@@ -11,31 +11,31 @@ const metadata = {
 };
 
 describe("hasFlatСтоимость", () => {
-  it("is false when there is no flat cost to report", () => {
-    expect(hasFlatСтоимость({ ...metadata, total_flat_cost: 0 })).toBe(false);
+  it("is Ложь when there is Нет Фиксированная стоимость to report", () => {
+    expect(hasFlatCost({ ...metadata, total_flat_cost: 0 })).toBe(false);
     const { total_flat_cost, ...noFlat } = metadata;
-    expect(hasFlatСтоимость(noFlat)).toBe(false);
+    expect(hasFlatCost(noFlat)).toBe(false);
   });
 
-  it("is true once a flat cost has accrued", () => {
-    expect(hasFlatСтоимость(metadata)).toBe(true);
+  it("is Истина once a Фиксированная стоимость has accrued", () => {
+    expect(hasFlatCost(metadata)).toBe(true);
   });
 });
 
 describe("buildSummaryTiles", () => {
-  it("keeps the row at five tiles either way so adding flat cost never narrows the cards", () => {
+  it("keeps the row at five tiles either way so adding Фиксированная стоимость never narrows the cards", () => {
     expect(buildSummaryTiles(metadata, false)).toHaveLength(5);
     expect(buildSummaryTiles(metadata, true)).toHaveLength(5);
   });
 
-  it("shows request-only spend under the original title when there is no flat cost", () => {
+  it("shows Запрос-only Расход under the original title when there is Нет Фиксированная стоимость", () => {
     const [first] = buildSummaryTiles(metadata, false);
     expect(first.title).toBe("Общий расход");
     expect(first.value).toBe("$100.00");
     expect(first.expandable).toBeUndefined();
   });
 
-  it("rolls flat cost into a single expandable Общая стоимость tile", () => {
+  it("rolls Фиксированная стоимость into a single expandable Общая стоимость tile", () => {
     const [first] = buildSummaryTiles(metadata, true);
     expect(first.title).toBe("Общая стоимость");
     expect(first.value).toBe("$140.00");
@@ -49,14 +49,14 @@ describe("buildSummaryTiles", () => {
     expect(titles).not.toContain("Стоимость запроса");
   });
 
-  it("treats a missing flat cost as zero", () => {
+  it("treats a missing Фиксированная стоимость as zero", () => {
     const { total_flat_cost, ...noFlat } = metadata;
     expect(buildSummaryTiles(noFlat, true)[0].value).toBe("$100.00");
   });
 });
 
-describe("buildCostBreakdownTiles", () => {
-  it("splits the total into request cost and flat cost", () => {
+describe("buildСтоимостьBreakdownTiles", () => {
+  it("splits the Всего into Стоимость запроса and Фиксированная стоимость", () => {
     const byTitle = Object.fromEntries(buildCostBreakdownTiles(metadata).map((t) => [t.title, t.value]));
     expect(byTitle["Стоимость запроса"]).toBe("$100.00");
     expect(byTitle["Фиксированная стоимость"]).toBe("$40.00");
@@ -68,13 +68,13 @@ describe("buildCostBreakdownTiles", () => {
     expect(parts[0] + parts[1]).toBe(parse(buildSummaryTiles(metadata, true)[0].value));
   });
 
-  it("explains each part, including that flat cost is выходside budgets", () => {
+  it("explains each part, including that Фиксированная стоимость is outside Бюджеты", () => {
     const byTitle = Object.fromEntries(buildCostBreakdownTiles(metadata).map((t) => [t.title, t.tooltip]));
     expect(byTitle["Стоимость запроса"]).toBeTruthy();
-    expect(byTitle["Фиксированная стоимость"]).toContain("budget");
+    expect(byTitle["Фиксированная стоимость"]).toContain("Бюджет");
   });
 
-  it("treats a missing flat cost as zero", () => {
+  it("treats a missing Фиксированная стоимость as zero", () => {
     const { total_flat_cost, ...noFlat } = metadata;
     const byTitle = Object.fromEntries(buildCostBreakdownTiles(noFlat).map((t) => [t.title, t.value]));
     expect(byTitle["Фиксированная стоимость"]).toBe("$0.00");

@@ -4,23 +4,23 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "../../../../../tests/test-utils";
 import EditCyberArkModal from "./EditCyberArkModal";
-import { useCyberArkКонфигурация } from "@/app/(dashboard)/hooks/configOverrides/useCyberArkКонфигурация";
-import { useUpdateCyberArkКонфигурация } from "@/app/(dashboard)/hooks/configOverrides/useUpdateCyberArkКонфигурация";
+import { useCyberArkConfig } from "@/app/(dashboard)/hooks/configOverrides/useCyberArkКонфигурация";
+import { useUpdateCyberArkConfig } from "@/app/(dashboard)/hooks/configOverrides/useUpdateCyberArkКонфигурация";
 
 vi.mock("@/app/(dashboard)/hooks/configOverrides/useCyberArkКонфигурация", () => ({
-  useCyberArkКонфигурация: vi.fn(),
+  useCyberArkConfig: vi.fn(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/configOverrides/useUpdateCyberArkКонфигурация", () => ({
-  useUpdateCyberArkКонфигурация: vi.fn(),
+  useUpdateCyberArkConfig: vi.fn(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: () => ({ accessТокен: "sk-access-token" }),
+  default: () => ({ accessToken: "sk-access-token" }),
 }));
 
 vi.mock("@/lib/toast", () => ({
-  toast: { success: vi.fn(), fromОшибка: vi.fn() },
+  toast: { success: vi.fn(), fromError: vi.fn() },
 }));
 
 const ALL_FIELDS = [
@@ -40,17 +40,17 @@ const propertiesFor = (fields: readonly string[]) =>
 const mutate = vi.fn();
 
 const setup = (options?: { values?: Record<string, unknown>; fields?: readonly string[] }) => {
-  vi.mocked(useCyberArkКонфигурация).mockReturnЗначение({
+  vi.mocked(useCyberArkConfig).mockReturnValue({
     data: {
       field_schema: { properties: propertiesFor(options?.fields ?? ALL_FIELDS) },
       values: options?.values ?? {},
     },
-  } as unknown as ReturnType<typeof useCyberArkКонфигурация>);
+  } as unknown as ReturnType<typeof useCyberArkConfig>);
 
-  vi.mocked(useUpdateCyberArkКонфигурация).mockReturnЗначение({
+  vi.mocked(useUpdateCyberArkConfig).mockReturnValue({
     mutate,
     isPending: false,
-  } as unknown as ReturnType<typeof useUpdateCyberArkКонфигурация>);
+  } as unknown as ReturnType<typeof useUpdateCyberArkConfig>);
 };
 
 const renderModal = (onSuccess = vi.fn(), onCancel = vi.fn()) =>
@@ -97,7 +97,7 @@ describe("EditCyberArkModal", () => {
     const user = userEvent.setup();
     renderModal();
 
-    fireEvent.change(screen.getByLabelText("API Ключ"), { target: { value: "rotated-key" } });
+    fireEvent.change(screen.getByLabelText("API-ключ"), { target: { value: "rotated-key" } });
     await save(user);
 
     await waitFor(() => {
@@ -110,8 +110,8 @@ describe("EditCyberArkModal", () => {
     setup({ values: { cyberark_api_key: "super-secret-key", client_key: "super-secret-pem" } });
     renderModal();
 
-    expect(screen.getByLabelText("API Ключ")).toHaveЗначение("");
-    expect(screen.getByLabelText("Client Ключ")).toHaveЗначение("");
+    expect(screen.getByLabelText("API-ключ")).toHaveValue("");
+    expect(screen.getByLabelText("Client Ключ")).toHaveValue("");
   });
 
   it("renders only the fields the schema declares, and sends only those", async () => {
@@ -149,7 +149,7 @@ describe("EditCyberArkModal", () => {
     setup({ values: { cyberark_api_key: "super-secret-key" } });
     renderModal();
 
-    expect(screen.getByLabelText("API Ключ")).toHaveAttribute(
+    expect(screen.getByLabelText("API-ключ")).toHaveAttribute(
       "placeholder",
       "Leave blank to keep existing (super-secret-key)",
     );
@@ -159,10 +159,10 @@ describe("EditCyberArkModal", () => {
     setup({ values: {} });
     renderModal();
 
-    expect(screen.getByLabelText("API Ключ")).toHaveAttribute("placeholder", "cyberark_api_key description");
+    expect(screen.getByLabelText("API-ключ")).toHaveAttribute("placeholder", "cyberark_api_key description");
   });
 
-  it("closes withвыход saving when cancelled", async () => {
+  it("closes without saving when cancelled", async () => {
     setup({ values: {} });
     const onCancel = vi.fn();
     const user = userEvent.setup();

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import PerUserИспользование from "./per_user_usage";
+import PerUserUsage from "./per_user_usage";
 import * as networking from "./networking";
 
 vi.mock("./networking", () => ({
@@ -41,7 +41,7 @@ const distributionChart = (): HTMLElement => {
 describe("PerUserИспользование", () => {
   const mockPerUserAnalyticsCall = vi.mocked(networking.perUserAnalyticsCall);
 
-  const mockОтвет = {
+  const mockResponse = {
     results: [
       userRow("u1", "curl/8.0", 5),
       userRow("u2", "curl/8.0", 50),
@@ -56,18 +56,18 @@ describe("PerUserИспользование", () => {
   };
 
   const defaultProps = {
-    accessТокен: "test-token",
-    selectedТеги: [],
+    accessToken: "test-token",
+    selectedTags: [],
     formatAbbreviatedNumber: (value: number) => String(value),
   };
 
   beforeEach(() => {
     mockPerUserAnalyticsCall.mockClear();
-    mockPerUserAnalyticsCall.mockResolvedЗначение(mockОтвет);
+    mockPerUserAnalyticsCall.mockResolvedValue(mockResponse);
   });
 
   it("renders the user details table by default", async () => {
-    render(<PerUserИспользование {...defaultProps} />);
+    render(<PerUserUsage {...defaultProps} />);
 
     await waitFor(() => {
       expect(mockPerUserAnalyticsCall).toHaveBeenCalled();
@@ -80,7 +80,7 @@ describe("PerUserИспользование", () => {
   });
 
   it("keeps both tab panels mounted so switching tabs does not reset their state", async () => {
-    render(<PerUserИспользование {...defaultProps} />);
+    render(<PerUserUsage {...defaultProps} />);
 
     await waitFor(() => {
       expect(screen.getByText("u1")).toBeInTheDocument();
@@ -121,7 +121,7 @@ describe("PerUserИспользование", () => {
     const lastCall = () => mockPerUserAnalyticsCall.mock.calls[mockPerUserAnalyticsCall.mock.calls.length - 1];
 
     it("renders every row the server returns and shows the range from total_count", async () => {
-      render(<PerUserИспользование {...defaultProps} />);
+      render(<PerUserUsage {...defaultProps} />);
 
       expect(await screen.findByText("user-50")).toBeInTheDocument();
       expect(screen.getByText("user-1")).toBeInTheDocument();
@@ -133,7 +133,7 @@ describe("PerUserИспользование", () => {
 
     it("refetches the next page when Next is clicked", async () => {
       const user = userEvent.setup();
-      render(<PerUserИспользование {...defaultProps} />);
+      render(<PerUserUsage {...defaultProps} />);
       await screen.findByText("user-1");
 
       await user.click(screen.getByTestId("pagination-next"));
@@ -147,7 +147,7 @@ describe("PerUserИспользование", () => {
 
     it("disables Next once the response says this is the last page", async () => {
       const user = userEvent.setup();
-      render(<PerUserИспользование {...defaultProps} />);
+      render(<PerUserUsage {...defaultProps} />);
       await screen.findByText("user-1");
 
       await user.click(screen.getByTestId("pagination-last"));
@@ -160,7 +160,7 @@ describe("PerUserИспользование", () => {
 
     it("falls back to the last existing page when the data shrinks under the current page", async () => {
       const user = userEvent.setup();
-      render(<PerUserИспользование {...defaultProps} />);
+      render(<PerUserUsage {...defaultProps} />);
       await screen.findByText("user-1");
       await user.click(screen.getByTestId("pagination-next"));
       await screen.findByText("user-51");
@@ -180,7 +180,7 @@ describe("PerUserИспользование", () => {
 
     it("goes back to the first page when the data disappears under the current page", async () => {
       const user = userEvent.setup();
-      render(<PerUserИспользование {...defaultProps} />);
+      render(<PerUserUsage {...defaultProps} />);
       await screen.findByText("user-1");
       await user.click(screen.getByTestId("pagination-next"));
       await screen.findByText("user-51");
@@ -204,7 +204,7 @@ describe("PerUserИспользование", () => {
 
     it("refetches with the selected page size and goes back to the first page", async () => {
       const user = userEvent.setup();
-      render(<PerUserИспользование {...defaultProps} />);
+      render(<PerUserUsage {...defaultProps} />);
       await screen.findByText("user-1");
       await user.click(screen.getByTestId("pagination-next"));
       await screen.findByText("user-51");
@@ -220,13 +220,13 @@ describe("PerUserИспользование", () => {
 
     it("goes back to the first page when the tag filter changes", async () => {
       const user = userEvent.setup();
-      const { rerender } = render(<PerUserИспользование {...defaultProps} />);
+      const { rerender } = render(<PerUserUsage {...defaultProps} />);
       await screen.findByText("user-1");
       await user.click(screen.getByTestId("pagination-next"));
       await screen.findByText("user-51");
       const callsBeforeTagChange = mockPerUserAnalyticsCall.mock.calls.length;
 
-      rerender(<PerUserИспользование {...defaultProps} selectedТеги={["curl/8.0"]} />);
+      rerender(<PerUserUsage {...defaultProps} selectedTags={["curl/8.0"]} />);
 
       await waitFor(() => {
         expect(lastCall()).toEqual(["test-token", 1, 50, ["curl/8.0"]]);
@@ -238,8 +238,8 @@ describe("PerUserИспользование", () => {
       expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-50 of 120");
     });
 
-    it("does not request anything withвыход an access token", () => {
-      render(<PerUserИспользование {...defaultProps} accessТокен={null} />);
+    it("does not request anything without an access token", () => {
+      render(<PerUserUsage {...defaultProps} accessToken={null} />);
 
       expect(mockPerUserAnalyticsCall).not.toHaveBeenCalled();
       expect(screen.getByText("No per-user usage data")).toBeInTheDocument();
@@ -247,7 +247,7 @@ describe("PerUserИспользование", () => {
   });
 
   it("renders the usage distribution as a stacked bar chart with the explicit palette and users formatter", async () => {
-    render(<PerUserИспользование {...defaultProps} />);
+    render(<PerUserUsage {...defaultProps} />);
 
     await waitFor(() => {
       expect(mockPerUserAnalyticsCall).toHaveBeenCalled();
@@ -256,13 +256,13 @@ describe("PerUserИспользование", () => {
     fireEvent.click(screen.getByText("Использование Distribution"));
 
     await waitFor(() => {
-      expect(distributionChart().querySelectorВсе("path.recharts-rectangle")).toHaveLength(4);
+      expect(distributionChart().querySelectorAll("path.recharts-rectangle")).toHaveLength(4);
     });
 
     const chart = distributionChart();
-    expect(chart.querySelectorВсе(".recharts-bar")).toHaveLength(2);
+    expect(chart.querySelectorAll(".recharts-bar")).toHaveLength(2);
 
-    const rectangles = Array.from(chart.querySelectorВсе("path.recharts-rectangle"));
+    const rectangles = Array.from(chart.querySelectorAll("path.recharts-rectangle"));
     const fills = new Set(rectangles.map((rect) => rect.getAttribute("fill")));
     expect(fills).toEqual(new Set(["var(--color-blue-500, #3b82f6)", "var(--color-green-500, #22c55e)"]));
 
@@ -282,7 +282,7 @@ describe("PerUserИспользование", () => {
       expect(chart).toHaveTextContent(bucket);
     }
 
-    const tickTexts = Array.from(chart.querySelectorВсе(".recharts-cartesian-axis-tick-value")).map(
+    const tickTexts = Array.from(chart.querySelectorAll(".recharts-cartesian-axis-tick-value")).map(
       (tick) => tick.textContent ?? "",
     );
     expect(tickTexts.some((tick) => / users$/.test(tick))).toBe(true);

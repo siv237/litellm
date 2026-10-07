@@ -3,13 +3,13 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import MCPSemanticFilterTestPanel from "./MCPSemanticFilterTestPanel";
-import { TestРезультат } from "./semanticFilterTestUtils";
+import { TestResult } from "./semanticFilterTestUtils";
 
-vi.mock("@/components/common_components/РежимlSelector", () => ({
+vi.mock("@/components/common_components/РежимlВыбратьor", () => ({
   default: ({ onChange, value, labelText, disabled }: any) => (
     <div>
-      <label htmlFor="Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-selector">{labelText ?? "Выберите модель"}</label>
-      <select id="Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-selector" value={value} onChange={(e) => onChange(e.target.value)} disabled={disabled}>
+      <label htmlFor="model-selector">{labelText ?? "Выберите модель"}</label>
+      <select id="model-selector" value={value} onChange={(e) => onChange(e.target.value)} disabled={disabled}>
         <option value="gpt-4o">gpt-4o</option>
         <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
       </select>
@@ -18,16 +18,16 @@ vi.mock("@/components/common_components/РежимlSelector", () => ({
 }));
 
 const buildProps = (overrides: Partial<React.ComponentProps<typeof MCPSemanticFilterTestPanel>> = {}) => ({
-  accessТокен: "test-token",
-  testЗапрос: "",
-  setTestЗапрос: vi.fn(),
+  accessToken: "test-token",
+  testQuery: "",
+  setTestQuery: vi.fn(),
   testModel: "gpt-4o",
   setTestModel: vi.fn(),
   isTesting: false,
   onTest: vi.fn(),
   filterEnabled: true,
-  testРезультат: null as TestРезультат | null,
-  testОшибка: null as string | null,
+  testResult: null as TestResult | null,
+  testError: null as string | null,
   curlCommand: "curl --location 'http://localhost:4000/v1/responses'",
   ...overrides,
 });
@@ -47,35 +47,35 @@ describe("MCPSemanticFilterTestPanel", () => {
     expect(screen.getByPlaceholderText(/enter a test query to see which tools/i)).toBeInTheDocument();
   });
 
-  it("should call setTestЗапрос when user types in the query field", () => {
-    const mockSetTestЗапрос = vi.fn();
-    render(<MCPSemanticFilterTestPanel {...buildProps({ setTestЗапрос: mockSetTestЗапрос })} />);
+  it("should call setTestQuery when user types in the query field", () => {
+    const mockSetTestQuery = vi.fn();
+    render(<MCPSemanticFilterTestPanel {...buildProps({ setTestQuery: mockSetTestQuery })} />);
 
     const textarea = screen.getByPlaceholderText(/enter a test query to see which tools/i);
     fireEvent.change(textarea, { target: { value: "find relevant tools" } });
 
-    expect(mockSetTestЗапрос).toHaveBeenCalledWith("find relevant tools");
+    expect(mockSetTestQuery).toHaveBeenCalledWith("find relevant tools");
   });
 
-  it("should disable the Test Фильтр button when testЗапрос is empty", () => {
-    render(<MCPSemanticFilterTestPanel {...buildProps({ testЗапрос: "" })} />);
+  it("should disable the Test Filter button when testQuery is empty", () => {
+    render(<MCPSemanticFilterTestPanel {...buildProps({ testQuery: "" })} />);
     expect(screen.getByRole("button", { name: /test filter/i })).toBeDisabled();
   });
 
-  it("should disable the Test Фильтр button when filterEnabled is false", () => {
-    render(<MCPSemanticFilterTestPanel {...buildProps({ testЗапрос: "search query", filterEnabled: false })} />);
+  it("should disable the Test Filter button when filterEnabled is false", () => {
+    render(<MCPSemanticFilterTestPanel {...buildProps({ testQuery: "search query", filterEnabled: false })} />);
     expect(screen.getByRole("button", { name: /test filter/i })).toBeDisabled();
   });
 
-  it("should enable the Test Фильтр button when testЗапрос is set and filter is enabled", () => {
-    render(<MCPSemanticFilterTestPanel {...buildProps({ testЗапрос: "search query" })} />);
+  it("should enable the Test Filter button when testQuery is set and filter is enabled", () => {
+    render(<MCPSemanticFilterTestPanel {...buildProps({ testQuery: "search query" })} />);
     expect(screen.getByRole("button", { name: /test filter/i })).toBeEnabled();
   });
 
-  it("should call onTest when the Test Фильтр button is clicked", async () => {
+  it("should call onTest when the Test Filter button is clicked", async () => {
     const mockOnTest = vi.fn();
     const user = userEvent.setup();
-    render(<MCPSemanticFilterTestPanel {...buildProps({ testЗапрос: "search query", onTest: mockOnTest })} />);
+    render(<MCPSemanticFilterTestPanel {...buildProps({ testQuery: "search query", onTest: mockOnTest })} />);
 
     await user.click(screen.getByRole("button", { name: /test filter/i }));
     expect(mockOnTest).toHaveBeenCalledOnce();
@@ -91,16 +91,16 @@ describe("MCPSemanticFilterTestPanel", () => {
     expect(screen.queryByText("Semantic filtering is disabled")).not.toBeInTheDocument();
   });
 
-  it("should display selected and filtered-выход counts when testРезультат is provided", () => {
-    const testРезультат: TestРезультат = {
-      totalИнструменты: 10,
-      selectedИнструменты: 3,
+  it("should display selected and filtered-out counts when testРезультат is provided", () => {
+    const testResult: TestResult = {
+      totalTools: 10,
+      selectedTools: 3,
       tools: ["wiki-fetch", "github-search", "slack-post"],
     };
-    render(<MCPSemanticFilterTestPanel {...buildProps({ testРезультат })} />);
+    render(<MCPSemanticFilterTestPanel {...buildProps({ testResult })} />);
 
     expect(screen.getByText("3 of 10 tools selected")).toBeInTheDocument();
-    expect(screen.getByText("7 tools filtered выход")).toBeInTheDocument();
+    expect(screen.getByText("7 tools filtered out")).toBeInTheDocument();
     expect(screen.getByText("wiki-fetch")).toBeInTheDocument();
     expect(screen.getByText("github-search")).toBeInTheDocument();
     expect(screen.getByText("slack-post")).toBeInTheDocument();
@@ -108,44 +108,44 @@ describe("MCPSemanticFilterTestPanel", () => {
   });
 
   it("should note how many selected tools are missing when the header list is incomplete", () => {
-    const testРезультат: TestРезультат = {
-      totalИнструменты: 40,
-      selectedИнструменты: 8,
+    const testResult: TestResult = {
+      totalTools: 40,
+      selectedTools: 8,
       tools: ["metrics_mcp-node_query_by_id", "metrics_mcp-latency_query_api", "inventory_mcp-site_lookup"],
     };
-    render(<MCPSemanticFilterTestPanel {...buildProps({ testРезультат })} />);
+    render(<MCPSemanticFilterTestPanel {...buildProps({ testResult })} />);
 
     expect(screen.getByText("+5 more selected tools not shown")).toBeInTheDocument();
   });
 
-  it("should surface a zero filtered-выход count when the filter selected every tool", () => {
-    const testРезультат: TestРезультат = {
-      totalИнструменты: 207,
-      selectedИнструменты: 207,
+  it("should surface a zero filtered-out count when the filter selected every tool", () => {
+    const testResult: TestResult = {
+      totalTools: 207,
+      selectedTools: 207,
       tools: ["tool-a", "tool-b"],
     };
-    render(<MCPSemanticFilterTestPanel {...buildProps({ testРезультат })} />);
+    render(<MCPSemanticFilterTestPanel {...buildProps({ testResult })} />);
 
     expect(screen.getByText("207 of 207 tools selected")).toBeInTheDocument();
-    expect(screen.getByText("0 tools filtered выход")).toBeInTheDocument();
+    expect(screen.getByText("0 tools filtered out")).toBeInTheDocument();
   });
 
   it("should not render the results section when testРезультат is null", () => {
-    render(<MCPSemanticFilterTestPanel {...buildProps({ testРезультат: null })} />);
+    render(<MCPSemanticFilterTestPanel {...buildProps({ testResult: null })} />);
     expect(screen.queryByText("Результатs")).not.toBeInTheDocument();
   });
 
-  it("should render an error banner with the backend message when testОшибка is set", () => {
-    const testОшибка =
-      "MCP semantic tool filtering could not run: embedding Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию 'text-embedding-3-small' exceeded its context window while embedding the user query. Switch to an embedding Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию with a larger context window, or disable semantic tool filtering.";
-    render(<MCPSemanticFilterTestPanel {...buildProps({ testОшибка })} />);
+  it("should render an error banner with the backend message when testError is set", () => {
+    const testError =
+      "MCP semantic tool filtering could not run: embedding model 'text-embedding-3-small' exceeded its context window while embedding the user query. Switch to an embedding model with a larger context window, or disable semantic tool filtering.";
+    render(<MCPSemanticFilterTestPanel {...buildProps({ testError })} />);
 
     expect(screen.getByText("Semantic filtering did not run")).toBeInTheDocument();
-    expect(screen.getByText(testОшибка)).toBeInTheDocument();
+    expect(screen.getByText(testError)).toBeInTheDocument();
   });
 
-  it("should not render the error banner when testОшибка is null", () => {
-    render(<MCPSemanticFilterTestPanel {...buildProps({ testОшибка: null })} />);
+  it("should not render the error banner when testError is null", () => {
+    render(<MCPSemanticFilterTestPanel {...buildProps({ testError: null })} />);
     expect(screen.queryByText("Semantic filtering did not run")).not.toBeInTheDocument();
   });
 

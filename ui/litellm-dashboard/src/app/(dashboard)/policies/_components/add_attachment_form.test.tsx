@@ -5,26 +5,26 @@ import { renderWithProviders } from "@/../tests/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as networking from "@/components/networking";
 import AddAttachmentForm from "./add_attachment_form";
-import { Политика } from "@/components/policies/types";
+import { Policy } from "@/components/policies/types";
 
 vi.mock("@/components/networking");
 
 vi.mock("./impact_preview_alert", () => ({
-  default: ({ impactРезультат }: { impactРезультат: any }) =>
+  default: ({ impactResult }: { impactResult: any }) =>
     React.createElement("div", { "data-testid": "impact-preview" }, `${impactРезультат.affected_keys_count} keys`),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: () => ({ userId: "admin-user-id", userRole: "Admin", accessТокен: "test-token" }),
+  default: () => ({ userId: "admin-user-id", userRole: "Admin", accessToken: "test-token" }),
 }));
 
-const makeПолитика = (overrides: Partial<Политика> = {}): Политика => ({
+const makePolicy = (overrides: Partial<Policy> = {}): Policy => ({
   policy_id: "policy-id-1",
   policy_name: "test-policy",
   inherit: null,
   description: null,
-  гардрейловs_add: [],
-  гардрейловs_remove: [],
+  guardrails_add: [],
+  guardrails_remove: [],
   condition: null,
   ...overrides,
 });
@@ -33,23 +33,23 @@ const defaultProps = {
   visible: true,
   onClose: vi.fn(),
   onSuccess: vi.fn(),
-  accessТокен: "test-token",
+  accessToken: "test-token",
   policies: [
-    makeПолитика({ policy_name: "policy-alpha" }),
-    makeПолитика({ policy_name: "policy-beta", policy_id: "id-2" }),
+    makePolicy({ policy_name: "policy-alpha" }),
+    makePolicy({ policy_name: "policy-beta", policy_id: "id-2" }),
   ],
   createAttachment: vi.fn(),
 };
 
-const teamListРезультат = (aliases: string[]) =>
+const teamListResult = (aliases: string[]) =>
   aliases.map((team_alias) => ({ team_alias })) as unknown as Awaited<ReturnType<typeof networking.teamListCall>>;
 
 describe("AddAttachmentForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(networking.teamListCall).mockResolvedЗначение([]);
-    vi.mocked(networking.keyListCall).mockResolvedЗначение({ keys: [] });
-    vi.mocked(networking.modelAvailableCall).mockResolvedЗначение({ data: [] });
+    vi.mocked(networking.teamListCall).mockResolvedValue([]);
+    vi.mocked(networking.keyListCall).mockResolvedValue({ keys: [] });
+    vi.mocked(networking.modelAvailableCall).mockResolvedValue({ data: [] });
   });
 
   it("should render the modal title when visible", async () => {
@@ -62,7 +62,7 @@ describe("AddAttachmentForm", () => {
     expect(screen.queryByText("Create Политика Attachment")).not.toBeInTheDocument();
   });
 
-  it("should fetch teams, keys, and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs on mount when visible and accessТокен are provided", async () => {
+  it("should fetch teams, keys, and models on mount when visible and accessToken are provided", async () => {
     renderWithProviders(<AddAttachmentForm {...defaultProps} />);
     await waitFor(() => {
       expect(networking.teamListCall).toHaveBeenCalled();
@@ -77,8 +77,8 @@ describe("AddAttachmentForm", () => {
     expect(networking.teamListCall).toHaveBeenCalledWith("test-token", null, null);
   });
 
-  it("should not fetch teams, keys, or Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs when accessТокен is null", () => {
-    renderWithProviders(<AddAttachmentForm {...defaultProps} accessТокен={null} />);
+  it("should not fetch teams, keys, or models when accessToken is null", () => {
+    renderWithProviders(<AddAttachmentForm {...defaultProps} accessToken={null} />);
     expect(networking.teamListCall).not.toHaveBeenCalled();
     expect(networking.keyListCall).not.toHaveBeenCalled();
     expect(networking.modelAvailableCall).not.toHaveBeenCalled();
@@ -128,7 +128,7 @@ describe("AddAttachmentForm", () => {
 
   const TEAMS_ERROR = /these teams don't exist/i;
 
-  const openSpecificОбласть = async (user: UserEvent) => {
+  const openSpecificScope = async (user: UserEvent) => {
     await screen.findByText("Create Политика Attachment");
     await waitFor(() => expect(networking.teamListCall).toHaveBeenCalled());
     await user.click(screen.getByRole("radio", { name: /specific/i }));
@@ -137,7 +137,7 @@ describe("AddAttachmentForm", () => {
   const enterTeam = async (user: UserEvent, value: string) => {
     const input = screen.getByLabelText("Команды");
     await user.click(input);
-    await user.type(input, `${value}{Введите}`);
+    await user.type(input, `${value}{Enter}`);
   };
 
   // Submits and waits for the validation cycle to settle. No policy is selected, so
@@ -150,10 +150,10 @@ describe("AddAttachmentForm", () => {
 
   it("blocks submit with a field error when a concrete team that does not exist is entered", async () => {
     const user = userEvent.setup();
-    vi.mocked(networking.teamListCall).mockResolvedЗначение(teamListРезультат(["real-team"]));
+    vi.mocked(networking.teamListCall).mockResolvedValue(teamListResult(["real-team"]));
     const createAttachment = vi.fn();
     renderWithProviders(<AddAttachmentForm {...defaultProps} createAttachment={createAttachment} />);
-    await openSpecificОбласть(user);
+    await openSpecificScope(user);
     await enterTeam(user, "ghost-team");
     await submitAndSettle(user);
     expect(screen.getByText(TEAMS_ERROR)).toBeInTheDocument();
@@ -162,9 +162,9 @@ describe("AddAttachmentForm", () => {
 
   it("does not flag a team that exists", async () => {
     const user = userEvent.setup();
-    vi.mocked(networking.teamListCall).mockResolvedЗначение(teamListРезультат(["real-team"]));
+    vi.mocked(networking.teamListCall).mockResolvedValue(teamListResult(["real-team"]));
     renderWithProviders(<AddAttachmentForm {...defaultProps} />);
-    await openSpecificОбласть(user);
+    await openSpecificScope(user);
     await enterTeam(user, "real-team");
     await submitAndSettle(user);
     expect(screen.queryByText(TEAMS_ERROR)).not.toBeInTheDocument();
@@ -172,9 +172,9 @@ describe("AddAttachmentForm", () => {
 
   it("does not flag a wildcard pattern even when it matches no existing team", async () => {
     const user = userEvent.setup();
-    vi.mocked(networking.teamListCall).mockResolvedЗначение(teamListРезультат([]));
+    vi.mocked(networking.teamListCall).mockResolvedValue(teamListResult([]));
     renderWithProviders(<AddAttachmentForm {...defaultProps} />);
-    await openSpecificОбласть(user);
+    await openSpecificScope(user);
     await enterTeam(user, "healthcare-*");
     await submitAndSettle(user);
     expect(screen.queryByText(TEAMS_ERROR)).not.toBeInTheDocument();
@@ -182,9 +182,9 @@ describe("AddAttachmentForm", () => {
 
   it("defers to the backend (does not flag) when the team list failed to load", async () => {
     const user = userEvent.setup();
-    vi.mocked(networking.teamListCall).mockRejectedЗначение(new Ошибка("boom"));
+    vi.mocked(networking.teamListCall).mockRejectedValue(new Error("boom"));
     renderWithProviders(<AddAttachmentForm {...defaultProps} />);
-    await openSpecificОбласть(user);
+    await openSpecificScope(user);
     await enterTeam(user, "ghost-team");
     await submitAndSettle(user);
     expect(screen.queryByText(TEAMS_ERROR)).not.toBeInTheDocument();

@@ -2,14 +2,14 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { toast } from "@/lib/toast";
-import { testПодключениеЗапрос } from "../networking";
-import { prepareModelAddЗапрос } from "./handle_add_model_submit";
-import РежимlConnectionTest from "./Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_connection_test";
+import { testConnectionRequest } from "../networking";
+import { prepareModelAddRequest } from "./handle_add_model_submit";
+import ModelConnectionTest from "./model_connection_test";
 
-vi.mock("../networking", () => ({ testПодключениеЗапрос: vi.fn() }));
-vi.mock("./handle_add_model_submit", () => ({ prepareModelAddЗапрос: vi.fn() }));
+vi.mock("../networking", () => ({ testConnectionRequest: vi.fn() }));
+vi.mock("./handle_add_model_submit", () => ({ prepareModelAddRequest: vi.fn() }));
 
-const preparedЗапрос = [{ litellmParamsObj: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "openai/gpt-4o-mini" }, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoObj: { mode: "chat" } }];
+const preparedRequest = [{ litellmParamsObj: { model: "openai/gpt-4o-mini" }, modelInfoObj: { mode: "chat" } }];
 
 const finishConnectionTest = async () => {
   await act(async () => {
@@ -17,75 +17,75 @@ const finishConnectionTest = async () => {
   });
 };
 
-describe("РежимlConnectionTest", () => {
+describe("РежимlПодключениеTest", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.clearAllMocks();
-    vi.mocked(prepareModelAddЗапрос).mockResolvedЗначение(preparedЗапрос as never);
+    vi.mocked(prepareModelAddRequest).mockResolvedValue(preparedRequest as never);
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it("tests the prepared Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию and shows a successful result", async () => {
+  it("tests the prepared Модель and shows a successful Результат", async () => {
     const onTestComplete = vi.fn();
-    vi.mocked(testПодключениеЗапрос).mockResolvedЗначение({ status: "success" } as never);
+    vi.mocked(testConnectionRequest).mockResolvedValue({ status: "success" } as never);
 
     render(
-      <РежимlConnectionTest
-        formValues={{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o-mini" }}
-        accessТокен="sk-test"
-        testРежим="chat"
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюName="GPT-4o mini"
+      <ModelConnectionTest
+        formValues={{ model: "gpt-4o-mini" }}
+        accessToken="sk-test"
+        testMode="chat"
+        modelName="GPT-4o mini"
         onTestComplete={onTestComplete}
       />,
     );
 
-    expect(screen.getByText("Testing connection to GPT-4o mini...")).toBeInTheDocument();
+    expect(screen.getByText("Testing Подключение to GPT-4o mini...")).toBeInTheDocument();
     await finishConnectionTest();
 
-    expect(prepareModelAddЗапрос).toHaveBeenCalledWith({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o-mini" }, "sk-test", null);
-    expect(testПодключениеЗапрос).toHaveBeenCalledWith(
+    expect(prepareModelAddRequest).toHaveBeenCalledWith({ model: "gpt-4o-mini" }, "sk-test", null);
+    expect(testConnectionRequest).toHaveBeenCalledWith(
       "sk-test",
-      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "openai/gpt-4o-mini" },
+      { model: "openai/gpt-4o-mini" },
       { mode: "chat" },
       "chat",
     );
-    expect(screen.getByTestId("connection-success-msg")).toHaveTextContent("Подключение to GPT-4o mini successful!");
+    expect(screen.getByTestId("Подключение-success-msg")).toHaveTextContent("Подключение to GPT-4o mini successful!");
     expect(toast.success).toHaveBeenCalledWith("Тест подключения успешен!");
     expect(onTestComplete).toHaveBeenCalledTimes(1);
   });
 
-  it("shows a cleaned provider error, request details, and copies the curl command", async () => {
+  it("shows a cleaned Провайдер Ошибка, Детали запроса, and copies the curl command", async () => {
     const writeText = vi.fn();
-    Object.defineСвойство(navigator, "clipboard", { configurable: true, value: { writeText } });
-    vi.mocked(testПодключениеЗапрос).mockResolvedЗначение({
-      status: "error",
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
+    vi.mocked(testConnectionRequest).mockResolvedValue({
+      status: "Ошибка",
       result: {
-        error: "litellm.АутентификацияОшибка: invalid api key stack trace: hidden",
+        error: "litellm.АутентификацияОшибка: invalid API-ключ Трассировка стека: hidden",
         raw_request_typed_dict: {
           raw_request_api_base: "https://api.example.test/v1/chat/completions",
-          raw_request_body: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o-mini" },
+          raw_request_body: { model: "gpt-4o-mini" },
           raw_request_headers: { Authorization: "Bearer test" },
         },
       },
     } as never);
 
     render(
-      <РежимlConnectionTest
-        formValues={{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o-mini" }}
-        accessТокен="sk-test"
-        testРежим="chat"
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюName="GPT-4o mini"
+      <ModelConnectionTest
+        formValues={{ model: "gpt-4o-mini" }}
+        accessToken="sk-test"
+        testMode="chat"
+        modelName="GPT-4o mini"
       />,
     );
     await finishConnectionTest();
 
-    expect(screen.getByTestId("connection-failure-msg")).toHaveTextContent("Подключение to GPT-4o mini failed");
-    expect(screen.getByText("invalid api key")).toBeInTheDocument();
+    expect(screen.getByTestId("Подключение-failure-msg")).toHaveTextContent("Подключение to GPT-4o mini Ошибка");
+    expect(screen.getByText("invalid API-ключ")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Show Details" }));
+    fireEvent.click(screen.getByRole("button", { name: "Show Подробнее" }));
     expect(screen.getByText("Детали диагностики")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Скопировать в буфер/ }));
 
@@ -93,13 +93,13 @@ describe("РежимlConnectionTest", () => {
     expect(toast.success).toHaveBeenCalledWith("Скопировано в буфер");
   });
 
-  it("shows a preparation failure withвыход sending a connection request", async () => {
-    vi.mocked(prepareModelAddЗапрос).mockResolvedЗначение(null as never);
+  it("shows a preparation failure without sending a Подключение Запрос", async () => {
+    vi.mocked(prepareModelAddRequest).mockResolvedValue(null as never);
 
-    render(<РежимlConnectionTest formValues={{}} accessТокен="sk-test" testРежим="chat" />);
+    render(<ModelConnectionTest formValues={{}} accessToken="sk-test" testMode="chat" />);
     await finishConnectionTest();
 
-    expect(screen.getByText("Ошибка to prepare Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию data. Please check your form inputs.")).toBeInTheDocument();
-    expect(testПодключениеЗапрос).not.toHaveBeenCalled();
+    expect(screen.getByText("Ошибка to prepare Модель data. Please check your form inputs.")).toBeInTheDocument();
+    expect(testConnectionRequest).not.toHaveBeenCalled();
   });
 });

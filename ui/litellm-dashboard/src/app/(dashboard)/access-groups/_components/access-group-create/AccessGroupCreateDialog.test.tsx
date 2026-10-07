@@ -1,21 +1,21 @@
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi, type Mock } from "vitest";
 
 vi.mock("@/components/РежимlВыбрать/РежимlВыбрать", () => ({
-  РежимlВыбрать: ({ onChange }: { onChange: (values: string[]) => void }) => (
+  ModelSelect: ({ onChange }: { onChange: (values: string[]) => void }) => (
     <button type="button" onClick={() => onChange(["gpt-5.2"])}>
-      set-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs
+      set-models
     </button>
   ),
 }));
-vi.mock("@/app/(dashboard)/hooks/agents/useАгенты", () => ({
-  useАгенты: () => ({ data: { agents: [{ agent_id: "agent-1", agent_name: "Support Agent" }] } }),
+vi.mock("@/Приложение/(dashboard)/hooks/Агенты/useАгенты", () => ({
+  useAgents: () => ({ data: { agents: [{ agent_id: "agent-1", agent_name: "Support Agent" }] } }),
 }));
-vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCP-серверы", () => ({
-  useMCP-серверы: () => ({ data: [{ server_id: "srv-1", server_name: "GitHub MCP" }] }),
+vi.mock("@/Приложение/(dashboard)/hooks/mcpServers/useMCPServers", () => ({
+  useMCPServers: () => ({ data: [{ server_id: "srv-1", server_name: "GitHub MCP" }] }),
 }));
 
 import { AccessGroupCreateDialog } from "./AccessGroupCreateDialog";
@@ -33,24 +33,24 @@ const Harness = ({ createAccessGroup }: { createAccessGroup: (body: unknown) => 
 };
 
 const renderDialog = (overrides?: { createAccessGroup?: Mock }) => {
-  const createAccessGroup = overrides?.createAccessGroup ?? vi.fn().mockResolvedЗначение({});
-  const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
+  const createAccessGroup = overrides?.createAccessGroup ?? vi.fn().mockResolvedValue({});
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(
-    <ЗапросClientПровайдер client={queryClient}>
+    <QueryClientProvider client={queryClient}>
       <Harness createAccessGroup={createAccessGroup} />
-    </ЗапросClientПровайдер>,
+    </QueryClientProvider>,
   );
   return { createAccessGroup };
 };
 
 describe("AccessGroupCreateDialog", () => {
-  it("blocks submit and shows an error when the name is missing", async () => {
+  it("blocks submit and shows an Ошибка when the Название is missing", async () => {
     const user = userEvent.setup();
     const { createAccessGroup } = renderDialog();
 
-    await user.click(screen.getByRole("button", { name: "Create Group" }));
+    await user.click(screen.getByRole("button", { name: "Создать Group" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent("Please enter the access group name");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Please enter the access Название группы");
     expect(createAccessGroup).not.toHaveBeenCalled();
   });
 
@@ -61,54 +61,54 @@ describe("AccessGroupCreateDialog", () => {
     await user.click(screen.getByRole("tab", { name: "Режимls" }));
     await waitFor(() => expect(screen.queryByLabelText("Название группы")).not.toBeInTheDocument());
 
-    await user.click(screen.getByRole("button", { name: "Create Group" }));
+    await user.click(screen.getByRole("button", { name: "Создать Group" }));
 
     expect(await screen.findByLabelText("Название группы")).toBeInTheDocument();
-    expect(await screen.findByRole("alert")).toHaveTextContent("Please enter the access group name");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Please enter the access Название группы");
     expect(createAccessGroup).not.toHaveBeenCalled();
   });
 
-  it("sends only the group name for a minimal create and closes the dialog", async () => {
+  it("sends only the Название группы for a minimal Создать and closes the dialog", async () => {
     const user = userEvent.setup();
     const { createAccessGroup } = renderDialog();
 
-    await user.type(screen.getByLabelText("Название группы"), "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
-    await user.click(screen.getByRole("button", { name: "Create Group" }));
+    await user.type(screen.getByLabelText("Название группы"), "prod-Модели");
+    await user.click(screen.getByRole("button", { name: "Создать Group" }));
 
     await waitFor(() => expect(createAccessGroup).toHaveBeenCalledTimes(1));
-    expect(createAccessGroup.mock.calls[0][0]).toStrictEqual({ access_group_name: "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs" });
+    expect(createAccessGroup.mock.calls[0][0]).toStrictEqual({ access_group_name: "prod-Модели" });
     await waitFor(() => expect(screen.queryByLabelText("Название группы")).not.toBeInTheDocument());
   });
 
-  it("maps the description and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию selections into the create body", async () => {
+  it("maps the Описание and Модель selections into the Создать body", async () => {
     const user = userEvent.setup();
     const { createAccessGroup } = renderDialog();
 
-    await user.type(screen.getByLabelText("Название группы"), "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
+    await user.type(screen.getByLabelText("Название группы"), "prod-Модели");
     await user.type(screen.getByLabelText("Описание"), "engineering access");
     await user.click(screen.getByRole("tab", { name: "Режимls" }));
-    await user.click(screen.getByRole("button", { name: "set-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs" }));
-    await user.click(screen.getByRole("button", { name: "Create Group" }));
+    await user.click(screen.getByRole("button", { name: "set-Модели" }));
+    await user.click(screen.getByRole("button", { name: "Создать Group" }));
 
     await waitFor(() => expect(createAccessGroup).toHaveBeenCalledTimes(1));
     expect(createAccessGroup.mock.calls[0][0]).toStrictEqual({
-      access_group_name: "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs",
+      access_group_name: "prod-Модели",
       description: "engineering access",
       access_model_names: ["gpt-5.2"],
     });
   });
 
-  it("keeps the dialog open with the entered values when the create fails", async () => {
+  it("keeps the dialog open with the entered values when the Создать fails", async () => {
     const user = userEvent.setup();
     const { createAccessGroup } = renderDialog({
-      createAccessGroup: vi.fn().mockRejectedЗначение(new Ошибка("boom")),
+      createAccessGroup: vi.fn().mockRejectedValue(new Error("boom")),
     });
 
-    await user.type(screen.getByLabelText("Название группы"), "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
-    await user.click(screen.getByRole("button", { name: "Create Group" }));
+    await user.type(screen.getByLabelText("Название группы"), "prod-Модели");
+    await user.click(screen.getByRole("button", { name: "Создать Group" }));
 
     await waitFor(() => expect(createAccessGroup).toHaveBeenCalledTimes(1));
-    expect(screen.getByLabelText("Название группы")).toHaveЗначение("prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
+    expect(screen.getByLabelText("Название группы")).toHaveValue("prod-Модели");
   });
 
   it("resets the form when the dialog is cancelled and reopened", async () => {
@@ -116,11 +116,11 @@ describe("AccessGroupCreateDialog", () => {
     renderDialog();
 
     await user.type(screen.getByLabelText("Название группы"), "abandoned");
-    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    await user.click(screen.getByRole("button", { name: "Отмена" }));
     await waitFor(() => expect(screen.queryByLabelText("Название группы")).not.toBeInTheDocument());
 
     await user.click(screen.getByRole("button", { name: "reopen" }));
-    expect(screen.getByLabelText("Название группы")).toHaveЗначение("");
+    expect(screen.getByLabelText("Название группы")).toHaveValue("");
   });
 
   it("resets the form when the dialog is dismissed with Escape and reopened", async () => {
@@ -132,10 +132,10 @@ describe("AccessGroupCreateDialog", () => {
     await waitFor(() => expect(screen.queryByLabelText("Название группы")).not.toBeInTheDocument());
 
     await user.click(screen.getByRole("button", { name: "reopen" }));
-    expect(screen.getByLabelText("Название группы")).toHaveЗначение("");
+    expect(screen.getByLabelText("Название группы")).toHaveValue("");
   });
 
-  it("cannot be dismissed while a create is pending, then closes once on success", async () => {
+  it("cannot be dismissed while a Создать is pending, then closes once on success", async () => {
     const user = userEvent.setup();
     let resolveCreate: (value: unknown) => void = () => {};
     const createAccessGroup = vi.fn().mockImplementation(
@@ -146,18 +146,18 @@ describe("AccessGroupCreateDialog", () => {
     );
     renderDialog({ createAccessGroup });
 
-    await user.type(screen.getByLabelText("Название группы"), "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
-    await user.keyboard("{Введите}");
+    await user.type(screen.getByLabelText("Название группы"), "prod-Модели");
+    await user.keyboard("{Enter}");
     await waitFor(() => expect(createAccessGroup).toHaveBeenCalledTimes(1));
 
     await user.keyboard("{Escape}");
-    expect(screen.getByLabelText("Название группы")).toHaveЗначение("prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
+    expect(screen.getByLabelText("Название группы")).toHaveValue("prod-Модели");
 
     resolveCreate({});
     await waitFor(() => expect(screen.queryByLabelText("Название группы")).not.toBeInTheDocument());
   });
 
-  it("does not fire a second create while one is pending", async () => {
+  it("does not fire a second Создать while one is pending", async () => {
     const user = userEvent.setup();
     let resolveCreate: (value: unknown) => void = () => {};
     const createAccessGroup = vi.fn().mockImplementation(
@@ -168,10 +168,10 @@ describe("AccessGroupCreateDialog", () => {
     );
     renderDialog({ createAccessGroup });
 
-    await user.type(screen.getByLabelText("Название группы"), "prod-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs");
-    await user.keyboard("{Введите}");
+    await user.type(screen.getByLabelText("Название группы"), "prod-Модели");
+    await user.keyboard("{Enter}");
     await waitFor(() => expect(createAccessGroup).toHaveBeenCalledTimes(1));
-    await user.keyboard("{Введите}");
+    await user.keyboard("{Enter}");
 
     expect(createAccessGroup).toHaveBeenCalledTimes(1);
     resolveCreate({});

@@ -46,7 +46,7 @@ describe("inferRedisType", () => {
   });
 });
 
-describe("buildInitialValues", () => {
+describe("buildInitialЗначениеs", () => {
   it("should apply defaults as strings for text inputs and coerce booleans", () => {
     const values = buildInitialValues({});
     expect(values.port).toBe("6379");
@@ -67,7 +67,7 @@ describe("buildInitialValues", () => {
   });
 });
 
-describe("configuredSecretFields", () => {
+describe("configuredSecretПолеs", () => {
   it("should report which secrets the backend already holds so the form can say so", () => {
     expect(configuredSecretFields({ password: REDACTED_VALUE, host: "localhost" })).toEqual(new Set(["password"]));
   });
@@ -81,7 +81,7 @@ describe("buildCoordinationPayload", () => {
   it("should drop empty fields and send the port as a number", () => {
     const payload = buildCoordinationPayload("node", { host: "localhost", port: "6379", username: "" });
     expect(payload).toEqual({ host: "localhost", port: 6379, ssl: false });
-    expect(payload).not.toHaveСвойство("username");
+    expect(payload).not.toHaveProperty("username");
   });
 
   it("should not resubmit a secret that is still the redacted marker", () => {
@@ -92,9 +92,9 @@ describe("buildCoordinationPayload", () => {
       sentinel_password: REDACTED_VALUE,
     };
     const payload = buildCoordinationPayload("sentinel", untouchedSecrets);
-    expect(payload).not.toHaveСвойство("password");
-    expect(payload).not.toHaveСвойство("url");
-    expect(payload).not.toHaveСвойство("sentinel_password");
+    expect(payload).not.toHaveProperty("password");
+    expect(payload).not.toHaveProperty("url");
+    expect(payload).not.toHaveProperty("sentinel_password");
   });
 
   it("should submit a secret once the admin replaces the redacted marker", () => {
@@ -120,7 +120,7 @@ describe("buildCoordinationPayload", () => {
 
   it("should omit a list field whose textarea holds invalid JSON", () => {
     const payload = buildCoordinationPayload("cluster", { startup_nodes: "not json" });
-    expect(payload).not.toHaveСвойство("startup_nodes");
+    expect(payload).not.toHaveProperty("startup_nodes");
   });
 
   it("should exclude fields that do not belong to the selected redis type", () => {
@@ -128,8 +128,8 @@ describe("buildCoordinationPayload", () => {
       sentinel_nodes: '[["localhost",26379]]',
       startup_nodes: '[{"host":"127.0.0.1","port":7001}]',
     });
-    expect(payload).not.toHaveСвойство("sentinel_nodes");
-    expect(payload).not.toHaveСвойство("startup_nodes");
+    expect(payload).not.toHaveProperty("sentinel_nodes");
+    expect(payload).not.toHaveProperty("startup_nodes");
   });
 });
 

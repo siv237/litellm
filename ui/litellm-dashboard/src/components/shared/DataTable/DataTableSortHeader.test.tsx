@@ -5,14 +5,14 @@ import {
   getSortedRowModel,
   type OnChangeFn,
   type SortingState,
-  useReactТаблица,
+  useReactTable,
 } from "@tanstack/react-table";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-import { DataTableSortHeader, type DataTableSortVariant } from "./DataTableSortHeader";
+import { DataTableSortHeader, type DataTableSortVariant } from "./DataТаблицаSortHeader";
 import { chooseSelectOption } from "../../../../tests/test-utils";
 
 interface Item {
@@ -29,7 +29,7 @@ function SortHeaderHarness({ variant, canSort = true, onSortingChange }: Harness
   const [sorting, setSorting] = useState<SortingState>([]);
   const columns: ColumnDef<Item, unknown>[] = [
     {
-      accessorКлюч: "name",
+      accessorKey: "name",
       enableSorting: canSort,
       header: ({ column }) => <DataTableSortHeader column={column} title="Name" variant={variant} />,
     },
@@ -45,7 +45,7 @@ function SortHeaderHarness({ variant, canSort = true, onSortingChange }: Harness
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   };
-  const table = useReactТаблица(options);
+  const table = useReactTable(options);
 
   return (
     <table>
@@ -62,7 +62,7 @@ function SortHeaderHarness({ variant, canSort = true, onSortingChange }: Harness
   );
 }
 
-describe("DataTableSortHeader", () => {
+describe("DataТаблицаSortHeader", () => {
   it("renders a plain label and no button when the column cannot sort", () => {
     render(<SortHeaderHarness variant="header-cycle" canSort={false} />);
     expect(screen.queryByTestId("sort-header-name")).not.toBeInTheDocument();
@@ -95,16 +95,16 @@ describe("DataTableSortHeader", () => {
     expect(screen.getByTestId("sort-trigger-name").querySelector('[data-sort-indicator="none"]')).not.toBeNull();
   });
 
-  it("dropdown-tristate trigger stops the click from reaching an выходer handler", async () => {
+  it("dropdown-tristate trigger stops the click from reaching an outer handler", async () => {
     const user = userEvent.setup();
-    const onOutputerClick = vi.fn();
+    const onOuterClick = vi.fn();
     render(
-      <div onClick={onOutputerClick}>
+      <div onClick={onOuterClick}>
         <SortHeaderHarness variant="dropdown-tristate" />
       </div>,
     );
 
     await user.click(screen.getByTestId("sort-trigger-name"));
-    expect(onOutputerClick).not.toHaveBeenCalled();
+    expect(onOuterClick).not.toHaveBeenCalled();
   });
 });

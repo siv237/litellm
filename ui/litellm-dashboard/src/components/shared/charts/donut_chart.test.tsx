@@ -15,7 +15,7 @@ describe("DonutChart", () => {
       <DonutChart data={data} index="provider" category="spend" colors={["cyan", "blue"]} />,
     );
 
-    const sectors = Array.from(container.querySelectorВсе(".recharts-pie-sector path"));
+    const sectors = Array.from(container.querySelectorAll(".recharts-pie-sector path"));
     expect(sectors).toHaveLength(3);
     expect(sectors.map((sector) => sector.getAttribute("fill"))).toEqual([
       "var(--color-cyan-500, #06b6d4)",
@@ -30,10 +30,10 @@ describe("DonutChart", () => {
       <DonutChart data={data} index="provider" category="spend" colors={["cyan"]} variant="pie" />,
     );
 
-    const donutПуть = donut.querySelector(".recharts-pie-sector path")?.getAttribute("d") ?? "";
-    const pieПуть = pie.querySelector(".recharts-pie-sector path")?.getAttribute("d") ?? "";
-    expect(donutПуть).not.toEqual(pieПуть);
-    expect((donutПуть.match(/A/g) ?? []).length).toBeGreaterThan((pieПуть.match(/A/g) ?? []).length);
+    const donutPath = donut.querySelector(".recharts-pie-sector path")?.getAttribute("d") ?? "";
+    const piePath = pie.querySelector(".recharts-pie-sector path")?.getAttribute("d") ?? "";
+    expect(donutPath).not.toEqual(piePath);
+    expect((donutPath.match(/A/g) ?? []).length).toBeGreaterThan((piePath.match(/A/g) ?? []).length);
   });
 
   it("hides the center label by default and shows the formatted total when showLabel is set", () => {

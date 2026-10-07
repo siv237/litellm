@@ -1,15 +1,15 @@
 // @vitest-environment jsdom
 
-import type { DateRangePickerЗначение } from "@/components/shared/date_picker_types";
+import type { DateRangePickerValue } from "@/components/shared/date_picker_types";
 import Papa from "papaparse";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { EntitySpendData, ExportОбласть } from "./types";
+import type { EntitySpendData, ExportScope } from "./types";
 import {
   generateDailyData,
   generateDailyWithKeysData,
   generateDailyWithModelsData,
   generateExportData,
-  generateМетаданные,
+  generateMetadata,
   getEntityBreakdown,
   handleExportCSV,
   handleExportJSON,
@@ -31,7 +31,7 @@ vi.mock("papaparse", () => ({
   },
 }));
 
-describe("EntityUsageExport utils", () => {
+describe("EntityИспользованиеExport utils", () => {
   // Entity keys match team_ids because that's how the backend shapes team exports
   // (breakdown.entities is keyed by team_id). The fix under test uses the entity key
   // directly for display, so the key_alias/team_id in api_key_breakdown metadata is
@@ -299,7 +299,7 @@ describe("EntityUsageExport utils", () => {
       expect(result).toHaveLength(0);
     });
 
-    it("should handle missing необязательно token fields", () => {
+    it("should handle missing optional token fields", () => {
       const spendDataWithMissingTokens: EntitySpendData = {
         ...mockSpendData,
         results: [
@@ -345,23 +345,23 @@ describe("EntityUsageExport utils", () => {
     });
   });
 
-  describe("generateDailyData", () => {
+  describe("generateКаждый деньData", () => {
     it("should generate daily breakdown data with correct structure", () => {
       const result = generateDailyData(mockSpendData, "Team", mockTeamAliasMap);
 
       expect(result).toHaveLength(3);
-      expect(result[0]).toHaveСвойство("Date");
-      expect(result[0]).toHaveСвойство("Team");
-      expect(result[0]).toHaveСвойство("ID команды");
-      expect(result[0]).toHaveСвойство("Расход ($)");
-      expect(result[0]).toHaveСвойство("Запросs");
-      expect(result[0]).toHaveСвойство("Успешных запросов");
-      expect(result[0]).toHaveСвойство("Запросов с ошибкой");
-      expect(result[0]).toHaveСвойство("Всего токенов");
-      expect(result[0]).toHaveСвойство("Prompt Токенs");
-      expect(result[0]).toHaveСвойство("Completion Токенs");
-      expect(result[0]).toHaveСвойство("Cache Read Вход Токенs");
-      expect(result[0]).toHaveСвойство("Cache Creation Вход Токенs");
+      expect(result[0]).toHaveProperty("Date");
+      expect(result[0]).toHaveProperty("Team");
+      expect(result[0]).toHaveProperty("ID команды");
+      expect(result[0]).toHaveProperty("Spend ($)");
+      expect(result[0]).toHaveProperty("Запросs");
+      expect(result[0]).toHaveProperty("Успешных запросов");
+      expect(result[0]).toHaveProperty("Запросов с ошибкой");
+      expect(result[0]).toHaveProperty("Всего токенов");
+      expect(result[0]).toHaveProperty("Prompt Tokens");
+      expect(result[0]).toHaveProperty("Completion Tokens");
+      expect(result[0]).toHaveProperty("Cache Read Вход Tokens");
+      expect(result[0]).toHaveProperty("Cache Creation Вход Tokens");
     });
 
     it("should export exact cache token values per entity per day", () => {
@@ -371,18 +371,18 @@ describe("EntityUsageExport utils", () => {
       const day1Team2 = result.find((r) => r.Date === "2025-01-01" && r["ID команды"] === "team-2");
       const day2Team1 = result.find((r) => r.Date === "2025-01-02" && r["ID команды"] === "team-1");
 
-      expect(day1Team1?.["Cache Read Вход Токенs"]).toBe(50);
-      expect(day1Team1?.["Cache Creation Вход Токенs"]).toBe(30);
-      expect(day1Team2?.["Cache Read Вход Токенs"]).toBe(100);
-      expect(day1Team2?.["Cache Creation Вход Токенs"]).toBe(60);
-      expect(day2Team1?.["Cache Read Вход Токенs"]).toBe(75);
-      expect(day2Team1?.["Cache Creation Вход Токенs"]).toBe(45);
+      expect(day1Team1?.["Cache Read Вход Tokens"]).toBe(50);
+      expect(day1Team1?.["Cache Creation Вход Tokens"]).toBe(30);
+      expect(day1Team2?.["Cache Read Вход Tokens"]).toBe(100);
+      expect(day1Team2?.["Cache Creation Вход Tokens"]).toBe(60);
+      expect(day2Team1?.["Cache Read Вход Tokens"]).toBe(75);
+      expect(day2Team1?.["Cache Creation Вход Tokens"]).toBe(45);
     });
 
     it("should sort data by date ascending", () => {
       const result = generateDailyData(mockSpendData, "Team");
 
-      const dates = result.map((r) => new Date(r.Date).getВремя());
+      const dates = result.map((r) => new Date(r.Date).getTime());
       for (let i = 0; i < dates.length - 1; i++) {
         expect(dates[i]).toBeLessThanOrEqual(dates[i + 1]);
       }
@@ -443,10 +443,10 @@ describe("EntityUsageExport utils", () => {
     it("should format spend values correctly", () => {
       const result = generateDailyData(mockSpendData, "Team");
 
-      expect(result[0]["Расход ($)"]).toBeDefined();
+      expect(result[0]["Spend ($)"]).toBeDefined();
     });
 
-    it("should handle missing необязательно token fields", () => {
+    it("should handle missing optional token fields", () => {
       const spendDataWithMissingTokens: EntitySpendData = {
         ...mockSpendData,
         results: [
@@ -486,15 +486,15 @@ describe("EntityUsageExport utils", () => {
 
       const result = generateDailyData(spendDataWithMissingTokens, "Team");
 
-      expect(result[0]["Prompt Токенs"]).toBe(0);
-      expect(result[0]["Completion Токенs"]).toBe(0);
-      expect(result[0]["Cache Read Вход Токенs"]).toBe(0);
-      expect(result[0]["Cache Creation Вход Токенs"]).toBe(0);
+      expect(result[0]["Prompt Tokens"]).toBe(0);
+      expect(result[0]["Completion Tokens"]).toBe(0);
+      expect(result[0]["Cache Read Вход Tokens"]).toBe(0);
+      expect(result[0]["Cache Creation Вход Tokens"]).toBe(0);
     });
   });
 
-  describe("generateDailyWithKeysData", () => {
-    const mockSpendDataWithКлючи: EntitySpendData = {
+  describe("generateКаждый деньWithКлючиData", () => {
+    const mockSpendDataWithKeys: EntitySpendData = {
       results: [
         {
           date: "2025-01-01",
@@ -620,23 +620,23 @@ describe("EntityUsageExport utils", () => {
     };
 
     it("should generate daily breakdown with key data and correct structure", () => {
-      const result = generateDailyWithKeysData(mockSpendDataWithКлючи, "Team", mockTeamAliasMap);
+      const result = generateDailyWithKeysData(mockSpendDataWithKeys, "Team", mockTeamAliasMap);
 
       expect(result.length).toBeGreaterThan(0);
-      expect(result[0]).toHaveСвойство("Date");
-      expect(result[0]).toHaveСвойство("Team");
-      expect(result[0]).toHaveСвойство("ID команды");
-      expect(result[0]).toHaveСвойство("Псевдоним ключа");
-      expect(result[0]).toHaveСвойство("Ключ ID");
-      expect(result[0]).toHaveСвойство("Расход ($)");
-      expect(result[0]).toHaveСвойство("Запросs");
-      expect(result[0]).toHaveСвойство("Успешных запросов");
-      expect(result[0]).toHaveСвойство("Запросов с ошибкой");
-      expect(result[0]).toHaveСвойство("Всего токенов");
-      expect(result[0]).toHaveСвойство("Prompt Токенs");
-      expect(result[0]).toHaveСвойство("Completion Токенs");
-      expect(result[0]).toHaveСвойство("Cache Read Вход Токенs");
-      expect(result[0]).toHaveСвойство("Cache Creation Вход Токенs");
+      expect(result[0]).toHaveProperty("Date");
+      expect(result[0]).toHaveProperty("Team");
+      expect(result[0]).toHaveProperty("ID команды");
+      expect(result[0]).toHaveProperty("Псевдоним ключа");
+      expect(result[0]).toHaveProperty("Ключ ID");
+      expect(result[0]).toHaveProperty("Spend ($)");
+      expect(result[0]).toHaveProperty("Запросs");
+      expect(result[0]).toHaveProperty("Успешных запросов");
+      expect(result[0]).toHaveProperty("Запросов с ошибкой");
+      expect(result[0]).toHaveProperty("Всего токенов");
+      expect(result[0]).toHaveProperty("Prompt Tokens");
+      expect(result[0]).toHaveProperty("Completion Tokens");
+      expect(result[0]).toHaveProperty("Cache Read Вход Tokens");
+      expect(result[0]).toHaveProperty("Cache Creation Вход Tokens");
     });
 
     it("should export and aggregate cache token values per key", () => {
@@ -682,20 +682,20 @@ describe("EntityUsageExport utils", () => {
 
       const spendDataWithCache: EntitySpendData = {
         results: [makeDay(40, 25), makeDay(10, 5)],
-        metadata: mockSpendDataWithКлючи.metadata,
+        metadata: mockSpendDataWithKeys.metadata,
       };
 
       const result = generateDailyWithKeysData(spendDataWithCache, "Team");
 
       expect(result).toHaveLength(1);
-      expect(result[0]["Cache Read Вход Токенs"]).toBe(50);
-      expect(result[0]["Cache Creation Вход Токенs"]).toBe(30);
+      expect(result[0]["Cache Read Вход Tokens"]).toBe(50);
+      expect(result[0]["Cache Creation Вход Tokens"]).toBe(30);
     });
 
     it("should sort data by date ascending", () => {
-      const result = generateDailyWithKeysData(mockSpendDataWithКлючи, "Team");
+      const result = generateDailyWithKeysData(mockSpendDataWithKeys, "Team");
 
-      const dates = result.map((r) => new Date(r.Date).getВремя());
+      const dates = result.map((r) => new Date(r.Date).getTime());
       for (let i = 0; i < dates.length - 1; i++) {
         expect(dates[i]).toBeLessThanOrEqual(dates[i + 1]);
       }
@@ -795,14 +795,14 @@ describe("EntityUsageExport utils", () => {
     });
 
     it("should use team alias when available", () => {
-      const result = generateDailyWithKeysData(mockSpendDataWithКлючи, "Team", mockTeamAliasMap);
+      const result = generateDailyWithKeysData(mockSpendDataWithKeys, "Team", mockTeamAliasMap);
       const team1Entry = result.find((r) => r["ID команды"] === "team-1");
 
       expect(team1Entry?.["Team"]).toBe("Team One");
     });
 
     it("should use dash when team alias is not available", () => {
-      const result = generateDailyWithKeysData(mockSpendDataWithКлючи, "Team");
+      const result = generateDailyWithKeysData(mockSpendDataWithKeys, "Team");
       const entryWithoutTeamAlias = result.find((r) => r["ID команды"] === "team-1" && !mockTeamAliasMap[r["ID команды"]]);
 
       if (entryWithoutTeamAlias) {
@@ -811,15 +811,15 @@ describe("EntityUsageExport utils", () => {
     });
 
     it("should use key alias when available", () => {
-      const result = generateDailyWithKeysData(mockSpendDataWithКлючи, "Team");
+      const result = generateDailyWithKeysData(mockSpendDataWithKeys, "Team");
       const key1Entry = result.find((r) => r["Ключ ID"] === "key1");
 
       expect(key1Entry?.["Псевдоним ключа"]).toBe("alias-1");
     });
 
     it("should use dash when key alias is not available", () => {
-      const spendDataWithвыходКлючAlias: EntitySpendData = {
-        ...mockSpendDataWithКлючи,
+      const spendDataWithoutKeyAlias: EntitySpendData = {
+        ...mockSpendDataWithKeys,
         results: [
           {
             date: "2025-01-01",
@@ -856,10 +856,10 @@ describe("EntityUsageExport utils", () => {
             },
           },
         ],
-        metadata: mockSpendDataWithКлючи.metadata,
+        metadata: mockSpendDataWithKeys.metadata,
       };
 
-      const result = generateDailyWithKeysData(spendDataWithвыходКлючAlias, "Team");
+      const result = generateDailyWithKeysData(spendDataWithoutKeyAlias, "Team");
       const key1Entry = result.find((r) => r["Ключ ID"] === "key1");
 
       expect(key1Entry?.["Псевдоним ключа"]).toBe("-");
@@ -867,7 +867,7 @@ describe("EntityUsageExport utils", () => {
 
     it("should use entity id when team id is not available in metadata", () => {
       const spendDataWithoutTeamId: EntitySpendData = {
-        ...mockSpendDataWithКлючи,
+        ...mockSpendDataWithKeys,
         results: [
           {
             date: "2025-01-01",
@@ -902,7 +902,7 @@ describe("EntityUsageExport utils", () => {
             },
           },
         ],
-        metadata: mockSpendDataWithКлючи.metadata,
+        metadata: mockSpendDataWithKeys.metadata,
       };
 
       const result = generateDailyWithKeysData(spendDataWithoutTeamId, "Team");
@@ -913,7 +913,7 @@ describe("EntityUsageExport utils", () => {
 
     it("should use dash when team id is not available", () => {
       const spendDataWithoutTeamId: EntitySpendData = {
-        ...mockSpendDataWithКлючи,
+        ...mockSpendDataWithKeys,
         results: [
           {
             date: "2025-01-01",
@@ -950,7 +950,7 @@ describe("EntityUsageExport utils", () => {
             },
           },
         ],
-        metadata: mockSpendDataWithКлючи.metadata,
+        metadata: mockSpendDataWithKeys.metadata,
       };
 
       const result = generateDailyWithKeysData(spendDataWithoutTeamId, "Team");
@@ -960,14 +960,14 @@ describe("EntityUsageExport utils", () => {
     });
 
     it("should format spend values correctly", () => {
-      const result = generateDailyWithKeysData(mockSpendDataWithКлючи, "Team");
+      const result = generateDailyWithKeysData(mockSpendDataWithKeys, "Team");
 
-      expect(result[0]["Расход ($)"]).toBeDefined();
+      expect(result[0]["Spend ($)"]).toBeDefined();
     });
 
-    it("should handle missing необязательно token fields", () => {
+    it("should handle missing optional token fields", () => {
       const spendDataWithMissingTokens: EntitySpendData = {
-        ...mockSpendDataWithКлючи,
+        ...mockSpendDataWithKeys,
         results: [
           {
             date: "2025-01-01",
@@ -1003,21 +1003,21 @@ describe("EntityUsageExport utils", () => {
             },
           },
         ],
-        metadata: mockSpendDataWithКлючи.metadata,
+        metadata: mockSpendDataWithKeys.metadata,
       };
 
       const result = generateDailyWithKeysData(spendDataWithMissingTokens, "Team");
       const key1Entry = result.find((r) => r["Ключ ID"] === "key1");
 
-      expect(key1Entry?.["Prompt Токенs"]).toBe(0);
-      expect(key1Entry?.["Completion Токенs"]).toBe(0);
-      expect(key1Entry?.["Cache Read Вход Токенs"]).toBe(0);
-      expect(key1Entry?.["Cache Creation Вход Токенs"]).toBe(0);
+      expect(key1Entry?.["Prompt Tokens"]).toBe(0);
+      expect(key1Entry?.["Completion Tokens"]).toBe(0);
+      expect(key1Entry?.["Cache Read Вход Tokens"]).toBe(0);
+      expect(key1Entry?.["Cache Creation Вход Tokens"]).toBe(0);
     });
 
     it("should handle empty api_key_breakdown", () => {
       const spendDataWithEmptyBreakdown: EntitySpendData = {
-        ...mockSpendDataWithКлючи,
+        ...mockSpendDataWithKeys,
         results: [
           {
             date: "2025-01-01",
@@ -1039,7 +1039,7 @@ describe("EntityUsageExport utils", () => {
             },
           },
         ],
-        metadata: mockSpendDataWithКлючи.metadata,
+        metadata: mockSpendDataWithKeys.metadata,
       };
 
       const result = generateDailyWithKeysData(spendDataWithEmptyBreakdown, "Team");
@@ -1048,7 +1048,7 @@ describe("EntityUsageExport utils", () => {
     });
 
     it("should handle multiple keys for same team on same date", () => {
-      const result = generateDailyWithKeysData(mockSpendDataWithКлючи, "Team");
+      const result = generateDailyWithKeysData(mockSpendDataWithKeys, "Team");
       const team1Entries = result.filter((r) => r["ID команды"] === "team-1" && r.Date === "2025-01-01");
 
       expect(team1Entries.length).toBeGreaterThanOrEqual(2);
@@ -1058,7 +1058,7 @@ describe("EntityUsageExport utils", () => {
     });
   });
 
-  describe("generateDailyWithModelsData", () => {
+  describe("generateКаждый деньWithРежимlsData", () => {
     const mockSpendDataWithModels: EntitySpendData = {
       results: [
         {
@@ -1105,7 +1105,7 @@ describe("EntityUsageExport utils", () => {
                 },
               },
             },
-            Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {
+            models: {
               "gpt-4": {
                 metrics: {
                   spend: 5.0,
@@ -1161,26 +1161,26 @@ describe("EntityUsageExport utils", () => {
       },
     };
 
-    it("should generate daily breakdown with Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию data", () => {
+    it("should generate daily breakdown with model data", () => {
       const result = generateDailyWithModelsData(mockSpendDataWithModels, "Team", mockTeamAliasMap);
 
       expect(result.length).toBeGreaterThan(0);
-      expect(result[0]).toHaveСвойство("Date");
-      expect(result[0]).toHaveСвойство("Team");
-      expect(result[0]).toHaveСвойство("ID команды");
-      expect(result[0]).toHaveСвойство("Режимl");
-      expect(result[0]).toHaveСвойство("Расход ($)");
-      expect(result[0]).toHaveСвойство("Запросs");
-      expect(result[0]).toHaveСвойство("Successful");
-      expect(result[0]).toHaveСвойство("Ошибка");
-      expect(result[0]).toHaveСвойство("Всего токенов");
-      expect(result[0]).toHaveСвойство("Prompt Токенs");
-      expect(result[0]).toHaveСвойство("Completion Токенs");
-      expect(result[0]).toHaveСвойство("Cache Read Вход Токенs");
-      expect(result[0]).toHaveСвойство("Cache Creation Вход Токенs");
+      expect(result[0]).toHaveProperty("Date");
+      expect(result[0]).toHaveProperty("Team");
+      expect(result[0]).toHaveProperty("ID команды");
+      expect(result[0]).toHaveProperty("Режимl");
+      expect(result[0]).toHaveProperty("Spend ($)");
+      expect(result[0]).toHaveProperty("Запросs");
+      expect(result[0]).toHaveProperty("Successful");
+      expect(result[0]).toHaveProperty("Ошибка");
+      expect(result[0]).toHaveProperty("Всего токенов");
+      expect(result[0]).toHaveProperty("Prompt Tokens");
+      expect(result[0]).toHaveProperty("Completion Tokens");
+      expect(result[0]).toHaveProperty("Cache Read Вход Tokens");
+      expect(result[0]).toHaveProperty("Cache Creation Вход Tokens");
     });
 
-    it("should export prompt, completion, and cache token values summed across keys for the same Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
+    it("should export prompt, completion, and cache token values summed across keys for the same model", () => {
       const data: EntitySpendData = {
         results: [
           {
@@ -1223,7 +1223,7 @@ describe("EntityUsageExport utils", () => {
                   },
                 },
               },
-              Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {
+              models: {
                 "claude-sonnet-4-5": {
                   metrics: {
                     spend: 5.0,
@@ -1281,10 +1281,10 @@ describe("EntityUsageExport utils", () => {
       expect(result).toHaveLength(1);
       expect(result[0].Model).toBe("claude-sonnet-4-5");
       expect(result[0]["Всего токенов"]).toBe(1050);
-      expect(result[0]["Prompt Токенs"]).toBe(750);
-      expect(result[0]["Completion Токенs"]).toBe(300);
-      expect(result[0]["Cache Read Вход Токенs"]).toBe(450);
-      expect(result[0]["Cache Creation Вход Токенs"]).toBe(200);
+      expect(result[0]["Prompt Tokens"]).toBe(750);
+      expect(result[0]["Completion Tokens"]).toBe(300);
+      expect(result[0]["Cache Read Вход Tokens"]).toBe(450);
+      expect(result[0]["Cache Creation Вход Tokens"]).toBe(200);
     });
 
     it("should sort data by date ascending", () => {
@@ -1322,7 +1322,7 @@ describe("EntityUsageExport utils", () => {
                   },
                 },
               },
-              Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {
+              models: {
                 "gpt-4": {
                   metrics: {
                     spend: 10.5,
@@ -1354,31 +1354,31 @@ describe("EntityUsageExport utils", () => {
 
       const result = generateDailyWithModelsData(multiDayData, "Team");
 
-      expect(new Date(result[0].Date).getВремя()).toBeLessThanOrEqual(
-        new Date(result[result.length - 1].Date).getВремя(),
+      expect(new Date(result[0].Date).getTime()).toBeLessThanOrEqual(
+        new Date(result[result.length - 1].Date).getTime(),
       );
     });
 
-    it("should attribute each Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию only its own per-key spend", () => {
+    it("should attribute each model only its own per-key spend", () => {
       const result = generateDailyWithModelsData(mockSpendDataWithModels, "Team");
 
       const gpt4Entry = result.find((r) => r.Model === "gpt-4");
       const gpt35Entry = result.find((r) => r.Model === "gpt-3.5-turbo");
 
-      expect(gpt4Entry?.["Расход ($)"]).toBe("5.0000");
+      expect(gpt4Entry?.["Spend ($)"]).toBe("5.0000");
       expect(gpt4Entry?.Requests).toBe(50);
       expect(gpt4Entry?.["Всего токенов"]).toBe(500);
 
-      expect(gpt35Entry?.["Расход ($)"]).toBe("5.5000");
+      expect(gpt35Entry?.["Spend ($)"]).toBe("5.5000");
       expect(gpt35Entry?.Requests).toBe(50);
       expect(gpt35Entry?.["Всего токенов"]).toBe(500);
     });
 
-    it("should not duplicate a user's spend across every Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию (regression for LIT overcount)", () => {
-      // One user, one key, that key used two Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs. The entity-level api_key_breakdown
-      // carries the key's total (8.0) across both Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs; each Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию's api_key_breakdown
-      // carries only that Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию's share (3.0 + 5.0). The per-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию rows must sum back to
-      // the user-day total, not repeat the total once per Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию.
+    it("should not duplicate a user's spend across every model (regression for LIT overcount)", () => {
+      // One user, one key, that key used two models. The entity-level api_key_breakdown
+      // carries the key's total (8.0) across both models; each model's api_key_breakdown
+      // carries only that model's share (3.0 + 5.0). The per-model rows must sum back to
+      // the user-day total, not repeat the total once per model.
       const data: EntitySpendData = {
         results: [
           {
@@ -1411,7 +1411,7 @@ describe("EntityUsageExport utils", () => {
                   },
                 },
               },
-              Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {
+              models: {
                 "claude-3-haiku": {
                   metrics: {
                     spend: 3.0,
@@ -1474,19 +1474,19 @@ describe("EntityUsageExport utils", () => {
       const haiku = result.find((r) => r.Model === "claude-3-haiku");
       const sonnet = result.find((r) => r.Model === "claude-sonnet-4-5");
 
-      expect(haiku?.["Расход ($)"]).toBe("3.0000");
-      expect(sonnet?.["Расход ($)"]).toBe("5.0000");
+      expect(haiku?.["Spend ($)"]).toBe("3.0000");
+      expect(sonnet?.["Spend ($)"]).toBe("5.0000");
 
-      const totalРасход = result.reduce((sum, r) => sum + parseFloat(r["Расход ($)"].replace(/,/g, "")), 0);
+      const totalSpend = result.reduce((sum, r) => sum + parseFloat(r["Spend ($)"].replace(/,/g, "")), 0);
       const totalRequests = result.reduce((sum, r) => sum + r.Requests, 0);
       const totalTokens = result.reduce((sum, r) => sum + r["Всего токенов"], 0);
 
-      expect(totalРасход).toBeCloseTo(8.0, 4);
+      expect(totalSpend).toBeCloseTo(8.0, 4);
       expect(totalRequests).toBe(80);
       expect(totalTokens).toBe(800);
     });
 
-    it("should omit Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs the user never called instead of fanning выход", () => {
+    it("should omit models the user never called instead of fanning out", () => {
       // A second key (key2) belongs to a different user and is the only caller of
       // gpt-3.5-turbo. user1 only used key1 -> gpt-4. user1 must get exactly one row.
       const data: EntitySpendData = {
@@ -1521,7 +1521,7 @@ describe("EntityUsageExport utils", () => {
                   },
                 },
               },
-              Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {
+              models: {
                 "gpt-4": {
                   metrics: {
                     spend: 5.0,
@@ -1581,7 +1581,7 @@ describe("EntityUsageExport utils", () => {
 
       expect(result).toHaveLength(1);
       expect(result[0].Model).toBe("gpt-4");
-      expect(result[0]["Расход ($)"]).toBe("5.0000");
+      expect(result[0]["Spend ($)"]).toBe("5.0000");
     });
 
     it("should use team alias when available", () => {
@@ -1600,8 +1600,8 @@ describe("EntityUsageExport utils", () => {
       }
     });
 
-    it("should handle empty Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs breakdown", () => {
-      const spendDataWithвыходРежимls: EntitySpendData = {
+    it("should handle empty models breakdown", () => {
+      const spendDataWithoutModels: EntitySpendData = {
         ...mockSpendDataWithModels,
         results: [
           {
@@ -1636,14 +1636,14 @@ describe("EntityUsageExport utils", () => {
                   },
                 },
               },
-              Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {},
+              models: {},
             },
           },
         ],
         metadata: mockSpendDataWithModels.metadata,
       };
 
-      const result = generateDailyWithModelsData(spendDataWithвыходРежимls, "Team");
+      const result = generateDailyWithModelsData(spendDataWithoutModels, "Team");
 
       expect(result).toHaveLength(0);
     });
@@ -1654,12 +1654,12 @@ describe("EntityUsageExport utils", () => {
       const result = generateExportData(mockSpendData, "daily", "Team", mockTeamAliasMap);
 
       expect(result.length).toBeGreaterThan(0);
-      expect(result[0]).toHaveСвойство("Date");
-      expect(result[0]).not.toHaveСвойство("Режимl");
+      expect(result[0]).toHaveProperty("Date");
+      expect(result[0]).not.toHaveProperty("Режимl");
     });
 
     it("should return daily with keys data when scope is daily_with_keys", () => {
-      const mockDataWithКлючи: EntitySpendData = {
+      const mockDataWithKeys: EntitySpendData = {
         ...mockSpendData,
         results: [
           {
@@ -1701,15 +1701,15 @@ describe("EntityUsageExport utils", () => {
         metadata: mockSpendData.metadata,
       };
 
-      const result = generateExportData(mockDataWithКлючи, "daily_with_keys", "Team", mockTeamAliasMap);
+      const result = generateExportData(mockDataWithKeys, "daily_with_keys", "Team", mockTeamAliasMap);
 
       expect(result.length).toBeGreaterThan(0);
-      expect(result[0]).toHaveСвойство("Псевдоним ключа");
-      expect(result[0]).toHaveСвойство("Ключ ID");
-      expect(result[0]).not.toHaveСвойство("Режимl");
+      expect(result[0]).toHaveProperty("Псевдоним ключа");
+      expect(result[0]).toHaveProperty("Ключ ID");
+      expect(result[0]).not.toHaveProperty("Режимl");
     });
 
-    it("should return daily with Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs data when scope is daily_with_models", () => {
+    it("should return daily with models data when scope is daily_with_models", () => {
       const mockDataWithModels: EntitySpendData = {
         ...mockSpendData,
         results: [
@@ -1745,7 +1745,7 @@ describe("EntityUsageExport utils", () => {
                   },
                 },
               },
-              Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {
+              models: {
                 "gpt-4": {
                   metrics: {
                     spend: 10.5,
@@ -1777,85 +1777,85 @@ describe("EntityUsageExport utils", () => {
       const result = generateExportData(mockDataWithModels, "daily_with_models", "Team", mockTeamAliasMap);
 
       expect(result.length).toBeGreaterThan(0);
-      expect(result[0]).toHaveСвойство("Режимl");
+      expect(result[0]).toHaveProperty("Режимl");
     });
 
     it("should default to daily data for unknown scope", () => {
-      const result = generateExportData(mockSpendData, "unknown" as ExportОбласть, "Team", mockTeamAliasMap);
+      const result = generateExportData(mockSpendData, "unknown" as ExportScope, "Team", mockTeamAliasMap);
 
       expect(result.length).toBeGreaterThan(0);
-      expect(result[0]).not.toHaveСвойство("Режимl");
+      expect(result[0]).not.toHaveProperty("Режимl");
     });
   });
 
   describe("generateМетаданные", () => {
-    const mockDateRange: DateRangePickerЗначение = {
+    const mockDateRange: DateRangePickerValue = {
       from: new Date("2025-01-01"),
       to: new Date("2025-01-31"),
     };
 
     it("should generate metadata with correct structure", () => {
-      const result = generateМетаданные("team", mockDateRange, [], "daily", mockSpendData);
+      const result = generateMetadata("team", mockDateRange, [], "daily", mockSpendData);
 
-      expect(result).toHaveСвойство("export_date");
-      expect(result).toHaveСвойство("entity_type");
-      expect(result).toHaveСвойство("date_range");
-      expect(result).toHaveСвойство("filters_applied");
-      expect(result).toHaveСвойство("export_scope");
-      expect(result).toHaveСвойство("summary");
+      expect(result).toHaveProperty("export_date");
+      expect(result).toHaveProperty("entity_type");
+      expect(result).toHaveProperty("date_range");
+      expect(result).toHaveProperty("filters_applied");
+      expect(result).toHaveProperty("export_scope");
+      expect(result).toHaveProperty("summary");
     });
 
     it("should include export date as ISO string", () => {
-      const result = generateМетаданные("team", mockDateRange, [], "daily", mockSpendData);
+      const result = generateMetadata("team", mockDateRange, [], "daily", mockSpendData);
 
       expect(result.export_date).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
     });
 
     it("should include entity type", () => {
-      const result = generateМетаданные("team", mockDateRange, [], "daily", mockSpendData);
+      const result = generateMetadata("team", mockDateRange, [], "daily", mockSpendData);
 
       expect(result.entity_type).toBe("team");
     });
 
     it("should format date range correctly", () => {
-      const result = generateМетаданные("team", mockDateRange, [], "daily", mockSpendData);
+      const result = generateMetadata("team", mockDateRange, [], "daily", mockSpendData);
 
       expect(result.date_range.from).toBe("2025-01-01T00:00:00.000Z");
       expect(result.date_range.to).toBe("2025-01-31T00:00:00.000Z");
     });
 
     it("should handle missing date range values", () => {
-      const incompleteDateRange: DateRangePickerЗначение = {
+      const incompleteDateRange: DateRangePickerValue = {
         from: undefined,
         to: undefined,
       };
 
-      const result = generateМетаданные("team", incompleteDateRange, [], "daily", mockSpendData);
+      const result = generateMetadata("team", incompleteDateRange, [], "daily", mockSpendData);
 
       expect(result.date_range.from).toBeUndefined();
       expect(result.date_range.to).toBeUndefined();
     });
 
     it("should set filters_applied to None when empty", () => {
-      const result = generateМетаданные("team", mockDateRange, [], "daily", mockSpendData);
+      const result = generateMetadata("team", mockDateRange, [], "daily", mockSpendData);
 
       expect(result.filters_applied).toBe("None");
     });
 
     it("should include filters when provided", () => {
-      const result = generateМетаданные("team", mockDateRange, ["filter1", "filter2"], "daily", mockSpendData);
+      const result = generateMetadata("team", mockDateRange, ["filter1", "filter2"], "daily", mockSpendData);
 
       expect(result.filters_applied).toEqual(["filter1", "filter2"]);
     });
 
     it("should include export scope", () => {
-      const result = generateМетаданные("team", mockDateRange, [], "daily_with_models", mockSpendData);
+      const result = generateMetadata("team", mockDateRange, [], "daily_with_models", mockSpendData);
 
       expect(result.export_scope).toBe("daily_with_models");
     });
 
     it("should include summary metrics from spend data", () => {
-      const result = generateМетаданные("team", mockDateRange, [], "daily", mockSpendData);
+      const result = generateMetadata("team", mockDateRange, [], "daily", mockSpendData);
 
       expect(result.summary.total_spend).toBe(46.0);
       expect(result.summary.total_requests).toBe(450);
@@ -1869,20 +1869,20 @@ describe("EntityUsageExport utils", () => {
         ...mockSpendData,
         metadata: { ...mockSpendData.metadata, total_flat_cost: 6.45 },
       };
-      const result = generateМетаданные("team", mockDateRange, [], "daily", spendWithFlat);
+      const result = generateMetadata("team", mockDateRange, [], "daily", spendWithFlat);
       expect(result.summary.total_flat_cost).toBeCloseTo(6.45, 4);
       expect(result.summary.total_cost).toBeCloseTo(46.0 + 6.45, 4);
     });
 
     it("should omit total_flat_cost and total_cost when total_flat_cost is zero", () => {
       const zeroFlat = { ...mockSpendData, metadata: { ...mockSpendData.metadata, total_flat_cost: 0 } };
-      const result = generateМетаданные("team", mockDateRange, [], "daily", zeroFlat);
+      const result = generateMetadata("team", mockDateRange, [], "daily", zeroFlat);
       expect(result.summary.total_flat_cost).toBeUndefined();
       expect(result.summary.total_cost).toBeUndefined();
     });
   });
 
-  describe("generateDailyData PTU flat cost", () => {
+  describe("generateКаждый деньData PTU flat cost", () => {
     const dayWithFlat: EntitySpendData = {
       results: [
         {
@@ -1921,8 +1921,8 @@ describe("EntityUsageExport utils", () => {
     it("includes Фиксированная стоимость ($) and Общая стоимость ($) columns when total_flat_cost is present", () => {
       const rows = generateDailyData(dayWithFlat, "Team", {});
       expect(rows).toHaveLength(1);
-      expect(rows[0]).toHaveСвойство("Фиксированная стоимость ($)");
-      expect(rows[0]).toHaveСвойство("Общая стоимость ($)");
+      expect(rows[0]).toHaveProperty("Фиксированная стоимость ($)");
+      expect(rows[0]).toHaveProperty("Общая стоимость ($)");
       expect(rows[0]["Фиксированная стоимость ($)"]).toBe("6.4500");
       expect(rows[0]["Общая стоимость ($)"]).toBe("16.4500");
     });
@@ -1941,8 +1941,8 @@ describe("EntityUsageExport utils", () => {
       };
       const rows = generateDailyData(spendWithoutFlat, "User", {});
       expect(rows).toHaveLength(1);
-      expect(rows[0]).not.toHaveСвойство("Фиксированная стоимость ($)");
-      expect(rows[0]).not.toHaveСвойство("Общая стоимость ($)");
+      expect(rows[0]).not.toHaveProperty("Фиксированная стоимость ($)");
+      expect(rows[0]).not.toHaveProperty("Общая стоимость ($)");
     });
   });
 
@@ -1958,7 +1958,7 @@ describe("EntityUsageExport utils", () => {
     });
 
     it("should create CSV file and trigger download", () => {
-      const createObjectURLSpy = vi.spyOn(window.URL, "createObjectURL").mockReturnЗначение("blob:mock-url");
+      const createObjectURLSpy = vi.spyOn(window.URL, "createObjectURL").mockReturnValue("blob:mock-url");
       vi.spyOn(window.URL, "revokeObjectURL");
       const createElementSpy = vi.spyOn(document, "createElement");
       const appendChildSpy = vi.spyOn(document.body, "appendChild");
@@ -1969,7 +1969,7 @@ describe("EntityUsageExport utils", () => {
       const unparsedRows = vi.mocked(Papa.unparse).mock.calls[0][0] as Record<string, unknown>[];
       expect(unparsedRows).toHaveLength(3);
       const day1Team1 = unparsedRows.find((r) => r["Date"] === "2025-01-01" && r["ID команды"] === "team-1");
-      expect(day1Team1?.["Cache Read Вход Токенs"]).toBe(50);
+      expect(day1Team1?.["Cache Read Вход Tokens"]).toBe(50);
 
       const exportedBlob = createObjectURLSpy.mock.calls[0][0] as Blob;
       expect(exportedBlob.type).toBe("text/csv;charset=utf-8;");
@@ -1982,7 +1982,7 @@ describe("EntityUsageExport utils", () => {
 
     it("should generate correct filename", () => {
       const anchorElement = document.createElement("a");
-      vi.spyOn(document, "createElement").mockReturnЗначение(anchorElement);
+      vi.spyOn(document, "createElement").mockReturnValue(anchorElement);
 
       const today = new Date().toISOString().split("T")[0];
 
@@ -2024,13 +2024,13 @@ describe("EntityUsageExport utils", () => {
     });
 
     it("should create JSON file and trigger download", () => {
-      const createObjectURLSpy = vi.spyOn(window.URL, "createObjectURL").mockReturnЗначение("blob:mock-url");
+      const createObjectURLSpy = vi.spyOn(window.URL, "createObjectURL").mockReturnValue("blob:mock-url");
       vi.spyOn(window.URL, "revokeObjectURL");
       const createElementSpy = vi.spyOn(document, "createElement");
       const appendChildSpy = vi.spyOn(document.body, "appendChild");
       const removeChildSpy = vi.spyOn(document.body, "removeChild");
 
-      const mockDateRange: DateRangePickerЗначение = {
+      const mockDateRange: DateRangePickerValue = {
         from: new Date("2025-01-01"),
         to: new Date("2025-01-31"),
       };
@@ -2048,10 +2048,10 @@ describe("EntityUsageExport utils", () => {
 
     it("should generate correct filename", () => {
       const anchorElement = document.createElement("a");
-      vi.spyOn(document, "createElement").mockReturnЗначение(anchorElement);
+      vi.spyOn(document, "createElement").mockReturnValue(anchorElement);
 
       const today = new Date().toISOString().split("T")[0];
-      const mockDateRange: DateRangePickerЗначение = {
+      const mockDateRange: DateRangePickerValue = {
         from: new Date("2025-01-01"),
         to: new Date("2025-01-31"),
       };
@@ -2074,7 +2074,7 @@ describe("EntityUsageExport utils", () => {
         }
       } as any;
 
-      const mockDateRange: DateRangePickerЗначение = {
+      const mockDateRange: DateRangePickerValue = {
         from: new Date("2025-01-01"),
         to: new Date("2025-01-31"),
       };
@@ -2099,7 +2099,7 @@ describe("EntityUsageExport utils", () => {
         }
       } as any;
 
-      const mockDateRange: DateRangePickerЗначение = {
+      const mockDateRange: DateRangePickerValue = {
         from: new Date("2025-01-01"),
         to: new Date("2025-01-31"),
       };
@@ -2107,8 +2107,8 @@ describe("EntityUsageExport utils", () => {
       handleExportJSON(mockSpendData, "daily", "Team", "team", mockDateRange, ["filter1"], mockTeamAliasMap);
 
       const exportObject = JSON.parse(jsonString);
-      expect(exportObject).toHaveСвойство("metadata");
-      expect(exportObject).toHaveСвойство("data");
+      expect(exportObject).toHaveProperty("metadata");
+      expect(exportObject).toHaveProperty("data");
       expect(exportObject.metadata.entity_type).toBe("team");
       expect(exportObject.metadata.filters_applied).toEqual(["filter1"]);
 
@@ -2140,7 +2140,7 @@ describe("EntityUsageExport utils", () => {
               metadata: { team_id: "team-1", key_alias: "staging-key" },
             },
           },
-          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {
+          models: {
             "gpt-4": {
               metrics: { spend: 35.8, api_requests: 350, total_tokens: 3500 },
               api_key_breakdown: {
@@ -2210,7 +2210,7 @@ describe("EntityUsageExport utils", () => {
         expect(result["team-2"].metrics.api_requests).toBe(200);
       });
 
-      it("should use 'Unassigned' for keys withвыход team_id", () => {
+      it("should use 'Unassigned' for keys without team_id", () => {
         const breakdown = {
           entities: {},
           api_keys: {
@@ -2252,16 +2252,16 @@ describe("EntityUsageExport utils", () => {
       });
     });
 
-    describe("generateDailyData with aggregated data", () => {
+    describe("generateКаждый деньData with aggregated data", () => {
       it("should produce rows from api_keys when entities is empty", () => {
         const result = generateDailyData(aggregatedSpendData, "Team");
         expect(result.length).toBeGreaterThan(0);
-        expect(result[0]).toHaveСвойство("Date");
-        expect(result[0]).toHaveСвойство("Team");
+        expect(result[0]).toHaveProperty("Date");
+        expect(result[0]).toHaveProperty("Team");
       });
     });
 
-    describe("generateDailyWithKeysData with aggregated data", () => {
+    describe("generateКаждый деньWithКлючиData with aggregated data", () => {
       it("should produce rows from api_keys when entities is empty", () => {
         const result = generateDailyWithKeysData(aggregatedSpendData, "Team");
         expect(result.length).toBeGreaterThan(0);
@@ -2275,18 +2275,18 @@ describe("EntityUsageExport utils", () => {
       });
     });
 
-    describe("generateDailyWithModelsData with aggregated data", () => {
+    describe("generateКаждый деньWithРежимlsData with aggregated data", () => {
       it("should produce rows from api_keys when entities is empty", () => {
         const result = generateDailyWithModelsData(aggregatedSpendData, "Team");
         expect(result.length).toBeGreaterThan(0);
-        expect(result[0]).toHaveСвойство("Режимl");
+        expect(result[0]).toHaveProperty("Режимl");
 
         // team-1 = key1 (10.5) + key1b (5) on gpt-4; team-2 = key2 (20.3) on gpt-4.
-        // Расход must aggregate per team-key, not repeat the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию total per team.
+        // Spend must aggregate per team-key, not repeat the model total per team.
         const team1 = result.find((r) => r["ID команды"] === "team-1");
         const team2 = result.find((r) => r["ID команды"] === "team-2");
-        expect(team1?.["Расход ($)"]).toBe("15.5000");
-        expect(team2?.["Расход ($)"]).toBe("20.3000");
+        expect(team1?.["Spend ($)"]).toBe("15.5000");
+        expect(team2?.["Spend ($)"]).toBe("20.3000");
       });
     });
   });
@@ -2350,12 +2350,12 @@ describe("EntityUsageExport utils", () => {
     });
 
     it("should fall back to the raw entity key when the entity carries no metadata", () => {
-      const noМетаданные = generateDailyData(makeSpendData("my-tag"), "Tag");
-      const emptyМетаданные = generateDailyData(makeSpendData("customer-9", {}), "Customer");
+      const noMetadata = generateDailyData(makeSpendData("my-tag"), "Tag");
+      const emptyMetadata = generateDailyData(makeSpendData("customer-9", {}), "Customer");
       const blankNames = generateDailyData(makeSpendData("user-123", { user_email: null, user_alias: null }), "User");
 
-      expect(noМетаданные[0]["Tag"]).toBe("my-tag");
-      expect(emptyМетаданные[0]["Customer"]).toBe("customer-9");
+      expect(noMetadata[0]["Tag"]).toBe("my-tag");
+      expect(emptyMetadata[0]["Customer"]).toBe("customer-9");
       expect(blankNames[0]["User"]).toBe("user-123");
     });
 
@@ -2421,7 +2421,7 @@ describe("EntityUsageExport utils", () => {
       expect(result.find((r) => r["Ключ ID"] === "key2")?.["Псевдоним ключа"]).toBe("dev-key");
     });
 
-    it("should resolve each entity's own email in the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs scope", () => {
+    it("should resolve each entity's own email in the models scope", () => {
       const spendData: EntitySpendData = {
         results: [
           {
@@ -2439,7 +2439,7 @@ describe("EntityUsageExport utils", () => {
                   api_key_breakdown: { key2: { metrics: entityMetrics, metadata: {} } },
                 },
               },
-              Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {
+              models: {
                 "claude-sonnet-4-5": {
                   metrics: entityMetrics,
                   api_key_breakdown: {

@@ -1,9 +1,9 @@
-import { detectSSOПровайдер, processSSOSettingsPayload } from "./utils";
+import { detectSSOProvider, processSSOSettingsPayload } from "./utils";
 import { describe, it, expect } from "vitest";
 import type { SSOSettingsValues } from "@/app/(dashboard)/hooks/sso/useSSOSettings";
 
 describe("processSSOSettingsPayload", () => {
-  describe("withвыход role mappings", () => {
+  describe("without role mappings", () => {
     it("should return all fields except role mapping fields when use_role_mappings is false", () => {
       const formValues = {
         proxy_admin_teams: "team1, team2",
@@ -166,7 +166,7 @@ describe("processSSOSettingsPayload", () => {
       });
     });
 
-    it("should filter выход empty strings after trimming", () => {
+    it("should filter out empty strings after trimming", () => {
       const formValues = {
         proxy_admin_teams: "admin1,,admin2, , admin3",
         default_role: "internal_user",
@@ -260,7 +260,7 @@ describe("processSSOSettingsPayload", () => {
     });
   });
 
-  describe("withвыход team mappings", () => {
+  describe("without team mappings", () => {
     it("should return all fields except team mapping fields when use_team_mappings is false", () => {
       const formValues = {
         use_team_mappings: false,
@@ -430,15 +430,15 @@ describe("processSSOSettingsPayload", () => {
   });
 });
 
-describe("detectSSOПровайдер with SAML", () => {
+describe("detectSSOProvider with SAML", () => {
   it("returns saml when a SAML IdP metadata URL is configured", () => {
-    expect(detectSSOПровайдер({ saml_idp_metadata_url: "https://idp.example.com/metadata" } as SSOSettingsValues)).toBe(
+    expect(detectSSOProvider({ saml_idp_metadata_url: "https://idp.example.com/metadata" } as SSOSettingsValues)).toBe(
       "saml",
     );
   });
 
   it("returns saml when only inline SAML metadata XML is configured", () => {
-    expect(detectSSOПровайдер({ saml_idp_metadata_xml: "<EntityDescriptor/>" } as SSOSettingsValues)).toBe("saml");
+    expect(detectSSOProvider({ saml_idp_metadata_xml: "<EntityDescriptor/>" } as SSOSettingsValues)).toBe("saml");
   });
 });
 

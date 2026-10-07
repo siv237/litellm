@@ -4,9 +4,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "../../../../../tests/test-utils";
 import AddProviderForm from "./add_provider_form";
-import { DiscountКонфигурация } from "./types";
+import { DiscountConfig } from "./types";
 
-const onAddПровайдер = vi.fn();
+const onAddProvider = vi.fn();
 const onParentFinish = vi.fn();
 
 const ParentOwnedForm = () => (
@@ -18,12 +18,12 @@ const ParentOwnedForm = () => (
     className="space-y-6"
   >
     <AddProviderForm
-      discountКонфигурация={{} as DiscountКонфигурация}
-      selectedПровайдер="OpenAI"
+      discountConfig={{} as DiscountConfig}
+      selectedProvider="OpenAI"
       newDiscount="5"
       onProviderChange={vi.fn()}
       onDiscountChange={vi.fn()}
-      onAddПровайдер={onAddПровайдер}
+      onAddProvider={onAddProvider}
     />
   </form>
 );
@@ -33,23 +33,23 @@ describe("AddProviderForm inside the form its parent owns", () => {
     vi.clearAllMocks();
   });
 
-  it("drives both the onAddПровайдер prop and the parent form submit from one click", async () => {
+  it("drives both the onAddProvider prop and the parent form submit from one click", async () => {
     const user = userEvent.setup();
     renderWithProviders(<ParentOwnedForm />);
 
     await user.click(screen.getByRole("button", { name: /add provider discount/i }));
 
-    expect(onAddПровайдер).toHaveBeenCalledTimes(1);
+    expect(onAddProvider).toHaveBeenCalledTimes(1);
     expect(onParentFinish).toHaveBeenCalledTimes(1);
   });
 
-  it("treats Введите in the discount field exactly like a click on the add button", async () => {
+  it("treats Enter in the discount field exactly like a click on the add button", async () => {
     const user = userEvent.setup();
     renderWithProviders(<ParentOwnedForm />);
 
-    await user.type(screen.getByPlaceholderText("5"), "{Введите}");
+    await user.type(screen.getByPlaceholderText("5"), "{Enter}");
 
     await vi.waitFor(() => expect(onParentFinish).toHaveBeenCalledTimes(1));
-    expect(onAddПровайдер).toHaveBeenCalledTimes(1);
+    expect(onAddProvider).toHaveBeenCalledTimes(1);
   });
 });

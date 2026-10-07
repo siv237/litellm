@@ -2,8 +2,8 @@ import { screen, waitFor } from "@testing-library/react";
 import { renderWithProviders } from "../../../tests/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as networking from "../networking";
-import ПолитикаВыбратьor, { getPolicyOptionEntries, policyVersionRef, POLICY_VERSION_ID_PREFIX } from "./ПолитикаВыбратьor";
-import { Политика } from "./types";
+import PolicySelector, { getPolicyOptionEntries, policyVersionRef, POLICY_VERSION_ID_PREFIX } from "./ПолитикаВыбратьor";
+import { Policy } from "./types";
 
 vi.mock("../networking");
 
@@ -12,28 +12,28 @@ vi.mock("@/app/(dashboard)/hooks/useCan", () => ({
   default: (...args: unknown[]) => can(...args),
 }));
 
-const makeПолитика = (overrides: Partial<Политика>): Политика => ({
+const makePolicy = (overrides: Partial<Policy>): Policy => ({
   policy_id: "uuid-1",
   policy_name: "test-policy",
   inherit: null,
   description: null,
-  гардрейловs_add: [],
-  гардрейловs_remove: [],
+  guardrails_add: [],
+  guardrails_remove: [],
   condition: null,
   ...overrides,
 });
 
-describe("policyVersionRef", () => {
+describe("policyВерсияRef", () => {
   it("should prefix the policy id with the version prefix", () => {
     expect(policyVersionRef("abc-123")).toBe(`${POLICY_VERSION_ID_PREFIX}abc-123`);
   });
 });
 
-describe("getPolicyOptionEntries", () => {
-  it("should filter выход draft policies", () => {
+describe("getПолитикаOptionEntries", () => {
+  it("should filter out draft policies", () => {
     const policies = [
-      makeПолитика({ policy_name: "draft-one", version_status: "draft" }),
-      makeПолитика({ policy_name: "published-one", version_status: "published", policy_id: "pub-id" }),
+      makePolicy({ policy_name: "draft-one", version_status: "draft" }),
+      makePolicy({ policy_name: "published-one", version_status: "published", policy_id: "pub-id" }),
     ];
     const options = getPolicyOptionEntries(policies);
     expect(options).toHaveLength(1);
@@ -41,26 +41,26 @@ describe("getPolicyOptionEntries", () => {
   });
 
   it("should use the policy_name as value for production policies", () => {
-    const policy = makeПолитика({ policy_name: "prod-policy", version_status: "production" });
+    const policy = makePolicy({ policy_name: "prod-policy", version_status: "production" });
     const options = getPolicyOptionEntries([policy]);
     expect(options[0].value).toBe("prod-policy");
   });
 
   it("should use a version ref as value for published (non-production) policies", () => {
-    const policy = makeПолитика({ policy_id: "abc-123", policy_name: "pub-policy", version_status: "published" });
+    const policy = makePolicy({ policy_id: "abc-123", policy_name: "pub-policy", version_status: "published" });
     const options = getPolicyOptionEntries([policy]);
     expect(options[0].value).toBe(policyVersionRef("abc-123"));
   });
 
   it("should include the version number and status in the label", () => {
-    const policy = makeПолитика({ policy_name: "my-policy", version_status: "published", version_number: 3 });
+    const policy = makePolicy({ policy_name: "my-policy", version_status: "published", version_number: 3 });
     const options = getPolicyOptionEntries([policy]);
     expect(options[0].label).toContain("v3");
     expect(options[0].label).toContain("published");
   });
 
   it("should append the description to the label when present", () => {
-    const policy = makeПолитика({
+    const policy = makePolicy({
       policy_name: "my-policy",
       version_status: "published",
       description: "blocks PII",
@@ -69,8 +69,8 @@ describe("getPolicyOptionEntries", () => {
     expect(options[0].label).toContain("blocks PII");
   });
 
-  it("should treat policies with no version_status as draft and filter them выход", () => {
-    const policy = makeПолитика({ policy_name: "implicit-draft" });
+  it("should treat policies with no version_status as draft and filter them out", () => {
+    const policy = makePolicy({ policy_name: "implicit-draft" });
     const options = getPolicyOptionEntries([policy]);
     expect(options).toHaveLength(0);
   });
@@ -81,29 +81,29 @@ describe("ПолитикаВыбратьor", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    can.mockReturnЗначение(true);
+    can.mockReturnValue(true);
   });
 
   it("should render", () => {
-    vi.mocked(networking.getPoliciesList).mockResolvedЗначение({ policies: [] });
-    renderWithProviders(<ПолитикаВыбратьor accessТокен="tok" onChange={mockOnChange} />);
+    vi.mocked(networking.getPoliciesList).mockResolvedValue({ policies: [] });
+    renderWithProviders(<PolicySelector accessToken="tok" onChange={mockOnChange} />);
     expect(screen.getByRole("combobox")).toBeInTheDocument();
   });
 
   it("should fetch policies on mount with the given access token", async () => {
-    vi.mocked(networking.getPoliciesList).mockResolvedЗначение({ policies: [] });
-    renderWithProviders(<ПолитикаВыбратьor accessТокен="my-token" onChange={mockOnChange} />);
+    vi.mocked(networking.getPoliciesList).mockResolvedValue({ policies: [] });
+    renderWithProviders(<PolicySelector accessToken="my-token" onChange={mockOnChange} />);
     await waitFor(() => {
       expect(networking.getPoliciesList).toHaveBeenCalledWith("my-token");
     });
   });
 
   it("should call onPoliciesLoaded with the fetched policies after mount", async () => {
-    const policies = [makeПолитика({ version_status: "production" })];
-    vi.mocked(networking.getPoliciesList).mockResolvedЗначение({ policies });
+    const policies = [makePolicy({ version_status: "production" })];
+    vi.mocked(networking.getPoliciesList).mockResolvedValue({ policies });
     const onPoliciesLoaded = vi.fn();
     renderWithProviders(
-      <ПолитикаВыбратьor accessТокен="tok" onChange={mockOnChange} onPoliciesLoaded={onPoliciesLoaded} />,
+      <PolicySelector accessToken="tok" onChange={mockOnChange} onPoliciesLoaded={onPoliciesLoaded} />,
     );
     await waitFor(() => {
       expect(onPoliciesLoaded).toHaveBeenCalledWith(policies);
@@ -111,21 +111,21 @@ describe("ПолитикаВыбратьor", () => {
   });
 
   it("should show a disabled placeholder when disabled prop is true", () => {
-    vi.mocked(networking.getPoliciesList).mockResolvedЗначение({ policies: [] });
-    renderWithProviders(<ПолитикаВыбратьor accessТокен="tok" onChange={mockOnChange} disabled />);
+    vi.mocked(networking.getPoliciesList).mockResolvedValue({ policies: [] });
+    renderWithProviders(<PolicySelector accessToken="tok" onChange={mockOnChange} disabled />);
     expect(screen.getByRole("combobox")).toBeDisabled();
   });
 
-  it("should not fetch policies when accessТокен is empty", () => {
-    renderWithProviders(<ПолитикаВыбратьor accessТокен="" onChange={mockOnChange} />);
+  it("should not fetch policies when accessToken is empty", () => {
+    renderWithProviders(<PolicySelector accessToken="" onChange={mockOnChange} />);
     expect(networking.getPoliciesList).not.toHaveBeenCalled();
   });
 
-  it("should render nothing and skip the admin-only fetch withвыход the viewPolicies capability", async () => {
-    can.mockReturnЗначение(false);
-    vi.mocked(networking.getPoliciesList).mockResolvedЗначение({ policies: [] });
+  it("should render nothing and skip the admin-only fetch without the viewPolicies capability", async () => {
+    can.mockReturnValue(false);
+    vi.mocked(networking.getPoliciesList).mockResolvedValue({ policies: [] });
 
-    const { container } = renderWithProviders(<ПолитикаВыбратьor accessТокен="tok" onChange={mockOnChange} />);
+    const { container } = renderWithProviders(<PolicySelector accessToken="tok" onChange={mockOnChange} />);
 
     await waitFor(() => {
       expect(can).toHaveBeenCalledWith("viewPolicies");

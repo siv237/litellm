@@ -1,38 +1,38 @@
 import { describe, expect, it } from "vitest";
-import { entriesToModelМакс.Бюджет, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries, type РежимlМакс.Бюджет } from "./РежимlМакс.BudgetEditor";
+import { entriesToModelMaxBudget, modelMaxBudgetToEntries, type ModelMaxBudget } from "./ModelMaxBudgetEditor";
 
-describe("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries", () => {
-  it("hydrates an existing budget withвыход losing its period", () => {
-    const budget: РежимlМакс.Бюджет = {
+describe("МодельМакс.BudgetToEntries", () => {
+  it("hydrates an existing Бюджет without losing its period", () => {
+    const budget: ModelMaxBudget = {
       "claude-opus-4-8": { budget_limit: 200, time_period: "1mo" },
       "gpt-4o": { budget_limit: 0.5, time_period: "7d" },
     };
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(budget)).toEqual([
-      { id: "existing-0", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-opus-4-8", budgetLimit: 200, timePeriod: "1mo", extra: {} },
-      { id: "existing-1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o", budgetLimit: 0.5, timePeriod: "7d", extra: {} },
+    expect(modelMaxBudgetToEntries(budget)).toEqual([
+      { id: "existing-0", model: "claude-opus-4-8", budgetLimit: 200, timePeriod: "1mo", extra: {} },
+      { id: "existing-1", model: "gpt-4o", budgetLimit: 0.5, timePeriod: "7d", extra: {} },
     ]);
   });
 
   it.each([
     ["null", null],
     ["undefined", undefined],
-    ["empty", {} as РежимlМакс.Бюджет],
-  ])("treats %s as no rows", (_label, budget) => {
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(budget)).toEqual([]);
+    ["empty", {} as ModelMaxBudget],
+  ])("treats %s as Нет rows", (_label, budget) => {
+    expect(modelMaxBudgetToEntries(budget)).toEqual([]);
   });
 });
 
-// Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget is a plain dict on keys and users, stored and returned exactly
-// as the client sent it, and БюджетКонфигурация documents the max_budget/budget_duration
+// model_max_budget is a plain dict on keys and users, stored and returned exactly
+// as the client sent it, and BudgetConfig documents the max_budget/budget_duration
 // spelling. Reading only one spelling mounts the row blank, and emitting then drops
 // it, so opening a form and saving it untouched would wipe the stored budget.
-describe("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries reads either БюджетКонфигурация spelling", () => {
+describe("МодельМакс.BudgetToEntries reads either БюджетКонфигурация spelling", () => {
   it.each([
     ["budget_limit/time_period", { budget_limit: 200, time_period: "1mo" }],
     ["max_budget/budget_duration", { max_budget: 200, budget_duration: "1mo" }],
   ])("hydrates a row stored as %s", (_label, config) => {
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries({ "claude-opus-4-8": config })).toEqual([
-      { id: "existing-0", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-opus-4-8", budgetLimit: 200, timePeriod: "1mo", extra: {} },
+    expect(modelMaxBudgetToEntries({ "claude-opus-4-8": config })).toEqual([
+      { id: "existing-0", model: "claude-opus-4-8", budgetLimit: 200, timePeriod: "1mo", extra: {} },
     ]);
   });
 
@@ -44,97 +44,97 @@ describe("Эвристический резерв по-прежнему оцен
     ["exponent notation", "5e-1", 0.5],
     ["zero, which is a real cap", 0, 0],
   ])("reads %s as the cap", (_label, stored, expected) => {
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries({ "gpt-4o": { budget_limit: stored, time_period: "1h" } })[0].budgetLimit).toBe(
+    expect(modelMaxBudgetToEntries({ "gpt-4o": { budget_limit: stored, time_period: "1h" } })[0].budgetLimit).toBe(
       expected,
     );
   });
 
-  it("leaves the cap empty rather than NaN when the stored value is not a number", () => {
+  it("leaves the cap empty rather than NaN when the stored Значение is not a number", () => {
     expect(
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries({ "gpt-4o": { budget_limit: "not a number", time_period: "1h" } })[0].budgetLimit,
+      modelMaxBudgetToEntries({ "gpt-4o": { budget_limit: "not a number", time_period: "1h" } })[0].budgetLimit,
     ).toBeNull();
   });
 
-  it("falls back to the default period rather than an empty one", () => {
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries({ "gpt-4o": { budget_limit: 1, time_period: "" } })[0].timePeriod).toBe("30d");
+  it("falls Назад to the default period rather than an empty one", () => {
+    expect(modelMaxBudgetToEntries({ "gpt-4o": { budget_limit: 1, time_period: "" } })[0].timePeriod).toBe("30d");
   });
 });
 
-// БюджетКонфигурация carries tpm_limit and rpm_limit too. This editor Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs neither, so
-// withвыход carrying them through, editing a dollar cap silently drops a configured
+// BudgetConfig carries tpm_limit and rpm_limit too. This editor models neither, so
+// without carrying them through, editing a dollar cap silently drops a configured
 // rate limit.
-describe("fields the editor does not Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
-  const WITH_RATE_LIMITS: РежимlМакс.Бюджет = {
+describe("fields the editor does not Модель", () => {
+  const WITH_RATE_LIMITS: ModelMaxBudget = {
     "gpt-4o": { budget_limit: 5, time_period: "1h", tpm_limit: 1000, rpm_limit: 60 },
   };
 
   it("keeps them on the entry when hydrating", () => {
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(WITH_RATE_LIMITS)[0].extra).toEqual({ tpm_limit: 1000, rpm_limit: 60 });
+    expect(modelMaxBudgetToEntries(WITH_RATE_LIMITS)[0].extra).toEqual({ tpm_limit: 1000, rpm_limit: 60 });
   });
 
-  it("puts them back when the cap is edited", () => {
-    const edited = Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(WITH_RATE_LIMITS).map((entry) => ({ ...entry, budgetLimit: 9 }));
+  it("puts them Назад when the cap is edited", () => {
+    const edited = modelMaxBudgetToEntries(WITH_RATE_LIMITS).map((entry) => ({ ...entry, budgetLimit: 9 }));
 
-    expect(entriesToModelМакс.Бюджет(edited)).toEqual({
+    expect(entriesToModelMaxBudget(edited)).toEqual({
       "gpt-4o": { budget_limit: 9, time_period: "1h", tpm_limit: 1000, rpm_limit: 60 },
     });
   });
 
   // Emitting both spellings would leave the proxy with a contradictory config.
-  it("does not re-emit the alias spelling alongside the canonical one", () => {
-    const stored: РежимlМакс.Бюджет = { "gpt-4o": { max_budget: 5, budget_duration: "1h", tpm_limit: 1000 } };
+  it("does not re-emit the Псевдоним spelling alongside the canonical one", () => {
+    const stored: ModelMaxBudget = { "gpt-4o": { max_budget: 5, budget_duration: "1h", tpm_limit: 1000 } };
 
-    expect(entriesToModelМакс.Бюджет(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(stored))).toEqual({
+    expect(entriesToModelMaxBudget(modelMaxBudgetToEntries(stored))).toEqual({
       "gpt-4o": { budget_limit: 5, time_period: "1h", tpm_limit: 1000 },
     });
   });
 });
 
-describe("entriesToModelМакс.Бюджет", () => {
-  // Two Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs are two independent budgets, so neither row order nor a
+describe("entriesToРежимlМакс.Бюджет", () => {
+  // Two models are two independent budgets, so neither row order nor a
   // half-filled row may change which budgets are submitted.
   it.each([
     ["configured first", ["gpt-4o", null] as const],
     ["configured second", [null, "gpt-4o"] as const],
-  ])("drops a row with no Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, %s", (_label, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs) => {
-    const entries = Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs.map((Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, index) => ({
+  ])("drops a row with Нет Модель, %s", (_label, models) => {
+    const entries = models.map((model, index) => ({
       id: String(index),
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию,
+      model,
       budgetLimit: 1.25,
       timePeriod: "30d",
       extra: {},
     }));
-    expect(entriesToModelМакс.Бюджет(entries)).toEqual({
+    expect(entriesToModelMaxBudget(entries)).toEqual({
       "gpt-4o": { budget_limit: 1.25, time_period: "30d" },
     });
   });
 
-  it("drops a row whose budget was never typed", () => {
+  it("drops a row whose Бюджет was never typed", () => {
     expect(
-      entriesToModelМакс.Бюджет([
-        { id: "1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o", budgetLimit: null, timePeriod: "30d", extra: {} },
-        { id: "2", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-opus-4-8", budgetLimit: 3, timePeriod: "1h", extra: {} },
+      entriesToModelMaxBudget([
+        { id: "1", model: "gpt-4o", budgetLimit: null, timePeriod: "30d", extra: {} },
+        { id: "2", model: "claude-opus-4-8", budgetLimit: 3, timePeriod: "1h", extra: {} },
       ]),
     ).toEqual({ "claude-opus-4-8": { budget_limit: 3, time_period: "1h" } });
   });
 
-  it("keeps a zero budget, which is a real cap and not an empty field", () => {
+  it("keeps a zero Бюджет, which is a real cap and not an empty Поле", () => {
     expect(
-      entriesToModelМакс.Бюджет([{ id: "1", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o", budgetLimit: 0, timePeriod: "30d", extra: {} }]),
+      entriesToModelMaxBudget([{ id: "1", model: "gpt-4o", budgetLimit: 0, timePeriod: "30d", extra: {} }]),
     ).toEqual({
       "gpt-4o": { budget_limit: 0, time_period: "30d" },
     });
   });
 
-  it("round-trips an existing budget unchanged", () => {
-    const budget: РежимlМакс.Бюджет = {
+  it("round-trips an existing Бюджет unchanged", () => {
+    const budget: ModelMaxBudget = {
       "claude-opus-4-8": { budget_limit: 200, time_period: "1mo" },
       "gpt-4o": { budget_limit: 0.5, time_period: "7d" },
     };
-    expect(entriesToModelМакс.Бюджет(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМакс.BudgetToEntries(budget))).toEqual(budget);
+    expect(entriesToModelMaxBudget(modelMaxBudgetToEntries(budget))).toEqual(budget);
   });
 
   it("submits nothing once the last row is removed", () => {
-    expect(entriesToModelМакс.Бюджет([])).toEqual({});
+    expect(entriesToModelMaxBudget([])).toEqual({});
   });
 });

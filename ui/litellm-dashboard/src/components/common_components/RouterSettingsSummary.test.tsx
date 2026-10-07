@@ -23,6 +23,6 @@ describe("RouterSettingsSummary", () => {
   it("should show the empty state when every setting is null", () => {
     render(<RouterSettingsSummary routerSettings={{ fallbacks: null, num_retries: null }} />);
 
-    expect(screen.getByText("No router settings configured")).toBeInTheDocument();
+    expect(screen.getByText("Нет router settings configured")).toBeInTheDocument();
   });
 });

@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
-import ChatMessageBubble from "./ChatMessageBubble";
-import { ЭндпоинтType } from "@/components/chat_ui/mode_endpoint_mapping";
-import { СообщениеType } from "@/components/chat_ui/types";
+import ChatMessageBubble from "./ChatСообщениеBubble";
+import { EndpointType } from "@/components/chat_ui/mode_endpoint_mapping";
+import { MessageType } from "@/components/chat_ui/types";
 
 // Mock child components to isolate bubble rendering logic
 vi.mock("react-markdown", () => ({
@@ -30,28 +30,28 @@ vi.mock("@/components/chat_ui/MCPEventsDisplay", () => ({
   default: ({ events }: { events: unknown[] }) => <div data-testid="mcp-events-display">{events.length} events</div>,
 }));
 
-vi.mock("./SearchResultsDisplay", () => ({
+vi.mock("./SearchРезультатsDisplay", () => ({
   SearchResultsDisplay: ({ searchResults }: { searchResults: unknown[] }) => (
     <div data-testid="search-results-display">{searchResults.length} results</div>
   ),
 }));
 
 vi.mock("@/components/chat_ui/ОтветМетрикаs", () => ({
-  default: ({ timeToFirstТокен }: { timeToFirstТокен?: number }) => (
-    <div data-testid="response-metrics">TTFT: {timeToFirstТокен}</div>
+  default: ({ timeToFirstToken }: { timeToFirstToken?: number }) => (
+    <div data-testid="response-metrics">TTFT: {timeToFirstToken}</div>
   ),
 }));
 
-vi.mock("./A2AMetrics", () => ({
-  default: ({ a2aМетаданные }: { a2aМетаданные: unknown }) => <div data-testid="a2a-metrics">A2A</div>,
+vi.mock("./A2AМетрикаs", () => ({
+  default: ({ a2aMetadata }: { a2aMetadata: unknown }) => <div data-testid="a2a-metrics">A2A</div>,
 }));
 
 vi.mock("./CodeInterpreterВыход", () => ({
-  default: ({ code }: { code: string }) => <div data-testid="code-interpreter-выходput">{code}</div>,
+  default: ({ code }: { code: string }) => <div data-testid="code-interpreter-output">{code}</div>,
 }));
 
 vi.mock("./AudioRenderer", () => ({
-  default: ({ message }: { message: СообщениеType }) => (
+  default: ({ message }: { message: MessageType }) => (
     <div data-testid="audio-renderer">{typeof message.content === "string" ? message.content : ""}</div>
   ),
 }));
@@ -65,14 +65,14 @@ vi.mock("./ChatImageRenderer", () => ({
 }));
 
 const defaultProps = {
-  isLastСообщение: false,
-  endpointType: ЭндпоинтType.CHAT,
+  isLastMessage: false,
+  endpointType: EndpointType.CHAT,
   mcpEvents: [],
-  codeInterpreterРезультат: null,
-  accessТокен: "test-token",
+  codeInterpreterResult: null,
+  accessToken: "test-token",
 };
 
-describe("ChatMessageBubble", () => {
+describe("ChatСообщениеBubble", () => {
   it("should render a user message with right-aligned text", () => {
     render(<ChatMessageBubble {...defaultProps} message={{ role: "user", content: "Hello" }} />);
 
@@ -102,14 +102,14 @@ describe("ChatMessageBubble", () => {
     expect(avatarEl).not.toHaveAttribute("style");
   });
 
-  it("should show Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию badge for assistant messages when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is provided", () => {
-    render(<ChatMessageBubble {...defaultProps} message={{ role: "assistant", content: "Reply", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }} />);
+  it("should show model badge for assistant messages when model is provided", () => {
+    render(<ChatMessageBubble {...defaultProps} message={{ role: "assistant", content: "Reply", model: "gpt-4" }} />);
 
     expect(screen.getByText("gpt-4")).toBeInTheDocument();
   });
 
-  it("should not show Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию badge for user messages even when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is set", () => {
-    render(<ChatMessageBubble {...defaultProps} message={{ role: "user", content: "Hello", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }} />);
+  it("should not show model badge for user messages even when model is set", () => {
+    render(<ChatMessageBubble {...defaultProps} message={{ role: "user", content: "Hello", model: "gpt-4" }} />);
 
     expect(screen.queryByText("gpt-4")).not.toBeInTheDocument();
   });
@@ -156,8 +156,8 @@ describe("ChatMessageBubble", () => {
     render(
       <ChatMessageBubble
         {...defaultProps}
-        isLastСообщение={true}
-        endpointType={ЭндпоинтType.RESPONSES}
+        isLastMessage={true}
+        endpointType={EndpointType.RESPONSES}
         mcpEvents={mcpEvents as any}
         message={{ role: "assistant", content: "response" }}
       />,
@@ -172,8 +172,8 @@ describe("ChatMessageBubble", () => {
     render(
       <ChatMessageBubble
         {...defaultProps}
-        isLastСообщение={true}
-        endpointType={ЭндпоинтType.CHAT}
+        isLastMessage={true}
+        endpointType={EndpointType.CHAT}
         mcpEvents={mcpEvents as any}
         message={{ role: "assistant", content: "response" }}
       />,
@@ -188,8 +188,8 @@ describe("ChatMessageBubble", () => {
     render(
       <ChatMessageBubble
         {...defaultProps}
-        isLastСообщение={false}
-        endpointType={ЭндпоинтType.RESPONSES}
+        isLastMessage={false}
+        endpointType={EndpointType.RESPONSES}
         mcpEvents={mcpEvents as any}
         message={{ role: "assistant", content: "response" }}
       />,
@@ -198,7 +198,7 @@ describe("ChatMessageBubble", () => {
     expect(screen.queryByTestId("mcp-events-display")).not.toBeInTheDocument();
   });
 
-  it("should show SearchResultsDisplay when searchResults are present", () => {
+  it("should show SearchРезультатsDisplay when searchРезультатs are present", () => {
     render(
       <ChatMessageBubble
         {...defaultProps}
@@ -220,7 +220,7 @@ describe("ChatMessageBubble", () => {
         message={{
           role: "assistant",
           content: "response",
-          timeToFirstТокен: 150,
+          timeToFirstToken: 150,
           usage: { completionTokens: 10, promptTokens: 5, totalTokens: 15 },
         }}
       />,
@@ -229,15 +229,15 @@ describe("ChatMessageBubble", () => {
     expect(screen.getByTestId("response-metrics")).toBeInTheDocument();
   });
 
-  it("should show A2AMetrics when a2aМетаданные is present instead of ОтветМетрикаs", () => {
+  it("should show A2AМетрикаs when a2aМетаданные is present instead of ОтветМетрикаs", () => {
     render(
       <ChatMessageBubble
         {...defaultProps}
         message={{
           role: "assistant",
           content: "agent response",
-          timeToFirstТокен: 100,
-          a2aМетаданные: { taskId: "task-1", status: { state: "completed" } },
+          timeToFirstToken: 100,
+          a2aMetadata: { taskId: "task-1", status: { state: "completed" } },
         }}
       />,
     );
@@ -250,9 +250,9 @@ describe("ChatMessageBubble", () => {
     render(
       <ChatMessageBubble
         {...defaultProps}
-        isLastСообщение={true}
-        endpointType={ЭндпоинтType.RESPONSES}
-        codeInterpreterРезультат={{
+        isLastMessage={true}
+        endpointType={EndpointType.RESPONSES}
+        codeInterpreterResult={{
           code: "print('hello')",
           containerId: "container-1",
           annotations: [],
@@ -261,7 +261,7 @@ describe("ChatMessageBubble", () => {
       />,
     );
 
-    expect(screen.getByTestId("code-interpreter-выходput")).toHaveTextContent("print('hello')");
+    expect(screen.getByTestId("code-interpreter-output")).toHaveTextContent("print('hello')");
   });
 
   it("should render generated image from chat completions via message.image", () => {

@@ -8,7 +8,7 @@ const FULL_RUNTIME_ARN = "arn:aws:bedrock-agentcore:eu-central-1:123456789012:ru
 const bedrockAgentcoreInfo: AgentCreateInfo = {
   agent_type: "bedrock_agentcore",
   agent_type_display_name: "Bedrock AgentCore",
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_template: "bedrock/agentcore/{agent_runtime_arn}",
+  model_template: "bedrock/agentcore/{agent_runtime_arn}",
   credential_fields: [
     {
       key: "agent_runtime_arn",
@@ -19,7 +19,7 @@ const bedrockAgentcoreInfo: AgentCreateInfo = {
   ],
 };
 
-describe("extractModelTemplateValues", () => {
+describe("extractРежимlTemplateЗначениеs", () => {
   it("recovers a placeholder value that itself contains '/' (an AWS ARN resource path)", () => {
     const values = extractModelTemplateValues(
       "bedrock/agentcore/{agent_runtime_arn}",
@@ -35,7 +35,7 @@ describe("extractModelTemplateValues", () => {
     expect(values.assistant_id).toBe("asst_1");
   });
 
-  it("returns no match when the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию does not fit the template", () => {
+  it("returns no match when the model does not fit the template", () => {
     const values = extractModelTemplateValues("langgraph/{assistant_id}", "azure_ai/agents/asst_1");
 
     expect(values).toEqual({});
@@ -50,7 +50,7 @@ describe("parseDynamicAgentForForm", () => {
       agent_card_params: { description: "" },
       litellm_params: {
         custom_llm_provider: "bedrock",
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: `bedrock/agentcore/${FULL_RUNTIME_ARN}`,
+        model: `bedrock/agentcore/${FULL_RUNTIME_ARN}`,
       },
     } as unknown as Agent;
 
@@ -61,11 +61,11 @@ describe("parseDynamicAgentForForm", () => {
 });
 
 describe("detectAgentType", () => {
-  it("detects bedrock_agentcore agents from the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию prefix", () => {
+  it("detects bedrock_agentcore agents from the model prefix", () => {
     const agent = {
       agent_id: "agent-1",
       agent_name: "bedrock-agent",
-      litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: `bedrock/agentcore/${FULL_RUNTIME_ARN}` },
+      litellm_params: { model: `bedrock/agentcore/${FULL_RUNTIME_ARN}` },
     } as unknown as Agent;
 
     expect(detectAgentType(agent)).toBe("bedrock_agentcore");

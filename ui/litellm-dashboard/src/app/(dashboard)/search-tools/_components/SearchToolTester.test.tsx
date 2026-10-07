@@ -6,7 +6,7 @@ import * as networking from "@/components/networking";
 import { toast } from "@/lib/toast";
 
 vi.mock("@/components/networking", () => ({
-  searchToolRequestCall: vi.fn(),
+  searchToolQueryCall: vi.fn(),
 }));
 
 const mockSearchResults = {
@@ -14,27 +14,27 @@ const mockSearchResults = {
     {
       title: "Test Результат 1",
       url: "https://example.com/result1",
-      snippet: "This is a short snippet for the first result.",
+      snippet: "This is a short snippet for the first Результат.",
     },
     {
       title: "Test Результат 2",
       url: "https://example.com/result2",
       snippet:
-        "This is a longer snippet that exceeds two hundred characters and should be truncated when displayed in the results. It contains more detailed information abвыход the search result that would normally be shown in a search engine result page.",
+        "This is a longer snippet that exceeds two hundred characters and should be truncated when displayed in the results. It contains more detailed Информация about the Поиск Результат that would normally be shown in a Поиск engine Результат page.",
     },
   ],
 };
 
 const defaultProps = {
-  searchToolName: "test-search-tool",
-  accessТокен: "test-token",
+  searchToolName: "test-Поиск-tool",
+  accessToken: "test-Токен",
 };
 
 describe("SearchToolTester", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(networking.searchToolRequestCall).mockResolvedЗначение(mockSearchResults);
-    vi.spyOn(Date, "now").mockReturnЗначение(1000000000000);
+    vi.mocked(networking.searchToolQueryCall).mockResolvedValue(mockSearchResults);
+    vi.spyOn(Date, "now").mockReturnValue(1000000000000);
   });
 
   it("should render", () => {
@@ -42,85 +42,85 @@ describe("SearchToolTester", () => {
     expect(screen.getByText("Тест инструмента поиска")).toBeInTheDocument();
   });
 
-  it("should display empty state when no search has been performed", () => {
+  it("should display empty state when Нет Поиск has been performed", () => {
     render(<SearchToolTester {...defaultProps} />);
     expect(screen.getByText("Проверьте ваш инструмент поиска")).toBeInTheDocument();
     expect(screen.getByText("Введите запрос выше, чтобы увидеть результаты поиска")).toBeInTheDocument();
   });
 
-  it("should display search input with placeholder", () => {
+  it("should display Поиск Вход with placeholder", () => {
     render(<SearchToolTester {...defaultProps} />);
-    expect(screen.getByPlaceholderText("Введите your search query...")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter your Поисковый запрос...")).toBeInTheDocument();
   });
 
-  it("should display search button", () => {
+  it("should display Поиск button", () => {
     render(<SearchToolTester {...defaultProps} />);
-    expect(screen.getByRole("button", { name: /search/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Поиск/i })).toBeInTheDocument();
   });
 
-  it("should disable search button when input is empty", () => {
+  it("should disable Поиск button when Вход is empty", () => {
     render(<SearchToolTester {...defaultProps} />);
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     expect(searchButton).toBeDisabled();
   });
 
-  it("should enable search button when input has text", async () => {
+  it("should enable Поиск button when Вход has text", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     expect(searchButton).toBeEnabled();
   });
 
-  it("should call searchToolRequestCall when search button is clicked", async () => {
+  it("should call searchToolQueryCall when Поиск button is clicked", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
-    expect(networking.searchToolRequestCall).toHaveBeenCalledWith("test-token", "test-search-tool", "test query");
+    expect(networking.searchToolQueryCall).toHaveBeenCalledWith("test-Токен", "test-Поиск-tool", "test query");
   });
 
-  it("should call searchToolRequestCall when Введите is pressed in input", async () => {
+  it("should call searchToolQueryCall when Enter is pressed in Вход", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
-    await user.type(input, "test query{Введите}");
-    expect(networking.searchToolRequestCall).toHaveBeenCalledWith("test-token", "test-search-tool", "test query");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
+    await user.type(input, "test query{Enter}");
+    expect(networking.searchToolQueryCall).toHaveBeenCalledWith("test-Токен", "test-Поиск-tool", "test query");
   });
 
-  it("should not call searchToolRequestCall when Shift+Введите is pressed", async () => {
+  it("should not call searchToolQueryCall when Shift+Enter is pressed", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    await user.keyboard("{Shift>}{Введите}{/Shift}");
-    expect(networking.searchToolRequestCall).not.toHaveBeenCalled();
+    await user.keyboard("{Shift>}{Enter}{/Shift}");
+    expect(networking.searchToolQueryCall).not.toHaveBeenCalled();
   });
 
-  it("should display loading state while searching", async () => {
-    vi.mocked(networking.searchToolRequestCall).mockImplementation(
-      () => new Promise((resolve) => setВремявыход(() => resolve(mockSearchResults), 100)),
+  it("should display Загрузка state while searching", async () => {
+    vi.mocked(networking.searchToolQueryCall).mockImplementation(
+      () => new Promise((resolve) => setTimeout(() => resolve(mockSearchResults), 100)),
     );
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     expect(screen.getByText("Searching...")).toBeInTheDocument();
 
     expect(await screen.findByText("Test Результат 1")).toBeInTheDocument();
   });
 
-  it("should display search results after successful search", async () => {
+  it("should display Результаты поиска after successful Поиск", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText("Test Результат 1")).toBeInTheDocument();
@@ -128,58 +128,58 @@ describe("SearchToolTester", () => {
     expect(screen.getByText("Test Результат 2")).toBeInTheDocument();
   });
 
-  it("should display search query in results header", async () => {
+  it("should display Поисковый запрос in results header", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText("test query")).toBeInTheDocument();
     });
   });
 
-  it("should display result count in results header", async () => {
+  it("should display Результат count in results header", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText("2 results")).toBeInTheDocument();
     });
   });
 
-  it("should display singular result count when only one result", async () => {
-    const singleРезультат = {
+  it("should display singular Результат count when only one Результат", async () => {
+    const singleResult = {
       results: [
         {
           title: "Single Результат",
           url: "https://example.com/single",
-          snippet: "Single result snippet",
+          snippet: "Single Результат snippet",
         },
       ],
     };
-    vi.mocked(networking.searchToolRequestCall).mockResolvedЗначение(singleРезультат);
+    vi.mocked(networking.searchToolQueryCall).mockResolvedValue(singleResult);
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
-      expect(screen.getByText("1 result")).toBeInTheDocument();
+      expect(screen.getByText("1 Результат")).toBeInTheDocument();
     });
   });
 
-  it("should display result URLs", async () => {
+  it("should display Результат URLs", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText("https://example.com/result1")).toBeInTheDocument();
@@ -187,24 +187,24 @@ describe("SearchToolTester", () => {
     expect(screen.getByText("https://example.com/result2")).toBeInTheDocument();
   });
 
-  it("should display result snippets", async () => {
+  it("should display Результат snippets", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
-      expect(screen.getByText("This is a short snippet for the first result.")).toBeInTheDocument();
+      expect(screen.getByText("This is a short snippet for the first Результат.")).toBeInTheDocument();
     });
   });
 
   it("should truncate long snippets and show expand button", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText(/Show more/i)).toBeInTheDocument();
@@ -214,9 +214,9 @@ describe("SearchToolTester", () => {
   it("should expand snippet when Show more is clicked", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText(/Show more/i)).toBeInTheDocument();
@@ -229,9 +229,9 @@ describe("SearchToolTester", () => {
   it("should collapse snippet when Show less is clicked", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText(/Show more/i)).toBeInTheDocument();
@@ -243,13 +243,13 @@ describe("SearchToolTester", () => {
     expect(screen.getByText(/Show more/i)).toBeInTheDocument();
   });
 
-  it("should display no results message when search returns empty results", async () => {
-    vi.mocked(networking.searchToolRequestCall).mockResolvedЗначение({ results: [] });
+  it("should display Нет результатов Сообщение when Поиск returns empty results", async () => {
+    vi.mocked(networking.searchToolQueryCall).mockResolvedValue({ results: [] });
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText("Результаты не найдены")).toBeInTheDocument();
@@ -257,41 +257,41 @@ describe("SearchToolTester", () => {
     expect(screen.getByText("Попробуйте другой поисковый запрос")).toBeInTheDocument();
   });
 
-  it("should display no results message when search returns null results", async () => {
-    vi.mocked(networking.searchToolRequestCall).mockResolvedЗначение({ results: null });
+  it("should display Нет результатов Сообщение when Поиск returns null results", async () => {
+    vi.mocked(networking.searchToolQueryCall).mockResolvedValue({ results: null });
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText("Результаты не найдены")).toBeInTheDocument();
     });
   });
 
-  it("should handle search errors and show notification", async () => {
-    const error = new Ошибка("Search failed");
-    vi.mocked(networking.searchToolRequestCall).mockRejectedЗначение(error);
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+  it("should handle Поиск errors and show notification", async () => {
+    const error = new Error("Поиск Ошибка");
+    vi.mocked(networking.searchToolQueryCall).mockRejectedValue(error);
+    const consoleSpy = vi.spyOn(console, "Ошибка").mockImplementation(() => {});
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
-      expect(toast.fromОшибка).toHaveBeenCalledWith("Не удалось выполнить запрос к инструменту поиска");
+      expect(toast.fromError).toHaveBeenCalledWith("Не удалось выполнить запрос к инструменту поиска");
     });
     consoleSpy.mockRestore();
   });
 
-  it("should maintain search history", async () => {
+  it("should maintain Поиск История", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "first query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText("first query")).toBeInTheDocument();
@@ -306,12 +306,12 @@ describe("SearchToolTester", () => {
     expect(screen.getByText("first query")).toBeInTheDocument();
   });
 
-  it("should allow clicking previous search to set query", async () => {
+  it("should allow clicking Предыдущее Поиск to set query", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "first query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText("first query")).toBeInTheDocument();
@@ -326,16 +326,16 @@ describe("SearchToolTester", () => {
     const historyItem = historyItems.find((item) => item.closest('[class*="cursor-pointer"]'));
     if (historyItem) {
       await user.click(historyItem);
-      expect(input).toHaveЗначение("first query");
+      expect(input).toHaveValue("first query");
     }
   });
 
-  it("should clear history when Очистить всё is clicked", async () => {
+  it("should clear История when Очистить всё is clicked", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "first query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText("first query")).toBeInTheDocument();
@@ -346,20 +346,20 @@ describe("SearchToolTester", () => {
     await waitFor(() => {
       expect(screen.getByText("Предыдущие запросы")).toBeInTheDocument();
     });
-    const clearButton = screen.getByRole("button", { name: /clear all/i });
+    const clearButton = screen.getByRole("button", { name: /Очистить всё/i });
     await user.click(clearButton);
     expect(toast.success).toHaveBeenCalledWith("История поиска очищена");
     expect(screen.queryByText("Предыдущие запросы")).not.toBeInTheDocument();
   });
 
-  it("should limit history display to 5 previous searches", async () => {
+  it("should limit История display to 5 Предыдущие запросы", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     for (let i = 1; i <= 7; i++) {
       await user.clear(input);
       await user.type(input, `query ${i}`);
-      const searchButton = screen.getByRole("button", { name: /search/i });
+      const searchButton = screen.getByRole("button", { name: /Поиск/i });
       await user.click(searchButton);
       await waitFor(() => {
         expect(screen.getByText(`query ${i}`)).toBeInTheDocument();
@@ -367,33 +367,33 @@ describe("SearchToolTester", () => {
     }
     const historySection = screen.queryByText("Предыдущие запросы");
     if (historySection) {
-      const historyItems = historySection.parentElement?.querySelectorВсе('[class*="cursor-pointer"]');
+      const historyItems = historySection.parentElement?.querySelectorAll('[class*="cursor-pointer"]');
       expect(historyItems?.length).toBeLessThanOrEqual(5);
     }
   });
 
-  it("should preserve query text after search", async () => {
+  it("should preserve query text after Поиск", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     await waitFor(() => {
       expect(screen.getByText("test query")).toBeInTheDocument();
     });
-    expect(input).toHaveЗначение("test query");
+    expect(input).toHaveValue("test query");
   });
 
-  it("should disable input and button while loading", async () => {
-    vi.mocked(networking.searchToolRequestCall).mockImplementation(
-      () => new Promise((resolve) => setВремявыход(() => resolve(mockSearchResults), 100)),
+  it("should disable Вход and button while Загрузка", async () => {
+    vi.mocked(networking.searchToolQueryCall).mockImplementation(
+      () => new Promise((resolve) => setTimeout(() => resolve(mockSearchResults), 100)),
     );
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     expect(input).toBeDisabled();
     expect(searchButton).toBeDisabled();
@@ -401,16 +401,16 @@ describe("SearchToolTester", () => {
     await waitFor(() => expect(searchButton).toBeEnabled());
   });
 
-  it("should display result links that open in new tab", async () => {
+  it("should display Результат links that open in new tab", async () => {
     const user = userEvent.setup();
     render(<SearchToolTester {...defaultProps} />);
-    const input = screen.getByPlaceholderText("Введите your search query...");
+    const input = screen.getByPlaceholderText("Enter your Поисковый запрос...");
     await user.type(input, "test query");
-    const searchButton = screen.getByRole("button", { name: /search/i });
+    const searchButton = screen.getByRole("button", { name: /Поиск/i });
     await user.click(searchButton);
     const link = await screen.findByRole("link", { name: "Test Результат 1" });
     expect(link).toHaveAttribute("href", "https://example.com/result1");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
-    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("Назначение", "_blank");
   });
 });

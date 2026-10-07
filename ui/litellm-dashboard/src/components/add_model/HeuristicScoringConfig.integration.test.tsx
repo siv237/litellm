@@ -1,32 +1,32 @@
 import { useState } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
-import { fireEvent, renderWithProviders, screen, testRequestClient, chooseSelectOption } from "../../../tests/test-utils";
-import { SHIPPED_SCORER_DEFAULTS } from "../../../tests/mocks/complexityWeightrDefaults";
-import HeuristicОцениваниеКонфигурация from "./HeuristicОцениваниеКонфигурация";
-import type { — сложностьRouterКонфигурацияЗначение } from "./— сложностьRouterКонфигурация";
+import { fireEvent, renderWithProviders, screen, testQueryClient, chooseSelectOption } from "../../../tests/test-utils";
+import { SHIPPED_SCORER_DEFAULTS } from "../../../tests/mocks/complexityScorerDefaults";
+import HeuristicScoringConfig from "./HeuristicScoringConfig";
+import type { ComplexityRouterConfigValue } from "./ComplexityRouterConfig";
 import { getComplexityScorerDefaults } from "@/components/networking";
 
 vi.mock("@/components/networking", () => ({ getComplexityScorerDefaults: vi.fn() }));
 
-const base: — сложностьRouterКонфигурацияЗначение = {
+const base: ComplexityRouterConfigValue = {
   classifier_type: "heuristic",
   tiers: { SIMPLE: [], MEDIUM: [], COMPLEX: [], REASONING: [] },
 };
-function Editor({ initial = base }: { initial?: — сложностьRouterКонфигурацияЗначение }) {
-  const [value, setЗначение] = useState(initial);
+function Editor({ initial = base }: { initial?: ComplexityRouterConfigValue }) {
+  const [value, setValue] = useState(initial);
   return (
     <>
-      <HeuristicОцениваниеКонфигурация value={value} onChange={setЗначение} />
-      <выходput aria-label="Черновик config">{JSON.stringify(value)}</выходput>
+      <HeuristicScoringConfig value={value} onChange={setValue} />
+      <output aria-label="Черновик Конфигурация">{JSON.stringify(value)}</output>
     </>
   );
 }
-const draft = (): — сложностьRouterКонфигурацияЗначение => JSON.parse(screen.getByLabelText("Черновик config").textContent!);
+const draft = (): ComplexityRouterConfigValue => JSON.parse(screen.getByLabelText("Черновик Конфигурация").textContent!);
 
 beforeEach(() => {
-  testRequestClient.clear();
-  vi.mocked(getComplexityScorerDefaults).mockResolvedЗначение(SHIPPED_SCORER_DEFAULTS);
+  testQueryClient.clear();
+  vi.mocked(getComplexityScorerDefaults).mockResolvedValue(SHIPPED_SCORER_DEFAULTS);
 });
 
 describe("combined heuristic editor", () => {
@@ -35,24 +35,24 @@ describe("combined heuristic editor", () => {
     renderWithProviders(<Editor />);
     await user.click(screen.getByText("Расширенное оценивание"));
     expect(await screen.findByRole("button", { name: "Restore default weights" })).toBeDisabled();
-    await user.click(screen.getByRole("button", { name: "Ключевые слова сопоставляются с текущим запросом. Regex проверяет первые 2048 символов и допускает повторы одного символа до 64 раз. Прокси проверяет паттерны при сохранении." }));
+    await user.click(screen.getByRole("button", { name: "Добавить своё измерение" }));
     expect(screen.getByRole("button", { name: "Restore default weights" })).toBeEnabled();
     expect(draft().dimension_weights?.codePresence).toBeCloseTo(0.27, 12);
     expect(draft().custom_dimensions?.[0].scoring_mode).toBe("match_count");
     expect(screen.getByRole("group", { name: "Своё измерение 1" })).toContainElement(
-      screen.getByLabelText("Name", { exact: true }),
+      screen.getByLabelText("Название", { exact: true }),
     );
-    fireEvent.change(screen.getByLabelText("Name", { exact: true }), { target: { value: "domain" } });
-    fireEvent.change(screen.getByLabelText("Ключевые слова (one per line)"), { target: { value: "orbitmesh\nfluxgate" } });
+    fireEvent.change(screen.getByLabelText("Название", { exact: true }), { target: { value: "domain" } });
+    fireEvent.change(screen.getByLabelText("Ключевые слова (по одному в строке)"), { target: { value: "orbitmesh\nfluxgate" } });
     fireEvent.change(screen.getByLabelText("Вес", { exact: true }), { target: { value: "0.2" } });
-    expect(screen.getByLabelText("Code presence", { exact: true })).toHaveЗначение("0.24");
-    expect(screen.getByTestId("dimension-weight-total")).toHaveTextContent("total 1.00");
+    expect(screen.getByLabelText("Code presence", { exact: true })).toHaveValue("0.24");
+    expect(screen.getByTestId("dimension-Вес-Всего")).toHaveTextContent("Всего 1.00");
     const beforeMatchers = draft().dimension_weights;
-    fireEvent.change(screen.getByLabelText("Regex patterns (one per line)"), { target: { value: "abc" } });
+    fireEvent.change(screen.getByLabelText("Regex patterns (по одному в строке)"), { target: { value: "abc" } });
     await chooseSelectOption(user, screen.getByLabelText("Оценивание"), "Бинарный");
     expect(draft().dimension_weights).toEqual(beforeMatchers);
-    expect(draft().custom_dimensions?.[0].scoring_mode).toBe("binary");
-    await user.click(screen.getByRole("button", { name: "Remove custom dimension 1" }));
+    expect(draft().custom_dimensions?.[0].scoring_mode).toBe("Бинарный");
+    await user.click(screen.getByRole("button", { name: "Убрать Своё измерение 1" }));
     expect(draft().custom_dimensions).toBeUndefined();
     expect(draft().dimension_weights?.codePresence).toBeCloseTo(0.3, 12);
   });
@@ -65,16 +65,16 @@ describe("combined heuristic editor", () => {
     };
     renderWithProviders(<Editor initial={legacy} />);
     await userEvent.click(screen.getByText("Расширенное оценивание"));
-    expect(await screen.findByTestId("dimension-weight-total")).toHaveTextContent("total 1.10");
+    expect(await screen.findByTestId("dimension-Вес-Всего")).toHaveTextContent("Всего 1.10");
     expect(draft()).toEqual(legacy);
-    expect(screen.getByLabelText("Токен count", { exact: true })).toHaveЗначение("0");
+    expect(screen.getByLabelText("Токен count", { exact: true })).toHaveValue("0");
     await userEvent.click(screen.getByRole("button", { name: "Restore default weights" }));
     expect(draft().custom_dimensions).toBeUndefined();
     expect(draft().dimension_weights).toBeUndefined();
   });
 
-  it("drops hidden custom drafts on a fallback-only weight edit so switching back cannot exceed the budget", async () => {
-    const initial: — сложностьRouterКонфигурацияЗначение = {
+  it("drops hidden custom drafts on a fallback-only Вес Изменить so switching Назад cannot exceed the Бюджет", async () => {
+    const initial: ComplexityRouterConfigValue = {
       ...base,
       classifier_type: "llm",
       classifier_fallback: "heuristic",
@@ -85,6 +85,6 @@ describe("combined heuristic editor", () => {
     fireEvent.change(await screen.findByLabelText("Code presence", { exact: true }), { target: { value: "0.5" } });
     expect(draft().custom_dimensions).toBeUndefined();
     expect(Object.values(draft().dimension_weights!).reduce((sum, weight) => sum + weight, 0)).toBeCloseTo(1, 12);
-    expect(screen.queryByRole("button", { name: "Ключевые слова сопоставляются с текущим запросом. Regex проверяет первые 2048 символов и допускает повторы одного символа до 64 раз. Прокси проверяет паттерны при сохранении." })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Добавить своё измерение" })).not.toBeInTheDocument();
   });
 });

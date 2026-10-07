@@ -9,10 +9,10 @@ vi.mock("@/components/networking", () => ({
 }));
 
 const PREBUILT = [
-  { name: "us_ssn", display_name: "US Social Безопасность Number", category: "PII Паттернs", description: "d" },
+  { name: "us_ssn", display_name: "US Social Безопасность Number", category: "PII Patterns", description: "d" },
 ];
 
-describe("ContentFilterConfiguration", () => {
+describe("ContentFilterКонфигурацияuration", () => {
   const handlers = {
     onPatternAdd: vi.fn(),
     onPatternRemove: vi.fn(),
@@ -22,14 +22,14 @@ describe("ContentFilterConfiguration", () => {
     onBlockedWordUpdate: vi.fn(),
   };
 
-  const renderКонфигурация = (overrides = {}) =>
+  const renderConfig = (overrides = {}) =>
     renderWithProviders(
       <ContentFilterConfiguration
         prebuiltPatterns={PREBUILT}
-        categories={["PII Паттернs"]}
+        categories={["PII Patterns"]}
         selectedPatterns={[]}
         blockedWords={[]}
-        accessТокен="test-token"
+        accessToken="test-Токен"
         {...handlers}
         {...overrides}
       />,
@@ -40,64 +40,64 @@ describe("ContentFilterConfiguration", () => {
   });
 
   it("should render the pattern and keyword sections", () => {
-    renderКонфигурация();
+    renderConfig();
 
-    expect(screen.getByText("Паттерн Detection")).toBeInTheDocument();
+    expect(screen.getByText("Обнаружение паттернов")).toBeInTheDocument();
     expect(
-      screen.getByText("Добавить готовый паттерн"),
+      screen.getByText("Обнаруживать чувствительную информацию по regex-паттернам (SSN, банковские карты, API-ключи и т.д.)"),
     ).toBeInTheDocument();
-    expect(screen.getByText("Blocked Ключевые слова")).toBeInTheDocument();
-    expect(screen.getByText("Добавить ключевое слово")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /add prebuilt pattern/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /add custom regex/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /add keyword/i })).toBeInTheDocument();
+    expect(screen.getByText("Блокируемые ключевые слова")).toBeInTheDocument();
+    expect(screen.getByText("Блокировать или маскировать конкретные чувствительные термины и фразы")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Добавить готовый паттерн/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Добавить свой regex/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Добавить ключевое слово/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /upload yaml file/i })).toBeInTheDocument();
   });
 
-  it("should show the empty states for patterns and keywords", () => {
-    renderКонфигурация();
+  it("should show the empty states for patterns and Ключевые слова", () => {
+    renderConfig();
 
-    expect(screen.getByText("No patterns added.")).toBeInTheDocument();
-    expect(screen.getByText("No keywords added.")).toBeInTheDocument();
+    expect(screen.getByText("Нет patterns added.")).toBeInTheDocument();
+    expect(screen.getByText("Нет Ключевые слова added.")).toBeInTheDocument();
   });
 
   it("should open the prebuilt pattern modal", async () => {
     const user = userEvent.setup();
-    renderКонфигурация();
+    renderConfig();
 
-    expect(screen.queryByText("Паттерн type")).not.toBeInTheDocument();
+    expect(screen.queryByText("Pattern Тип")).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /add prebuilt pattern/i }));
+    await user.click(screen.getByRole("button", { name: /Добавить готовый паттерн/i }));
 
-    expect(await screen.findByText("Паттерн type")).toBeInTheDocument();
+    expect(await screen.findByText("Pattern Тип")).toBeInTheDocument();
   });
 
   it("should open the custom regex modal", async () => {
     const user = userEvent.setup();
-    renderКонфигурация();
+    renderConfig();
 
-    expect(screen.queryByText("<CardTitle>Блокируемые ключевые слова</CardTitle> pattern")).not.toBeInTheDocument();
+    expect(screen.queryByText("Добавить свой regex pattern")).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /add custom regex/i }));
+    await user.click(screen.getByRole("button", { name: /Добавить свой regex/i }));
 
-    expect(await screen.findByText("<CardTitle>Блокируемые ключевые слова</CardTitle> pattern")).toBeInTheDocument();
+    expect(await screen.findByText("Добавить свой regex pattern")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("e.g., ID-[0-9]{6}")).toBeInTheDocument();
   });
 
   it("should open the keyword modal", async () => {
     const user = userEvent.setup();
-    renderКонфигурация();
+    renderConfig();
 
-    expect(screen.queryByText("Add blocked keyword")).not.toBeInTheDocument();
+    expect(screen.queryByText("Добавить blocked keyword")).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /add keyword/i }));
+    await user.click(screen.getByRole("button", { name: /Добавить ключевое слово/i }));
 
-    expect(await screen.findByText("Add blocked keyword")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Введите sensitive keyword or phrase")).toBeInTheDocument();
+    expect(await screen.findByText("Добавить blocked keyword")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter sensitive keyword or phrase")).toBeInTheDocument();
   });
 
-  it("should list already selected patterns and keywords", () => {
-    renderКонфигурация({
+  it("should list already selected patterns and Ключевые слова", () => {
+    renderConfig({
       selectedPatterns: [
         {
           id: "pattern-1",
@@ -112,21 +112,21 @@ describe("ContentFilterConfiguration", () => {
 
     expect(screen.getByText("US Social Безопасность Number")).toBeInTheDocument();
     expect(screen.getByText("secret")).toBeInTheDocument();
-    expect(screen.queryByText("No patterns added.")).not.toBeInTheDocument();
-    expect(screen.queryByText("No keywords added.")).not.toBeInTheDocument();
+    expect(screen.queryByText("Нет patterns added.")).not.toBeInTheDocument();
+    expect(screen.queryByText("Нет Ключевые слова added.")).not.toBeInTheDocument();
   });
 
-  it("should show only the keyword section when the keywords step is requested", () => {
-    renderКонфигурация({ showStep: "keywords" });
+  it("should show only the keyword section when the Ключевые слова step is requested", () => {
+    renderConfig({ showStep: "Ключевые слова" });
 
-    expect(screen.getByText("Blocked Ключевые слова")).toBeInTheDocument();
-    expect(screen.queryByText("Паттерн Detection")).not.toBeInTheDocument();
+    expect(screen.getByText("Блокируемые ключевые слова")).toBeInTheDocument();
+    expect(screen.queryByText("Обнаружение паттернов")).not.toBeInTheDocument();
   });
 
   it("should show only the pattern section when the patterns step is requested", () => {
-    renderКонфигурация({ showStep: "patterns" });
+    renderConfig({ showStep: "patterns" });
 
-    expect(screen.getByText("Паттерн Detection")).toBeInTheDocument();
-    expect(screen.queryByText("Blocked Ключевые слова")).not.toBeInTheDocument();
+    expect(screen.getByText("Обнаружение паттернов")).toBeInTheDocument();
+    expect(screen.queryByText("Блокируемые ключевые слова")).not.toBeInTheDocument();
   });
 });

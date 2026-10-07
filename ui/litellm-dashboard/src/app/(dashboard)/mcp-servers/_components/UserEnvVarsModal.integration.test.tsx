@@ -2,37 +2,37 @@ import React from "react";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent, { PointerEventsCheckLevel } from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import UserEnvVarsModal from "./UserEnvVarsModal";
 import * as networking from "@/components/networking";
-import { MCPСервер, MCPUserEnvVarsStatus } from "@/components/mcp_tools/types";
+import { MCPServer, MCPUserEnvVarsStatus } from "@/components/mcp_tools/types";
 
 vi.mock("@/components/networking", () => ({
   getMCPUserEnvVars: vi.fn(),
   storeMCPUserEnvVars: vi.fn(),
 }));
 
-const createRequestClient = () => new ЗапросClient({ defaultOptions: { queries: { retry: false, gcВремя: 0 } } });
+const createQueryClient = () => new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
 
 const setup = () => userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
 
-const server = { server_id: "srv-1", server_name: "Payments", alias: "payments" } as MCPСервер;
+const server = { server_id: "srv-1", server_name: "Payments", alias: "payments" } as MCPServer;
 
 const statusWith = (required: MCPUserEnvVarsStatus["required"]): MCPUserEnvVarsStatus =>
   ({ required }) as MCPUserEnvVarsStatus;
 
 const renderModal = (status: MCPUserEnvVarsStatus, onSaved = vi.fn(), onClose = vi.fn()) => {
-  vi.mocked(networking.getMCPUserEnvVars).mockResolvedЗначение(status);
+  vi.mocked(networking.getMCPUserEnvVars).mockResolvedValue(status);
   const view = render(
-    <ЗапросClientПровайдер client={createRequestClient()}>
-      <UserEnvVarsModal server={server} open accessТокен="sk-test" onClose={onClose} onSaved={onSaved} />
-    </ЗапросClientПровайдер>,
+    <QueryClientProvider client={createQueryClient()}>
+      <UserEnvVarsModal server={server} open accessToken="sk-test" onClose={onClose} onSaved={onSaved} />
+    </QueryClientProvider>,
   );
   const setOpen = (open: boolean) =>
     view.rerender(
-      <ЗапросClientПровайдер client={createRequestClient()}>
-        <UserEnvVarsModal server={server} open={open} accessТокен="sk-test" onClose={onClose} onSaved={onSaved} />
-      </ЗапросClientПровайдер>,
+      <QueryClientProvider client={createQueryClient()}>
+        <UserEnvVarsModal server={server} open={open} accessToken="sk-test" onClose={onClose} onSaved={onSaved} />
+      </QueryClientProvider>,
     );
   return { onSaved, onClose, setOpen };
 };
@@ -54,7 +54,7 @@ describe("UserEnvVarsModal", () => {
 
   it("submits every declared field, trimmed, keyed by env var name", async () => {
     const user = setup();
-    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedЗначение(statusWith([]));
+    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedValue(statusWith([]));
     renderModal(
       statusWith([
         { name: "API_KEY", description: "Your API key", is_set: false },
@@ -77,7 +77,7 @@ describe("UserEnvVarsModal", () => {
 
   it("sends an empty string for an already-set field left blank", async () => {
     const user = setup();
-    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedЗначение(statusWith([]));
+    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedValue(statusWith([]));
     renderModal(
       statusWith([
         { name: "API_KEY", description: null, is_set: true },
@@ -114,7 +114,7 @@ describe("UserEnvVarsModal", () => {
 
   it("does not require an already-set field", async () => {
     const user = setup();
-    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedЗначение(statusWith([]));
+    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedValue(statusWith([]));
     renderModal(statusWith([{ name: "API_KEY", description: null, is_set: true }]));
 
     await fieldAfterOpen(/^API_KEY/);
@@ -134,7 +134,7 @@ describe("UserEnvVarsModal", () => {
   it("renders the overwrite placeholder and a Set marker for an already-set field", async () => {
     renderModal(statusWith([{ name: "API_KEY", description: "Grab it from the console", is_set: true }]));
 
-    expect(await screen.findByPlaceholderText("Введите a new value to overwrite")).toBeInTheDocument();
+    expect(await screen.findByPlaceholderText("Enter a new value to overwrite")).toBeInTheDocument();
     expect(screen.getByText("Set")).toBeInTheDocument();
   });
 
@@ -160,7 +160,7 @@ describe("UserEnvVarsModal", () => {
 
     const input = await fieldAfterOpen(/^API_KEY/);
     fireEvent.change(input, { target: { value: "hunter2" } });
-    expect(screen.getByLabelText(/^API_KEY/)).toHaveЗначение("hunter2");
+    expect(screen.getByLabelText(/^API_KEY/)).toHaveValue("hunter2");
 
     setOpen(false);
     await waitFor(() => {
@@ -168,7 +168,7 @@ describe("UserEnvVarsModal", () => {
     });
 
     setOpen(true);
-    expect(await fieldAfterOpen(/^API_KEY/)).toHaveЗначение("");
+    expect(await fieldAfterOpen(/^API_KEY/)).toHaveValue("");
   });
 
   it("reports the empty state instead of a form when nothing is required", async () => {
@@ -181,7 +181,7 @@ describe("UserEnvVarsModal", () => {
   it("closes and reports the saved status on success", async () => {
     const user = setup();
     const saved = statusWith([{ name: "API_KEY", description: null, is_set: true }]);
-    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedЗначение(saved);
+    vi.mocked(networking.storeMCPUserEnvVars).mockResolvedValue(saved);
     const { onSaved, onClose } = renderModal(statusWith([{ name: "API_KEY", description: null, is_set: false }]));
 
     fireEvent.change(await fieldAfterOpen(/^API_KEY/), { target: { value: "abc" } });
@@ -200,7 +200,7 @@ describe("UserEnvVarsModal", () => {
     fireEvent.change(await fieldAfterOpen(/^API_KEY/), { target: { value: "hunter2" } });
     await user.click(screen.getByRole("button", { name: "Show password" }));
     expect(screen.getByLabelText(/^API_KEY/)).toHaveAttribute("type", "text");
-    expect(screen.getByLabelText(/^API_KEY/)).toHaveЗначение("hunter2");
+    expect(screen.getByLabelText(/^API_KEY/)).toHaveValue("hunter2");
 
     await user.click(screen.getByRole("button", { name: "Hide password" }));
     expect(screen.getByLabelText(/^API_KEY/)).toHaveAttribute("type", "password");
@@ -216,9 +216,9 @@ describe("UserEnvVarsModal", () => {
     expect(networking.storeMCPUserEnvVars).not.toHaveBeenCalled();
   });
 
-  it("surfaces a save failure withвыход closing", async () => {
+  it("surfaces a save failure without closing", async () => {
     const user = setup();
-    vi.mocked(networking.storeMCPUserEnvVars).mockRejectedЗначение(new Ошибка("boom"));
+    vi.mocked(networking.storeMCPUserEnvVars).mockRejectedValue(new Error("boom"));
     const { onSaved, onClose } = renderModal(statusWith([{ name: "API_KEY", description: null, is_set: false }]));
 
     fireEvent.change(await fieldAfterOpen(/^API_KEY/), { target: { value: "abc" } });

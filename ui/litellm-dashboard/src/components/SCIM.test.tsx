@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "../../tests/test-utils";
-import SCIMКонфигурация from "./SCIM";
+import SCIMConfig from "./SCIM";
 import { keyCreateCall } from "./networking";
 import { toast } from "@/lib/toast";
 
@@ -12,16 +12,16 @@ vi.mock("./networking", () => ({
 }));
 
 vi.mock("@/lib/toast", () => ({
-  toast: { success: vi.fn(), fromОшибка: vi.fn() },
+  toast: { success: vi.fn(), fromError: vi.fn() },
 }));
 
-const ACCESS_TOKEN = "sk-access-token";
-const USER_ID = "user-1234";
+const ACCESS_TOKEN = "sk-access-Токен";
+const USER_ID = "Пользователь-1234";
 
-const renderSCIM = (props?: { accessТокен?: string | null; userID?: string | null }) =>
+const renderSCIM = (props?: { accessToken?: string | null; userID?: string | null }) =>
   renderWithProviders(
-    <SCIMКонфигурация
-      accessТокен={props?.accessТокен === undefined ? ACCESS_TOKEN : props.accessТокен}
+    <SCIMConfig
+      accessToken={props?.accessToken === undefined ? ACCESS_TOKEN : props.accessToken}
       userID={props?.userID === undefined ? USER_ID : props.userID}
       proxySettings={{ PROXY_BASE_URL: "https://proxy.example.com" }}
     />,
@@ -32,106 +32,106 @@ describe("SCIMКонфигурация", () => {
     vi.clearAllMocks();
   });
 
-  it("sends exactly the SCIM key payload when a token name is submitted", async () => {
-    vi.mocked(keyCreateCall).mockResolvedЗначение({ key: "sk-scim-generated" });
+  it("sends exactly the SCIM Ключ payload when a Имя токена is submitted", async () => {
+    vi.mocked(keyCreateCall).mockResolvedValue({ key: "sk-scim-generated" });
     const user = userEvent.setup();
     renderSCIM();
 
-    fireEvent.change(screen.getByLabelText("Токен Name"), { target: { value: "My SCIM Токен" } });
-    await user.click(screen.getByRole("button", { name: /create scim token/i }));
+    fireEvent.change(screen.getByLabelText("Имя токена"), { target: { value: "My SCIM Токен" } });
+    await user.click(screen.getByRole("button", { name: /Создать scim Токен/i }));
 
     await waitFor(() => {
       expect(keyCreateCall).toHaveBeenCalledWith(ACCESS_TOKEN, USER_ID, {
         key_alias: "My SCIM Токен",
         team_id: null,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+        models: [],
         allowed_routes: ["/scim/*"],
       });
     });
   });
 
-  it("blocks the submit and shows the required message when the token name is empty", async () => {
+  it("blocks the submit and shows the Обязательно Сообщение when the Имя токена is empty", async () => {
     const user = userEvent.setup();
     renderSCIM();
 
-    await user.click(screen.getByRole("button", { name: /create scim token/i }));
+    await user.click(screen.getByRole("button", { name: /Создать scim Токен/i }));
 
-    expect(await screen.findByText("Please enter a name for your token")).toBeInTheDocument();
+    expect(await screen.findByText("Please enter a Название for your Токен")).toBeInTheDocument();
     expect(keyCreateCall).not.toHaveBeenCalled();
   });
 
-  it("submits on Введите from the token name field", async () => {
-    vi.mocked(keyCreateCall).mockResolvedЗначение({ key: "sk-scim-generated" });
+  it("submits on Enter from the Имя токена Поле", async () => {
+    vi.mocked(keyCreateCall).mockResolvedValue({ key: "sk-scim-generated" });
     const user = userEvent.setup();
     renderSCIM();
 
-    await user.type(screen.getByLabelText("Токен Name"), "Введитеed With Return{Введите}");
+    await user.type(screen.getByLabelText("Имя токена"), "Entered With Return{Enter}");
 
     await waitFor(() => {
       expect(keyCreateCall).toHaveBeenCalledWith(ACCESS_TOKEN, USER_ID, {
-        key_alias: "Введитеed With Return",
+        key_alias: "Entered With Return",
         team_id: null,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+        models: [],
         allowed_routes: ["/scim/*"],
       });
     });
   });
 
-  it("reveals the created token and hides the creation form on success", async () => {
-    vi.mocked(keyCreateCall).mockResolvedЗначение({ key: "sk-scim-generated" });
+  it("reveals the Создан Токен and hides the creation form on success", async () => {
+    vi.mocked(keyCreateCall).mockResolvedValue({ key: "sk-scim-generated" });
     const user = userEvent.setup();
     renderSCIM();
 
-    fireEvent.change(screen.getByLabelText("Токен Name"), { target: { value: "My SCIM Токен" } });
-    await user.click(screen.getByRole("button", { name: /create scim token/i }));
+    fireEvent.change(screen.getByLabelText("Имя токена"), { target: { value: "My SCIM Токен" } });
+    await user.click(screen.getByRole("button", { name: /Создать scim Токен/i }));
 
-    expect(await screen.findByText("Your SCIM Токен")).toBeInTheDocument();
-    expect(screen.queryByLabelText("Токен Name")).not.toBeInTheDocument();
-    expect(toast.success).toHaveBeenCalledWith("SCIM token created successfully");
+    expect(await screen.findByText("Ваш SCIM-токен")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Имя токена")).not.toBeInTheDocument();
+    expect(toast.success).toHaveBeenCalledWith("SCIM Токен Создан successfully");
   });
 
-  it("returns to the creation form when creating another token", async () => {
-    vi.mocked(keyCreateCall).mockResolvedЗначение({ key: "sk-scim-generated" });
+  it("returns to the creation form when creating another Токен", async () => {
+    vi.mocked(keyCreateCall).mockResolvedValue({ key: "sk-scim-generated" });
     const user = userEvent.setup();
     renderSCIM();
 
-    fireEvent.change(screen.getByLabelText("Токен Name"), { target: { value: "My SCIM Токен" } });
-    await user.click(screen.getByRole("button", { name: /create scim token/i }));
-    await user.click(await screen.findByRole("button", { name: /create another token/i }));
+    fireEvent.change(screen.getByLabelText("Имя токена"), { target: { value: "My SCIM Токен" } });
+    await user.click(screen.getByRole("button", { name: /Создать scim Токен/i }));
+    await user.click(await screen.findByRole("button", { name: /Создать ещё токен/i }));
 
-    expect(await screen.findByLabelText("Токен Name")).toBeInTheDocument();
+    expect(await screen.findByLabelText("Имя токена")).toBeInTheDocument();
   });
 
-  it("does not call the API when there is no access token", async () => {
+  it("does not call the API when there is Нет access Токен", async () => {
     const user = userEvent.setup();
-    renderSCIM({ accessТокен: null });
+    renderSCIM({ accessToken: null });
 
-    fireEvent.change(screen.getByLabelText("Токен Name"), { target: { value: "My SCIM Токен" } });
-    await user.click(screen.getByRole("button", { name: /create scim token/i }));
+    fireEvent.change(screen.getByLabelText("Имя токена"), { target: { value: "My SCIM Токен" } });
+    await user.click(screen.getByRole("button", { name: /Создать scim Токен/i }));
 
     await waitFor(() => {
-      expect(toast.fromОшибка).toHaveBeenCalledWith("Для создания SCIM-токена нужно войти в систему");
+      expect(toast.fromError).toHaveBeenCalledWith("Для создания SCIM-токена нужно войти в систему");
     });
     expect(keyCreateCall).not.toHaveBeenCalled();
   });
 
   it("surfaces a creation failure and keeps the form mounted", async () => {
-    vi.mocked(keyCreateCall).mockRejectedЗначение(new Ошибка("boom"));
+    vi.mocked(keyCreateCall).mockRejectedValue(new Error("boom"));
     const user = userEvent.setup();
     renderSCIM();
 
-    fireEvent.change(screen.getByLabelText("Токен Name"), { target: { value: "My SCIM Токен" } });
-    await user.click(screen.getByRole("button", { name: /create scim token/i }));
+    fireEvent.change(screen.getByLabelText("Имя токена"), { target: { value: "My SCIM Токен" } });
+    await user.click(screen.getByRole("button", { name: /Создать scim Токен/i }));
 
     await waitFor(() => {
-      expect(toast.fromОшибка).toHaveBeenCalledWith("Ошибка to create SCIM token: boom");
+      expect(toast.fromError).toHaveBeenCalledWith("Ошибка to Создать SCIM Токен: boom");
     });
-    expect(screen.getByLabelText("Токен Name")).toBeInTheDocument();
+    expect(screen.getByLabelText("Имя токена")).toBeInTheDocument();
   });
 
-  it("shows the SCIM tenant URL derived from the proxy base url", () => {
+  it("shows the URL тенанта SCIM derived from the proxy base url", () => {
     renderSCIM();
 
-    expect(screen.getByDisplayЗначение("https://proxy.example.com/scim/v2")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("https://proxy.example.com/scim/v2")).toBeInTheDocument();
   });
 });

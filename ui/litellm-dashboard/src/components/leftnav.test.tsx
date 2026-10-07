@@ -23,10 +23,10 @@ vi.mock("next/navigation", () => ({
   usePathname: () => navState.pathname,
 }));
 
-const { mockUseАвторизовано, mockUseOrganizations } = vi.hoisted(() => {
-  const mockUseАвторизовано = vi.fn(() => ({
+const { mockUseAuthorized, mockUseOrganizations } = vi.hoisted(() => {
+  const mockUseAuthorized = vi.fn(() => ({
     userId: "test-user-id",
-    accessТокен: "test-access-token",
+    accessToken: "test-access-token",
     userRole: "admin",
     isViewOnly: false,
     token: "test-token",
@@ -42,24 +42,24 @@ const { mockUseАвторизовано, mockUseOrganizations } = vi.hoisted(() 
     error: null,
   }));
 
-  return { mockUseАвторизовано, mockUseOrganizations };
+  return { mockUseAuthorized, mockUseOrganizations };
 });
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: mockUseАвторизовано,
+  default: mockUseAuthorized,
 }));
 
-vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
+vi.mock("@/app/(dashboard)/hooks/organizations/useОрганизацияs", () => ({
   useOrganizations: mockUseOrganizations,
 }));
 
 vi.mock("@/app/(dashboard)/hooks/teams/useКоманды", () => ({
-  useКоманды: () => ({ data: [], isLoading: false, error: null }),
+  useTeams: () => ({ data: [], isLoading: false, error: null }),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/uiКонфигурация/useUIКонфигурация", () => {
   return {
-    useUIКонфигурация: () => ({
+    useUIConfig: () => ({
       data: { admin_ui_disabled: false },
       isLoading: false,
     }),
@@ -67,7 +67,7 @@ vi.mock("@/app/(dashboard)/hooks/uiКонфигурация/useUIКонфигу�
 });
 
 // The redesigned sidebar reads the custom logo from ThemeContext; the test tree
-// has no ThemeПровайдер, so stub the hook.
+// has no ThemeProvider, so stub the hook.
 const unbrandedTheme = () => ({
   logoUrl: null as string | null,
   logoUrlDark: null as string | null,
@@ -81,15 +81,15 @@ vi.mock("@/contexts/ThemeContext", () => ({
   useTheme: () => mockUseThemeImpl(),
 }));
 
-// Версия tag + logвыход target come from network hooks; keep them inert in unit tests.
+// Version tag + logout target come from network hooks; keep them inert in unit tests.
 vi.mock("@/app/(dashboard)/hooks/healthReadiness/useHealthReadinessDetails", () => ({
   useHealthReadinessDetails: () => ({ data: undefined }),
 }));
-vi.mock("@/app/(dashboard)/hooks/useLogвыход", () => ({
-  useLogвыход: () => vi.fn(),
+vi.mock("@/app/(dashboard)/hooks/useLogout", () => ({
+  useLogout: () => vi.fn(),
 }));
 
-const collectNavКлючи = (): string[] =>
+const collectNavKeys = (): string[] =>
   menuGroups.flatMap((group) => group.items.flatMap((item) => [item.key, ...(item.children ?? []).map((c) => c.key)]));
 
 // Every place a page id appears in the nav, as "GROUP" for a top-level item or
@@ -108,7 +108,7 @@ describe("Sidebar (leftnav)", () => {
   };
 
   afterEach(() => {
-    mockUseАвторизовано.mockReset();
+    mockUseAuthorized.mockReset();
     mockUseOrganizations.mockReset();
     mockUseThemeImpl = unbrandedTheme;
     navState.pathname = "/ui/api-keys";
@@ -123,7 +123,7 @@ describe("Sidebar (leftnav)", () => {
   it("pairs the logo with a dark-mode variant that swaps on the dark class", () => {
     renderWithProviders(<Sidebar {...defaultProps} />);
 
-    const [light, dark] = Array.from(screen.getByRole("link", { name: /на главную ruLiteLLM/i }).querySelectorВсе("img"));
+    const [light, dark] = Array.from(screen.getByRole("link", { name: /на главную ruLiteLLM/i }).querySelectorAll("img"));
     const classesOf = (el: Element) => new Set(el.className.split(/\s+/));
 
     const lightSrc = light.getAttribute("src") ?? "";
@@ -143,7 +143,7 @@ describe("Sidebar (leftnav)", () => {
     });
     renderWithProviders(<Sidebar {...defaultProps} />);
 
-    const [light, dark] = Array.from(screen.getByRole("link", { name: /на главную ruLiteLLM/i }).querySelectorВсе("img"));
+    const [light, dark] = Array.from(screen.getByRole("link", { name: /на главную ruLiteLLM/i }).querySelectorAll("img"));
 
     expect(light).toHaveAttribute("src", "https://cdn.example.com/logo.png");
     expect(dark).toHaveAttribute("src", "https://cdn.example.com/logo-dark.png");
@@ -153,7 +153,7 @@ describe("Sidebar (leftnav)", () => {
     mockUseThemeImpl = () => ({ ...unbrandedTheme(), logoUrl: "https://cdn.example.com/logo.png" });
     renderWithProviders(<Sidebar {...defaultProps} />);
 
-    const [light, dark] = Array.from(screen.getByRole("link", { name: /на главную ruLiteLLM/i }).querySelectorВсе("img"));
+    const [light, dark] = Array.from(screen.getByRole("link", { name: /на главную ruLiteLLM/i }).querySelectorAll("img"));
 
     expect(light).toHaveAttribute("src", "https://cdn.example.com/logo.png");
     expect(dark).toHaveAttribute("src", "https://cdn.example.com/logo.png");
@@ -167,7 +167,7 @@ describe("Sidebar (leftnav)", () => {
     });
     renderWithProviders(<Sidebar {...defaultProps} />);
 
-    const [, dark] = Array.from(screen.getByRole("link", { name: /на главную ruLiteLLM/i }).querySelectorВсе("img"));
+    const [, dark] = Array.from(screen.getByRole("link", { name: /на главную ruLiteLLM/i }).querySelectorAll("img"));
     expect(dark).toHaveAttribute("src", "https://cdn.example.com/gone.png");
 
     fireEvent.error(dark);
@@ -183,7 +183,7 @@ describe("Sidebar (leftnav)", () => {
       "Playground",
       "Режимls + Эндпоинтs",
       "Agentic",
-      "MCP -серверы",
+      "MCP-серверы",
       "Гардрейлы",
       "Policies",
       "Инструменты",
@@ -233,7 +233,7 @@ describe("Sidebar (leftnav)", () => {
   });
 
   it("keeps Router Settings as a single Settings child", () => {
-    // Router Settings is admin-only, so getAvailablePages() filters it выход entirely and the
+    // Router Settings is admin-only, so getAvailablePages() filters it out entirely and the
     // page_utils duplicate-key guard cannot see it. Walk menuGroups directly, otherwise a
     // stray duplicate placement ships silently.
     expect(placementsOf("router-settings")).toEqual(["SETTINGS > settings"]);
@@ -242,7 +242,7 @@ describe("Sidebar (leftnav)", () => {
   it("has no duplicate keys among all menu items and their children", () => {
     // React keys must be unique across the whole nav config, otherwise the
     // active-item highlight and group expansion collide.
-    const keys = collectNavКлючи();
+    const keys = collectNavKeys();
     const duplicates = keys.filter((key, i) => keys.indexOf(key) !== i);
     expect(duplicates).toEqual([]);
   });
@@ -252,10 +252,10 @@ describe("Sidebar (leftnav)", () => {
     // cost-incurring actions" rule. The session hook presents the viewer as
     // an admin (`userRole: "admin"`) with `isViewOnly: true`; Playground
     // stays hidden (incurs LLM cost) via the isViewOnly flag, while every
-    // admin page (Режимls + Эндпоинтs, Агенты, Журналы, ...) is visible read-only.
+    // admin page (Models + Endpoints, Agents, Logs, ...) is visible read-only.
     const adminViewerAuth = {
       userId: "admin-viewer-user-id",
-      accessТокен: "test-access-token",
+      accessToken: "test-access-token",
       userRole: "admin",
       isViewOnly: true,
       token: "test-token",
@@ -266,22 +266,22 @@ describe("Sidebar (leftnav)", () => {
     };
 
     it("hides Playground from Admin Viewer (cost-incurring action)", () => {
-      mockUseАвторизовано.mockReturnЗначение(adminViewerAuth);
+      mockUseAuthorized.mockReturnValue(adminViewerAuth);
       renderWithProviders(<Sidebar {...defaultProps} />);
       expect(screen.queryByText("Playground")).not.toBeInTheDocument();
     });
 
     it("shows Режимls + Эндпоинтs to Admin Viewer (read-only)", () => {
-      mockUseАвторизовано.mockReturnЗначение(adminViewerAuth);
+      mockUseAuthorized.mockReturnValue(adminViewerAuth);
       renderWithProviders(<Sidebar {...defaultProps} />);
       expect(screen.getByText("Режимls + Эндпоинтs")).toBeInTheDocument();
     });
 
     it("shows Агенты (under Agentic) to Admin Viewer (read-only)", async () => {
-      mockUseАвторизовано.mockReturnЗначение(adminViewerAuth);
+      mockUseAuthorized.mockReturnValue(adminViewerAuth);
       renderWithProviders(<Sidebar {...defaultProps} />);
-      // Агенты is now nested under the "Agentic" submenu — expand parent
-      // first to render the children, then assert Агенты is visible.
+      // Agents is now nested under the "Agentic" submenu — expand parent
+      // first to render the children, then assert Agents is visible.
       act(() => {
         fireEvent.click(screen.getByText("Agentic"));
       });
@@ -291,7 +291,7 @@ describe("Sidebar (leftnav)", () => {
     });
 
     it("shows Журналы to Admin Viewer", () => {
-      mockUseАвторизовано.mockReturnЗначение(adminViewerAuth);
+      mockUseAuthorized.mockReturnValue(adminViewerAuth);
       renderWithProviders(<Sidebar {...defaultProps} />);
       expect(screen.getByText("Журналы")).toBeInTheDocument();
     });
@@ -300,7 +300,7 @@ describe("Sidebar (leftnav)", () => {
   describe("capability-gated Инструменты children", () => {
     const internalAuth = {
       userId: "internal-user-id",
-      accessТокен: "test-access-token",
+      accessToken: "test-access-token",
       userRole: "internal",
       isViewOnly: false,
       token: "test-token",
@@ -311,11 +311,11 @@ describe("Sidebar (leftnav)", () => {
     };
 
     afterEach(() => {
-      mockUseАвторизовано.mockReset();
+      mockUseAuthorized.mockReset();
     });
 
     it("should hide Tool Policies from internal users while keeping other Инструменты children", async () => {
-      mockUseАвторизовано.mockReturnЗначение(internalAuth);
+      mockUseAuthorized.mockReturnValue(internalAuth);
       renderWithProviders(<Sidebar {...defaultProps} />);
 
       act(() => {
@@ -339,7 +339,7 @@ describe("Sidebar (leftnav)", () => {
     });
 
     it("should hide the Policies entry from internal users while keeping Гардрейлы", () => {
-      mockUseАвторизовано.mockReturnЗначение(internalAuth);
+      mockUseAuthorized.mockReturnValue(internalAuth);
       renderWithProviders(<Sidebar {...defaultProps} />);
 
       expect(screen.getByText("Гардрейлы")).toBeInTheDocument();
@@ -347,7 +347,7 @@ describe("Sidebar (leftnav)", () => {
     });
 
     it("should hide the Prompts entry from internal users while keeping other Experimental children", async () => {
-      mockUseАвторизовано.mockReturnЗначение(internalAuth);
+      mockUseAuthorized.mockReturnValue(internalAuth);
       renderWithProviders(<Sidebar {...defaultProps} />);
 
       act(() => {
@@ -360,7 +360,7 @@ describe("Sidebar (leftnav)", () => {
     });
 
     it("should hide Old Использование from internal users while keeping other Experimental children", async () => {
-      mockUseАвторизовано.mockReturnЗначение(internalAuth);
+      mockUseAuthorized.mockReturnValue(internalAuth);
       renderWithProviders(<Sidebar {...defaultProps} />);
 
       act(() => {
@@ -384,15 +384,15 @@ describe("Sidebar (leftnav)", () => {
     });
   });
 
-  // Workflow Runs, Память and Гардрейлы Monitor render a shell and then 401
-  // for every non-proxy-admin role, because their page-load routes sit выходside
-  // internal_user_routes / self_managed_routes. Стоимость Optimization does not:
+  // Workflow Runs, Memory and Guardrails Monitor render a shell and then 401
+  // for every non-proxy-admin role, because their page-load routes sit outside
+  // internal_user_routes / self_managed_routes. Cost Optimization does not:
   // its primary call is /user/daily/activity, which every role may make, so
   // the entry stays and only its proxy-wide tabs are gated inside the page.
   describe("capability-gated pages whose data is proxy-admin-only", () => {
     const authFor = (userRole: string) => ({
       userId: "some-user-id",
-      accessТокен: "test-access-token",
+      accessToken: "test-access-token",
       userRole,
       isViewOnly: false,
       token: "test-token",
@@ -403,17 +403,17 @@ describe("Sidebar (leftnav)", () => {
     });
 
     afterEach(() => {
-      mockUseАвторизовано.mockReset();
+      mockUseAuthorized.mockReset();
     });
 
     it("hides Workflow Runs and Память from an internal user under Agentic", async () => {
-      mockUseАвторизовано.mockReturnЗначение(authFor("internal"));
+      mockUseAuthorized.mockReturnValue(authFor("internal"));
       renderWithProviders(<Sidebar {...defaultProps} />);
 
       act(() => {
         fireEvent.click(screen.getByText("Agentic"));
       });
-      // Liveness gate: the sibling Агенты child stays visible to this role, so
+      // Liveness gate: the sibling Agents child stays visible to this role, so
       // the absences below mean the gate fired, not that the group never opened.
       await waitFor(() => {
         expect(screen.getByText("Агенты")).toBeInTheDocument();
@@ -425,14 +425,14 @@ describe("Sidebar (leftnav)", () => {
     // An org admin's session role is "Org Admin", which no capability list
     // carries, and the proxy denies these routes to org admins too because
     // `_user_is_org_admin` needs an organization_id the page-load GET never sends.
-    // Агенты is already выход of reach for this role, so gating the other two
+    // Agents is already out of reach for this role, so gating the other two
     // empties the Agentic group entirely and the parent must go with it rather
     // than degrade into a leaf link to the non-route `?page=agentic`.
     it("drops the whole Agentic group for an org admin once its last child is gated", () => {
-      mockUseАвторизовано.mockReturnЗначение(authFor("org_admin"));
+      mockUseAuthorized.mockReturnValue(authFor("org_admin"));
       renderWithProviders(<Sidebar {...defaultProps} />);
 
-      // Liveness gate: Журналы carries no role list, so it proves the sidebar rendered.
+      // Liveness gate: Logs carries no role list, so it proves the sidebar rendered.
       expect(screen.getByText("Журналы")).toBeInTheDocument();
       expect(screen.queryByText("Agentic")).not.toBeInTheDocument();
       expect(screen.queryByText("Workflow Runs")).not.toBeInTheDocument();
@@ -440,7 +440,7 @@ describe("Sidebar (leftnav)", () => {
     });
 
     it("keeps the Agentic group for an internal user, who can still see Агенты", () => {
-      mockUseАвторизовано.mockReturnЗначение(authFor("internal"));
+      mockUseAuthorized.mockReturnValue(authFor("internal"));
       renderWithProviders(<Sidebar {...defaultProps} />);
 
       expect(screen.getByText("Agentic")).toBeInTheDocument();
@@ -459,7 +459,7 @@ describe("Sidebar (leftnav)", () => {
     });
 
     it("hides Гардрейлы Monitor from an internal user while keeping Использование and Стоимость Optimization", () => {
-      mockUseАвторизовано.mockReturnЗначение(authFor("internal"));
+      mockUseAuthorized.mockReturnValue(authFor("internal"));
       renderWithProviders(<Sidebar {...defaultProps} />);
 
       expect(screen.queryByText("Гардрейлы Monitor")).not.toBeInTheDocument();
@@ -475,9 +475,9 @@ describe("Sidebar (leftnav)", () => {
   });
 
   it("should show Организацияs tab for organization admins", () => {
-    mockUseАвторизовано.mockReturnЗначение({
+    mockUseAuthorized.mockReturnValue({
       userId: "org-admin-user-id",
-      accessТокен: "test-access-token",
+      accessToken: "test-access-token",
       userRole: "viewer",
       isViewOnly: false,
       token: "test-token",
@@ -487,14 +487,14 @@ describe("Sidebar (leftnav)", () => {
       showSSOBanner: false,
     });
 
-    mockUseOrganizations.mockReturnЗначение({
+    mockUseOrganizations.mockReturnValue({
       data: [
         {
           organization_id: "org-1",
           organization_name: "Test Организация",
           spend: 0,
           max_budget: null,
-          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+          models: [],
           tpm_limit: null,
           rpm_limit: null,
           members: [
@@ -544,7 +544,7 @@ describe("Sidebar (leftnav)", () => {
       expect(screen.getByRole("link", { name: label })).toHaveAttribute("href", href);
     expectHref("Виртуальный ключs", "/ui/api-keys");
     expectHref("Playground", "/ui/playground");
-    expectHref("Режимls + Эндпоинтs", "/ui/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-and-endpoints");
+    expectHref("Режимls + Эндпоинтs", "/ui/models-and-endpoints");
     expectHref("Использование", "/ui/usage");
     expectHref("API Reference", "/ui/api-reference");
     expectHref("Old Использование", "/ui/old-usage");
@@ -601,7 +601,7 @@ describe("getBreadcrumb", () => {
   });
 
   it("resolves routes whose segment differs from the sidebar page id", () => {
-    expect(getBreadcrumb("/ui/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs-and-endpoints")).toEqual({ section: "AI Gateway", title: "Режимls + Эндпоинтs" });
+    expect(getBreadcrumb("/ui/models-and-endpoints")).toEqual({ section: "AI Gateway", title: "Режимls + Эндпоинтs" });
     expect(getBreadcrumb("/ui/usage")).toEqual({ section: "Observability", title: "Использование" });
     expect(getBreadcrumb("/ui/old-usage")).toEqual({ section: "Developer Инструменты", title: "Old Использование" });
   });

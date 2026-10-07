@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { makeOpenAIResponsesЗапрос } from "./responses_api";
-import { СообщениеType } from "../chat_ui/types";
-import type { ТокенИспользование } from "../chat_ui/ОтветМетрикаs";
+import { makeOpenAIResponsesRequest } from "./responses_api";
+import { MessageType } from "../chat_ui/types";
+import type { TokenUsage } from "../chat_ui/ОтветМетрикаs";
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: vi.fn(() => "https://example.com"),
@@ -22,13 +22,13 @@ vi.mock("openai", () => ({
   },
 }));
 
-const nonStreamingОтвет = (data: unknown, headers: Record<string, string> = {}) => ({
-  withОтвет: async () => ({ data, response: { headers: new Заголовки(headers) } }),
+const nonStreamingResponse = (data: unknown, headers: Record<string, string> = {}) => ({
+  withResponse: async () => ({ data, response: { headers: new Headers(headers) } }),
 });
 
 describe("responses_api", () => {
   const mockUpdateTextUI = vi.fn();
-  const messages: СообщениеType[] = [{ role: "user", content: "Hello" }];
+  const messages: MessageType[] = [{ role: "user", content: "Hello" }];
 
   beforeEach(() => {
     const mockEvents = [
@@ -37,7 +37,7 @@ describe("responses_api", () => {
         type: "response.completed",
         response: {
           id: "resp_123",
-          usage: { выходput_tokens: 2, input_tokens: 5, total_tokens: 7 },
+          usage: { output_tokens: 2, input_tokens: 5, total_tokens: 7 },
         },
       },
     ];
@@ -48,7 +48,7 @@ describe("responses_api", () => {
       }
     }
 
-    mockResponsesCreate.mockResolvedЗначение(mockStream());
+    mockResponsesCreate.mockResolvedValue(mockStream());
   });
 
   afterEach(() => {
@@ -56,12 +56,12 @@ describe("responses_api", () => {
   });
 
   it("should send a basic responses request", async () => {
-    await makeOpenAIResponsesЗапрос(messages, mockUpdateTextUI, "gpt-4", "test-token");
+    await makeOpenAIResponsesRequest(messages, mockUpdateTextUI, "gpt-4", "test-token");
 
     expect(mockResponsesCreate).toHaveBeenCalledTimes(1);
     expect(mockResponsesCreate).toHaveBeenCalledWith(
       expect.objectContaining({
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+        model: "gpt-4",
         input: [
           {
             role: "user",
@@ -76,20 +76,20 @@ describe("responses_api", () => {
     expect(mockUpdateTextUI).toHaveBeenCalledWith("assistant", "Hi", "gpt-4");
   });
 
-  it("should send a non-streaming request and render the whole выходput at once when streaming is disabled", async () => {
+  it("should send a non-streaming request and render the whole output at once when streaming is disabled", async () => {
     mockResponsesCreate.mockReturnValueOnce(
-      nonStreamingОтвет({
+      nonStreamingResponse({
         id: "resp_456",
-        выходput: [
+        output: [
           {
             type: "message",
             content: [
-              { type: "выходput_text", text: "Full " },
-              { type: "выходput_text", text: "answer" },
+              { type: "output_text", text: "Full " },
+              { type: "output_text", text: "answer" },
             ],
           },
         ],
-        usage: { выходput_tokens: 3, input_tokens: 4, total_tokens: 7 },
+        usage: { output_tokens: 3, input_tokens: 4, total_tokens: 7 },
       }),
     );
 
@@ -97,7 +97,7 @@ describe("responses_api", () => {
     const onUsageData = vi.fn();
     const onResponseId = vi.fn();
 
-    await makeOpenAIResponsesЗапрос(
+    await makeOpenAIResponsesRequest(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -109,16 +109,16 @@ describe("responses_api", () => {
       onUsageData,
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // гардрейловs
+      undefined, // guardrails
       undefined, // policies
-      undefined, // selectedMCP-серверы
+      undefined, // selectedMCPServers
       undefined, // previousResponseId
       onResponseId,
       undefined, // onMCPEvent
       undefined, // codeInterpreterEnabled
-      undefined, // onCodeInterpreterРезультат
+      undefined, // onCodeInterpreterResult
       undefined, // customBaseUrl
-      undefined, // mcp-серверы
+      undefined, // mcpServers
       undefined, // mcpServerToolRestrictions
       undefined, // mcpToolsets
       false, // streamingEnabled
@@ -138,7 +138,7 @@ describe("responses_api", () => {
   it("should report total latency in both streaming and non-streaming modes", async () => {
     const onTotalLatency = vi.fn();
     const callWithStreaming = (streamingEnabled: boolean) =>
-      makeOpenAIResponsesЗапрос(
+      makeOpenAIResponsesRequest(
         messages,
         mockUpdateTextUI,
         "gpt-4",
@@ -150,16 +150,16 @@ describe("responses_api", () => {
         undefined, // onUsageData
         undefined, // traceId
         undefined, // vector_store_ids
-        undefined, // гардрейловs
+        undefined, // guardrails
         undefined, // policies
-        undefined, // selectedMCP-серверы
+        undefined, // selectedMCPServers
         undefined, // previousResponseId
         undefined, // onResponseId
         undefined, // onMCPEvent
         undefined, // codeInterpreterEnabled
-        undefined, // onCodeInterpreterРезультат
+        undefined, // onCodeInterpreterResult
         undefined, // customBaseUrl
-        undefined, // mcp-серверы
+        undefined, // mcpServers
         undefined, // mcpServerToolRestrictions
         undefined, // mcpToolsets
         streamingEnabled,
@@ -171,9 +171,9 @@ describe("responses_api", () => {
     expect(onTotalLatency).toHaveBeenLastCalledWith(expect.any(Number));
 
     mockResponsesCreate.mockReturnValueOnce(
-      nonStreamingОтвет({
+      nonStreamingResponse({
         id: "resp_latency",
-        выходput: [{ type: "message", content: [{ type: "выходput_text", text: "Answer" }] }],
+        output: [{ type: "message", content: [{ type: "output_text", text: "Answer" }] }],
       }),
     );
 
@@ -183,21 +183,21 @@ describe("responses_api", () => {
   });
 
   it("should forward the cost the proxy reports on the streamed usage object", async () => {
-    async function* streamWithСтоимость() {
+    async function* streamWithCost() {
       yield { type: "response.output_text.delta", delta: "Hi" };
       yield {
         type: "response.completed",
         response: {
           id: "resp_cost",
-          usage: { выходput_tokens: 12, input_tokens: 12, total_tokens: 24, cost: 0.000063 },
+          usage: { output_tokens: 12, input_tokens: 12, total_tokens: 24, cost: 0.000063 },
         },
       };
     }
-    mockResponsesCreate.mockResolvedValueOnce(streamWithСтоимость());
+    mockResponsesCreate.mockResolvedValueOnce(streamWithCost());
 
     const onUsageData = vi.fn();
 
-    await makeOpenAIResponsesЗапрос(
+    await makeOpenAIResponsesRequest(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -218,7 +218,7 @@ describe("responses_api", () => {
   it("should omit cost when the proxy reports none", async () => {
     const onUsageData = vi.fn();
 
-    await makeOpenAIResponsesЗапрос(
+    await makeOpenAIResponsesRequest(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -234,20 +234,20 @@ describe("responses_api", () => {
   });
 
   it("should omit cost when the proxy reports a non-numeric cost", async () => {
-    async function* streamWithNonNumericСтоимость() {
+    async function* streamWithNonNumericCost() {
       yield {
         type: "response.completed",
         response: {
           id: "resp_non_numeric_cost",
-          usage: { выходput_tokens: 12, input_tokens: 12, total_tokens: 24, cost: "not-a-number" },
+          usage: { output_tokens: 12, input_tokens: 12, total_tokens: 24, cost: "not-a-number" },
         },
       };
     }
-    mockResponsesCreate.mockResolvedValueOnce(streamWithNonNumericСтоимость());
+    mockResponsesCreate.mockResolvedValueOnce(streamWithNonNumericCost());
 
     const onUsageData = vi.fn();
 
-    await makeOpenAIResponsesЗапрос(
+    await makeOpenAIResponsesRequest(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -263,20 +263,20 @@ describe("responses_api", () => {
   });
 
   it("should omit cost when the proxy reports a blank cost", async () => {
-    async function* streamWithBlankСтоимость() {
+    async function* streamWithBlankCost() {
       yield {
         type: "response.completed",
         response: {
           id: "resp_blank_cost",
-          usage: { выходput_tokens: 12, input_tokens: 12, total_tokens: 24, cost: "  " },
+          usage: { output_tokens: 12, input_tokens: 12, total_tokens: 24, cost: "  " },
         },
       };
     }
-    mockResponsesCreate.mockResolvedValueOnce(streamWithBlankСтоимость());
+    mockResponsesCreate.mockResolvedValueOnce(streamWithBlankCost());
 
     const onUsageData = vi.fn();
 
-    await makeOpenAIResponsesЗапрос(
+    await makeOpenAIResponsesRequest(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -291,22 +291,22 @@ describe("responses_api", () => {
     expect(onUsageData).toHaveBeenCalledWith(expect.not.objectContaining({ cost: expect.anything() }), "");
   });
 
-  it("should replay MCP выходput items as events for a non-streaming response", async () => {
+  it("should replay MCP output items as events for a non-streaming response", async () => {
     mockResponsesCreate.mockReturnValueOnce(
-      nonStreamingОтвет({
+      nonStreamingResponse({
         id: "resp_789",
-        выходput: [
-          { type: "mcp_call", id: "mcp_1", name: "search_docs", arguments: "{}", выходput: "found it" },
-          { type: "message", content: [{ type: "выходput_text", text: "Answer" }] },
+        output: [
+          { type: "mcp_call", id: "mcp_1", name: "search_docs", arguments: "{}", output: "found it" },
+          { type: "message", content: [{ type: "output_text", text: "Answer" }] },
         ],
-        usage: { выходput_tokens: 1, input_tokens: 1, total_tokens: 2 },
+        usage: { output_tokens: 1, input_tokens: 1, total_tokens: 2 },
       }),
     );
 
     const onMCPEvent = vi.fn();
     const onUsageData = vi.fn();
 
-    await makeOpenAIResponsesЗапрос(
+    await makeOpenAIResponsesRequest(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -318,16 +318,16 @@ describe("responses_api", () => {
       onUsageData,
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // гардрейловs
+      undefined, // guardrails
       undefined, // policies
-      undefined, // selectedMCP-серверы
+      undefined, // selectedMCPServers
       undefined, // previousResponseId
       undefined, // onResponseId
       onMCPEvent,
       undefined, // codeInterpreterEnabled
-      undefined, // onCodeInterpreterРезультат
+      undefined, // onCodeInterpreterResult
       undefined, // customBaseUrl
-      undefined, // mcp-серверы
+      undefined, // mcpServers
       undefined, // mcpServerToolRestrictions
       undefined, // mcpToolsets
       false, // streamingEnabled
@@ -337,15 +337,15 @@ describe("responses_api", () => {
       expect.objectContaining({
         type: "response.output_item.done",
         item_id: "mcp_1",
-        item: expect.objectContaining({ type: "mcp_call", name: "search_docs", выходput: "found it" }),
+        item: expect.objectContaining({ type: "mcp_call", name: "search_docs", output: "found it" }),
       }),
     );
     expect(onUsageData).toHaveBeenCalledWith(expect.anything(), "search_docs");
   });
 
   it("should configure MCP tools per server with restrictions", async () => {
-    const selectedMCP-серверы = ["server-1", "server-2"];
-    const mcp-серверы = [
+    const selectedMCPServers = ["server-1", "server-2"];
+    const mcpServers = [
       {
         server_id: "server-1",
         alias: "alpha",
@@ -371,7 +371,7 @@ describe("responses_api", () => {
       "server-2": ["toolB", "toolC"],
     };
 
-    await makeOpenAIResponsesЗапрос(
+    await makeOpenAIResponsesRequest(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -383,16 +383,16 @@ describe("responses_api", () => {
       undefined, // onUsageData
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // гардрейловs
+      undefined, // guardrails
       undefined, // policies
-      selectedMCP-серверы,
+      selectedMCPServers,
       undefined, // previousResponseId
       undefined, // onResponseId
       undefined, // onMCPEvent
       undefined, // codeInterpreterEnabled
-      undefined, // onCodeInterpreterРезультат
+      undefined, // onCodeInterpreterResult
       undefined, // customBaseUrl
-      mcp-серверы,
+      mcpServers,
       mcpServerToolRestrictions,
     );
 
@@ -418,20 +418,20 @@ describe("responses_api", () => {
 });
 
 describe("responses_api prompt cache usage", () => {
-  const captureИспользование = async (usage: Record<string, unknown>): Promise<ТокенИспользование> => {
+  const captureUsage = async (usage: Record<string, unknown>): Promise<TokenUsage> => {
     async function* mockStream() {
       yield {
         type: "response.completed",
         response: {
           id: "resp_cache",
-          usage: { выходput_tokens: 2, input_tokens: 5000, total_tokens: 5002, ...usage },
+          usage: { output_tokens: 2, input_tokens: 5000, total_tokens: 5002, ...usage },
         },
       };
     }
-    mockResponsesCreate.mockResolvedЗначение(mockStream());
+    mockResponsesCreate.mockResolvedValue(mockStream());
 
     const onUsageData = vi.fn();
-    await makeOpenAIResponsesЗапрос(
+    await makeOpenAIResponsesRequest(
       [{ role: "user", content: "Hello" }],
       vi.fn(),
       "gpt-4",
@@ -444,7 +444,7 @@ describe("responses_api prompt cache usage", () => {
     );
 
     expect(onUsageData).toHaveBeenCalledTimes(1);
-    return onUsageData.mock.calls[0][0] as ТокенИспользование;
+    return onUsageData.mock.calls[0][0] as TokenUsage;
   };
 
   afterEach(() => {
@@ -453,32 +453,32 @@ describe("responses_api prompt cache usage", () => {
 
   it("surfaces read tokens from Ответs-shape input_tokens_details", async () => {
     await expect(
-      captureИспользование({ input_tokens_details: { cached_tokens: 4695, cache_write_tokens: 0 } }),
+      captureUsage({ input_tokens_details: { cached_tokens: 4695, cache_write_tokens: 0 } }),
     ).resolves.toMatchObject({ cacheReadTokens: 4695, promptTokens: 5000 });
   });
 
   it("surfaces creation tokens from Ответs-shape cache writes", async () => {
     await expect(
-      captureИспользование({ input_tokens_details: { cached_tokens: 0, cache_write_tokens: 4695 } }),
+      captureUsage({ input_tokens_details: { cached_tokens: 0, cache_write_tokens: 4695 } }),
     ).resolves.toMatchObject({ cacheCreationTokens: 4695 });
   });
 
   it("omits cache fields entirely for a provider that reports none", async () => {
-    const usageData = await captureИспользование({});
+    const usageData = await captureUsage({});
 
-    expect(usageData).not.toHaveСвойство("cacheReadTokens");
-    expect(usageData).not.toHaveСвойство("cacheCreationTokens");
+    expect(usageData).not.toHaveProperty("cacheReadTokens");
+    expect(usageData).not.toHaveProperty("cacheCreationTokens");
     expect(usageData.promptTokens).toBe(5000);
   });
 
-  it("surfaces reasoning tokens from Ответs-shape выходput_tokens_details", async () => {
-    await expect(captureИспользование({ выходput_tokens_details: { reasoning_tokens: 42 } })).resolves.toMatchObject({
+  it("surfaces reasoning tokens from Ответs-shape output_tokens_details", async () => {
+    await expect(captureUsage({ output_tokens_details: { reasoning_tokens: 42 } })).resolves.toMatchObject({
       reasoningTokens: 42,
     });
   });
 
-  it("falls back to completion_tokens_details reasoning tokens when выходput_tokens_details is absent", async () => {
-    await expect(captureИспользование({ completion_tokens_details: { reasoning_tokens: 17 } })).resolves.toMatchObject({
+  it("falls back to completion_tokens_details reasoning tokens when output_tokens_details is absent", async () => {
+    await expect(captureUsage({ completion_tokens_details: { reasoning_tokens: 17 } })).resolves.toMatchObject({
       reasoningTokens: 17,
     });
   });
@@ -486,7 +486,7 @@ describe("responses_api prompt cache usage", () => {
 
 describe("responses_api response cache", () => {
   const mockUpdateTextUI = vi.fn();
-  const messages: СообщениеType[] = [{ role: "user", content: "Hello" }];
+  const messages: MessageType[] = [{ role: "user", content: "Hello" }];
 
   afterEach(() => {
     vi.clearAllMocks();
@@ -494,12 +494,12 @@ describe("responses_api response cache", () => {
 
   it("flags a non-streaming response-cache hit even though it replays provider prompt-cache usage", async () => {
     mockResponsesCreate.mockReturnValueOnce(
-      nonStreamingОтвет(
+      nonStreamingResponse(
         {
           id: "resp_replayed",
-          выходput: [{ type: "message", content: [{ type: "выходput_text", text: "Full answer" }] }],
+          output: [{ type: "message", content: [{ type: "output_text", text: "Full answer" }] }],
           usage: {
-            выходput_tokens: 2,
+            output_tokens: 2,
             input_tokens: 5000,
             total_tokens: 5002,
             input_tokens_details: { cached_tokens: 4695 },
@@ -511,7 +511,7 @@ describe("responses_api response cache", () => {
 
     const onUsageData = vi.fn();
 
-    await makeOpenAIResponsesЗапрос(
+    await makeOpenAIResponsesRequest(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -523,16 +523,16 @@ describe("responses_api response cache", () => {
       onUsageData,
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // гардрейловs
+      undefined, // guardrails
       undefined, // policies
-      undefined, // selectedMCP-серверы
+      undefined, // selectedMCPServers
       undefined, // previousResponseId
       undefined, // onResponseId
       undefined, // onMCPEvent
       undefined, // codeInterpreterEnabled
-      undefined, // onCodeInterpreterРезультат
+      undefined, // onCodeInterpreterResult
       undefined, // customBaseUrl
-      undefined, // mcp-серверы
+      undefined, // mcpServers
       undefined, // mcpServerToolRestrictions
       undefined, // mcpToolsets
       false, // streamingEnabled
@@ -546,16 +546,16 @@ describe("responses_api response cache", () => {
 
   it("does not flag a non-streaming response that missed the response cache", async () => {
     mockResponsesCreate.mockReturnValueOnce(
-      nonStreamingОтвет({
+      nonStreamingResponse({
         id: "resp_fresh",
-        выходput: [{ type: "message", content: [{ type: "выходput_text", text: "Full answer" }] }],
-        usage: { выходput_tokens: 2, input_tokens: 5, total_tokens: 7 },
+        output: [{ type: "message", content: [{ type: "output_text", text: "Full answer" }] }],
+        usage: { output_tokens: 2, input_tokens: 5, total_tokens: 7 },
       }),
     );
 
     const onUsageData = vi.fn();
 
-    await makeOpenAIResponsesЗапрос(
+    await makeOpenAIResponsesRequest(
       messages,
       mockUpdateTextUI,
       "gpt-4",
@@ -567,16 +567,16 @@ describe("responses_api response cache", () => {
       onUsageData,
       undefined, // traceId
       undefined, // vector_store_ids
-      undefined, // гардрейловs
+      undefined, // guardrails
       undefined, // policies
-      undefined, // selectedMCP-серверы
+      undefined, // selectedMCPServers
       undefined, // previousResponseId
       undefined, // onResponseId
       undefined, // onMCPEvent
       undefined, // codeInterpreterEnabled
-      undefined, // onCodeInterpreterРезультат
+      undefined, // onCodeInterpreterResult
       undefined, // customBaseUrl
-      undefined, // mcp-серверы
+      undefined, // mcpServers
       undefined, // mcpServerToolRestrictions
       undefined, // mcpToolsets
       false, // streamingEnabled
@@ -589,14 +589,14 @@ describe("responses_api response cache", () => {
     async function* mockStream() {
       yield {
         type: "response.completed",
-        response: { id: "resp_stream", usage: { выходput_tokens: 2, input_tokens: 5, total_tokens: 7 } },
+        response: { id: "resp_stream", usage: { output_tokens: 2, input_tokens: 5, total_tokens: 7 } },
       };
     }
     mockResponsesCreate.mockResolvedValueOnce(mockStream());
 
     const onUsageData = vi.fn();
 
-    await makeOpenAIResponsesЗапрос(
+    await makeOpenAIResponsesRequest(
       messages,
       mockUpdateTextUI,
       "gpt-4",

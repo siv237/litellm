@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { MCPServerView } from "./mcp_server_view";
-import type { MCPСервер } from "@/components/mcp_tools/types";
+import type { MCPServer } from "@/components/mcp_tools/types";
 
 vi.mock(".", () => ({
   MCPToolsViewer: () => <div>tools viewer</div>,
@@ -13,7 +13,7 @@ vi.mock("./mcp_server_edit", () => ({
   EDIT_OAUTH_UI_STATE_KEY: "litellm-mcp-oauth-edit-state",
 }));
 
-const baseСервер = {
+const baseServer = {
   server_id: "srv-1",
   server_name: "demo server",
   alias: "demo_alias",
@@ -21,16 +21,16 @@ const baseСервер = {
   transport: "http",
   url: "https://example.com/mcp",
   auth_type: "api_key",
-} as MCPСервер;
+} as MCPServer;
 
-const renderView = (overrides: Partial<MCPСервер> = {}, props: Record<string, unknown> = {}) =>
+const renderView = (overrides: Partial<MCPServer> = {}, props: Record<string, unknown> = {}) =>
   render(
     <MCPServerView
-      mcpСервер={{ ...baseСервер, ...overrides } as MCPСервер}
+      mcpServer={{ ...baseServer, ...overrides } as MCPServer}
       onBack={vi.fn()}
       isProxyAdmin
       isEditing={false}
-      accessТокен="tok"
+      accessToken="tok"
       userRole="Admin"
       userID="u1"
       availableAccessGroups={[]}
@@ -57,11 +57,11 @@ describe("MCPServerView", () => {
   it("falls back to a placeholder name when the server has neither name nor alias", () => {
     renderView({ server_name: undefined, alias: undefined });
 
-    expect(screen.getByText("Unnamed Сервер")).toBeInTheDocument();
+    expect(screen.getByText("Unnamed Server")).toBeInTheDocument();
   });
 
-  // "Транспорт" and "Аутентификация" label both an Обзор card and a Settings
-  // row, so only Обзор-exclusive labels identify the Обзор panel.
+  // "Транспорт" and "Аутентификация" label both an Overview card and a Settings
+  // row, so only Overview-exclusive labels identify the Overview panel.
   it("summarises the connection on the Обзор tab", () => {
     renderView();
 
@@ -94,7 +94,7 @@ describe("MCPServerView", () => {
 
     await userEvent.click(screen.getByRole("tab", { name: "Settings" }));
 
-    expect(await screen.findByText("MCP Сервер Settings")).toBeInTheDocument();
+    expect(await screen.findByText("MCP Server Settings")).toBeInTheDocument();
     expect(screen.getByText("Всеow Все ключи")).toBeInTheDocument();
     expect(screen.getByText("Enabled")).toBeInTheDocument();
     expect(screen.getByText("Internal only")).toBeInTheDocument();
@@ -129,7 +129,7 @@ describe("MCPServerView", () => {
     const onBack = vi.fn();
     renderView({}, { onBack });
 
-    await userEvent.click(screen.getByRole("button", { name: /Back to Все -серверы/ }));
+    await userEvent.click(screen.getByRole("button", { name: /Back to Все Servers/ }));
 
     expect(onBack).toHaveBeenCalled();
   });

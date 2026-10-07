@@ -16,26 +16,26 @@ vi.mock("@/components/networking", () => ({
 }));
 
 vi.mock("@/components/llm_calls/fetch_models", () => ({
-  fetchAvailableModels: vi.fn().mockResolvedЗначение([]),
+  fetchAvailableModels: vi.fn().mockResolvedValue([]),
 }));
 
-const renderSettings = () => render(<CacheSettings accessТокен="sk-test" userRole="Admin" userID="u1" />);
+const renderSettings = () => render(<CacheSettings accessToken="sk-test" userRole="Admin" userID="u1" />);
 
 describe("CacheSettings", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    getCacheSettingsCall.mockResolvedЗначение({ current_values: {} });
-    updateCacheSettingsCall.mockResolvedЗначение({ status: "success" });
-    testCacheConnectionCall.mockResolvedЗначение({ status: "success" });
+    getCacheSettingsCall.mockResolvedValue({ current_values: {} });
+    updateCacheSettingsCall.mockResolvedValue({ status: "success" });
+    testCacheConnectionCall.mockResolvedValue({ status: "success" });
   });
 
-  it("should render the connection fields once current values load", async () => {
+  it("should render the Подключение fields once current values load", async () => {
     renderSettings();
     expect(await screen.findByText("Настройки соединения")).toBeInTheDocument();
   });
 
-  describe("when the redis type is node", () => {
-    it("should show the connection fields and hide cluster/sentinel/semantic fields", async () => {
+  describe("when the redis Тип is node", () => {
+    it("should show the Подключение fields and hide cluster/sentinel/semantic fields", async () => {
       renderSettings();
 
       expect(await screen.findByText("Redis URL")).toBeInTheDocument();
@@ -46,34 +46,34 @@ describe("CacheSettings", () => {
     });
   });
 
-  describe("when the redis type is cluster", () => {
-    it("should reveal the cluster startup nodes field", async () => {
-      getCacheSettingsCall.mockResolvedЗначение({ current_values: { redis_type: "cluster" } });
+  describe("when the redis Тип is cluster", () => {
+    it("should reveal the cluster Узлы запуска Поле", async () => {
+      getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "cluster" } });
       renderSettings();
       expect(await screen.findByText("Startup-узлы")).toBeInTheDocument();
     });
   });
 
-  describe("when the redis type is sentinel", () => {
+  describe("when the redis Тип is sentinel", () => {
     it("should reveal the sentinel fields", async () => {
-      getCacheSettingsCall.mockResolvedЗначение({ current_values: { redis_type: "sentinel" } });
+      getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "sentinel" } });
       renderSettings();
       expect(await screen.findByText("Узлы Sentinel")).toBeInTheDocument();
       expect(screen.getByText("Имя сервиса")).toBeInTheDocument();
     });
   });
 
-  describe("when the redis type is semantic", () => {
+  describe("when the redis Тип is semantic", () => {
     it("should reveal the semantic fields", async () => {
-      getCacheSettingsCall.mockResolvedЗначение({ current_values: { redis_type: "semantic" } });
+      getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "semantic" } });
       renderSettings();
       expect(await screen.findByText("Порог схожести")).toBeInTheDocument();
       expect(screen.getByText("Модель эмбеддингов")).toBeInTheDocument();
     });
   });
 
-  describe("when a field fails inline validation", () => {
-    it("should block save and surface the validation message", async () => {
+  describe("when a Поле fails inline validation", () => {
+    it("should block Сохранить and surface the validation Сообщение", async () => {
       const user = userEvent.setup();
       renderSettings();
 
@@ -86,9 +86,9 @@ describe("CacheSettings", () => {
       expect(updateCacheSettingsCall).not.toHaveBeenCalled();
     });
 
-    it("should block save when a list field holds malformed JSON instead of silently dropping it", async () => {
+    it("should block Сохранить when a list Поле holds malformed JSON instead of silently dropping it", async () => {
       const user = userEvent.setup();
-      getCacheSettingsCall.mockResolvedЗначение({ current_values: { redis_type: "cluster" } });
+      getCacheSettingsCall.mockResolvedValue({ current_values: { redis_type: "cluster" } });
       renderSettings();
 
       const startupNodes = await screen.findByLabelText("Startup-узлы");
@@ -99,12 +99,12 @@ describe("CacheSettings", () => {
       expect(updateCacheSettingsCall).not.toHaveBeenCalled();
     });
 
-    it("should block save with an error when a non-numeric value is entered into a numeric field", async () => {
+    it("should block Сохранить with an Ошибка when a non-numeric Значение is entered into a numeric Поле", async () => {
       const user = userEvent.setup();
       renderSettings();
 
       const db = await screen.findByLabelText("Индекс базы данных");
-      fireEvent.change(db, { target: { value: "redis://host:6379/1" } });
+      fireEvent.change(db, { target: { value: "redis://Хост:6379/1" } });
       await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
       expect(await screen.findByText(/Должно быть целым неотрицательным числом/i)).toBeInTheDocument();
@@ -113,7 +113,7 @@ describe("CacheSettings", () => {
   });
 
   describe("when saving a valid node configuration", () => {
-    it("should send the backend payload shape with type redis and no UI-only fields", async () => {
+    it("should Отправить the backend payload shape with Тип redis and Нет UI-only fields", async () => {
       const user = userEvent.setup();
       renderSettings();
 
@@ -132,16 +132,16 @@ describe("CacheSettings", () => {
       );
     });
 
-    it("should include a numeric field like Индекс базы данных in the save payload", async () => {
+    it("should include a numeric Поле like Индекс базы данных in the Сохранить payload", async () => {
       const user = userEvent.setup();
       renderSettings();
 
-      fireEvent.change(await screen.findByLabelText("Redis URL"), { target: { value: "redis://host:6379/1" } });
+      fireEvent.change(await screen.findByLabelText("Redis URL"), { target: { value: "redis://Хост:6379/1" } });
       fireEvent.change(await screen.findByLabelText("Индекс базы данных"), { target: { value: "2" } });
       await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
       await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalled());
-      expect(updateCacheSettingsCall.mock.calls[0][1]).toMatchObject({ db: 2, url: "redis://host:6379/1" });
+      expect(updateCacheSettingsCall.mock.calls[0][1]).toMatchObject({ db: 2, url: "redis://Хост:6379/1" });
     });
   });
 });

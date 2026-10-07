@@ -12,9 +12,9 @@ vi.mock("@/components/networking", () => ({
 }));
 
 vi.mock("@/components/llm_calls/fetch_models", () => ({
-  fetchAvailableModels: vi.fn().mockResolvedЗначение([
-    { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "text-embedding-3-small", mode: "embedding" },
-    { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4o", mode: "chat" },
+  fetchAvailableModels: vi.fn().mockResolvedValue([
+    { model_group: "text-embedding-3-small", mode: "embedding" },
+    { model_group: "gpt-4o", mode: "chat" },
   ]),
 }));
 
@@ -29,26 +29,26 @@ const renderForm = () =>
       isVisible={true}
       onCancel={vi.fn()}
       onSuccess={onSuccess}
-      accessТокен="test-token"
+      accessToken="test-token"
       credentials={[{ credential_name: "bedrock-prod", credential_info: {}, credential_values: {} }]}
     />,
   );
 
 const setupUser = () => userEvent.setup({ pointerEventsCheck: 0 });
 
-const chooseFromВыбрать = async (user: ReturnType<typeof userEvent.setup>, index: number, optionText: string) => {
+const chooseFromSelect = async (user: ReturnType<typeof userEvent.setup>, index: number, optionText: string) => {
   const trigger = screen.getAllByRole("combobox")[index];
   await user.click(trigger);
   if (trigger.getAttribute("aria-expanded") !== "true") {
     trigger.focus();
-    await user.keyboard("{Введите}");
+    await user.keyboard("{Enter}");
   }
   const options = await screen.findAllByText(optionText);
   await user.click(options[options.length - 1]);
 };
 
-const chooseПровайдер = (user: ReturnType<typeof userEvent.setup>, providerLabel: string) =>
-  chooseFromВыбрать(user, 0, providerLabel);
+const chooseProvider = (user: ReturnType<typeof userEvent.setup>, providerLabel: string) =>
+  chooseFromSelect(user, 0, providerLabel);
 
 const submit = async (user: ReturnType<typeof userEvent.setup>) =>
   user.click(screen.getByRole("button", { name: "Create" }));
@@ -58,14 +58,14 @@ const createdPayload = () => mockCreate.mock.calls[0][1];
 describe("VectorStoreForm submit payload", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockCreate.mockResolvedЗначение(undefined);
+    mockCreate.mockResolvedValue(undefined);
   });
 
-  it("sends every payload key for the default provider, leaving untouched необязательно fields undefined", async () => {
+  it("sends every payload key for the default provider, leaving untouched optional fields undefined", async () => {
     const user = setupUser();
     renderForm();
 
-    await user.type(screen.getByPlaceholderText("Введите vector store ID from your provider"), "vs-bedrock");
+    await user.type(screen.getByPlaceholderText("Enter vector store ID from your provider"), "vs-bedrock");
     await submit(user);
 
     await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
@@ -82,17 +82,17 @@ describe("VectorStoreForm submit payload", () => {
     expect(onSuccess).toHaveBeenCalledTimes(1);
   });
 
-  it("sends the filled необязательно fields, parsed metadata and the selected credential", async () => {
+  it("sends the filled optional fields, parsed metadata and the selected credential", async () => {
     const user = setupUser();
     renderForm();
 
-    await user.type(screen.getByPlaceholderText("Введите vector store ID from your provider"), "vs-full");
+    await user.type(screen.getByPlaceholderText("Enter vector store ID from your provider"), "vs-full");
     const textboxes = screen.getAllByRole("textbox");
     await user.type(textboxes[1], "Support docs");
     await user.type(textboxes[2], "Docs for the support team");
     await user.clear(screen.getByPlaceholderText('{"key": "value"}'));
     await user.type(screen.getByPlaceholderText('{"key": "value"}'), '{{"tier": "gold"}');
-    await chooseFromВыбрать(user, 1, "bedrock-prod");
+    await chooseFromSelect(user, 1, "bedrock-prod");
     await submit(user);
 
     await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
@@ -107,22 +107,22 @@ describe("VectorStoreForm submit payload", () => {
     });
   });
 
-  it("renames the milvus embedding Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию to litellm_embedding_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию inside litellm_params", async () => {
+  it("renames the milvus embedding model to litellm_embedding_model inside litellm_params", async () => {
     const user = setupUser();
     renderForm();
 
-    await chooseПровайдер(user, "Milvus");
-    await user.type(screen.getByPlaceholderText("Введите vector store ID from your provider"), "vs-milvus");
+    await chooseProvider(user, "Milvus");
+    await user.type(screen.getByPlaceholderText("Enter vector store ID from your provider"), "vs-milvus");
     await user.type(screen.getByPlaceholderText("username:password or api key"), "user:pass");
     await user.type(screen.getByPlaceholderText("https://your-milvus-endpoint.com/"), "https://milvus.example.com");
-    await chooseFromВыбрать(user, 1, "text-embedding-3-small");
+    await chooseFromSelect(user, 1, "text-embedding-3-small");
     await submit(user);
 
     await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
     expect(createdPayload().litellm_params).toStrictEqual({
       api_key: "user:pass",
       api_base: "https://milvus.example.com",
-      litellm_embedding_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "text-embedding-3-small",
+      litellm_embedding_model: "text-embedding-3-small",
     });
     expect(createdPayload().custom_llm_provider).toBe("milvus");
   });
@@ -131,7 +131,7 @@ describe("VectorStoreForm submit payload", () => {
     const user = setupUser();
     renderForm();
 
-    await chooseПровайдер(user, "Vertex AI Search");
+    await chooseProvider(user, "Vertex AI Search");
     await user.type(
       screen.getByPlaceholderText('my-datastore_1234567890 (data store ID from Vertex AI / "Agent Search" console)'),
       "vs-vertex",
@@ -152,11 +152,11 @@ describe("VectorStoreForm submit payload", () => {
     const user = setupUser();
     renderForm();
 
-    await chooseПровайдер(user, "PostgreSQL pgvector (LiteLLM Подключитьor)");
+    await chooseProvider(user, "PostgreSQL pgvector (LiteLLM Подключитьor)");
     await user.type(screen.getByPlaceholderText("http://your-deployed-server:8000"), "http://pg:8000");
     await user.type(screen.getByPlaceholderText("your-deployed-api-key"), "pg-key");
-    await chooseПровайдер(user, "Azure OpenAI");
-    await user.type(screen.getByPlaceholderText("Введите vector store ID from your provider"), "vs-azure");
+    await chooseProvider(user, "Azure OpenAI");
+    await user.type(screen.getByPlaceholderText("Enter vector store ID from your provider"), "vs-azure");
     await submit(user);
 
     await vi.waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
@@ -170,12 +170,12 @@ describe("VectorStoreForm submit payload", () => {
     const user = setupUser();
     renderForm();
 
-    await user.type(screen.getByPlaceholderText("Введите vector store ID from your provider"), "vs-bad-json");
+    await user.type(screen.getByPlaceholderText("Enter vector store ID from your provider"), "vs-bad-json");
     await user.clear(screen.getByPlaceholderText('{"key": "value"}'));
     await user.type(screen.getByPlaceholderText('{"key": "value"}'), "not json");
     await submit(user);
 
-    await vi.waitFor(() => expect(mockToast.fromОшибка).toHaveBeenCalledWith("Invalid JSON in metadata field"));
+    await vi.waitFor(() => expect(mockToast.fromError).toHaveBeenCalledWith("Invalid JSON in metadata field"));
     expect(mockCreate).not.toHaveBeenCalled();
   });
 

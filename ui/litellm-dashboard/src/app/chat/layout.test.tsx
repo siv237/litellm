@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import ChatLayвыход from "./layвыход";
+import ChatLayout from "./layout";
 
-const { mockUseАвторизовано, mockUseUISettings, mockReplace, mockUiHref, state } = vi.hoisted(() => {
+const { mockUseAuthorized, mockUseUISettings, mockReplace, mockUiHref, state } = vi.hoisted(() => {
   const state = {
     enableChatUI: false,
     isUISettingsLoading: false,
@@ -11,8 +11,8 @@ const { mockUseАвторизовано, mockUseUISettings, mockReplace, mockUiH
     state,
     mockReplace: vi.fn(),
     mockUiHref: vi.fn((segment: string) => `/mocked-ui/${segment}`),
-    mockUseАвторизовано: vi.fn(() => ({
-      accessТокен: "token-123",
+    mockUseAuthorized: vi.fn(() => ({
+      accessToken: "token-123",
       userRole: "Internal User",
       userId: "user-1",
       userEmail: "user@example.com",
@@ -28,21 +28,21 @@ const { mockUseАвторизовано, mockUseUISettings, mockReplace, mockUiH
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ replace: mockReplace }),
 }));
-vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({ default: mockUseАвторизовано }));
+vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({ default: mockUseAuthorized }));
 vi.mock("@/app/(dashboard)/hooks/uiSettings/useUISettings", () => ({ useUISettings: mockUseUISettings }));
 vi.mock("@/utils/uiHref", () => ({ uiHref: mockUiHref }));
 vi.mock("@/components/navbar", () => ({ default: () => <div data-testid="navbar" /> }));
 vi.mock("@/contexts/ThemeContext", () => ({
-  ThemeПровайдер: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 vi.mock("@/contexts/ChatShellContext", () => ({
-  ChatShellПровайдер: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  ChatShellProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 vi.mock("@/components/chat/ChatShell", () => ({
   default: ({ children }: { children: React.ReactNode }) => <div data-testid="chat-shell">{children}</div>,
 }));
 
-describe("ChatLayвыход", () => {
+describe("ChatLayout", () => {
   afterEach(() => {
     state.enableChatUI = false;
     state.isUISettingsLoading = false;
@@ -53,9 +53,9 @@ describe("ChatLayвыход", () => {
   it("renders the chat shell when enable_chat_ui is on", () => {
     state.enableChatUI = true;
     render(
-      <ChatLayвыход>
+      <ChatLayout>
         <div data-testid="page-content" />
-      </ChatLayвыход>,
+      </ChatLayout>,
     );
     expect(screen.getByTestId("chat-shell")).toBeInTheDocument();
     expect(screen.getByTestId("page-content")).toBeInTheDocument();
@@ -65,9 +65,9 @@ describe("ChatLayвыход", () => {
   it("redirects to the dashboard when enable_chat_ui is off", () => {
     state.enableChatUI = false;
     render(
-      <ChatLayвыход>
+      <ChatLayout>
         <div data-testid="page-content" />
-      </ChatLayвыход>,
+      </ChatLayout>,
     );
     expect(screen.queryByTestId("chat-shell")).not.toBeInTheDocument();
     expect(mockReplace).toHaveBeenCalledWith("/mocked-ui/");
@@ -76,9 +76,9 @@ describe("ChatLayвыход", () => {
   it("renders nothing while UI settings are still loading", () => {
     state.isUISettingsLoading = true;
     render(
-      <ChatLayвыход>
+      <ChatLayout>
         <div data-testid="page-content" />
-      </ChatLayвыход>,
+      </ChatLayout>,
     );
     expect(screen.queryByTestId("chat-shell")).not.toBeInTheDocument();
     expect(mockReplace).not.toHaveBeenCalled();

@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 import type { UseFormGetValues } from "react-hook-form";
 
 import {
-  MountedFormПоле,
-  MountedFormПровайдер,
+  MountedFormField,
+  MountedFormProvider,
   projectMountedValues,
   useMountRegistry,
   type MountedFieldName,
@@ -33,7 +33,7 @@ const projectPaths = (entries: readonly (readonly [MountedFieldName, unknown])[]
   return projectMountedValues(registryOf(entries.map(([name]) => name)), getValuesOf(store));
 };
 
-describe("projectMountedValues", () => {
+describe("projectMountedЗначениеs", () => {
   it("keeps a flat name flat", () => {
     expect(project({ server_name: "s1", transport: "http" })).toStrictEqual({ server_name: "s1", transport: "http" });
   });
@@ -105,13 +105,13 @@ describe("projectMountedValues", () => {
 describe("useMountRegistry lifecycle", () => {
   const GatedForm: React.FC<{
     showOptional: boolean;
-    showОбязательно: boolean;
+    showRequired: boolean;
     onFinish: (v: MountedFormValues) => void;
-  }> = ({ showOptional, showОбязательно, onFinish }) => {
+  }> = ({ showOptional, showRequired, onFinish }) => {
     const form = useForm<MountedFormValues>({ mode: "onChange", defaultValues: { server_name: "keep" } });
     const registry = useMountRegistry();
     return (
-      <MountedFormПровайдер value={{ control: form.control, registry }}>
+      <MountedFormProvider value={{ control: form.control, registry }}>
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -122,40 +122,40 @@ describe("useMountRegistry lifecycle", () => {
               });
           }}
         >
-          <MountedFormПоле name="server_name">
+          <MountedFormField name="server_name">
             {(control) => (
               <input aria-label="server_name" value={String(control.value ?? "")} onChange={control.onChange} />
             )}
-          </MountedFormПоле>
+          </MountedFormField>
           {showOptional && (
-            <MountedFormПоле name="alias">
+            <MountedFormField name="alias">
               {(control) => (
                 <input aria-label="alias" value={String(control.value ?? "")} onChange={control.onChange} />
               )}
-            </MountedFormПоле>
+            </MountedFormField>
           )}
-          {showОбязательно && (
-            <MountedFormПоле name="token_url" rules={{ required: "Токен URL is required" }}>
+          {showRequired && (
+            <MountedFormField name="token_url" rules={{ required: "Token URL is required" }}>
               {(control) => (
                 <input aria-label="token_url" value={String(control.value ?? "")} onChange={control.onChange} />
               )}
-            </MountedFormПоле>
+            </MountedFormField>
           )}
           <button type="submit">Submit</button>
         </form>
-      </MountedFormПровайдер>
+      </MountedFormProvider>
     );
   };
 
   it("drops a field's key from the submitted payload once its gate unmounts it", async () => {
     const onFinish = vi.fn();
-    const { rerender } = render(<GatedForm showOptional showОбязательно={false} onFinish={onFinish} />);
+    const { rerender } = render(<GatedForm showOptional showRequired={false} onFinish={onFinish} />);
 
     await userEvent.click(screen.getByRole("button", { name: "Submit" }));
     await waitFor(() => expect(onFinish).toHaveBeenCalledTimes(1));
     expect(Object.keys(onFinish.mock.calls[0][0] as object)).toContain("alias");
 
-    rerender(<GatedForm showOptional={false} showОбязательно={false} onFinish={onFinish} />);
+    rerender(<GatedForm showOptional={false} showRequired={false} onFinish={onFinish} />);
     await userEvent.click(screen.getByRole("button", { name: "Submit" }));
     await waitFor(() => expect(onFinish).toHaveBeenCalledTimes(2));
     expect(Object.keys(onFinish.mock.calls[1][0] as object)).not.toContain("alias");
@@ -163,13 +163,13 @@ describe("useMountRegistry lifecycle", () => {
 
   it("submits after a required field is unmounted, rather than validating a field the user can no longer see", async () => {
     const onFinish = vi.fn();
-    const { rerender } = render(<GatedForm showOptional={false} showОбязательно onFinish={onFinish} />);
+    const { rerender } = render(<GatedForm showOptional={false} showRequired onFinish={onFinish} />);
 
     await userEvent.click(screen.getByRole("button", { name: "Submit" }));
-    expect(await screen.findByText("Токен URL is required")).toBeInTheDocument();
+    expect(await screen.findByText("Token URL is required")).toBeInTheDocument();
     expect(onFinish).not.toHaveBeenCalled();
 
-    rerender(<GatedForm showOptional={false} showОбязательно={false} onFinish={onFinish} />);
+    rerender(<GatedForm showOptional={false} showRequired={false} onFinish={onFinish} />);
     await userEvent.click(screen.getByRole("button", { name: "Submit" }));
     await waitFor(() => expect(onFinish).toHaveBeenCalledTimes(1));
     expect(Object.keys(onFinish.mock.calls[0][0] as object)).not.toContain("token_url");

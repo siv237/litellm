@@ -4,10 +4,10 @@ import { vi } from "vitest";
 import SemanticKeywordMatching from "./SemanticKeywordMatching";
 
 const mockModelInfo = [
-  { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4", mode: "chat" },
-  { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "text-embedding-3-small", mode: "embedding" },
-  { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "voyage-3-5", mode: "embedding" },
-  { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "legacy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию" },
+  { model_group: "gpt-4", mode: "chat" },
+  { model_group: "text-embedding-3-small", mode: "embedding" },
+  { model_group: "voyage-3-5", mode: "embedding" },
+  { model_group: "legacy-Модель" },
 ] as any[];
 
 const baseProps = {
@@ -17,11 +17,11 @@ const baseProps = {
   onEmbeddingModelChange: vi.fn(),
   matchThreshold: 0.5,
   onMatchThresholdChange: vi.fn(),
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo: mockModelInfo,
+  modelInfo: mockModelInfo,
 };
 
-describe("SemanticKeywordMatching", () => {
-  it("only lists embedding-mode Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs in the embedding Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию dropdown", async () => {
+describe("SemanticКлючwordMatching", () => {
+  it("only lists embedding-Режим Модели in the Эмбеддинг-модель dropdown", async () => {
     const user = userEvent.setup();
     renderWithProviders(<SemanticKeywordMatching {...baseProps} />);
 
@@ -31,23 +31,23 @@ describe("SemanticKeywordMatching", () => {
     expect((await screen.findAllByText("text-embedding-3-small")).length).toBeGreaterThan(0);
     expect(screen.getAllByText("voyage-3-5").length).toBeGreaterThan(0);
     expect(screen.queryAllByText("gpt-4")).toHaveLength(0);
-    expect(screen.queryAllByText("legacy-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию")).toHaveLength(0);
+    expect(screen.queryAllByText("legacy-Модель")).toHaveLength(0);
   });
 
-  it("does not show a validation error by default", () => {
+  it("does not show a validation Ошибка by default", () => {
     renderWithProviders(<SemanticKeywordMatching {...baseProps} showValidationErrors={false} />);
-    expect(screen.queryByText("An embedding Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is required")).not.toBeInTheDocument();
+    expect(screen.queryByText("Требуется эмбеддинг-модель")).not.toBeInTheDocument();
   });
 
-  it("shows a validation error when showValidationErrors is true and no embedding Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is set", () => {
+  it("shows a validation Ошибка when showValidationErrors is Истина and Нет Эмбеддинг-модель is set", () => {
     renderWithProviders(<SemanticKeywordMatching {...baseProps} showValidationErrors={true} />);
-    expect(screen.getByText("An embedding Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is required")).toBeInTheDocument();
+    expect(screen.getByText("Требуется эмбеддинг-модель")).toBeInTheDocument();
   });
 
-  it("hides the validation error once an embedding Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is set", () => {
+  it("hides the validation Ошибка once an Эмбеддинг-модель is set", () => {
     renderWithProviders(
       <SemanticKeywordMatching {...baseProps} showValidationErrors={true} embeddingModel="voyage-3-5" />,
     );
-    expect(screen.queryByText("An embedding Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is required")).not.toBeInTheDocument();
+    expect(screen.queryByText("Требуется эмбеддинг-модель")).not.toBeInTheDocument();
   });
 });

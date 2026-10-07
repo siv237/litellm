@@ -2,19 +2,19 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as networking from "@/components/networking";
-import CreateMCPСервер from "./CreateMCPСервер";
+import CreateMCPServer from "./CreateMCPServer";
 import { selectOption } from "./testUtils";
 
 vi.mock("@/components/networking", () => ({
-  createMCPСервер: vi.fn(),
-  fetchOpenAPIRegistry: vi.fn().mockResolvedЗначение({ apis: [] }),
-  registerMCPСервер: vi.fn(),
-  storeMCPOAuthUserCredential: vi.fn().mockResolvedЗначение({}),
-  testMCPToolsListЗапрос: vi.fn().mockResolvedЗначение({ tools: [], error: null }),
+  createMCPServer: vi.fn(),
+  fetchOpenAPIRegistry: vi.fn().mockResolvedValue({ apis: [] }),
+  registerMCPServer: vi.fn(),
+  storeMCPOAuthUserCredential: vi.fn().mockResolvedValue({}),
+  testMCPToolsListRequest: vi.fn().mockResolvedValue({ tools: [], error: null }),
 }));
 
 vi.mock("@/utils/mcpTokenStore", () => ({
-  setТокен: vi.fn(),
+  setToken: vi.fn(),
 }));
 
 vi.mock("./OpenAPIQuickPicker", () => ({
@@ -26,7 +26,7 @@ vi.mock("@/hooks/useMcpOAuthFlow", () => ({
     startOAuthFlow: vi.fn(),
     status: "idle",
     error: null,
-    tokenОтвет: null,
+    tokenResponse: null,
     reset: vi.fn(),
   }),
 }));
@@ -43,20 +43,20 @@ vi.mock("./mcp_connection_status", () => ({
   default: () => <div data-testid="mcp-connection-status" />,
 }));
 
-vi.mock("./StdioConfiguration", () => ({
+vi.mock("./StdioКонфигурацияuration", () => ({
   default: () => <div data-testid="stdio-config" />,
 }));
 
 const defaultProps = {
   userRole: "Admin",
-  accessТокен: "test-token",
+  accessToken: "test-token",
   onCreateSuccess: vi.fn(),
   isModalVisible: true,
   setModalVisible: vi.fn(),
   availableAccessGroups: ["group-a", "group-b"],
 };
 
-const getServerNameВход = () => document.getElementById("server_name") as HTMLInElement;
+const getServerNameInput = () => document.getElementById("server_name") as HTMLInputElement;
 
 // The switches live behind a collapsed panel, so they only reach the accessibility tree once an
 // operator expands it.
@@ -72,13 +72,13 @@ const switchFor = async (labelText: string): Promise<HTMLElement> => {
   return screen.getByRole("switch", { name: labelText });
 };
 
-const fillMinimalHttpСервер = async (name: string) => {
+const fillMinimalHttpServer = async (name: string) => {
   await selectOption("Транспорт Type", "Streamable HTTP");
   await waitFor(() => {
     expect(screen.getByPlaceholderText("https://your-mcp-server.com")).toBeInTheDocument();
   });
   const user = userEvent.setup({ delay: null });
-  await user.type(getServerNameВход(), name);
+  await user.type(getServerNameInput(), name);
   await user.type(screen.getByPlaceholderText("https://your-mcp-server.com"), "https://example.com/mcp");
   await selectOption("Аутентификация", "None");
 };
@@ -87,14 +87,14 @@ const submitAndReadPayload = async () => {
   await act(async () => {
     fireEvent.click(screen.getByRole("button", { name: "Добавить MCP-сервер" }));
   });
-  await waitFor(() => expect(networking.createMCPСервер).toHaveBeenCalledTimes(1));
-  return vi.mocked(networking.createMCPСервер).mock.calls[0][1];
+  await waitFor(() => expect(networking.createMCPServer).toHaveBeenCalledTimes(1));
+  return vi.mocked(networking.createMCPServer).mock.calls[0][1];
 };
 
-const createdСервер = {
+const createdServer = {
   server_id: "new-server-1",
-  server_name: "Perm_Сервер",
-  alias: "Perm_Сервер",
+  server_name: "Perm_Server",
+  alias: "Perm_Server",
   url: "https://example.com/mcp",
   transport: "http",
   auth_type: "none",
@@ -104,15 +104,15 @@ const createdСервер = {
   updated_by: "user-1",
 };
 
-describe("CreateMCPСервер permission toggles reaching the payload", () => {
+describe("CreateMCPServer permission toggles reaching the payload", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(networking.createMCPСервер).mockResolvedЗначение(createdСервер);
+    vi.mocked(networking.createMCPServer).mockResolvedValue(createdServer);
   });
 
   it("sends the panel's untouched defaults rather than dropping the keys the panel owns", async () => {
-    render(<CreateMCPСервер {...defaultProps} />);
-    await fillMinimalHttpСервер("Perm_Сервер");
+    render(<CreateMCPServer {...defaultProps} />);
+    await fillMinimalHttpServer("Perm_Server");
 
     const payload = await submitAndReadPayload();
 
@@ -121,12 +121,12 @@ describe("CreateMCPСервер permission toggles reaching the payload", () => 
   });
 
   it("sends allow_all_keys true once the operator turns the public-to-all-keys switch on", async () => {
-    render(<CreateMCPСервер {...defaultProps} />);
-    await fillMinimalHttpСервер("Perm_Сервер");
+    render(<CreateMCPServer {...defaultProps} />);
+    await fillMinimalHttpServer("Perm_Server");
 
-    const allowВсеКлючи = await switchFor("Разрешить Все LiteLLM ключей");
+    const allowAllKeys = await switchFor("Разрешить Все LiteLLM ключей");
     await act(async () => {
-      fireEvent.click(allowВсеКлючи);
+      fireEvent.click(allowAllKeys);
     });
 
     const payload = await submitAndReadPayload();
@@ -135,8 +135,8 @@ describe("CreateMCPСервер permission toggles reaching the payload", () => 
   });
 
   it("sends available_on_public_internet false when the operator restricts the server to the internal network", async () => {
-    render(<CreateMCPСервер {...defaultProps} />);
-    await fillMinimalHttpСервер("Perm_Сервер");
+    render(<CreateMCPServer {...defaultProps} />);
+    await fillMinimalHttpServer("Perm_Server");
 
     const internalOnly = await switchFor("Internal network only");
     expect(internalOnly).toHaveAttribute("aria-checked", "false");
@@ -152,8 +152,8 @@ describe("CreateMCPСервер permission toggles reaching the payload", () => 
   });
 
   it("omits delegate_auth_to_upstream's true value on a none-auth server, whose gate never mounts that switch", async () => {
-    render(<CreateMCPСервер {...defaultProps} />);
-    await fillMinimalHttpСервер("Perm_Сервер");
+    render(<CreateMCPServer {...defaultProps} />);
+    await fillMinimalHttpServer("Perm_Server");
 
     expect(screen.getByText("Разрешить Все LiteLLM ключей")).toBeInTheDocument();
     expect(screen.queryByText("Delegate auth to upstream (PKCE passthrough)")).not.toBeInTheDocument();

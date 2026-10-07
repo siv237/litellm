@@ -1,13 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import КлючРежимlUsageView from "./КлючРежимlUsageView";
+import KeyModelUsageView from "./КлючРежимlИспользованиеView";
 import { TopModelData } from "../types";
 
-describe("КлючРежимlUsageView", () => {
+describe("КлючРежимlИспользованиеView", () => {
   const mockTopModels: TopModelData[] = [
     {
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       spend: 150.5,
       requests: 105,
       successful_requests: 100,
@@ -15,7 +15,7 @@ describe("КлючРежимlUsageView", () => {
       tokens: 50000,
     },
     {
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo",
       spend: 75.25,
       requests: 200,
       successful_requests: 195,
@@ -25,47 +25,47 @@ describe("КлючРежимlUsageView", () => {
   ];
 
   it("should render", () => {
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
     expect(screen.getByText("Режимl Использование")).toBeInTheDocument();
   });
 
-  it("should return null when topModels is empty", () => {
-    const { container } = render(<КлючРежимlUsageView topModels={[]} />);
+  it("should return null when topРежимls is empty", () => {
+    const { container } = render(<KeyModelUsageView topModels={[]} />);
     expect(container).toBeEmptyDOMElement();
   });
 
   it("should display Режимl Использование title", () => {
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
     expect(screen.getByText("Режимl Использование")).toBeInTheDocument();
   });
 
   it("should display Таблица view button", () => {
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
     expect(screen.getByRole("button", { name: "Таблица" })).toBeInTheDocument();
   });
 
   it("should display Chart view button", () => {
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
     expect(screen.getByRole("button", { name: "Chart" })).toBeInTheDocument();
   });
 
   it("should default to table view", () => {
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
     const tableButton = screen.getByRole("button", { name: "Таблица" });
     expect(tableButton).toHaveClass("bg-info/15");
   });
 
   it("should display all table column headers", () => {
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
     expect(screen.getByText("Режимl")).toBeInTheDocument();
-    expect(screen.getByText("Расход (USD)")).toBeInTheDocument();
+    expect(screen.getByText("Spend (USD)")).toBeInTheDocument();
     expect(screen.getByText("Successful")).toBeInTheDocument();
     expect(screen.getByText("Ошибка")).toBeInTheDocument();
-    expect(screen.getByText("Токенs")).toBeInTheDocument();
+    expect(screen.getByText("Tokens")).toBeInTheDocument();
   });
 
-  it("should display Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию data in table view", () => {
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+  it("should display model data in table view", () => {
+    render(<KeyModelUsageView topModels={mockTopModels} />);
     expect(screen.getByText("gpt-4")).toBeInTheDocument();
     expect(screen.getByText("gpt-3.5-turbo")).toBeInTheDocument();
     expect(screen.getByText("$150.50")).toBeInTheDocument();
@@ -73,9 +73,9 @@ describe("КлючРежимlUsageView", () => {
   });
 
   it("should format spend values with two decimal places", () => {
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithDecimalРасход: TopModelData[] = [
+    const modelsWithDecimalSpend: TopModelData[] = [
       {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
+        model: "test-model",
         spend: 123.456,
         requests: 10,
         successful_requests: 10,
@@ -83,14 +83,14 @@ describe("КлючРежимlUsageView", () => {
         tokens: 1000,
       },
     ];
-    render(<КлючРежимlUsageView topModels={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithDecimalРасход} />);
+    render(<KeyModelUsageView topModels={modelsWithDecimalSpend} />);
     expect(screen.getByText("$123.46")).toBeInTheDocument();
   });
 
   it("should format large spend values with commas", () => {
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithLargeРасход: TopModelData[] = [
+    const modelsWithLargeSpend: TopModelData[] = [
       {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
+        model: "test-model",
         spend: 1234567.89,
         requests: 10,
         successful_requests: 10,
@@ -98,28 +98,28 @@ describe("КлючРежимlUsageView", () => {
         tokens: 1000,
       },
     ];
-    render(<КлючРежимlUsageView topModels={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithLargeРасход} />);
+    render(<KeyModelUsageView topModels={modelsWithLargeSpend} />);
     expect(screen.getByText("$1,234,567.89")).toBeInTheDocument();
   });
 
   it("should display successful requests with green styling", () => {
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
     const successfulElements = screen.getAllByText("100");
     const greenElement = successfulElements.find((el) => el.closest("span")?.classList.contains("text-success"));
     expect(greenElement).toBeDefined();
   });
 
   it("should display failed requests with red styling", () => {
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
     const failedElements = screen.getAllByText("5");
     const redElement = failedElements.find((el) => el.closest("span")?.classList.contains("text-destructive"));
     expect(redElement).toBeDefined();
   });
 
   it("should format token numbers with commas", () => {
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithLargeTokens: TopModelData[] = [
+    const modelsWithLargeTokens: TopModelData[] = [
       {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
+        model: "test-model",
         spend: 100,
         requests: 10,
         successful_requests: 10,
@@ -127,14 +127,14 @@ describe("КлючРежимlUsageView", () => {
         tokens: 1234567,
       },
     ];
-    render(<КлючРежимlUsageView topModels={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithLargeTokens} />);
+    render(<KeyModelUsageView topModels={modelsWithLargeTokens} />);
     expect(screen.getByText("1,234,567")).toBeInTheDocument();
   });
 
-  it("should display dash for missing Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию value", () => {
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithMissingModel: TopModelData[] = [
+  it("should display dash for missing model value", () => {
+    const modelsWithMissingModel: TopModelData[] = [
       {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "",
+        model: "",
         spend: 100,
         requests: 10,
         successful_requests: 10,
@@ -142,14 +142,14 @@ describe("КлючРежимlUsageView", () => {
         tokens: 1000,
       },
     ];
-    render(<КлючРежимlUsageView topModels={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithMissingModel} />);
+    render(<KeyModelUsageView topModels={modelsWithMissingModel} />);
     expect(screen.getByText("-")).toBeInTheDocument();
   });
 
   it("should display zero values correctly", () => {
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithZeros: TopModelData[] = [
+    const modelsWithZeros: TopModelData[] = [
       {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
+        model: "test-model",
         spend: 0,
         requests: 0,
         successful_requests: 0,
@@ -157,14 +157,14 @@ describe("КлючРежимlUsageView", () => {
         tokens: 0,
       },
     ];
-    render(<КлючРежимlUsageView topModels={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithZeros} />);
+    render(<KeyModelUsageView topModels={modelsWithZeros} />);
     expect(screen.getByText("-")).toBeInTheDocument();
     expect(screen.getAllByText("0").length).toBeGreaterThan(0);
   });
 
   it("should switch to chart view when chart button is clicked", async () => {
     const user = userEvent.setup();
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
 
     const chartButton = screen.getByRole("button", { name: "Chart" });
     await user.click(chartButton);
@@ -176,7 +176,7 @@ describe("КлючРежимlUsageView", () => {
 
   it("should switch back to table view when table button is clicked", async () => {
     const user = userEvent.setup();
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
 
     const chartButton = screen.getByRole("button", { name: "Chart" });
     const tableButton = screen.getByRole("button", { name: "Таблица" });
@@ -190,7 +190,7 @@ describe("КлючРежимlUsageView", () => {
 
   it("should display chart when chart view is selected", async () => {
     const user = userEvent.setup();
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
 
     const chartButton = screen.getByRole("button", { name: "Chart" });
     await user.click(chartButton);
@@ -198,13 +198,13 @@ describe("КлючРежимlUsageView", () => {
     expect(screen.queryByText("Режимl")).not.toBeInTheDocument();
   });
 
-  it("renders one cyan bar per Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию with Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию names on the axis in chart view", async () => {
+  it("renders one cyan bar per model with model names on the axis in chart view", async () => {
     const user = userEvent.setup();
-    const { container } = render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    const { container } = render(<KeyModelUsageView topModels={mockTopModels} />);
 
     await user.click(screen.getByRole("button", { name: "Chart" }));
 
-    const bars = container.querySelectorВсе("path.recharts-rectangle");
+    const bars = container.querySelectorAll("path.recharts-rectangle");
     expect(bars).toHaveLength(2);
     const fills = new Set(Array.from(bars).map((bar) => bar.getAttribute("fill")));
     expect(fills).toEqual(new Set(["var(--color-cyan-500, #06b6d4)"]));
@@ -213,14 +213,14 @@ describe("КлючРежимlUsageView", () => {
   });
 
   it("should display table when table view is selected", () => {
-    render(<КлючРежимlUsageView topModels={mockTopModels} />);
+    render(<KeyModelUsageView topModels={mockTopModels} />);
     expect(screen.getByText("Режимl")).toBeInTheDocument();
     expect(screen.getByText("gpt-4")).toBeInTheDocument();
   });
 
-  it("should handle multiple Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию entries", () => {
+  it("should handle multiple model entries", () => {
     const manyModels: TopModelData[] = Array.from({ length: 10 }, (_, i) => ({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: `Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-${i + 1}`,
+      model: `model-${i + 1}`,
       spend: 100 + i,
       requests: 50 + i,
       successful_requests: 45 + i,
@@ -228,15 +228,15 @@ describe("КлючРежимlUsageView", () => {
       tokens: 10000 + i * 1000,
     }));
 
-    render(<КлючРежимlUsageView topModels={manyModels} />);
-    expect(screen.getByText("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1")).toBeInTheDocument();
-    expect(screen.getByText("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-10")).toBeInTheDocument();
+    render(<KeyModelUsageView topModels={manyModels} />);
+    expect(screen.getByText("model-1")).toBeInTheDocument();
+    expect(screen.getByText("model-10")).toBeInTheDocument();
   });
 
   it("should format successful requests with toLocaleString", () => {
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithLargeNumbers: TopModelData[] = [
+    const modelsWithLargeNumbers: TopModelData[] = [
       {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
+        model: "test-model",
         spend: 100,
         requests: 1000,
         successful_requests: 999999,
@@ -244,14 +244,14 @@ describe("КлючРежимlUsageView", () => {
         tokens: 1000,
       },
     ];
-    render(<КлючРежимlUsageView topModels={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithLargeNumbers} />);
+    render(<KeyModelUsageView topModels={modelsWithLargeNumbers} />);
     expect(screen.getByText("999,999")).toBeInTheDocument();
   });
 
   it("should format failed requests with toLocaleString", () => {
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithLargeNumbers: TopModelData[] = [
+    const modelsWithLargeNumbers: TopModelData[] = [
       {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
+        model: "test-model",
         spend: 100,
         requests: 1000,
         successful_requests: 1,
@@ -259,14 +259,14 @@ describe("КлючРежимlUsageView", () => {
         tokens: 1000,
       },
     ];
-    render(<КлючРежимlUsageView topModels={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithLargeNumbers} />);
+    render(<KeyModelUsageView topModels={modelsWithLargeNumbers} />);
     expect(screen.getByText("999,999")).toBeInTheDocument();
   });
 
   it("should display zero for missing successful_requests", () => {
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithMissingFields: TopModelData[] = [
+    const modelsWithMissingFields: TopModelData[] = [
       {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
+        model: "test-model",
         spend: 100,
         requests: 10,
         successful_requests: undefined as any,
@@ -274,16 +274,16 @@ describe("КлючРежимlUsageView", () => {
         tokens: 1000,
       },
     ];
-    render(<КлючРежимlUsageView topModels={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithMissingFields} />);
+    render(<KeyModelUsageView topModels={modelsWithMissingFields} />);
     const zeroElements = screen.getAllByText("0");
     const successfulZero = zeroElements.find((el) => el.closest("span")?.classList.contains("text-success"));
     expect(successfulZero).toBeDefined();
   });
 
   it("should display zero for missing failed_requests", () => {
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithMissingFields: TopModelData[] = [
+    const modelsWithMissingFields: TopModelData[] = [
       {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
+        model: "test-model",
         spend: 100,
         requests: 10,
         successful_requests: 10,
@@ -291,14 +291,14 @@ describe("КлючРежимlUsageView", () => {
         tokens: 1000,
       },
     ];
-    render(<КлючРежимlUsageView topModels={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithMissingFields} />);
+    render(<KeyModelUsageView topModels={modelsWithMissingFields} />);
     expect(screen.getAllByText("0").length).toBeGreaterThan(0);
   });
 
   it("should display zero for missing tokens", () => {
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithMissingFields: TopModelData[] = [
+    const modelsWithMissingFields: TopModelData[] = [
       {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "test-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию",
+        model: "test-model",
         spend: 100,
         requests: 10,
         successful_requests: 10,
@@ -306,7 +306,7 @@ describe("КлючРежимlUsageView", () => {
         tokens: undefined as any,
       },
     ];
-    render(<КлючРежимlUsageView topModels={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюsWithMissingFields} />);
+    render(<KeyModelUsageView topModels={modelsWithMissingFields} />);
     expect(screen.getAllByText("0").length).toBeGreaterThan(0);
   });
 });

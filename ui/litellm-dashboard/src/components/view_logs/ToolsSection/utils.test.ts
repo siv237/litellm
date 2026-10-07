@@ -3,11 +3,11 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { parseToolsFromLog, hasИнструменты } from "./utils";
+import { parseToolsFromLog, hasTools } from "./utils";
 import { LogEntry } from "../columns";
 
 describe("ИнструментыSection utils", () => {
-  describe("parseToolsFromLog", () => {
+  describe("parseИнструментыFromLog", () => {
     it("should return empty array when no tools in request", () => {
       const log: Partial<LogEntry> = {
         request_id: "test-1",
@@ -94,7 +94,7 @@ describe("ИнструментыSection utils", () => {
               type: "function",
               function: {
                 name: "send_email",
-                description: "Send email",
+                description: "Отправить email",
               },
             },
           ],
@@ -313,7 +313,7 @@ describe("ИнструментыSection utils", () => {
             {
               type: "response.done",
               response: {
-                выходput: [
+                output: [
                   {
                     type: "function_call",
                     call_id: "call_xyz",
@@ -345,7 +345,7 @@ describe("ИнструментыSection utils", () => {
         response: {},
       };
 
-      expect(hasИнструменты(log as LogEntry)).toBe(false);
+      expect(hasTools(log as LogEntry)).toBe(false);
     });
 
     it("should return true when tools present in request", () => {
@@ -364,7 +364,7 @@ describe("ИнструментыSection utils", () => {
         response: {},
       } as any;
 
-      expect(hasИнструменты(log as LogEntry)).toBe(true);
+      expect(hasTools(log as LogEntry)).toBe(true);
     });
   });
 });

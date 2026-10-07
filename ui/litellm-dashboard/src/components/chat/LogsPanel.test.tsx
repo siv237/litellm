@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import ЖурналыPanel from "./ЖурналыPanel";
+import LogsPanel from "./LogsPanel";
 import { renderWithProviders } from "../../../tests/test-utils";
 import { uiSpendLogDetailsCall, uiSpendLogsCall } from "../networking";
 
@@ -14,14 +14,14 @@ const mockedDetailsCall = vi.mocked(uiSpendLogDetailsCall);
 
 const sampleRow = {
   request_id: "req-abc-123",
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o",
+  model: "gpt-4o",
   status: "success",
   spend: 0.0123,
   total_tokens: 1500,
   prompt_tokens: 1000,
   completion_tokens: 500,
-  startВремя: "2026-07-18T10:00:00Z",
-  endВремя: "2026-07-18T10:00:02Z",
+  startTime: "2026-07-18T10:00:00Z",
+  endTime: "2026-07-18T10:00:02Z",
   request_duration_ms: 2000,
 };
 
@@ -36,44 +36,44 @@ const paginated = (rows: unknown[]) => ({
 describe("ЖурналыPanel", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockedLogsCall.mockResolvedЗначение(paginated([sampleRow]));
-    mockedDetailsCall.mockResolvedЗначение({ messages: [{ role: "user", content: "hi" }], response: { ok: true } });
+    mockedLogsCall.mockResolvedValue(paginated([sampleRow]));
+    mockedDetailsCall.mockResolvedValue({ messages: [{ role: "Пользователь", content: "hi" }], response: { ok: true } });
   });
 
-  it("scopes the query to the current user so it only shows their own logs", async () => {
-    renderWithProviders(<ЖурналыPanel accessТокен="tok-scope" userId="user-42" />);
+  it("scopes the query to the current Пользователь so it only shows their own Журналы", async () => {
+    renderWithProviders(<LogsPanel accessToken="tok-Область" userId="Пользователь-42" />);
 
     await waitFor(() => expect(mockedLogsCall).toHaveBeenCalled());
     expect(mockedLogsCall).toHaveBeenCalledWith(
       expect.objectContaining({
-        accessТокен: "tok-scope",
-        params: expect.objectContaining({ user_id: "user-42" }),
+        accessToken: "tok-Область",
+        params: expect.objectContaining({ user_id: "Пользователь-42" }),
       }),
     );
   });
 
   it("renders a row for each returned log", async () => {
-    renderWithProviders(<ЖурналыPanel accessТокен="tok-rows" userId="user-1" />);
+    renderWithProviders(<LogsPanel accessToken="tok-rows" userId="Пользователь-1" />);
 
     expect(await screen.findByText("gpt-4o")).toBeInTheDocument();
     expect(screen.getByText("1,500")).toBeInTheDocument();
     expect(screen.getByText("Success")).toBeInTheDocument();
   });
 
-  it("shows an empty state when there are no logs", async () => {
-    mockedLogsCall.mockResolvedЗначение(paginated([]));
-    renderWithProviders(<ЖурналыPanel accessТокен="tok-empty" userId="user-1" />);
+  it("shows an empty state when there are Нет Журналы", async () => {
+    mockedLogsCall.mockResolvedValue(paginated([]));
+    renderWithProviders(<LogsPanel accessToken="tok-empty" userId="Пользователь-1" />);
 
     expect(await screen.findByText("Нет журналов за этот период")).toBeInTheDocument();
   });
 
-  it("opens the detail dialog and lazily loads request/response when a row is clicked", async () => {
-    renderWithProviders(<ЖурналыPanel accessТокен="tok-detail" userId="user-1" />);
+  it("opens the detail dialog and lazily loads Запрос/Ответ when a row is clicked", async () => {
+    renderWithProviders(<LogsPanel accessToken="tok-detail" userId="Пользователь-1" />);
 
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCell = await screen.findByText("gpt-4o");
+    const modelCell = await screen.findByText("gpt-4o");
     expect(mockedDetailsCall).not.toHaveBeenCalled();
 
-    fireEvent.click(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюCell);
+    fireEvent.click(modelCell);
 
     expect(await screen.findByText("Детали запроса")).toBeInTheDocument();
     await waitFor(() =>
@@ -81,21 +81,21 @@ describe("ЖурналыPanel", () => {
     );
   });
 
-  it("shows an error state (not the empty state) when the logs query fails", async () => {
-    mockedLogsCall.mockRejectedЗначение(new Ошибка("boom"));
-    renderWithProviders(<ЖурналыPanel accessТокен="tok-err" userId="user-1" />);
+  it("shows an Ошибка state (not the empty state) when the Журналы query fails", async () => {
+    mockedLogsCall.mockRejectedValue(new Error("boom"));
+    renderWithProviders(<LogsPanel accessToken="tok-err" userId="Пользователь-1" />);
 
     expect(await screen.findByText("Не удалось загрузить ваши журналы")).toBeInTheDocument();
     expect(screen.queryByText("Нет журналов за этот период")).not.toBeInTheDocument();
   });
 
-  it("falls back to proxy_server_request when messages is empty for the request payload", async () => {
-    mockedDetailsCall.mockResolvedЗначение({
+  it("falls Назад to proxy_server_request when messages is empty for the Запрос payload", async () => {
+    mockedDetailsCall.mockResolvedValue({
       messages: {},
-      proxy_server_request: { body: { messages: [{ role: "user", content: "hello from proxy" }] } },
+      proxy_server_request: { body: { messages: [{ role: "Пользователь", content: "hello from proxy" }] } },
       response: { ok: true },
     });
-    renderWithProviders(<ЖурналыPanel accessТокен="tok-fallback" userId="user-1" />);
+    renderWithProviders(<LogsPanel accessToken="tok-fallback" userId="Пользователь-1" />);
 
     fireEvent.click(await screen.findByText("gpt-4o"));
 

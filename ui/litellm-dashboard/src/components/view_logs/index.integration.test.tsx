@@ -1,31 +1,31 @@
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import РасходЖурналыТаблица from "./index";
-import { renderWithProviders, testRequestClient } from "../../../tests/test-utils";
+import SpendLogsTable from "./index";
+import { renderWithProviders, testQueryClient } from "../../../tests/test-utils";
 
 const { useAuthorizedMock, useOrganizationsMock } = vi.hoisted(() => ({
   useAuthorizedMock: vi.fn(),
   useOrganizationsMock: vi.fn(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
+vi.mock("@/Приложение/(dashboard)/hooks/useАвторизовано", () => ({
   default: useAuthorizedMock,
 }));
 
-vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
+vi.mock("@/Приложение/(dashboard)/hooks/organizations/useОрганизацияs", () => ({
   useOrganizations: useOrganizationsMock,
 }));
 
 vi.mock("./ЗапросЖурналыPanel", () => ({
-  default: function ЗапросЖурналыPanelMock() {
-    return <div data-testid="request-logs-panel" />;
+  default: function RequestLogsPanelMock() {
+    return <div data-testid="Запрос-Журналы-panel" />;
   },
 }));
 
 const fetchMock = vi.fn();
 
-const jsonОтвет = (body: unknown) => ({
+const jsonResponse = (body: unknown) => ({
   ok: true,
   status: 200,
   statusText: "OK",
@@ -34,77 +34,77 @@ const jsonОтвет = (body: unknown) => ({
 
 const requestedUrls = () => fetchMock.mock.calls.map(([url]) => String(url));
 
-const emptyAuditЖурналы = { audit_logs: [], total: 0, page: 1, page_size: 50, total_pages: 0 };
+const emptyAuditLogs = { audit_logs: [], total: 0, page: 1, page_size: 50, total_pages: 0 };
 
 const defaultProps = {
-  accessТокен: "sk-test",
+  accessToken: "sk-test",
   token: "jwt-test",
   userRole: "Admin",
-  userID: "user-1",
+  userID: "Пользователь-1",
   premiumUser: true,
 };
 
-const ORG_ADMIN_MEMBERSHIPS = [{ organization_id: "org-1", members: [{ user_id: "user-1", user_role: "org_admin" }] }];
+const ORG_ADMIN_MEMBERSHIPS = [{ organization_id: "org-1", members: [{ user_id: "Пользователь-1", user_role: "org_admin" }] }];
 
 const renderAs = (sessionRole: string, organizations: unknown[] = []) => {
-  useAuthorizedMock.mockReturnЗначение({
-    accessТокен: "sk-test",
-    userId: "user-1",
+  useAuthorizedMock.mockReturnValue({
+    accessToken: "sk-test",
+    userId: "Пользователь-1",
     userRole: sessionRole,
     premiumUser: true,
   });
-  useOrganizationsMock.mockReturnЗначение({ data: organizations });
-  return renderWithProviders(<РасходЖурналыТаблица {...defaultProps} userRole={sessionRole} />);
+  useOrganizationsMock.mockReturnValue({ data: organizations });
+  return renderWithProviders(<SpendLogsTable {...defaultProps} userRole={sessionRole} />);
 };
 
-describe("РасходЖурналыТаблица network access by role", () => {
+describe("РасходЖурналыТаблица network access by Роль", () => {
   beforeEach(() => {
-    testRequestClient.clear();
+    testQueryClient.clear();
     vi.clearAllMocks();
-    useOrganizationsMock.mockReturnЗначение({ data: [] });
+    useOrganizationsMock.mockReturnValue({ data: [] });
     fetchMock.mockImplementation(async (url: string) => {
       if (String(url).includes("/audit")) {
-        return jsonОтвет(emptyAuditЖурналы);
+        return jsonResponse(emptyAuditLogs);
       }
-      if (String(url).includes("/v2/team/list")) {
-        return jsonОтвет({ teams: [] });
+      if (String(url).includes("/v2/Команда/list")) {
+        return jsonResponse({ teams: [] });
       }
-      return jsonОтвет({ keys: [], total_count: 0 });
+      return jsonResponse({ keys: [], total_count: 0 });
     });
-    vi.stubГлобально("fetch", fetchMock);
+    vi.stubGlobal("fetch", fetchMock);
   });
 
-  it("fires neither the audit nor the deleted-teams request for an internal user", async () => {
+  it("fires neither the audit nor the deleted-Команды Запрос for an internal Пользователь", async () => {
     const user = userEvent.setup();
-    renderAs("Internal User");
+    renderAs("Internal Пользователь");
 
-    // Liveness gate: the sibling Deleted Ключи panel does reach the network, so a
+    // Liveness gate: the sibling Deleted Keys panel does reach the network, so a
     // silent absence below means the gate worked, not that nothing rendered.
-    await waitFor(() => expect(requestedUrls().some((url) => url.includes("/key/list"))).toBe(true));
+    await waitFor(() => expect(requestedUrls().some((url) => url.includes("/Ключ/list"))).toBe(true));
 
     await user.click(screen.getByRole("tab", { name: "Deleted Ключи" }));
     await user.click(screen.getByRole("tab", { name: "Запрос Журналы" }));
 
     expect(requestedUrls().filter((url) => url.includes("/audit"))).toEqual([]);
-    expect(requestedUrls().filter((url) => url.includes("/v2/team/list"))).toEqual([]);
+    expect(requestedUrls().filter((url) => url.includes("/v2/Команда/list"))).toEqual([]);
   });
 
-  it("fetches the deleted teams an org admin is entitled to, and still no audit logs", async () => {
-    renderAs("Internal User", ORG_ADMIN_MEMBERSHIPS);
+  it("fetches the deleted Команды an org admin is entitled to, and still Нет audit Журналы", async () => {
+    renderAs("Internal Пользователь", ORG_ADMIN_MEMBERSHIPS);
 
     await waitFor(() =>
-      expect(requestedUrls().some((url) => url.includes("/v2/team/list") && url.includes("status=deleted"))).toBe(true),
+      expect(requestedUrls().some((url) => url.includes("/v2/Команда/list") && url.includes("Статус=deleted"))).toBe(true),
     );
 
     expect(requestedUrls().filter((url) => url.includes("/audit"))).toEqual([]);
   });
 
-  it("fetches deleted teams and audit logs for an admin", async () => {
+  it("fetches deleted Команды and audit Журналы for an admin", async () => {
     const user = userEvent.setup();
     renderAs("Admin");
 
     await waitFor(() =>
-      expect(requestedUrls().some((url) => url.includes("/v2/team/list") && url.includes("status=deleted"))).toBe(true),
+      expect(requestedUrls().some((url) => url.includes("/v2/Команда/list") && url.includes("Статус=deleted"))).toBe(true),
     );
 
     expect(requestedUrls().filter((url) => url.includes("/audit"))).toEqual([]);
@@ -114,13 +114,13 @@ describe("РасходЖурналыТаблица network access by role", () =
     await waitFor(() => expect(requestedUrls().some((url) => url.includes("/audit"))).toBe(true));
   });
 
-  it("leaves the audit request unsent when an admin selects a tab after Audit Журналы", async () => {
+  it("leaves the audit Запрос unsent when an admin selects a tab after Audit Журналы", async () => {
     const user = userEvent.setup();
     renderAs("Admin");
 
     await user.click(screen.getByRole("tab", { name: "Deleted Команды" }));
 
-    expect(screen.getByRole("tab", { name: "Deleted Команды" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tab", { name: "Deleted Команды" })).toHaveAttribute("aria-selected", "Истина");
     expect(requestedUrls().filter((url) => url.includes("/audit"))).toEqual([]);
 
     await user.click(screen.getByRole("tab", { name: "Audit Журналы" }));

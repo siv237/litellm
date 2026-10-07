@@ -1,52 +1,52 @@
 import {
-  DeleteProxyКонфигурацияПолеЗапрос,
-  useDeleteProxyКонфигурацияПоле,
-  useProxyКонфигурация,
-} from "@/app/(dashboard)/hooks/proxyКонфигурация/useProxyКонфигурация";
-import { useStoreRequestInРасходЖурналы } from "@/app/(dashboard)/hooks/storeRequestInРасходЖурналы/useStoreRequestInРасходЖурналы";
+  DeleteProxyConfigFieldRequest,
+  useDeleteProxyConfigField,
+  useProxyConfig,
+} from "@/app/(dashboard)/hooks/proxyConfig/useProxyConfig";
+import { useStoreRequestInSpendLogs } from "@/app/(dashboard)/hooks/storeRequestInSpendLogs/useStoreRequestInSpendLogs";
 import { toast } from "@/lib/toast";
-import { parseОшибкаСообщение } from "@/components/shared/errorUtils";
+import { parseErrorMessage } from "@/components/shared/errorUtils";
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "../../../../../tests/test-utils";
 import LoggingSettings from "./LoggingSettings";
 
-vi.mock("@/app/(dashboard)/hooks/storeRequestInРасходЖурналы/useStoreRequestInРасходЖурналы");
-vi.mock("@/app/(dashboard)/hooks/proxyКонфигурация/useProxyКонфигурация", async () => {
-  const actual = await vi.importActual<typeof import("@/app/(dashboard)/hooks/proxyКонфигурация/useProxyКонфигурация")>(
-    "@/app/(dashboard)/hooks/proxyКонфигурация/useProxyКонфигурация",
+vi.mock("@/Приложение/(dashboard)/hooks/storeЗапросInSpendЖурналы/useStoreЗапросInSpendЖурналы");
+vi.mock("@/Приложение/(dashboard)/hooks/proxyКонфигурация/useProxyКонфигурация", async () => {
+  const actual = await vi.importActual<typeof import("@/app/(dashboard)/hooks/proxyConfig/useProxyConfig")>(
+    "@/Приложение/(dashboard)/hooks/proxyКонфигурация/useProxyКонфигурация",
   );
   return {
     ...actual,
-    useProxyКонфигурация: vi.fn(),
-    useDeleteProxyКонфигурацияПоле: vi.fn(),
+    useProxyConfig: vi.fn(),
+    useDeleteProxyConfigField: vi.fn(),
   };
 });
 vi.mock("@/components/shared/errorUtils", () => ({
-  parseОшибкаСообщение: vi.fn(),
+  parseErrorMessage: vi.fn(),
 }));
 
-const mockUseStoreRequestInРасходЖурналы = vi.mocked(useStoreRequestInРасходЖурналы);
-const mockUseProxyКонфигурация = vi.mocked(useProxyКонфигурация);
-const mockUseDeleteProxyКонфигурацияПоле = vi.mocked(useDeleteProxyКонфигурацияПоле);
+const mockUseStoreRequestInSpendLogs = vi.mocked(useStoreRequestInSpendLogs);
+const mockUseProxyConfig = vi.mocked(useProxyConfig);
+const mockUseDeleteProxyConfigField = vi.mocked(useDeleteProxyConfigField);
 const mockToast = vi.mocked(toast);
-const mockParseОшибкаСообщение = vi.mocked(parseОшибкаСообщение);
+const mockParseErrorMessage = vi.mocked(parseErrorMessage);
 
 describe("LoggingSettings", () => {
   const mockMutate = vi.fn();
-  const mockDeleteПоле = vi.fn();
+  const mockDeleteField = vi.fn();
   const mockRefetch = vi.fn();
 
   const clearedFieldNames = (): string[] =>
-    mockDeleteПоле.mock.calls.map((call) => (call[0] as DeleteProxyКонфигурацияПолеЗапрос).field_name);
+    mockDeleteField.mock.calls.map((call) => (call[0] as DeleteProxyConfigFieldRequest).field_name);
 
-  // Every необязательно knob already persisted. Clearing is only ever issued for a
-  // field that has a stored value, so any test abвыход the clear path has to say
+  // Every optional knob already persisted. Clearing is only ever issued for a
+  // field that has a stored value, so any test about the clear path has to say
   // so; the default mock below is an empty config, which is a proxy that has
   // never saved these settings and therefore has nothing to clear.
   const withEveryOptionalFieldStored = () =>
-    mockUseProxyКонфигурация.mockReturnЗначение({
+    mockUseProxyConfig.mockReturnValue({
       data: [
         {
           field_name: "maximum_spend_logs_retention_period",
@@ -58,39 +58,39 @@ describe("LoggingSettings", () => {
         {
           field_name: "maximum_spend_logs_cleanup_batch_size",
           field_type: "Integer",
-          field_description: "Rows per delete",
+          field_description: "Rows per Удалить",
           field_value: 2000,
           stored_in_db: true,
         },
         {
           field_name: "maximum_spend_logs_cleanup_max_batches",
           field_type: "Integer",
-          field_description: "Deletes per table per run",
+          field_description: "Deletes per Таблица per run",
           field_value: 50,
           stored_in_db: true,
         },
         {
           field_name: "maximum_spend_logs_cleanup_run_budget",
           field_type: "string",
-          field_description: "Wall clock budget per run",
+          field_description: "Wall clock Бюджет per run",
           field_value: "90s",
           stored_in_db: true,
         },
         {
-          field_name: "maximum_spend_logs_cleanup_batch_timeвыход",
+          field_name: "maximum_spend_logs_cleanup_batch_timeout",
           field_type: "string",
-          field_description: "Statement and lock timeвыход per batch",
+          field_description: "Statement and lock timeout per batch",
           field_value: "10s",
           stored_in_db: true,
         },
       ],
       isLoading: false,
       refetch: mockRefetch,
-    } as unknown as ReturnType<typeof useProxyКонфигурация>);
+    } as unknown as ReturnType<typeof useProxyConfig>);
 
-  // Blank every необязательно input the form rendered from stored values, which is
+  // Blank every optional input the form rendered from stored values, which is
   // what an admin does to reset a knob to its default.
-  const blankEveryOptionalПоле = async (user: ReturnType<typeof userEvent.setup>) => {
+  const blankEveryOptionalField = async (user: ReturnType<typeof userEvent.setup>) => {
     for (const placeholder of ["e.g., 7d, 30d", "e.g., 1000", "e.g., 500", "e.g., 5m", "e.g., 30s"]) {
       await user.clear(screen.getByPlaceholderText(placeholder));
     }
@@ -98,20 +98,20 @@ describe("LoggingSettings", () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
-    mockUseStoreRequestInРасходЖурналы.mockReturnЗначение({
+    mockUseStoreRequestInSpendLogs.mockReturnValue({
       mutate: mockMutate,
       isPending: false,
     } as any);
-    mockUseDeleteProxyКонфигурацияПоле.mockReturnЗначение({
-      mutate: mockDeleteПоле,
+    mockUseDeleteProxyConfigField.mockReturnValue({
+      mutate: mockDeleteField,
       isPending: false,
     } as any);
-    mockUseProxyКонфигурация.mockReturnЗначение({
+    mockUseProxyConfig.mockReturnValue({
       data: [],
       isLoading: false,
       refetch: mockRefetch,
     } as any);
-    mockParseОшибкаСообщение.mockImplementation((error: any) => error?.message || String(error));
+    mockParseErrorMessage.mockImplementation((error: any) => error?.message || String(error));
   });
 
   it("should render the card with title and form fields", () => {
@@ -121,10 +121,10 @@ describe("LoggingSettings", () => {
     expect(screen.getByText("Store Prompts in Расход Журналы")).toBeInTheDocument();
     expect(screen.getByLabelText("Макс. срок хранения журналов расходов (необязательно)")).toBeInTheDocument();
     expect(screen.getByPlaceholderText("e.g., 7d, 30d")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Save Settings" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Сохранить Settings" })).toBeInTheDocument();
   });
 
-  it("should render a control for every spend logs cleanup knob", () => {
+  it("should render a control for every Расход Журналы cleanup knob", () => {
     renderWithProviders(<LoggingSettings />);
 
     expect(screen.getByLabelText("Размер пачки очистки журналов расходов (необязательно)")).toBeInTheDocument();
@@ -151,19 +151,19 @@ describe("LoggingSettings", () => {
     });
   });
 
-  it("should update retention period input", async () => {
+  it("should update retention period Вход", async () => {
     const user = userEvent.setup();
     renderWithProviders(<LoggingSettings />);
 
-    const retentionВход = screen.getByPlaceholderText("e.g., 7d, 30d");
-    await user.type(retentionВход, "30d");
+    const retentionInput = screen.getByPlaceholderText("e.g., 7d, 30d");
+    await user.type(retentionInput, "30d");
 
-    expect(retentionВход).toHaveЗначение("30d");
+    expect(retentionInput).toHaveValue("30d");
   });
 
-  it("should submit form with store prompts enabled and retention period", async () => {
+  it("should submit form with store prompts Включено and retention period", async () => {
     const user = userEvent.setup();
-    mockDeleteПоле.mockImplementation((_params, options) => {
+    mockDeleteField.mockImplementation((_params, options) => {
       options?.onSettled?.();
     });
     mockMutate.mockImplementation((_params, options) => {
@@ -175,10 +175,10 @@ describe("LoggingSettings", () => {
     const switchElement = screen.getByRole("switch");
     await user.click(switchElement);
 
-    const retentionВход = screen.getByPlaceholderText("e.g., 7d, 30d");
-    await user.type(retentionВход, "30d");
+    const retentionInput = screen.getByPlaceholderText("e.g., 7d, 30d");
+    await user.type(retentionInput, "30d");
 
-    const saveButton = screen.getByRole("button", { name: "Save Settings" });
+    const saveButton = screen.getByRole("button", { name: "Сохранить Settings" });
     await user.click(saveButton);
 
     await waitFor(() => {
@@ -193,7 +193,7 @@ describe("LoggingSettings", () => {
     expect(clearedFieldNames()).not.toContain("maximum_spend_logs_retention_period");
   });
 
-  it("should submit every spend logs cleanup setting that has a value", async () => {
+  it("should submit every Расход Журналы cleanup setting that has a Значение", async () => {
     const user = userEvent.setup();
     mockMutate.mockImplementation((_params, options) => {
       options?.onSuccess?.();
@@ -208,7 +208,7 @@ describe("LoggingSettings", () => {
     await user.type(screen.getByPlaceholderText("e.g., 5m"), "90s");
     await user.type(screen.getByPlaceholderText("e.g., 30s"), "10s");
 
-    await user.click(screen.getByRole("button", { name: "Save Settings" }));
+    await user.click(screen.getByRole("button", { name: "Сохранить Settings" }));
 
     const expectedParams = {
       store_prompts_in_spend_logs: true,
@@ -216,18 +216,18 @@ describe("LoggingSettings", () => {
       maximum_spend_logs_cleanup_batch_size: 2000,
       maximum_spend_logs_cleanup_max_batches: 50,
       maximum_spend_logs_cleanup_run_budget: "90s",
-      maximum_spend_logs_cleanup_batch_timeвыход: "10s",
+      maximum_spend_logs_cleanup_batch_timeout: "10s",
     };
 
     await waitFor(() => {
       expect(mockMutate).toHaveBeenCalledWith(expectedParams, expect.any(Object));
     });
-    expect(mockDeleteПоле).not.toHaveBeenCalled();
+    expect(mockDeleteField).not.toHaveBeenCalled();
   });
 
-  it("should omit blank cleanup settings from the save payload instead of sending empty values", async () => {
+  it("should omit blank cleanup settings from the Сохранить payload instead of sending empty values", async () => {
     const user = userEvent.setup();
-    mockDeleteПоле.mockImplementation((_params, options) => {
+    mockDeleteField.mockImplementation((_params, options) => {
       options?.onSettled?.();
     });
     mockMutate.mockImplementation((_params, options) => {
@@ -237,27 +237,27 @@ describe("LoggingSettings", () => {
     renderWithProviders(<LoggingSettings />);
 
     await user.type(screen.getByPlaceholderText("e.g., 1000"), "2000");
-    await user.click(screen.getByRole("button", { name: "Save Settings" }));
+    await user.click(screen.getByRole("button", { name: "Сохранить Settings" }));
 
     await waitFor(() => {
       expect(mockMutate).toHaveBeenCalled();
     });
 
     const submittedParams = mockMutate.mock.calls[0][0];
-    expect(submittedParams).not.toHaveСвойство("maximum_spend_logs_retention_period");
-    expect(submittedParams).not.toHaveСвойство("maximum_spend_logs_cleanup_max_batches");
-    expect(submittedParams).not.toHaveСвойство("maximum_spend_logs_cleanup_run_budget");
-    expect(submittedParams).not.toHaveСвойство("maximum_spend_logs_cleanup_batch_timeвыход");
+    expect(submittedParams).not.toHaveProperty("maximum_spend_logs_retention_period");
+    expect(submittedParams).not.toHaveProperty("maximum_spend_logs_cleanup_max_batches");
+    expect(submittedParams).not.toHaveProperty("maximum_spend_logs_cleanup_run_budget");
+    expect(submittedParams).not.toHaveProperty("maximum_spend_logs_cleanup_batch_timeout");
     expect(submittedParams).toEqual({
       store_prompts_in_spend_logs: false,
       maximum_spend_logs_cleanup_batch_size: 2000,
     });
   });
 
-  it("should clear the stored value of every cleanup setting left blank", async () => {
+  it("should clear the stored Значение of every cleanup setting left blank", async () => {
     const user = userEvent.setup();
     withEveryOptionalFieldStored();
-    mockDeleteПоле.mockImplementation((_params, options) => {
+    mockDeleteField.mockImplementation((_params, options) => {
       options?.onSettled?.();
     });
     mockMutate.mockImplementation((_params, options) => {
@@ -266,9 +266,9 @@ describe("LoggingSettings", () => {
 
     renderWithProviders(<LoggingSettings />);
 
-    await blankEveryOptionalПоле(user);
+    await blankEveryOptionalField(user);
     await user.type(screen.getByPlaceholderText("e.g., 5m"), "10m");
-    await user.click(screen.getByRole("button", { name: "Save Settings" }));
+    await user.click(screen.getByRole("button", { name: "Сохранить Settings" }));
 
     await waitFor(() => {
       expect(mockMutate).toHaveBeenCalled();
@@ -276,16 +276,16 @@ describe("LoggingSettings", () => {
 
     expect(clearedFieldNames().sort()).toEqual([
       "maximum_spend_logs_cleanup_batch_size",
-      "maximum_spend_logs_cleanup_batch_timeвыход",
+      "maximum_spend_logs_cleanup_batch_timeout",
       "maximum_spend_logs_cleanup_max_batches",
       "maximum_spend_logs_retention_period",
     ]);
   });
 
-  it("should delete retention period field when left empty on submit", async () => {
+  it("should Удалить retention period Поле when left empty on submit", async () => {
     const user = userEvent.setup();
     withEveryOptionalFieldStored();
-    mockDeleteПоле.mockImplementation((_params, options) => {
+    mockDeleteField.mockImplementation((_params, options) => {
       options?.onSettled?.();
     });
     mockMutate.mockImplementation((_params, options) => {
@@ -294,8 +294,8 @@ describe("LoggingSettings", () => {
 
     renderWithProviders(<LoggingSettings />);
 
-    await blankEveryOptionalПоле(user);
-    const saveButton = screen.getByRole("button", { name: "Save Settings" });
+    await blankEveryOptionalField(user);
+    const saveButton = screen.getByRole("button", { name: "Сохранить Settings" });
     await user.click(saveButton);
 
     await waitFor(() => {
@@ -311,7 +311,7 @@ describe("LoggingSettings", () => {
 
   it("should show success notification on successful submission", async () => {
     const user = userEvent.setup();
-    mockDeleteПоле.mockImplementation((_params, options) => {
+    mockDeleteField.mockImplementation((_params, options) => {
       options?.onSettled?.();
     });
     mockMutate.mockImplementation((_params, options) => {
@@ -320,7 +320,7 @@ describe("LoggingSettings", () => {
 
     renderWithProviders(<LoggingSettings />);
 
-    const saveButton = screen.getByRole("button", { name: "Save Settings" });
+    const saveButton = screen.getByRole("button", { name: "Сохранить Settings" });
     await user.click(saveButton);
 
     await waitFor(() => {
@@ -328,30 +328,30 @@ describe("LoggingSettings", () => {
     });
   });
 
-  it("should show a single error notification via onОшибка callback", async () => {
+  it("should show a single Ошибка notification via onError callback", async () => {
     const user = userEvent.setup();
-    const error = new Ошибка("Backend error");
-    mockDeleteПоле.mockImplementation((_params, options) => {
+    const error = new Error("Backend Ошибка");
+    mockDeleteField.mockImplementation((_params, options) => {
       options?.onSettled?.();
     });
     mockMutate.mockImplementation((_params, options) => {
-      options?.onОшибка?.(error);
+      options?.onError?.(error);
     });
-    mockParseОшибкаСообщение.mockReturnЗначение("Backend error");
+    mockParseErrorMessage.mockReturnValue("Backend Ошибка");
 
     renderWithProviders(<LoggingSettings />);
 
-    const saveButton = screen.getByRole("button", { name: "Save Settings" });
+    const saveButton = screen.getByRole("button", { name: "Сохранить Settings" });
     await user.click(saveButton);
 
     await waitFor(() => {
-      expect(mockToast.fromОшибка).toHaveBeenCalledWith("Не удалось сохранить настройки журналов расходов: Backend error");
+      expect(mockToast.fromError).toHaveBeenCalledWith("Не удалось сохранить настройки журналов расходов: Backend Ошибка");
     });
-    expect(mockToast.fromОшибка).toHaveBeenCalledTimes(1);
+    expect(mockToast.fromError).toHaveBeenCalledTimes(1);
   });
 
-  it("should show loading state on save button when update pending", () => {
-    mockUseStoreRequestInРасходЖурналы.mockReturnЗначение({
+  it("should show Загрузка state on Сохранить button when update pending", () => {
+    mockUseStoreRequestInSpendLogs.mockReturnValue({
       mutate: mockMutate,
       isPending: true,
     } as any);
@@ -360,12 +360,12 @@ describe("LoggingSettings", () => {
 
     const saveButton = screen.getByRole("button", { name: /Saving/i });
     expect(saveButton).toBeInTheDocument();
-    expect(within(saveButton).getByRole("img", { name: "loading" })).toBeInTheDocument();
+    expect(within(saveButton).getByRole("img", { name: "Загрузка" })).toBeInTheDocument();
   });
 
-  it("should show loading state on save button when delete pending", () => {
-    mockUseDeleteProxyКонфигурацияПоле.mockReturnЗначение({
-      mutate: mockDeleteПоле,
+  it("should show Загрузка state on Сохранить button when Удалить pending", () => {
+    mockUseDeleteProxyConfigField.mockReturnValue({
+      mutate: mockDeleteField,
       isPending: true,
     } as any);
 
@@ -373,16 +373,16 @@ describe("LoggingSettings", () => {
 
     const saveButton = screen.getByRole("button", { name: /Saving/i });
     expect(saveButton).toBeInTheDocument();
-    expect(within(saveButton).getByRole("img", { name: "loading" })).toBeInTheDocument();
+    expect(within(saveButton).getByRole("img", { name: "Загрузка" })).toBeInTheDocument();
   });
 
-  it("should render form with initial values from config data", () => {
-    mockUseProxyКонфигурация.mockReturnЗначение({
+  it("should render form with initial values from Конфигурация data", () => {
+    mockUseProxyConfig.mockReturnValue({
       data: [
         {
           field_name: "store_prompts_in_spend_logs",
           field_type: "bool",
-          field_description: "Store prompts in spend logs",
+          field_description: "Store prompts in Расход Журналы",
           field_value: true,
           stored_in_db: true,
           field_default_value: false,
@@ -398,7 +398,7 @@ describe("LoggingSettings", () => {
         {
           field_name: "maximum_spend_logs_cleanup_batch_size",
           field_type: "Integer",
-          field_description: "Rows per delete",
+          field_description: "Rows per Удалить",
           field_value: 2000,
           stored_in_db: true,
           field_default_value: 1000,
@@ -406,7 +406,7 @@ describe("LoggingSettings", () => {
         {
           field_name: "maximum_spend_logs_cleanup_max_batches",
           field_type: "Integer",
-          field_description: "Deletes per table per run",
+          field_description: "Deletes per Таблица per run",
           field_value: 50,
           stored_in_db: true,
           field_default_value: 500,
@@ -414,15 +414,15 @@ describe("LoggingSettings", () => {
         {
           field_name: "maximum_spend_logs_cleanup_run_budget",
           field_type: "string",
-          field_description: "Wall clock budget per run",
+          field_description: "Wall clock Бюджет per run",
           field_value: "90s",
           stored_in_db: true,
           field_default_value: "5m",
         },
         {
-          field_name: "maximum_spend_logs_cleanup_batch_timeвыход",
+          field_name: "maximum_spend_logs_cleanup_batch_timeout",
           field_type: "string",
-          field_description: "Statement and lock timeвыход per batch",
+          field_description: "Statement and lock timeout per batch",
           field_value: "10s",
           stored_in_db: true,
           field_default_value: "30s",
@@ -435,33 +435,33 @@ describe("LoggingSettings", () => {
     renderWithProviders(<LoggingSettings />);
 
     const switchElement = screen.getByRole("switch");
-    const retentionВход = screen.getByPlaceholderText("e.g., 7d, 30d");
+    const retentionInput = screen.getByPlaceholderText("e.g., 7d, 30d");
 
     expect(switchElement).toBeChecked();
-    expect(retentionВход).toHaveЗначение("30d");
-    expect(screen.getByPlaceholderText("e.g., 1000")).toHaveDisplayЗначение("2000");
-    expect(screen.getByPlaceholderText("e.g., 500")).toHaveDisplayЗначение("50");
-    expect(screen.getByPlaceholderText("e.g., 5m")).toHaveЗначение("90s");
-    expect(screen.getByPlaceholderText("e.g., 30s")).toHaveЗначение("10s");
+    expect(retentionInput).toHaveValue("30d");
+    expect(screen.getByPlaceholderText("e.g., 1000")).toHaveDisplayValue("2000");
+    expect(screen.getByPlaceholderText("e.g., 500")).toHaveDisplayValue("50");
+    expect(screen.getByPlaceholderText("e.g., 5m")).toHaveValue("90s");
+    expect(screen.getByPlaceholderText("e.g., 30s")).toHaveValue("10s");
   });
 
-  it("should reflect persisted values that arrive after the initial loading render", async () => {
-    mockUseProxyКонфигурация.mockReturnЗначение({
+  it("should reflect persisted values that arrive after the initial Загрузка render", async () => {
+    mockUseProxyConfig.mockReturnValue({
       data: undefined,
       isLoading: true,
       refetch: mockRefetch,
-    } as unknown as ReturnType<typeof useProxyКонфигурация>);
+    } as unknown as ReturnType<typeof useProxyConfig>);
 
     const { rerender } = renderWithProviders(<LoggingSettings />);
 
     expect(screen.queryByRole("switch")).not.toBeInTheDocument();
 
-    mockUseProxyКонфигурация.mockReturnЗначение({
+    mockUseProxyConfig.mockReturnValue({
       data: [
         {
           field_name: "store_prompts_in_spend_logs",
           field_type: "bool",
-          field_description: "Store prompts in spend logs",
+          field_description: "Store prompts in Расход Журналы",
           field_value: true,
           stored_in_db: true,
           field_default_value: false,
@@ -477,18 +477,18 @@ describe("LoggingSettings", () => {
       ],
       isLoading: false,
       refetch: mockRefetch,
-    } as unknown as ReturnType<typeof useProxyКонфигурация>);
+    } as unknown as ReturnType<typeof useProxyConfig>);
 
     rerender(<LoggingSettings />);
 
     await waitFor(() => {
       expect(screen.getByRole("switch")).toBeChecked();
     });
-    expect(screen.getByPlaceholderText("e.g., 7d, 30d")).toHaveЗначение("30d");
+    expect(screen.getByPlaceholderText("e.g., 7d, 30d")).toHaveValue("30d");
   });
 
-  it("should show skeleton loaders when config is loading", () => {
-    mockUseProxyКонфигурация.mockReturnЗначение({
+  it("should show skeleton loaders when Конфигурация is Загрузка", () => {
+    mockUseProxyConfig.mockReturnValue({
       data: undefined,
       isLoading: true,
       refetch: mockRefetch,
@@ -498,16 +498,16 @@ describe("LoggingSettings", () => {
 
     expect(screen.queryByRole("switch")).not.toBeInTheDocument();
     expect(screen.queryByPlaceholderText("e.g., 7d, 30d")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Save Settings" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Сохранить Settings" })).not.toBeInTheDocument();
 
-    expect(document.querySelectorВсе('[data-slot="skeleton"]').length).toBeGreaterThan(0);
+    expect(document.querySelectorAll('[data-slot="skeleton"]').length).toBeGreaterThan(0);
   });
 
-  it("should report an error and not claim success when clearing a field fails", async () => {
+  it("should report an Ошибка and not claim success when clearing a Поле fails", async () => {
     const user = userEvent.setup();
     withEveryOptionalFieldStored();
-    mockDeleteПоле.mockImplementation((_params, options) => {
-      options?.onОшибка?.(new Ошибка("Поле does not exist"));
+    mockDeleteField.mockImplementation((_params, options) => {
+      options?.onError?.(new Error("Поле does not exist"));
       options?.onSettled?.();
     });
     mockMutate.mockImplementation((_params, options) => {
@@ -516,25 +516,25 @@ describe("LoggingSettings", () => {
 
     renderWithProviders(<LoggingSettings />);
 
-    await blankEveryOptionalПоле(user);
-    const saveButton = screen.getByRole("button", { name: "Save Settings" });
+    await blankEveryOptionalField(user);
+    const saveButton = screen.getByRole("button", { name: "Сохранить Settings" });
     await user.click(saveButton);
 
     await waitFor(() => {
-      expect(mockToast.fromОшибка).toHaveBeenCalled();
+      expect(mockToast.fromError).toHaveBeenCalled();
     });
     // the old value is still in force server side, so an unqualified success
     // notification would tell the admin the opposite of what happened
     expect(mockToast.success).not.toHaveBeenCalled();
   });
 
-  it("should clear fields one at a time, never concurrently", async () => {
+  it("should clear fields one at a Время, never concurrently", async () => {
     const user = userEvent.setup();
     withEveryOptionalFieldStored();
     let inFlight = 0;
     let maxInFlight = 0;
 
-    mockDeleteПоле.mockImplementation((_params, options) => {
+    mockDeleteField.mockImplementation((_params, options) => {
       inFlight += 1;
       maxInFlight = Math.max(maxInFlight, inFlight);
       // Settle on a microtask rather than synchronously, so a parallel
@@ -551,8 +551,8 @@ describe("LoggingSettings", () => {
 
     renderWithProviders(<LoggingSettings />);
 
-    await blankEveryOptionalПоле(user);
-    const saveButton = screen.getByRole("button", { name: "Save Settings" });
+    await blankEveryOptionalField(user);
+    const saveButton = screen.getByRole("button", { name: "Сохранить Settings" });
     await user.click(saveButton);
 
     await waitFor(() => {
@@ -561,12 +561,12 @@ describe("LoggingSettings", () => {
     // /config/field/delete rewrites the whole general_settings object, so two of
     // them in flight at once means the later write restores what the earlier cleared
     expect(maxInFlight).toBe(1);
-    expect(mockDeleteПоле.mock.calls.length).toBeGreaterThan(1);
+    expect(mockDeleteField.mock.calls.length).toBeGreaterThan(1);
   });
 
-  it("should submit with only store prompts enabled when retention is empty", async () => {
+  it("should submit with only store prompts Включено when retention is empty", async () => {
     const user = userEvent.setup();
-    mockDeleteПоле.mockImplementation((_params, options) => {
+    mockDeleteField.mockImplementation((_params, options) => {
       options?.onSettled?.();
     });
     mockMutate.mockImplementation((_params, options) => {
@@ -578,7 +578,7 @@ describe("LoggingSettings", () => {
     const switchElement = screen.getByRole("switch");
     await user.click(switchElement);
 
-    const saveButton = screen.getByRole("button", { name: "Save Settings" });
+    const saveButton = screen.getByRole("button", { name: "Сохранить Settings" });
     await user.click(saveButton);
 
     await waitFor(() => {
@@ -590,16 +590,16 @@ describe("LoggingSettings", () => {
       );
     });
     // nothing is stored for the blank fields, so there is nothing to clear
-    expect(mockDeleteПоле).not.toHaveBeenCalled();
+    expect(mockDeleteField).not.toHaveBeenCalled();
   });
 
-  it("should save on a proxy that has never stored these settings, withвыход clearing anything", async () => {
+  it("should Сохранить on a proxy that has never stored these settings, without clearing anything", async () => {
     // The first save on a new deployment: no general_settings row exists, so
     // /config/field/delete answers 400 for every blank field. Issuing those
     // clears anyway failed the whole save and persisted nothing.
     const user = userEvent.setup();
-    mockDeleteПоле.mockImplementation((_params, options) => {
-      options?.onОшибка?.(new Ошибка("Поле name=... not in config"));
+    mockDeleteField.mockImplementation((_params, options) => {
+      options?.onError?.(new Error("Поле Название=... not in Конфигурация"));
       options?.onSettled?.();
     });
     mockMutate.mockImplementation((_params, options) => {
@@ -610,22 +610,22 @@ describe("LoggingSettings", () => {
 
     const switchElement = screen.getByRole("switch");
     await user.click(switchElement);
-    await user.click(screen.getByRole("button", { name: "Save Settings" }));
+    await user.click(screen.getByRole("button", { name: "Сохранить Settings" }));
 
     await waitFor(() => {
       expect(mockToast.success).toHaveBeenCalled();
     });
-    expect(mockDeleteПоле).not.toHaveBeenCalled();
+    expect(mockDeleteField).not.toHaveBeenCalled();
     expect(mockMutate).toHaveBeenCalledWith({ store_prompts_in_spend_logs: true }, expect.any(Object));
-    expect(mockToast.fromОшибка).not.toHaveBeenCalled();
+    expect(mockToast.fromError).not.toHaveBeenCalled();
   });
 
-  it("should still clear a field that does have a stored value", async () => {
+  it("should still clear a Поле that does have a stored Значение", async () => {
     // The guard above must not turn into "never clear anything": a field the
-    // admin blanks выход that IS stored still has to be deleted server side.
+    // admin blanks out that IS stored still has to be deleted server side.
     const user = userEvent.setup();
     withEveryOptionalFieldStored();
-    mockDeleteПоле.mockImplementation((_params, options) => {
+    mockDeleteField.mockImplementation((_params, options) => {
       options?.onSettled?.();
     });
     mockMutate.mockImplementation((_params, options) => {
@@ -635,7 +635,7 @@ describe("LoggingSettings", () => {
     renderWithProviders(<LoggingSettings />);
 
     await user.clear(screen.getByPlaceholderText("e.g., 5m"));
-    await user.click(screen.getByRole("button", { name: "Save Settings" }));
+    await user.click(screen.getByRole("button", { name: "Сохранить Settings" }));
 
     await waitFor(() => {
       expect(mockToast.success).toHaveBeenCalled();
@@ -643,7 +643,7 @@ describe("LoggingSettings", () => {
     expect(clearedFieldNames()).toContain("maximum_spend_logs_cleanup_run_budget");
   });
   describe("numeric coercion parity", () => {
-    it("should round a fractional batch size to a whole number, in the input and in the payload", async () => {
+    it("should round a fractional batch size to a whole number, in the Вход and in the payload", async () => {
       const user = userEvent.setup();
       mockMutate.mockImplementation((_params, options) => {
         options?.onSuccess?.();
@@ -653,12 +653,12 @@ describe("LoggingSettings", () => {
 
       const batchSize = screen.getByPlaceholderText("e.g., 1000");
       await user.type(batchSize, "2000.7");
-      await user.click(screen.getByRole("button", { name: "Save Settings" }));
+      await user.click(screen.getByRole("button", { name: "Сохранить Settings" }));
 
       await waitFor(() => {
         expect(mockMutate).toHaveBeenCalled();
       });
-      expect(batchSize).toHaveDisplayЗначение("2001");
+      expect(batchSize).toHaveDisplayValue("2001");
       expect(mockMutate.mock.calls[0][0]).toEqual({
         store_prompts_in_spend_logs: false,
         maximum_spend_logs_cleanup_batch_size: 2001,
@@ -676,16 +676,16 @@ describe("LoggingSettings", () => {
 
       const batchSize = screen.getByPlaceholderText("e.g., 1000");
       await user.type(batchSize, "0");
-      await user.click(screen.getByRole("button", { name: "Save Settings" }));
+      await user.click(screen.getByRole("button", { name: "Сохранить Settings" }));
 
       await waitFor(() => {
         expect(mockMutate).toHaveBeenCalled();
       });
-      expect(batchSize).toHaveDisplayЗначение("1");
+      expect(batchSize).toHaveDisplayValue("1");
       expect(mockMutate.mock.calls[0][0].maximum_spend_logs_cleanup_batch_size).toBe(1);
     });
 
-    it("should send a trimmable duration exactly as typed, withвыход coercion", async () => {
+    it("should Отправить a trimmable Длительность exactly as typed, without coercion", async () => {
       const user = userEvent.setup();
       mockMutate.mockImplementation((_params, options) => {
         options?.onSuccess?.();
@@ -694,7 +694,7 @@ describe("LoggingSettings", () => {
       renderWithProviders(<LoggingSettings />);
 
       await user.type(screen.getByPlaceholderText("e.g., 7d, 30d"), "30d");
-      await user.click(screen.getByRole("button", { name: "Save Settings" }));
+      await user.click(screen.getByRole("button", { name: "Сохранить Settings" }));
 
       await waitFor(() => {
         expect(mockMutate).toHaveBeenCalled();
@@ -705,7 +705,7 @@ describe("LoggingSettings", () => {
       });
     });
 
-    it("should keep a whitespace-only duration выход of the payload", async () => {
+    it("should keep a whitespace-only Длительность out of the payload", async () => {
       const user = userEvent.setup();
       mockMutate.mockImplementation((_params, options) => {
         options?.onSuccess?.();
@@ -714,7 +714,7 @@ describe("LoggingSettings", () => {
       renderWithProviders(<LoggingSettings />);
 
       await user.type(screen.getByPlaceholderText("e.g., 7d, 30d"), "   ");
-      await user.click(screen.getByRole("button", { name: "Save Settings" }));
+      await user.click(screen.getByRole("button", { name: "Сохранить Settings" }));
 
       await waitFor(() => {
         expect(mockMutate).toHaveBeenCalled();

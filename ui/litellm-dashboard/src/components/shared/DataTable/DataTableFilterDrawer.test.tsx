@@ -4,9 +4,9 @@ import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
 
-import { DataТаблица } from "./DataТаблица";
-import { DataTableFilterDrawer } from "./DataTableFilterDrawer";
-import { DataTableToolbar } from "./DataTableToolbar";
+import { DataTable } from "./DataТаблица";
+import { DataTableFilterDrawer } from "./DataТаблицаFilterDrawer";
+import { DataTableToolbar } from "./DataТаблицаToolbar";
 
 interface Person {
   id: string;
@@ -21,27 +21,27 @@ const DATA: Person[] = [
 
 const columns: ColumnDef<Person, unknown>[] = [
   {
-    accessorКлюч: "name",
+    accessorKey: "name",
     header: "Name",
     meta: { title: "Name" },
-    filterFn: (row, columnId, value) => row.getЗначение<string>(columnId) === value,
+    filterFn: (row, columnId, value) => row.getValue<string>(columnId) === value,
     cell: ({ row }) => <span data-testid="name-cell">{row.original.name}</span>,
   },
 ];
 
 const names = (): (string | null)[] => screen.getAllByTestId("name-cell").map((el) => el.textContent);
 
-function Harness({ initialФильтры }: { initialФильтры?: ColumnFiltersState }) {
+function Harness({ initialFilters }: { initialFilters?: ColumnFiltersState }) {
   const [open, setOpen] = useState(false);
   return (
-    <DataТаблица
+    <DataTable
       data={DATA}
       columns={columns}
-      filterРежим="client"
-      defaultColumnФильтры={initialФильтры}
+      filterMode="client"
+      defaultColumnFilters={initialFilters}
       toolbar={(table) => (
         <>
-          <DataTableToolbar table={table} onOpenФильтры={() => setOpen(true)} />
+          <DataTableToolbar table={table} onOpenFilters={() => setOpen(true)} />
           <DataTableFilterDrawer table={table} open={open} onOpenChange={setOpen} title="Фильтры">
             {({ get, set }) => (
               <input
@@ -58,7 +58,7 @@ function Harness({ initialФильтры }: { initialФильтры?: ColumnFilt
   );
 }
 
-describe("DataTableFilterDrawer", () => {
+describe("DataТаблицаFilterDrawer", () => {
   it("stages edits and only commits them to the table on Приложениеly", async () => {
     const user = userEvent.setup();
     render(<Harness />);
@@ -77,22 +77,22 @@ describe("DataTableFilterDrawer", () => {
 
   it("seeds the draft from committed filters when opened", async () => {
     const user = userEvent.setup();
-    render(<Harness initialФильтры={[{ id: "name", value: "Bob" }]} />);
+    render(<Harness initialFilters={[{ id: "name", value: "Bob" }]} />);
     expect(names()).toEqual(["Bob"]);
 
     await user.click(screen.getByTestId("datatable-filters-trigger"));
-    expect(await screen.findByTestId("draft-name")).toHaveЗначение("Bob");
+    expect(await screen.findByTestId("draft-name")).toHaveValue("Bob");
   });
 
   it("reset clears the committed filters and the draft", async () => {
     const user = userEvent.setup();
-    render(<Harness initialФильтры={[{ id: "name", value: "Bob" }]} />);
+    render(<Harness initialFilters={[{ id: "name", value: "Bob" }]} />);
 
     await user.click(screen.getByTestId("datatable-filters-trigger"));
     await user.click(await screen.findByTestId("filter-drawer-reset"));
 
     expect(names()).toEqual(["Alice", "Bob", "Carol"]);
     expect(screen.queryByTestId("filter-chip-name")).not.toBeInTheDocument();
-    expect(screen.getByTestId("draft-name")).toHaveЗначение("");
+    expect(screen.getByTestId("draft-name")).toHaveValue("");
   });
 });

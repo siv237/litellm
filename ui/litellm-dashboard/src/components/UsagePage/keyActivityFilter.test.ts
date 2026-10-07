@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { filterKeyActivity, keyActivityMatches } from "./keyActivityФильтр";
-import type { КлючМетаданные, РежимlActivityData } from "./types";
+import { filterKeyActivity, keyActivityMatches } from "./keyActivityFilter";
+import type { KeyMetadata, ModelActivityData } from "./types";
 
-function activity(label: string, key_metadata?: КлючМетаданные): РежимlActivityData {
+function activity(label: string, key_metadata?: KeyMetadata): ModelActivityData {
   return {
     label,
     key_metadata,
@@ -22,13 +22,13 @@ function activity(label: string, key_metadata?: КлючМетаданные): �
   };
 }
 
-const aliceMeta: КлючМетаданные = {
+const aliceMeta: KeyMetadata = {
   key_alias: "alice-batch",
   team_id: "team-research",
   user_id: "user-alice-1234",
   user_email: "alice@example.com",
 };
-const bobMeta: КлючМетаданные = {
+const bobMeta: KeyMetadata = {
   key_alias: null,
   team_id: "team-research",
   user_id: "user-bob-5678",
@@ -38,7 +38,7 @@ const alice = activity("alice-batch (team: research)", aliceMeta);
 const bob = activity("bob@example.com (team: research)", bobMeta);
 const orphan = activity("key-hash-deadbeef", { key_alias: null, team_id: null });
 
-const keyMetrics: Record<string, РежимlActivityData> = {
+const keyMetrics: Record<string, ModelActivityData> = {
   "hash-alice": alice,
   "hash-bob": bob,
   deadbeef: orphan,
@@ -75,7 +75,7 @@ describe("keyActivityMatches", () => {
   });
 });
 
-describe("filterKeyActivity", () => {
+describe("filterКлючActivity", () => {
   it("returns the same object when the query is blank", () => {
     expect(filterKeyActivity(keyMetrics, "")).toBe(keyMetrics);
   });

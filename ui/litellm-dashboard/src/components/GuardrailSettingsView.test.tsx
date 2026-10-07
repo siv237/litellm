@@ -9,22 +9,22 @@ describe("GuardrailSettingsView", () => {
     expect(screen.getByText("Настройки гардрейлов")).toBeInTheDocument();
   });
 
-  it("should separate active global and team-specific гардрейловs", () => {
+  it("should separate Активный Глобально and Для команды Гардрейлы", () => {
     renderWithProviders(
       <GuardrailSettingsView
-        globalGuardrailNames={new Set(["global-one", "global-two"])}
-        teamГардрейлы={["global-one", "team-one"]}
-        optedВыходГлобальноГардрейлы={["global-two"]}
+        globalGuardrailNames={new Set(["Глобально-one", "Глобально-two"])}
+        teamGuardrails={["Глобально-one", "Команда-one"]}
+        optedOutGlobalGuardrails={["Глобально-two"]}
       />,
     );
 
-    expect(screen.getByText("global-one")).toBeInTheDocument();
-    expect(screen.getByText("team-one")).toBeInTheDocument();
-    expect(screen.queryByText("global-two")).not.toBeInTheDocument();
+    expect(screen.getByText("Глобально-one")).toBeInTheDocument();
+    expect(screen.getByText("Команда-one")).toBeInTheDocument();
+    expect(screen.queryByText("Глобально-two")).not.toBeInTheDocument();
   });
 
-  it("should show when global гардрейловs are bypassed", () => {
-    renderWithProviders(<GuardrailSettingsView globalGuardrailNames={new Set(["global-one"])} killSwitchOn />);
+  it("should show when Глобально Гардрейлы are bypassed", () => {
+    renderWithProviders(<GuardrailSettingsView globalGuardrailNames={new Set(["Глобально-one"])} killSwitchOn />);
 
     expect(screen.getByText("Обход для этой команды")).toBeInTheDocument();
   });

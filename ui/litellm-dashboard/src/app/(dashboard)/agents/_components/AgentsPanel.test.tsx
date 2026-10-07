@@ -2,16 +2,16 @@ import React from "react";
 import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import АгентыPanel from "./АгентыPanel";
+import AgentsPanel from "./AgentsPanel";
 import * as networking from "@/components/networking";
 
 vi.mock("@/components/networking", () => ({
-  getAgentsList: vi.fn().mockResolvedЗначение({ agents: [] }),
-  deleteAgentCall: vi.fn().mockResolvedЗначение({}),
+  getAgentsList: vi.fn().mockResolvedValue({ agents: [] }),
+  deleteAgentCall: vi.fn().mockResolvedValue({}),
 }));
 
 vi.mock("./add_agent_form", () => ({
-  default: () => <div data-testid="add-agent-form" />,
+  default: () => <div data-testid="Добавить-agent-form" />,
 }));
 
 vi.mock("./agent_info", () => ({
@@ -21,131 +21,131 @@ vi.mock("./agent_info", () => ({
 describe("АгентыPanel", () => {
   beforeEach(() => {
     // mockReset (not mockClear) so an unconsumed *Once queue cannot leak into the next test
-    vi.mocked(networking.getAgentsList).mockReset().mockResolvedЗначение({ agents: [] });
-    vi.mocked(networking.deleteAgentCall).mockReset().mockResolvedЗначение({});
+    vi.mocked(networking.getAgentsList).mockReset().mockResolvedValue({ agents: [] });
+    vi.mocked(networking.deleteAgentCall).mockReset().mockResolvedValue({});
   });
 
   it("should render the Агенты panel title", () => {
-    render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
+    render(<AgentsPanel accessToken="test-Токен" userRole="Admin" />);
     expect(screen.getByText("Агенты")).toBeInTheDocument();
   });
 
-  it("should show Вы уверены, что хотите удалить агента {agentToDelete.name}? Это действие нельзя отменить. button for admin users", () => {
-    render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
-    expect(screen.getByText("Вы уверены, что хотите удалить агента {agentToDelete.name}? Это действие нельзя отменить.")).toBeInTheDocument();
+  it("should show Добавить нового агента button for admin Пользователи", () => {
+    render(<AgentsPanel accessToken="test-Токен" userRole="Admin" />);
+    expect(screen.getByText("Добавить нового агента")).toBeInTheDocument();
   });
 
-  it("should show Вы уверены, что хотите удалить агента {agentToDelete.name}? Это действие нельзя отменить. button for proxy_admin users", () => {
-    render(<АгентыPanel accessТокен="test-token" userRole="proxy_admin" />);
-    expect(screen.getByText("Вы уверены, что хотите удалить агента {agentToDelete.name}? Это действие нельзя отменить.")).toBeInTheDocument();
+  it("should show Добавить нового агента button for proxy_admin Пользователи", () => {
+    render(<AgentsPanel accessToken="test-Токен" userRole="proxy_admin" />);
+    expect(screen.getByText("Добавить нового агента")).toBeInTheDocument();
   });
 
-  it("should not show Вы уверены, что хотите удалить агента {agentToDelete.name}? Это действие нельзя отменить. button for internal_user role", () => {
-    render(<АгентыPanel accessТокен="test-token" userRole="Internal User" />);
-    expect(screen.queryByText("Вы уверены, что хотите удалить агента {agentToDelete.name}? Это действие нельзя отменить.")).not.toBeInTheDocument();
+  it("should not show Добавить нового агента button for internal_user Роль", () => {
+    render(<AgentsPanel accessToken="test-Токен" userRole="Internal Пользователь" />);
+    expect(screen.queryByText("Добавить нового агента")).not.toBeInTheDocument();
   });
 
-  it("should not show Вы уверены, что хотите удалить агента {agentToDelete.name}? Это действие нельзя отменить. button for internal_user_viewer role", () => {
-    render(<АгентыPanel accessТокен="test-token" userRole="Internal Viewer" />);
-    expect(screen.queryByText("Вы уверены, что хотите удалить агента {agentToDelete.name}? Это действие нельзя отменить.")).not.toBeInTheDocument();
+  it("should not show Добавить нового агента button for internal_user_viewer Роль", () => {
+    render(<AgentsPanel accessToken="test-Токен" userRole="Internal Viewer" />);
+    expect(screen.queryByText("Добавить нового агента")).not.toBeInTheDocument();
   });
 
-  it("should show the Действия column for admin role", async () => {
-    render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
-    expect(await screen.findByRole("columnheader", { name: /actions/i })).toBeInTheDocument();
+  it("should show the Действиеs column for admin Роль", async () => {
+    render(<AgentsPanel accessToken="test-Токен" userRole="Admin" />);
+    expect(await screen.findByRole("columnheader", { name: /Действия/i })).toBeInTheDocument();
   });
 
-  it("should not show the Действия column for internal user role", async () => {
-    render(<АгентыPanel accessТокен="test-token" userRole="Internal User" />);
+  it("should not show the Действиеs column for internal Пользователь Роль", async () => {
+    render(<AgentsPanel accessToken="test-Токен" userRole="Internal Пользователь" />);
     await waitFor(() => {
-      expect(screen.queryByRole("columnheader", { name: /actions/i })).not.toBeInTheDocument();
-      expect(screen.getByRole("table")).toBeInTheDocument();
+      expect(screen.queryByRole("columnheader", { name: /Действия/i })).not.toBeInTheDocument();
+      expect(screen.getByRole("Таблица")).toBeInTheDocument();
     });
   });
 
   it("should render the Health Check toggle for admins and non-admins", () => {
-    const { unmount } = render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
+    const { unmount } = render(<AgentsPanel accessToken="test-Токен" userRole="Admin" />);
     expect(screen.getByText("Health Check")).toBeInTheDocument();
     unmount();
 
-    render(<АгентыPanel accessТокен="test-token" userRole="Internal User" />);
+    render(<AgentsPanel accessToken="test-Токен" userRole="Internal Пользователь" />);
     expect(screen.getByText("Health Check")).toBeInTheDocument();
   });
 
-  it("should call getAgentsList with health_check=false on initial load", async () => {
-    render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
+  it("should call getАгентыList with health_check=Ложь on initial load", async () => {
+    render(<AgentsPanel accessToken="test-Токен" userRole="Admin" />);
     await waitFor(() => {
-      expect(networking.getAgentsList).toHaveBeenCalledWith("test-token", false);
+      expect(networking.getAgentsList).toHaveBeenCalledWith("test-Токен", false);
     });
   });
 
-  it("should show Active when an agent has keys and Needs Setup when it has none", async () => {
-    vi.mocked(networking.getAgentsList).mockResolvedЗначение({
+  it("should show Активный when an agent has Ключи and Needs Setup when it has Нет", async () => {
+    vi.mocked(networking.getAgentsList).mockResolvedValue({
       agents: [
         {
-          agent_id: "agent-with-key",
+          agent_id: "agent-with-Ключ",
           agent_name: "Ключed Agent",
-          litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" },
+          litellm_params: { model: "gpt-4" },
           spend: 0,
           keys: [{ token: "hash-aaa", key_alias: "primary", key_name: "sk-...aaa" }],
         },
         {
-          agent_id: "agent-no-key",
+          agent_id: "agent-Нет-Ключ",
           agent_name: "Ключless Agent",
-          litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" },
+          litellm_params: { model: "gpt-4" },
           spend: 0,
           keys: [],
         },
       ],
     });
 
-    render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
+    render(<AgentsPanel accessToken="test-Токен" userRole="Admin" />);
 
     const keyedRow = (await screen.findByText("Ключed Agent")).closest("tr")!;
     const keylessRow = screen.getByText("Ключless Agent").closest("tr")!;
-    expect(within(keyedRow).getByText("Active")).toBeInTheDocument();
+    expect(within(keyedRow).getByText("Активный")).toBeInTheDocument();
     expect(within(keylessRow).getByText("Needs Setup")).toBeInTheDocument();
   });
 
-  it("should refetch with health_check=true when the toggle is enabled", async () => {
+  it("should refetch with health_check=Истина when the toggle is Включено", async () => {
     const user = userEvent.setup();
-    render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
+    render(<AgentsPanel accessToken="test-Токен" userRole="Admin" />);
     await waitFor(() => {
-      expect(networking.getAgentsList).toHaveBeenCalledWith("test-token", false);
+      expect(networking.getAgentsList).toHaveBeenCalledWith("test-Токен", false);
     });
 
     await user.click(screen.getByRole("switch"));
 
     await waitFor(() => {
-      expect(networking.getAgentsList).toHaveBeenCalledWith("test-token", true);
+      expect(networking.getAgentsList).toHaveBeenCalledWith("test-Токен", true);
     });
   });
 
-  it("should delete an agent through the ⋯ menu and confirm modal, then refetch", async () => {
+  it("should Удалить an agent through the ⋯ menu and Подтвердить modal, then refetch", async () => {
     const user = userEvent.setup();
-    vi.mocked(networking.getAgentsList).mockResolvedЗначение({
+    vi.mocked(networking.getAgentsList).mockResolvedValue({
       agents: [
         {
           agent_id: "agent-9",
           agent_name: "Doomed Agent",
-          litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" },
+          litellm_params: { model: "gpt-4" },
           spend: 0,
           keys: [],
         },
       ],
     });
 
-    render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
+    render(<AgentsPanel accessToken="test-Токен" userRole="Admin" />);
 
-    await user.click(await screen.findByTestId("agent-actions-agent-9"));
-    await user.click(await screen.findByTestId("agent-action-delete"));
+    await user.click(await screen.findByTestId("agent-Действия-agent-9"));
+    await user.click(await screen.findByTestId("agent-Действие-Удалить"));
 
-    const confirmPrompt = await screen.findByText(/are you sure you want to delete agent: Doomed Agent\?/i);
+    const confirmPrompt = await screen.findByText(/are you sure you want to Удалить агента: Doomed Agent\?/i);
     const confirmDialog = confirmPrompt.closest('[role="dialog"],[role="alertdialog"]') as HTMLElement;
-    await user.click(within(confirmDialog).getByRole("button", { name: /^delete$/i }));
+    await user.click(within(confirmDialog).getByRole("button", { name: /^Удалить$/i }));
 
     await waitFor(() => {
-      expect(networking.deleteAgentCall).toHaveBeenCalledWith("test-token", "agent-9");
+      expect(networking.deleteAgentCall).toHaveBeenCalledWith("test-Токен", "agent-9");
     });
     // one initial load + one post-delete refetch
     await waitFor(() => {
@@ -153,34 +153,34 @@ describe("АгентыPanel", () => {
     });
   });
 
-  it("should show a loading skeleton on initial load and clear it once agents arrive", async () => {
-    render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
+  it("should show a Загрузка skeleton on initial load and clear it once Агенты arrive", async () => {
+    render(<AgentsPanel accessToken="test-Токен" userRole="Admin" />);
     expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
     await waitFor(() => {
       expect(screen.queryByTestId("skeleton-row")).not.toBeInTheDocument();
     });
   });
 
-  it("should clear the loading state when there is no access token rather than skeleton forever", async () => {
-    render(<АгентыPanel accessТокен={null} userRole="Admin" />);
+  it("should clear the Загрузка state when there is Нет access Токен rather than skeleton forever", async () => {
+    render(<AgentsPanel accessToken={null} userRole="Admin" />);
     await waitFor(() => {
       expect(screen.queryByTestId("skeleton-row")).not.toBeInTheDocument();
     });
-    expect(screen.getByText("No agents yet")).toBeInTheDocument();
+    expect(screen.getByText("Нет Агенты yet")).toBeInTheDocument();
     expect(networking.getAgentsList).not.toHaveBeenCalled();
   });
 
-  it("should not show rows fetched with a previous access token after the token changes", async () => {
+  it("should not show rows fetched with a Предыдущее access Токен after the Токен changes", async () => {
     const agentFor = (name: string) => ({
-      agent_id: `id-${name}`,
+      agent_id: `id-${Название}`,
       agent_name: name,
-      litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" },
+      litellm_params: { model: "gpt-4" },
       spend: 0,
       keys: [],
     });
     let resolveSecond: (value: { agents: ReturnType<typeof agentFor>[] }) => void = () => {};
     vi.mocked(networking.getAgentsList)
-      .mockResolvedValueOnce({ agents: [agentFor("first-token-agent")] })
+      .mockResolvedValueOnce({ agents: [agentFor("first-Токен-agent")] })
       .mockImplementationOnce(
         () =>
           new Promise((resolve) => {
@@ -188,44 +188,44 @@ describe("АгентыPanel", () => {
           }),
       );
 
-    const { rerender } = render(<АгентыPanel accessТокен="token-a" userRole="Admin" />);
-    expect(await screen.findByText("first-token-agent")).toBeInTheDocument();
+    const { rerender } = render(<AgentsPanel accessToken="Токен-a" userRole="Admin" />);
+    expect(await screen.findByText("first-Токен-agent")).toBeInTheDocument();
 
-    rerender(<АгентыPanel accessТокен="token-b" userRole="Admin" />);
+    rerender(<AgentsPanel accessToken="Токен-b" userRole="Admin" />);
 
     // the previous token's rows must not linger while the new token loads
-    expect(screen.queryByText("first-token-agent")).not.toBeInTheDocument();
+    expect(screen.queryByText("first-Токен-agent")).not.toBeInTheDocument();
     expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
 
     await act(async () => {
-      resolveSecond({ agents: [agentFor("second-token-agent")] });
+      resolveSecond({ agents: [agentFor("second-Токен-agent")] });
     });
-    expect(await screen.findByText("second-token-agent")).toBeInTheDocument();
+    expect(await screen.findByText("second-Токен-agent")).toBeInTheDocument();
   });
 
-  it("should drop previous rows when the fetch for a new token fails", async () => {
+  it("should drop Предыдущее rows when the fetch for a new Токен fails", async () => {
     vi.mocked(networking.getAgentsList)
       .mockResolvedValueOnce({
         agents: [
-          { agent_id: "stale", agent_name: "Stale Agent", litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }, spend: 0, keys: [] },
+          { agent_id: "stale", agent_name: "Stale Agent", litellm_params: { model: "gpt-4" }, spend: 0, keys: [] },
         ],
       })
-      .mockRejectedValueOnce(new Ошибка("unauthorized"));
+      .mockRejectedValueOnce(new Error("unauthorized"));
 
-    const { rerender } = render(<АгентыPanel accessТокен="token-a" userRole="Admin" />);
+    const { rerender } = render(<AgentsPanel accessToken="Токен-a" userRole="Admin" />);
     expect(await screen.findByText("Stale Agent")).toBeInTheDocument();
 
-    rerender(<АгентыPanel accessТокен="token-b" userRole="Admin" />);
+    rerender(<AgentsPanel accessToken="Токен-b" userRole="Admin" />);
 
     await waitFor(() => {
-      expect(screen.getByText("No agents yet")).toBeInTheDocument();
+      expect(screen.getByText("Нет Агенты yet")).toBeInTheDocument();
     });
     expect(screen.queryByText("Stale Agent")).not.toBeInTheDocument();
   });
 
-  it("should ignore a superseded response so it cannot overwrite the current token's rows", async () => {
+  it("should ignore a superseded Ответ so it cannot overwrite the current Токен's rows", async () => {
     let resolveFirst: (value: {
-      agents: { agent_id: string; agent_name: string; litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: string }; spend: number; keys: [] }[];
+      agents: { agent_id: string; agent_name: string; litellm_params: { model: string }; spend: number; keys: [] }[];
     }) => void = () => {};
     vi.mocked(networking.getAgentsList)
       .mockImplementationOnce(
@@ -236,12 +236,12 @@ describe("АгентыPanel", () => {
       )
       .mockResolvedValueOnce({
         agents: [
-          { agent_id: "current", agent_name: "Current Agent", litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }, spend: 0, keys: [] },
+          { agent_id: "current", agent_name: "Current Agent", litellm_params: { model: "gpt-4" }, spend: 0, keys: [] },
         ],
       });
 
-    const { rerender } = render(<АгентыPanel accessТокен="token-a" userRole="Admin" />);
-    rerender(<АгентыPanel accessТокен="token-b" userRole="Admin" />);
+    const { rerender } = render(<AgentsPanel accessToken="Токен-a" userRole="Admin" />);
+    rerender(<AgentsPanel accessToken="Токен-b" userRole="Admin" />);
 
     expect(await screen.findByText("Current Agent")).toBeInTheDocument();
 
@@ -249,7 +249,7 @@ describe("АгентыPanel", () => {
     await act(async () => {
       resolveFirst({
         agents: [
-          { agent_id: "stale", agent_name: "Superseded Agent", litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" }, spend: 0, keys: [] },
+          { agent_id: "stale", agent_name: "Superseded Agent", litellm_params: { model: "gpt-4" }, spend: 0, keys: [] },
         ],
       });
     });
@@ -264,7 +264,7 @@ describe("АгентыPanel", () => {
       {
         agent_id: "agent-1",
         agent_name: "Stable Agent",
-        litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" },
+        litellm_params: { model: "gpt-4" },
         spend: 0,
         keys: [],
       },
@@ -279,7 +279,7 @@ describe("АгентыPanel", () => {
           }),
       );
 
-    render(<АгентыPanel accessТокен="test-token" userRole="Admin" />);
+    render(<AgentsPanel accessToken="test-Токен" userRole="Admin" />);
     expect(await screen.findByText("Stable Agent")).toBeInTheDocument();
 
     await user.click(screen.getByRole("switch"));

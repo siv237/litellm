@@ -2,36 +2,36 @@ import React from "react";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent, { PointerEventsCheckLevel } from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
-import { MCPToolsetsTab } from "./MCPToolsetsTab";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MCPToolsetsTab } from "./MCPИнструментыetsTab";
 import * as networking from "@/components/networking";
-import { useMCPToolsets } from "@/app/(dashboard)/hooks/mcp-серверы/useMCPToolsets";
-import { useMCP-серверы } from "@/app/(dashboard)/hooks/mcp-серверы/useMCP-серверы";
+import { useMCPToolsets } from "@/app/(dashboard)/hooks/mcpServers/useMCPИнструментыets";
+import { useMCPServers } from "@/app/(dashboard)/hooks/mcpServers/useMCPServers";
 import { MCPToolset } from "@/components/mcp_tools/types";
 
 vi.mock("@/components/networking", () => ({
   createMCPToolset: vi.fn(),
   updateMCPToolset: vi.fn(),
   deleteMCPToolset: vi.fn(),
-  listMCPИнструменты: vi.fn(),
-  getProxyBaseUrl: vi.fn().mockReturnЗначение("http://localhost:4000"),
+  listMCPTools: vi.fn(),
+  getProxyBaseUrl: vi.fn().mockReturnValue("http://localhost:4000"),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCPToolsets", () => ({ useMCPToolsets: vi.fn() }));
-vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCP-серверы", () => ({ useMCP-серверы: vi.fn() }));
+vi.mock("@/app/(dashboard)/hooks/mcpServers/useMCPИнструментыets", () => ({ useMCPToolsets: vi.fn() }));
+vi.mock("@/app/(dashboard)/hooks/mcpServers/useMCPServers", () => ({ useMCPServers: vi.fn() }));
 
 const setup = () => userEvent.setup({ pointerEventsCheck: PointerEventsCheckLevel.Never });
 
 const renderTab = (toolsets: MCPToolset[] = []) => {
-  vi.mocked(useMCPToolsets).mockReturnЗначение({
+  vi.mocked(useMCPToolsets).mockReturnValue({
     data: toolsets,
     isLoading: false,
   } as unknown as ReturnType<typeof useMCPToolsets>);
-  vi.mocked(useMCP-серверы).mockReturnЗначение({ data: [] } as unknown as ReturnType<typeof useMCP-серверы>);
+  vi.mocked(useMCPServers).mockReturnValue({ data: [] } as unknown as ReturnType<typeof useMCPServers>);
   render(
-    <ЗапросClientПровайдер client={new ЗапросClient({ defaultOptions: { queries: { retry: false, gcВремя: 0 } } })}>
-      <MCPToolsetsTab accessТокен="sk-test" userRole="Admin" />
-    </ЗапросClientПровайдер>,
+    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } })}>
+      <MCPToolsetsTab accessToken="sk-test" userRole="Admin" />
+    </QueryClientProvider>,
   );
 };
 
@@ -39,7 +39,7 @@ const dialogWithButton = async (name: string | RegExp) => {
   const button = await screen.findByRole("button", { name });
   const dialog = button.closest('[role="dialog"]');
   if (dialog === null) {
-    throw new Ошибка(`no dialog contains a "${name}" button`);
+    throw new Error(`no dialog contains a "${name}" button`);
   }
   return within(dialog as HTMLElement);
 };
@@ -55,14 +55,14 @@ const openCreate = async (user: ReturnType<typeof setup>) => {
   return dialogWithButton(/создать набор/i);
 };
 
-describe("MCPToolsetsTab create/edit toolset form", () => {
+describe("MCPИнструментыetsTab create/edit toolset form", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("creates a toolset with the typed name, description and no tools", async () => {
     const user = setup();
-    vi.mocked(networking.createMCPToolset).mockResolvedЗначение(
+    vi.mocked(networking.createMCPToolset).mockResolvedValue(
       {} as Awaited<ReturnType<typeof networking.createMCPToolset>>,
     );
     renderTab();
@@ -86,7 +86,7 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
 
   it("sends an empty string when the description is left untouched", async () => {
     const user = setup();
-    vi.mocked(networking.createMCPToolset).mockResolvedЗначение(
+    vi.mocked(networking.createMCPToolset).mockResolvedValue(
       {} as Awaited<ReturnType<typeof networking.createMCPToolset>>,
     );
     renderTab();
@@ -117,7 +117,7 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
 
   it("does not treat a whitespace-only description as absent", async () => {
     const user = setup();
-    vi.mocked(networking.createMCPToolset).mockResolvedЗначение(
+    vi.mocked(networking.createMCPToolset).mockResolvedValue(
       {} as Awaited<ReturnType<typeof networking.createMCPToolset>>,
     );
     renderTab();
@@ -138,7 +138,7 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
 
   it("seeds the edit form from the toolset and updates it by id", async () => {
     const user = setup();
-    vi.mocked(networking.updateMCPToolset).mockResolvedЗначение(
+    vi.mocked(networking.updateMCPToolset).mockResolvedValue(
       {} as Awaited<ReturnType<typeof networking.updateMCPToolset>>,
     );
     const toolset = {
@@ -150,10 +150,10 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
     renderTab([toolset]);
 
     const dialog = await openEditFor(user);
-    const name = await dialog.findByDisplayЗначение("existing");
+    const name = await dialog.findByDisplayValue("existing");
     expect(name).toBe(dialog.getByPlaceholderText("напр. github-linear-tools"));
     expect(dialog.getByText("Набор инструментов")).toBeInTheDocument();
-    expect(dialog.getByPlaceholderText("Необязательное описание")).toHaveЗначение("old description");
+    expect(dialog.getByPlaceholderText("Необязательное описание")).toHaveValue("old description");
 
     await user.clear(name);
     fireEvent.change(name, { target: { value: "renamed" } });
@@ -172,7 +172,7 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
 
   it("seeds an absent description as an empty string rather than failing", async () => {
     const user = setup();
-    vi.mocked(networking.updateMCPToolset).mockResolvedЗначение(
+    vi.mocked(networking.updateMCPToolset).mockResolvedValue(
       {} as Awaited<ReturnType<typeof networking.updateMCPToolset>>,
     );
     const toolset = {
@@ -184,8 +184,8 @@ describe("MCPToolsetsTab create/edit toolset form", () => {
     renderTab([toolset]);
 
     const dialog = await openEditFor(user);
-    await dialog.findByDisplayЗначение("no-desc");
-    expect(dialog.getByPlaceholderText("Необязательное описание")).toHaveЗначение("");
+    await dialog.findByDisplayValue("no-desc");
+    expect(dialog.getByPlaceholderText("Необязательное описание")).toHaveValue("");
 
     await user.click(dialog.getByRole("button", { name: /сохранить изменения/i }));
 

@@ -1,28 +1,28 @@
 import { describe, expect, it } from "vitest";
 
-import type { МаршрутизацияGroup } from "./types";
+import type { RoutingGroup } from "./types";
 import {
   argsForStrategy,
   buildRoutingGroupPayload,
   toRoutingGroupFormValues,
-  type МаршрутизацияGroupFormValues,
+  type RoutingGroupFormValues,
 } from "./routingGroupPayload";
 
-const values = (overrides: Partial<МаршрутизацияGroupFormValues> = {}): МаршрутизацияGroupFormValues => ({
+const values = (overrides: Partial<RoutingGroupFormValues> = {}): RoutingGroupFormValues => ({
   group_name: "fast-chat",
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o"],
+  models: ["gpt-4o"],
   routing_strategy: "simple-shuffle",
   routing_strategy_args: "",
   ...overrides,
 });
 
-describe("buildRoutingGroupPayload", () => {
+describe("buildМаршрутизацияGroupPayload", () => {
   it("sends a null args key for a strategy that takes no arguments", () => {
     expect(buildRoutingGroupPayload(values())).toStrictEqual({
       ok: true,
       group: {
         group_name: "fast-chat",
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o"],
+        models: ["gpt-4o"],
         routing_strategy: "simple-shuffle",
         routing_strategy_args: null,
       },
@@ -38,7 +38,7 @@ describe("buildRoutingGroupPayload", () => {
       ok: true,
       group: {
         group_name: "fast-chat",
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o"],
+        models: ["gpt-4o"],
         routing_strategy: "latency-based-routing",
         routing_strategy_args: { ttl: 3600 },
       },
@@ -72,7 +72,7 @@ describe("buildRoutingGroupPayload", () => {
   it("reports invalid JSON instead of a payload", () => {
     expect(
       buildRoutingGroupPayload(values({ routing_strategy: "latency-based-routing", routing_strategy_args: "{ttl:}" })),
-    ).toStrictEqual({ ok: false, argsОшибка: "Must be valid JSON" });
+    ).toStrictEqual({ ok: false, argsError: "Must be valid JSON" });
   });
 
   it("trims the group name", () => {
@@ -81,11 +81,11 @@ describe("buildRoutingGroupPayload", () => {
     expect(result.ok && result.group.group_name).toBe("fast-chat");
   });
 
-  it("passes the selected Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs through untouched", () => {
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs = ["gpt-4o", "claude-sonnet", "gemini-pro"];
-    const result = buildRoutingGroupPayload(values({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs }));
+  it("passes the selected models through untouched", () => {
+    const models = ["gpt-4o", "claude-sonnet", "gemini-pro"];
+    const result = buildRoutingGroupPayload(values({ models }));
 
-    expect(result.ok && result.group.models).toStrictEqual(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs);
+    expect(result.ok && result.group.models).toStrictEqual(models);
   });
 });
 
@@ -99,11 +99,11 @@ describe("argsForStrategy", () => {
   });
 });
 
-describe("toRoutingGroupFormValues", () => {
+describe("toМаршрутизацияGroupFormЗначениеs", () => {
   it("falls back to empty values and the first available strategy when creating", () => {
-    const expected: МаршрутизацияGroupFormValues = {
+    const expected: RoutingGroupFormValues = {
       group_name: "",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+      models: [],
       routing_strategy: "least-busy",
       routing_strategy_args: "",
     };
@@ -116,15 +116,15 @@ describe("toRoutingGroupFormValues", () => {
   });
 
   it("pretty-prints the stored arguments", () => {
-    const stored: МаршрутизацияGroup = {
+    const stored: RoutingGroup = {
       group_name: "latency-group",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o"],
+      models: ["gpt-4o"],
       routing_strategy: "latency-based-routing",
       routing_strategy_args: { ttl: 3600 },
     };
-    const expected: МаршрутизацияGroupFormValues = {
+    const expected: RoutingGroupFormValues = {
       group_name: "latency-group",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-4o"],
+      models: ["gpt-4o"],
       routing_strategy: "latency-based-routing",
       routing_strategy_args: '{\n  "ttl": 3600\n}',
     };
@@ -133,9 +133,9 @@ describe("toRoutingGroupFormValues", () => {
   });
 
   it("leaves the arguments blank when the stored group has none", () => {
-    const stored: МаршрутизацияGroup = {
+    const stored: RoutingGroup = {
       group_name: "g",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+      models: [],
       routing_strategy: "simple-shuffle",
       routing_strategy_args: null,
     };
@@ -146,8 +146,8 @@ describe("toRoutingGroupFormValues", () => {
   it("carries only the four bound fields, never the rest of the record", () => {
     expect(
       Object.keys(
-        toRoutingGroupFormValues({ group_name: "g", Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [], routing_strategy: "simple-shuffle" }, []),
+        toRoutingGroupFormValues({ group_name: "g", models: [], routing_strategy: "simple-shuffle" }, []),
       ).sort(),
-    ).toStrictEqual(["group_name", "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", "routing_strategy", "routing_strategy_args"]);
+    ).toStrictEqual(["group_name", "models", "routing_strategy", "routing_strategy_args"]);
   });
 });

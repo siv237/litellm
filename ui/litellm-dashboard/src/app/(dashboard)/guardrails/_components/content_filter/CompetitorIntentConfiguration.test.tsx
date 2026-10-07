@@ -5,14 +5,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getMajorAirlines } from "@/components/networking";
 
-import CompetitorIntentConfiguration, { type CompetitorIntentКонфигурация } from "./CompetitorIntentConfiguration";
+import CompetitorIntentConfiguration, { type CompetitorIntentConfig } from "./CompetitorIntentКонфигурацияuration";
 
 vi.mock("@/components/networking", () => ({ getMajorAirlines: vi.fn() }));
 
 const mockAirlines = vi.mocked(getMajorAirlines);
 const onChange = vi.fn();
 
-const DEFAULT_CONFIG: CompetitorIntentКонфигурация = {
+const DEFAULT_CONFIG: CompetitorIntentConfig = {
   competitor_intent_type: "airline",
   brand_self: [],
   locations: [],
@@ -27,28 +27,28 @@ const DEFAULT_CONFIG: CompetitorIntentКонфигурация = {
 
 const Harness = ({ initialEnabled = true }: { initialEnabled?: boolean }) => {
   const [enabled, setEnabled] = useState(initialEnabled);
-  const [config, setКонфигурация] = useState<CompetitorIntentКонфигурация | null>(initialEnabled ? DEFAULT_CONFIG : null);
-  const handleChange = (nextEnabled: boolean, nextКонфигурация: CompetitorIntentКонфигурация | null) => {
-    onChange(nextEnabled, nextКонфигурация);
+  const [config, setConfig] = useState<CompetitorIntentConfig | null>(initialEnabled ? DEFAULT_CONFIG : null);
+  const handleChange = (nextEnabled: boolean, nextConfig: CompetitorIntentConfig | null) => {
+    onChange(nextEnabled, nextConfig);
     setEnabled(nextEnabled);
-    setКонфигурация(nextКонфигурация);
+    setConfig(nextConfig);
   };
   return (
-    <CompetitorIntentConfiguration enabled={enabled} config={config} accessТокен="sk-test" onChange={handleChange} />
+    <CompetitorIntentConfiguration enabled={enabled} config={config} accessToken="sk-test" onChange={handleChange} />
   );
 };
 
-const lastКонфигурация = (): CompetitorIntentКонфигурация => onChange.mock.calls[onChange.mock.calls.length - 1][1];
+const lastConfig = (): CompetitorIntentConfig => onChange.mock.calls[onChange.mock.calls.length - 1][1];
 
 const chooseOption = async (user: ReturnType<typeof userEvent.setup>, index: number, optionText: string) => {
   await user.click(screen.getAllByRole("combobox")[index]);
   await user.click(await screen.findByRole("option", { name: optionText }));
 };
 
-describe("CompetitorIntentConfiguration reported config", () => {
+describe("CompetitorIntentКонфигурацияuration reported config", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAirlines.mockResolvedЗначение({ airlines: [] });
+    mockAirlines.mockResolvedValue({ airlines: [] });
   });
 
   it("reports the seeded config when switched on and null when switched off", async () => {
@@ -68,18 +68,18 @@ describe("CompetitorIntentConfiguration reported config", () => {
 
     await chooseOption(user, 0, "Общий (конкуренты указываются вручную)");
 
-    expect(lastКонфигурация()).toStrictEqual({ ...DEFAULT_CONFIG, competitor_intent_type: "generic" });
+    expect(lastConfig()).toStrictEqual({ ...DEFAULT_CONFIG, competitor_intent_type: "generic" });
     expect(screen.getByText("Конкуренты")).toBeInTheDocument();
     expect(screen.queryByText("Локации (необязательно)")).not.toBeInTheDocument();
   });
 
-  it("reports a policy change withвыход dropping the other policy key", async () => {
+  it("reports a policy change without dropping the other policy key", async () => {
     const user = userEvent.setup();
     render(<Harness />);
 
     await chooseOption(user, 3, "Переформулировать (предложить альтернативу)");
 
-    expect(lastКонфигурация()).toStrictEqual({
+    expect(lastConfig()).toStrictEqual({
       ...DEFAULT_CONFIG,
       policy: { competitor_comparison: "reframe", possible_competitor_comparison: "reframe" },
     });
@@ -93,7 +93,7 @@ describe("CompetitorIntentConfiguration reported config", () => {
     await user.click(brandSelf);
     await user.type(brandSelf, "acme,globex,");
 
-    expect(lastКонфигурация().brand_self).toStrictEqual(["acme", "globex"]);
+    expect(lastConfig().brand_self).toStrictEqual(["acme", "globex"]);
   });
 
   it("commits the pending brand term when the field loses focus", async () => {
@@ -105,11 +105,11 @@ describe("CompetitorIntentConfiguration reported config", () => {
     await user.type(brandSelf, "acme");
     await user.tab();
 
-    expect(lastКонфигурация().brand_self).toStrictEqual(["acme"]);
+    expect(lastConfig().brand_self).toStrictEqual(["acme"]);
   });
 
   it("expands a picked airline into all of its match variants, lowercased", async () => {
-    mockAirlines.mockResolvedЗначение({ airlines: [{ id: "qr", match: "Qatar Airways|qatar|qr", tags: [] }] });
+    mockAirlines.mockResolvedValue({ airlines: [{ id: "qr", match: "Qatar Airways|qatar|qr", tags: [] }] });
     const user = userEvent.setup();
     render(<Harness />);
 
@@ -117,7 +117,7 @@ describe("CompetitorIntentConfiguration reported config", () => {
     const options = await screen.findAllByText(/Qatar Airways/);
     await user.click(options[options.length - 1]);
 
-    expect(lastКонфигурация().brand_self).toStrictEqual(["qatar airways", "qatar", "qr"]);
+    expect(lastConfig().brand_self).toStrictEqual(["qatar airways", "qatar", "qr"]);
   });
 
   it("reports locations only while the airline type is selected", async () => {
@@ -128,7 +128,7 @@ describe("CompetitorIntentConfiguration reported config", () => {
     await user.click(locations);
     await user.type(locations, "doha,");
 
-    expect(lastКонфигурация()).toStrictEqual({ ...DEFAULT_CONFIG, locations: ["doha"] });
+    expect(lastConfig()).toStrictEqual({ ...DEFAULT_CONFIG, locations: ["doha"] });
   });
 
   it("reports a typed decimal threshold and leaves the other two alone", async () => {
@@ -139,7 +139,7 @@ describe("CompetitorIntentConfiguration reported config", () => {
     await user.clear(thresholds[0]);
     await user.type(thresholds[0], "0.55");
 
-    expect(lastКонфигурация()).toStrictEqual({ ...DEFAULT_CONFIG, threshold_high: 0.55 });
+    expect(lastConfig()).toStrictEqual({ ...DEFAULT_CONFIG, threshold_high: 0.55 });
   });
 
   it("falls back to the default threshold when the field is cleared", async () => {
@@ -148,7 +148,7 @@ describe("CompetitorIntentConfiguration reported config", () => {
 
     await user.clear(screen.getAllByRole("spinbutton")[1]);
 
-    expect(lastКонфигурация()).toStrictEqual(DEFAULT_CONFIG);
+    expect(lastConfig()).toStrictEqual(DEFAULT_CONFIG);
   });
 
   it("clamps a threshold above the maximum back to 1 when the field is left", async () => {
@@ -160,10 +160,10 @@ describe("CompetitorIntentConfiguration reported config", () => {
     await user.type(thresholds[2], "5");
     await user.tab();
 
-    expect(lastКонфигурация()).toStrictEqual({ ...DEFAULT_CONFIG, threshold_low: 1 });
+    expect(lastConfig()).toStrictEqual({ ...DEFAULT_CONFIG, threshold_low: 1 });
   });
 
-  it("explains the filter withвыход rendering any control while switched off", () => {
+  it("explains the filter without rendering any control while switched off", () => {
     render(<Harness initialEnabled={false} />);
 
     expect(

@@ -1,13 +1,13 @@
 import React from "react";
 import { fireEvent, render, waitFor, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const mockUserDailyActivityCall = vi.fn();
 const mockUserDailyActivityAggregatedCall = vi.fn();
-const { useAuthorizedMock, mockToolРасходОтвет } = vi.hoisted(() => ({
+const { useAuthorizedMock, mockToolSpendResponse } = vi.hoisted(() => ({
   useAuthorizedMock: vi.fn(),
-  mockToolРасходОтвет: { by_tool: [], daily: [], start_date: null, end_date: null },
+  mockToolSpendResponse: { by_tool: [], daily: [], start_date: null, end_date: null },
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
@@ -17,9 +17,9 @@ vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
 vi.mock("@/components/networking", () => ({
   userDailyActivityCall: (...args: unknown[]) => mockUserDailyActivityCall(...args),
   userDailyActivityAggregatedCall: (...args: unknown[]) => mockUserDailyActivityAggregatedCall(...args),
-  getToolРасход: vi.fn().mockResolvedЗначение(mockToolРасходОтвет),
-  getGeneralSettingsCall: vi.fn().mockResolvedЗначение([]),
-  organizationListCall: vi.fn().mockResolvedЗначение([]),
+  getToolSpend: vi.fn().mockResolvedValue(mockToolSpendResponse),
+  getGeneralSettingsCall: vi.fn().mockResolvedValue([]),
+  organizationListCall: vi.fn().mockResolvedValue([]),
 }));
 
 vi.mock("@/components/shared/advanced_date_picker", () => ({
@@ -32,7 +32,7 @@ vi.mock("@/components/shared/charts", () => ({
   DonutChart: () => <div />,
   BarChart: () => <div />,
   CustomLegend: () => <div />,
-  chartColorЗначение: (color: string) => color,
+  chartColorValue: (color: string) => color,
   DEFAULT_COLOR_CYCLE: ["blue", "cyan", "sky", "indigo", "violet", "purple", "fuchsia", "slate"],
   SEQUENTIAL_COLOR_RAMP: ["indigo"],
 }));
@@ -43,7 +43,7 @@ vi.mock("@/app/(dashboard)/router-settings/_components/general_settings", () => 
 
 vi.mock("./PromptCompressionTab", () => ({ __esModule: true, default: () => <div /> }));
 
-import СтоимостьOptimizationView from "./СтоимостьOptimizationView";
+import CostOptimizationView from "./СтоимостьOptimizationView";
 
 const singlePage = {
   results: [],
@@ -52,14 +52,14 @@ const singlePage = {
 
 describe("СтоимостьOptimizationView daily activity", () => {
   it("fetches daily activity once for the page and shares it with every tab that needs it", async () => {
-    mockUserDailyActivityAggregatedCall.mockResolvedЗначение(singlePage);
-    useAuthorizedMock.mockReturnЗначение({ accessТокен: "test-token", userId: "u1", userRole: "proxy_admin" });
-    const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
+    mockUserDailyActivityAggregatedCall.mockResolvedValue(singlePage);
+    useAuthorizedMock.mockReturnValue({ accessToken: "test-token", userId: "u1", userRole: "proxy_admin" });
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
     render(
-      <ЗапросClientПровайдер client={queryClient}>
-        <СтоимостьOptimizationView accessТокен="test-token" userId="u1" userRole="proxy_admin" />
-      </ЗапросClientПровайдер>,
+      <QueryClientProvider client={queryClient}>
+        <CostOptimizationView accessToken="test-token" userId="u1" userRole="proxy_admin" />
+      </QueryClientProvider>,
     );
 
     await waitFor(() => expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalledTimes(1));
@@ -75,19 +75,19 @@ describe("СтоимостьOptimizationView daily activity", () => {
   it("shows the fetch-progress banner while the paginated fallback streams pages in", async () => {
     mockUserDailyActivityAggregatedCall.mockReset();
     mockUserDailyActivityCall.mockReset();
-    mockUserDailyActivityAggregatedCall.mockRejectedЗначение(new Ошибка("aggregated unavailable"));
+    mockUserDailyActivityAggregatedCall.mockRejectedValue(new Error("aggregated unavailable"));
     mockUserDailyActivityCall.mockImplementation((...args: unknown[]) =>
       args[3] === 1
         ? Promise.resolve({ results: [], metadata: { total_pages: 3, has_more: true, page: 1 } })
         : new Promise(() => {}),
     );
-    useAuthorizedMock.mockReturnЗначение({ accessТокен: "test-token", userId: "u1", userRole: "proxy_admin" });
-    const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false } } });
+    useAuthorizedMock.mockReturnValue({ accessToken: "test-token", userId: "u1", userRole: "proxy_admin" });
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
     render(
-      <ЗапросClientПровайдер client={queryClient}>
-        <СтоимостьOptimizationView accessТокен="test-token" userId="u1" userRole="proxy_admin" />
-      </ЗапросClientПровайдер>,
+      <QueryClientProvider client={queryClient}>
+        <CostOptimizationView accessToken="test-token" userId="u1" userRole="proxy_admin" />
+      </QueryClientProvider>,
     );
 
     expect(await screen.findByText(/Currently fetching spend data: fetched 1 \/ 3 pages/)).toBeInTheDocument();

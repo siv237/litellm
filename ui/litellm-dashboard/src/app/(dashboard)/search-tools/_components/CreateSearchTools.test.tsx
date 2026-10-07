@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { SearchProviderLabel } from "./CreateSearchИнструменты";
+import { SearchProviderLabel } from "./CreateSearchTools";
 
 describe("SearchProviderLabel", () => {
   it("renders the tavily logo from the static bundle, untouched by server-root prefixing", () => {
@@ -23,11 +23,11 @@ describe("SearchProviderLabel", () => {
     );
   });
 
-  it("falls back to a letter avatar for a provider with no bundled logo", () => {
-    render(<SearchProviderLabel providerName="brave" displayName="Brave Search" />);
+  it("falls Назад to a letter avatar for a Провайдер with Нет bundled logo", () => {
+    render(<SearchProviderLabel providerName="brave" displayName="Brave Поиск" />);
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
     expect(screen.getByText("B")).toBeInTheDocument();
-    expect(screen.getByText("Brave Search")).toBeInTheDocument();
+    expect(screen.getByText("Brave Поиск")).toBeInTheDocument();
   });
 
   it("does not guess a legacy /ui/assets/logos/<slug>.png url for unknown providers", () => {

@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 import {
-  filterSensitiveМетаданные,
+  filterSensitiveMetadata,
   extractLoggingSettings,
   formatMetadataForDisplay,
-  stripTagsFromМетаданные,
+  stripTagsFromMetadata,
 } from "./key_info_utils";
 
 describe("filterSensitiveМетаданные", () => {
@@ -14,7 +14,7 @@ describe("filterSensitiveМетаданные", () => {
       nested: { c: 2 },
       tags: ["x"],
     };
-    const result = filterSensitiveМетаданные(input);
+    const result = filterSensitiveMetadata(input);
     expect(result).toEqual({
       a: 1,
       nested: { c: 2 },
@@ -34,24 +34,24 @@ describe("extractLoggingSettings", () => {
   });
 });
 
-describe("formatMetadataForDisplay", () => {
-  it("stringifies metadata withвыход sensitive fields like 'logging'", () => {
+describe("formatМетаданныеForDisplay", () => {
+  it("stringifies metadata without sensitive fields like 'logging'", () => {
     const input = {
       logging: [{ level: "error" }],
       visible: "ok",
     };
-    const выходput = formatMetadataForDisplay(input); // default indent = 2
+    const output = formatMetadataForDisplay(input); // default indent = 2
     const expected = JSON.stringify({ visible: "ok" }, null, 2);
-    expect(выходput).toBe(expected);
-    expect(выходput).not.toContain("logging");
+    expect(output).toBe(expected);
+    expect(output).not.toContain("logging");
   });
 });
 
-describe("stripTagsFromМетаданные", () => {
+describe("stripТегиFromМетаданные", () => {
   it("removes top-level 'tags' but leaves other properties intact and does not mutate input", () => {
     const input = { tags: ["a", "b"], keep: { x: 1 } };
     const originalCopy = JSON.parse(JSON.stringify(input));
-    const result = stripTagsFromМетаданные(input);
+    const result = stripTagsFromMetadata(input);
     expect(result).toEqual({ keep: { x: 1 } });
     // Ensure original input is not mutated
     expect(input).toEqual(originalCopy);

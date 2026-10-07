@@ -7,29 +7,29 @@ vi.mock("@/lib/toast", () => ({
 }));
 
 // ---- Hoisted shared mocks (safe to use inside vi.mock factories) ----
-const { keyUpdateCallMock, keyDeleteCallMock, mockUseАвторизовано } = vi.hoisted(() => {
+const { keyUpdateCallMock, keyDeleteCallMock, mockUseAuthorized } = vi.hoisted(() => {
   return {
-    keyUpdateCallMock: vi.fn().mockResolvedЗначение({}),
-    keyDeleteCallMock: vi.fn().mockResolvedЗначение({}),
-    mockUseАвторизовано: vi.fn(),
+    keyUpdateCallMock: vi.fn().mockResolvedValue({}),
+    keyDeleteCallMock: vi.fn().mockResolvedValue({}),
+    mockUseAuthorized: vi.fn(),
   };
 });
 
 // ---- Module mocks ----
 
-// Mock useАвторизовано hook FIRST (before component imports it)
+// Mock useAuthorized hook FIRST (before component imports it)
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: mockUseАвторизовано,
+  default: mockUseAuthorized,
 }));
 
-vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
+vi.mock("@/app/(dashboard)/hooks/organizations/useОрганизацияs", () => ({
   useOrganizations: () => ({ data: [] }),
 }));
 
 // Networking: wire the hoisted fns so we can assert calls later
 vi.mock("../networking", () => {
   return {
-    serverRootПуть: "",
+    serverRootPath: "",
     keyUpdateCall: (...args: any[]) => keyUpdateCallMock(...args),
     keyDeleteCall: (...args: any[]) => keyDeleteCallMock(...args),
   };
@@ -52,7 +52,7 @@ vi.mock("@/utils/dataUtils", () => ({
 vi.mock("../key_info_utils", () => ({
   extractLoggingSettings: () => ({}),
   formatMetadataForDisplay: (m: any) => JSON.stringify(m, null, 2),
-  stripTagsFromМетаданные: (m: any) => m,
+  stripTagsFromMetadata: (m: any) => m,
 }));
 vi.mock("../callback_info_helpers", () => ({
   callback_map: {},
@@ -60,11 +60,11 @@ vi.mock("../callback_info_helpers", () => ({
   mapDisplayToInternalNames: (x: any) => x,
 }));
 vi.mock("../shared/errorUtils", () => ({
-  parseОшибкаСообщение: (e: any) => String(e),
+  parseErrorMessage: (e: any) => String(e),
 }));
 
 // Icons -> async factory & local React
-vi.mock("@heroicons/react/выходline", async () => {
+vi.mock("@heroicons/react/outline", async () => {
   const React = await import("react");
   function ArrowLeftIcon() {
     return React.createElement("span");
@@ -83,11 +83,11 @@ vi.mock("@heroicons/react/выходline", async () => {
 
 // Heavy children -> async factories & local React
 vi.mock("../organisms/ПерегенерироватьКлючModal", () => {
-  function ПерегенерироватьКлючModal() {
+  function RegenerateKeyModal() {
     return null;
   }
-  (ПерегенерироватьКлючModal as any).displayName = "ПерегенерироватьКлючModal";
-  return { ПерегенерироватьКлючModal };
+  (RegenerateKeyModal as any).displayName = "ПерегенерироватьКлючModal";
+  return { RegenerateKeyModal };
 });
 vi.mock("../object_permissions_view", () => {
   function ObjectPermissionsView() {
@@ -123,61 +123,61 @@ vi.mock("next/navigation", () => ({
   }),
 }));
 
-// Mock useКоманды hook
+// Mock useTeams hook
 vi.mock("@/app/(dashboard)/hooks/useКоманды", () => ({
   default: vi.fn(() => ({
     teams: [],
-    setКоманды: vi.fn(),
+    setTeams: vi.fn(),
   })),
 }));
 
 // Mock useProjects hook
 vi.mock("@/app/(dashboard)/hooks/projects/useProjects", () => ({
-  useProjects: vi.fn().mockReturnЗначение({ data: [], isLoading: false }),
+  useProjects: vi.fn().mockReturnValue({ data: [], isLoading: false }),
 }));
 
 // Mock useUISettings hook
 vi.mock("@/app/(dashboard)/hooks/uiSettings/useUISettings", () => ({
-  useUISettings: vi.fn().mockReturnЗначение({ data: { values: {} }, isLoading: false }),
+  useUISettings: vi.fn().mockReturnValue({ data: { values: {} }, isLoading: false }),
 }));
 
-// Mock useMCP-серверы hook (requires ЗапросClientПровайдер which is not available in this test)
-vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCP-серверы", () => ({
-  useMCP-серверы: vi.fn().mockReturnЗначение({ data: [] }),
+// Mock useMCPServers hook (requires QueryClientProvider which is not available in this test)
+vi.mock("@/app/(dashboard)/hooks/mcpServers/useMCPServers", () => ({
+  useMCPServers: vi.fn().mockReturnValue({ data: [] }),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCPToolsets", () => ({
-  useMCPToolsets: vi.fn().mockReturnЗначение({ data: [] }),
+vi.mock("@/app/(dashboard)/hooks/mcpServers/useMCPИнструментыets", () => ({
+  useMCPToolsets: vi.fn().mockReturnValue({ data: [] }),
 }));
 
-// Mock useResetКлючРасход hook (requires ЗапросClientПровайдер which is not available in this test)
-vi.mock("@/app/(dashboard)/hooks/keys/useResetКлючРасход", () => ({
-  useResetКлючРасход: vi.fn().mockReturnЗначение({
+// Mock useResetKeySpend hook (requires QueryClientProvider which is not available in this test)
+vi.mock("@/app/(dashboard)/hooks/keys/useResetКлючSpend", () => ({
+  useResetKeySpend: vi.fn().mockReturnValue({
     mutate: vi.fn(),
     isPending: false,
   }),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/keys/useSetKeyBlockedState", () => ({
-  useSetKeyBlockedState: vi.fn().mockReturnЗначение({
+vi.mock("@/app/(dashboard)/hooks/keys/useSetКлючBlockedState", () => ({
+  useSetKeyBlockedState: vi.fn().mockReturnValue({
     mutate: vi.fn(),
     isPending: false,
   }),
 }));
 
-// useRequestClient also needs a provider; the delete-path invalidation is covered in key_info_view.test.tsx
+// useQueryClient also needs a provider; the delete-path invalidation is covered in key_info_view.test.tsx
 vi.mock("@tanstack/react-query", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@tanstack/react-query")>();
   return {
     ...actual,
-    useRequestClient: () => ({ invalidateQueries: vi.fn() }),
+    useQueryClient: () => ({ invalidateQueries: vi.fn() }),
   };
 });
 
-// КлючEditView mock: triggers onSubmit with our injected form values
+// KeyEditView mock: triggers onSubmit with our injected form values
 vi.mock("./key_edit_view", async () => {
   const React = await import("react");
-  function КлючEditView(props: any) {
+  function KeyEditView(props: any) {
     return React.createElement(
       "div",
       null,
@@ -190,12 +190,12 @@ vi.mock("./key_edit_view", async () => {
       ),
     );
   }
-  (КлючEditView as any).displayName = "КлючEditViewMock";
-  return { КлючEditView };
+  (KeyEditView as any).displayName = "КлючEditViewMock";
+  return { KeyEditView };
 });
 
 // ---- SUT import AFTER mocks ----
-import КлючInfoView from "./key_info_view";
+import KeyInfoView from "./key_info_view";
 
 // ---- Test data helpers ----
 const baseKeyData = {
@@ -209,7 +209,7 @@ const baseKeyData = {
   max_budget: null,
   tpm_limit: null,
   rpm_limit: null,
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [] as string[],
+  models: [] as string[],
   metadata: {} as Record<string, any>,
   object_permission: {} as Record<string, any>,
   auto_rotate: false,
@@ -220,9 +220,9 @@ const baseKeyData = {
 };
 
 const renderView = (premiumUser: boolean) => {
-  // Конфигурацияure the mock for this test
-  mockUseАвторизовано.mockReturnЗначение({
-    accessТокен: "access_abc",
+  // Configure the mock for this test
+  mockUseAuthorized.mockReturnValue({
+    accessToken: "access_abc",
     userId: "user_1",
     userRole: "Admin",
     premiumUser,
@@ -233,7 +233,7 @@ const renderView = (premiumUser: boolean) => {
   });
 
   return render(
-    <КлючInfoView
+    <KeyInfoView
       keyId="tok_123"
       onClose={() => {}}
       keyData={baseKeyData as any}
@@ -249,11 +249,11 @@ beforeEach(() => {
 });
 
 // ---- Tests ----
-describe("КлючInfoView handleKeyUpdate гардрейловs guard", () => {
-  it("should remove гардрейловs & prompts for non-premium key owner withвыход write access role", async () => {
+describe("КлючInfoView handleКлючUpdate guardrails guard", () => {
+  it("should remove guardrails & prompts for non-premium key owner without write access role", async () => {
     const keyDataWithOwner = { ...baseKeyData, user_id: "user_1" };
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: "access_abc",
+    mockUseAuthorized.mockReturnValue({
+      accessToken: "access_abc",
       userId: "user_1",
       userRole: "viewer",
       premiumUser: false,
@@ -264,7 +264,7 @@ describe("КлючInfoView handleKeyUpdate гардрейловs guard", () => {
     });
 
     render(
-      <КлючInfoView
+      <KeyInfoView
         keyId="tok_123"
         onClose={() => {}}
         keyData={keyDataWithOwner as any}
@@ -277,7 +277,7 @@ describe("КлючInfoView handleKeyUpdate гардрейловs guard", () => {
     fireEvent.click(screen.getByText("Edit Settings"));
     (globalThis as any).__TEST_FORM_VALUES = {
       token: "tok_123",
-      гардрейловs: ["gr-1", "gr-2"],
+      guardrails: ["gr-1", "gr-2"],
       prompts: ["fast", "safe"],
       metadata: {},
     };
@@ -286,23 +286,23 @@ describe("КлючInfoView handleKeyUpdate гардрейловs guard", () => {
 
     await waitFor(() => expect(keyUpdateCallMock).toHaveBeenCalled());
 
-    const [sentAccessТокен, sentPayload] = keyUpdateCallMock.mock.calls[0];
-    expect(sentAccessТокен).toBe("access_abc");
+    const [sentAccessToken, sentPayload] = keyUpdateCallMock.mock.calls[0];
+    expect(sentAccessToken).toBe("access_abc");
 
-    expect("гардрейловs" in sentPayload).toBe(false);
+    expect("guardrails" in sentPayload).toBe(false);
     expect("prompts" in sentPayload).toBe(false);
     expect(sentPayload.metadata?.guardrails).toBeUndefined();
     expect(sentPayload.key).toBe("tok_123");
   });
 
-  it("should preserve гардрейловs & prompts for non-premium users with write access role (e.g. Admin)", async () => {
+  it("should preserve guardrails & prompts for non-premium users with write access role (e.g. Admin)", async () => {
     renderView(false); // premiumUser = false, userRole = "Admin"
 
     fireEvent.click(screen.getByText("Settings"));
     fireEvent.click(screen.getByText("Edit Settings"));
     (globalThis as any).__TEST_FORM_VALUES = {
       token: "tok_123",
-      гардрейловs: ["gr-1"],
+      guardrails: ["gr-1"],
       prompts: ["fast"],
       metadata: {},
     };
@@ -319,14 +319,14 @@ describe("КлючInfoView handleKeyUpdate гардрейловs guard", () => {
     expect(sentPayload.key).toBe("tok_123");
   });
 
-  it("should preserve гардрейловs & prompts for premium users and includes metadata.guardrails", async () => {
+  it("should preserve guardrails & prompts for premium users and includes metadata.guardrails", async () => {
     renderView(true); // premiumUser = true
 
     fireEvent.click(screen.getByText("Settings"));
     fireEvent.click(screen.getByText("Edit Settings"));
     (globalThis as any).__TEST_FORM_VALUES = {
       token: "tok_123",
-      гардрейловs: ["gr-1"],
+      guardrails: ["gr-1"],
       prompts: ["fast"],
       metadata: {},
     };
@@ -344,7 +344,7 @@ describe("КлючInfoView handleKeyUpdate гардрейловs guard", () => {
   });
 });
 
-describe("КлючInfoView handleKeyUpdate mcp_toolsets", () => {
+describe("КлючInfoView handleКлючUpdate mcp_toolsets", () => {
   it("should forward the toolsets the edit form supplies into object_permission", async () => {
     renderView(true);
 
@@ -366,7 +366,7 @@ describe("КлючInfoView handleKeyUpdate mcp_toolsets", () => {
   });
 });
 
-describe("КлючInfoView handleKeyUpdate skills", () => {
+describe("КлючInfoView handleКлючUpdate skills", () => {
   it("should forward the skills the edit form supplies into object_permission and drop the form key", async () => {
     renderView(true);
 
@@ -383,7 +383,7 @@ describe("КлючInfoView handleKeyUpdate skills", () => {
 
     const [, sentPayload] = keyUpdateCallMock.mock.calls[0];
     expect(sentPayload.object_permission.skills).toEqual(["private-skill"]);
-    expect(sentPayload).not.toHaveСвойство("skills");
+    expect(sentPayload).not.toHaveProperty("skills");
   });
 
   it("should send an explicit empty skills list when the form clears every skill", async () => {
@@ -405,7 +405,7 @@ describe("КлючInfoView handleKeyUpdate skills", () => {
   });
 });
 
-describe("КлючInfoView handleKeyUpdate budget_duration", () => {
+describe("КлючInfoView handleКлючUpdate budget_duration", () => {
   it("should send a canonical budget_duration through unchanged", async () => {
     renderView(true);
 
@@ -467,8 +467,8 @@ describe("КлючInfoView handleKeyUpdate budget_duration", () => {
       budget_duration: null,
       budget_reset_at: null,
     });
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: "access_abc",
+    mockUseAuthorized.mockReturnValue({
+      accessToken: "access_abc",
       userId: "user_1",
       userRole: "Admin",
       premiumUser: true,
@@ -479,7 +479,7 @@ describe("КлючInfoView handleKeyUpdate budget_duration", () => {
     });
 
     render(
-      <КлючInfoView
+      <KeyInfoView
         keyId="tok_123"
         onClose={() => {}}
         keyData={{ ...baseKeyData, budget_duration: "30d", budget_reset_at: "2026-09-01T00:00:00Z" } as any}
@@ -505,7 +505,7 @@ describe("КлючInfoView handleKeyUpdate budget_duration", () => {
   });
 });
 
-describe("КлючInfoView handleKeyUpdate empty strings", () => {
+describe("КлючInfoView handleКлючUpdate empty strings", () => {
   ["tpm_limit", "rpm_limit", "max_parallel_requests", "max_budget"].forEach((limit) => {
     it(`maps empty strings to null for ${limit}`, async () => {
       renderView(true); // premiumUser = true
@@ -521,16 +521,16 @@ describe("КлючInfoView handleKeyUpdate empty strings", () => {
 
       await waitFor(() => expect(keyUpdateCallMock).toHaveBeenCalled());
 
-      const [sentAccessТокен, sentPayload] = keyUpdateCallMock.mock.calls[0];
-      expect(sentAccessТокен).toBe("access_abc");
+      const [sentAccessToken, sentPayload] = keyUpdateCallMock.mock.calls[0];
+      expect(sentAccessToken).toBe("access_abc");
       expect(sentPayload[limit]).toBeNull();
     });
   });
 });
 
-describe("КлючInfoView handleKeyUpdate soft_budget", () => {
+describe("КлючInfoView handleКлючUpdate soft_budget", () => {
   const premiumAdminAuth = {
-    accessТокен: "access_abc",
+    accessToken: "access_abc",
     userId: "user_1",
     userRole: "Admin",
     premiumUser: true,
@@ -540,15 +540,15 @@ describe("КлючInfoView handleKeyUpdate soft_budget", () => {
     showSSOBanner: false,
   };
 
-  const renderWithSoftБюджет = (softБюджет: number | null) => {
-    mockUseАвторизовано.mockReturnЗначение(premiumAdminAuth);
+  const renderWithSoftBudget = (softBudget: number | null) => {
+    mockUseAuthorized.mockReturnValue(premiumAdminAuth);
 
     return render(
-      <КлючInfoView
+      <KeyInfoView
         keyId="tok_123"
         onClose={() => {}}
         keyData={
-          { ...baseKeyData, litellm_budget_table: softБюджет === null ? null : { soft_budget: softБюджет } } as any
+          { ...baseKeyData, litellm_budget_table: softBudget === null ? null : { soft_budget: softBudget } } as any
         }
         onKeyDataUpdate={() => {}}
         teams={[]}
@@ -557,7 +557,7 @@ describe("КлючInfoView handleKeyUpdate soft_budget", () => {
   };
 
   it("should send a changed soft_budget as a number", async () => {
-    renderWithSoftБюджет(null);
+    renderWithSoftBudget(null);
 
     fireEvent.click(screen.getByText("Settings"));
     fireEvent.click(screen.getByText("Edit Settings"));
@@ -575,7 +575,7 @@ describe("КлючInfoView handleKeyUpdate soft_budget", () => {
   });
 
   it("should omit an unchanged soft_budget so unrelated edits skip the budget gate", async () => {
-    renderWithSoftБюджет(25);
+    renderWithSoftBudget(25);
 
     fireEvent.click(screen.getByText("Settings"));
     fireEvent.click(screen.getByText("Edit Settings"));
@@ -594,7 +594,7 @@ describe("КлючInfoView handleKeyUpdate soft_budget", () => {
   });
 
   it("should forward a cleared soft_budget as an explicit null the JSON body keeps", async () => {
-    renderWithSoftБюджет(25);
+    renderWithSoftBudget(25);
 
     fireEvent.click(screen.getByText("Settings"));
     fireEvent.click(screen.getByText("Edit Settings"));
@@ -613,7 +613,7 @@ describe("КлючInfoView handleKeyUpdate soft_budget", () => {
   });
 
   it("should reject an overflowing soft_budget instead of silently clearing it", async () => {
-    renderWithSoftБюджет(25);
+    renderWithSoftBudget(25);
 
     fireEvent.click(screen.getByText("Settings"));
     fireEvent.click(screen.getByText("Edit Settings"));

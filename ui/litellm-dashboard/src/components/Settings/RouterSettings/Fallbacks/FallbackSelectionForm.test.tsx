@@ -1,17 +1,17 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { FallbackSelectionForm } from "./FallbackSelectionForm";
+import { FallbackSelectionForm } from "./FallbackВыбратьionForm";
 import type { FallbackGroup } from "./FallbackGroupКонфигурация";
 import { toast } from "@/lib/toast";
 
 const mockOnGroupsChange = vi.fn();
 const AVAILABLE_MODELS = ["gpt-4", "gpt-3.5-turbo", "claude-3-opus"];
 
-describe("FallbackSelectionForm", () => {
+describe("FallbackВыбратьionForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.spyOn(Date, "now").mockReturnЗначение(1234567890);
+    vi.spyOn(Date, "now").mockReturnValue(1234567890);
   });
 
   it("should render the component", () => {
@@ -54,7 +54,7 @@ describe("FallbackSelectionForm", () => {
     expect(screen.getByRole("tab", { name: /group 1/i })).toBeInTheDocument();
   });
 
-  it("should display primary Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию as tab label when set", () => {
+  it("should display primary model as tab label when set", () => {
     const groups: FallbackGroup[] = [{ id: "1", primaryModel: "gpt-4", fallbackModels: [] }];
     render(
       <FallbackSelectionForm groups={groups} onGroupsChange={mockOnGroupsChange} availableModels={AVAILABLE_MODELS} />,
@@ -140,11 +140,11 @@ describe("FallbackSelectionForm", () => {
     render(
       <FallbackSelectionForm groups={groups} onGroupsChange={mockOnGroupsChange} availableModels={AVAILABLE_MODELS} />,
     );
-    expect(screen.getByRole("combobox", { name: /primary Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/i })).toHaveЗначение("");
+    expect(screen.getByRole("combobox", { name: /primary model/i })).toHaveValue("");
     expect(screen.getByText("Primary Режимl")).toBeInTheDocument();
   });
 
-  it("should display group with primary and fallback Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs in FallbackGroupКонфигурация", () => {
+  it("should display group with primary and fallback models in FallbackGroupКонфигурация", () => {
     const groups: FallbackGroup[] = [{ id: "1", primaryModel: "gpt-4", fallbackModels: ["gpt-3.5-turbo"] }];
     render(
       <FallbackSelectionForm groups={groups} onGroupsChange={mockOnGroupsChange} availableModels={AVAILABLE_MODELS} />,

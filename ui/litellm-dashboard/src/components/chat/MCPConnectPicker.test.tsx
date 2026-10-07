@@ -1,14 +1,14 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach } from "vitest";
-import MCPConnectPicker from "./MCPConnectPicker";
-import { fetchMCP-серверы } from "../networking";
-import type { MCPСервер } from "../mcp_tools/types";
-import { setServerRootПуть } from "@/lib/serverRootПуть";
+import MCPConnectPicker from "./MCPПодключитьPicker";
+import { fetchMCPServers } from "../networking";
+import type { MCPServer } from "../mcp_tools/types";
+import { setServerRootPath } from "@/lib/serverRootПуть";
 
 vi.mock("../networking", () => ({
-  fetchMCP-серверы: vi.fn(),
-  listMCPИнструменты: vi.fn(),
+  fetchMCPServers: vi.fn(),
+  listMCPTools: vi.fn(),
 }));
 
 const servers = [
@@ -26,28 +26,28 @@ const servers = [
     server_id: "s-none",
     server_name: "no_logo",
   },
-] as MCPСервер[];
+] as MCPServer[];
 
-describe("MCPConnectPicker logos", () => {
+describe("MCPПодключитьPicker logos", () => {
   afterEach(() => {
-    setServerRootПуть("/");
+    setServerRootPath("/");
   });
 
   it("resolves backend logo_url values through the Logo component", async () => {
-    setServerRootПуть("/litellm");
-    vi.mocked(fetchMCP-серверы).mockResolvedЗначение(servers);
+    setServerRootPath("/litellm");
+    vi.mocked(fetchMCPServers).mockResolvedValue(servers);
 
-    render(<MCPConnectPicker accessТокен="tok" selected-серверы={[]} onChange={vi.fn()} />);
+    render(<MCPConnectPicker accessToken="tok" selectedServers={[]} onChange={vi.fn()} />);
 
     expect(await screen.findByText("external_logo")).toBeInTheDocument();
     expect(screen.getByAltText("external_logo logo")).toHaveAttribute("src", "https://cdn.example.com/ext.png");
     expect(screen.getByAltText("local_logo logo")).toHaveAttribute("src", "/litellm/ui/assets/logos/github.svg");
   });
 
-  it("renders no logo at all for servers withвыход logo_url", async () => {
-    vi.mocked(fetchMCP-серверы).mockResolvedЗначение(servers);
+  it("renders no logo at all for servers without logo_url", async () => {
+    vi.mocked(fetchMCPServers).mockResolvedValue(servers);
 
-    render(<MCPConnectPicker accessТокен="tok" selected-серверы={[]} onChange={vi.fn()} />);
+    render(<MCPConnectPicker accessToken="tok" selectedServers={[]} onChange={vi.fn()} />);
 
     expect(await screen.findByText("no_logo")).toBeInTheDocument();
     expect(screen.queryByAltText("no_logo logo")).not.toBeInTheDocument();

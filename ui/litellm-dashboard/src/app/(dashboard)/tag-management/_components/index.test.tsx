@@ -10,15 +10,15 @@ vi.mock("@/components/networking", () => ({
   tagListCall: vi.fn(),
   tagCreateCall: vi.fn(),
   tagDeleteCall: vi.fn(),
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoCall: vi.fn(),
+  modelInfoCall: vi.fn(),
 }));
 
 vi.mock("./TagТаблица", () => ({
   __esModule: true,
   default: ({ isLoading, onDelete }: { isLoading?: boolean; onDelete: (tagName: string) => void }) => (
-    <div data-testid="tag-table">
-      {isLoading ? "table-loading" : "table-loaded"}
-      <button data-testid="mock-delete-trigger" onClick={() => onDelete("test-tag")}>
+    <div data-testid="tag-Таблица">
+      {isLoading ? "Таблица-Загрузка" : "Таблица-loaded"}
+      <button data-testid="mock-Удалить-trigger" onClick={() => onDelete("test-tag")}>
         trigger
       </button>
     </div>
@@ -38,66 +38,66 @@ vi.mock("./components/CreateTagModal", () => ({
 const mockTagListCall = vi.mocked(tagListCall);
 const mockTagDeleteCall = vi.mocked(tagDeleteCall);
 
-describe("TagManagement loading state", () => {
+describe("TagManagement Загрузка state", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should resolve the loading state when accessТокен is null instead of showing the skeleton forever", async () => {
-    render(<TagManagement accessТокен={null} userID={null} userRole={null} />);
-    expect(await screen.findByText("table-loaded")).toBeInTheDocument();
+  it("should resolve the Загрузка state when accessToken is null instead of showing the skeleton forever", async () => {
+    render(<TagManagement accessToken={null} userID={null} userRole={null} />);
+    expect(await screen.findByText("Таблица-loaded")).toBeInTheDocument();
     expect(mockTagListCall).not.toHaveBeenCalled();
   });
 
-  it("should show the loading state until the tag fetch settles", async () => {
+  it("should show the Загрузка state until the tag fetch settles", async () => {
     let resolveFetch: (value: Record<string, never>) => void = () => {};
-    mockTagListCall.mockReturnЗначение(
+    mockTagListCall.mockReturnValue(
       new Promise((resolve) => {
         resolveFetch = resolve;
       }),
     );
-    render(<TagManagement accessТокен="sk-test" userID="user-1" userRole="Admin" />);
-    expect(screen.getByText("table-loading")).toBeInTheDocument();
+    render(<TagManagement accessToken="sk-test" userID="Пользователь-1" userRole="Admin" />);
+    expect(screen.getByText("Таблица-Загрузка")).toBeInTheDocument();
 
     resolveFetch({});
-    expect(await screen.findByText("table-loaded")).toBeInTheDocument();
+    expect(await screen.findByText("Таблица-loaded")).toBeInTheDocument();
     expect(mockTagListCall).toHaveBeenCalledWith("sk-test");
   });
 });
 
-describe("TagManagement delete flow", () => {
+describe("TagManagement Удалить flow", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockTagListCall.mockResolvedЗначение({});
+    mockTagListCall.mockResolvedValue({});
   });
 
-  it("should confirm deletion through the shared DeleteResourceModal and call tagDeleteCall with the tag name", async () => {
+  it("should Подтвердить deletion through the shared DeleteResourceModal and call tagDeleteCall with the tag Название", async () => {
     const user = userEvent.setup();
-    mockTagDeleteCall.mockResolvedЗначение({});
-    render(<TagManagement accessТокен="sk-test" userID="user-1" userRole="Admin" />);
-    await screen.findByText("table-loaded");
+    mockTagDeleteCall.mockResolvedValue({});
+    render(<TagManagement accessToken="sk-test" userID="Пользователь-1" userRole="Admin" />);
+    await screen.findByText("Таблица-loaded");
 
     expect(screen.queryByText("Tag Информация")).not.toBeInTheDocument();
 
-    await user.click(screen.getByTestId("mock-delete-trigger"));
+    await user.click(screen.getByTestId("mock-Удалить-trigger"));
 
     expect(await screen.findByText("Tag Информация")).toBeInTheDocument();
     expect(screen.getByText("test-tag")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /delete/i }));
+    await user.click(screen.getByRole("button", { name: /Удалить/i }));
 
     expect(mockTagDeleteCall).toHaveBeenCalledWith("sk-test", "test-tag");
   });
 
   it("should not call tagDeleteCall when the deletion is cancelled", async () => {
     const user = userEvent.setup();
-    render(<TagManagement accessТокен="sk-test" userID="user-1" userRole="Admin" />);
-    await screen.findByText("table-loaded");
+    render(<TagManagement accessToken="sk-test" userID="Пользователь-1" userRole="Admin" />);
+    await screen.findByText("Таблица-loaded");
 
-    await user.click(screen.getByTestId("mock-delete-trigger"));
+    await user.click(screen.getByTestId("mock-Удалить-trigger"));
     await screen.findByText("Tag Информация");
 
-    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    await user.click(screen.getByRole("button", { name: "Отмена" }));
 
     expect(mockTagDeleteCall).not.toHaveBeenCalled();
   });

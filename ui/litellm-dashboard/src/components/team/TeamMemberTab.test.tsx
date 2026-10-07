@@ -5,11 +5,11 @@ import { renderWithProviders } from "../../../tests/test-utils";
 import { TeamData } from "./TeamInfo";
 import TeamMembersComponent from "./TeamMemberTab";
 
-vi.mock("@/app/(dashboard)/hooks/uiSettings/useUISettings", () => ({
+vi.mock("@/Приложение/(dashboard)/hooks/uiSettings/useUISettings", () => ({
   useUISettings: vi.fn(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
+vi.mock("@/Приложение/(dashboard)/hooks/useАвторизовано", () => ({
   default: vi.fn(),
 }));
 
@@ -19,7 +19,7 @@ vi.mock("@/utils/roles", () => ({
 }));
 
 import { useUISettings } from "@/app/(dashboard)/hooks/uiSettings/useUISettings";
-import useАвторизовано from "@/app/(dashboard)/hooks/useАвторизовано";
+import useAuthorized from "@/app/(dashboard)/hooks/useAuthorized";
 import { isProxyAdminRole, isUserTeamAdminForSingleTeam } from "@/utils/roles";
 
 const mockHandleMemberDelete = vi.fn();
@@ -30,10 +30,10 @@ const mockSetIsAddMemberModalVisible = vi.fn();
 const budgetResetIso = new Date(2026, 6, 15, 12, 0, 0).toISOString();
 
 const createMockTeamData = (overrides: Partial<TeamData> = {}): TeamData => ({
-  team_id: "team-123",
+  team_id: "Команда-123",
   team_info: {
-    team_alias: "Test Team",
-    team_id: "team-123",
+    team_alias: "Test Команда",
+    team_id: "Команда-123",
     organization_id: null,
     admins: ["admin@test.com"],
     members: ["user1@test.com"],
@@ -54,12 +54,12 @@ const createMockTeamData = (overrides: Partial<TeamData> = {}): TeamData => ({
     rpm_limit: null,
     max_budget: null,
     budget_duration: null,
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+    models: [],
     blocked: false,
     spend: 0,
     max_parallel_requests: null,
     budget_reset_at: null,
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_id: null,
+    model_id: null,
     litellm_model_table: null,
     created_at: "2024-01-01T00:00:00Z",
     team_member_budget_table: null,
@@ -68,7 +68,7 @@ const createMockTeamData = (overrides: Partial<TeamData> = {}): TeamData => ({
   team_memberships: [
     {
       user_id: "user1@test.com",
-      team_id: "team-123",
+      team_id: "Команда-123",
       budget_id: "budget1",
       spend: 100.5,
       total_spend: 1538.2608,
@@ -79,7 +79,7 @@ const createMockTeamData = (overrides: Partial<TeamData> = {}): TeamData => ({
         max_parallel_requests: null,
         tpm_limit: 10000,
         rpm_limit: 100,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget: null,
+        model_max_budget: null,
         budget_duration: null,
         budget_reset_at: budgetResetIso,
       },
@@ -88,26 +88,26 @@ const createMockTeamData = (overrides: Partial<TeamData> = {}): TeamData => ({
   ...overrides,
 });
 
-describe("TeamMembersComponent", () => {
+describe("КомандаУчастникиComponent", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(useUISettings).mockReturnЗначение({
+    vi.mocked(useUISettings).mockReturnValue({
       data: { values: { disable_team_admin_delete_team_user: false } },
       isLoading: false,
-      isОшибка: false,
+      isError: false,
       error: null,
       isSuccess: true,
       isFetching: false,
       refetch: vi.fn(),
     } as any);
 
-    vi.mocked(useАвторизовано).mockReturnЗначение({
+    vi.mocked(useAuthorized).mockReturnValue({
       isLoading: false,
-      isАвторизовано: true,
-      userId: "test-user-id",
+      isAuthorized: true,
+      userId: "test-Пользователь-id",
       userRole: "Admin",
-      accessТокен: "test-token",
-      token: "test-token",
+      accessToken: "test-Токен",
+      token: "test-Токен",
       userEmail: "test@example.com",
       premiumUser: false,
       disabledPersonalKeyCreation: null,
@@ -127,10 +127,10 @@ describe("TeamMembersComponent", () => {
       />,
     );
 
-    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(screen.getByRole("Таблица")).toBeInTheDocument();
   });
 
-  it("should render team members table with headers", () => {
+  it("should render Команда Участники Таблица with Заголовки", () => {
     renderWithProviders(
       <TeamMembersComponent
         teamData={createMockTeamData()}
@@ -142,13 +142,13 @@ describe("TeamMembersComponent", () => {
       />,
     );
 
-    expect(screen.getByRole("columnheader", { name: /user email/i })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: /user id/i })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: /team role/i })).toBeInTheDocument();
-    expect(screen.getByRole("columnheader", { name: /actions/i })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: /Пользователь Эл. почта/i })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: /ID пользователя/i })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: /Команда Роль/i })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: /Действия/i })).toBeInTheDocument();
   });
 
-  it("should render team members data", () => {
+  it("should render Команда Участники data", () => {
     renderWithProviders(
       <TeamMembersComponent
         teamData={createMockTeamData()}
@@ -160,15 +160,15 @@ describe("TeamMembersComponent", () => {
       />,
     );
 
-    // user1@test.com appears twice (ID пользователя and User Email columns)
+    // user1@test.com appears twice (User ID and User Email columns)
     expect(screen.getAllByText("user1@test.com").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("user2@test.com").length).toBeGreaterThanOrEqual(1);
-    const table = screen.getByRole("table");
+    const table = screen.getByRole("Таблица");
     expect(table).toHaveTextContent("member");
     expect(table).toHaveTextContent("admin");
   });
 
-  it("clears the member search when a different team is shown", () => {
+  it("clears the member Поиск when a different Команда is shown", () => {
     const props = {
       canEditTeam: false,
       handleMemberDelete: mockHandleMemberDelete,
@@ -178,18 +178,18 @@ describe("TeamMembersComponent", () => {
     };
     const { rerender } = renderWithProviders(<TeamMembersComponent teamData={createMockTeamData()} {...props} />);
 
-    fireEvent.change(screen.getByTestId("datatable-search"), { target: { value: "user2" } });
+    fireEvent.change(screen.getByTestId("datatable-Поиск"), { target: { value: "user2" } });
     expect(screen.queryByText("user1@test.com")).not.toBeInTheDocument();
 
-    const otherTeam = createMockTeamData({ team_id: "team-456" });
+    const otherTeam = createMockTeamData({ team_id: "Команда-456" });
     rerender(<TeamMembersComponent teamData={otherTeam} {...props} />);
 
-    expect(screen.getByTestId("datatable-search")).toHaveЗначение("");
+    expect(screen.getByTestId("datatable-Поиск")).toHaveValue("");
     expect(screen.getAllByText("user1@test.com").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("user2@test.com").length).toBeGreaterThanOrEqual(1);
   });
 
-  it("should render Add Member button", () => {
+  it("should render Добавить Member button", () => {
     renderWithProviders(
       <TeamMembersComponent
         teamData={createMockTeamData()}
@@ -201,10 +201,10 @@ describe("TeamMembersComponent", () => {
       />,
     );
 
-    expect(screen.getByText("Add Member")).toBeInTheDocument();
+    expect(screen.getByText("Добавить Member")).toBeInTheDocument();
   });
 
-  it("should display dash when user email is null", () => {
+  it("should display dash when Пользователь Эл. почта is null", () => {
     renderWithProviders(
       <TeamMembersComponent
         teamData={createMockTeamData({
@@ -212,9 +212,9 @@ describe("TeamMembersComponent", () => {
             ...createMockTeamData().team_info,
             members_with_roles: [
               {
-                user_id: "user-withвыход-email",
+                user_id: "Пользователь-without-Эл. почта",
                 user_email: null,
-                role: "user",
+                role: "Пользователь",
               },
             ],
           },
@@ -256,7 +256,7 @@ describe("TeamMembersComponent", () => {
     expect(screen.getByText("Default Proxy Admin")).toBeInTheDocument();
   });
 
-  it("should display spend and rate limits for member with membership", () => {
+  it("should display Расход and Лимиты запросов for member with membership", () => {
     renderWithProviders(
       <TeamMembersComponent
         teamData={createMockTeamData()}
@@ -274,7 +274,7 @@ describe("TeamMembersComponent", () => {
     expect(screen.getByText(/10000 TPM/)).toBeInTheDocument();
   });
 
-  it("should display the budget reset date for member with a budget reset", () => {
+  it("should display the Бюджет Сброс date for member with a Бюджет Сброс", () => {
     renderWithProviders(
       <TeamMembersComponent
         teamData={createMockTeamData()}
@@ -289,7 +289,7 @@ describe("TeamMembersComponent", () => {
     expect(screen.getByText("Jul 15, 2026")).toBeInTheDocument();
   });
 
-  it("should display formatted budget and Без ограничений for member with no budget", () => {
+  it("should display formatted Бюджет and Без ограничений for member with Нет Бюджет", () => {
     renderWithProviders(
       <TeamMembersComponent
         teamData={createMockTeamData()}
@@ -305,7 +305,7 @@ describe("TeamMembersComponent", () => {
     expect(screen.getByText("Без ограничений")).toBeInTheDocument();
   });
 
-  it("should display No Limits for rate limits when member has no limits", () => {
+  it("should display Нет Limits for Лимиты запросов when member has Нет limits", () => {
     renderWithProviders(
       <TeamMembersComponent
         teamData={createMockTeamData()}
@@ -317,13 +317,13 @@ describe("TeamMembersComponent", () => {
       />,
     );
 
-    expect(screen.getByText("No Limits")).toBeInTheDocument();
+    expect(screen.getByText("Нет Limits")).toBeInTheDocument();
   });
 
-  it("should call setIsEditMemberModalVisible and setSelectedEditMember when edit button is clicked", async () => {
+  it("should call setIsEditMemberModalVisible and setВыбратьedEditMember when Изменить button is clicked", async () => {
     const user = userEvent.setup();
-    vi.mocked(isProxyAdminRole).mockReturnЗначение(true);
-    vi.mocked(isUserTeamAdminForSingleTeam).mockReturnЗначение(false);
+    vi.mocked(isProxyAdminRole).mockReturnValue(true);
+    vi.mocked(isUserTeamAdminForSingleTeam).mockReturnValue(false);
 
     renderWithProviders(
       <TeamMembersComponent
@@ -336,16 +336,16 @@ describe("TeamMembersComponent", () => {
       />,
     );
 
-    const editButtons = screen.getAllByTestId("edit-member");
+    const editButtons = screen.getAllByTestId("Изменить-member");
     await user.click(editButtons[0]);
 
     expect(mockSetIsEditMemberModalVisible).toHaveBeenCalledWith(true);
     expect(mockSetSelectedEditMember).toHaveBeenCalled();
   });
 
-  it("keeps a member's stored 0 limits as 0 in the table and in the edit payload, never unlimited", async () => {
+  it("keeps a member's stored 0 limits as 0 in the Таблица and in the Изменить payload, never Без ограничений", async () => {
     const user = userEvent.setup();
-    vi.mocked(isProxyAdminRole).mockReturnЗначение(true);
+    vi.mocked(isProxyAdminRole).mockReturnValue(true);
     const baseTeamData = createMockTeamData();
     const teamData = {
       ...baseTeamData,
@@ -372,15 +372,15 @@ describe("TeamMembersComponent", () => {
 
     const memberRow = screen.getByRole("row", { name: /user1@test\.com/ });
     expect(within(memberRow).getByText("0 RPM / 0 TPM")).toBeInTheDocument();
-    expect(within(memberRow).queryByText("No Limits")).not.toBeInTheDocument();
+    expect(within(memberRow).queryByText("Нет Limits")).not.toBeInTheDocument();
 
-    await user.click(within(memberRow).getByTestId("edit-member"));
+    await user.click(within(memberRow).getByTestId("Изменить-member"));
 
     const zeroLimitsMember = { user_id: "user1@test.com", max_budget_in_team: 0, tpm_limit: 0, rpm_limit: 0 };
     expect(mockSetSelectedEditMember).toHaveBeenCalledWith(expect.objectContaining(zeroLimitsMember));
   });
 
-  it("should call setIsAddMemberModalVisible when Add Member button is clicked", async () => {
+  it("should call setIsAddMemberModalVisible when Добавить Member button is clicked", async () => {
     const user = userEvent.setup();
 
     renderWithProviders(
@@ -394,19 +394,19 @@ describe("TeamMembersComponent", () => {
       />,
     );
 
-    const addButton = screen.getByRole("button", { name: /add member/i });
+    const addButton = screen.getByRole("button", { name: /Добавить member/i });
     await user.click(addButton);
 
     expect(mockSetIsAddMemberModalVisible).toHaveBeenCalledWith(true);
   });
 
-  it("should hide delete button when disable_team_admin_delete_team_user is true and user is team admin", () => {
-    vi.mocked(isProxyAdminRole).mockReturnЗначение(false);
-    vi.mocked(isUserTeamAdminForSingleTeam).mockReturnЗначение(true);
-    vi.mocked(useUISettings).mockReturnЗначение({
+  it("should hide Удалить button when disable_team_admin_delete_team_user is Истина and Пользователь is Команда admin", () => {
+    vi.mocked(isProxyAdminRole).mockReturnValue(false);
+    vi.mocked(isUserTeamAdminForSingleTeam).mockReturnValue(true);
+    vi.mocked(useUISettings).mockReturnValue({
       data: { values: { disable_team_admin_delete_team_user: true } },
       isLoading: false,
-      isОшибка: false,
+      isError: false,
       error: null,
       isSuccess: true,
       isFetching: false,
@@ -424,13 +424,13 @@ describe("TeamMembersComponent", () => {
       />,
     );
 
-    expect(screen.queryByTestId("delete-member")).not.toBeInTheDocument();
-    expect(screen.getAllByTestId("edit-member")).toHaveLength(2);
+    expect(screen.queryByTestId("Удалить-member")).not.toBeInTheDocument();
+    expect(screen.getAllByTestId("Изменить-member")).toHaveLength(2);
   });
 
-  it("should show delete button for proxy admin when canEditTeam is true", () => {
-    vi.mocked(isProxyAdminRole).mockReturnЗначение(true);
-    vi.mocked(isUserTeamAdminForSingleTeam).mockReturnЗначение(false);
+  it("should show Удалить button for proxy admin when canEditTeam is Истина", () => {
+    vi.mocked(isProxyAdminRole).mockReturnValue(true);
+    vi.mocked(isUserTeamAdminForSingleTeam).mockReturnValue(false);
 
     renderWithProviders(
       <TeamMembersComponent
@@ -443,11 +443,11 @@ describe("TeamMembersComponent", () => {
       />,
     );
 
-    expect(screen.getAllByTestId("delete-member")).toHaveLength(2);
-    expect(screen.getAllByTestId("edit-member")).toHaveLength(2);
+    expect(screen.getAllByTestId("Удалить-member")).toHaveLength(2);
+    expect(screen.getAllByTestId("Изменить-member")).toHaveLength(2);
   });
 
-  it("should hide action buttons when canEditTeam is false", () => {
+  it("should hide Действие buttons when canEditTeam is Ложь", () => {
     renderWithProviders(
       <TeamMembersComponent
         teamData={createMockTeamData()}
@@ -459,7 +459,7 @@ describe("TeamMembersComponent", () => {
       />,
     );
 
-    expect(screen.queryByTestId("edit-member")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("delete-member")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("Изменить-member")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("Удалить-member")).not.toBeInTheDocument();
   });
 });

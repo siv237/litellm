@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { DataТаблица } from "@/components/shared/DataТаблица";
+import { DataTable } from "@/components/shared/DataТаблица";
 import { MCPToolset } from "@/components/mcp_tools/types";
-import { getMCPToolsetTableColumns } from "./MCPToolsetTableColumns";
+import { getMCPToolsetTableColumns } from "./MCPИнструментыetТаблицаColumns";
 
 vi.mock("@/components/networking", () => ({
   getProxyBaseUrl: () => "http://localhost:4000",
@@ -28,29 +28,29 @@ const serverPrefixById = new Map([
   ["srv-2", "exa"],
 ]);
 
-function renderТаблица({ isAdmin = true, onEditClick = vi.fn(), onDeleteClick = vi.fn() } = {}) {
+function renderTable({ isAdmin = true, onEditClick = vi.fn(), onDeleteClick = vi.fn() } = {}) {
   const deps = { isAdmin, serverPrefixById, onEditClick, onDeleteClick };
   render(
-    <DataТаблица
+    <DataTable
       data={[mockToolset]}
       columns={getMCPToolsetTableColumns(deps)}
       getRowId={(toolset) => toolset.toolset_id}
-      sortingРежим="client"
+      sortingMode="client"
       size="compact"
     />,
   );
   return { onEditClick, onDeleteClick };
 }
 
-describe("getMCPToolsetTableColumns", () => {
+describe("getMCPИнструментыetТаблицаColumns", () => {
   it("renders the toolset with its endpoint url as subtitle", () => {
-    renderТаблица();
+    renderTable();
     expect(screen.getByText("github-tools")).toBeInTheDocument();
     expect(screen.getByText("http://localhost:4000/toolset/github-tools/mcp")).toBeInTheDocument();
   });
 
   it("renders server-prefixed tool chips capped at four with an overflow count", () => {
-    renderТаблица();
+    renderTable();
     expect(screen.getByText("github-create_issue")).toBeInTheDocument();
     expect(screen.getByText("github-list_issues")).toBeInTheDocument();
     expect(screen.getByText("exa-search")).toBeInTheDocument();
@@ -61,19 +61,19 @@ describe("getMCPToolsetTableColumns", () => {
 
   it("opens the edit modal when an admin clicks the toolset name", async () => {
     const user = userEvent.setup();
-    const { onEditClick } = renderТаблица();
+    const { onEditClick } = renderTable();
     await user.click(screen.getByRole("button", { name: /github-tools/ }));
     expect(onEditClick).toHaveBeenCalledWith(mockToolset);
   });
 
   it("does not make the name clickable for non-admins", () => {
-    renderТаблица({ isAdmin: false });
+    renderTable({ isAdmin: false });
     expect(screen.queryByRole("button", { name: /github-tools/ })).not.toBeInTheDocument();
   });
 
   it("copies the endpoint url and toolset id from the actions menu", async () => {
     const user = userEvent.setup();
-    renderТаблица({ isAdmin: false });
+    renderTable({ isAdmin: false });
 
     await user.click(screen.getByTestId("toolset-actions-ts-1"));
     await user.click(await screen.findByTestId("toolset-action-copy-url"));
@@ -86,7 +86,7 @@ describe("getMCPToolsetTableColumns", () => {
 
   it("edits and deletes through the actions menu as admin", async () => {
     const user = userEvent.setup();
-    const { onEditClick, onDeleteClick } = renderТаблица();
+    const { onEditClick, onDeleteClick } = renderTable();
 
     await user.click(screen.getByTestId("toolset-actions-ts-1"));
     await user.click(await screen.findByTestId("toolset-action-edit"));
@@ -99,7 +99,7 @@ describe("getMCPToolsetTableColumns", () => {
 
   it("hides edit and delete from non-admins but keeps the copy actions", async () => {
     const user = userEvent.setup();
-    renderТаблица({ isAdmin: false });
+    renderTable({ isAdmin: false });
 
     await user.click(screen.getByTestId("toolset-actions-ts-1"));
     expect(await screen.findByTestId("toolset-action-copy-url")).toBeInTheDocument();

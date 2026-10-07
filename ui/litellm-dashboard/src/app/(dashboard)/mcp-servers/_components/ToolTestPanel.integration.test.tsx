@@ -5,17 +5,17 @@ import type { UserEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi, type Mock } from "vitest";
 
 import { ToolTestPanel } from "./ToolTestPanel";
-import { ВходSchema, MCPTool } from "@/components/mcp_tools/types";
+import { InputSchema, MCPTool } from "@/components/mcp_tools/types";
 import { chooseSelectOption } from "../../../../../tests/test-utils";
 
-const buildTool = (schema: ВходSchema | string): MCPTool => ({
+const buildTool = (schema: InputSchema | string): MCPTool => ({
   name: "demo-tool",
   description: "demo",
   inputSchema: schema,
   mcp_info: { server_name: "demo-server" },
 });
 
-const renderPanel = (schema: ВходSchema | string) =>
+const renderPanel = (schema: InputSchema | string) =>
   renderWithProviders(
     <ToolTestPanel
       tool={buildTool(schema)}
@@ -29,7 +29,7 @@ const renderPanel = (schema: ВходSchema | string) =>
 
 describe("ToolTestPanel defaults", () => {
   it("pre-populates primitive, array, and nested object inputs from schema", () => {
-    const schema: ВходSchema = {
+    const schema: InputSchema = {
       type: "object",
       properties: {
         message: { type: "string", description: "Prompt text" },
@@ -52,7 +52,7 @@ describe("ToolTestPanel defaults", () => {
                   type: "array",
                   items: { type: "string" },
                   default: [],
-                  description: "необязательно tags",
+                  description: "optional tags",
                 },
               },
               required: ["id"],
@@ -79,9 +79,9 @@ describe("ToolTestPanel defaults", () => {
 
     renderPanel(schema);
 
-    expect(screen.getByLabelText("message")).toHaveЗначение("");
-    expect(screen.getByLabelText("attempts")).toHaveЗначение(0);
-    expect(screen.getByLabelText("ratio")).toHaveЗначение(0.4);
+    expect(screen.getByLabelText("message")).toHaveValue("");
+    expect(screen.getByLabelText("attempts")).toHaveValue(0);
+    expect(screen.getByLabelText("ratio")).toHaveValue(0.4);
     expect(screen.getByTitle("Истина")).toBeInTheDocument();
 
     const keywordsTextarea = screen.getByTestId<HTMLTextAreaElement>("textarea-keywords");
@@ -104,7 +104,7 @@ describe("ToolTestPanel defaults", () => {
   });
 
   it("uses nested params schema when present", () => {
-    const schema: ВходSchema = {
+    const schema: InputSchema = {
       type: "object",
       properties: {
         params: {
@@ -146,7 +146,7 @@ describe("ToolTestPanel defaults", () => {
   });
 
   it("renders the call button as type=button so a click never also triggers native form submission", () => {
-    const schema: ВходSchema = {
+    const schema: InputSchema = {
       type: "object",
       properties: {
         message: { type: "string", description: "Prompt text" },
@@ -162,7 +162,7 @@ describe("ToolTestPanel defaults", () => {
 });
 
 describe("ToolTestPanel argument payload", () => {
-  const submitPanel = async (schema: ВходSchema | string, drive?: (user: UserEvent) => Promise<void>) => {
+  const submitPanel = async (schema: InputSchema | string, drive?: (user: UserEvent) => Promise<void>) => {
     const onSubmit = vi.fn();
     renderWithProviders(
       <ToolTestPanel
@@ -272,7 +272,7 @@ describe("ToolTestPanel argument payload", () => {
     );
 
     expect(onSubmit).toHaveBeenCalledWith({ "filter.name": "acme" });
-    expect(onSubmit.mock.calls[0][0]).not.toHaveСвойство("filter");
+    expect(onSubmit.mock.calls[0][0]).not.toHaveProperty("filter");
   });
 
   it("sends the option picked from an enum select", async () => {
@@ -326,7 +326,7 @@ describe("ToolTestPanel argument payload", () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
-  it("sends the seeded defaults when the user submits withвыход touching anything", async () => {
+  it("sends the seeded defaults when the user submits without touching anything", async () => {
     const onSubmit = await submitPanel({
       type: "object",
       properties: {
@@ -341,7 +341,7 @@ describe("ToolTestPanel argument payload", () => {
 });
 
 describe("ToolTestPanel schema changes under a stable tool name", () => {
-  const renderWith = (schema: ВходSchema, onSubmit: Mock) => (
+  const renderWith = (schema: InputSchema, onSubmit: Mock) => (
     <ToolTestPanel
       tool={buildTool(schema)}
       onSubmit={onSubmit}
@@ -354,8 +354,8 @@ describe("ToolTestPanel schema changes under a stable tool name", () => {
 
   it("reseeds the fields when the same-named tool's schema changes", async () => {
     const onSubmit = vi.fn();
-    const before: ВходSchema = { type: "object", properties: { message: { type: "string" } } };
-    const after: ВходSchema = {
+    const before: InputSchema = { type: "object", properties: { message: { type: "string" } } };
+    const after: InputSchema = {
       type: "object",
       properties: { query: { type: "string" }, limit: { type: "integer", default: 5 } },
     };
@@ -367,8 +367,8 @@ describe("ToolTestPanel schema changes under a stable tool name", () => {
     rerender(renderWith(after, onSubmit));
 
     expect(screen.queryByLabelText("message")).not.toBeInTheDocument();
-    expect(screen.getByLabelText("query")).toHaveЗначение("");
-    expect(screen.getByLabelText("limit")).toHaveЗначение(5);
+    expect(screen.getByLabelText("query")).toHaveValue("");
+    expect(screen.getByLabelText("limit")).toHaveValue(5);
 
     await user.type(screen.getByLabelText("query"), "widgets");
     await user.click(screen.getByRole("button", { name: "Call Tool" }));
@@ -378,7 +378,7 @@ describe("ToolTestPanel schema changes under a stable tool name", () => {
 
   it("keeps what the user typed when the schema is rebuilt with identical content", async () => {
     const onSubmit = vi.fn();
-    const schema = (): ВходSchema => ({ type: "object", properties: { message: { type: "string" } } });
+    const schema = (): InputSchema => ({ type: "object", properties: { message: { type: "string" } } });
 
     const { rerender } = renderWithProviders(renderWith(schema(), onSubmit));
     const user = userEvent.setup();
@@ -386,12 +386,12 @@ describe("ToolTestPanel schema changes under a stable tool name", () => {
 
     rerender(renderWith(schema(), onSubmit));
 
-    expect(screen.getByLabelText("message")).toHaveЗначение("typed by hand");
+    expect(screen.getByLabelText("message")).toHaveValue("typed by hand");
   });
 });
 
-describe("ToolTestPanel необязательно union-typed parameters", () => {
-  const qaEchoSchema: ВходSchema = {
+describe("ToolTestPanel optional union-typed parameters", () => {
+  const qaEchoSchema: InputSchema = {
     type: "object",
     properties: {
       message: { type: "string" },
@@ -419,17 +419,17 @@ describe("ToolTestPanel необязательно union-typed parameters", () =
     return onSubmit;
   };
 
-  it("renders the JSON textarea for an необязательно array parameter, not a plain text input", () => {
+  it("renders the JSON textarea for an optional array parameter, not a plain text input", () => {
     renderPanel(qaEchoSchema);
 
     const tags = screen.getByTestId("textarea-tags");
     expect(tags.tagName).toBe("TEXTAREA");
-    expect(tags).toHaveЗначение("");
-    expect(screen.getByPlaceholderText("Введите JSON array for tags")).toBe(tags);
-    expect(screen.queryByPlaceholderText("Введите tags")).not.toBeInTheDocument();
+    expect(tags).toHaveValue("");
+    expect(screen.getByPlaceholderText("Enter JSON array for tags")).toBe(tags);
+    expect(screen.queryByPlaceholderText("Enter tags")).not.toBeInTheDocument();
   });
 
-  it("renders the JSON textarea for an необязательно object parameter, not a plain text input", () => {
+  it("renders the JSON textarea for an optional object parameter, not a plain text input", () => {
     renderPanel({
       type: "object",
       properties: {
@@ -438,14 +438,14 @@ describe("ToolTestPanel необязательно union-typed parameters", () =
     });
 
     const payload = screen.getByTestId<HTMLTextAreaElement>("textarea-payload");
-    expect(payload).toHaveЗначение(JSON.stringify({ id: "" }, null, 2));
-    expect(screen.getByPlaceholderText("Введите JSON object for payload")).toBe(payload);
-    expect(screen.queryByPlaceholderText("Введите payload")).not.toBeInTheDocument();
+    expect(payload).toHaveValue(JSON.stringify({ id: "" }, null, 2));
+    expect(screen.getByPlaceholderText("Enter JSON object for payload")).toBe(payload);
+    expect(screen.queryByPlaceholderText("Enter payload")).not.toBeInTheDocument();
   });
 
-  it("sends an необязательно array parameter as a real array", async () => {
+  it("sends an optional array parameter as a real array", async () => {
     const onSubmit = await runPanel(() => {
-      fireEvent.change(screen.getByPlaceholderText("Введите message"), { target: { value: "hi" } });
+      fireEvent.change(screen.getByPlaceholderText("Enter message"), { target: { value: "hi" } });
       fireEvent.change(screen.getByTestId("textarea-tags"), { target: { value: '["a","b"]' } });
     });
 
@@ -453,9 +453,9 @@ describe("ToolTestPanel необязательно union-typed parameters", () =
     expect(onSubmit).toHaveBeenCalledWith(expected);
   });
 
-  it("omits an необязательно array parameter the user never filled in", async () => {
+  it("omits an optional array parameter the user never filled in", async () => {
     const onSubmit = await runPanel(() => {
-      fireEvent.change(screen.getByPlaceholderText("Введите message"), { target: { value: "hi" } });
+      fireEvent.change(screen.getByPlaceholderText("Enter message"), { target: { value: "hi" } });
     });
 
     expect(onSubmit).toHaveBeenCalledWith({ message: "hi", repeat: 1, loud: false });
@@ -463,7 +463,7 @@ describe("ToolTestPanel необязательно union-typed parameters", () =
 
   it("blocks the call instead of sending comma-separated text as a raw string", async () => {
     const onSubmit = await runPanel(() => {
-      fireEvent.change(screen.getByPlaceholderText("Введите message"), { target: { value: "hi" } });
+      fireEvent.change(screen.getByPlaceholderText("Enter message"), { target: { value: "hi" } });
       fireEvent.change(screen.getByTestId("textarea-tags"), { target: { value: "a,b" } });
     });
 

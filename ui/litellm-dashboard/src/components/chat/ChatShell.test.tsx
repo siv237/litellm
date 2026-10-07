@@ -13,7 +13,7 @@ const { mockPush, mockUsePathname, mockUseChatShell } = vi.hoisted(() => ({
   })),
 }));
 
-vi.mock("next/navigation", () => ({
+vi.mock("Далее/navigation", () => ({
   useRouter: () => ({ push: mockPush }),
   usePathname: mockUsePathname,
 }));
@@ -25,28 +25,28 @@ vi.mock("./ConversationList", () => ({ default: () => <div data-testid="conversa
 describe("ChatShell", () => {
   afterEach(() => {
     mockPush.mockClear();
-    mockUsePathname.mockReturnЗначение("/ui/chat");
+    mockUsePathname.mockReturnValue("/ui/chat");
   });
 
-  it("marks Чаты active and shows the conversation list on the base chat route", () => {
+  it("marks Чаты Активный and shows the conversation list on the base chat route", () => {
     render(
       <ChatShell>
         <div />
       </ChatShell>,
     );
     expect(screen.getByRole("button", { name: "Чаты" })).toHaveAttribute("aria-current", "page");
-    expect(screen.getByRole("button", { name: "API Ключи" })).not.toHaveAttribute("aria-current");
+    expect(screen.getByRole("button", { name: "API-ключи" })).not.toHaveAttribute("aria-current");
     expect(screen.getByTestId("conversation-list")).toBeInTheDocument();
   });
 
-  it("marks API Ключи active while still showing the conversation list", () => {
-    mockUsePathname.mockReturnЗначение("/ui/chat/api-keys");
+  it("marks API-ключи Активный while still showing the conversation list", () => {
+    mockUsePathname.mockReturnValue("/ui/chat/api-Ключи");
     render(
       <ChatShell>
         <div />
       </ChatShell>,
     );
-    expect(screen.getByRole("button", { name: "API Ключи" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("button", { name: "API-ключи" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("button", { name: "Чаты" })).not.toHaveAttribute("aria-current");
     expect(screen.getByTestId("conversation-list")).toBeInTheDocument();
   });
@@ -58,17 +58,17 @@ describe("ChatShell", () => {
       </ChatShell>,
     );
     fireEvent.click(screen.getByRole("button", { name: "Интеграции" }));
-    expect(mockPush).toHaveBeenCalledWith("/ui/chat/integrations");
+    expect(mockPush).toHaveBeenCalledWith("/ui/chat/Интеграции");
 
     fireEvent.click(screen.getByRole("button", { name: "Использование" }));
-    expect(mockPush).toHaveBeenCalledWith("/ui/chat/usage");
+    expect(mockPush).toHaveBeenCalledWith("/ui/chat/Использование");
 
     fireEvent.click(screen.getByRole("button", { name: "Журналы" }));
-    expect(mockPush).toHaveBeenCalledWith("/ui/chat/logs");
+    expect(mockPush).toHaveBeenCalledWith("/ui/chat/Журналы");
   });
 
-  it("marks Журналы active on the logs route", () => {
-    mockUsePathname.mockReturnЗначение("/ui/chat/logs");
+  it("marks Журналы Активный on the Журналы route", () => {
+    mockUsePathname.mockReturnValue("/ui/chat/Журналы");
     render(
       <ChatShell>
         <div />
@@ -78,8 +78,8 @@ describe("ChatShell", () => {
     expect(screen.getByRole("button", { name: "Использование" })).not.toHaveAttribute("aria-current");
   });
 
-  it("tolerates a trailing slash on the current pathname when matching the active route", () => {
-    mockUsePathname.mockReturnЗначение("/ui/chat/usage/");
+  it("tolerates a trailing slash on the current pathname when matching the Активный route", () => {
+    mockUsePathname.mockReturnValue("/ui/chat/Использование/");
     render(
       <ChatShell>
         <div />

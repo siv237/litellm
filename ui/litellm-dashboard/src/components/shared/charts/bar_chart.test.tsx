@@ -14,7 +14,7 @@ describe("BarChart", () => {
       <BarChart data={data} index="date" categories={["passed", "blocked"]} colors={["green", "red"]} />,
     );
 
-    const rectangles = Array.from(container.querySelectorВсе("path.recharts-rectangle"));
+    const rectangles = Array.from(container.querySelectorAll("path.recharts-rectangle"));
     expect(rectangles).toHaveLength(4);
     const fills = new Set(rectangles.map((rect) => rect.getAttribute("fill")));
     expect(fills).toEqual(new Set(["var(--color-green-500, #22c55e)", "var(--color-red-500, #ef4444)"]));
@@ -31,12 +31,12 @@ describe("BarChart", () => {
     const { container } = render(<BarChart data={data} index="date" categories={["passed", "blocked"]} />);
 
     const fills = new Set(
-      Array.from(container.querySelectorВсе("path.recharts-rectangle")).map((rect) => rect.getAttribute("fill")),
+      Array.from(container.querySelectorAll("path.recharts-rectangle")).map((rect) => rect.getAttribute("fill")),
     );
     expect(fills).toEqual(new Set(["var(--color-blue-500, #3b82f6)", "var(--color-cyan-500, #06b6d4)"]));
   });
 
-  it("fires onValueChange with the datum and clicked category", () => {
+  it("fires onЗначениеChange with the datum and clicked category", () => {
     const onValueChange = vi.fn();
     const { container } = render(
       <BarChart
@@ -62,7 +62,7 @@ describe("BarChart", () => {
     expect(onValueChange).toHaveBeenCalledWith(expectedClickItem);
   });
 
-  it("renders category labels on the y axis in vertical layвыход", () => {
+  it("renders category labels on the y axis in vertical layout", () => {
     render(
       <BarChart
         data={[
@@ -72,7 +72,7 @@ describe("BarChart", () => {
         index="key"
         categories={["spend"]}
         colors={["cyan"]}
-        layвыход="vertical"
+        layout="vertical"
         yAxisWidth={120}
       />,
     );
@@ -114,30 +114,30 @@ describe("BarChart", () => {
   });
 
   it("colors each bar by its datum when colorByDatum is set, instead of one fill for the series", () => {
-    const singleКатегория = [
+    const singleCategory = [
       { tool: "alpha", spend: 3 },
       { tool: "beta", spend: 2 },
       { tool: "gamma", spend: 1 },
     ];
 
     const { container, rerender } = render(
-      <BarChart data={singleКатегория} index="tool" categories={["spend"]} colors={["blue", "cyan", "violet"]} />,
+      <BarChart data={singleCategory} index="tool" categories={["spend"]} colors={["blue", "cyan", "violet"]} />,
     );
-    const sharedFills = Array.from(container.querySelectorВсе("path.recharts-rectangle")).map((rect) =>
+    const sharedFills = Array.from(container.querySelectorAll("path.recharts-rectangle")).map((rect) =>
       rect.getAttribute("fill"),
     );
     expect(new Set(sharedFills).size).toBe(1);
 
     rerender(
       <BarChart
-        data={singleКатегория}
+        data={singleCategory}
         index="tool"
         categories={["spend"]}
         colors={["blue", "cyan", "violet"]}
         colorByDatum
       />,
     );
-    const perDatumFills = Array.from(container.querySelectorВсе("path.recharts-rectangle")).map((rect) =>
+    const perDatumFills = Array.from(container.querySelectorAll("path.recharts-rectangle")).map((rect) =>
       rect.getAttribute("fill"),
     );
     expect(perDatumFills).toEqual([
@@ -152,7 +152,7 @@ describe("BarChart", () => {
       <BarChart data={data} index="date" categories={["passed", "blocked"]} colors={["green", "red"]} stack={true} />,
     );
 
-    const xPositions = Array.from(container.querySelectorВсе("path.recharts-rectangle")).map(
+    const xPositions = Array.from(container.querySelectorAll("path.recharts-rectangle")).map(
       (rect) => rect.getAttribute("d")?.split(",")[0],
     );
     expect(new Set(xPositions).size).toBe(2);

@@ -1,46 +1,46 @@
 /* @vitest-environment jsdom */
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import РежимlsAndEndpointsPage from "./page";
+import ModelsAndEndpointsPage from "./page";
 
-vi.mock("./panels/ВсеРежимlsPanel", () => ({ default: () => <div data-testid="panel-all-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs" /> }));
-vi.mock("./panels/AddModelPanel", () => ({ default: () => <div data-testid="panel-add" /> }));
+vi.mock("./panels/ВсеРежимlsPanel", () => ({ default: () => <div data-testid="panel-all-models" /> }));
+vi.mock("./panels/AddРежимlPanel", () => ({ default: () => <div data-testid="panel-add" /> }));
 vi.mock("./panels/AutoRoutersTabPanel", () => ({ default: () => <div data-testid="panel-auto-routers" /> }));
-vi.mock("./panels/LlmCredentialsPanel", () => ({ default: () => <div data-testid="panel-credentials" /> }));
+vi.mock("./panels/LlmУчётные данныеPanel", () => ({ default: () => <div data-testid="panel-credentials" /> }));
 vi.mock("./panels/PassThroughPanel", () => ({ default: () => <div data-testid="panel-pass-through" /> }));
 vi.mock("./panels/HealthStatusPanel", () => ({ default: () => <div data-testid="panel-health" /> }));
 vi.mock("./panels/РежимlRetrySettingsPanel", () => ({ default: () => <div data-testid="panel-retry" /> }));
 vi.mock("./panels/РежимlGroupAliasPanel", () => ({ default: () => <div data-testid="panel-alias" /> }));
 vi.mock("./panels/PriceDataPanel", () => ({ default: () => <div data-testid="panel-price" /> }));
 
-const detailState = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId: null as string | null, teamId: null as string | null };
+const detailState = { modelId: null as string | null, teamId: null as string | null };
 vi.mock("./detailNavigation", () => ({
-  useModelDetailМаршрутизация: () => ({ ...detailState, close: vi.fn(), openModel: vi.fn(), openTeam: vi.fn() }),
+  useModelDetailRouting: () => ({ ...detailState, close: vi.fn(), openModel: vi.fn(), openTeam: vi.fn() }),
 }));
 
 vi.mock("@/components/molecules/cost_optimization_feedback_banner", () => ({ default: () => null }));
-vi.mock("@/components/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info_view", () => ({
-  default: ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId }: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId: string }) => <div data-testid="Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-info">Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию:{Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId}</div>,
+vi.mock("@/components/model_info_view", () => ({
+  default: ({ modelId }: { modelId: string }) => <div data-testid="model-info">model:{modelId}</div>,
 }));
 vi.mock("@/components/team/TeamInfo", () => ({
   default: ({ teamId }: { teamId: string }) => <div data-testid="team-info">team:{teamId}</div>,
 }));
 
-const mockUseАвторизовано = vi.fn();
-vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({ default: () => mockUseАвторизовано() }));
-vi.mock("@/app/(dashboard)/hooks/teams/useКоманды", () => ({ useКоманды: () => ({ data: [] }) }));
+const mockUseAuthorized = vi.fn();
+vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({ default: () => mockUseAuthorized() }));
+vi.mock("@/app/(dashboard)/hooks/teams/useКоманды", () => ({ useTeams: () => ({ data: [] }) }));
 vi.mock("@/app/(dashboard)/hooks/uiSettings/useUISettings", () => ({
   useUISettings: () => ({ data: { values: {} } }),
 }));
-vi.mock("./useModelDashboardData", () => ({
+vi.mock("./useРежимlDashboardData", () => ({
   useModelDashboardData: () => ({ availableModelAccessGroups: [], allModelsOnProxy: [], availableModelGroups: [] }),
 }));
 
-const ADMIN = { accessТокен: "at", token: "t", userRole: "Admin", userId: "u1", premiumUser: false, isViewOnly: false };
+const ADMIN = { accessToken: "at", token: "t", userRole: "Admin", userId: "u1", premiumUser: false, isViewOnly: false };
 const NON_ADMIN = {
-  accessТокен: "at",
+  accessToken: "at",
   token: "t",
   userRole: "Internal User",
   userId: "u1",
@@ -51,19 +51,19 @@ const NON_ADMIN = {
 const VIEW_ONLY_ADMIN = { ...ADMIN, isViewOnly: true };
 
 const renderPage = () => {
-  const queryClient = new ЗапросClient({ defaultOptions: { queries: { retry: false, gcВремя: 0 } } });
+  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
   return render(
-    <ЗапросClientПровайдер client={queryClient}>
-      <РежимlsAndEndpointsPage />
-    </ЗапросClientПровайдер>,
+    <QueryClientProvider client={queryClient}>
+      <ModelsAndEndpointsPage />
+    </QueryClientProvider>,
   );
 };
 
-describe("РежимlsAndEndpointsPage", () => {
+describe("РежимlsAndЭндпоинтsPage", () => {
   beforeEach(() => {
     detailState.modelId = null;
     detailState.teamId = null;
-    mockUseАвторизовано.mockReturnЗначение(ADMIN);
+    mockUseAuthorized.mockReturnValue(ADMIN);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (global as any).ResizeObserver = class {
       observe() {}
@@ -77,7 +77,7 @@ describe("РежимlsAndEndpointsPage", () => {
     expect(screen.getByRole("tab", { name: "Все Режимls" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "LLM Учётные данные" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Состояние" })).toBeInTheDocument();
-    expect(screen.getByTestId("panel-all-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs")).toBeInTheDocument();
+    expect(screen.getByTestId("panel-all-models")).toBeInTheDocument();
   });
 
   it("switches tabs in-memory, mounting only the active panel", async () => {
@@ -85,13 +85,13 @@ describe("РежимlsAndEndpointsPage", () => {
     renderPage();
     await user.click(screen.getByRole("tab", { name: "Состояние" }));
     expect(screen.getByTestId("panel-health")).toBeInTheDocument();
-    expect(screen.queryByTestId("panel-all-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("panel-all-models")).not.toBeInTheDocument();
   });
 
-  it("renders the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию detail overlay from the ?Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию drill-in and hides the tabs", () => {
+  it("renders the model detail overlay from the ?model drill-in and hides the tabs", () => {
     detailState.modelId = "abc-123";
     renderPage();
-    expect(screen.getByTestId("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-info")).toHaveTextContent("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию:abc-123");
+    expect(screen.getByTestId("model-info")).toHaveTextContent("model:abc-123");
     expect(screen.queryByRole("tab", { name: "Все Режимls" })).not.toBeInTheDocument();
   });
 
@@ -102,15 +102,15 @@ describe("РежимlsAndEndpointsPage", () => {
   });
 
   it("hides admin-only tabs for a non-admin user", () => {
-    mockUseАвторизовано.mockReturnЗначение(NON_ADMIN);
+    mockUseAuthorized.mockReturnValue(NON_ADMIN);
     renderPage();
     expect(screen.queryByRole("tab", { name: "LLM Учётные данные" })).not.toBeInTheDocument();
     expect(screen.queryByRole("tab", { name: "Состояние" })).not.toBeInTheDocument();
   });
 
-  // POST /Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/new 403s a proxy_admin_viewer, so the form's tab must not render for one.
+  // POST /model/new 403s a proxy_admin_viewer, so the form's tab must not render for one.
   it("hides the Add Режимl tab for a view-only admin session", () => {
-    mockUseАвторизовано.mockReturnЗначение(VIEW_ONLY_ADMIN);
+    mockUseAuthorized.mockReturnValue(VIEW_ONLY_ADMIN);
     renderPage();
     expect(screen.queryByRole("tab", { name: "Add Режимl" })).not.toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Все Режимls" })).toBeInTheDocument();
@@ -119,7 +119,7 @@ describe("РежимlsAndEndpointsPage", () => {
   // Read parity: the Auto-Routers list stays reachable for a view-only admin; only the
   // create affordance inside it is withheld, which AutoRoutersTabPanel decides.
   it("keeps the Auto-Routers tab for a view-only admin session", () => {
-    mockUseАвторизовано.mockReturnЗначение(VIEW_ONLY_ADMIN);
+    mockUseAuthorized.mockReturnValue(VIEW_ONLY_ADMIN);
     renderPage();
     expect(screen.getByRole("tab", { name: /Auto-Routers/ })).toBeInTheDocument();
   });
@@ -134,7 +134,7 @@ describe("РежимlsAndEndpointsPage", () => {
       expect(tabs[0]).toContain("Все Режимls");
       expect(tabs[1]).toBe("Add Режимl");
       expect(tabs[2]).toContain("Auto-Routers");
-      // Badged Бета while the tab settles; БетаBadge renders the label text.
+      // Badged Beta while the tab settles; BetaBadge renders the label text.
       expect(tabs[2]).toContain("Бета");
     });
 
@@ -146,8 +146,8 @@ describe("РежимlsAndEndpointsPage", () => {
       expect(screen.getByTestId("panel-auto-routers")).toBeInTheDocument();
     });
 
-    it("is hidden from non-admins, who cannot write Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => {
-      mockUseАвторизовано.mockReturnЗначение(NON_ADMIN);
+    it("is hidden from non-admins, who cannot write models", () => {
+      mockUseAuthorized.mockReturnValue(NON_ADMIN);
       renderPage();
 
       expect(screen.queryByRole("tab", { name: /Auto-Routers/ })).not.toBeInTheDocument();

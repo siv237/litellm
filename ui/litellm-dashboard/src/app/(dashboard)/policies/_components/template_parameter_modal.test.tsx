@@ -5,21 +5,21 @@ import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "@/../tests/test-utils";
 import TemplateParameterModal from "./template_parameter_modal";
 
-const { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall, enrichPolicyTemplateStream } = vi.hoisted(() => ({
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall: vi.fn(),
+const { modelHubCall, enrichPolicyTemplateStream } = vi.hoisted(() => ({
+  modelHubCall: vi.fn(),
   enrichPolicyTemplateStream: vi.fn(),
 }));
 
-vi.mock("@/components/networking", () => ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall, enrichPolicyTemplateStream }));
+vi.mock("@/components/networking", () => ({ modelHubCall, enrichPolicyTemplateStream }));
 
-type StreamРезультат = { competitors: string[]; competitor_variations?: Record<string, string[]> };
+type StreamResult = { competitors: string[]; competitor_variations?: Record<string, string[]> };
 type StreamArgs = [
   token: string,
   templateId: string,
   params: Record<string, string>,
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: string,
+  model: string,
   onName: (name: string) => void,
-  onDone: (result: StreamРезультат) => void,
+  onDone: (result: StreamResult) => void,
 ];
 
 interface TestTemplate {
@@ -34,7 +34,7 @@ const plainTemplate: TestTemplate = {
   title: "Базовый Redaction",
   parameters: [
     { name: "org_name", label: "Название организации", type: "string", required: true, placeholder: "e.g. Contoso" },
-    { name: "note", label: "Note", type: "string", required: false, placeholder: "необязательно note" },
+    { name: "note", label: "Note", type: "string", required: false, placeholder: "Необязательно note" },
   ],
 };
 
@@ -50,7 +50,7 @@ const defaultProps = {
   template: plainTemplate,
   onConfirm: vi.fn(),
   onCancel: vi.fn(),
-  accessТокен: "sk-test",
+  accessToken: "sk-test",
 };
 
 const renderModal = (props: Partial<typeof defaultProps> = {}) =>
@@ -59,7 +59,7 @@ const renderModal = (props: Partial<typeof defaultProps> = {}) =>
 describe("TemplateParameterModal", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall.mockResolvedЗначение({ data: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-5.1" }] });
+    modelHubCall.mockResolvedValue({ data: [{ model_group: "gpt-5.1" }] });
   });
 
   it("renders nothing while closed", () => {
@@ -75,7 +75,7 @@ describe("TemplateParameterModal", () => {
     expect(screen.getByText("Настройка блокировки конкурентов для вашего бренда")).toBeInTheDocument();
   });
 
-  it("renders exactly one labelled field per template parameter", async () => {
+  it("renders exactly one labelled Поле per template parameter", async () => {
     renderModal();
 
     // Exactly one: a plain template used to render every parameter twice, once from
@@ -83,10 +83,10 @@ describe("TemplateParameterModal", () => {
     expect(await screen.findByText("Название организации")).toBeInTheDocument();
     expect(screen.getByText("Note")).toBeInTheDocument();
     expect(screen.getAllByPlaceholderText("e.g. Contoso")).toHaveLength(1);
-    expect(screen.getAllByPlaceholderText("необязательно note")).toHaveLength(1);
+    expect(screen.getAllByPlaceholderText("Необязательно note")).toHaveLength(1);
   });
 
-  it("keeps Continue disabled until every required parameter is filled", async () => {
+  it("keeps Continue Выключено until every Обязательно parameter is filled", async () => {
     const user = userEvent.setup();
     renderModal();
 
@@ -98,7 +98,7 @@ describe("TemplateParameterModal", () => {
     expect(screen.getByRole("button", { name: "Continue" })).toBeEnabled();
   });
 
-  it("hands the entered parameters back to the caller", async () => {
+  it("hands the entered parameters Назад to the caller", async () => {
     const onConfirm = vi.fn();
     const user = userEvent.setup();
     renderModal({ onConfirm });
@@ -111,13 +111,13 @@ describe("TemplateParameterModal", () => {
     expect(onConfirm.mock.calls[0][0]).toEqual({ org_name: "Contoso", note: "" });
   });
 
-  it("cancels back to the caller", async () => {
+  it("cancels Назад to the caller", async () => {
     const onCancel = vi.fn();
     const user = userEvent.setup();
     renderModal({ onCancel });
 
     await screen.findByText("Базовый Redaction");
-    await user.click(screen.getByRole("button", { name: "Cancel" }));
+    await user.click(screen.getByRole("button", { name: "Отмена" }));
 
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
@@ -131,15 +131,15 @@ describe("TemplateParameterModal", () => {
     expect(screen.getByRole("button", { name: /Generate Competitor Names/ })).toBeInTheDocument();
   });
 
-  it("loads the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию list for an enrichment template", async () => {
+  it("loads the Модель list for an enrichment template", async () => {
     renderModal({ template: enrichmentTemplate });
 
     await waitFor(() => {
-      expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюHubCall).toHaveBeenCalledWith("sk-test");
+      expect(modelHubCall).toHaveBeenCalledWith("sk-test");
     });
   });
 
-  it("hides the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию picker when competitors are entered manually", async () => {
+  it("hides the Модель picker when competitors are entered manually", async () => {
     const user = userEvent.setup();
     renderModal({ template: enrichmentTemplate });
 
@@ -152,12 +152,12 @@ describe("TemplateParameterModal", () => {
     expect(screen.queryByRole("button", { name: /Generate Competitor Names/ })).not.toBeInTheDocument();
   });
 
-  it("keeps Continue disabled for an enrichment template until competitors exist", async () => {
+  it("keeps Continue Выключено for an enrichment template until competitors exist", async () => {
     const user = userEvent.setup();
     renderModal({ template: enrichmentTemplate });
 
     await screen.findByText("Поиск конкурентов");
-    fireEvent.change(screen.getByPlaceholderText("e.g. Acme Airlines"), { target: { value: "Contoso" } });
+    fireEvent.change(screen.getByPlaceholderText("напр. Acme Airlines"), { target: { value: "Contoso" } });
 
     expect(screen.getByRole("button", { name: "Continue" })).toBeDisabled();
   });
@@ -172,7 +172,7 @@ describe("TemplateParameterModal", () => {
     renderModal({ template: enrichmentTemplate });
 
     await screen.findByText("Поиск конкурентов");
-    fireEvent.change(screen.getByPlaceholderText("e.g. Acme Airlines"), { target: { value: "Contoso" } });
+    fireEvent.change(screen.getByPlaceholderText("напр. Acme Airlines"), { target: { value: "Contoso" } });
     await user.click(screen.getAllByRole("combobox")[0]);
     const options = await screen.findAllByText("gpt-5.1");
     await user.click(options[options.length - 1]);
@@ -185,7 +185,7 @@ describe("TemplateParameterModal", () => {
     });
   });
 
-  it("passes the discovered competitors to the caller on confirm", async () => {
+  it("passes the discovered competitors to the caller on Подтвердить", async () => {
     enrichPolicyTemplateStream.mockImplementation(async (...args: StreamArgs) => {
       const [, , , , , onDone] = args;
       onDone({ competitors: ["Northwind"] });
@@ -195,7 +195,7 @@ describe("TemplateParameterModal", () => {
     renderModal({ template: enrichmentTemplate, onConfirm });
 
     await screen.findByText("Поиск конкурентов");
-    fireEvent.change(screen.getByPlaceholderText("e.g. Acme Airlines"), { target: { value: "Contoso" } });
+    fireEvent.change(screen.getByPlaceholderText("напр. Acme Airlines"), { target: { value: "Contoso" } });
     await user.click(screen.getAllByRole("combobox")[0]);
     const options = await screen.findAllByText("gpt-5.1");
     await user.click(options[options.length - 1]);

@@ -1,15 +1,15 @@
 import { describe, it, expect } from "vitest";
-import { MCPСервер, MCPToolset } from "../mcp_tools/types";
+import { MCPServer, MCPToolset } from "../mcp_tools/types";
 import {
   applyToolPermissionWrite,
   emptyMcpAccessGroups,
   mcpAllowedToolsFor,
-  mcpServersForИдентификатор,
+  mcpServersForIdentifier,
   mcpToolPermissionKeyFor,
-  resolveEffectiveMcp-серверы,
-} from "./effectiveMcp-серверы";
+  resolveEffectiveMcpServers,
+} from "./effectiveMcpServers";
 
-const server = (overrides: Partial<MCPСервер> & { server_id: string }): MCPСервер =>
+const server = (overrides: Partial<MCPServer> & { server_id: string }): MCPServer =>
   ({
     server_name: null,
     alias: null,
@@ -18,34 +18,34 @@ const server = (overrides: Partial<MCPСервер> & { server_id: string }): MC
     updated_at: "2026-01-01",
     updated_by: "admin",
     ...overrides,
-  }) as MCPСервер;
+  }) as MCPServer;
 
 const toolset = (overrides: Partial<MCPToolset> & { toolset_id: string }): MCPToolset =>
   ({ toolset_name: overrides.toolset_id, tools: [], ...overrides }) as MCPToolset;
 
-const emptyВход = {
-  all-серверы: [] as readonly MCPСервер[],
-  selected-серверы: [] as readonly string[],
+const emptyInput = {
+  allServers: [] as readonly MCPServer[],
+  selectedServers: [] as readonly string[],
   selectedAccessGroups: [] as readonly string[],
   selectedToolsets: [] as readonly string[],
   toolsets: [] as readonly MCPToolset[],
   toolPermissions: {} as Readonly<Record<string, readonly string[]>>,
 };
 
-describe("mcpServersForИдентификатор", () => {
+describe("mcpServersForIdentifier", () => {
   const target = server({ server_id: "uuid-1", server_name: "github_mcp", alias: "GitHub" });
 
   it("matches on id, server name and alias alike", () => {
-    expect(mcpServersForИдентификатор([target], "uuid-1")).toEqual([target]);
-    expect(mcpServersForИдентификатор([target], "github_mcp")).toEqual([target]);
-    expect(mcpServersForИдентификатор([target], "GitHub")).toEqual([target]);
-    expect(mcpServersForИдентификатор([target], "other")).toEqual([]);
+    expect(mcpServersForIdentifier([target], "uuid-1")).toEqual([target]);
+    expect(mcpServersForIdentifier([target], "github_mcp")).toEqual([target]);
+    expect(mcpServersForIdentifier([target], "GitHub")).toEqual([target]);
+    expect(mcpServersForIdentifier([target], "other")).toEqual([]);
   });
 
   it("names every server sharing a duplicated name, as the backend does", () => {
     const twin = server({ server_id: "uuid-2", server_name: "github_mcp" });
 
-    expect(mcpServersForИдентификатор([target, twin], "github_mcp").map((match) => match.server_id)).toEqual([
+    expect(mcpServersForIdentifier([target, twin], "github_mcp").map((match) => match.server_id)).toEqual([
       "uuid-1",
       "uuid-2",
     ]);
@@ -62,11 +62,11 @@ describe("mcpServersForИдентификатор", () => {
     const byName = server({ server_id: "uuid-9", server_name: "collide" });
     const catalog = idOwnerFirst ? [byId, byName] : [byName, byId];
 
-    expect(mcpServersForИдентификатор(catalog, "collide").map((match) => match.server_id)).toEqual(["collide"]);
+    expect(mcpServersForIdentifier(catalog, "collide").map((match) => match.server_id)).toEqual(["collide"]);
   });
 });
 
-describe("mcpToolPermissionKeyFor", () => {
+describe("mcpToolPermissionКлючFor", () => {
   const target = server({ server_id: "uuid-1", server_name: "github_mcp", alias: "GitHub" });
 
   it("returns the existing name key so an edit does not fork into a second entry", () => {
@@ -108,7 +108,7 @@ describe("emptyMcpAccessGroups", () => {
     ...grouped,
     server_id: "srv-obj",
     mcp_access_groups: [{ name: "legacy" }],
-  } as unknown as MCPСервер;
+  } as unknown as MCPServer;
 
   it("names only the selected groups no loaded server belongs to", () => {
     expect(emptyMcpAccessGroups([grouped, objectGrouped], [], ["prod", "legacy", "ops_readonly"])).toEqual([
@@ -125,38 +125,38 @@ describe("emptyMcpAccessGroups", () => {
   });
 });
 
-describe("resolveEffectiveMcp-серверы", () => {
+describe("resolveEffectiveMcpServers", () => {
   const direct = server({ server_id: "srv-direct", server_name: "Direct" });
   const grouped = server({ server_id: "srv-group", server_name: "Grouped", mcp_access_groups: ["prod"] });
   const inToolset = server({ server_id: "srv-toolset", server_name: "Инструментыetted" });
 
   it("resolves a selected access group to its member servers", () => {
-    const resolved = resolveEffectiveMcp-серверы({
-      ...emptyВход,
-      all-серверы: [direct, grouped],
+    const resolved = resolveEffectiveMcpServers({
+      ...emptyInput,
+      allServers: [direct, grouped],
       selectedAccessGroups: ["prod"],
     });
 
     expect(resolved).toEqual([
       {
         server: grouped,
-        permissionКлюч: "srv-group",
-        supersededКлючи: [],
-        ambiguousКлючи: [],
-        keyedИнструменты: undefined,
-        toolsetИнструменты: undefined,
-        allowedИнструменты: undefined,
+        permissionKey: "srv-group",
+        supersededKeys: [],
+        ambiguousKeys: [],
+        keyedTools: undefined,
+        toolsetTools: undefined,
+        allowedTools: undefined,
         source: { kind: "accessGroup", name: "prod" },
       },
     ]);
   });
 
   it("resolves access groups stored as objects rather than plain names", () => {
-    const objectGrouped = { ...grouped, mcp_access_groups: [{ name: "prod" }] } as unknown as MCPСервер;
+    const objectGrouped = { ...grouped, mcp_access_groups: [{ name: "prod" }] } as unknown as MCPServer;
 
-    const resolved = resolveEffectiveMcp-серверы({
-      ...emptyВход,
-      all-серверы: [objectGrouped],
+    const resolved = resolveEffectiveMcpServers({
+      ...emptyInput,
+      allServers: [objectGrouped],
       selectedAccessGroups: ["prod"],
     });
 
@@ -165,8 +165,8 @@ describe("resolveEffectiveMcp-серверы", () => {
 
   it("resolves a selected toolset to the servers its tools live on", () => {
     const input = {
-      ...emptyВход,
-      all-серверы: [direct, inToolset],
+      ...emptyInput,
+      allServers: [direct, inToolset],
       selectedToolsets: ["ts-1"],
       toolsets: [
         toolset({
@@ -176,17 +176,17 @@ describe("resolveEffectiveMcp-серверы", () => {
         }),
       ],
     };
-    const resolved = resolveEffectiveMcp-серверы(input);
+    const resolved = resolveEffectiveMcpServers(input);
 
     expect(resolved).toEqual([
       {
         server: inToolset,
-        permissionКлюч: "srv-toolset",
-        supersededКлючи: [],
-        ambiguousКлючи: [],
-        keyedИнструменты: undefined,
-        toolsetИнструменты: ["list_issues"],
-        allowedИнструменты: ["list_issues"],
+        permissionKey: "srv-toolset",
+        supersededKeys: [],
+        ambiguousKeys: [],
+        keyedTools: undefined,
+        toolsetTools: ["list_issues"],
+        allowedTools: ["list_issues"],
         source: { kind: "toolset", name: "Support" },
       },
     ]);
@@ -194,32 +194,32 @@ describe("resolveEffectiveMcp-серверы", () => {
 
   it("yields nothing for a toolset that is not in the loaded list", () => {
     const input = {
-      ...emptyВход,
-      all-серверы: [inToolset],
+      ...emptyInput,
+      allServers: [inToolset],
       selectedToolsets: ["ts-missing"],
       toolsets: [],
     };
-    const resolved = resolveEffectiveMcp-серверы(input);
+    const resolved = resolveEffectiveMcpServers(input);
 
     expect(resolved).toEqual([]);
   });
 
   it("includes a server that only a tool-permission entry names", () => {
-    const resolved = resolveEffectiveMcp-серверы({
-      ...emptyВход,
-      all-серверы: [grouped],
+    const resolved = resolveEffectiveMcpServers({
+      ...emptyInput,
+      allServers: [grouped],
       toolPermissions: { "srv-group": ["list_issues"] },
     });
 
     expect(resolved).toEqual([
       {
         server: grouped,
-        permissionКлюч: "srv-group",
-        supersededКлючи: [],
-        ambiguousКлючи: [],
-        keyedИнструменты: ["list_issues"],
-        toolsetИнструменты: undefined,
-        allowedИнструменты: ["list_issues"],
+        permissionKey: "srv-group",
+        supersededKeys: [],
+        ambiguousKeys: [],
+        keyedTools: ["list_issues"],
+        toolsetTools: undefined,
+        allowedTools: ["list_issues"],
         source: { kind: "toolPermission" },
       },
     ]);
@@ -227,23 +227,23 @@ describe("resolveEffectiveMcp-серверы", () => {
 
   it("reports a server once, attributing it to the strongest grant", () => {
     const input = {
-      ...emptyВход,
-      all-серверы: [grouped],
-      selected-серверы: ["srv-group"],
+      ...emptyInput,
+      allServers: [grouped],
+      selectedServers: ["srv-group"],
       selectedAccessGroups: ["prod"],
       toolPermissions: { "srv-group": ["list_issues"] },
     };
-    const resolved = resolveEffectiveMcp-серверы(input);
+    const resolved = resolveEffectiveMcpServers(input);
 
     expect(resolved).toEqual([
       {
         server: grouped,
-        permissionКлюч: "srv-group",
-        supersededКлючи: [],
-        ambiguousКлючи: [],
-        keyedИнструменты: ["list_issues"],
-        toolsetИнструменты: undefined,
-        allowedИнструменты: ["list_issues"],
+        permissionKey: "srv-group",
+        supersededKeys: [],
+        ambiguousKeys: [],
+        keyedTools: ["list_issues"],
+        toolsetTools: undefined,
+        allowedTools: ["list_issues"],
         source: { kind: "direct" },
       },
     ]);
@@ -253,22 +253,22 @@ describe("resolveEffectiveMcp-серверы", () => {
     const named = server({ server_id: "uuid-1", server_name: "github_mcp", alias: "GitHub" });
 
     const input = {
-      ...emptyВход,
-      all-серверы: [named],
-      selected-серверы: ["github_mcp"],
+      ...emptyInput,
+      allServers: [named],
+      selectedServers: ["github_mcp"],
       toolPermissions: { github_mcp: ["list_issues"] },
     };
-    const resolved = resolveEffectiveMcp-серверы(input);
+    const resolved = resolveEffectiveMcpServers(input);
 
     expect(resolved).toEqual([
       {
         server: named,
-        permissionКлюч: "github_mcp",
-        supersededКлючи: [],
-        ambiguousКлючи: [],
-        keyedИнструменты: ["list_issues"],
-        toolsetИнструменты: undefined,
-        allowedИнструменты: ["list_issues"],
+        permissionKey: "github_mcp",
+        supersededKeys: [],
+        ambiguousKeys: [],
+        keyedTools: ["list_issues"],
+        toolsetTools: undefined,
+        allowedTools: ["list_issues"],
         source: { kind: "direct" },
       },
     ]);
@@ -284,10 +284,10 @@ describe("resolveEffectiveMcp-серверы", () => {
     const byId = server({ server_id: "collide", server_name: "Payments" });
     const byName = server({ server_id: "uuid-9", server_name: "collide" });
 
-    const resolved = resolveEffectiveMcp-серверы({
-      ...emptyВход,
-      all-серверы: idOwnerFirst ? [byId, byName] : [byName, byId],
-      selected-серверы: ["collide"],
+    const resolved = resolveEffectiveMcpServers({
+      ...emptyInput,
+      allServers: idOwnerFirst ? [byId, byName] : [byName, byId],
+      selectedServers: ["collide"],
     });
 
     expect(resolved.map((entry) => entry.server.server_id)).toEqual(["collide"]);
@@ -297,10 +297,10 @@ describe("resolveEffectiveMcp-серверы", () => {
     const first = server({ server_id: "uuid-1", server_name: "shared" });
     const second = server({ server_id: "uuid-2", server_name: "shared" });
 
-    const resolved = resolveEffectiveMcp-серверы({
-      ...emptyВход,
-      all-серверы: [first, second],
-      selected-серверы: ["shared"],
+    const resolved = resolveEffectiveMcpServers({
+      ...emptyInput,
+      allServers: [first, second],
+      selectedServers: ["shared"],
     });
 
     expect(resolved.map((entry) => entry.server.server_id)).toEqual(["uuid-1", "uuid-2"]);
@@ -320,29 +320,29 @@ describe("equivalent permission keys for one server", () => {
 
   it("reports the extra keys as superseded so a write can collapse them", () => {
     const input = {
-      ...emptyВход,
-      all-серверы: [named],
-      selected-серверы: ["uuid-1"],
+      ...emptyInput,
+      allServers: [named],
+      selectedServers: ["uuid-1"],
       toolPermissions: { "uuid-1": ["list_issues"], github_mcp: ["create_issue"], GitHub: ["delete_issue"] },
     };
-    const resolved = resolveEffectiveMcp-серверы(input);
+    const resolved = resolveEffectiveMcpServers(input);
 
     expect(resolved).toHaveLength(1);
-    expect(resolved[0].permissionКлюч).toBe("uuid-1");
-    expect(resolved[0].supersededКлючи).toEqual(["github_mcp", "GitHub"]);
-    expect(resolved[0].ambiguousКлючи).toEqual([]);
-    expect(resolved[0].allowedИнструменты).toEqual(["list_issues", "create_issue", "delete_issue"]);
+    expect(resolved[0].permissionKey).toBe("uuid-1");
+    expect(resolved[0].supersededKeys).toEqual(["github_mcp", "GitHub"]);
+    expect(resolved[0].ambiguousKeys).toEqual([]);
+    expect(resolved[0].allowedTools).toEqual(["list_issues", "create_issue", "delete_issue"]);
   });
 
   it("collapses a write onto the kept key and drops the equivalents", () => {
     const toolPermissions = { "uuid-1": ["list_issues"], github_mcp: ["create_issue"], "uuid-2": ["ping"] };
     const input = {
-      ...emptyВход,
-      all-серверы: [named, other],
-      selected-серверы: ["uuid-1"],
+      ...emptyInput,
+      allServers: [named, other],
+      selectedServers: ["uuid-1"],
       toolPermissions,
     };
-    const [entry] = resolveEffectiveMcp-серверы(input);
+    const [entry] = resolveEffectiveMcpServers(input);
 
     expect(applyToolPermissionWrite({ toolPermissions, entry, allowed: ["list_issues"] })).toEqual({
       "uuid-1": ["list_issues"],
@@ -353,15 +353,15 @@ describe("equivalent permission keys for one server", () => {
   it("leaves a single-key server, and every other server, untouched", () => {
     const toolPermissions = { github_mcp: ["list_issues"], "uuid-2": ["ping"] };
     const input = {
-      ...emptyВход,
-      all-серверы: [named, other],
-      selected-серверы: ["github_mcp"],
+      ...emptyInput,
+      allServers: [named, other],
+      selectedServers: ["github_mcp"],
       toolPermissions,
     };
-    const [entry] = resolveEffectiveMcp-серверы(input);
+    const [entry] = resolveEffectiveMcpServers(input);
 
-    expect(entry.supersededКлючи).toEqual([]);
-    expect(entry.ambiguousКлючи).toEqual([]);
+    expect(entry.supersededKeys).toEqual([]);
+    expect(entry.ambiguousKeys).toEqual([]);
     expect(applyToolPermissionWrite({ toolPermissions, entry, allowed: [] })).toEqual({
       github_mcp: [],
       "uuid-2": ["ping"],
@@ -379,15 +379,15 @@ describe("equivalent permission keys for one server", () => {
     const toolPermissions = { "uuid-1": ["list_issues"], shared: ["create_issue"] };
 
     const input = {
-      ...emptyВход,
-      all-серверы: editedFirst ? [firstShared, secondShared] : [secondShared, firstShared],
-      selected-серверы: ["uuid-1"],
+      ...emptyInput,
+      allServers: editedFirst ? [firstShared, secondShared] : [secondShared, firstShared],
+      selectedServers: ["uuid-1"],
       toolPermissions,
     };
-    const [entry] = resolveEffectiveMcp-серверы(input);
+    const [entry] = resolveEffectiveMcpServers(input);
 
-    expect(entry.supersededКлючи).toEqual([]);
-    expect(entry.ambiguousКлючи).toEqual(["shared"]);
+    expect(entry.supersededKeys).toEqual([]);
+    expect(entry.ambiguousKeys).toEqual(["shared"]);
     expect(applyToolPermissionWrite({ toolPermissions, entry, allowed: ["list_issues"] })).toEqual({
       "uuid-1": ["list_issues"],
       shared: ["create_issue"],
@@ -406,19 +406,19 @@ describe("equivalent permission keys for one server", () => {
     const toolPermissions = { shared: ["list_issues"] };
 
     const input = {
-      ...emptyВход,
-      all-серверы: editedFirst ? [firstShared, secondShared] : [secondShared, firstShared],
-      selected-серверы: ["uuid-1"],
+      ...emptyInput,
+      allServers: editedFirst ? [firstShared, secondShared] : [secondShared, firstShared],
+      selectedServers: ["uuid-1"],
       toolPermissions,
     };
-    const resolved = resolveEffectiveMcp-серверы(input);
+    const resolved = resolveEffectiveMcpServers(input);
 
     const edited = resolved.find((entry) => entry.server.server_id === "uuid-1")!;
-    expect(edited.permissionКлюч).toBe("uuid-1");
-    expect(edited.supersededКлючи).toEqual([]);
-    expect(edited.ambiguousКлючи).toEqual(["shared"]);
+    expect(edited.permissionKey).toBe("uuid-1");
+    expect(edited.supersededKeys).toEqual([]);
+    expect(edited.ambiguousKeys).toEqual(["shared"]);
     // What the backend enforces on this server today, which is what the card has to show.
-    expect(edited.allowedИнструменты).toEqual(["list_issues"]);
+    expect(edited.allowedTools).toEqual(["list_issues"]);
     expect(
       applyToolPermissionWrite({ toolPermissions, entry: edited, allowed: ["list_issues", "create_issue"] }),
     ).toEqual({
@@ -428,10 +428,10 @@ describe("equivalent permission keys for one server", () => {
   });
 
   it("adds an entry for a server that had none", () => {
-    const [entry] = resolveEffectiveMcp-серверы({
-      ...emptyВход,
-      all-серверы: [named],
-      selected-серверы: ["uuid-1"],
+    const [entry] = resolveEffectiveMcpServers({
+      ...emptyInput,
+      allServers: [named],
+      selectedServers: ["uuid-1"],
     });
 
     expect(applyToolPermissionWrite({ toolPermissions: {}, entry, allowed: ["list_issues"] })).toEqual({
@@ -450,17 +450,17 @@ describe("equivalent permission keys for one server", () => {
     const toolPermissions = { collide: ["list_issues"] };
 
     const input = {
-      ...emptyВход,
-      all-серверы: idOwnerFirst ? [byId, byName] : [byName, byId],
-      selected-серверы: ["uuid-9"],
+      ...emptyInput,
+      allServers: idOwnerFirst ? [byId, byName] : [byName, byId],
+      selectedServers: ["uuid-9"],
       toolPermissions,
     };
-    const resolved = resolveEffectiveMcp-серверы(input);
+    const resolved = resolveEffectiveMcpServers(input);
 
     const edited = resolved.find((entry) => entry.server.server_id === "uuid-9")!;
-    expect(edited.permissionКлюч).toBe("uuid-9");
-    expect(edited.supersededКлючи).toEqual([]);
-    expect(edited.allowedИнструменты).toBeUndefined();
+    expect(edited.permissionKey).toBe("uuid-9");
+    expect(edited.supersededKeys).toEqual([]);
+    expect(edited.allowedTools).toBeUndefined();
     expect(applyToolPermissionWrite({ toolPermissions, entry: edited, allowed: ["ping"] })).toEqual({
       collide: ["list_issues"],
       "uuid-9": ["ping"],
@@ -483,27 +483,27 @@ describe("tools a selected toolset grants", () => {
 
   const resolveOne = (toolPermissions: Readonly<Record<string, readonly string[]>>) => {
     const input = {
-      ...emptyВход,
-      all-серверы: [inToolset],
+      ...emptyInput,
+      allServers: [inToolset],
       selectedToolsets: ["ts-1"],
       toolsets: [support],
       toolPermissions,
     };
-    return resolveEffectiveMcp-серверы(input)[0];
+    return resolveEffectiveMcpServers(input)[0];
   };
 
   it("reports them as allowed rather than leaving the server unrestricted", () => {
     const entry = resolveOne({});
 
-    expect(entry.toolsetИнструменты).toEqual(["list_issues"]);
-    expect(entry.allowedИнструменты).toEqual(["list_issues"]);
+    expect(entry.toolsetTools).toEqual(["list_issues"]);
+    expect(entry.allowedTools).toEqual(["list_issues"]);
   });
 
   it("unions them with what the permission key allows", () => {
     const entry = resolveOne({ "srv-toolset": ["create_issue"] });
 
-    expect(entry.keyedИнструменты).toEqual(["create_issue"]);
-    expect(entry.allowedИнструменты).toEqual(["create_issue", "list_issues"]);
+    expect(entry.keyedTools).toEqual(["create_issue"]);
+    expect(entry.allowedTools).toEqual(["create_issue", "list_issues"]);
   });
 
   it("keeps a write from copying a toolset tool into the permission entry", () => {
@@ -534,15 +534,15 @@ describe("tools a selected toolset grants", () => {
 
   it("leaves a server no selected toolset names unrestricted", () => {
     const input = {
-      ...emptyВход,
-      all-серверы: [inToolset],
-      selected-серверы: ["srv-toolset"],
+      ...emptyInput,
+      allServers: [inToolset],
+      selectedServers: ["srv-toolset"],
       selectedToolsets: [],
       toolsets: [support],
     };
-    const untouched = resolveEffectiveMcp-серверы(input)[0];
+    const untouched = resolveEffectiveMcpServers(input)[0];
 
-    expect(untouched.toolsetИнструменты).toBeUndefined();
-    expect(untouched.allowedИнструменты).toBeUndefined();
+    expect(untouched.toolsetTools).toBeUndefined();
+    expect(untouched.allowedTools).toBeUndefined();
   });
 });

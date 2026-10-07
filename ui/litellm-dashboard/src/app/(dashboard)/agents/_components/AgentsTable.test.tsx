@@ -2,7 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 
-import АгентыТаблица from "./АгентыТаблица";
+import AgentsTable from "./АгентыТаблица";
 import { Agent } from "@/components/agents/types";
 
 const baseProps = {
@@ -18,7 +18,7 @@ const baseProps = {
 const makeAgent = (overrides: Partial<Agent> = {}): Agent => ({
   agent_id: "agent-1",
   agent_name: "Test Agent",
-  litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4" },
+  litellm_params: { model: "gpt-4" },
   spend: 0,
   keys: [{ token: "hash-1", key_alias: "primary", key_name: "sk-...1" }],
   created_at: "2023-01-01T00:00:00Z",
@@ -27,17 +27,17 @@ const makeAgent = (overrides: Partial<Agent> = {}): Agent => ({
 
 describe("АгентыТаблица", () => {
   it("renders every column header", () => {
-    render(<АгентыТаблица agents={[]} {...baseProps} />);
-    for (const header of ["Название агента", "Agent ID", "Расход (USD)", "Режимl", "Создан", "Status"]) {
+    render(<AgentsTable agents={[]} {...baseProps} />);
+    for (const header of ["Название агента", "Agent ID", "Spend (USD)", "Режимl", "Создан", "Status"]) {
       expect(screen.getByText(header)).toBeInTheDocument();
     }
   });
 
-  it("renders the agent's Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию and opens the detail view when the ID cell is clicked", async () => {
+  it("renders the agent's model and opens the detail view when the ID cell is clicked", async () => {
     const user = userEvent.setup();
     const onAgentClick = vi.fn();
-    const agent = makeAgent({ agent_id: "agent-xyz", agent_name: "Router", litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-3-5" } });
-    render(<АгентыТаблица agents={[agent]} {...baseProps} onAgentClick={onAgentClick} />);
+    const agent = makeAgent({ agent_id: "agent-xyz", agent_name: "Router", litellm_params: { model: "claude-3-5" } });
+    render(<AgentsTable agents={[agent]} {...baseProps} onAgentClick={onAgentClick} />);
 
     expect(screen.getByText("claude-3-5")).toBeInTheDocument();
 
@@ -47,7 +47,7 @@ describe("АгентыТаблица", () => {
 
   it("marks agents Active when they have keys and Needs Setup when they have none", () => {
     render(
-      <АгентыТаблица
+      <AgentsTable
         agents={[
           makeAgent({ agent_id: "keyed", agent_name: "Ключed Agent", keys: [{ token: "k" }] }),
           makeAgent({ agent_id: "keyless", agent_name: "Ключless Agent", keys: [] }),
@@ -66,7 +66,7 @@ describe("АгентыТаблица", () => {
     const user = userEvent.setup();
     const onDeleteClick = vi.fn();
     const agent = makeAgent({ agent_id: "agent-9", agent_name: "Doomed Agent" });
-    render(<АгентыТаблица agents={[agent]} {...baseProps} onDeleteClick={onDeleteClick} />);
+    render(<AgentsTable agents={[agent]} {...baseProps} onDeleteClick={onDeleteClick} />);
 
     await user.click(screen.getByTestId("agent-actions-agent-9"));
     await user.click(await screen.findByTestId("agent-action-delete"));
@@ -77,7 +77,7 @@ describe("АгентыТаблица", () => {
   it("filters agents by name or by agent card description", async () => {
     const user = userEvent.setup();
     render(
-      <АгентыТаблица
+      <AgentsTable
         agents={[
           makeAgent({ agent_id: "a1", agent_name: "Billing Router" }),
           makeAgent({
@@ -104,7 +104,7 @@ describe("АгентыТаблица", () => {
   it("filters agents by a pasted agent_id so only that agent's row survives", async () => {
     const user = userEvent.setup();
     render(
-      <АгентыТаблица
+      <AgentsTable
         agents={[
           makeAgent({ agent_id: "5f3c2a1b-9d8e-4f7a-b6c5-d4e3f2a1b0c9", agent_name: "Billing Router" }),
           makeAgent({ agent_id: "0a9b8c7d-6e5f-4a3b-8c2d-1e0f9a8b7c6d", agent_name: "Second Agent" }),
@@ -128,7 +128,7 @@ describe("АгентыТаблица", () => {
 
   it("shows the no-match empty state when the search matches nothing", async () => {
     const user = userEvent.setup();
-    render(<АгентыТаблица agents={[makeAgent()]} {...baseProps} />);
+    render(<AgentsTable agents={[makeAgent()]} {...baseProps} />);
 
     await user.type(screen.getByPlaceholderText("Search agents by name, ID, or description..."), "zzzz");
     expect(screen.queryByText("Test Agent")).not.toBeInTheDocument();
@@ -137,7 +137,7 @@ describe("АгентыТаблица", () => {
 
   it("hides the actions column entirely for non-admins", () => {
     const agent = makeAgent({ agent_id: "agent-2" });
-    render(<АгентыТаблица agents={[agent]} {...baseProps} isAdmin={false} />);
+    render(<AgentsTable agents={[agent]} {...baseProps} isAdmin={false} />);
 
     expect(screen.queryByTestId("agent-actions-agent-2")).not.toBeInTheDocument();
     expect(screen.queryByRole("columnheader", { name: /actions/i })).not.toBeInTheDocument();
@@ -145,14 +145,14 @@ describe("АгентыТаблица", () => {
   });
 
   it("shows the actions column for admins", () => {
-    render(<АгентыТаблица agents={[makeAgent({ agent_id: "agent-3" })]} {...baseProps} isAdmin />);
+    render(<AgentsTable agents={[makeAgent({ agent_id: "agent-3" })]} {...baseProps} isAdmin />);
     expect(screen.getByRole("columnheader", { name: /actions/i })).toBeInTheDocument();
     expect(screen.getByTestId("agent-actions-agent-3")).toBeInTheDocument();
   });
 
   it("defaults to sorting by created_at descending (newest first)", () => {
     render(
-      <АгентыТаблица
+      <AgentsTable
         agents={[
           makeAgent({ agent_id: "old", agent_name: "Alpha Agent", created_at: "2021-06-01T00:00:00Z" }),
           makeAgent({ agent_id: "new", agent_name: "Бета Agent", created_at: "2023-06-01T00:00:00Z" }),
@@ -168,7 +168,7 @@ describe("АгентыТаблица", () => {
 
   it("sorts agents with no created_at last, never ahead of dated ones", () => {
     render(
-      <АгентыТаблица
+      <AgentsTable
         agents={[
           makeAgent({ agent_id: "old", agent_name: "Alpha Agent", created_at: "2021-06-01T00:00:00Z" }),
           makeAgent({ agent_id: "undated", agent_name: "Undated Agent", created_at: undefined }),
@@ -185,13 +185,13 @@ describe("АгентыТаблица", () => {
   });
 
   it("shows a rich empty state when there are no agents", () => {
-    render(<АгентыТаблица agents={[]} {...baseProps} />);
+    render(<AgentsTable agents={[]} {...baseProps} />);
     expect(screen.getByText("No agents yet")).toBeInTheDocument();
     expect(screen.queryByTestId("skeleton-row")).not.toBeInTheDocument();
   });
 
   it("renders loading skeleton rows on initial load instead of the empty state", () => {
-    render(<АгентыТаблица agents={[]} {...baseProps} isLoading />);
+    render(<AgentsTable agents={[]} {...baseProps} isLoading />);
     expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
     expect(screen.queryByText("No agents yet")).not.toBeInTheDocument();
   });
@@ -199,7 +199,7 @@ describe("АгентыТаблица", () => {
   it("invokes the health-check toggle from the toolbar", async () => {
     const user = userEvent.setup();
     const onHealthCheckToggle = vi.fn();
-    render(<АгентыТаблица agents={[]} {...baseProps} onHealthCheckToggle={onHealthCheckToggle} />);
+    render(<AgentsTable agents={[]} {...baseProps} onHealthCheckToggle={onHealthCheckToggle} />);
 
     expect(screen.getByText("Health Check")).toBeInTheDocument();
     await user.click(screen.getByRole("switch"));

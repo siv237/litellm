@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
-import { DataTablePagination } from "./DataTablePagination";
+import { DataTablePagination } from "./DataТаблицаPagination";
 
 const baseProps = {
   page: 0,
@@ -12,7 +12,7 @@ const baseProps = {
   onPageSizeChange: () => {},
 };
 
-describe("DataTablePagination", () => {
+describe("DataТаблицаPagination", () => {
   it("renders the current range from plain props", () => {
     render(<DataTablePagination {...baseProps} />);
     expect(screen.getByTestId("pagination-range")).toHaveTextContent("Showing 1-25 of 100");

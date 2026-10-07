@@ -3,10 +3,10 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { describe, expect, it, vi } from "vitest";
 import { z } from "zod/v4";
-import { TeamМетаданныеПоле } from "@/app/(dashboard)/hooks/teams/useTeamMetadataSchema";
+import { TeamMetadataField } from "@/app/(dashboard)/hooks/teams/useTeamМетаданныеSchema";
 import { useZodForm } from "@/lib/forms/useZodForm";
-import МетаданныеКлючЗначениеПолеs, {
-  МетаданныеPair,
+import MetadataKeyValueFields, {
+  MetadataPair,
   metadataObjectToPairs,
   metadataPairsSchema,
   metadataPairsToObject,
@@ -47,7 +47,7 @@ describe("metadataObjectToPairs", () => {
     ]);
   });
 
-  it("filters выход excluded keys", () => {
+  it("filters out excluded keys", () => {
     expect(
       metadataObjectToPairs({ department: "research", logging: [{ callback_name: "langfuse" }] }, new Set(["logging"])),
     ).toEqual([{ key: "department", value: "research" }]);
@@ -74,7 +74,7 @@ describe("metadataPairsToObject", () => {
     ).toEqual({ tier: 3, beta: true, config: { region: "us" }, code: "42" });
   });
 
-  it("skips rows withвыход a key and defaults a missing value to an empty string", () => {
+  it("skips rows without a key and defaults a missing value to an empty string", () => {
     expect(metadataPairsToObject([{ key: "", value: "orphan" }, undefined, { key: "kept" }])).toEqual({ kept: "" });
   });
 
@@ -91,19 +91,19 @@ describe("metadataPairsToObject", () => {
 });
 
 interface HarnessProps {
-  onFinish: (values: { metadata?: МетаданныеPair[] }) => void;
-  initialМетаданные?: МетаданныеPair[];
-  schemaFields?: TeamМетаданныеПоле[];
+  onFinish: (values: { metadata?: MetadataPair[] }) => void;
+  initialMetadata?: MetadataPair[];
+  schemaFields?: TeamMetadataField[];
   schemaLoading?: boolean;
 }
 
 const harnessSchema = z.object({ metadata: metadataPairsSchema });
 
-const Harness: React.FC<HarnessProps> = ({ onFinish, initialМетаданные, schemaFields, schemaLoading }) => {
-  const form = useZodForm(harnessSchema, { defaultValues: { metadata: initialМетаданные ?? [] } });
+const Harness: React.FC<HarnessProps> = ({ onFinish, initialMetadata, schemaFields, schemaLoading }) => {
+  const form = useZodForm(harnessSchema, { defaultValues: { metadata: initialMetadata ?? [] } });
   return (
     <form onSubmit={form.handleSubmit((values) => onFinish(values))}>
-      <МетаданныеКлючЗначениеПолеs
+      <MetadataKeyValueFields
         control={form.control}
         getValues={form.getValues}
         name="metadata"
@@ -120,17 +120,17 @@ describe("МетаданныеКлючЗначениеПолеs", () => {
     render(
       <Harness
         onFinish={vi.fn()}
-        initialМетаданные={[
+        initialMetadata={[
           { key: "department", value: "research" },
           { key: "tier", value: "3" },
         ]}
       />,
     );
 
-    const keyIns = screen.getAllByPlaceholderText("Ключ");
-    const valueIns = screen.getAllByPlaceholderText("Значение");
-    expect(keyIns.map((input) => (input as HTMLInElement).value)).toEqual(["department", "tier"]);
-    expect(valueIns.map((input) => (input as HTMLInElement).value)).toEqual(["research", "3"]);
+    const keyInputs = screen.getAllByPlaceholderText("Ключ");
+    const valueInputs = screen.getAllByPlaceholderText("Значение");
+    expect(keyInputs.map((input) => (input as HTMLInputElement).value)).toEqual(["department", "tier"]);
+    expect(valueInputs.map((input) => (input as HTMLInputElement).value)).toEqual(["research", "3"]);
   });
 
   it("adds a row and submits the entered pair", async () => {
@@ -154,7 +154,7 @@ describe("МетаданныеКлючЗначениеПолеs", () => {
     render(
       <Harness
         onFinish={onFinish}
-        initialМетаданные={[
+        initialMetadata={[
           { key: "department", value: "research" },
           { key: "tier", value: "3" },
         ]}
@@ -175,7 +175,7 @@ describe("МетаданныеКлючЗначениеПолеs", () => {
     render(
       <Harness
         onFinish={onFinish}
-        initialМетаданные={[
+        initialMetadata={[
           { key: "department", value: "research" },
           { key: "department", value: "sales" },
         ]}
@@ -207,7 +207,7 @@ describe("МетаданныеКлючЗначениеПолеs", () => {
 });
 
 describe("МетаданныеКлючЗначениеПолеs with a declared schema", () => {
-  const schema: TeamМетаданныеПоле[] = [
+  const schema: TeamMetadataField[] = [
     { key: "cost_center", label: "Стоимость Center" },
     { key: "app_name", label: "Приложениеlication Name" },
   ];
@@ -216,7 +216,7 @@ describe("МетаданныеКлючЗначениеПолеs with a declared 
     render(<Harness onFinish={vi.fn()} schemaFields={schema} />);
 
     await waitFor(() => {
-      expect(screen.getAllByPlaceholderText("Ключ").map((input) => (input as HTMLInElement).value)).toEqual([
+      expect(screen.getAllByPlaceholderText("Ключ").map((input) => (input as HTMLInputElement).value)).toEqual([
         "cost_center",
         "app_name",
       ]);
@@ -240,16 +240,16 @@ describe("МетаданныеКлючЗначениеПолеs with a declared 
 
   it("should not add a second row for keys already present in the form", async () => {
     render(
-      <Harness onFinish={vi.fn()} schemaFields={schema} initialМетаданные={[{ key: "cost_center", value: "CC-1001" }]} />,
+      <Harness onFinish={vi.fn()} schemaFields={schema} initialMetadata={[{ key: "cost_center", value: "CC-1001" }]} />,
     );
 
     await waitFor(() => {
-      expect(screen.getAllByPlaceholderText("Ключ").map((input) => (input as HTMLInElement).value)).toEqual([
+      expect(screen.getAllByPlaceholderText("Ключ").map((input) => (input as HTMLInputElement).value)).toEqual([
         "cost_center",
         "app_name",
       ]);
     });
-    expect(screen.getAllByPlaceholderText("Значение").map((input) => (input as HTMLInElement).value)).toEqual([
+    expect(screen.getAllByPlaceholderText("Значение").map((input) => (input as HTMLInputElement).value)).toEqual([
       "CC-1001",
       "",
     ]);
@@ -263,7 +263,7 @@ describe("МетаданныеКлючЗначениеПолеs with a declared 
     await user.click(screen.getAllByLabelText("Remove key-value pair")[0]);
 
     await waitFor(() => {
-      expect(screen.getAllByPlaceholderText("Ключ").map((input) => (input as HTMLInElement).value)).toEqual([
+      expect(screen.getAllByPlaceholderText("Ключ").map((input) => (input as HTMLInputElement).value)).toEqual([
         "app_name",
       ]);
     });
@@ -283,7 +283,7 @@ describe("МетаданныеКлючЗначениеПолеs with a declared 
     rerender(<Harness onFinish={onFinish} schemaFields={schema} schemaLoading={false} />);
 
     await waitFor(() => {
-      expect(screen.getAllByPlaceholderText("Ключ").map((input) => (input as HTMLInElement).value)).toEqual([
+      expect(screen.getAllByPlaceholderText("Ключ").map((input) => (input as HTMLInputElement).value)).toEqual([
         "cost_center",
         "app_name",
       ]);

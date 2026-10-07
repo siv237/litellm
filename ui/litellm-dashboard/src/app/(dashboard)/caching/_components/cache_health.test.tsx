@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "@/../tests/test-utils";
 import { CacheHealthTab } from "./cache_health";
 
-const healthyОтвет = {
+const healthyResponse = {
   status: "healthy",
   ping_response: true,
   set_cache_response: "success",
@@ -24,12 +24,12 @@ const errorPayload = {
   health_check_cache_params: {},
 };
 
-const errorОтвет = { error: { message: JSON.stringify(errorPayload) } };
+const errorResponse = { error: { message: JSON.stringify(errorPayload) } };
 
 const renderTab = (overrides: Partial<React.ComponentProps<typeof CacheHealthTab>> = {}) =>
   renderWithProviders(
     <CacheHealthTab
-      {...{ accessТокен: "sk-test", healthCheckОтвет: "", runCachingHealthCheck: vi.fn(), ...overrides }}
+      {...{ accessToken: "sk-test", healthCheckResponse: "", runCachingHealthCheck: vi.fn(), ...overrides }}
     />,
   );
 
@@ -67,7 +67,7 @@ describe("CacheHealthTab", () => {
   });
 
   it("reports a healthy cache with its ping and set-cache results", async () => {
-    renderTab({ healthCheckОтвет: healthyОтвет });
+    renderTab({ healthCheckResponse: healthyResponse });
 
     expect(await screen.findByText("Cache Status: healthy")).toBeInTheDocument();
     expect(screen.getByText("Cache Details")).toBeInTheDocument();
@@ -77,7 +77,7 @@ describe("CacheHealthTab", () => {
   });
 
   it("shows the Redis detail rows when the cache type is redis", async () => {
-    renderTab({ healthCheckОтвет: healthyОтвет });
+    renderTab({ healthCheckResponse: healthyResponse });
 
     expect(await screen.findByText("Redis Details")).toBeInTheDocument();
     expect(screen.getByText("Redis Хост")).toBeInTheDocument();
@@ -91,7 +91,7 @@ describe("CacheHealthTab", () => {
 
   it("omits the Redis detail rows for a non-redis cache type", async () => {
     renderTab({
-      healthCheckОтвет: {
+      healthCheckResponse: {
         status: "healthy",
         ping_response: true,
         litellm_cache_params: JSON.stringify({ type: "local" }),
@@ -104,43 +104,43 @@ describe("CacheHealthTab", () => {
   });
 
   it("surfaces the error message and traceback when the check fails", async () => {
-    renderTab({ healthCheckОтвет: errorОтвет });
+    renderTab({ healthCheckResponse: errorResponse });
 
     expect(await screen.findByText("Детали ошибки")).toBeInTheDocument();
-    expect(screen.getByText("Ошибка Сообщение")).toBeInTheDocument();
+    expect(screen.getByText("Error Сообщение")).toBeInTheDocument();
     expect(screen.getByText("Подключение refused")).toBeInTheDocument();
     expect(screen.getByText("Traceback")).toBeInTheDocument();
     expect(screen.getByText("Cache Status: unhealthy")).toBeInTheDocument();
   });
 
   it("still shows the cache details section when the check failed", async () => {
-    renderTab({ healthCheckОтвет: errorОтвет });
+    renderTab({ healthCheckResponse: errorResponse });
 
     expect(await screen.findByText("Cache Details")).toBeInTheDocument();
   });
 
   it("truncates a long value and expands it to the full value on click", async () => {
-    const longСообщение = "M".repeat(120);
+    const longMessage = "M".repeat(120);
     const user = userEvent.setup();
     renderTab({
-      healthCheckОтвет: {
-        error: { message: JSON.stringify({ message: longСообщение, traceback: "short" }) },
+      healthCheckResponse: {
+        error: { message: JSON.stringify({ message: longMessage, traceback: "short" }) },
       },
     });
 
-    await screen.findByText("Ошибка Сообщение");
+    await screen.findByText("Error Сообщение");
     expect(screen.getByText(`${"M".repeat(50)}...`)).toBeInTheDocument();
-    expect(screen.queryByText(longСообщение)).not.toBeInTheDocument();
+    expect(screen.queryByText(longMessage)).not.toBeInTheDocument();
 
     await user.click(screen.getAllByRole("button", { name: "▶" })[0]);
 
     await waitFor(() => {
-      expect(screen.getByText(longСообщение)).toBeInTheDocument();
+      expect(screen.getByText(longMessage)).toBeInTheDocument();
     });
   });
 
   it("offers both the summary and raw response views", async () => {
-    renderTab({ healthCheckОтвет: healthyОтвет });
+    renderTab({ healthCheckResponse: healthyResponse });
 
     expect(await screen.findByText("Summary")).toBeInTheDocument();
     expect(screen.getByText("Raw Ответ")).toBeInTheDocument();

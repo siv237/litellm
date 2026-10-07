@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   formatInstallCommand,
-  extractКатегории,
+  extractCategories,
   validatePluginName,
   getSourceDisplayText,
   getSourceLink,
@@ -9,14 +9,14 @@ import {
   formatDateString,
   truncateText,
   filterPluginsBySearch,
-  filterPluginsByКатегория,
-  isValidSemanticВерсия,
+  filterPluginsByCategory,
+  isValidSemanticVersion,
   isValidEmail,
   isValidUrl,
-  parseКлючевые слова,
-  formatКлючевые слова,
-  parseSkillИсточник,
-  isValidSubПуть,
+  parseKeywords,
+  formatKeywords,
+  parseSkillSource,
+  isValidSubPath,
   isValidSha256,
   buildMarketplaceSettingsSnippet,
 } from "./helpers";
@@ -49,22 +49,22 @@ describe("formatInstallCommand", () => {
 
 describe("extractКатегории", () => {
   it("returns Все and Other for empty list", () => {
-    expect(extractКатегории([])).toEqual(["Все", "Other"]);
+    expect(extractCategories([])).toEqual(["Все", "Other"]);
   });
 
   it("extracts and sorts unique categories", () => {
     const plugins = [{ category: "Разработка" }, { category: "Analytics" }, { category: "Разработка" }];
-    expect(extractКатегории(plugins)).toEqual(["Все", "Analytics", "Разработка", "Other"]);
+    expect(extractCategories(plugins)).toEqual(["Все", "Analytics", "Разработка", "Other"]);
   });
 
   it("ignores empty/whitespace categories", () => {
     const plugins = [{ category: "" }, { category: "  " }, { category: "Инструменты" }];
-    expect(extractКатегории(plugins)).toEqual(["Все", "Инструменты", "Other"]);
+    expect(extractCategories(plugins)).toEqual(["Все", "Инструменты", "Other"]);
   });
 
   it("handles undefined category", () => {
     const plugins = [{ category: undefined }, { category: "Безопасность" }];
-    expect(extractКатегории(plugins)).toEqual(["Все", "Безопасность", "Other"]);
+    expect(extractCategories(plugins)).toEqual(["Все", "Безопасность", "Other"]);
   });
 });
 
@@ -94,7 +94,7 @@ describe("validatePluginName", () => {
   });
 });
 
-describe("getSourceDisplayText", () => {
+describe("getИсточникDisplayText", () => {
   it("shows github repo", () => {
     expect(getSourceDisplayText({ source: "github", repo: "org/repo" })).toBe("GitHub: org/repo");
   });
@@ -126,7 +126,7 @@ describe("getSourceDisplayText", () => {
   });
 });
 
-describe("getSourceLink", () => {
+describe("getИсточникLink", () => {
   it("returns github link for github source", () => {
     expect(getSourceLink({ source: "github", repo: "org/repo" })).toBe("https://github.com/org/repo");
   });
@@ -230,7 +230,7 @@ describe("truncateText", () => {
   });
 });
 
-describe("filterPluginsBySearch", () => {
+describe("filterПлагиныBySearch", () => {
   const plugins: MarketplacePluginEntry[] = [
     {
       name: "code-formatter",
@@ -270,7 +270,7 @@ describe("filterPluginsBySearch", () => {
   });
 });
 
-describe("filterPluginsByКатегория", () => {
+describe("filterПлагиныByCategory", () => {
   const plugins: MarketplacePluginEntry[] = [
     { name: "a", source: { source: "github" }, category: "Dev" },
     { name: "b", source: { source: "github" }, category: "Безопасность" },
@@ -279,17 +279,17 @@ describe("filterPluginsByКатегория", () => {
   ];
 
   it("returns all plugins for 'Все'", () => {
-    expect(filterPluginsByКатегория(plugins, "Все")).toEqual(plugins);
+    expect(filterPluginsByCategory(plugins, "Все")).toEqual(plugins);
   });
 
   it("returns uncategorized plugins for 'Other'", () => {
-    const result = filterPluginsByКатегория(plugins, "Other");
+    const result = filterPluginsByCategory(plugins, "Other");
     expect(result).toHaveLength(2);
     expect(result.map((p) => p.name)).toEqual(["c", "d"]);
   });
 
   it("filters by specific category", () => {
-    const result = filterPluginsByКатегория(plugins, "Dev");
+    const result = filterPluginsByCategory(plugins, "Dev");
     expect(result).toHaveLength(1);
     expect(result[0].name).toBe("a");
   });
@@ -297,18 +297,18 @@ describe("filterPluginsByКатегория", () => {
 
 describe("isValidSemanticВерсия", () => {
   it("accepts valid semver", () => {
-    expect(isValidSemanticВерсия("1.0.0")).toBe(true);
-    expect(isValidSemanticВерсия("0.1.0-alpha")).toBe(true);
-    expect(isValidSemanticВерсия("2.3.4+build.1")).toBe(true);
+    expect(isValidSemanticVersion("1.0.0")).toBe(true);
+    expect(isValidSemanticVersion("0.1.0-alpha")).toBe(true);
+    expect(isValidSemanticVersion("2.3.4+build.1")).toBe(true);
   });
 
   it("rejects invalid semver", () => {
-    expect(isValidSemanticВерсия("1.0")).toBe(false);
-    expect(isValidSemanticВерсия("abc")).toBe(false);
+    expect(isValidSemanticVersion("1.0")).toBe(false);
+    expect(isValidSemanticVersion("abc")).toBe(false);
   });
 
-  it("returns true for undefined (необязательно)", () => {
-    expect(isValidSemanticВерсия(undefined)).toBe(true);
+  it("returns true for undefined (optional)", () => {
+    expect(isValidSemanticVersion(undefined)).toBe(true);
   });
 });
 
@@ -322,7 +322,7 @@ describe("isValidEmail", () => {
     expect(isValidEmail("@example.com")).toBe(false);
   });
 
-  it("returns true for undefined (необязательно)", () => {
+  it("returns true for undefined (optional)", () => {
     expect(isValidEmail(undefined)).toBe(true);
   });
 });
@@ -337,7 +337,7 @@ describe("isValidUrl", () => {
     expect(isValidUrl("not a url")).toBe(false);
   });
 
-  it("returns true for undefined (необязательно)", () => {
+  it("returns true for undefined (optional)", () => {
     expect(isValidUrl(undefined)).toBe(true);
   });
 });
@@ -358,48 +358,48 @@ describe("isValidSha256", () => {
 
 describe("parseКлючевые слова", () => {
   it("splits comma-separated keywords", () => {
-    expect(parseКлючевые слова("a, b, c")).toEqual(["a", "b", "c"]);
+    expect(parseKeywords("a, b, c")).toEqual(["a", "b", "c"]);
   });
 
   it("trims whitespace", () => {
-    expect(parseКлючевые слова("  foo ,  bar  ")).toEqual(["foo", "bar"]);
+    expect(parseKeywords("  foo ,  bar  ")).toEqual(["foo", "bar"]);
   });
 
   it("filters empty entries", () => {
-    expect(parseКлючевые слова("a,,b,")).toEqual(["a", "b"]);
+    expect(parseKeywords("a,,b,")).toEqual(["a", "b"]);
   });
 
   it("returns empty array for empty string", () => {
-    expect(parseКлючевые слова("")).toEqual([]);
-    expect(parseКлючевые слова("  ")).toEqual([]);
+    expect(parseKeywords("")).toEqual([]);
+    expect(parseKeywords("  ")).toEqual([]);
   });
 });
 
 describe("formatКлючевые слова", () => {
   it("joins keywords with comma and space", () => {
-    expect(formatКлючевые слова(["a", "b", "c"])).toBe("a, b, c");
+    expect(formatKeywords(["a", "b", "c"])).toBe("a, b, c");
   });
 
   it("returns empty string for empty/undefined array", () => {
-    expect(formatКлючевые слова([])).toBe("");
-    expect(formatКлючевые слова(undefined)).toBe("");
+    expect(formatKeywords([])).toBe("");
+    expect(formatKeywords(undefined)).toBe("");
   });
 });
 
 describe("parseSkillИсточник", () => {
   it("parses a plain github repo", () => {
-    expect(parseSkillИсточник("github.com/org/repo")?.parsed).toEqual({ source: "github", repo: "org/repo" });
+    expect(parseSkillSource("github.com/org/repo")?.parsed).toEqual({ source: "github", repo: "org/repo" });
   });
 
   it("strips a .git suffix from the github repo shorthand", () => {
-    expect(parseSkillИсточник("https://github.com/org/repo.git")?.parsed).toEqual({
+    expect(parseSkillSource("https://github.com/org/repo.git")?.parsed).toEqual({
       source: "github",
       repo: "org/repo",
     });
   });
 
   it("parses a github tree URL into a git-subdir", () => {
-    expect(parseSkillИсточник("github.com/org/repo/tree/main/plugins/x")?.parsed).toEqual({
+    expect(parseSkillSource("github.com/org/repo/tree/main/plugins/x")?.parsed).toEqual({
       source: "git-subdir",
       url: "https://github.com/org/repo",
       path: "plugins/x",
@@ -407,7 +407,7 @@ describe("parseSkillИсточник", () => {
   });
 
   it("drops a trailing file segment from a github blob URL", () => {
-    expect(parseSkillИсточник("github.com/org/repo/blob/main/x/SKILL.md")?.parsed).toEqual({
+    expect(parseSkillSource("github.com/org/repo/blob/main/x/SKILL.md")?.parsed).toEqual({
       source: "git-subdir",
       url: "https://github.com/org/repo",
       path: "x",
@@ -415,7 +415,7 @@ describe("parseSkillИсточник", () => {
   });
 
   it("combines a github repo with an explicit subfolder", () => {
-    expect(parseSkillИсточник("github.com/org/repo", "plugins/x")?.parsed).toEqual({
+    expect(parseSkillSource("github.com/org/repo", "plugins/x")?.parsed).toEqual({
       source: "git-subdir",
       url: "https://github.com/org/repo",
       path: "plugins/x",
@@ -423,21 +423,21 @@ describe("parseSkillИсточник", () => {
   });
 
   it("treats a gitlab repo as a raw url source", () => {
-    expect(parseSkillИсточник("gitlab.com/org/repo")?.parsed).toEqual({
+    expect(parseSkillSource("gitlab.com/org/repo")?.parsed).toEqual({
       source: "url",
       url: "https://gitlab.com/org/repo",
     });
   });
 
   it("keeps the .git suffix on raw urls", () => {
-    expect(parseSkillИсточник("https://gitlab.com/org/repo.git")?.parsed).toEqual({
+    expect(parseSkillSource("https://gitlab.com/org/repo.git")?.parsed).toEqual({
       source: "url",
       url: "https://gitlab.com/org/repo.git",
     });
   });
 
   it("combines a gitlab repo with an explicit subfolder", () => {
-    expect(parseSkillИсточник("gitlab.com/org/repo", "plugins/x")?.parsed).toEqual({
+    expect(parseSkillSource("gitlab.com/org/repo", "plugins/x")?.parsed).toEqual({
       source: "git-subdir",
       url: "https://gitlab.com/org/repo",
       path: "plugins/x",
@@ -445,7 +445,7 @@ describe("parseSkillИсточник", () => {
   });
 
   it("combines a self-hosted host with an explicit subfolder", () => {
-    expect(parseSkillИсточник("https://git.acme.com/team/repo", "sub/dir")?.parsed).toEqual({
+    expect(parseSkillSource("https://git.acme.com/team/repo", "sub/dir")?.parsed).toEqual({
       source: "git-subdir",
       url: "https://git.acme.com/team/repo",
       path: "sub/dir",
@@ -453,7 +453,7 @@ describe("parseSkillИсточник", () => {
   });
 
   it("lets a github URL-encoded subdir win over an also-provided subfolder", () => {
-    expect(parseSkillИсточник("github.com/org/repo/tree/main/plugins/x", "ignored/path")?.parsed).toEqual({
+    expect(parseSkillSource("github.com/org/repo/tree/main/plugins/x", "ignored/path")?.parsed).toEqual({
       source: "git-subdir",
       url: "https://github.com/org/repo",
       path: "plugins/x",
@@ -461,19 +461,19 @@ describe("parseSkillИсточник", () => {
   });
 
   it("rejects traversal, absolute, and double-slash subfolders", () => {
-    expect(parseSkillИсточник("gitlab.com/org/repo", "../etc")).toBeNull();
-    expect(parseSkillИсточник("gitlab.com/org/repo", "/abs")).toBeNull();
-    expect(parseSkillИсточник("gitlab.com/org/repo", "a//b")).toBeNull();
+    expect(parseSkillSource("gitlab.com/org/repo", "../etc")).toBeNull();
+    expect(parseSkillSource("gitlab.com/org/repo", "/abs")).toBeNull();
+    expect(parseSkillSource("gitlab.com/org/repo", "a//b")).toBeNull();
   });
 
   it("returns null for empty and garbage input", () => {
-    expect(parseSkillИсточник("")).toBeNull();
-    expect(parseSkillИсточник("   ")).toBeNull();
-    expect(parseSkillИсточник("not a url")).toBeNull();
+    expect(parseSkillSource("")).toBeNull();
+    expect(parseSkillSource("   ")).toBeNull();
+    expect(parseSkillSource("not a url")).toBeNull();
   });
 
   it("parses an S3 zip URL into an archive source and names the skill after the file", () => {
-    expect(parseSkillИсточник("https://skills-bucket.s3.us-east-1.amazonaws.com/plugins/My_Skill-1.0.0.zip")).toEqual({
+    expect(parseSkillSource("https://skills-bucket.s3.us-east-1.amazonaws.com/plugins/My_Skill-1.0.0.zip")).toEqual({
       parsed: { source: "archive", url: "https://skills-bucket.s3.us-east-1.amazonaws.com/plugins/My_Skill-1.0.0.zip" },
       label: "Zip archive — skills-bucket.s3.us-east-1.amazonaws.com/plugins/My_Skill-1.0.0.zip",
       suggestedName: "my-skill-1-0-0",
@@ -481,70 +481,70 @@ describe("parseSkillИсточник", () => {
   });
 
   it("keeps the query string of a zip URL so versioned or signed object links still resolve", () => {
-    expect(parseSkillИсточник("https://bucket.s3.amazonaws.com/skill.ZIP?versionId=abc")?.parsed).toEqual({
+    expect(parseSkillSource("https://bucket.s3.amazonaws.com/skill.ZIP?versionId=abc")?.parsed).toEqual({
       source: "archive",
       url: "https://bucket.s3.amazonaws.com/skill.ZIP?versionId=abc",
     });
   });
 
   it("ignores the subfolder for a zip URL since the archive is installed whole", () => {
-    expect(parseSkillИсточник("https://artifacts.example.com/skill.zip", "plugins/x")?.parsed).toEqual({
+    expect(parseSkillSource("https://artifacts.example.com/skill.zip", "plugins/x")?.parsed).toEqual({
       source: "archive",
       url: "https://artifacts.example.com/skill.zip",
     });
   });
 
   it("rejects a plain http zip URL", () => {
-    expect(parseSkillИсточник("http://artifacts.example.com/skill.zip")).toBeNull();
+    expect(parseSkillSource("http://artifacts.example.com/skill.zip")).toBeNull();
   });
 
   it("treats a github zip download URL as an archive rather than a repo path", () => {
-    expect(parseSkillИсточник("https://github.com/org/repo/releases/download/v1/skill.zip")?.parsed).toEqual({
+    expect(parseSkillSource("https://github.com/org/repo/releases/download/v1/skill.zip")?.parsed).toEqual({
       source: "archive",
       url: "https://github.com/org/repo/releases/download/v1/skill.zip",
     });
   });
 
   it("suggests a kebab-friendly name from the last path segment", () => {
-    expect(parseSkillИсточник("github.com/org/my-awesome-skill")?.suggestedName).toBe("my-awesome-skill");
-    expect(parseSkillИсточник("github.com/org/repo/tree/main/plugins/cool-skill")?.suggestedName).toBe("cool-skill");
-    expect(parseSkillИсточник("gitlab.com/org/repo", "plugins/x")?.suggestedName).toBe("x");
+    expect(parseSkillSource("github.com/org/my-awesome-skill")?.suggestedName).toBe("my-awesome-skill");
+    expect(parseSkillSource("github.com/org/repo/tree/main/plugins/cool-skill")?.suggestedName).toBe("cool-skill");
+    expect(parseSkillSource("gitlab.com/org/repo", "plugins/x")?.suggestedName).toBe("x");
   });
 
   it("rejects a bad explicit subfolder for a github repo", () => {
-    expect(parseSkillИсточник("github.com/org/repo", "../etc")).toBeNull();
-    expect(parseSkillИсточник("github.com/org/repo", "/abs")).toBeNull();
-    expect(parseSkillИсточник("github.com/org/repo", "a//b")).toBeNull();
+    expect(parseSkillSource("github.com/org/repo", "../etc")).toBeNull();
+    expect(parseSkillSource("github.com/org/repo", "/abs")).toBeNull();
+    expect(parseSkillSource("github.com/org/repo", "a//b")).toBeNull();
   });
 
   it("treats a blob URL pointing at a root file as the plain repo", () => {
-    expect(parseSkillИсточник("github.com/org/repo/blob/main/SKILL.md")?.parsed).toEqual({
+    expect(parseSkillSource("github.com/org/repo/blob/main/SKILL.md")?.parsed).toEqual({
       source: "github",
       repo: "org/repo",
     });
   });
 
   it("strips query strings and fragments before parsing", () => {
-    expect(parseSkillИсточник("github.com/org/repo?tab=readme")?.parsed).toEqual({ source: "github", repo: "org/repo" });
-    expect(parseSkillИсточник("github.com/org/repo#section")?.parsed).toEqual({ source: "github", repo: "org/repo" });
+    expect(parseSkillSource("github.com/org/repo?tab=readme")?.parsed).toEqual({ source: "github", repo: "org/repo" });
+    expect(parseSkillSource("github.com/org/repo#section")?.parsed).toEqual({ source: "github", repo: "org/repo" });
   });
 
   it("rejects a tree URL whose folder has a space or percent-encoded segment", () => {
-    expect(parseSkillИсточник("github.com/org/repo/tree/main/a b")).toBeNull();
-    expect(parseSkillИсточник("github.com/org/repo/tree/main/a%20b")).toBeNull();
+    expect(parseSkillSource("github.com/org/repo/tree/main/a b")).toBeNull();
+    expect(parseSkillSource("github.com/org/repo/tree/main/a%20b")).toBeNull();
   });
 
   it("routes uppercase and www github hosts through the github shorthand", () => {
-    expect(parseSkillИсточник("GitHub.com/org/repo/tree/main/x")?.parsed).toEqual({
+    expect(parseSkillSource("GitHub.com/org/repo/tree/main/x")?.parsed).toEqual({
       source: "git-subdir",
       url: "https://github.com/org/repo",
       path: "x",
     });
-    expect(parseSkillИсточник("www.github.com/org/repo")?.parsed).toEqual({ source: "github", repo: "org/repo" });
+    expect(parseSkillSource("www.github.com/org/repo")?.parsed).toEqual({ source: "github", repo: "org/repo" });
   });
 
   it("keeps a dotted folder name as the subdir path", () => {
-    expect(parseSkillИсточник("github.com/org/repo/blob/main/my.skill")?.parsed).toEqual({
+    expect(parseSkillSource("github.com/org/repo/blob/main/my.skill")?.parsed).toEqual({
       source: "git-subdir",
       url: "https://github.com/org/repo",
       path: "my.skill",
@@ -552,16 +552,16 @@ describe("parseSkillИсточник", () => {
   });
 
   it("falls back to the repo for a tree URL with a branch but no folder", () => {
-    expect(parseSkillИсточник("github.com/org/repo/tree/main")?.parsed).toEqual({ source: "github", repo: "org/repo" });
+    expect(parseSkillSource("github.com/org/repo/tree/main")?.parsed).toEqual({ source: "github", repo: "org/repo" });
   });
 
   it("kebab-cases the suggested name from a mixed-case repo", () => {
-    expect(parseSkillИсточник("github.com/Org/My_Repo")?.suggestedName).toBe("my-repo");
+    expect(parseSkillSource("github.com/Org/My_Repo")?.suggestedName).toBe("my-repo");
   });
 
   it("rejects a bare host or single-segment raw git url", () => {
-    expect(parseSkillИсточник("gitlab.com")).toBeNull();
-    expect(parseSkillИсточник("gitlab.com/org")).toBeNull();
+    expect(parseSkillSource("gitlab.com")).toBeNull();
+    expect(parseSkillSource("gitlab.com/org")).toBeNull();
   });
 });
 
@@ -580,15 +580,15 @@ describe("parseSkillИсточник — security boundary", () => {
       "data:text/plain,hi",
       "//gitlab.com/org/repo",
     ]) {
-      expect(parseSkillИсточник(url)).toBeNull();
+      expect(parseSkillSource(url)).toBeNull();
     }
   });
 
   it("rejects URLs with embedded credentials", () => {
-    expect(parseSkillИсточник("https://user:token@gitlab.com/org/repo")).toBeNull();
-    expect(parseSkillИсточник("https://user@gitlab.com/org/repo")).toBeNull();
+    expect(parseSkillSource("https://user:token@gitlab.com/org/repo")).toBeNull();
+    expect(parseSkillSource("https://user@gitlab.com/org/repo")).toBeNull();
     // userinfo confusion: the real host is evil.com, not github.com
-    expect(parseSkillИсточник("https://github.com@evil.com/org/repo")).toBeNull();
+    expect(parseSkillSource("https://github.com@evil.com/org/repo")).toBeNull();
   });
 
   it("rejects IP-literal hosts (loopback, private, metadata, obfuscated, IPv6)", () => {
@@ -599,35 +599,35 @@ describe("parseSkillИсточник — security boundary", () => {
       "https://2130706433/org/repo",
       "https://[::ffff:127.0.0.1]/org/repo",
     ]) {
-      expect(parseSkillИсточник(url)).toBeNull();
+      expect(parseSkillSource(url)).toBeNull();
     }
   });
 
   it("does not grant GitHub shorthand to a look-alike host", () => {
-    expect(parseSkillИсточник("https://github.com.evil.com/org/repo")?.parsed).toEqual({
+    expect(parseSkillSource("https://github.com.evil.com/org/repo")?.parsed).toEqual({
       source: "url",
       url: "https://github.com.evil.com/org/repo",
     });
   });
 
   it("rejects GitHub org/repo segments with illegal characters", () => {
-    expect(parseSkillИсточник("github.com/o@x/repo")).toBeNull();
-    expect(parseSkillИсточник("github.com/org/..%2f..%2fx")).toBeNull();
+    expect(parseSkillSource("github.com/o@x/repo")).toBeNull();
+    expect(parseSkillSource("github.com/org/..%2f..%2fx")).toBeNull();
   });
 });
 
 describe("isValidSubПуть", () => {
   it("accepts relative segment paths", () => {
-    expect(isValidSubПуть("plugins/x")).toBe(true);
-    expect(isValidSubПуть("sub/dir")).toBe(true);
-    expect(isValidSubПуть("a.b-c_d")).toBe(true);
-    expect(isValidSubПуть("plugins/x/")).toBe(true);
+    expect(isValidSubPath("plugins/x")).toBe(true);
+    expect(isValidSubPath("sub/dir")).toBe(true);
+    expect(isValidSubPath("a.b-c_d")).toBe(true);
+    expect(isValidSubPath("plugins/x/")).toBe(true);
   });
 
   it("rejects empty, traversal, absolute, and double-slash paths", () => {
-    expect(isValidSubПуть("")).toBe(false);
-    expect(isValidSubПуть("../etc")).toBe(false);
-    expect(isValidSubПуть("/abs")).toBe(false);
-    expect(isValidSubПуть("a//b")).toBe(false);
+    expect(isValidSubPath("")).toBe(false);
+    expect(isValidSubPath("../etc")).toBe(false);
+    expect(isValidSubPath("/abs")).toBe(false);
+    expect(isValidSubPath("a//b")).toBe(false);
   });
 });

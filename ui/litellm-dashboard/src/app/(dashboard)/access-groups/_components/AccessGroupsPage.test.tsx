@@ -3,9 +3,9 @@ import { waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AccessGroupsPage } from "./AccessGroupsPage";
-import type { AccessGroupОтвет } from "@/app/(dashboard)/hooks/accessGroups/useAccessGroups";
+import type { AccessGroupResponse } from "@/app/(dashboard)/hooks/accessGroups/useAccessGroups";
 
-const mockAccessGroups: AccessGroupОтвет[] = [
+const mockAccessGroups: AccessGroupResponse[] = [
   {
     access_group_id: "ag-1",
     access_group_name: "Admin Group",
@@ -15,7 +15,7 @@ const mockAccessGroups: AccessGroupОтвет[] = [
     access_agent_ids: ["a1"],
     assigned_team_ids: [],
     assigned_key_ids: [],
-    access_mcp_servers: [{ id: "s1", name: "Сервер One" }],
+    access_mcp_servers: [{ id: "s1", name: "Server One" }],
     access_agents: [{ id: "a1", name: "Agent One" }],
     assigned_teams: [],
     assigned_keys: [],
@@ -27,7 +27,7 @@ const mockAccessGroups: AccessGroupОтвет[] = [
   {
     access_group_id: "ag-2",
     access_group_name: "Read Only",
-    description: "Read-only access to Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs",
+    description: "Read-only access to models",
     access_model_names: ["m1"],
     access_mcp_server_ids: [],
     access_agent_ids: [],
@@ -47,7 +47,7 @@ const mockAccessGroups: AccessGroupОтвет[] = [
 const mockUseAccessGroups = vi.fn();
 const mockUseDeleteAccessGroup = vi.fn();
 const mockMutate = vi.fn();
-const mockUseАвторизовано = vi.fn();
+const mockUseAuthorized = vi.fn();
 
 vi.mock("@/app/(dashboard)/hooks/accessGroups/useAccessGroups", () => ({
   useAccessGroups: () => mockUseAccessGroups(),
@@ -58,7 +58,7 @@ vi.mock("@/app/(dashboard)/hooks/accessGroups/useDeleteAccessGroup", () => ({
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: () => mockUseАвторизовано(),
+  default: () => mockUseAuthorized(),
 }));
 
 vi.mock("./AccessGroupsDetailsPage", () => ({
@@ -79,7 +79,7 @@ vi.mock("./access-group-create/AccessGroupCreateDialog", () => ({
     ) : null,
 }));
 
-const makeGroups = (count: number): AccessGroupОтвет[] =>
+const makeGroups = (count: number): AccessGroupResponse[] =>
   Array.from({ length: count }, (_, index) => {
     const suffix = String(index + 1).padStart(2, "0");
     return {
@@ -98,9 +98,9 @@ const openRowMenu = async (user: ReturnType<typeof userEvent.setup>, groupId: st
 describe("AccessGroupsPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockUseAccessGroups.mockReturnЗначение({ data: mockAccessGroups, isLoading: false });
-    mockUseDeleteAccessGroup.mockReturnЗначение({ mutate: mockMutate, isPending: false });
-    mockUseАвторизовано.mockReturnЗначение({ userRole: "Admin", accessТокен: "sk-test" });
+    mockUseAccessGroups.mockReturnValue({ data: mockAccessGroups, isLoading: false });
+    mockUseDeleteAccessGroup.mockReturnValue({ mutate: mockMutate, isPending: false });
+    mockUseAuthorized.mockReturnValue({ userRole: "Admin", accessToken: "sk-test" });
   });
 
   it("renders the page title and subtitle", () => {
@@ -125,10 +125,10 @@ describe("AccessGroupsPage", () => {
 
   it("renders resource counts for each group", () => {
     renderWithProviders(<AccessGroupsPage />);
-    // ag-1 has 2 Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs, 1 mcp server, 1 agent.
+    // ag-1 has 2 models, 1 mcp server, 1 agent.
     const adminRow = screen.getByText("ag-1").closest("tr") as HTMLElement;
     expect(within(adminRow).getByTitle("2 Режимls")).toHaveTextContent("2");
-    expect(within(adminRow).getByTitle("1 MCP -серверы")).toHaveTextContent("1");
+    expect(within(adminRow).getByTitle("1 MCP-серверы")).toHaveTextContent("1");
     expect(within(adminRow).getByTitle("1 Агенты")).toHaveTextContent("1");
   });
 
@@ -182,13 +182,13 @@ describe("AccessGroupsPage", () => {
   });
 
   it("shows the empty state when there are no groups", () => {
-    mockUseAccessGroups.mockReturnЗначение({ data: [], isLoading: false });
+    mockUseAccessGroups.mockReturnValue({ data: [], isLoading: false });
     renderWithProviders(<AccessGroupsPage />);
     expect(screen.getByText("No access groups yet")).toBeInTheDocument();
   });
 
   it("renders loading skeletons on the initial load", () => {
-    mockUseAccessGroups.mockReturnЗначение({ data: undefined, isLoading: true });
+    mockUseAccessGroups.mockReturnValue({ data: undefined, isLoading: true });
     renderWithProviders(<AccessGroupsPage />);
     expect(screen.getAllByTestId("skeleton-row").length).toBeGreaterThan(0);
     expect(screen.queryByText("Admin Group")).not.toBeInTheDocument();
@@ -220,14 +220,14 @@ describe("AccessGroupsPage", () => {
     await user.click(await openRowMenu(user, "ag-1"));
     const dialog = screen.getByRole("dialog", { name: "Delete Access Group" });
     expect(
-      within(dialog).getByText("Are you sure you want to delete this access group? Это действие нельзя отменить."),
+      within(dialog).getByText("Are you sure you want to delete this access group? This action cannot be undone."),
     ).toBeInTheDocument();
     expect(within(dialog).getByText("Access Group Информация")).toBeInTheDocument();
     expect(within(dialog).getByText("ag-1")).toBeInTheDocument();
     expect(within(dialog).getByText("Admin Group")).toBeInTheDocument();
   });
 
-  it("closes the delete modal on cancel withвыход deleting", async () => {
+  it("closes the delete modal on cancel without deleting", async () => {
     const user = userEvent.setup();
     renderWithProviders(<AccessGroupsPage />);
     await user.click(await openRowMenu(user, "ag-1"));
@@ -253,7 +253,7 @@ describe("AccessGroupsPage", () => {
 
   it("still shows matches when searching from a later page", async () => {
     const user = userEvent.setup();
-    mockUseAccessGroups.mockReturnЗначение({ data: makeGroups(25), isLoading: false });
+    mockUseAccessGroups.mockReturnValue({ data: makeGroups(25), isLoading: false });
     renderWithProviders(<AccessGroupsPage />);
 
     await user.click(screen.getByTestId("pagination-next"));
@@ -269,7 +269,7 @@ describe("AccessGroupsPage", () => {
   });
 
   it("hides the Create button and row actions for a non-admin", () => {
-    mockUseАвторизовано.mockReturnЗначение({ userRole: "Admin Viewer", accessТокен: "sk-test" });
+    mockUseAuthorized.mockReturnValue({ userRole: "Admin Viewer", accessToken: "sk-test" });
     renderWithProviders(<AccessGroupsPage />);
     expect(screen.queryByRole("button", { name: /create access group/i })).not.toBeInTheDocument();
     expect(screen.queryByTestId("access-group-actions-ag-1")).not.toBeInTheDocument();

@@ -19,48 +19,48 @@ const submittedPayload = (): Record<string, unknown> => {
 
 describe("PromptCompressionTab submit payload", () => {
   beforeEach(() => {
-    createGuardrailCall.mockClear().mockResolvedЗначение({});
-    getGuardrailsList.mockClear().mockResolvedЗначение({ гардрейловs: [] });
+    createGuardrailCall.mockClear().mockResolvedValue({});
+    getGuardrailsList.mockClear().mockResolvedValue({ guardrails: [] });
   });
 
-  it("sends the trimmed name and api base with default_on true", async () => {
+  it("sends the trimmed Название and api base with default_on Истина", async () => {
     const user = userEvent.setup();
-    render(<PromptCompressionTab accessТокен="test-token" />);
+    render(<PromptCompressionTab accessToken="test-Токен" />);
 
-    fireEvent.change(screen.getByLabelText("Name"), { target: { value: "  headroom-compression  " } });
+    fireEvent.change(screen.getByLabelText("Название"), { target: { value: "  headroom-compression  " } });
     fireEvent.change(screen.getByLabelText("Headroom API base"), {
       target: { value: "  https://headroom.example.com  " },
     });
-    await user.click(screen.getByRole("button", { name: "Add гардрейлов" }));
+    await user.click(screen.getByRole("button", { name: "Добавить guardrail" }));
 
     await vi.waitFor(() =>
       expect(submittedPayload()).toEqual({
-        гардрейлов_name: "headroom-compression",
+        guardrail_name: "headroom-compression",
         litellm_params: {
-          гардрейлов: "headroom",
+          guardrail: "headroom",
           mode: "pre_call",
           api_base: "https://headroom.example.com",
           default_on: true,
         },
       }),
     );
-    expect(createGuardrailCall.mock.calls[0][0]).toBe("test-token");
+    expect(createGuardrailCall.mock.calls[0][0]).toBe("test-Токен");
   });
 
-  it("sends default_on false once the apply-to-all switch is turned off", async () => {
+  it("sends default_on Ложь once the Применить-to-Все switch is turned off", async () => {
     const user = userEvent.setup();
-    render(<PromptCompressionTab accessТокен="test-token" />);
+    render(<PromptCompressionTab accessToken="test-Токен" />);
 
-    fireEvent.change(screen.getByLabelText("Name"), { target: { value: "headroom-optin" } });
+    fireEvent.change(screen.getByLabelText("Название"), { target: { value: "headroom-optin" } });
     fireEvent.change(screen.getByLabelText("Headroom API base"), { target: { value: "https://headroom.example.com" } });
-    await user.click(screen.getByLabelText("Приложениеly to all requests"));
-    await user.click(screen.getByRole("button", { name: "Add гардрейлов" }));
+    await user.click(screen.getByLabelText("Применять ко всем запросам"));
+    await user.click(screen.getByRole("button", { name: "Добавить guardrail" }));
 
     await vi.waitFor(() =>
       expect(submittedPayload()).toEqual({
-        гардрейлов_name: "headroom-optin",
+        guardrail_name: "headroom-optin",
         litellm_params: {
-          гардрейлов: "headroom",
+          guardrail: "headroom",
           mode: "pre_call",
           api_base: "https://headroom.example.com",
           default_on: false,
@@ -69,58 +69,58 @@ describe("PromptCompressionTab submit payload", () => {
     );
   });
 
-  it("blocks submission and shows both required messages when the form is empty", async () => {
+  it("blocks submission and shows both Обязательно messages when the form is empty", async () => {
     const user = userEvent.setup();
-    render(<PromptCompressionTab accessТокен="test-token" />);
+    render(<PromptCompressionTab accessToken="test-Токен" />);
 
-    await user.click(screen.getByRole("button", { name: "Add гардрейлов" }));
+    await user.click(screen.getByRole("button", { name: "Добавить guardrail" }));
 
-    expect(await screen.findByText("Name is required")).toBeInTheDocument();
-    expect(screen.getByText("API base is required")).toBeInTheDocument();
+    expect(await screen.findByText("Название is Обязательно")).toBeInTheDocument();
+    expect(screen.getByText("API base is Обязательно")).toBeInTheDocument();
     expect(createGuardrailCall).not.toHaveBeenCalled();
   });
 
-  it("submits when Введите is pressed inside a text field", async () => {
+  it("submits when Enter is pressed inside a text Поле", async () => {
     const user = userEvent.setup();
-    render(<PromptCompressionTab accessТокен="test-token" />);
+    render(<PromptCompressionTab accessToken="test-Токен" />);
 
-    fireEvent.change(screen.getByLabelText("Name"), { target: { value: "headroom-compression" } });
-    await user.type(screen.getByLabelText("Headroom API base"), "https://headroom.example.com{Введите}");
+    fireEvent.change(screen.getByLabelText("Название"), { target: { value: "headroom-compression" } });
+    await user.type(screen.getByLabelText("Headroom API base"), "https://headroom.example.com{Enter}");
 
     await vi.waitFor(() => expect(createGuardrailCall).toHaveBeenCalledTimes(1));
   });
 
-  it("clears the name and restores the default switch state after a successful create", async () => {
+  it("clears the Название and restores the default switch state after a successful Создать", async () => {
     const user = userEvent.setup();
-    render(<PromptCompressionTab accessТокен="test-token" />);
+    render(<PromptCompressionTab accessToken="test-Токен" />);
 
-    fireEvent.change(screen.getByLabelText("Name"), { target: { value: "headroom-compression" } });
+    fireEvent.change(screen.getByLabelText("Название"), { target: { value: "headroom-compression" } });
     fireEvent.change(screen.getByLabelText("Headroom API base"), { target: { value: "https://headroom.example.com" } });
-    await user.click(screen.getByLabelText("Приложениеly to all requests"));
-    await user.click(screen.getByRole("button", { name: "Add гардрейлов" }));
+    await user.click(screen.getByLabelText("Применять ко всем запросам"));
+    await user.click(screen.getByRole("button", { name: "Добавить guardrail" }));
 
-    await vi.waitFor(() => expect(screen.getByLabelText("Name")).toHaveЗначение(""));
-    expect(screen.getByLabelText("Headroom API base")).toHaveЗначение("");
-    expect(screen.getByLabelText("Приложениеly to all requests")).toBeChecked();
+    await vi.waitFor(() => expect(screen.getByLabelText("Название")).toHaveValue(""));
+    expect(screen.getByLabelText("Headroom API base")).toHaveValue("");
+    expect(screen.getByLabelText("Применять ко всем запросам")).toBeChecked();
     expect(getGuardrailsList).toHaveBeenCalledTimes(2);
   });
 
-  it("keeps the always-on and opt-in badges for the гардрейловs it lists", async () => {
-    getGuardrailsList.mockResolvedЗначение({
-      гардрейловs: [
+  it("keeps the always-on and opt-in badges for the Гардрейлы it lists", async () => {
+    getGuardrailsList.mockResolvedValue({
+      guardrails: [
         {
-          гардрейлов_id: "g-1",
-          гардрейлов_name: "always-on-one",
-          litellm_params: { гардрейлов: "headroom", api_base: "https://a.example.com", default_on: true },
+          guardrail_id: "g-1",
+          guardrail_name: "always-on-one",
+          litellm_params: { guardrail: "headroom", api_base: "https://a.example.com", default_on: true },
         },
         {
-          гардрейлов_id: "g-2",
-          гардрейлов_name: "opt-in-one",
-          litellm_params: { гардрейлов: "headroom", api_base: "https://b.example.com", default_on: false },
+          guardrail_id: "g-2",
+          guardrail_name: "opt-in-one",
+          litellm_params: { guardrail: "headroom", api_base: "https://b.example.com", default_on: false },
         },
       ],
     });
-    render(<PromptCompressionTab accessТокен="test-token" />);
+    render(<PromptCompressionTab accessToken="test-Токен" />);
 
     expect(await screen.findByText("Always on")).toBeInTheDocument();
     expect(screen.getByText("Opt-in")).toBeInTheDocument();

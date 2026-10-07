@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 import { renderWithProviders, screen } from "../../../tests/test-utils";
-import { MODEL_MAX_BUDGET_PREMIUM_HINT, РежимlМакс.BudgetEditor, type РежимlМакс.Бюджет } from "./РежимlМакс.BudgetEditor";
+import { MODEL_MAX_BUDGET_PREMIUM_HINT, ModelMaxBudgetEditor, type ModelMaxBudget } from "./ModelMaxBudgetEditor";
 
-const STORED: РежимlМакс.Бюджет = { "gpt-4o": { budget_limit: 5, time_period: "30d" } };
+const STORED: ModelMaxBudget = { "gpt-4o": { budget_limit: 5, time_period: "30d" } };
 
-const renderEditor = (premiumUser: boolean, value: РежимlМакс.Бюджет = STORED) =>
+const renderEditor = (premiumUser: boolean, value: ModelMaxBudget = STORED) =>
   renderWithProviders(
-    <РежимlМакс.BudgetEditor
+    <ModelMaxBudgetEditor
       value={value}
       onChange={vi.fn()}
       availableModels={["gpt-4o", "claude-opus-4-8"]}
@@ -16,10 +16,10 @@ const renderEditor = (premiumUser: boolean, value: РежимlМакс.Бюдж�
 
 const addButton = () => screen.getByRole("button", { name: /Добавить бюджет модели/i });
 
-// The proxy refuses a populated Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget withвыход an enterprise license,
+// The proxy refuses a populated model_max_budget without an enterprise license,
 // so an editable field would only ever hand a non-premium operator a 400 after
 // they had filled the whole form in.
-describe("РежимlМакс.BudgetEditor withвыход an enterprise license", () => {
+describe("РежимlМакс.BudgetEditor without an enterprise license", () => {
   it("locks every control on an existing row", () => {
     renderEditor(false);
 
@@ -27,10 +27,10 @@ describe("РежимlМакс.BudgetEditor withвыход an enterprise license"
     expect(addButton()).toBeDisabled();
   });
 
-  it("still shows the budgets already stored, so they stay auditable", () => {
+  it("still shows the Бюджеты already stored, so they stay auditable", () => {
     renderEditor(false);
 
-    expect(screen.getByPlaceholderText("Макс. расход ($)")).toHaveЗначение(5);
+    expect(screen.getByPlaceholderText("Макс. расход ($)")).toHaveValue(5);
   });
 
   it("says why the controls are locked instead of failing silently", () => {
@@ -39,7 +39,7 @@ describe("РежимlМакс.BudgetEditor withвыход an enterprise license"
     expect(screen.getByText(MODEL_MAX_BUDGET_PREMIUM_HINT)).toBeInTheDocument();
   });
 
-  it("locks the empty state too, so no row can be started", () => {
+  it("locks the empty state too, so Нет row can be started", () => {
     renderEditor(false, {});
 
     expect(addButton()).toBeDisabled();

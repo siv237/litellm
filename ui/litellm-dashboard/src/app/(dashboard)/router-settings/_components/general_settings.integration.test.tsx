@@ -6,15 +6,15 @@ import { deleteConfigFieldSetting, getGeneralSettingsCall, updateConfigFieldSett
 
 vi.mock("@/components/networking", () => ({
   getGeneralSettingsCall: vi.fn(),
-  updateConfigFieldSetting: vi.fn().mockResolvedЗначение({}),
-  deleteConfigFieldSetting: vi.fn().mockResolvedЗначение({}),
+  updateConfigFieldSetting: vi.fn().mockResolvedValue({}),
+  deleteConfigFieldSetting: vi.fn().mockResolvedValue({}),
 }));
 
 vi.mock("@/components/router_settings", () => ({ default: () => null }));
 vi.mock("@/components/Settings/RouterSettings/Резервные модели/Резервные модели", () => ({ default: () => null }));
 vi.mock("@/components/routing_groups", () => ({ default: () => null }));
 // Mirrors the /config/list ordering: the two prompt-caching rows sit between the
-// General-tab rows in the unfiltered response but are filtered выход of the General
+// General-tab rows in the unfiltered response but are filtered out of the General
 // tab's table, so any index-based lookup into the unfiltered array reads the wrong
 // row for every field rendered after them.
 const SETTINGS_FIXTURE = [
@@ -62,18 +62,18 @@ const settingsRow = async (fieldName: string) => {
   return row as HTMLElement;
 };
 
-const numericValueIn = (row: HTMLElement) => Number((within(row).getByRole("spinbutton") as HTMLInElement).value);
+const numericValueIn = (row: HTMLElement) => Number((within(row).getByRole("spinbutton") as HTMLInputElement).value);
 
 describe("GeneralSettings General tab", () => {
   beforeEach(() => {
-    vi.mocked(getGeneralSettingsCall).mockResolvedЗначение([...SETTINGS_FIXTURE.map((s) => ({ ...s }))]);
+    vi.mocked(getGeneralSettingsCall).mockResolvedValue([...SETTINGS_FIXTURE.map((s) => ({ ...s }))]);
     vi.mocked(updateConfigFieldSetting).mockClear();
     vi.mocked(deleteConfigFieldSetting).mockClear();
   });
 
   it("updates max_ui_session_budget with its own value, not the value at its filtered index", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<GeneralSettings accessТокен="token" userRole="Admin" userID="user" />);
+    renderWithProviders(<GeneralSettings accessToken="token" userRole="Admin" userID="user" />);
 
     await user.click(screen.getByText("General"));
     const row = await settingsRow("max_ui_session_budget");
@@ -85,13 +85,13 @@ describe("GeneralSettings General tab", () => {
 
   it("reset shows the field's default value instead of an empty input", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<GeneralSettings accessТокен="token" userRole="Admin" userID="user" />);
+    renderWithProviders(<GeneralSettings accessToken="token" userRole="Admin" userID="user" />);
 
     await user.click(screen.getByText("General"));
     const row = await settingsRow("max_ui_session_budget");
     expect(numericValueIn(row)).toBe(7.5);
 
-    const actionCell = row.querySelectorВсе("td")[3];
+    const actionCell = row.querySelectorAll("td")[3];
     const resetIcon = actionCell.querySelector("svg");
     expect(resetIcon).not.toBeNull();
     await user.click(resetIcon as unknown as Element);
@@ -101,14 +101,14 @@ describe("GeneralSettings General tab", () => {
   });
 });
 
-// The five tabs here are proxy-wide settings. Auto-routers moved to Режимls + Эндпоинтs.
+// The five tabs here are proxy-wide settings. Auto-routers moved to Models + Endpoints.
 describe("GeneralSettings tabs", () => {
   beforeEach(() => {
-    vi.mocked(getGeneralSettingsCall).mockResolvedЗначение([]);
+    vi.mocked(getGeneralSettingsCall).mockResolvedValue([]);
   });
 
   it("renders the proxy-wide tabs and no auto-router tab", async () => {
-    renderWithProviders(<GeneralSettings accessТокен="token" userRole="proxy_admin" userID="u" />);
+    renderWithProviders(<GeneralSettings accessToken="token" userRole="proxy_admin" userID="u" />);
 
     for (const name of ["Loadbalancing", "Маршрутизация Groups", "Резервные модели", "Prompt Caching", "General"]) {
       expect(await screen.findByRole("tab", { name })).toBeInTheDocument();
@@ -118,7 +118,7 @@ describe("GeneralSettings tabs", () => {
 });
 
 it("should delete only the Default setting and retain explicit false and zero", async () => {
-  vi.mocked(getGeneralSettingsCall).mockResolvedЗначение([
+  vi.mocked(getGeneralSettingsCall).mockResolvedValue([
     {
       field_name: "synthetic_choice",
       field_type: "Выбрать",
@@ -145,7 +145,7 @@ it("should delete only the Default setting and retain explicit false and zero", 
   vi.mocked(updateConfigFieldSetting).mockClear();
   vi.mocked(deleteConfigFieldSetting).mockClear();
   const user = userEvent.setup();
-  renderWithProviders(<GeneralSettings accessТокен="token" userRole="Admin" userID="user" />);
+  renderWithProviders(<GeneralSettings accessToken="token" userRole="Admin" userID="user" />);
   await user.click(screen.getByRole("tab", { name: "General" }));
   const row = await screen.findByRole("row", { name: /synthetic_choice/ });
   await user.click(within(row).getByRole("combobox"));

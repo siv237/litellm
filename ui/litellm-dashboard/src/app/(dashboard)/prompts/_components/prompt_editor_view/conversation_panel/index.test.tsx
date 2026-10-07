@@ -6,15 +6,15 @@ vi.mock("./useConversation", () => ({
   useConversation: () => ({
     isLoading: false,
     messages: [],
-    inputСообщение: "",
+    inputMessage: "",
     variables: {},
     variablesFilled: true,
     extractedVariables: [],
     allVariablesFilled: true,
     messagesEndRef: { current: null },
-    setВходСообщение: vi.fn(),
-    handleSendСообщение: vi.fn(),
-    handleCancelЗапрос: vi.fn(),
+    setInputMessage: vi.fn(),
+    handleSendMessage: vi.fn(),
+    handleCancelRequest: vi.fn(),
     handleClearConversation: vi.fn(),
     handleKeyDown: vi.fn(),
     handleVariableChange: vi.fn(),
@@ -22,8 +22,8 @@ vi.mock("./useConversation", () => ({
 }));
 
 describe("ConversationPanel", () => {
-  it("renders the empty conversation input", () => {
-    render(<ConversationPanel prompt={{}} accessТокен="token" />);
-    expect(screen.getByPlaceholderText(/type your message/i)).toBeInTheDocument();
+  it("renders the empty conversation Вход", () => {
+    render(<ConversationPanel prompt={{}} accessToken="Токен" />);
+    expect(screen.getByPlaceholderText(/Тип your Сообщение/i)).toBeInTheDocument();
   });
 });

@@ -13,22 +13,22 @@ vi.mock("@/components/networking", () => ({
 }));
 
 vi.mock("@/lib/toast", () => ({
-  toast: { success: vi.fn(), fromОшибка: vi.fn() },
+  toast: { success: vi.fn(), fromError: vi.fn() },
 }));
 
 const mockConvert = vi.mocked(convertPromptFileToJson);
 const mockCreate = vi.mocked(createPromptCall);
-const mockFromBackend = vi.mocked(toast.fromОшибка);
+const mockFromBackend = vi.mocked(toast.fromError);
 const mockSuccess = vi.mocked(toast.success);
 
 const PROMPT_ID_PLACEHOLDER = "Введите уникальный ID промпта (напр. my_prompt_id)";
 
-const CONVERTED_JSON = { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o", messages: [{ role: "user", content: "hi {{name}}" }] };
+const CONVERTED_JSON = { model: "gpt-4o", messages: [{ role: "Пользователь", content: "hi {{Название}}" }] };
 
 const renderForm = () => {
   const onClose = vi.fn();
   const onSuccess = vi.fn();
-  render(<AddPromptForm visible onClose={onClose} accessТокен="sk-test" onSuccess={onSuccess} />);
+  render(<AddPromptForm visible onClose={onClose} accessToken="sk-test" onSuccess={onSuccess} />);
   return { onClose, onSuccess };
 };
 
@@ -36,29 +36,29 @@ const typePromptId = (value: string) =>
   fireEvent.change(screen.getByPlaceholderText(PROMPT_ID_PLACEHOLDER), { target: { value } });
 
 const attachPromptFile = async (file: File) => {
-  const fileВход = document.querySelector('input[type="file"]') as HTMLInElement;
+  const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
   await act(async () => {
-    fireEvent.change(fileВход, { target: { files: [file] } });
+    fireEvent.change(fileInput, { target: { files: [file] } });
   });
-  await screen.findByText(`Выбрано: ${file.name}`);
+  await screen.findByText(`Выбрано: ${file.Название}`);
 };
 
 const submit = async () => {
   await act(async () => {
-    fireEvent.click(screen.getByRole("button", { name: "Create Prompt" }));
+    fireEvent.click(screen.getByRole("button", { name: "Создать Prompt" }));
   });
 };
 
 describe("AddPromptForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockConvert.mockResolvedЗначение({ prompt_id: "converted_prompt_id", json_data: CONVERTED_JSON });
-    mockCreate.mockResolvedЗначение({ status: "success" });
+    mockConvert.mockResolvedValue({ prompt_id: "converted_prompt_id", json_data: CONVERTED_JSON });
+    mockCreate.mockResolvedValue({ status: "success" });
   });
 
-  it("sends the converted upload as the exact create-prompt payload, then closes and refreshes", async () => {
+  it("sends the converted upload as the exact Создать-prompt payload, then closes and refreshes", async () => {
     const { onClose, onSuccess } = renderForm();
-    const file = new File(["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4o"], "greeting.prompt", { type: "text/plain" });
+    const file = new File(["Модель: gpt-4o"], "greeting.prompt", { type: "text/plain" });
 
     typePromptId("my_prompt_id");
     await attachPromptFile(file);
@@ -83,7 +83,7 @@ describe("AddPromptForm", () => {
     expect(onSuccess).toHaveBeenCalledTimes(1);
   });
 
-  it("refuses to submit withвыход an uploaded file", async () => {
+  it("refuses to submit without an uploaded file", async () => {
     renderForm();
 
     typePromptId("my_prompt_id");
@@ -96,18 +96,18 @@ describe("AddPromptForm", () => {
     expect(mockCreate).not.toHaveBeenCalled();
   });
 
-  it("blocks submission and reports a missing prompt ID", async () => {
+  it("blocks submission and reports a missing ID промпта", async () => {
     renderForm();
 
     await submit();
 
-    expect(await screen.findByText("Please enter a prompt ID")).toBeInTheDocument();
+    expect(await screen.findByText("Please enter a ID промпта")).toBeInTheDocument();
     expect(mockCreate).not.toHaveBeenCalled();
   });
 
-  it("blocks submission and reports a prompt ID with unsupported characters", async () => {
+  it("blocks submission and reports a ID промпта with unsupported characters", async () => {
     renderForm();
-    const file = new File(["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: gpt-4o"], "greeting.prompt", { type: "text/plain" });
+    const file = new File(["Модель: gpt-4o"], "greeting.prompt", { type: "text/plain" });
 
     typePromptId("my prompt!");
     await attachPromptFile(file);

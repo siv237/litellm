@@ -1,24 +1,24 @@
 import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { ReactNode } from "react";
 import { useCloudZeroSettings, useCloudZeroUpdateSettings, useCloudZeroDeleteSettings } from "./useCloudZeroSettings";
-import { CloudZeroSettings } from "@/components/CloudZeroCostTracking/types";
+import { CloudZeroSettings } from "@/components/CloudZeroСтоимостьTracking/types";
 
 const {
   mockProxyBaseUrl,
-  mockAccessТокен,
+  mockAccessToken,
   mockHeaderName,
   mockGetProxyBaseUrl,
   mockGetGlobalLitellmHeaderName,
-  mockCreateЗапросКлючи,
+  mockCreateQueryKeys,
 } = vi.hoisted(() => {
   const mockProxyBaseUrl = "https://proxy.example.com";
-  const mockAccessТокен = "test-access-token";
+  const mockAccessToken = "test-access-token";
   const mockHeaderName = "X-LiteLLM-API-Ключ";
   const mockGetProxyBaseUrl = vi.fn(() => mockProxyBaseUrl);
   const mockGetGlobalLitellmHeaderName = vi.fn(() => mockHeaderName);
-  const mockCreateЗапросКлючи = vi.fn((resource: string) => ({
+  const mockCreateQueryKeys = vi.fn((resource: string) => ({
     all: [resource],
     lists: () => [resource, "list"],
     list: (params?: any) => [resource, "list", { params }],
@@ -28,11 +28,11 @@ const {
 
   return {
     mockProxyBaseUrl,
-    mockAccessТокен,
+    mockAccessToken,
     mockHeaderName,
     mockGetProxyBaseUrl,
     mockGetGlobalLitellmHeaderName,
-    mockCreateЗапросКлючи,
+    mockCreateQueryKeys,
   };
 });
 
@@ -41,8 +41,8 @@ vi.mock("@/components/networking", () => ({
   getGlobalLitellmHeaderName: mockGetGlobalLitellmHeaderName,
 }));
 
-vi.mock("../common/queryKeysFactory", () => ({
-  createЗапросКлючи: mockCreateЗапросКлючи,
+vi.mock("../common/queryКлючиFactory", () => ({
+  createQueryKeys: mockCreateQueryKeys,
 }));
 
 const mockCloudZeroSettings: CloudZeroSettings = {
@@ -53,11 +53,11 @@ const mockCloudZeroSettings: CloudZeroSettings = {
 };
 
 describe("useCloudZeroSettings", () => {
-  let queryClient: ЗапросClient;
+  let queryClient: QueryClient;
   let fetchSpy: Mock;
 
   beforeEach(() => {
-    queryClient = new ЗапросClient({
+    queryClient = new QueryClient({
       defaultOptions: {
         queries: {
           retry: false,
@@ -80,15 +80,15 @@ describe("useCloudZeroSettings", () => {
   });
 
   const wrapper = ({ children }: { children: ReactNode }) =>
-    React.createElement(ЗапросClientПровайдер, { client: queryClient }, children);
+    React.createElement(QueryClientProvider, { client: queryClient }, children);
 
   it("should return CloudZero settings data when query is successful", async () => {
-    (fetchSpy as any).mockResolvedЗначение({
+    (fetchSpy as any).mockResolvedValue({
       ok: true,
       json: async () => mockCloudZeroSettings,
     });
 
-    const { result } = renderHook(() => useCloudZeroSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroSettings(mockAccessToken), { wrapper });
 
     expect(result.current.isLoading).toBe(true);
     expect(result.current.data).toBeUndefined();
@@ -103,19 +103,19 @@ describe("useCloudZeroSettings", () => {
     expect(fetchSpy).toHaveBeenCalledWith(`${mockProxyBaseUrl}/cloudzero/settings`, {
       method: "GET",
       headers: {
-        [mockHeaderName]: `Bearer ${mockAccessТокен}`,
+        [mockHeaderName]: `Bearer ${mockAccessToken}`,
         "Content-Type": "application/json",
       },
     });
   });
 
   it("should return null when settings are not configured (missing both api_key_masked and connection_id)", async () => {
-    (fetchSpy as any).mockResolvedЗначение({
+    (fetchSpy as any).mockResolvedValue({
       ok: true,
       json: async () => ({}),
     });
 
-    const { result } = renderHook(() => useCloudZeroSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroSettings(mockAccessToken), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
@@ -127,12 +127,12 @@ describe("useCloudZeroSettings", () => {
 
   it("should return settings when at least one required field is present", async () => {
     const settingsWithConnectionId = { connection_id: "test-connection-id" };
-    (fetchSpy as any).mockResolvedЗначение({
+    (fetchSpy as any).mockResolvedValue({
       ok: true,
       json: async () => settingsWithConnectionId,
     });
 
-    const { result } = renderHook(() => useCloudZeroSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroSettings(mockAccessToken), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
@@ -147,73 +147,73 @@ describe("useCloudZeroSettings", () => {
       { error: { message: "Ошибка to fetch" }, expected: "Ошибка to fetch" },
       { error: "Unauthorized", expected: "Unauthorized" },
       { message: "Not found", expected: "Not found" },
-      { detail: "Сервер error", expected: "Сервер error" },
+      { detail: "Server error", expected: "Server error" },
     ];
 
-    for (const errorОтвет of errorCases) {
+    for (const errorResponse of errorCases) {
       vi.clearAllMocks();
-      (fetchSpy as any).mockResolvedЗначение({
+      (fetchSpy as any).mockResolvedValue({
         ok: false,
-        json: async () => errorОтвет,
+        json: async () => errorResponse,
       });
 
-      const { result } = renderHook(() => useCloudZeroSettings(mockAccessТокен), { wrapper });
+      const { result } = renderHook(() => useCloudZeroSettings(mockAccessToken), { wrapper });
 
       await waitFor(() => {
-        expect(result.current.isОшибка).toBe(true);
+        expect(result.current.isError).toBe(true);
       });
 
-      expect(result.current.error?.message).toBe(errorОтвет.expected);
+      expect(result.current.error?.message).toBe(errorResponse.expected);
     }
   });
 
   it("should handle error response with string error data", async () => {
-    (fetchSpy as any).mockResolvedЗначение({
+    (fetchSpy as any).mockResolvedValue({
       ok: false,
-      json: async () => "Ошибка string",
+      json: async () => "Error string",
     });
 
-    const { result } = renderHook(() => useCloudZeroSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroSettings(mockAccessToken), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error?.message).toBe("Ошибка string");
+    expect(result.current.error?.message).toBe("Error string");
   });
 
   it("should handle error response with invalid JSON", async () => {
-    (fetchSpy as any).mockResolvedЗначение({
+    (fetchSpy as any).mockResolvedValue({
       ok: false,
-      statusText: "Internal Сервер Ошибка",
+      statusText: "Internal Server Error",
       json: async () => {
-        throw new Ошибка("Invalid JSON");
+        throw new Error("Invalid JSON");
       },
     });
 
-    const { result } = renderHook(() => useCloudZeroSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroSettings(mockAccessToken), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error?.message).toBe("Internal Сервер Ошибка");
+    expect(result.current.error?.message).toBe("Internal Server Error");
   });
 
   it("should handle network error", async () => {
-    const networkОшибка = new Ошибка("Network request failed");
-    (fetchSpy as any).mockRejectedЗначение(networkОшибка);
+    const networkError = new Error("Network request failed");
+    (fetchSpy as any).mockRejectedValue(networkError);
 
-    const { result } = renderHook(() => useCloudZeroSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroSettings(mockAccessToken), { wrapper });
 
     await waitFor(() => {
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error).toEqual(networkОшибка);
+    expect(result.current.error).toEqual(networkError);
   });
 
-  it("should not execute query when accessТокен is missing", () => {
+  it("should not execute query when accessToken is missing", () => {
     const { result } = renderHook(() => useCloudZeroSettings(""), { wrapper });
 
     expect(result.current.isLoading).toBe(false);
@@ -223,13 +223,13 @@ describe("useCloudZeroSettings", () => {
   });
 
   it("should use relative URL when proxyBaseUrl is not set", async () => {
-    mockGetProxyBaseUrl.mockReturnЗначение("");
-    (fetchSpy as any).mockResolvedЗначение({
+    mockGetProxyBaseUrl.mockReturnValue("");
+    (fetchSpy as any).mockResolvedValue({
       ok: true,
       json: async () => mockCloudZeroSettings,
     });
 
-    const { result } = renderHook(() => useCloudZeroSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroSettings(mockAccessToken), { wrapper });
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
@@ -240,11 +240,11 @@ describe("useCloudZeroSettings", () => {
 });
 
 describe("useCloudZeroUpdateSettings", () => {
-  let queryClient: ЗапросClient;
+  let queryClient: QueryClient;
   let fetchSpy: Mock;
 
   beforeEach(() => {
-    queryClient = new ЗапросClient({
+    queryClient = new QueryClient({
       defaultOptions: {
         queries: {
           retry: false,
@@ -267,16 +267,16 @@ describe("useCloudZeroUpdateSettings", () => {
   });
 
   const wrapper = ({ children }: { children: ReactNode }) =>
-    React.createElement(ЗапросClientПровайдер, { client: queryClient }, children);
+    React.createElement(QueryClientProvider, { client: queryClient }, children);
 
   it("should successfully update settings with all parameters", async () => {
-    const mockОтвет = { message: "Settings updated successfully", status: "success" };
-    (fetchSpy as any).mockResolvedЗначение({
+    const mockResponse = { message: "Settings updated successfully", status: "success" };
+    (fetchSpy as any).mockResolvedValue({
       ok: true,
-      json: async () => mockОтвет,
+      json: async () => mockResponse,
     });
 
-    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessToken), { wrapper });
 
     result.current.mutate({
       connection_id: "new-connection-id",
@@ -288,11 +288,11 @@ describe("useCloudZeroUpdateSettings", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.data).toEqual(mockОтвет);
+    expect(result.current.data).toEqual(mockResponse);
     expect(fetchSpy).toHaveBeenCalledWith(`${mockProxyBaseUrl}/cloudzero/settings`, {
       method: "PUT",
       headers: {
-        [mockHeaderName]: `Bearer ${mockAccessТокен}`,
+        [mockHeaderName]: `Bearer ${mockAccessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -304,13 +304,13 @@ describe("useCloudZeroUpdateSettings", () => {
   });
 
   it("should not include undefined fields in request body", async () => {
-    const mockОтвет = { message: "Обновлён" };
-    (fetchSpy as any).mockResolvedЗначение({
+    const mockResponse = { message: "Обновлён" };
+    (fetchSpy as any).mockResolvedValue({
       ok: true,
-      json: async () => mockОтвет,
+      json: async () => mockResponse,
     });
 
-    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessToken), { wrapper });
 
     result.current.mutate({
       connection_id: "test-id",
@@ -322,20 +322,20 @@ describe("useCloudZeroUpdateSettings", () => {
 
     const callBody = JSON.parse((fetchSpy as any).mock.calls[0][1].body);
     expect(callBody).toEqual({ connection_id: "test-id" });
-    expect(callBody).not.toHaveСвойство("timezone");
-    expect(callBody).not.toHaveСвойство("api_key");
+    expect(callBody).not.toHaveProperty("timezone");
+    expect(callBody).not.toHaveProperty("api_key");
   });
 
   it("should invalidate settings query on success", async () => {
-    const mockОтвет = { message: "Обновлён", status: "success" };
-    (fetchSpy as any).mockResolvedЗначение({
+    const mockResponse = { message: "Обновлён", status: "success" };
+    (fetchSpy as any).mockResolvedValue({
       ok: true,
-      json: async () => mockОтвет,
+      json: async () => mockResponse,
     });
 
-    queryClient.setRequestData(["cloudZeroSettings", "list", { params: {} }], mockCloudZeroSettings);
+    queryClient.setQueryData(["cloudZeroSettings", "list", { params: {} }], mockCloudZeroSettings);
 
-    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessToken), { wrapper });
 
     result.current.mutate({
       connection_id: "test-id",
@@ -345,11 +345,11 @@ describe("useCloudZeroUpdateSettings", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    const queryCache = queryClient.getRequestCache();
-    const queries = queryCache.findВсе();
-    const settingsЗапрос = queries.find((q) => q.queryКлюч[0] === "cloudZeroSettings");
+    const queryCache = queryClient.getQueryCache();
+    const queries = queryCache.findAll();
+    const settingsQuery = queries.find((q) => q.queryKey[0] === "cloudZeroSettings");
 
-    expect(settingsЗапрос).toBeDefined();
+    expect(settingsQuery).toBeDefined();
   });
 
   it("should handle error responses", async () => {
@@ -357,101 +357,101 @@ describe("useCloudZeroUpdateSettings", () => {
       { error: { message: "Update failed" }, expected: "Update failed" },
       { error: "Validation error", expected: "Validation error" },
       { message: "Invalid input", expected: "Invalid input" },
-      { detail: "Сервер error", expected: "Сервер error" },
+      { detail: "Server error", expected: "Server error" },
     ];
 
-    for (const errorОтвет of errorCases) {
+    for (const errorResponse of errorCases) {
       vi.clearAllMocks();
-      (fetchSpy as any).mockResolvedЗначение({
+      (fetchSpy as any).mockResolvedValue({
         ok: false,
-        json: async () => errorОтвет,
+        json: async () => errorResponse,
       });
 
-      const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessТокен), { wrapper });
+      const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessToken), { wrapper });
 
       result.current.mutate({
         connection_id: "test-id",
       });
 
       await waitFor(() => {
-        expect(result.current.isОшибка).toBe(true);
+        expect(result.current.isError).toBe(true);
       });
 
-      expect(result.current.error?.message).toBe(errorОтвет.expected);
+      expect(result.current.error?.message).toBe(errorResponse.expected);
     }
   });
 
   it("should handle error response with string error data", async () => {
-    (fetchSpy as any).mockResolvedЗначение({
+    (fetchSpy as any).mockResolvedValue({
       ok: false,
-      json: async () => "Ошибка string",
+      json: async () => "Error string",
     });
 
-    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessToken), { wrapper });
 
     result.current.mutate({
       connection_id: "test-id",
     });
 
     await waitFor(() => {
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error?.message).toBe("Ошибка string");
+    expect(result.current.error?.message).toBe("Error string");
   });
 
   it("should handle error response with invalid JSON", async () => {
-    (fetchSpy as any).mockResolvedЗначение({
+    (fetchSpy as any).mockResolvedValue({
       ok: false,
       statusText: "Bad Запрос",
       json: async () => {
-        throw new Ошибка("Invalid JSON");
+        throw new Error("Invalid JSON");
       },
     });
 
-    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessToken), { wrapper });
 
     result.current.mutate({
       connection_id: "test-id",
     });
 
     await waitFor(() => {
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
     expect(result.current.error?.message).toBe("Bad Запрос");
   });
 
   it("should handle network error", async () => {
-    const networkОшибка = new Ошибка("Network request failed");
-    (fetchSpy as any).mockRejectedЗначение(networkОшибка);
+    const networkError = new Error("Network request failed");
+    (fetchSpy as any).mockRejectedValue(networkError);
 
-    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessToken), { wrapper });
 
     result.current.mutate({
       connection_id: "test-id",
     });
 
     await waitFor(() => {
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error).toEqual(networkОшибка);
+    expect(result.current.error).toEqual(networkError);
   });
 
-  it("should throw error when accessТокен is missing", async () => {
+  it("should throw error when accessToken is missing", async () => {
     const testCases = ["", null as any];
 
-    for (const accessТокен of testCases) {
+    for (const accessToken of testCases) {
       vi.clearAllMocks();
-      const { result } = renderHook(() => useCloudZeroUpdateSettings(accessТокен), { wrapper });
+      const { result } = renderHook(() => useCloudZeroUpdateSettings(accessToken), { wrapper });
 
       result.current.mutate({
         connection_id: "test-id",
       });
 
       await waitFor(() => {
-        expect(result.current.isОшибка).toBe(true);
+        expect(result.current.isError).toBe(true);
       });
 
       expect(result.current.error?.message).toBe("Требуется токен доступа");
@@ -460,14 +460,14 @@ describe("useCloudZeroUpdateSettings", () => {
   });
 
   it("should use relative URL when proxyBaseUrl is not set", async () => {
-    mockGetProxyBaseUrl.mockReturnЗначение("");
-    const mockОтвет = { message: "Обновлён", status: "success" };
-    (fetchSpy as any).mockResolvedЗначение({
+    mockGetProxyBaseUrl.mockReturnValue("");
+    const mockResponse = { message: "Обновлён", status: "success" };
+    (fetchSpy as any).mockResolvedValue({
       ok: true,
-      json: async () => mockОтвет,
+      json: async () => mockResponse,
     });
 
-    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroUpdateSettings(mockAccessToken), { wrapper });
 
     result.current.mutate({
       connection_id: "test-id",
@@ -482,11 +482,11 @@ describe("useCloudZeroUpdateSettings", () => {
 });
 
 describe("useCloudZeroDeleteSettings", () => {
-  let queryClient: ЗапросClient;
+  let queryClient: QueryClient;
   let fetchSpy: Mock;
 
   beforeEach(() => {
-    queryClient = new ЗапросClient({
+    queryClient = new QueryClient({
       defaultOptions: {
         queries: {
           retry: false,
@@ -509,16 +509,16 @@ describe("useCloudZeroDeleteSettings", () => {
   });
 
   const wrapper = ({ children }: { children: ReactNode }) =>
-    React.createElement(ЗапросClientПровайдер, { client: queryClient }, children);
+    React.createElement(QueryClientProvider, { client: queryClient }, children);
 
   it("should successfully delete settings", async () => {
-    const mockОтвет = { message: "Settings deleted successfully", status: "success" };
-    (fetchSpy as any).mockResolvedЗначение({
+    const mockResponse = { message: "Settings deleted successfully", status: "success" };
+    (fetchSpy as any).mockResolvedValue({
       ok: true,
-      json: async () => mockОтвет,
+      json: async () => mockResponse,
     });
 
-    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessToken), { wrapper });
 
     result.current.mutate();
 
@@ -526,26 +526,26 @@ describe("useCloudZeroDeleteSettings", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.data).toEqual(mockОтвет);
+    expect(result.current.data).toEqual(mockResponse);
     expect(fetchSpy).toHaveBeenCalledWith(`${mockProxyBaseUrl}/cloudzero/delete`, {
       method: "DELETE",
       headers: {
-        [mockHeaderName]: `Bearer ${mockAccessТокен}`,
+        [mockHeaderName]: `Bearer ${mockAccessToken}`,
         "Content-Type": "application/json",
       },
     });
   });
 
   it("should invalidate settings query on success", async () => {
-    const mockОтвет = { message: "Deleted", status: "success" };
-    (fetchSpy as any).mockResolvedЗначение({
+    const mockResponse = { message: "Deleted", status: "success" };
+    (fetchSpy as any).mockResolvedValue({
       ok: true,
-      json: async () => mockОтвет,
+      json: async () => mockResponse,
     });
 
-    queryClient.setRequestData(["cloudZeroSettings", "list", { params: {} }], mockCloudZeroSettings);
+    queryClient.setQueryData(["cloudZeroSettings", "list", { params: {} }], mockCloudZeroSettings);
 
-    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessToken), { wrapper });
 
     result.current.mutate();
 
@@ -553,11 +553,11 @@ describe("useCloudZeroDeleteSettings", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    const queryCache = queryClient.getRequestCache();
-    const queries = queryCache.findВсе();
-    const settingsЗапрос = queries.find((q) => q.queryКлюч[0] === "cloudZeroSettings");
+    const queryCache = queryClient.getQueryCache();
+    const queries = queryCache.findAll();
+    const settingsQuery = queries.find((q) => q.queryKey[0] === "cloudZeroSettings");
 
-    expect(settingsЗапрос).toBeDefined();
+    expect(settingsQuery).toBeDefined();
   });
 
   it("should handle error responses", async () => {
@@ -565,91 +565,91 @@ describe("useCloudZeroDeleteSettings", () => {
       { error: { message: "Delete failed" }, expected: "Delete failed" },
       { error: "Permission denied", expected: "Permission denied" },
       { message: "Not found", expected: "Not found" },
-      { detail: "Сервер error", expected: "Сервер error" },
+      { detail: "Server error", expected: "Server error" },
     ];
 
-    for (const errorОтвет of errorCases) {
+    for (const errorResponse of errorCases) {
       vi.clearAllMocks();
-      (fetchSpy as any).mockResolvedЗначение({
+      (fetchSpy as any).mockResolvedValue({
         ok: false,
-        json: async () => errorОтвет,
+        json: async () => errorResponse,
       });
 
-      const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessТокен), { wrapper });
+      const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessToken), { wrapper });
 
       result.current.mutate();
 
       await waitFor(() => {
-        expect(result.current.isОшибка).toBe(true);
+        expect(result.current.isError).toBe(true);
       });
 
-      expect(result.current.error?.message).toBe(errorОтвет.expected);
+      expect(result.current.error?.message).toBe(errorResponse.expected);
     }
   });
 
   it("should handle error response with string error data", async () => {
-    (fetchSpy as any).mockResolvedЗначение({
+    (fetchSpy as any).mockResolvedValue({
       ok: false,
-      json: async () => "Ошибка string",
+      json: async () => "Error string",
     });
 
-    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessToken), { wrapper });
 
     result.current.mutate();
 
     await waitFor(() => {
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error?.message).toBe("Ошибка string");
+    expect(result.current.error?.message).toBe("Error string");
   });
 
   it("should handle error response with invalid JSON", async () => {
-    (fetchSpy as any).mockResolvedЗначение({
+    (fetchSpy as any).mockResolvedValue({
       ok: false,
-      statusText: "Internal Сервер Ошибка",
+      statusText: "Internal Server Error",
       json: async () => {
-        throw new Ошибка("Invalid JSON");
+        throw new Error("Invalid JSON");
       },
     });
 
-    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessToken), { wrapper });
 
     result.current.mutate();
 
     await waitFor(() => {
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error?.message).toBe("Internal Сервер Ошибка");
+    expect(result.current.error?.message).toBe("Internal Server Error");
   });
 
   it("should handle network error", async () => {
-    const networkОшибка = new Ошибка("Network request failed");
-    (fetchSpy as any).mockRejectedЗначение(networkОшибка);
+    const networkError = new Error("Network request failed");
+    (fetchSpy as any).mockRejectedValue(networkError);
 
-    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessToken), { wrapper });
 
     result.current.mutate();
 
     await waitFor(() => {
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error).toEqual(networkОшибка);
+    expect(result.current.error).toEqual(networkError);
   });
 
-  it("should throw error when accessТокен is missing", async () => {
+  it("should throw error when accessToken is missing", async () => {
     const testCases = ["", null as any];
 
-    for (const accessТокен of testCases) {
+    for (const accessToken of testCases) {
       vi.clearAllMocks();
-      const { result } = renderHook(() => useCloudZeroDeleteSettings(accessТокен), { wrapper });
+      const { result } = renderHook(() => useCloudZeroDeleteSettings(accessToken), { wrapper });
 
       result.current.mutate();
 
       await waitFor(() => {
-        expect(result.current.isОшибка).toBe(true);
+        expect(result.current.isError).toBe(true);
       });
 
       expect(result.current.error?.message).toBe("Требуется токен доступа");
@@ -658,14 +658,14 @@ describe("useCloudZeroDeleteSettings", () => {
   });
 
   it("should use relative URL when proxyBaseUrl is not set", async () => {
-    mockGetProxyBaseUrl.mockReturnЗначение("");
-    const mockОтвет = { message: "Deleted", status: "success" };
-    (fetchSpy as any).mockResolvedЗначение({
+    mockGetProxyBaseUrl.mockReturnValue("");
+    const mockResponse = { message: "Deleted", status: "success" };
+    (fetchSpy as any).mockResolvedValue({
       ok: true,
-      json: async () => mockОтвет,
+      json: async () => mockResponse,
     });
 
-    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessТокен), { wrapper });
+    const { result } = renderHook(() => useCloudZeroDeleteSettings(mockAccessToken), { wrapper });
 
     result.current.mutate();
 

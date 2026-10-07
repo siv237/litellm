@@ -1,19 +1,19 @@
-import { useАгенты } from "@/app/(dashboard)/hooks/agents/useАгенты";
+import { useAgents } from "@/app/(dashboard)/hooks/agents/useАгенты";
 import { useCustomers } from "@/app/(dashboard)/hooks/customers/useCustomers";
-import useАвторизовано from "@/app/(dashboard)/hooks/useАвторизовано";
+import useAuthorized from "@/app/(dashboard)/hooks/useАвторизовано";
 import useIsOrgAdmin from "@/app/(dashboard)/hooks/useIsOrgAdmin";
 import { useCurrentUser } from "@/app/(dashboard)/hooks/users/useCurrentUser";
 import { useInfiniteUsers } from "@/app/(dashboard)/hooks/users/useUsers";
 import { act, fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeВсе, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "@/../tests/test-utils";
-import type { Организация } from "@/components/networking";
+import type { Organization } from "@/components/networking";
 import * as networking from "@/components/networking";
-import ИспользованиеPage from "./ИспользованиеPageView";
+import UsagePage from "./ИспользованиеPageView";
 
 // Polyfill ResizeObserver for test environment
-beforeВсе(() => {
+beforeAll(() => {
   if (typeof window !== "undefined" && !window.ResizeObserver) {
     window.ResizeObserver = class ResizeObserver {
       observe() {}
@@ -33,41 +33,41 @@ vi.mock("@/components/networking", () => ({
 
 // Mock child components to simplify testing
 vi.mock("@/components/activity_metrics", () => ({
-  ActivityMetrics: ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs }: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs?: { __source?: string } }) => (
-    <div>{`activity-source:${Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюМетрикаs?.__source ?? "none"}`}</div>
+  ActivityMetrics: ({ modelMetrics }: { modelMetrics?: { __source?: string } }) => (
+    <div>{`activity-source:${modelМетрикаs?.__source ?? "none"}`}</div>
   ),
   processActivityData: (_data: unknown, key: string) => ({ __source: key }),
 }));
 
 vi.mock("@/components/view_user_spend", () => ({
-  default: () => <div>View User Расход</div>,
+  default: () => <div>View User Spend</div>,
 }));
 
-vi.mock("@/components/ИспользованиеPage/components/EntityИспользование/TopKeyView", () => ({
-  default: () => <div>Top Ключи</div>,
+vi.mock("@/components/ИспользованиеPage/components/EntityИспользование/TopКлючView", () => ({
+  default: () => <div>Top Keys</div>,
 }));
 
 vi.mock("./EntityИспользование/EntityИспользование", () => ({
   default: ({ entityType, entityList }: { entityType: string; entityList: unknown }) => (
     <div data-testid="entity-usage" data-entity-type={entityType} data-entity-list={JSON.stringify(entityList ?? null)}>
-      Entity Использование
+      Entity Usage
     </div>
   ),
   EntityList: [],
 }));
 
-vi.mock("./EntityИспользование/РасходByПровайдер", () => ({
-  default: () => <div>Расход By Провайдер</div>,
+vi.mock("./EntityИспользование/SpendByProvider", () => ({
+  default: () => <div>Spend By Provider</div>,
 }));
 
 vi.mock("./ЭндпоинтИспользование/ЭндпоинтИспользование", () => ({
-  default: () => <div>Эндпоинт Использование</div>,
+  default: () => <div>Endpoint Usage</div>,
 }));
 
 vi.mock("./ИспользованиеViewВыбрать/ИспользованиеViewВыбрать", async () => {
   const React = await import("react");
-  const ИспользованиеViewВыбрать = ({ value, onChange, canViewTagИспользование = false }: any) => {
-    const tagOption = canViewTagИспользование ? React.createElement("option", { value: "tag" }, "Tag Использование") : null;
+  const UsageViewSelect = ({ value, onChange, canViewTagUsage = false }: any) => {
+    const tagOption = canViewTagUsage ? React.createElement("option", { value: "tag" }, "Tag Использование") : null;
     return React.createElement(
       "select",
       {
@@ -86,8 +86,8 @@ vi.mock("./ИспользованиеViewВыбрать/Использовани
       React.createElement("option", { value: "user-agent-activity" }, "User Agent Activity"),
     );
   };
-  ИспользованиеViewВыбрать.displayName = "ИспользованиеViewВыбрать";
-  return { ИспользованиеViewВыбрать };
+  UsageViewSelect.displayName = "ИспользованиеViewВыбрать";
+  return { UsageViewSelect };
 });
 
 vi.mock("@/components/shared/advanced_date_picker", async () => {
@@ -121,12 +121,12 @@ vi.mock("@/components/cloudzero_export_modal", () => ({
   default: () => <div>CloudZero Export Modal</div>,
 }));
 
-vi.mock("@/components/EntityUsageExport", () => ({
-  default: () => <div>Entity Использование Export Modal</div>,
+vi.mock("@/components/EntityИспользованиеExport", () => ({
+  default: () => <div>Entity Usage Export Modal</div>,
 }));
 
 vi.mock("./ИспользованиеAIChatPanel", () => ({
-  default: () => <div data-testid="usage-ai-chat-panel">Использование AI Chat Panel</div>,
+  default: () => <div data-testid="usage-ai-chat-panel">Usage AI Chat Panel</div>,
 }));
 
 vi.mock("@/app/(dashboard)/hooks/customers/useCustomers", () => ({
@@ -134,7 +134,7 @@ vi.mock("@/app/(dashboard)/hooks/customers/useCustomers", () => ({
 }));
 
 vi.mock("@/app/(dashboard)/hooks/agents/useАгенты", () => ({
-  useАгенты: vi.fn(),
+  useAgents: vi.fn(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
@@ -162,8 +162,8 @@ describe("ИспользованиеPage", () => {
   const mockTagListCall = vi.mocked(networking.tagListCall);
   const mockGatewayDailyActivityCall = vi.mocked(networking.gatewayDailyActivityCall);
   const mockUseCustomers = vi.mocked(useCustomers);
-  const mockUseАгенты = vi.mocked(useАгенты);
-  const mockUseАвторизовано = vi.mocked(useАвторизовано);
+  const mockUseAgents = vi.mocked(useAgents);
+  const mockUseAuthorized = vi.mocked(useAuthorized);
   const mockUseCurrentUser = vi.mocked(useCurrentUser);
   const mockUseInfiniteUsers = vi.mocked(useInfiniteUsers);
 
@@ -183,7 +183,7 @@ describe("ИспользованиеPage", () => {
           cache_creation_input_tokens: 0,
         },
         breakdown: {
-          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: {
+          models: {
             "gpt-4": {
               metrics: {
                 spend: 75.5,
@@ -200,7 +200,7 @@ describe("ИспользованиеPage", () => {
               api_key_breakdown: {},
             },
           },
-          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups: {
+          model_groups: {
             "gpt-4": {
               metrics: {
                 spend: 75.5,
@@ -264,15 +264,15 @@ describe("ИспользованиеPage", () => {
     },
   };
 
-  const mockOrganizations: Организация[] = [
+  const mockOrganizations: Organization[] = [
     {
       organization_id: "org-123",
       organization_alias: "Acme Org",
       budget_id: "budget-1",
       metadata: {},
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+      models: [],
       spend: 0,
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_spend: {},
+      model_spend: {},
       created_at: "2025-01-01T00:00:00Z",
       created_by: "user-123",
       updated_at: "2025-01-02T00:00:00Z",
@@ -291,13 +291,13 @@ describe("ИспользованиеPage", () => {
       spend: 0,
       blocked: false,
       allowed_model_region: null,
-      default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: null,
+      default_model: null,
       budget_id: null,
       litellm_budget_table: null,
     },
   ];
 
-  const mockАгенты = [
+  const mockAgents = [
     {
       agent_id: "agent-123",
       agent_name: "Test Agent",
@@ -306,11 +306,11 @@ describe("ИспользованиеPage", () => {
 
   // The same session the suite runs as, minus the admin role. Named rather than
   // inlined so the test reads as "this session, but not an admin".
-  const nonAdminСессия = {
+  const nonAdminSession = {
     isLoading: false,
-    isАвторизовано: true,
+    isAuthorized: true,
     token: "mock-token",
-    accessТокен: "test-token",
+    accessToken: "test-token",
     userId: "user-123",
     userEmail: "test@example.com",
     userRole: "Internal User",
@@ -335,7 +335,7 @@ describe("ИспользованиеPage", () => {
       {
         team_id: "team-1",
         team_alias: "Test Team",
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+        models: [],
         max_budget: null,
         spend: 0,
         tpm_limit: null,
@@ -353,11 +353,11 @@ describe("ИспользованиеPage", () => {
   };
 
   beforeEach(() => {
-    mockUseАвторизовано.mockReturnЗначение({
+    mockUseAuthorized.mockReturnValue({
       isLoading: false,
-      isАвторизовано: true,
+      isAuthorized: true,
       token: "mock-token",
-      accessТокен: "test-token",
+      accessToken: "test-token",
       userId: "user-123",
       userEmail: "test@example.com",
       userRole: "Admin",
@@ -365,7 +365,7 @@ describe("ИспользованиеPage", () => {
       disabledPersonalKeyCreation: false,
       showSSOBanner: false,
     });
-    mockUseCurrentUser.mockReturnЗначение({
+    mockUseCurrentUser.mockReturnValue({
       data: {
         user_id: "user-123",
         max_budget: null,
@@ -377,9 +377,9 @@ describe("ИспользованиеPage", () => {
     mockUserDailyActivityCall.mockClear();
     mockTagListCall.mockClear();
     mockGatewayDailyActivityCall.mockClear();
-    mockUserDailyActivityAggregatedCall.mockResolvedЗначение(mockSpendData);
-    mockGatewayDailyActivityCall.mockResolvedЗначение(mockGatewayActivity);
-    mockUseInfiniteUsers.mockReturnЗначение({
+    mockUserDailyActivityAggregatedCall.mockResolvedValue(mockSpendData);
+    mockGatewayDailyActivityCall.mockResolvedValue(mockGatewayActivity);
+    mockUseInfiniteUsers.mockReturnValue({
       data: {
         pages: [
           {
@@ -400,13 +400,13 @@ describe("ИспользованиеPage", () => {
       isFetchingNextPage: false,
       isLoading: false,
     } as any);
-    mockTagListCall.mockResolvedЗначение({});
-    mockUseCustomers.mockReturnЗначение({
+    mockTagListCall.mockResolvedValue({});
+    mockUseCustomers.mockReturnValue({
       data: [],
       isLoading: false,
       error: null,
     } as any);
-    mockUseАгенты.mockReturnЗначение({
+    mockUseAgents.mockReturnValue({
       data: { agents: [] },
       isLoading: false,
       error: null,
@@ -414,7 +414,7 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should render and fetch usage data on mount", async () => {
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
 
     // Wait for data to be fetched
     await waitFor(() => {
@@ -449,7 +449,7 @@ describe("ИспользованиеPage", () => {
         }),
     );
 
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
     await waitFor(() => {
       expect(screen.getAllByText("75,000").length).toBeGreaterThan(0);
     });
@@ -472,9 +472,9 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should fall back to the spend-derived count when the gateway endpoint is unavailable", async () => {
-    mockGatewayDailyActivityCall.mockRejectedЗначение(new Ошибка("gateway activity unavailable"));
+    mockGatewayDailyActivityCall.mockRejectedValue(new Error("gateway activity unavailable"));
 
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
 
     await waitFor(() => {
       expect(mockGatewayDailyActivityCall).toHaveBeenCalled();
@@ -490,9 +490,9 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should not request deployment-wide gateway counts for a non-admin", async () => {
-    mockUseАвторизовано.mockReturnЗначение(nonAdminСессия);
+    mockUseAuthorized.mockReturnValue(nonAdminSession);
 
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
 
     await waitFor(() => {
       expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -504,7 +504,7 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should display usage metrics and charts", async () => {
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
 
     await waitFor(() => {
       expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -520,13 +520,13 @@ describe("ИспользованиеPage", () => {
     const totalTokensElements = screen.getAllByText("Всего токенов");
     expect(totalTokensElements.length).toBeGreaterThan(0);
 
-    // Check for chart titles (these are in the Стоимость tab)
+    // Check for chart titles (these are in the Cost tab)
     expect(screen.getByText("Дневной расход")).toBeInTheDocument();
     expect(screen.getByText("Top Виртуальный ключs")).toBeInTheDocument();
   });
 
-  it("should render the daily spend and top Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs charts with cyan bars", async () => {
-    const { container } = renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+  it("should render the daily spend and top models charts with cyan bars", async () => {
+    const { container } = renderWithProviders(<UsagePage {...defaultProps} />);
 
     await waitFor(() => {
       expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -536,7 +536,7 @@ describe("ИспользованиеPage", () => {
     // so it is excluded rather than allowed to widen the expected fill set.
     const spendBars = () => {
       const gatewayCard = container.querySelector('[data-testid="gateway-requests-by-endpoint"]');
-      return Array.from(container.querySelectorВсе("path.recharts-rectangle")).filter(
+      return Array.from(container.querySelectorAll("path.recharts-rectangle")).filter(
         (rect) => !gatewayCard?.contains(rect),
       );
     };
@@ -553,33 +553,33 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should switch between usage views correctly", async () => {
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
 
     await waitFor(() => {
       expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
-    // Default view should show Глобально Использование (for admin)
+    // Default view should show Global Usage (for admin)
     expect(screen.getByText("Дневной расход")).toBeInTheDocument();
 
-    // Switch to Team Использование view
-    const usageВыбрать = screen.getByTestId("usage-view-select");
+    // Switch to Team Usage view
+    const usageSelect = screen.getByTestId("usage-view-select");
     act(() => {
-      fireEvent.change(usageВыбрать, { target: { value: "team" } });
+      fireEvent.change(usageSelect, { target: { value: "team" } });
     });
 
-    // Should render EntityИспользование component
+    // Should render EntityUsage component
     await waitFor(() => {
       const entityUsageElements = screen.getAllByText("Entity Использование");
       expect(entityUsageElements.length).toBeGreaterThan(0);
     });
 
-    // Switch to Tag Использование view (admin only)
+    // Switch to Tag Usage view (admin only)
     act(() => {
-      fireEvent.change(usageВыбрать, { target: { value: "tag" } });
+      fireEvent.change(usageSelect, { target: { value: "tag" } });
     });
 
-    // Should still render EntityИспользование component for tags
+    // Should still render EntityUsage component for tags
     await waitFor(() => {
       const entityUsageElements = screen.getAllByText("Entity Использование");
       expect(entityUsageElements.length).toBeGreaterThan(0);
@@ -588,20 +588,20 @@ describe("ИспользованиеPage", () => {
 
   it("should withhold the tag list until it resolves so no empty state is shown while loading", async () => {
     let resolveTagList: (tags: Record<string, unknown>) => void = () => {};
-    mockTagListCall.mockReturnЗначение(
+    mockTagListCall.mockReturnValue(
       new Promise((resolve) => {
         resolveTagList = resolve;
       }) as ReturnType<typeof networking.tagListCall>,
     );
 
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
 
     act(() => {
       fireEvent.change(screen.getByTestId("usage-view-select"), { target: { value: "tag" } });
     });
 
-    const entityИспользование = await screen.findByTestId("entity-usage");
-    expect(entityИспользование).toHaveAttribute("data-entity-list", "null");
+    const entityUsage = await screen.findByTestId("entity-usage");
+    expect(entityUsage).toHaveAttribute("data-entity-list", "null");
 
     await act(async () => {
       resolveTagList({});
@@ -611,9 +611,9 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should drop the previous range's tags as soon as the range changes", async () => {
-    mockTagListCall.mockResolvedЗначение({ "old-range-tag": { name: "old-range-tag" } } as never);
+    mockTagListCall.mockResolvedValue({ "old-range-tag": { name: "old-range-tag" } } as never);
 
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
 
     act(() => {
       fireEvent.change(screen.getByTestId("usage-view-select"), { target: { value: "tag" } });
@@ -627,7 +627,7 @@ describe("ИспользованиеPage", () => {
     });
 
     let resolveNewRange: (tags: Record<string, unknown>) => void = () => {};
-    mockTagListCall.mockReturnЗначение(
+    mockTagListCall.mockReturnValue(
       new Promise((resolve) => {
         resolveNewRange = resolve;
       }) as ReturnType<typeof networking.tagListCall>,
@@ -647,11 +647,11 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should show tag usage selector option for internal users", async () => {
-    mockUseАвторизовано.mockReturnЗначение({
+    mockUseAuthorized.mockReturnValue({
       isLoading: false,
-      isАвторизовано: true,
+      isAuthorized: true,
       token: "mock-token",
-      accessТокен: "test-token",
+      accessToken: "test-token",
       userId: "user-123",
       userEmail: "test@example.com",
       userRole: "internal_user",
@@ -660,7 +660,7 @@ describe("ИспользованиеPage", () => {
       showSSOBanner: false,
     });
 
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
 
     await waitFor(() => {
       expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -670,15 +670,15 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should show organization usage banner and view for admins", async () => {
-    renderWithProviders(<ИспользованиеPage {...defaultProps} organizations={mockOrganizations} />);
+    renderWithProviders(<UsagePage {...defaultProps} organizations={mockOrganizations} />);
 
     await waitFor(() => {
       expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
-    const usageВыбрать = screen.getByTestId("usage-view-select");
+    const usageSelect = screen.getByTestId("usage-view-select");
     act(() => {
-      fireEvent.change(usageВыбрать, { target: { value: "organization" } });
+      fireEvent.change(usageSelect, { target: { value: "organization" } });
     });
 
     await waitFor(() => {
@@ -688,19 +688,19 @@ describe("ИспользованиеPage", () => {
   });
 
   // Org-admin membership comes from the server, so it can be revoked while the
-  // page is open. The Организация Использование option and its panel both disappear,
-  // and withвыход a fallback the selector keeps a value it no longer offers,
+  // page is open. The Organization Usage option and its panel both disappear,
+  // and without a fallback the selector keeps a value it no longer offers,
   // leaving the user on a blank trigger over a blank panel with nothing to
   // click. An internal user is used because that is the session role an org
   // admin actually carries.
   it("should leave the organization view when org-admin membership is revoked mid-session", async () => {
     const mockUseIsOrgAdmin = vi.mocked(useIsOrgAdmin);
-    mockUseIsOrgAdmin.mockReturnЗначение(true);
-    mockUseАвторизовано.mockReturnЗначение({
+    mockUseIsOrgAdmin.mockReturnValue(true);
+    mockUseAuthorized.mockReturnValue({
       isLoading: false,
-      isАвторизовано: true,
+      isAuthorized: true,
       token: "mock-token",
-      accessТокен: "test-token",
+      accessToken: "test-token",
       userId: "user-123",
       userEmail: "test@example.com",
       userRole: "Internal User",
@@ -709,20 +709,20 @@ describe("ИспользованиеPage", () => {
       showSSOBanner: false,
     } as any);
 
-    const { rerender } = renderWithProviders(<ИспользованиеPage {...defaultProps} organizations={mockOrganizations} />);
+    const { rerender } = renderWithProviders(<UsagePage {...defaultProps} organizations={mockOrganizations} />);
 
-    const usageВыбрать = screen.getByTestId("usage-view-select");
+    const usageSelect = screen.getByTestId("usage-view-select");
     act(() => {
-      fireEvent.change(usageВыбрать, { target: { value: "organization" } });
+      fireEvent.change(usageSelect, { target: { value: "organization" } });
     });
     await waitFor(() => {
       expect(screen.getAllByText("Entity Использование").length).toBeGreaterThan(0);
     });
-    expect((usageВыбрать as HTMLSelectElement).value).toBe("organization");
+    expect((usageSelect as HTMLSelectElement).value).toBe("organization");
 
-    mockUseIsOrgAdmin.mockReturnЗначение(false);
+    mockUseIsOrgAdmin.mockReturnValue(false);
     act(() => {
-      rerender(<ИспользованиеPage {...defaultProps} organizations={mockOrganizations} />);
+      rerender(<UsagePage {...defaultProps} organizations={mockOrganizations} />);
     });
 
     await waitFor(() => {
@@ -731,21 +731,21 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should show customer usage view for admins", async () => {
-    mockUseCustomers.mockReturnЗначение({
+    mockUseCustomers.mockReturnValue({
       data: mockCustomers,
       isLoading: false,
       error: null,
     } as any);
 
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
 
     await waitFor(() => {
       expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
-    const usageВыбрать = screen.getByTestId("usage-view-select");
+    const usageSelect = screen.getByTestId("usage-view-select");
     act(() => {
-      fireEvent.change(usageВыбрать, { target: { value: "customer" } });
+      fireEvent.change(usageSelect, { target: { value: "customer" } });
     });
 
     await waitFor(() => {
@@ -755,34 +755,34 @@ describe("ИспользованиеPage", () => {
   });
 
   it("should withhold the customer list while it is still loading", async () => {
-    mockUseCustomers.mockReturnЗначение({ data: undefined, isLoading: true, error: null } as any);
+    mockUseCustomers.mockReturnValue({ data: undefined, isLoading: true, error: null } as any);
 
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
 
     act(() => {
       fireEvent.change(screen.getByTestId("usage-view-select"), { target: { value: "customer" } });
     });
 
-    const entityИспользование = await screen.findByTestId("entity-usage");
-    expect(entityИспользование).toHaveAttribute("data-entity-list", "null");
+    const entityUsage = await screen.findByTestId("entity-usage");
+    expect(entityUsage).toHaveAttribute("data-entity-list", "null");
   });
 
   it("should show agent usage view for admins", async () => {
-    mockUseАгенты.mockReturnЗначение({
-      data: { agents: mockАгенты },
+    mockUseAgents.mockReturnValue({
+      data: { agents: mockAgents },
       isLoading: false,
       error: null,
     } as any);
 
-    renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    renderWithProviders(<UsagePage {...defaultProps} />);
 
     await waitFor(() => {
       expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
-    const usageВыбрать = screen.getByTestId("usage-view-select");
+    const usageSelect = screen.getByTestId("usage-view-select");
     act(() => {
-      fireEvent.change(usageВыбрать, { target: { value: "agent" } });
+      fireEvent.change(usageSelect, { target: { value: "agent" } });
     });
 
     await waitFor(() => {
@@ -792,22 +792,22 @@ describe("ИспользованиеPage", () => {
   });
 
   it.each(["organization", "agent"])("should not render the %s usage view for an internal user", async (usageView) => {
-    mockUseАвторизовано.mockReturnЗначение(nonAdminСессия);
+    mockUseAuthorized.mockReturnValue(nonAdminSession);
 
-    renderWithProviders(<ИспользованиеPage {...defaultProps} organizations={mockOrganizations} />);
+    renderWithProviders(<UsagePage {...defaultProps} organizations={mockOrganizations} />);
 
     await waitFor(() => {
       expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
     });
 
-    const usageВыбрать = screen.getByTestId("usage-view-select");
+    const usageSelect = screen.getByTestId("usage-view-select");
     act(() => {
-      fireEvent.change(usageВыбрать, { target: { value: "team" } });
+      fireEvent.change(usageSelect, { target: { value: "team" } });
     });
     expect(screen.getAllByText("Entity Использование").length).toBeGreaterThan(0);
 
     act(() => {
-      fireEvent.change(usageВыбрать, { target: { value: usageView } });
+      fireEvent.change(usageSelect, { target: { value: usageView } });
     });
     expect(screen.queryByText("Entity Использование")).not.toBeInTheDocument();
   });
@@ -815,7 +815,7 @@ describe("ИспользованиеPage", () => {
   describe("admin user selector", () => {
     // Anchored on the field's own label, so it does not depend on which library draws the control.
     const userSelectCombobox = (): HTMLElement => {
-      let node: HTMLElement | null = screen.getByText("Фильтр by user");
+      let node: HTMLElement | null = screen.getByText("Filter by user");
       while (node && !node.querySelector('[role="combobox"]')) {
         node = node.parentElement;
       }
@@ -824,7 +824,7 @@ describe("ИспользованиеPage", () => {
       return combobox as HTMLElement;
     };
 
-    const openUserВыбрать = async () => {
+    const openUserSelect = async () => {
       await userEvent.setup().click(userSelectCombobox());
     };
 
@@ -834,7 +834,7 @@ describe("ИспользованиеPage", () => {
       screen.queryAllByText(text).length + screen.queryAllByPlaceholderText(text).length > 0;
 
     it("should render user selector for admin users in global view", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -845,24 +845,24 @@ describe("ИспользованиеPage", () => {
     });
 
     it("should format user options with alias when available", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
-      await openUserВыбрать();
+      await openUserSelect();
 
       // User with alias should show "alias (id)"
       expect(screen.getByText("Alice (user-001)")).toBeInTheDocument();
-      // User withвыход alias but with email should show "email (id)"
+      // User without alias but with email should show "email (id)"
       expect(screen.getByText("bob@example.com (user-002)")).toBeInTheDocument();
       // User with neither alias nor email should show just the id
       expect(screen.getByText("user-003")).toBeInTheDocument();
     });
 
     it("should call useInfiniteUsers with debounced search", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -873,7 +873,7 @@ describe("ИспользованиеPage", () => {
     });
 
     it("should deduplicate users across pages", async () => {
-      mockUseInfiniteUsers.mockReturnЗначение({
+      mockUseInfiniteUsers.mockReturnValue({
         data: {
           pages: [
             {
@@ -900,13 +900,13 @@ describe("ИспользованиеPage", () => {
         isLoading: false,
       } as any);
 
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
-      await openUserВыбрать();
+      await openUserSelect();
 
       // Duplicate user should appear only once
       const dupElements = screen.getAllByText("DupUser (user-dup)");
@@ -916,7 +916,7 @@ describe("ИспользованиеPage", () => {
     });
 
     it("should pass selected userId to aggregated call", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -934,7 +934,7 @@ describe("ИспользованиеPage", () => {
 
   describe("user usage view", () => {
     it("should hand EntityИспользование no user list so its own filter can search every user", async () => {
-      mockUseInfiniteUsers.mockReturnЗначение({
+      mockUseInfiniteUsers.mockReturnValue({
         data: {
           pages: [
             {
@@ -956,7 +956,7 @@ describe("ИспользованиеPage", () => {
         isLoading: false,
       } as unknown as ReturnType<typeof useInfiniteUsers>);
 
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -966,19 +966,19 @@ describe("ИспользованиеPage", () => {
         fireEvent.change(screen.getByTestId("usage-view-select"), { target: { value: "user" } });
       });
 
-      const entityИспользование = await screen.findByTestId("entity-usage");
-      expect(entityИспользование).toHaveAttribute("data-entity-type", "user");
-      expect(entityИспользование).toHaveAttribute("data-entity-list", "null");
+      const entityUsage = await screen.findByTestId("entity-usage");
+      expect(entityUsage).toHaveAttribute("data-entity-type", "user");
+      expect(entityUsage).toHaveAttribute("data-entity-list", "null");
     });
   });
 
   describe("non-admin user behavior", () => {
     it("should not render user selector for non-admin users", async () => {
-      mockUseАвторизовано.mockReturnЗначение({
+      mockUseAuthorized.mockReturnValue({
         isLoading: false,
-        isАвторизовано: true,
+        isAuthorized: true,
         token: "mock-token",
-        accessТокен: "test-token",
+        accessToken: "test-token",
         userId: "user-123",
         userEmail: "test@example.com",
         userRole: "Internal User",
@@ -987,7 +987,7 @@ describe("ИспользованиеPage", () => {
         showSSOBanner: false,
       });
 
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -995,15 +995,15 @@ describe("ИспользованиеPage", () => {
 
       // The admin case above proves this label is rendered when the selector exists, so its
       // absence here is a live assertion rather than a query that can never match.
-      expect(screen.queryByText("Фильтр by user")).not.toBeInTheDocument();
+      expect(screen.queryByText("Filter by user")).not.toBeInTheDocument();
     });
 
     it("should always pass own userId for non-admin users", async () => {
-      mockUseАвторизовано.mockReturnЗначение({
+      mockUseAuthorized.mockReturnValue({
         isLoading: false,
-        isАвторизовано: true,
+        isAuthorized: true,
         token: "mock-token",
-        accessТокен: "test-token",
+        accessToken: "test-token",
         userId: "user-123",
         userEmail: "test@example.com",
         userRole: "Internal User",
@@ -1012,7 +1012,7 @@ describe("ИспользованиеPage", () => {
         showSSOBanner: false,
       });
 
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalledWith(
@@ -1027,8 +1027,8 @@ describe("ИспользованиеPage", () => {
 
   describe("aggregated endpoint fallback", () => {
     it("should fall back to paginated calls when aggregated endpoint fails", async () => {
-      mockUserDailyActivityAggregatedCall.mockRejectedЗначение(new Ошибка("Aggregated endpoint not available"));
-      mockUserDailyActivityCall.mockResolvedЗначение({
+      mockUserDailyActivityAggregatedCall.mockRejectedValue(new Error("Aggregated endpoint not available"));
+      mockUserDailyActivityCall.mockResolvedValue({
         ...mockSpendData,
         metadata: {
           ...mockSpendData.metadata,
@@ -1037,7 +1037,7 @@ describe("ИспользованиеPage", () => {
         },
       });
 
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -1055,19 +1055,19 @@ describe("ИспользованиеPage", () => {
       let releaseSecondAggregated: () => void = () => {};
       mockUserDailyActivityAggregatedCall.mockReset();
       mockUserDailyActivityAggregatedCall
-        .mockRejectedValueOnce(new Ошибка("Aggregated endpoint not available"))
+        .mockRejectedValueOnce(new Error("Aggregated endpoint not available"))
         .mockImplementationOnce(
           () =>
             new Promise((_resolve, reject) => {
-              releaseSecondAggregated = () => reject(new Ошибка("Aggregated endpoint not available"));
+              releaseSecondAggregated = () => reject(new Error("Aggregated endpoint not available"));
             }),
         );
-      mockUserDailyActivityCall.mockResolvedЗначение({
+      mockUserDailyActivityCall.mockResolvedValue({
         ...mockSpendData,
         metadata: { ...mockSpendData.metadata, total_pages: 1, page: 1 },
       });
 
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
       await waitFor(() => {
         expect(screen.getAllByText("75,000").length).toBeGreaterThan(0);
       });
@@ -1090,7 +1090,7 @@ describe("ИспользованиеPage", () => {
     });
 
     it("should aggregate multiple pages when paginated endpoint has more than 1 page", async () => {
-      mockUserDailyActivityAggregatedCall.mockRejectedЗначение(new Ошибка("Недоступно"));
+      mockUserDailyActivityAggregatedCall.mockRejectedValue(new Error("Недоступно"));
 
       const page1Data = {
         results: [mockSpendData.results[0]],
@@ -1125,7 +1125,7 @@ describe("ИспользованиеPage", () => {
 
       mockUserDailyActivityCall.mockResolvedValueOnce(page1Data).mockResolvedValueOnce(page2Data);
 
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         // Both pages should have been fetched
@@ -1140,30 +1140,30 @@ describe("ИспользованиеPage", () => {
     });
   });
 
-  describe("MCP Сервер Activity tab", () => {
-    it("should render MCP Сервер Activity tab", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+  describe("MCP Server Activity tab", () => {
+    it("should render MCP Server Activity tab", async () => {
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
-      // The tab list should contain MCP Сервер Activity
-      expect(screen.getByText("MCP Сервер Activity")).toBeInTheDocument();
+      // The tab list should contain MCP Server Activity
+      expect(screen.getByText("MCP Server Activity")).toBeInTheDocument();
     });
   });
 
   describe("User Agent Activity view", () => {
     it("should render User Agent Activity component when view is selected", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
-      const usageВыбрать = screen.getByTestId("usage-view-select");
+      const usageSelect = screen.getByTestId("usage-view-select");
       act(() => {
-        fireEvent.change(usageВыбрать, { target: { value: "user-agent-activity" } });
+        fireEvent.change(usageSelect, { target: { value: "user-agent-activity" } });
       });
 
       await waitFor(() => {
@@ -1176,7 +1176,7 @@ describe("ИспользованиеPage", () => {
 
   describe("Export Data button", () => {
     it("should render Export Data button in global view for admin", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -1188,7 +1188,7 @@ describe("ИспользованиеPage", () => {
 
   describe("Спросить ИИ button", () => {
     it("should render Спросить ИИ button in global view", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -1198,7 +1198,7 @@ describe("ИспользованиеPage", () => {
     });
 
     it("should render AI chat panel component", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -1208,9 +1208,9 @@ describe("ИспользованиеPage", () => {
     });
   });
 
-  describe("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию view toggle", () => {
+  describe("model view toggle", () => {
     it("should show Публичное название модели view by default", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -1223,7 +1223,7 @@ describe("ИспользованиеPage", () => {
     });
 
     it("should switch to Litellm Название модели view on toggle click", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -1242,7 +1242,7 @@ describe("ИспользованиеPage", () => {
     });
 
     it("should switch back to Публичное название модели view", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -1269,19 +1269,19 @@ describe("ИспользованиеPage", () => {
       });
     });
 
-    it("should feed the Режимl Activity tab from the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups breakdown by default", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    it("should feed the Режимl Activity tab from the model_groups breakdown by default", async () => {
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
-      expect(screen.getByText("activity-source:Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups")).toBeInTheDocument();
-      expect(screen.queryByText("activity-source:Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs")).not.toBeInTheDocument();
+      expect(screen.getByText("activity-source:model_groups")).toBeInTheDocument();
+      expect(screen.queryByText("activity-source:models")).not.toBeInTheDocument();
     });
 
-    it("should switch the Режимl Activity tab to the litellm Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs breakdown on toggle click", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+    it("should switch the Режимl Activity tab to the litellm models breakdown on toggle click", async () => {
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -1292,29 +1292,29 @@ describe("ИспользованиеPage", () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText("activity-source:Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs")).toBeInTheDocument();
+        expect(screen.getByText("activity-source:models")).toBeInTheDocument();
       });
-      expect(screen.queryByText("activity-source:Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_groups")).not.toBeInTheDocument();
+      expect(screen.queryByText("activity-source:model_groups")).not.toBeInTheDocument();
     });
   });
 
   describe("customer usage banner", () => {
     it("should show and be dismissible in customer view", async () => {
-      mockUseCustomers.mockReturnЗначение({
+      mockUseCustomers.mockReturnValue({
         data: mockCustomers,
         isLoading: false,
         error: null,
       } as any);
 
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
-      const usageВыбрать = screen.getByTestId("usage-view-select");
+      const usageSelect = screen.getByTestId("usage-view-select");
       act(() => {
-        fireEvent.change(usageВыбрать, { target: { value: "customer" } });
+        fireEvent.change(usageSelect, { target: { value: "customer" } });
       });
 
       await waitFor(() => {
@@ -1326,21 +1326,21 @@ describe("ИспользованиеPage", () => {
 
   describe("agent usage banner", () => {
     it("should show agent usage banner with A2A info", async () => {
-      mockUseАгенты.mockReturnЗначение({
-        data: { agents: mockАгенты },
+      mockUseAgents.mockReturnValue({
+        data: { agents: mockAgents },
         isLoading: false,
         error: null,
       } as any);
 
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
       });
 
-      const usageВыбрать = screen.getByTestId("usage-view-select");
+      const usageSelect = screen.getByTestId("usage-view-select");
       act(() => {
-        fireEvent.change(usageВыбрать, { target: { value: "agent" } });
+        fireEvent.change(usageSelect, { target: { value: "agent" } });
       });
 
       await waitFor(() => {
@@ -1352,7 +1352,7 @@ describe("ИспользованиеPage", () => {
 
   describe("tab navigation in global view", () => {
     it("should render all expected tabs", async () => {
-      renderWithProviders(<ИспользованиеPage {...defaultProps} />);
+      renderWithProviders(<UsagePage {...defaultProps} />);
 
       await waitFor(() => {
         expect(mockUserDailyActivityAggregatedCall).toHaveBeenCalled();
@@ -1361,7 +1361,7 @@ describe("ИспользованиеPage", () => {
       expect(screen.getByText("Стоимость")).toBeInTheDocument();
       expect(screen.getByText("Режимl Activity")).toBeInTheDocument();
       expect(screen.getByText("Ключ Activity")).toBeInTheDocument();
-      expect(screen.getByText("MCP Сервер Activity")).toBeInTheDocument();
+      expect(screen.getByText("MCP Server Activity")).toBeInTheDocument();
       expect(screen.getByText("Эндпоинт Activity")).toBeInTheDocument();
     });
   });

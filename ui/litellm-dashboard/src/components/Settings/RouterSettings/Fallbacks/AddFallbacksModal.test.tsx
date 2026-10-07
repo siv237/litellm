@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AddFallbacksModal } from "./AddFallbacksModal";
+import { AddFallbacksModal } from "./AddРезервные моделиModal";
 
-describe("AddFallbacksModal", () => {
+describe("AddРезервные моделиModal", () => {
   const mockOnCancel = vi.fn();
 
   beforeEach(() => {
@@ -19,7 +19,7 @@ describe("AddFallbacksModal", () => {
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(screen.getByText("Конфигурацияure Режимl Резервные модели")).toBeInTheDocument();
     expect(
-      screen.getByText("Manage multiple fallback chains for different Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs (up to 5 groups at a time)"),
+      screen.getByText("Manage multiple fallback chains for different models (up to 5 groups at a time)"),
     ).toBeInTheDocument();
     expect(screen.getByText("Test Content")).toBeInTheDocument();
   });

@@ -1,14 +1,14 @@
 import React from "react";
 import { describe, it, expect } from "vitest";
 import BedrockGuardrailDetails, {
-  BedrockGuardrailОтвет,
+  BedrockGuardrailResponse,
 } from "@/components/view_logs/GuardrailViewer/BedrockGuardrailDetails";
 import { renderWithProviders, screen } from "../../../../tests/test-utils";
 import {
   makeAssessment,
   makeBedrockCoverage,
-  makeBedrockОтвет,
-  makeBedrockИспользование,
+  makeBedrockResponse,
+  makeBedrockUsage,
 } from "@/components/view_logs/GuardrailViewer/__tests__/fixtures";
 
 describe("BedrockGuardrailDetails", () => {
@@ -19,10 +19,10 @@ describe("BedrockGuardrailDetails", () => {
   });
 
   it("renders top summary: action chip, reason, blocked response", () => {
-    const resp: BedrockGuardrailОтвет = makeBedrockОтвет({
+    const resp: BedrockGuardrailResponse = makeBedrockResponse({
       action: "GUARDRAIL_INTERVENED",
       actionReason: "Политика violation",
-      blockedОтвет: "[blocked]",
+      blockedResponse: "[blocked]",
     });
     renderWithProviders(<BedrockGuardrailDetails response={resp} />);
 
@@ -32,33 +32,33 @@ describe("BedrockGuardrailDetails", () => {
   });
 
   it("renders coverage and usage pills", () => {
-    const resp = makeBedrockОтвет({
-      гардрейловCoverage: makeBedrockCoverage(),
-      usage: makeBedrockИспользование({ contentPolicyUnits: 7, wordPolicyUnits: 1 }),
+    const resp = makeBedrockResponse({
+      guardrailCoverage: makeBedrockCoverage(),
+      usage: makeBedrockUsage({ contentPolicyUnits: 7, wordPolicyUnits: 1 }),
     });
     renderWithProviders(<BedrockGuardrailDetails response={resp} />);
 
     expect(screen.getByText(/text guarded 27\/100/)).toBeInTheDocument();
     expect(screen.getByText(/images guarded 1\/3/)).toBeInTheDocument();
-    expect(screen.getByText(/contentPolicyUnits: 7/)).toBeInTheDocument();
-    expect(screen.getByText(/wordPolicyUnits: 1/)).toBeInTheDocument();
+    expect(screen.getByText(/contentПолитикаUnits: 7/)).toBeInTheDocument();
+    expect(screen.getByText(/wordПолитикаUnits: 1/)).toBeInTheDocument();
   });
 
-  it("renders выходputs when present (prefers `выходputs`, falls back to `выходput`)", () => {
-    // Использование выходputs
-    let resp = makeBedrockОтвет({ выходputs: [{ text: "hello" }] });
+  it("renders outputs when present (prefers `outputs`, falls back to `output`)", () => {
+    // Using outputs
+    let resp = makeBedrockResponse({ outputs: [{ text: "hello" }] });
     const { rerender } = renderWithProviders(<BedrockGuardrailDetails response={resp} />);
     expect(screen.getByText("Результаты")).toBeInTheDocument();
     expect(screen.getByText("hello")).toBeInTheDocument();
 
-    // Использование выходput
-    resp = makeBedrockОтвет({ выходputs: undefined, выходput: [{ text: "world" }] });
+    // Using output
+    resp = makeBedrockResponse({ outputs: undefined, output: [{ text: "world" }] });
     rerender(<BedrockGuardrailDetails response={resp} />);
     expect(screen.getByText("world")).toBeInTheDocument();
   });
 
   it("renders assessments with all policy sections and metrics", () => {
-    const resp = makeBedrockОтвет({
+    const resp = makeBedrockResponse({
       assessments: [makeAssessment()],
     });
     renderWithProviders(<BedrockGuardrailDetails response={resp} />);
@@ -81,38 +81,38 @@ describe("BedrockGuardrailDetails", () => {
     expect(screen.getByText("Персональные данные (PII)")).toBeInTheDocument();
     expect(screen.getByText("Пользовательские регулярные выражения")).toBeInTheDocument();
 
-    // Topic Политика
+    // Topic Policy
     expect(screen.getByText("Тематическая политика")).toBeInTheDocument();
     expect(screen.getByText("weapons")).toBeInTheDocument();
 
-    // Invocation Метрикаs
+    // Invocation Metrics
     expect(screen.getByText("Метрики вызова")).toBeInTheDocument();
 
     // Raw JSON section exists (closed by default)
     expect(screen.getByText("Исходный ответ AWS Bedrock Гардрейлы")).toBeInTheDocument();
   });
 
-  it("handles non-text выходputs gracefully", () => {
-    const resp = makeBedrockОтвет({ выходputs: [{}, { text: "texty" }] });
+  it("handles non-text outputs gracefully", () => {
+    const resp = makeBedrockResponse({ outputs: [{}, { text: "texty" }] });
     renderWithProviders(<BedrockGuardrailDetails response={resp} />);
     expect(screen.getByText("(не текстовый вывод)")).toBeInTheDocument();
     expect(screen.getByText("texty")).toBeInTheDocument();
   });
 
-  it("gracefully handles missing необязательно sections", () => {
-    const resp = makeBedrockОтвет({
+  it("gracefully handles missing optional sections", () => {
+    const resp = makeBedrockResponse({
       assessments: [
         {
           // only include minimal fields; others omitted
-          invocationMetrics: { гардрейловProcessingLatency: 5 },
+          invocationMetrics: { guardrailProcessingLatency: 5 },
         } as any,
       ],
       usage: undefined,
-      гардрейловCoverage: undefined,
-      выходputs: [],
+      guardrailCoverage: undefined,
+      outputs: [],
     });
     renderWithProviders(<BedrockGuardrailDetails response={resp} />);
-    // No crash, minimal render: Assessment + Invocation Метрикаs present, but no usage/coverage chips at top
+    // No crash, minimal render: Assessment + Invocation Metrics present, but no usage/coverage chips at top
     expect(screen.getByText("Assessment #1")).toBeInTheDocument();
   });
 });

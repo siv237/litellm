@@ -10,14 +10,14 @@ import { chooseSelectOption } from "../../../../../tests/test-utils";
 
 const { updateMock } = vi.hoisted(() => ({ updateMock: vi.fn() }));
 
-vi.mock("@/app/(dashboard)/hooks/budgets/useБюджеты", () => ({
-  useUpdateБюджет: () => ({ mutateAsync: updateMock }),
+vi.mock("@/Приложение/(dashboard)/hooks/Бюджеты/useБюджеты", () => ({
+  useUpdateBudget: () => ({ mutateAsync: updateMock }),
 }));
 
-type БюджетItem = components["schemas"]["БюджетListItem"];
+type BudgetItem = components["schemas"]["BudgetListItem"];
 
-const EXISTING_BUDGET: БюджетItem = {
-  budget_id: "budget-alpha",
+const EXISTING_BUDGET: BudgetItem = {
+  budget_id: "Бюджет-alpha",
   max_budget: 100,
   budget_duration: "7d",
   tpm_limit: 1000,
@@ -29,10 +29,10 @@ const EXISTING_BUDGET: БюджетItem = {
 };
 
 const renderModal = () =>
-  render(<EditBudgetModal isModalVisible={true} setIsModalVisible={vi.fn()} existingБюджет={EXISTING_BUDGET} />);
+  render(<EditBudgetModal isModalVisible={true} setIsModalVisible={vi.fn()} existingBudget={EXISTING_BUDGET} />);
 
 const save = async (user: ReturnType<typeof userEvent.setup>) =>
-  user.click(screen.getByRole("button", { name: "Save" }));
+  user.click(screen.getByRole("button", { name: "Сохранить" }));
 
 const openOptionalSettings = async (user: ReturnType<typeof userEvent.setup>) => {
   await user.click(screen.getByText("Дополнительные параметры"));
@@ -42,7 +42,7 @@ const openOptionalSettings = async (user: ReturnType<typeof userEvent.setup>) =>
 describe("EditBudgetModal", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    updateMock.mockResolvedЗначение(undefined);
+    updateMock.mockResolvedValue(undefined);
   });
 
   it("submits only the mounted fields when Дополнительные параметры stays collapsed", async () => {
@@ -55,13 +55,13 @@ describe("EditBudgetModal", () => {
 
     await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
     expect(updateMock.mock.calls[0][0]).toEqual({
-      budget_id: "budget-alpha",
+      budget_id: "Бюджет-alpha",
       tpm_limit: 500.57,
       rpm_limit: 10,
     });
   });
 
-  it("submits every field once Дополнительные параметры is expanded", async () => {
+  it("submits every Поле once Дополнительные параметры is expanded", async () => {
     const user = userEvent.setup();
     renderModal();
 
@@ -74,13 +74,13 @@ describe("EditBudgetModal", () => {
     await user.clear(screen.getByLabelText("Макс. бюджет (USD)"));
     fireEvent.change(screen.getByLabelText("Макс. бюджет (USD)"), { target: { value: "42.567" } });
 
-    await chooseSelectOption(user, screen.getByRole("combobox"), "monthly");
+    await chooseSelectOption(user, screen.getByRole("combobox"), "Каждый месяц");
 
     await save(user);
 
     await waitFor(() => expect(updateMock).toHaveBeenCalledTimes(1));
     const expected = {
-      budget_id: "budget-alpha",
+      budget_id: "Бюджет-alpha",
       tpm_limit: 500.57,
       rpm_limit: 7,
       max_budget: 42.57,
@@ -90,19 +90,19 @@ describe("EditBudgetModal", () => {
     expect(updateMock.mock.calls[0][0]).toEqual(expected);
   });
 
-  it("keeps a typed Optional Setting when the section is collapsed and reopened, as antd's store did", async () => {
+  it("keeps a typed Необязательно Setting when the section is collapsed and reopened, as antd's store did", async () => {
     const user = userEvent.setup();
     renderModal();
 
     await openOptionalSettings(user);
-    const maxБюджет = screen.getByLabelText("Макс. бюджет (USD)");
-    await user.clear(maxБюджет);
-    fireEvent.change(maxБюджет, { target: { value: "99.25" } });
+    const maxBudget = screen.getByLabelText("Макс. бюджет (USD)");
+    await user.clear(maxBudget);
+    fireEvent.change(maxBudget, { target: { value: "99.25" } });
 
     await user.click(screen.getByText("Дополнительные параметры"));
     await user.click(screen.getByText("Дополнительные параметры"));
 
-    expect(await screen.findByLabelText("Макс. бюджет (USD)")).toHaveЗначение(99.25);
+    expect(await screen.findByLabelText("Макс. бюджет (USD)")).toHaveValue(99.25);
 
     await save(user);
 

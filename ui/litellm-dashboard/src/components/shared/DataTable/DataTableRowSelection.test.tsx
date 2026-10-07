@@ -4,25 +4,25 @@ import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it } from "vitest";
 
-import { createSelectionColumn, DataТаблица } from "./index";
+import { createSelectionColumn, DataTable } from "./index";
 
-interface Режимl {
+interface Model {
   id: string;
   name: string;
 }
 
-const data: Режимl[] = [
+const data: Model[] = [
   { id: "m1", name: "Alpha" },
   { id: "m2", name: "Бета" },
   { id: "m3", name: "Gamma" },
 ];
 
-const columns: ColumnDef<Режимl, unknown>[] = [
-  createSelectionColumn<Режимl>({ rowAriaLabel: (row) => `Выбрать ${row.original.name}` }),
-  { id: "name", accessorКлюч: "name", header: "Name", enableSorting: false },
+const columns: ColumnDef<Model, unknown>[] = [
+  createSelectionColumn<Model>({ rowAriaLabel: (row) => `Выбрать ${row.original.name}` }),
+  { id: "name", accessorKey: "name", header: "Name", enableSorting: false },
 ];
 
-const selectВсе = () => screen.getByTestId("datatable-select-all");
+const selectAll = () => screen.getByTestId("datatable-select-all");
 const rowBox = (id: string) => screen.getByTestId(`datatable-select-row-${id}`);
 const selectedCount = () => screen.getByTestId("count");
 
@@ -40,7 +40,7 @@ function ControlledHarness() {
       <button type="button" data-testid="clear" onClick={() => setRowSelection({})}>
         clear
       </button>
-      <DataТаблица
+      <DataTable
         data={data}
         columns={columns}
         getRowId={(row) => row.id}
@@ -56,7 +56,7 @@ describe("DataТаблица row selection", () => {
     const user = userEvent.setup();
 
     render(
-      <DataТаблица
+      <DataTable
         data={data}
         columns={columns}
         getRowId={(row) => row.id}
@@ -68,13 +68,13 @@ describe("DataТаблица row selection", () => {
 
     await user.click(rowBox("m1"));
     expect(selectedCount()).toHaveTextContent("1");
-    expect(selectВсе()).toHaveAttribute("aria-checked", "mixed");
+    expect(selectAll()).toHaveAttribute("aria-checked", "mixed");
 
-    await user.click(selectВсе());
+    await user.click(selectAll());
     expect(selectedCount()).toHaveTextContent("3");
-    expect(selectВсе()).toHaveAttribute("aria-checked", "true");
+    expect(selectAll()).toHaveAttribute("aria-checked", "true");
 
-    await user.click(selectВсе());
+    await user.click(selectAll());
     expect(selectedCount()).toHaveTextContent("0");
   });
 
@@ -93,7 +93,7 @@ describe("DataТаблица row selection", () => {
     const user = userEvent.setup();
     render(<ControlledHarness />);
 
-    await user.click(selectВсе());
+    await user.click(selectAll());
     expect(screen.getByTestId("keys")).toHaveTextContent("m1,m2,m3");
 
     await user.click(screen.getByTestId("clear"));
@@ -101,11 +101,11 @@ describe("DataТаблица row selection", () => {
     expect(rowBox("m1")).toHaveAttribute("aria-checked", "false");
   });
 
-  it("respects an enableRowSelection predicate", async () => {
+  it("respects an enableRowВыбратьion predicate", async () => {
     const user = userEvent.setup();
 
     render(
-      <DataТаблица
+      <DataTable
         data={data}
         columns={columns}
         getRowId={(row) => row.id}

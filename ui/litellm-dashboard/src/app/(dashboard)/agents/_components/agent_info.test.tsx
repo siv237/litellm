@@ -7,12 +7,12 @@ import type { Agent } from "@/components/agents/types";
 
 vi.mock("@/components/networking", () => ({
   getAgentInfo: vi.fn(),
-  getAgentCreateМетаданные: vi.fn(),
+  getAgentCreateMetadata: vi.fn(),
   patchAgentCall: vi.fn(),
 }));
 
 vi.mock("@/app/(dashboard)/hooks/keys/useКлючи", () => ({
-  useКлючи: () => ({ data: { keys: [] }, isLoading: false, refetch: vi.fn() }),
+  useKeys: () => ({ data: { keys: [] }, isLoading: false, refetch: vi.fn() }),
 }));
 
 vi.mock("./agent_card_discovery", () => ({
@@ -24,11 +24,11 @@ vi.mock("./agent_form_fields", () => ({
   unmountedA2AFieldNames: () => [],
 }));
 
-vi.mock("@/app/(dashboard)/hooks/mcp-серверы/useMCP-серверы", () => ({
-  useMCP-серверы: () => ({ data: [{ server_id: "srv-1", server_name: "github" }] }),
+vi.mock("@/app/(dashboard)/hooks/mcpServers/useMCPServers", () => ({
+  useMCPServers: () => ({ data: [{ server_id: "srv-1", server_name: "github" }] }),
 }));
 
-vi.mock("@/components/mcp_server_management/MCPServerSelector", () => ({
+vi.mock("@/components/mcp_server_management/MCPServerВыбратьor", () => ({
   default: () => <div data-testid="mcp-server-selector" />,
 }));
 
@@ -44,7 +44,7 @@ const agent = {
     description: "Answers support questions",
     url: "http://localhost:9999/",
     version: "1.0.0",
-    protocolВерсия: "1.0",
+    protocolVersion: "1.0",
     capabilities: { streaming: false },
     skills: [],
   },
@@ -53,13 +53,13 @@ const agent = {
 
 describe("AgentInfoView settings", () => {
   beforeEach(() => {
-    vi.mocked(networking.getAgentInfo).mockReset().mockResolvedЗначение(agent);
-    vi.mocked(networking.getAgentCreateМетаданные).mockReset().mockResolvedЗначение([]);
-    vi.mocked(networking.patchAgentCall).mockReset().mockResolvedЗначение({});
+    vi.mocked(networking.getAgentInfo).mockReset().mockResolvedValue(agent);
+    vi.mocked(networking.getAgentCreateMetadata).mockReset().mockResolvedValue([]);
+    vi.mocked(networking.patchAgentCall).mockReset().mockResolvedValue({});
   });
 
   it("submits the edited agent when Save Changes is pressed", async () => {
-    render(<AgentInfoView agentId="agent-1" onClose={vi.fn()} accessТокен="sk-test" isAdmin={true} />);
+    render(<AgentInfoView agentId="agent-1" onClose={vi.fn()} accessToken="sk-test" isAdmin={true} />);
 
     fireEvent.click(await screen.findByRole("tab", { name: "Settings" }));
     fireEvent.click(screen.getByRole("button", { name: "Edit Settings" }));
@@ -79,12 +79,12 @@ describe("AgentInfoView settings", () => {
   });
 
   it("shows MCP grants with server names on the overview tab", async () => {
-    vi.mocked(networking.getAgentInfo).mockResolvedЗначение({
+    vi.mocked(networking.getAgentInfo).mockResolvedValue({
       ...agent,
       object_permission: { mcp_servers: ["srv-1"] },
     } as unknown as Agent);
 
-    render(<AgentInfoView agentId="agent-1" onClose={vi.fn()} accessТокен="sk-test" isAdmin={true} />);
+    render(<AgentInfoView agentId="agent-1" onClose={vi.fn()} accessToken="sk-test" isAdmin={true} />);
 
     expect(await screen.findByText("github (srv-1)")).toBeInTheDocument();
   });

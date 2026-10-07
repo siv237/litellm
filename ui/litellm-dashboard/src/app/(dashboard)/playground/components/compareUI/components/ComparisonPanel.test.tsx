@@ -3,35 +3,35 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ComparisonInstance } from "../CompareUI";
 import { ComparisonPanel } from "./ComparisonPanel";
-import { ЭндпоинтId, ENDPOINT_CONFIGS } from "../endpoint_config";
+import { EndpointId, ENDPOINT_CONFIGS } from "../endpoint_config";
 
 vi.mock("./СообщениеDisplay", () => ({
-  СообщениеDisplay: () => <div data-testid="message-display">СообщениеDisplay</div>,
+  MessageDisplay: () => <div data-testid="Сообщение-display">MessageDisplay</div>,
 }));
 
-vi.mock("./UnifiedSelector", () => ({
+vi.mock("./UnifiedВыбратьor", () => ({
   UnifiedSelector: ({ value, onChange }: { value: string; onChange: (val: string) => void }) => (
     <select data-testid="unified-selector" value={value} onChange={(e) => onChange(e.target.value)}>
-      <option value="">Выбрать option</option>
+      <option value="">Select option</option>
       <option value="gpt-4">gpt-4</option>
     </select>
   ),
 }));
 
-vi.mock("@/components/tag_management/TagSelector", () => ({
+vi.mock("@/components/tag_management/TagВыбратьor", () => ({
   default: () => <div data-testid="tag-selector">TagSelector</div>,
 }));
 
-vi.mock("@/components/vector_store_management/VectorStoreSelector", () => ({
+vi.mock("@/components/vector_store_management/VectorStoreВыбратьor", () => ({
   default: () => <div data-testid="vector-store-selector">VectorStoreSelector</div>,
 }));
 
-vi.mock("@/components/гардрейловs/GuardrailSelector", () => ({
-  default: () => <div data-testid="гардрейлов-selector">GuardrailSelector</div>,
+vi.mock("@/components/Гардрейлы/GuardrailВыбратьor", () => ({
+  default: () => <div data-testid="guardrail-selector">GuardrailSelector</div>,
 }));
 
 beforeEach(() => {
-  Object.defineСвойство(window, "matchMedia", {
+  Object.defineProperty(window, "matchMedia", {
     writable: true,
     value: (query: string) => ({
       matches: false,
@@ -48,14 +48,14 @@ beforeEach(() => {
 
 const mockComparison: ComparisonInstance = {
   id: "1",
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+  model: "gpt-4",
   agent: "",
   messages: [],
   isLoading: false,
   tags: [],
-  mcpИнструменты: [],
+  mcpTools: [],
   vectorStores: [],
-  гардрейловs: [],
+  guardrails: [],
   temperature: 1,
   maxTokens: 2048,
   applyAcrossModels: false,
@@ -72,15 +72,15 @@ const mockProps = {
     { value: "gpt-3.5-turbo", label: "gpt-3.5-turbo" },
   ],
   isLoadingOptions: false,
-  endpointКонфигурация: ENDPOINT_CONFIGS[ЭндпоинтId.CHAT_COMPLETIONS],
-  apiКлюч: "test-api-key",
+  endpointConfig: ENDPOINT_CONFIGS[EndpointId.CHAT_COMPLETIONS],
+  apiKey: "test-api-Ключ",
 };
 
 const buttonWithIcon = (icon: string): HTMLButtonElement => {
-  const match = Array.from(document.querySelectorВсе("button")).find((button) =>
+  const match = Array.from(document.querySelectorAll("button")).find((button) =>
     button.querySelector(`svg.lucide-${icon}`),
   );
-  if (!match) throw new Ошибка(`no button carrying the ${icon} icon`);
+  if (!match) throw new Error(`Нет button carrying the ${icon} icon`);
   return match;
 };
 
@@ -94,10 +94,10 @@ describe("ComparisonPanel", () => {
     render(<ComparisonPanel {...mockProps} />);
 
     expect(screen.getByTestId("unified-selector")).toBeInTheDocument();
-    expect(screen.getByTestId("message-display")).toBeInTheDocument();
+    expect(screen.getByTestId("Сообщение-display")).toBeInTheDocument();
   });
 
-  it("removes the panel when the remove control is used", async () => {
+  it("removes the panel when the Убрать control is used", async () => {
     const user = userEvent.setup();
     const onRemove = vi.fn();
     render(<ComparisonPanel {...mockProps} onRemove={onRemove} />);
@@ -107,13 +107,13 @@ describe("ComparisonPanel", () => {
     expect(onRemove).toHaveBeenCalledTimes(1);
   });
 
-  it("hides the remove control on the last remaining panel", () => {
+  it("hides the Убрать control on the last remaining panel", () => {
     render(<ComparisonPanel {...mockProps} canRemove={false} />);
 
     expect(() => buttonWithIcon("x")).toThrow();
   });
 
-  it("keeps the settings выход of sight until the gear is used", async () => {
+  it("keeps the settings out of sight until the gear is used", async () => {
     const user = userEvent.setup();
     render(<ComparisonPanel {...mockProps} />);
 
@@ -125,10 +125,10 @@ describe("ComparisonPanel", () => {
     expect(screen.getByText("Расширенные настройки")).toBeInTheDocument();
     expect(screen.getByTestId("tag-selector")).toBeInTheDocument();
     expect(screen.getByTestId("vector-store-selector")).toBeInTheDocument();
-    expect(screen.getByTestId("гардрейлов-selector")).toBeInTheDocument();
+    expect(screen.getByTestId("guardrail-selector")).toBeInTheDocument();
   });
 
-  it("shows the current temperature and token ceiling", async () => {
+  it("shows the current Температура and Токен ceiling", async () => {
     const user = userEvent.setup();
     render(<ComparisonPanel {...mockProps} />);
 
@@ -139,7 +139,7 @@ describe("ComparisonPanel", () => {
     expect(screen.getByText("Макс. токенов")).toBeInTheDocument();
     expect(screen.getByText("2048")).toBeInTheDocument();
 
-    const ranges = Array.from(document.querySelectorВсе("[aria-valuenow]"));
+    const ranges = Array.from(document.querySelectorAll("[aria-valuenow]"));
     expect(ranges.map((range) => range.getAttribute("aria-valuenow"))).toEqual(["1", "2048"]);
   });
 
@@ -156,12 +156,12 @@ describe("ComparisonPanel", () => {
     expect(updates.applyAcrossModels).toBe(true);
     expect(updates.temperature).toBe(1);
     expect(updates.maxTokens).toBe(2048);
-    expect(options.applyToВсе).toBe(true);
-    expect(options.keysToApply).toContain("temperature");
+    expect(options.applyToAll).toBe(true);
+    expect(options.keysToApply).toContain("Температура");
     expect(options.keysToApply).toContain("maxTokens");
   });
 
-  it("turns sync off withвыход resetting the values it was sharing", async () => {
+  it("turns sync off without resetting the values it was sharing", async () => {
     const user = userEvent.setup();
     const onUpdate = vi.fn();
     render(
@@ -192,7 +192,7 @@ describe("ComparisonPanel", () => {
     expect(onUpdate.mock.calls[0][1]).toBeUndefined();
   });
 
-  it("fans an advanced-parameter toggle выход to every panel while sync is on", async () => {
+  it("fans an advanced-parameter toggle out to every panel while sync is on", async () => {
     const user = userEvent.setup();
     const onUpdate = vi.fn();
     render(
@@ -207,6 +207,6 @@ describe("ComparisonPanel", () => {
     await user.click(screen.getByRole("checkbox", { name: /Использовать расширенные параметры/i }));
 
     await waitFor(() => expect(onUpdate).toHaveBeenCalled());
-    expect(onUpdate.mock.calls[0][1]).toEqual({ applyToВсе: true, keysToApply: ["useAdvancedParams"] });
+    expect(onUpdate.mock.calls[0][1]).toEqual({ applyToAll: true, keysToApply: ["useAdvancedParams"] });
   });
 });

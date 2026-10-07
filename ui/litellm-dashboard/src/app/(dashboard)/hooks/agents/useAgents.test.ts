@@ -1,31 +1,31 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { ReactNode } from "react";
-import { useАгенты } from "./useАгенты";
+import { useAgents } from "./useАгенты";
 import { getAgentsList } from "@/components/networking";
-import type { АгентыОтвет, Agent } from "@/components/agents/types";
+import type { AgentsResponse, Agent } from "@/components/agents/types";
 
 // Mock the networking function
 vi.mock("@/components/networking", () => ({
   getAgentsList: vi.fn(),
 }));
 
-// Mock useАвторизовано hook - we can override this in individual tests
-const mockUseАвторизовано = vi.fn();
+// Mock useAuthorized hook - we can override this in individual tests
+const mockUseAuthorized = vi.fn();
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: () => mockUseАвторизовано(),
+  default: () => mockUseAuthorized(),
 }));
 
 // Import actual roles instead of mocking them
 
 // Mock data
-const mockАгенты: Agent[] = [
+const mockAgents: Agent[] = [
   {
     agent_id: "agent-1",
     agent_name: "Test Agent 1",
     litellm_params: {
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo",
       api_key: "test-key-1",
     },
     agent_card_params: {
@@ -40,7 +40,7 @@ const mockАгенты: Agent[] = [
     agent_id: "agent-2",
     agent_name: "Test Agent 2",
     litellm_params: {
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "claude-3",
+      model: "claude-3",
       api_key: "test-key-2",
     },
     agent_card_params: {
@@ -53,15 +53,15 @@ const mockАгенты: Agent[] = [
   },
 ];
 
-const mockАгентыОтвет: АгентыОтвет = {
-  agents: mockАгенты,
+const mockAgentsResponse: AgentsResponse = {
+  agents: mockAgents,
 };
 
 describe("useАгенты", () => {
-  let queryClient: ЗапросClient;
+  let queryClient: QueryClient;
 
   beforeEach(() => {
-    queryClient = new ЗапросClient({
+    queryClient = new QueryClient({
       defaultOptions: {
         queries: {
           retry: false,
@@ -72,9 +72,9 @@ describe("useАгенты", () => {
     // Reset all mocks
     vi.clearAllMocks();
 
-    // Set default mock for useАвторизовано (enabled state)
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: "test-access-token",
+    // Set default mock for useAuthorized (enabled state)
+    mockUseAuthorized.mockReturnValue({
+      accessToken: "test-access-token",
       userRole: "Admin",
       userId: "test-user-id",
       token: "test-token",
@@ -86,13 +86,13 @@ describe("useАгенты", () => {
   });
 
   const wrapper = ({ children }: { children: ReactNode }) =>
-    React.createElement(ЗапросClientПровайдер, { client: queryClient }, children);
+    React.createElement(QueryClientProvider, { client: queryClient }, children);
 
   it("should return agents data when query is successful", async () => {
     // Mock successful API call
-    (getAgentsList as any).mockResolvedЗначение(mockАгентыОтвет);
+    (getAgentsList as any).mockResolvedValue(mockAgentsResponse);
 
-    const { result } = renderHook(() => useАгенты(), { wrapper });
+    const { result } = renderHook(() => useAgents(), { wrapper });
 
     // Initially loading
     expect(result.current.isLoading).toBe(true);
@@ -104,20 +104,20 @@ describe("useАгенты", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.data).toEqual(mockАгентыОтвет);
+    expect(result.current.data).toEqual(mockAgentsResponse);
     expect(result.current.error).toBeNull();
     expect(getAgentsList).toHaveBeenCalledWith("test-access-token");
     expect(getAgentsList).toHaveBeenCalledTimes(1);
   });
 
-  it("should handle error when getAgentsList fails", async () => {
-    const errorСообщение = "Ошибка to fetch agents";
-    const testОшибка = new Ошибка(errorСообщение);
+  it("should handle error when getАгентыList fails", async () => {
+    const errorMessage = "Ошибка to fetch agents";
+    const testError = new Error(errorMessage);
 
     // Mock failed API call
-    (getAgentsList as any).mockRejectedЗначение(testОшибка);
+    (getAgentsList as any).mockRejectedValue(testError);
 
-    const { result } = renderHook(() => useАгенты(), { wrapper });
+    const { result } = renderHook(() => useAgents(), { wrapper });
 
     // Initially loading
     expect(result.current.isLoading).toBe(true);
@@ -125,19 +125,19 @@ describe("useАгенты", () => {
     // Wait for error
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error).toEqual(testОшибка);
+    expect(result.current.error).toEqual(testError);
     expect(result.current.data).toBeUndefined();
     expect(getAgentsList).toHaveBeenCalledWith("test-access-token");
     expect(getAgentsList).toHaveBeenCalledTimes(1);
   });
 
-  it("should not execute query when accessТокен is missing", async () => {
-    // Mock missing accessТокен
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: null,
+  it("should not execute query when accessToken is missing", async () => {
+    // Mock missing accessToken
+    mockUseAuthorized.mockReturnValue({
+      accessToken: null,
       userRole: "Admin",
       userId: "test-user-id",
       token: null,
@@ -147,9 +147,9 @@ describe("useАгенты", () => {
       showSSOBanner: false,
     });
 
-    const { result } = renderHook(() => useАгенты(), { wrapper });
+    const { result } = renderHook(() => useAgents(), { wrapper });
 
-    // Запрос should not execute
+    // Query should not execute
     expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toBeUndefined();
     expect(result.current.isFetched).toBe(false);
@@ -160,8 +160,8 @@ describe("useАгенты", () => {
 
   it("should not execute query when userRole is not an admin role", async () => {
     // Mock non-admin userRole
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: "test-access-token",
+    mockUseAuthorized.mockReturnValue({
+      accessToken: "test-access-token",
       userRole: "member", // Not in all_admin_roles
       userId: "test-user-id",
       token: "test-token",
@@ -171,9 +171,9 @@ describe("useАгенты", () => {
       showSSOBanner: false,
     });
 
-    const { result } = renderHook(() => useАгенты(), { wrapper });
+    const { result } = renderHook(() => useAgents(), { wrapper });
 
-    // Запрос should not execute
+    // Query should not execute
     expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toBeUndefined();
     expect(result.current.isFetched).toBe(false);
@@ -184,8 +184,8 @@ describe("useАгенты", () => {
 
   it("should not execute query when userRole is null", async () => {
     // Mock null userRole
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: "test-access-token",
+    mockUseAuthorized.mockReturnValue({
+      accessToken: "test-access-token",
       userRole: null,
       userId: "test-user-id",
       token: "test-token",
@@ -195,9 +195,9 @@ describe("useАгенты", () => {
       showSSOBanner: false,
     });
 
-    const { result } = renderHook(() => useАгенты(), { wrapper });
+    const { result } = renderHook(() => useAgents(), { wrapper });
 
-    // Запрос should not execute
+    // Query should not execute
     expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toBeUndefined();
     expect(result.current.isFetched).toBe(false);
@@ -208,8 +208,8 @@ describe("useАгенты", () => {
 
   it("should not execute query when userRole is empty string", async () => {
     // Mock empty string userRole
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: "test-access-token",
+    mockUseAuthorized.mockReturnValue({
+      accessToken: "test-access-token",
       userRole: "",
       userId: "test-user-id",
       token: "test-token",
@@ -219,9 +219,9 @@ describe("useАгенты", () => {
       showSSOBanner: false,
     });
 
-    const { result } = renderHook(() => useАгенты(), { wrapper });
+    const { result } = renderHook(() => useAgents(), { wrapper });
 
-    // Запрос should not execute
+    // Query should not execute
     expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toBeUndefined();
     expect(result.current.isFetched).toBe(false);
@@ -230,10 +230,10 @@ describe("useАгенты", () => {
     expect(getAgentsList).not.toHaveBeenCalled();
   });
 
-  it("should not execute query when both accessТокен and userRole are missing", async () => {
+  it("should not execute query when both accessToken and userRole are missing", async () => {
     // Mock both auth values missing
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: null,
+    mockUseAuthorized.mockReturnValue({
+      accessToken: null,
       userRole: null,
       userId: "test-user-id",
       token: null,
@@ -243,9 +243,9 @@ describe("useАгенты", () => {
       showSSOBanner: false,
     });
 
-    const { result } = renderHook(() => useАгенты(), { wrapper });
+    const { result } = renderHook(() => useAgents(), { wrapper });
 
-    // Запрос should not execute
+    // Query should not execute
     expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toBeUndefined();
     expect(result.current.isFetched).toBe(false);
@@ -254,12 +254,12 @@ describe("useАгенты", () => {
     expect(getAgentsList).not.toHaveBeenCalled();
   });
 
-  it("should execute query when accessТокен is present and userRole is Admin", async () => {
+  it("should execute query when accessToken is present and userRole is Admin", async () => {
     // Mock successful API call
-    (getAgentsList as any).mockResolvedЗначение(mockАгентыОтвет);
+    (getAgentsList as any).mockResolvedValue(mockAgentsResponse);
 
     // Ensure auth values are set (already done in beforeEach)
-    const { result } = renderHook(() => useАгенты(), { wrapper });
+    const { result } = renderHook(() => useAgents(), { wrapper });
 
     // Wait for query to execute
     await waitFor(() => {
@@ -270,13 +270,13 @@ describe("useАгенты", () => {
     expect(getAgentsList).toHaveBeenCalledTimes(1);
   });
 
-  it("should execute query when accessТокен is present and userRole is proxy_admin", async () => {
+  it("should execute query when accessToken is present and userRole is proxy_admin", async () => {
     // Mock successful API call
-    (getAgentsList as any).mockResolvedЗначение(mockАгентыОтвет);
+    (getAgentsList as any).mockResolvedValue(mockAgentsResponse);
 
     // Mock proxy_admin role
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: "test-access-token",
+    mockUseAuthorized.mockReturnValue({
+      accessToken: "test-access-token",
       userRole: "proxy_admin",
       userId: "test-user-id",
       token: "test-token",
@@ -286,7 +286,7 @@ describe("useАгенты", () => {
       showSSOBanner: false,
     });
 
-    const { result } = renderHook(() => useАгенты(), { wrapper });
+    const { result } = renderHook(() => useAgents(), { wrapper });
 
     // Wait for query to execute
     await waitFor(() => {
@@ -299,9 +299,9 @@ describe("useАгенты", () => {
 
   it("should return empty agents array when API returns empty data", async () => {
     // Mock API returning empty agents array
-    (getAgentsList as any).mockResolvedЗначение({ agents: [] });
+    (getAgentsList as any).mockResolvedValue({ agents: [] });
 
-    const { result } = renderHook(() => useАгенты(), { wrapper });
+    const { result } = renderHook(() => useAgents(), { wrapper });
 
     // Wait for success
     await waitFor(() => {
@@ -313,20 +313,20 @@ describe("useАгенты", () => {
     expect(getAgentsList).toHaveBeenCalledWith("test-access-token");
   });
 
-  it("should handle network timeвыход error", async () => {
-    const timeвыходОшибка = new Ошибка("Network timeвыход");
+  it("should handle network timeout error", async () => {
+    const timeoutError = new Error("Network timeout");
 
-    // Mock network timeвыход
-    (getAgentsList as any).mockRejectedЗначение(timeвыходОшибка);
+    // Mock network timeout
+    (getAgentsList as any).mockRejectedValue(timeoutError);
 
-    const { result } = renderHook(() => useАгенты(), { wrapper });
+    const { result } = renderHook(() => useAgents(), { wrapper });
 
     // Wait for error
     await waitFor(() => {
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error).toEqual(timeвыходОшибка);
+    expect(result.current.error).toEqual(timeoutError);
     expect(result.current.data).toBeUndefined();
   });
 });

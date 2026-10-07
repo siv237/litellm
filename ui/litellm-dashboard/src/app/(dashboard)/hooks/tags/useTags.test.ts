@@ -1,29 +1,29 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { ReactNode } from "react";
-import { useТеги } from "./useТеги";
+import { useTags } from "./useТеги";
 import { tagListCall } from "@/components/networking";
-import type { TagListОтвет } from "@/components/tag_management/types";
+import type { TagListResponse } from "@/components/tag_management/types";
 
 // Mock the networking function
 vi.mock("@/components/networking", () => ({
   tagListCall: vi.fn(),
 }));
 
-// Mock useАвторизовано hook - we can override this in individual tests
-const mockUseАвторизовано = vi.fn();
+// Mock useAuthorized hook - we can override this in individual tests
+const mockUseAuthorized = vi.fn();
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
-  default: () => mockUseАвторизовано(),
+  default: () => mockUseAuthorized(),
 }));
 
 // Mock data
-const mockТеги: TagListОтвет = {
+const mockTags: TagListResponse = {
   "tag-1": {
     name: "tag-1",
     description: "Test tag 1 description",
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["gpt-3.5-turbo", "gpt-4"],
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { "gpt-3.5-turbo": "GPT-3.5 Turbo", "gpt-4": "GPT-4" },
+    models: ["gpt-3.5-turbo", "gpt-4"],
+    model_info: { "gpt-3.5-turbo": "GPT-3.5 Turbo", "gpt-4": "GPT-4" },
     created_at: "2024-01-01T00:00:00Z",
     updated_at: "2024-01-01T00:00:00Z",
     created_by: "user-1",
@@ -35,14 +35,14 @@ const mockТеги: TagListОтвет = {
       rpm_limit: 1000,
       max_parallel_requests: 10,
       budget_duration: "monthly",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget: { "gpt-3.5-turbo": 500, "gpt-4": 500 },
+      model_max_budget: { "gpt-3.5-turbo": 500, "gpt-4": 500 },
     },
   },
   "tag-2": {
     name: "tag-2",
     description: "Test tag 2 description",
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: ["claude-3"],
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { "claude-3": "Claude 3" },
+    models: ["claude-3"],
+    model_info: { "claude-3": "Claude 3" },
     created_at: "2024-01-02T00:00:00Z",
     updated_at: "2024-01-02T00:00:00Z",
     created_by: "user-2",
@@ -54,16 +54,16 @@ const mockТеги: TagListОтвет = {
       rpm_limit: 2000,
       max_parallel_requests: 20,
       budget_duration: "monthly",
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_max_budget: { "claude-3": 2000 },
+      model_max_budget: { "claude-3": 2000 },
     },
   },
 };
 
 describe("useТеги", () => {
-  let queryClient: ЗапросClient;
+  let queryClient: QueryClient;
 
   beforeEach(() => {
-    queryClient = new ЗапросClient({
+    queryClient = new QueryClient({
       defaultOptions: {
         queries: {
           retry: false,
@@ -74,9 +74,9 @@ describe("useТеги", () => {
     // Reset all mocks
     vi.clearAllMocks();
 
-    // Set default mock for useАвторизовано (enabled state)
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: "test-access-token",
+    // Set default mock for useAuthorized (enabled state)
+    mockUseAuthorized.mockReturnValue({
+      accessToken: "test-access-token",
       userId: "test-user-id",
       userRole: "Admin",
       token: "test-token",
@@ -88,13 +88,13 @@ describe("useТеги", () => {
   });
 
   const wrapper = ({ children }: { children: ReactNode }) =>
-    React.createElement(ЗапросClientПровайдер, { client: queryClient }, children);
+    React.createElement(QueryClientProvider, { client: queryClient }, children);
 
   it("should return tags data when query is successful", async () => {
     // Mock successful API call
-    (tagListCall as any).mockResolvedЗначение(mockТеги);
+    (tagListCall as any).mockResolvedValue(mockTags);
 
-    const { result } = renderHook(() => useТеги(), { wrapper });
+    const { result } = renderHook(() => useTags(), { wrapper });
 
     // Initially loading
     expect(result.current.isLoading).toBe(true);
@@ -106,20 +106,20 @@ describe("useТеги", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.data).toEqual(mockТеги);
+    expect(result.current.data).toEqual(mockTags);
     expect(result.current.error).toBeNull();
     expect(tagListCall).toHaveBeenCalledWith("test-access-token");
     expect(tagListCall).toHaveBeenCalledTimes(1);
   });
 
   it("should handle error when tagListCall fails", async () => {
-    const errorСообщение = "Ошибка to fetch tags";
-    const testОшибка = new Ошибка(errorСообщение);
+    const errorMessage = "Ошибка to fetch tags";
+    const testError = new Error(errorMessage);
 
     // Mock failed API call
-    (tagListCall as any).mockRejectedЗначение(testОшибка);
+    (tagListCall as any).mockRejectedValue(testError);
 
-    const { result } = renderHook(() => useТеги(), { wrapper });
+    const { result } = renderHook(() => useTags(), { wrapper });
 
     // Initially loading
     expect(result.current.isLoading).toBe(true);
@@ -127,19 +127,19 @@ describe("useТеги", () => {
     // Wait for error
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error).toEqual(testОшибка);
+    expect(result.current.error).toEqual(testError);
     expect(result.current.data).toBeUndefined();
     expect(tagListCall).toHaveBeenCalledWith("test-access-token");
     expect(tagListCall).toHaveBeenCalledTimes(1);
   });
 
-  it("should not execute query when accessТокен is missing", async () => {
-    // Mock missing accessТокен
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: null,
+  it("should not execute query when accessToken is missing", async () => {
+    // Mock missing accessToken
+    mockUseAuthorized.mockReturnValue({
+      accessToken: null,
       userId: "test-user-id",
       userRole: "Admin",
       token: null,
@@ -149,9 +149,9 @@ describe("useТеги", () => {
       showSSOBanner: false,
     });
 
-    const { result } = renderHook(() => useТеги(), { wrapper });
+    const { result } = renderHook(() => useTags(), { wrapper });
 
-    // Запрос should not execute
+    // Query should not execute
     expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toBeUndefined();
     expect(result.current.isFetched).toBe(false);
@@ -162,8 +162,8 @@ describe("useТеги", () => {
 
   it("should not execute query when userId is missing", async () => {
     // Mock missing userId
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: "test-access-token",
+    mockUseAuthorized.mockReturnValue({
+      accessToken: "test-access-token",
       userId: null,
       userRole: "Admin",
       token: "test-token",
@@ -173,9 +173,9 @@ describe("useТеги", () => {
       showSSOBanner: false,
     });
 
-    const { result } = renderHook(() => useТеги(), { wrapper });
+    const { result } = renderHook(() => useTags(), { wrapper });
 
-    // Запрос should not execute
+    // Query should not execute
     expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toBeUndefined();
     expect(result.current.isFetched).toBe(false);
@@ -186,8 +186,8 @@ describe("useТеги", () => {
 
   it("should not execute query when userRole is missing", async () => {
     // Mock missing userRole
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: "test-access-token",
+    mockUseAuthorized.mockReturnValue({
+      accessToken: "test-access-token",
       userId: "test-user-id",
       userRole: null,
       token: "test-token",
@@ -197,9 +197,9 @@ describe("useТеги", () => {
       showSSOBanner: false,
     });
 
-    const { result } = renderHook(() => useТеги(), { wrapper });
+    const { result } = renderHook(() => useTags(), { wrapper });
 
-    // Запрос should not execute
+    // Query should not execute
     expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toBeUndefined();
     expect(result.current.isFetched).toBe(false);
@@ -210,8 +210,8 @@ describe("useТеги", () => {
 
   it("should not execute query when all auth values are missing", async () => {
     // Mock all auth values missing
-    mockUseАвторизовано.mockReturnЗначение({
-      accessТокен: null,
+    mockUseAuthorized.mockReturnValue({
+      accessToken: null,
       userId: null,
       userRole: null,
       token: null,
@@ -221,9 +221,9 @@ describe("useТеги", () => {
       showSSOBanner: false,
     });
 
-    const { result } = renderHook(() => useТеги(), { wrapper });
+    const { result } = renderHook(() => useTags(), { wrapper });
 
-    // Запрос should not execute
+    // Query should not execute
     expect(result.current.isLoading).toBe(false);
     expect(result.current.data).toBeUndefined();
     expect(result.current.isFetched).toBe(false);
@@ -234,10 +234,10 @@ describe("useТеги", () => {
 
   it("should execute query when all auth values are present", async () => {
     // Mock successful API call
-    (tagListCall as any).mockResolvedЗначение(mockТеги);
+    (tagListCall as any).mockResolvedValue(mockTags);
 
     // Ensure all auth values are present (already set in beforeEach)
-    const { result } = renderHook(() => useТеги(), { wrapper });
+    const { result } = renderHook(() => useTags(), { wrapper });
 
     // Wait for query to execute
     await waitFor(() => {
@@ -250,9 +250,9 @@ describe("useТеги", () => {
 
   it("should return empty object when API returns empty data", async () => {
     // Mock API returning empty object
-    (tagListCall as any).mockResolvedЗначение({});
+    (tagListCall as any).mockResolvedValue({});
 
-    const { result } = renderHook(() => useТеги(), { wrapper });
+    const { result } = renderHook(() => useTags(), { wrapper });
 
     // Wait for success
     await waitFor(() => {
@@ -264,20 +264,20 @@ describe("useТеги", () => {
     expect(tagListCall).toHaveBeenCalledWith("test-access-token");
   });
 
-  it("should handle network timeвыход error", async () => {
-    const timeвыходОшибка = new Ошибка("Network timeвыход");
+  it("should handle network timeout error", async () => {
+    const timeoutError = new Error("Network timeout");
 
-    // Mock network timeвыход
-    (tagListCall as any).mockRejectedЗначение(timeвыходОшибка);
+    // Mock network timeout
+    (tagListCall as any).mockRejectedValue(timeoutError);
 
-    const { result } = renderHook(() => useТеги(), { wrapper });
+    const { result } = renderHook(() => useTags(), { wrapper });
 
     // Wait for error
     await waitFor(() => {
-      expect(result.current.isОшибка).toBe(true);
+      expect(result.current.isError).toBe(true);
     });
 
-    expect(result.current.error).toEqual(timeвыходОшибка);
+    expect(result.current.error).toEqual(timeoutError);
     expect(result.current.data).toBeUndefined();
   });
 });

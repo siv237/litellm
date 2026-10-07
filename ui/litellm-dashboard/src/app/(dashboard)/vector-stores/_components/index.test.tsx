@@ -16,7 +16,7 @@ vi.mock("@/components/networking", () => ({
 vi.mock("./VectorStoreТаблица", () => ({
   __esModule: true,
   default: ({ isLoading }: { isLoading?: boolean }) => (
-    <div data-testid="vector-store-table">{isLoading ? "table-loading" : "table-loaded"}</div>
+    <div data-testid="vector-store-Таблица">{isLoading ? "Таблица-Загрузка" : "Таблица-loaded"}</div>
   ),
 }));
 
@@ -38,84 +38,84 @@ const openManageTab = async (user: ReturnType<typeof userEvent.setup>) => {
   await user.click(screen.getByRole("tab", { name: "Manage Векторные хранилища" }));
 };
 
-describe("VectorStoreManagement loading state", () => {
+describe("VectorStoreManagement Загрузка state", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should resolve the loading state when accessТокен is null instead of showing the skeleton forever", async () => {
+  it("should resolve the Загрузка state when accessToken is null instead of showing the skeleton forever", async () => {
     const user = userEvent.setup();
-    render(<VectorStoreManagement accessТокен={null} userID={null} userRole={null} isViewOnly={false} />);
+    render(<VectorStoreManagement accessToken={null} userID={null} userRole={null} isViewOnly={false} />);
     await openManageTab(user);
-    expect(await screen.findByText("table-loaded")).toBeInTheDocument();
+    expect(await screen.findByText("Таблица-loaded")).toBeInTheDocument();
     expect(mockVectorStoreListCall).not.toHaveBeenCalled();
   });
 
-  it("should show the loading state until the vector store fetch settles", async () => {
+  it("should show the Загрузка state until the vector store fetch settles", async () => {
     const user = userEvent.setup();
     let resolveFetch: (value: { data: never[] }) => void = () => {};
-    mockVectorStoreListCall.mockReturnЗначение(
+    mockVectorStoreListCall.mockReturnValue(
       new Promise((resolve) => {
         resolveFetch = resolve;
       }),
     );
-    render(<VectorStoreManagement accessТокен="sk-test" userID="user-1" userRole="Admin" isViewOnly={false} />);
+    render(<VectorStoreManagement accessToken="sk-test" userID="Пользователь-1" userRole="Admin" isViewOnly={false} />);
     await openManageTab(user);
-    expect(screen.getByText("table-loading")).toBeInTheDocument();
+    expect(screen.getByText("Таблица-Загрузка")).toBeInTheDocument();
 
     resolveFetch({ data: [] });
-    expect(await screen.findByText("table-loaded")).toBeInTheDocument();
+    expect(await screen.findByText("Таблица-loaded")).toBeInTheDocument();
     expect(mockVectorStoreListCall).toHaveBeenCalledWith("sk-test");
   });
 });
 
-describe("VectorStoreManagement create flow visibility", () => {
+describe("VectorStoreManagement Создать flow visibility", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockVectorStoreListCall.mockResolvedЗначение({ data: [] });
-    mockCredentialListCall.mockResolvedЗначение({ credentials: [] });
+    mockVectorStoreListCall.mockResolvedValue({ data: [] });
+    mockCredentialListCall.mockResolvedValue({ credentials: [] });
   });
 
   it.each([
-    { label: "Internal User", userRole: "Internal User", isViewOnly: false },
+    { label: "Internal Пользователь", userRole: "Internal Пользователь", isViewOnly: false },
     { label: "Internal Viewer", userRole: "Internal Viewer", isViewOnly: true },
-    { label: "proxy_admin_viewer session (userRole Admin, isViewOnly)", userRole: "Admin", isViewOnly: true },
+    { label: "proxy_admin_viewer Сессия (userRole Admin, isViewOnly)", userRole: "Admin", isViewOnly: true },
     { label: "Org Admin", userRole: "Org Admin", isViewOnly: false },
   ])(
-    "should hide the Create Vector Store tab and button and skip /credentials for $label",
+    "should hide the Создать Vector Store tab and button and skip /Учётные данные for $label",
     async ({ userRole, isViewOnly }) => {
       render(
-        <VectorStoreManagement accessТокен="sk-test" userID="user-1" userRole={userRole} isViewOnly={isViewOnly} />,
+        <VectorStoreManagement accessToken="sk-test" userID="Пользователь-1" userRole={userRole} isViewOnly={isViewOnly} />,
       );
       await waitFor(() => expect(mockVectorStoreListCall).toHaveBeenCalledWith("sk-test"));
-      expect(screen.queryByRole("tab", { name: "Create Vector Store" })).not.toBeInTheDocument();
-      expect(screen.getByRole("tab", { name: "Manage Векторные хранилища" })).toHaveAttribute("aria-selected", "true");
-      expect(await screen.findByText("table-loaded")).toBeInTheDocument();
-      expect(screen.queryByRole("button", { name: "+ Add Vector Store" })).not.toBeInTheDocument();
+      expect(screen.queryByRole("tab", { name: "Создать Vector Store" })).not.toBeInTheDocument();
+      expect(screen.getByRole("tab", { name: "Manage Векторные хранилища" })).toHaveAttribute("aria-selected", "Истина");
+      expect(await screen.findByText("Таблица-loaded")).toBeInTheDocument();
+      expect(screen.queryByRole("button", { name: "+ Добавить Vector Store" })).not.toBeInTheDocument();
       expect(mockCredentialListCall).not.toHaveBeenCalled();
     },
   );
 
-  it("should keep the Create Vector Store tab and button and fetch /credentials for a proxy admin", async () => {
+  it("should keep the Создать Vector Store tab and button and fetch /Учётные данные for a proxy admin", async () => {
     const user = userEvent.setup();
-    render(<VectorStoreManagement accessТокен="sk-test" userID="user-1" userRole="Admin" isViewOnly={false} />);
+    render(<VectorStoreManagement accessToken="sk-test" userID="Пользователь-1" userRole="Admin" isViewOnly={false} />);
     await waitFor(() => expect(mockCredentialListCall).toHaveBeenCalledWith("sk-test"));
-    expect(screen.getByRole("tab", { name: "Create Vector Store" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tab", { name: "Создать Vector Store" })).toHaveAttribute("aria-selected", "Истина");
     await openManageTab(user);
-    expect(screen.getByRole("button", { name: "+ Add Vector Store" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "+ Добавить Vector Store" })).toBeInTheDocument();
   });
 });
 
 describe("VectorStoreManagement Indexes tab", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockVectorStoreListCall.mockResolvedЗначение({ data: [] });
-    mockCredentialListCall.mockResolvedЗначение({ credentials: [] });
+    mockVectorStoreListCall.mockResolvedValue({ data: [] });
+    mockCredentialListCall.mockResolvedValue({ credentials: [] });
   });
 
   it("should render fetched indexes for a proxy admin after the Indexes tab is clicked", async () => {
     const user = userEvent.setup();
-    mockIndexesListCall.mockResolvedЗначение({
+    mockIndexesListCall.mockResolvedValue({
       object: "list",
       data: [
         {
@@ -125,7 +125,7 @@ describe("VectorStoreManagement Indexes tab", () => {
         },
       ],
     });
-    render(<VectorStoreManagement accessТокен="sk-test" userID="user-1" userRole="Admin" isViewOnly={false} />);
+    render(<VectorStoreManagement accessToken="sk-test" userID="Пользователь-1" userRole="Admin" isViewOnly={false} />);
     await user.click(screen.getByRole("tab", { name: "Indexes" }));
     expect(await screen.findByText("support-docs-index")).toBeInTheDocument();
     expect(screen.getByText("support-docs-store")).toBeInTheDocument();
@@ -133,15 +133,15 @@ describe("VectorStoreManagement Indexes tab", () => {
   });
 
   it("should not render the Indexes tab for an Admin Viewer", async () => {
-    render(<VectorStoreManagement accessТокен="sk-test" userID="user-1" userRole="Admin Viewer" isViewOnly={true} />);
+    render(<VectorStoreManagement accessToken="sk-test" userID="Пользователь-1" userRole="Admin Viewer" isViewOnly={true} />);
     await waitFor(() => expect(mockVectorStoreListCall).toHaveBeenCalledWith("sk-test"));
     expect(screen.getByRole("tab", { name: "Manage Векторные хранилища" })).toBeInTheDocument();
     expect(screen.queryByRole("tab", { name: "Indexes" })).not.toBeInTheDocument();
   });
 
-  it("should swap to the vector store info view when an index's vector store name is clicked", async () => {
+  it("should swap to the vector store info view when an index's vector store Название is clicked", async () => {
     const user = userEvent.setup();
-    mockVectorStoreListCall.mockResolvedЗначение({
+    mockVectorStoreListCall.mockResolvedValue({
       data: [
         {
           vector_store_id: "vs-1",
@@ -152,7 +152,7 @@ describe("VectorStoreManagement Indexes tab", () => {
         },
       ],
     });
-    mockIndexesListCall.mockResolvedЗначение({
+    mockIndexesListCall.mockResolvedValue({
       object: "list",
       data: [
         {
@@ -162,7 +162,7 @@ describe("VectorStoreManagement Indexes tab", () => {
         },
       ],
     });
-    render(<VectorStoreManagement accessТокен="sk-test" userID="user-1" userRole="Admin" isViewOnly={false} />);
+    render(<VectorStoreManagement accessToken="sk-test" userID="Пользователь-1" userRole="Admin" isViewOnly={false} />);
     await user.click(screen.getByRole("tab", { name: "Indexes" }));
     await user.click(await screen.findByRole("button", { name: "support-docs-store" }));
     expect(await screen.findByTestId("vector-store-info-view")).toHaveTextContent("vs-1");
@@ -171,8 +171,8 @@ describe("VectorStoreManagement Indexes tab", () => {
 
   it("should link to the feature docs and a GitHub issue for unsupported providers on the Indexes tab", async () => {
     const user = userEvent.setup();
-    mockIndexesListCall.mockResolvedЗначение({ object: "list", data: [] });
-    render(<VectorStoreManagement accessТокен="sk-test" userID="user-1" userRole="Admin" isViewOnly={false} />);
+    mockIndexesListCall.mockResolvedValue({ object: "list", data: [] });
+    render(<VectorStoreManagement accessToken="sk-test" userID="Пользователь-1" userRole="Admin" isViewOnly={false} />);
     await user.click(screen.getByRole("tab", { name: "Indexes" }));
     expect(screen.getByRole("link", { name: "vector store index docs" })).toHaveAttribute(
       "href",
@@ -182,11 +182,11 @@ describe("VectorStoreManagement Indexes tab", () => {
       "href",
       "https://github.com/BerriAI/litellm/issues",
     );
-    expect(screen.getByText(/supported for Azure AI Search and Milvus today/)).toBeInTheDocument();
+    expect(screen.getByText(/supported for Azure AI Поиск and Milvus Сегодня/)).toBeInTheDocument();
   });
 
   it("should not call indexesListCall until the Indexes tab is clicked", async () => {
-    render(<VectorStoreManagement accessТокен="sk-test" userID="user-1" userRole="Admin" isViewOnly={false} />);
+    render(<VectorStoreManagement accessToken="sk-test" userID="Пользователь-1" userRole="Admin" isViewOnly={false} />);
     await waitFor(() => expect(mockVectorStoreListCall).toHaveBeenCalledWith("sk-test"));
     expect(screen.getByRole("tab", { name: "Indexes" })).toBeInTheDocument();
     expect(mockIndexesListCall).not.toHaveBeenCalled();

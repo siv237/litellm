@@ -33,17 +33,17 @@ const promptWithoutTemplate = {
 
 describe("PromptInfoView environment scoping", () => {
   beforeEach(() => {
-    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedЗначение(promptWithoutTemplate);
-    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedЗначение({ prompts: [] });
+    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedValue(promptWithoutTemplate);
+    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedValue({ prompts: [] });
   });
 
   it("fetches the initial environment it was opened with", async () => {
     render(
       <PromptInfoView
         promptId="support-reply"
-        initialОкружение="staging"
+        initialEnvironment="staging"
         onClose={vi.fn()}
-        accessТокен="sk-test"
+        accessToken="sk-test"
         isAdmin={true}
       />,
     );
@@ -52,8 +52,8 @@ describe("PromptInfoView environment scoping", () => {
     expect(networking.getPromptInfo).toHaveBeenCalledWith("sk-test", "support-reply", "staging");
   });
 
-  it("fetches the serve default when opened withвыход an environment", async () => {
-    render(<PromptInfoView promptId="support-reply" onClose={vi.fn()} accessТокен="sk-test" isAdmin={true} />);
+  it("fetches the serve default when opened without an environment", async () => {
+    render(<PromptInfoView promptId="support-reply" onClose={vi.fn()} accessToken="sk-test" isAdmin={true} />);
 
     await screen.findByRole("tab", { name: "Raw JSON" });
     expect(networking.getPromptInfo).toHaveBeenCalledWith("sk-test", "support-reply", undefined);
@@ -62,7 +62,7 @@ describe("PromptInfoView environment scoping", () => {
 
 describe("PromptInfoView code snippets", () => {
   beforeEach(() => {
-    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedЗначение({ prompts: [] });
+    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedValue({ prompts: [] });
   });
 
   it.each([
@@ -71,7 +71,7 @@ describe("PromptInfoView code snippets", () => {
   ])("hands the viewed environment of %s to the code snippets", async (_label, environment, environments) => {
     vi.mocked(networking.getPromptInfo)
       .mockReset()
-      .mockResolvedЗначение({
+      .mockResolvedValue({
         ...promptWithoutTemplate,
         prompt_spec: { ...promptWithoutTemplate.prompt_spec, environment },
         environments,
@@ -80,9 +80,9 @@ describe("PromptInfoView code snippets", () => {
     render(
       <PromptInfoView
         promptId="support-reply"
-        initialОкружение={environment}
+        initialEnvironment={environment}
         onClose={vi.fn()}
-        accessТокен="sk-test"
+        accessToken="sk-test"
         isAdmin={true}
       />,
     );
@@ -94,13 +94,13 @@ describe("PromptInfoView code snippets", () => {
 
 describe("PromptInfoView tabs", () => {
   beforeEach(() => {
-    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedЗначение(promptWithoutTemplate);
-    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedЗначение({ prompts: [] });
+    vi.mocked(networking.getPromptInfo).mockReset().mockResolvedValue(promptWithoutTemplate);
+    vi.mocked(networking.getPromptVersions).mockReset().mockResolvedValue({ prompts: [] });
   });
 
   it("shows the raw API response for a prompt that has no template", async () => {
     const user = userEvent.setup();
-    render(<PromptInfoView promptId="support-reply" onClose={vi.fn()} accessТокен="sk-test" isAdmin={true} />);
+    render(<PromptInfoView promptId="support-reply" onClose={vi.fn()} accessToken="sk-test" isAdmin={true} />);
 
     expect(await screen.findByRole("tab", { name: "Raw JSON" })).toBeInTheDocument();
     expect(screen.queryByRole("tab", { name: "Prompt Template" })).not.toBeInTheDocument();

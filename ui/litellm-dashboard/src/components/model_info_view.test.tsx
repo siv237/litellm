@@ -1,30 +1,30 @@
-import { ЗапросClient, ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React, { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import РежимlInfoView from "./Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info_view";
+import ModelInfoView from "./model_info_view";
 import { toast } from "@/lib/toast";
 import * as networking from "./networking";
 vi.mock(
-  "@/app/(dashboard)/hooks/autoRouter/useComplexityScorerDefaults",
-  async () => await import("../../tests/mocks/complexityWeightrDefaults"),
+  "@/app/(dashboard)/hooks/autoRouter/useСложностьОценкаrDefaults",
+  async () => await import("../../tests/mocks/complexityОценкаrDefaults"),
 );
 
 vi.mock("../../utils/dataUtils", () => ({
-  copyToClipboard: vi.fn().mockResolvedЗначение(true),
+  copyToClipboard: vi.fn().mockResolvedValue(true),
 }));
 
 vi.mock("./networking", () => ({
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoV1Call: vi.fn(),
+  modelInfoV1Call: vi.fn(),
   credentialGetCall: vi.fn(),
   credentialListCall: vi.fn(),
   getGuardrailsList: vi.fn(),
   tagListCall: vi.fn(),
-  testПодключениеЗапрос: vi.fn(),
-  testModelGroupПодключение: vi.fn(),
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюPatchUpdateCall: vi.fn(),
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюDeleteCall: vi.fn(),
+  testConnectionRequest: vi.fn(),
+  testModelGroupConnection: vi.fn(),
+  modelPatchUpdateCall: vi.fn(),
+  modelDeleteCall: vi.fn(),
   credentialCreateCall: vi.fn(),
   vectorStoreListCall: vi.fn(),
 }));
@@ -32,18 +32,18 @@ vi.mock("./networking", () => ({
 const mockUseModelsInfo = vi.fn();
 const mockUseModelHub = vi.fn();
 
-vi.mock("@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useModels", () => ({
+vi.mock("@/app/(dashboard)/hooks/models/useРежимls", () => ({
   useModelsInfo: (...args: any[]) => mockUseModelsInfo(...args),
   useModelHub: (...args: any[]) => mockUseModelHub(...args),
 }));
 
 const mockUseModelCostMap = vi.fn();
-vi.mock("@/app/(dashboard)/hooks/Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs/useModelCostMap", () => ({
+vi.mock("@/app/(dashboard)/hooks/models/useРежимlСтоимостьMap", () => ({
   useModelCostMap: (...args: any[]) => mockUseModelCostMap(...args),
 }));
 
 const mockUsePtuCostAttributionEnabled = vi.fn();
-vi.mock("@/app/(dashboard)/hooks/uiSettings/usePtuCostAttributionEnabled", () => ({
+vi.mock("@/app/(dashboard)/hooks/uiSettings/usePtuСтоимостьAttributionEnabled", () => ({
   usePtuCostAttributionEnabled: () => mockUsePtuCostAttributionEnabled(),
 }));
 
@@ -53,47 +53,47 @@ const mockCredentialGetCall = vi.mocked(networking.credentialGetCall);
 const mockCredentialListCall = vi.mocked(networking.credentialListCall);
 const mockGetGuardrailsList = vi.mocked(networking.getGuardrailsList);
 const mockTagListCall = vi.mocked(networking.tagListCall);
-const mockTestПодключениеЗапрос = vi.mocked(networking.testПодключениеЗапрос);
-const mockTestModelGroupПодключение = vi.mocked(networking.testModelGroupПодключение);
+const mockTestConnectionRequest = vi.mocked(networking.testConnectionRequest);
+const mockTestModelGroupConnection = vi.mocked(networking.testModelGroupConnection);
 const mockModelPatchUpdateCall = vi.mocked(networking.modelPatchUpdateCall);
 const mockModelDeleteCall = vi.mocked(networking.modelDeleteCall);
 const mockCredentialCreateCall = vi.mocked(networking.credentialCreateCall);
 const mockVectorStoreListCall = vi.mocked(networking.vectorStoreListCall);
 
 describe("РежимlInfoView", () => {
-  let queryClient: ЗапросClient;
+  let queryClient: QueryClient;
 
   const defaultModelData = {
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "GPT-4",
+    model_name: "GPT-4",
     litellm_params: {
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+      model: "gpt-4",
       api_base: "https://api.openai.com/v1",
       custom_llm_provider: "openai",
       litellm_credential_name: "selected-credential",
     },
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: {
+    model_info: {
       id: "123",
       created_by: "123",
       created_at: "2024-01-01T00:00:00Z",
-      db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: true,
+      db_model: true,
       input_cost_per_token: 0.00003,
-      выходput_cost_per_token: 0.00006,
+      output_cost_per_token: 0.00006,
     },
   };
 
   const DEFAULT_ADMIN_PROPS = {
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюId: "123",
+    modelId: "123",
     onClose: vi.fn(),
-    accessТокен: "test-token",
+    accessToken: "test-token",
     userID: "123",
     userRole: "Admin",
     isViewOnly: false,
     onModelUpdate: vi.fn(),
-    Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюAccessGroups: ["group1", "group2"],
+    modelAccessGroups: ["group1", "group2"],
   };
 
   beforeEach(() => {
-    queryClient = new ЗапросClient({
+    queryClient = new QueryClient({
       defaultOptions: {
         queries: {
           retry: false,
@@ -101,9 +101,9 @@ describe("РежимlInfoView", () => {
       },
     });
     vi.clearAllMocks();
-    mockUsePtuCostAttributionEnabled.mockReturnЗначение(false);
+    mockUsePtuCostAttributionEnabled.mockReturnValue(false);
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [defaultModelData],
       },
@@ -111,7 +111,7 @@ describe("РежимlInfoView", () => {
       error: null,
     });
 
-    mockUseModelHub.mockReturnЗначение({
+    mockUseModelHub.mockReturnValue({
       data: {
         data: [],
       },
@@ -119,22 +119,22 @@ describe("РежимlInfoView", () => {
       error: null,
     });
 
-    mockUseModelCostMap.mockReturnЗначение({
+    mockUseModelCostMap.mockReturnValue({
       data: {},
       isLoading: false,
       error: null,
     });
 
-    mockModelInfoV1Call.mockResolvedЗначение({
+    mockModelInfoV1Call.mockResolvedValue({
       data: [defaultModelData],
     });
 
-    mockCredentialGetCall.mockResolvedЗначение({
+    mockCredentialGetCall.mockResolvedValue({
       credential_name: "test-credential",
       credential_values: {},
       credential_info: {},
     });
-    mockCredentialListCall.mockResolvedЗначение({
+    mockCredentialListCall.mockResolvedValue({
       credentials: [
         {
           credential_name: "selected-credential",
@@ -144,65 +144,65 @@ describe("РежимlInfoView", () => {
       ],
     });
 
-    mockGetGuardrailsList.mockResolvedЗначение({
-      гардрейловs: [{ гардрейлов_name: "content_filter" }, { гардрейлов_name: "toxicity_filter" }],
+    mockGetGuardrailsList.mockResolvedValue({
+      guardrails: [{ guardrail_name: "content_filter" }, { guardrail_name: "toxicity_filter" }],
     });
 
-    mockTagListCall.mockResolvedЗначение({
+    mockTagListCall.mockResolvedValue({
       test_tag: {
         name: "test_tag",
         description: "A test tag",
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+        models: [],
         created_at: "2024-01-01T00:00:00Z",
         updated_at: "2024-01-01T00:00:00Z",
       },
       production_tag: {
         name: "production_tag",
-        description: "Продакшен ready Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs",
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+        description: "Продакшен ready models",
+        models: [],
         created_at: "2024-01-01T00:00:00Z",
         updated_at: "2024-01-01T00:00:00Z",
       },
     });
 
-    mockTestПодключениеЗапрос.mockResolvedЗначение({
+    mockTestConnectionRequest.mockResolvedValue({
       status: "success",
     });
 
-    mockVectorStoreListCall.mockResolvedЗначение({
+    mockVectorStoreListCall.mockResolvedValue({
       data: [
         { vector_store_id: "vs-alpha", vector_store_name: "Alpha" },
         { vector_store_id: "vs-beta", vector_store_name: "Бета" },
       ],
     } as never);
-    mockModelPatchUpdateCall.mockResolvedЗначение({});
-    mockModelDeleteCall.mockResolvedЗначение({});
-    mockCredentialCreateCall.mockResolvedЗначение({});
+    mockModelPatchUpdateCall.mockResolvedValue({});
+    mockModelDeleteCall.mockResolvedValue({});
+    mockCredentialCreateCall.mockResolvedValue({});
   });
 
   const wrapper = ({ children }: { children: ReactNode }) =>
-    React.createElement(ЗапросClientПровайдер, { client: queryClient }, children);
+    React.createElement(QueryClientProvider, { client: queryClient }, children);
 
   it("should render", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Настройки модели")).toBeInTheDocument();
     });
   });
 
-  it("should display loading state when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию data is loading", () => {
-    mockUseModelsInfo.mockReturnЗначение({
+  it("should display loading state when model data is loading", () => {
+    mockUseModelsInfo.mockReturnValue({
       data: null,
       isLoading: true,
       error: null,
     });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     expect(screen.getByText("Загрузка…")).toBeInTheDocument();
   });
 
-  it("should display not found message when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию data is not available", async () => {
-    mockUseModelsInfo.mockReturnЗначение({
+  it("should display not found message when model data is not available", async () => {
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [],
       },
@@ -210,14 +210,14 @@ describe("РежимlInfoView", () => {
       error: null,
     });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Модель не найдена")).toBeInTheDocument();
     });
   });
 
-  it("should display Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name in the header", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+  it("should display model name in the header", async () => {
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText(/Публичное название модели:/)).toBeInTheDocument();
     });
@@ -226,7 +226,7 @@ describe("РежимlInfoView", () => {
   it("should display back button that calls onClose when clicked", async () => {
     const mockOnClose = vi.fn();
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} onClose={mockOnClose} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} onClose={mockOnClose} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByText("Настройки модели")).toBeInTheDocument();
@@ -239,7 +239,7 @@ describe("РежимlInfoView", () => {
   });
 
   it("should display test connection button", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /test connection/i })).toBeInTheDocument();
     });
@@ -247,7 +247,7 @@ describe("РежимlInfoView", () => {
 
   it("should test connection when test connection button is clicked", async () => {
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByText("Настройки модели")).toBeInTheDocument();
@@ -257,19 +257,19 @@ describe("РежимlInfoView", () => {
     await user.click(testButton);
 
     await waitFor(() => {
-      expect(mockTestПодключениеЗапрос).toHaveBeenCalled();
+      expect(mockTestConnectionRequest).toHaveBeenCalled();
       expect(mockToast.success).toHaveBeenCalledWith("Тест подключения успешен!");
     });
   });
 
-  it("should pass Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info.id to disambiguate duplicate Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name deployments", async () => {
-    // Regression test: when two deployments share `Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name` (e.g.
+  it("should pass model_info.id to disambiguate duplicate model_name deployments", async () => {
+    // Regression test: when two deployments share `model_name` (e.g.
     // wildcard `openai/*` with different `api_base` values), the UI
-    // must forward the clicked row's `Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info.id` to the backend.
+    // must forward the clicked row's `model_info.id` to the backend.
     // Otherwise /health/test_connection silently probes deployments[0]
     // instead of the deployment the user actually selected.
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByText("Настройки модели")).toBeInTheDocument();
@@ -279,21 +279,21 @@ describe("РежимlInfoView", () => {
     await user.click(testButton);
 
     await waitFor(() => {
-      expect(mockTestПодключениеЗапрос).toHaveBeenCalled();
+      expect(mockTestConnectionRequest).toHaveBeenCalled();
     });
 
-    const callArgs = mockTestПодключениеЗапрос.mock.calls[0];
-    // Signature: (accessТокен, litellm_params, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info, mode)
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoArg = callArgs[2] as Record<string, unknown>;
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoArg).toBeDefined();
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfoArg.id).toBe("123");
+    const callArgs = mockTestConnectionRequest.mock.calls[0];
+    // Signature: (accessToken, litellm_params, model_info, mode)
+    const modelInfoArg = callArgs[2] as Record<string, unknown>;
+    expect(modelInfoArg).toBeDefined();
+    expect(modelInfoArg.id).toBe("123");
   });
 
   it("should display error notification when connection test fails", async () => {
     const user = userEvent.setup();
-    mockTestПодключениеЗапрос.mockRejectedЗначение(new Ошибка("Подключение failed"));
+    mockTestConnectionRequest.mockRejectedValue(new Error("Подключение failed"));
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByText("Настройки модели")).toBeInTheDocument();
@@ -308,47 +308,47 @@ describe("РежимlInfoView", () => {
   });
 
   it("should display reuse credentials button for admin users", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /re-use credentials/i })).toBeInTheDocument();
     });
   });
 
   it("should disable reuse credentials button for non-admin users", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} userRole="User" />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} userRole="User" />, { wrapper });
     await waitFor(() => {
       const button = screen.getByRole("button", { name: /re-use credentials/i });
       expect(button).toBeDisabled();
     });
   });
 
-  it("should display delete Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию button", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+  it("should display delete model button", async () => {
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: /delete Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /delete model/i })).toBeInTheDocument();
     });
   });
 
   // A proxy_admin_viewer session reads "Admin" through effectiveSessionRole, but the update
   // and delete endpoints 403 it, so the write buttons must not be offered.
   it("should disable delete and update buttons for a view-only admin session", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} isViewOnly={true} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} isViewOnly={true} />, { wrapper });
     await waitFor(() => {
-      expect(screen.getByTestId("delete-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-button")).toBeDisabled();
+      expect(screen.getByTestId("delete-model-button")).toBeDisabled();
     });
     expect(screen.getByTestId("update-api-key-button")).toBeDisabled();
   });
 
-  it("should disable delete button when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is not a DB Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
+  it("should disable delete button when model is not a DB model", async () => {
     const nonDbModelData = {
       ...defaultModelData,
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: {
+      model_info: {
         ...defaultModelData.model_info,
-        db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: false,
+        db_model: false,
       },
     };
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [nonDbModelData],
       },
@@ -356,23 +356,23 @@ describe("РежимlInfoView", () => {
       error: null,
     });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
-      const deleteButton = screen.getByRole("button", { name: /delete Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/i });
+      const deleteButton = screen.getByRole("button", { name: /delete model/i });
       expect(deleteButton).toBeDisabled();
     });
   });
 
-  it("should disable delete button when user is not admin and did not create the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
+  it("should disable delete button when user is not admin and did not create the model", async () => {
     const nonCreatedByUserModelData = {
       ...defaultModelData,
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: {
+      model_info: {
         ...defaultModelData.model_info,
         created_by: "456",
       },
     };
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [nonCreatedByUserModelData],
       },
@@ -380,15 +380,15 @@ describe("РежимlInfoView", () => {
       error: null,
     });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} userRole="User" />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} userRole="User" />, { wrapper });
     await waitFor(() => {
-      const deleteButton = screen.getByRole("button", { name: /delete Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/i });
+      const deleteButton = screen.getByRole("button", { name: /delete model/i });
       expect(deleteButton).toBeDisabled();
     });
   });
 
   it("should display overview and raw JSON tabs", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByRole("tab", { name: /overview/i })).toBeInTheDocument();
       expect(screen.getByRole("tab", { name: /raw json/i })).toBeInTheDocument();
@@ -397,18 +397,18 @@ describe("РежимlInfoView", () => {
 
   it("keeps the edit form and its touched fields alive across a tab switch", async () => {
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await user.click(await screen.findByRole("button", { name: /редактировать настройки/i }));
-    const costВход = screen.getByPlaceholderText("Введите стоимость входных токенов") as HTMLInElement;
-    await user.clear(costВход);
-    await user.type(costВход, "5");
+    const costInput = screen.getByPlaceholderText("Введите стоимость входных токенов") as HTMLInputElement;
+    await user.clear(costInput);
+    await user.type(costInput, "5");
 
     await user.click(screen.getByRole("tab", { name: /raw json/i }));
     await user.click(screen.getByRole("tab", { name: /overview/i }));
 
-    expect(screen.getByPlaceholderText("Введите стоимость входных токенов")).toBe(costВход);
-    expect(Number(costВход.value)).toBe(5);
+    expect(screen.getByPlaceholderText("Введите стоимость входных токенов")).toBe(costInput);
+    expect(Number(costInput.value)).toBe(5);
     await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
     await waitFor(() => {
@@ -417,8 +417,8 @@ describe("РежимlInfoView", () => {
     expect(mockModelPatchUpdateCall.mock.calls[0][1].litellm_params.input_cost_per_token).toBeCloseTo(5 / 1_000_000);
   });
 
-  it("should display Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию information in overview tab", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+  it("should display model information in overview tab", async () => {
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Провайдер")).toBeInTheDocument();
       expect(screen.getByText("Модель LiteLLM")).toBeInTheDocument();
@@ -426,23 +426,23 @@ describe("РежимlInfoView", () => {
     });
   });
 
-  it("should display edit settings button when user can edit Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+  it("should display edit settings button when user can edit model", async () => {
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     });
   });
 
-  it("should not display edit settings button when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is not a DB Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
+  it("should not display edit settings button when model is not a DB model", async () => {
     const nonDbModelData = {
       ...defaultModelData,
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: {
+      model_info: {
         ...defaultModelData.model_info,
-        db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: false,
+        db_model: false,
       },
     };
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [nonDbModelData],
       },
@@ -450,7 +450,7 @@ describe("РежимlInfoView", () => {
       error: null,
     });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.queryByRole("button", { name: /редактировать настройки/i })).not.toBeInTheDocument();
     });
@@ -458,7 +458,7 @@ describe("РежимlInfoView", () => {
 
   it("should enter edit mode when edit settings button is clicked", async () => {
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
@@ -475,7 +475,7 @@ describe("РежимlInfoView", () => {
 
   it("should display form fields in edit mode", async () => {
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
@@ -490,9 +490,9 @@ describe("РежимlInfoView", () => {
     });
   });
 
-  it("should allow editing Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name in edit mode", async () => {
+  it("should allow editing model name in edit mode", async () => {
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
@@ -501,16 +501,16 @@ describe("РежимlInfoView", () => {
     const editButton = screen.getByRole("button", { name: /редактировать настройки/i });
     await user.click(editButton);
 
-    const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюNameВход = await screen.findByPlaceholderText("Введите название модели");
-    await user.clear(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюNameВход);
-    fireEvent.change(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюNameВход, { target: { value: "Обновлён Название модели" } });
+    const modelNameInput = await screen.findByPlaceholderText("Введите название модели");
+    await user.clear(modelNameInput);
+    fireEvent.change(modelNameInput, { target: { value: "Обновлён Название модели" } });
 
-    expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюNameВход).toHaveЗначение("Обновлён Название модели");
+    expect(modelNameInput).toHaveValue("Обновлён Название модели");
   });
 
   it("should cancel editing when cancel button is clicked", async () => {
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
@@ -532,10 +532,10 @@ describe("РежимlInfoView", () => {
     });
   });
 
-  it("should save Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию changes when save button is clicked", async () => {
+  it("should save model changes when save button is clicked", async () => {
     const user = userEvent.setup();
     const mockOnModelUpdate = vi.fn();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} onModelUpdate={mockOnModelUpdate} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} onModelUpdate={mockOnModelUpdate} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
@@ -559,14 +559,14 @@ describe("РежимlInfoView", () => {
   });
 
   it("should display tags section", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Теги")).toBeInTheDocument();
     });
   });
 
   it("should display LiteLLM Params section", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Параметры LiteLLM")).toBeInTheDocument();
     });
@@ -574,7 +574,7 @@ describe("РежимlInfoView", () => {
 
   it("should show existing credentials field in edit mode", async () => {
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
@@ -589,7 +589,7 @@ describe("РежимlInfoView", () => {
 
   it("should keep selector credential and ignore litellm_credential_name from LiteLLM Params json", async () => {
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
@@ -597,19 +597,19 @@ describe("РежимlInfoView", () => {
 
     await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
 
-    const litellmParamsВход = screen
+    const litellmParamsInput = screen
       .getAllByRole("textbox")
       .find(
         (input) =>
           input.tagName === "TEXTAREA" && (input as HTMLTextAreaElement).value.includes('"custom_llm_provider"'),
       );
-    expect(litellmParamsВход).toBeDefined();
-    if (!litellmParamsВход) {
+    expect(litellmParamsInput).toBeDefined();
+    if (!litellmParamsInput) {
       return;
     }
-    expect((litellmParamsВход as HTMLTextAreaElement).value).not.toContain("litellm_credential_name");
-    await user.clear(litellmParamsВход);
-    await user.paste(`{"litellm_credential_name":"from-json","timeвыход":42}`);
+    expect((litellmParamsInput as HTMLTextAreaElement).value).not.toContain("litellm_credential_name");
+    await user.clear(litellmParamsInput);
+    await user.paste(`{"litellm_credential_name":"from-json","timeout":42}`);
 
     await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
@@ -622,12 +622,12 @@ describe("РежимlInfoView", () => {
     expect(updatePayload.litellm_params.litellm_credential_name).not.toBe("from-json");
   });
 
-  it("should not include vector_store_ids in update payload when Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию has none", async () => {
-    // Regression: editing a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию withвыход vector stores used to inject
+  it("should not include vector_store_ids in update payload when model has none", async () => {
+    // Regression: editing a model without vector stores used to inject
     // vector_store_ids: [] into litellm_params, which then propagated to
     // inference requests and broke Anthropic calls.
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
@@ -646,7 +646,7 @@ describe("РежимlInfoView", () => {
     });
 
     const updatePayload = mockModelPatchUpdateCall.mock.calls[0][1];
-    expect(updatePayload.litellm_params).not.toHaveСвойство("vector_store_ids");
+    expect(updatePayload.litellm_params).not.toHaveProperty("vector_store_ids");
   });
 
   describe("PTU cost attribution gate", () => {
@@ -654,12 +654,12 @@ describe("РежимlInfoView", () => {
       ...defaultModelData,
       // Zero per-token pricing is what the backend stores for a PTU deployment, since the flat
       // cost of its reserved capacity already covers the traffic that capacity serves.
-      litellm_params: { ...defaultModelData.litellm_params, input_cost_per_token: 0, выходput_cost_per_token: 0 },
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: {
+      litellm_params: { ...defaultModelData.litellm_params, input_cost_per_token: 0, output_cost_per_token: 0 },
+      model_info: {
         ...defaultModelData.model_info,
         team_id: "team-1",
         input_cost_per_token: 0,
-        выходput_cost_per_token: 0,
+        output_cost_per_token: 0,
         ptu_count: 15,
         cost_per_ptu_per_hour: 2,
         ptu_effective_from: "2026-07-01T00:00:00+00:00",
@@ -668,12 +668,12 @@ describe("РежимlInfoView", () => {
     };
 
     const renderWithPtuModel = () => {
-      mockUseModelsInfo.mockReturnЗначение({ data: { data: [ptuModelData] }, isLoading: false, error: null });
-      mockModelInfoV1Call.mockResolvedЗначение({ data: [ptuModelData] });
-      return render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+      mockUseModelsInfo.mockReturnValue({ data: { data: [ptuModelData] }, isLoading: false, error: null });
+      mockModelInfoV1Call.mockResolvedValue({ data: [ptuModelData] });
+      return render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     };
 
-    it("hides the PTU fields when disabled, even for a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию that already stores PTU config", async () => {
+    it("hides the PTU fields when disabled, even for a model that already stores PTU config", async () => {
       renderWithPtuModel();
 
       await waitFor(() => {
@@ -687,7 +687,7 @@ describe("РежимlInfoView", () => {
     });
 
     it("shows the PTU fields when enabled", async () => {
-      mockUsePtuCostAttributionEnabled.mockReturnЗначение(true);
+      mockUsePtuCostAttributionEnabled.mockReturnValue(true);
       renderWithPtuModel();
 
       await waitFor(() => {
@@ -716,15 +716,15 @@ describe("РежимlInfoView", () => {
         expect(mockModelPatchUpdateCall).toHaveBeenCalled();
       });
 
-      const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo = mockModelPatchUpdateCall.mock.calls[0][1].model_info;
-      expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo).not.toHaveСвойство("ptu_count");
-      expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo).not.toHaveСвойство("cost_per_ptu_per_hour");
-      expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo).not.toHaveСвойство("ptu_effective_from");
-      expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo).not.toHaveСвойство("ptu_effective_to");
+      const modelInfo = mockModelPatchUpdateCall.mock.calls[0][1].model_info;
+      expect(modelInfo).not.toHaveProperty("ptu_count");
+      expect(modelInfo).not.toHaveProperty("cost_per_ptu_per_hour");
+      expect(modelInfo).not.toHaveProperty("ptu_effective_from");
+      expect(modelInfo).not.toHaveProperty("ptu_effective_to");
     });
 
     it("shows a zeroed PTU price as 0.0000 rather than Not Set", async () => {
-      mockUsePtuCostAttributionEnabled.mockReturnЗначение(true);
+      mockUsePtuCostAttributionEnabled.mockReturnValue(true);
       renderWithPtuModel();
 
       await waitFor(() => {
@@ -736,7 +736,7 @@ describe("РежимlInfoView", () => {
     });
 
     it("blocks the save once the operator types a non-zero per-token cost alongside PTU config", async () => {
-      mockUsePtuCostAttributionEnabled.mockReturnЗначение(true);
+      mockUsePtuCostAttributionEnabled.mockReturnValue(true);
       const user = userEvent.setup();
       renderWithPtuModel();
 
@@ -758,18 +758,18 @@ describe("РежимlInfoView", () => {
       expect(mockModelPatchUpdateCall).not.toHaveBeenCalled();
     });
 
-    it("lets the operator put a cost-map-priced deployment on PTU withвыход clearing the seeded rate", async () => {
-      // A rate the form seeded from /Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/info is the server's own, so refusing it blocked
+    it("lets the operator put a cost-map-priced deployment on PTU without clearing the seeded rate", async () => {
+      // A rate the form seeded from /model/info is the server's own, so refusing it blocked
       // every attempt to enable PTU from the dashboard.
-      mockUsePtuCostAttributionEnabled.mockReturnЗначение(true);
+      mockUsePtuCostAttributionEnabled.mockReturnValue(true);
       const seededModel = {
         ...defaultModelData,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...defaultModelData.model_info, team_id: "team-1", input_cost_per_token: 0.0000003 },
+        model_info: { ...defaultModelData.model_info, team_id: "team-1", input_cost_per_token: 0.0000003 },
       };
-      mockUseModelsInfo.mockReturnЗначение({ data: { data: [seededModel] }, isLoading: false, error: null });
-      mockModelInfoV1Call.mockResolvedЗначение({ data: [seededModel] });
+      mockUseModelsInfo.mockReturnValue({ data: { data: [seededModel] }, isLoading: false, error: null });
+      mockModelInfoV1Call.mockResolvedValue({ data: [seededModel] });
       const user = userEvent.setup();
-      render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+      render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
       await waitFor(() => {
         expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
@@ -788,7 +788,7 @@ describe("РежимlInfoView", () => {
     });
 
     const enterPtuEdit = async (user: ReturnType<typeof userEvent.setup>) => {
-      mockUsePtuCostAttributionEnabled.mockReturnЗначение(true);
+      mockUsePtuCostAttributionEnabled.mockReturnValue(true);
       renderWithPtuModel();
       expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
@@ -802,15 +802,15 @@ describe("РежимlInfoView", () => {
     };
 
     it("skips PTU validation entirely when the feature is disabled, so a half-set stored record still saves", async () => {
-      mockUsePtuCostAttributionEnabled.mockReturnЗначение(false);
+      mockUsePtuCostAttributionEnabled.mockReturnValue(false);
       const halfSetPtuModel = {
         ...ptuModelData,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...ptuModelData.model_info, cost_per_ptu_per_hour: null, ptu_effective_from: null },
+        model_info: { ...ptuModelData.model_info, cost_per_ptu_per_hour: null, ptu_effective_from: null },
       };
-      mockUseModelsInfo.mockReturnЗначение({ data: { data: [halfSetPtuModel] }, isLoading: false, error: null });
-      mockModelInfoV1Call.mockResolvedЗначение({ data: [halfSetPtuModel] });
+      mockUseModelsInfo.mockReturnValue({ data: { data: [halfSetPtuModel] }, isLoading: false, error: null });
+      mockModelInfoV1Call.mockResolvedValue({ data: [halfSetPtuModel] });
       const user = userEvent.setup();
-      render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+      render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
       expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
@@ -851,15 +851,15 @@ describe("РежимlInfoView", () => {
     });
 
     it("blocks PTU config with no effective start", async () => {
-      mockUsePtuCostAttributionEnabled.mockReturnЗначение(true);
+      mockUsePtuCostAttributionEnabled.mockReturnValue(true);
       const undatedPtuModel = {
         ...ptuModelData,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { ...ptuModelData.model_info, ptu_effective_from: null, ptu_effective_to: null },
+        model_info: { ...ptuModelData.model_info, ptu_effective_from: null, ptu_effective_to: null },
       };
-      mockUseModelsInfo.mockReturnЗначение({ data: { data: [undatedPtuModel] }, isLoading: false, error: null });
-      mockModelInfoV1Call.mockResolvedЗначение({ data: [undatedPtuModel] });
+      mockUseModelsInfo.mockReturnValue({ data: { data: [undatedPtuModel] }, isLoading: false, error: null });
+      mockModelInfoV1Call.mockResolvedValue({ data: [undatedPtuModel] });
       const user = userEvent.setup();
-      render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+      render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
       expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
@@ -880,7 +880,7 @@ describe("РежимlInfoView", () => {
     });
 
     it("sends the PTU fields on save when enabled", async () => {
-      mockUsePtuCostAttributionEnabled.mockReturnЗначение(true);
+      mockUsePtuCostAttributionEnabled.mockReturnValue(true);
       const user = userEvent.setup();
       renderWithPtuModel();
 
@@ -898,13 +898,13 @@ describe("РежимlInfoView", () => {
         expect(mockModelPatchUpdateCall).toHaveBeenCalled();
       });
 
-      const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo = mockModelPatchUpdateCall.mock.calls[0][1].model_info;
-      expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo.ptu_count).toBe(15);
-      expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo.cost_per_ptu_per_hour).toBe(2);
+      const modelInfo = mockModelPatchUpdateCall.mock.calls[0][1].model_info;
+      expect(modelInfo.ptu_count).toBe(15);
+      expect(modelInfo.cost_per_ptu_per_hour).toBe(2);
     });
 
-    it("routes each edited PTU field into its own Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info key", async () => {
-      mockUsePtuCostAttributionEnabled.mockReturnЗначение(true);
+    it("routes each edited PTU field into its own model_info key", async () => {
+      mockUsePtuCostAttributionEnabled.mockReturnValue(true);
       const user = userEvent.setup();
       renderWithPtuModel();
 
@@ -919,8 +919,8 @@ describe("РежимlInfoView", () => {
 
       const from = screen.getByLabelText("PTU действует с (UTC)");
       const to = screen.getByLabelText("PTU действует по (UTC)");
-      expect(from).toHaveЗначение("2026-07-01T00:00");
-      expect(to).toHaveЗначение("2026-08-01T00:00");
+      expect(from).toHaveValue("2026-07-01T00:00");
+      expect(to).toHaveValue("2026-08-01T00:00");
 
       fireEvent.change(to, { target: { value: "2026-10-03T02:00:00" } });
       fireEvent.change(from, { target: { value: "2026-09-02T01:00:00" } });
@@ -928,17 +928,17 @@ describe("РежимlInfoView", () => {
       await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
       await waitFor(() => expect(mockModelPatchUpdateCall).toHaveBeenCalled());
 
-      const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo = mockModelPatchUpdateCall.mock.calls[0][1].model_info;
-      expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo.ptu_count).toBe(20);
-      expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo.cost_per_ptu_per_hour).toBe(3.5);
-      expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo.ptu_effective_from).toBe("2026-09-02T01:00:00.000Z");
-      expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo.ptu_effective_to).toBe("2026-10-03T02:00:00.000Z");
+      const modelInfo = mockModelPatchUpdateCall.mock.calls[0][1].model_info;
+      expect(modelInfo.ptu_count).toBe(20);
+      expect(modelInfo.cost_per_ptu_per_hour).toBe(3.5);
+      expect(modelInfo.ptu_effective_from).toBe("2026-09-02T01:00:00.000Z");
+      expect(modelInfo.ptu_effective_to).toBe("2026-10-03T02:00:00.000Z");
     });
   });
 
   it("blocks the save when the LiteLLM Params box does not hold valid JSON", async () => {
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
@@ -958,12 +958,12 @@ describe("РежимlInfoView", () => {
     expect(mockModelPatchUpdateCall).not.toHaveBeenCalled();
   });
 
-  it("should not include input_cost_per_token or выходput_cost_per_token in update payload when user does not touch cost fields", async () => {
-    // Regression: editing a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию withвыход touching cost fields used to inject
-    // input_cost_per_token: 0 and выходput_cost_per_token: 0 into litellm_params,
-    // overriding the built-in pricing table from Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_prices_and_context_window.json.
+  it("should not include input_cost_per_token or output_cost_per_token in update payload when user does not touch cost fields", async () => {
+    // Regression: editing a model without touching cost fields used to inject
+    // input_cost_per_token: 0 and output_cost_per_token: 0 into litellm_params,
+    // overriding the built-in pricing table from model_prices_and_context_window.json.
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
@@ -982,12 +982,12 @@ describe("РежимlInfoView", () => {
     });
 
     const updatePayload = mockModelPatchUpdateCall.mock.calls[0][1];
-    expect(updatePayload.litellm_params).not.toHaveСвойство("input_cost_per_token");
-    expect(updatePayload.litellm_params).not.toHaveСвойство("выходput_cost_per_token");
+    expect(updatePayload.litellm_params).not.toHaveProperty("input_cost_per_token");
+    expect(updatePayload.litellm_params).not.toHaveProperty("output_cost_per_token");
   });
 
   it("never re-sends a masked secret on save (regression: masked auth value must not overwrite the real secret)", async () => {
-    // /Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/info redacts secrets by masking (e.g. "azur****BBCC"), not removing them.
+    // /model/info redacts secrets by masking (e.g. "azur****BBCC"), not removing them.
     // A plain save re-PATCHes the whole litellm_params blob; if the masked value were
     // sent, the backend would encrypt the asterisks over the real azure_ad_token and
     // silently destroy the credential. The edit form must strip masked values entirely.
@@ -995,21 +995,21 @@ describe("РежимlInfoView", () => {
     const maskedModelData = {
       ...defaultModelData,
       litellm_params: {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "azure/gpt-4o",
+        model: "azure/gpt-4o",
         api_base: "https://example-az.openai.azure.com",
         custom_llm_provider: "azure",
         azure_ad_token: maskedSecret,
       },
     };
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: { data: [maskedModelData] },
       isLoading: false,
       error: null,
     });
-    mockModelInfoV1Call.mockResolvedЗначение({ data: [maskedModelData] });
+    mockModelInfoV1Call.mockResolvedValue({ data: [maskedModelData] });
 
     const user = userEvent.setup();
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
@@ -1027,20 +1027,20 @@ describe("РежимlInfoView", () => {
 
     const updatePayload = mockModelPatchUpdateCall.mock.calls[0][1];
     expect(updatePayload.litellm_params.azure_ad_token).not.toBe(maskedSecret);
-    // No masked value may appear anywhere in the выходbound params.
+    // No masked value may appear anywhere in the outbound params.
     expect(JSON.stringify(updatePayload.litellm_params)).not.toContain("**");
   });
 
-  it("should display health check Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию field for wildcard Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", async () => {
+  it("should display health check model field for wildcard models", async () => {
     const wildcardModelData = {
       ...defaultModelData,
       litellm_params: {
         ...defaultModelData.litellm_params,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "openai/gpt-4*",
+        model: "openai/gpt-4*",
       },
     };
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [wildcardModelData],
       },
@@ -1048,21 +1048,21 @@ describe("РежимlInfoView", () => {
       error: null,
     });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Модель проверки доступности")).toBeInTheDocument();
     });
   });
 
-  it("should not display health check Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию field for non-wildcard Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+  it("should not display health check model field for non-wildcard models", async () => {
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Настройки модели")).toBeInTheDocument();
       expect(screen.queryByText("Модель проверки доступности")).not.toBeInTheDocument();
     });
   });
 
-  it("should display edit auto router button for auto router Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", async () => {
+  it("should display edit auto router button for auto router models", async () => {
     const autoRouterModelData = {
       ...defaultModelData,
       litellm_params: {
@@ -1071,7 +1071,7 @@ describe("РежимlInfoView", () => {
       },
     };
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [autoRouterModelData],
       },
@@ -1079,13 +1079,13 @@ describe("РежимlInfoView", () => {
       error: null,
     });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByRole("button", { name: /изменить автомаршрутизатор/i })).toBeInTheDocument();
     });
   });
 
-  it("does not offer Test Подключение for semantic auto router Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs (no tier-based test exists yet)", async () => {
+  it("does not offer Test Подключение for semantic auto router models (no tier-based test exists yet)", async () => {
     const semanticAutoRouterModelData = {
       ...defaultModelData,
       litellm_params: {
@@ -1094,7 +1094,7 @@ describe("РежимlInfoView", () => {
       },
     };
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [semanticAutoRouterModelData],
       },
@@ -1102,107 +1102,107 @@ describe("РежимlInfoView", () => {
       error: null,
     });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Настройки модели")).toBeInTheDocument();
     });
     expect(screen.queryByTestId("test-connection-button")).not.toBeInTheDocument();
   });
 
-  it("tests each complexity tier's Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию group instead of sending the router pseudo-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию to /health/test_connection (regression: raw test previously threw 'Unmapped LLM provider... Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию=complexity_router')", async () => {
+  it("tests each complexity tier's model group instead of sending the router pseudo-model to /health/test_connection (regression: raw test previously threw 'Unmapped LLM provider... model=complexity_router')", async () => {
     const complexityRouterModelData = {
       ...defaultModelData,
       litellm_params: {
         ...defaultModelData.litellm_params,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/complexity_router",
+        model: "auto_router/complexity_router",
         complexity_router_config: {
           tiers: { SIMPLE: ["gpt-4o-mini"], MEDIUM: ["gpt-4o"], COMPLEX: [], REASONING: [] },
         },
       },
     };
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [complexityRouterModelData],
       },
       isLoading: false,
       error: null,
     });
-    mockTestModelGroupПодключение.mockResolvedЗначение({ status: "success" });
+    mockTestModelGroupConnection.mockResolvedValue({ status: "success" });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     const testConnectionButton = await screen.findByTestId("test-connection-button");
     await userEvent.click(testConnectionButton);
 
     await waitFor(() => {
-      expect(mockTestModelGroupПодключение).toHaveBeenCalledWith("test-token", "gpt-4o-mini", "chat");
+      expect(mockTestModelGroupConnection).toHaveBeenCalledWith("test-token", "gpt-4o-mini", "chat");
     });
-    expect(mockTestModelGroupПодключение).toHaveBeenCalledWith("test-token", "gpt-4o", "chat");
-    expect(mockTestПодключениеЗапрос).not.toHaveBeenCalled();
+    expect(mockTestModelGroupConnection).toHaveBeenCalledWith("test-token", "gpt-4o", "chat");
+    expect(mockTestConnectionRequest).not.toHaveBeenCalled();
   });
 
-  it("also tests the configured default Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию when an unconfigured tier would fall back to it in production", async () => {
+  it("also tests the configured default model when an unconfigured tier would fall back to it in production", async () => {
     const complexityRouterModelData = {
       ...defaultModelData,
       litellm_params: {
         ...defaultModelData.litellm_params,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/complexity_router",
+        model: "auto_router/complexity_router",
         complexity_router_config: {
           tiers: { SIMPLE: ["gpt-4o-mini"], MEDIUM: [], COMPLEX: [], REASONING: [] },
         },
-        complexity_router_default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o",
+        complexity_router_default_model: "gpt-4o",
       },
     };
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [complexityRouterModelData],
       },
       isLoading: false,
       error: null,
     });
-    mockTestModelGroupПодключение.mockResolvedЗначение({ status: "success" });
+    mockTestModelGroupConnection.mockResolvedValue({ status: "success" });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     const testConnectionButton = await screen.findByTestId("test-connection-button");
     await userEvent.click(testConnectionButton);
 
     await waitFor(() => {
-      expect(mockTestModelGroupПодключение).toHaveBeenCalledWith("test-token", "gpt-4o-mini", "chat");
+      expect(mockTestModelGroupConnection).toHaveBeenCalledWith("test-token", "gpt-4o-mini", "chat");
     });
-    expect(mockTestModelGroupПодключение).toHaveBeenCalledWith("test-token", "gpt-4o", "chat");
+    expect(mockTestModelGroupConnection).toHaveBeenCalledWith("test-token", "gpt-4o", "chat");
   });
 
-  it("does not duplicate the default Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию as a test target when it is already covered by a configured tier", async () => {
+  it("does not duplicate the default model as a test target when it is already covered by a configured tier", async () => {
     const complexityRouterModelData = {
       ...defaultModelData,
       litellm_params: {
         ...defaultModelData.litellm_params,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/complexity_router",
+        model: "auto_router/complexity_router",
         complexity_router_config: {
           tiers: { SIMPLE: ["gpt-4o-mini"], MEDIUM: ["gpt-4o"], COMPLEX: [], REASONING: [] },
         },
-        complexity_router_default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o",
+        complexity_router_default_model: "gpt-4o",
       },
     };
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [complexityRouterModelData],
       },
       isLoading: false,
       error: null,
     });
-    mockTestModelGroupПодключение.mockResolvedЗначение({ status: "success" });
+    mockTestModelGroupConnection.mockResolvedValue({ status: "success" });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     const testConnectionButton = await screen.findByTestId("test-connection-button");
     await userEvent.click(testConnectionButton);
 
     await waitFor(() => {
-      expect(mockTestModelGroupПодключение).toHaveBeenCalledWith("test-token", "gpt-4o", "chat");
+      expect(mockTestModelGroupConnection).toHaveBeenCalledWith("test-token", "gpt-4o", "chat");
     });
-    expect(mockTestModelGroupПодключение).toHaveBeenCalledTimes(2);
+    expect(mockTestModelGroupConnection).toHaveBeenCalledTimes(2);
   });
 
   it("warns instead of erroring when no complexity tiers are configured to test", async () => {
@@ -1210,14 +1210,14 @@ describe("РежимlInfoView", () => {
       ...defaultModelData,
       litellm_params: {
         ...defaultModelData.litellm_params,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/complexity_router",
+        model: "auto_router/complexity_router",
         complexity_router_config: {
           tiers: { SIMPLE: [], MEDIUM: [], COMPLEX: [], REASONING: [] },
         },
       },
     };
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [complexityRouterModelData],
       },
@@ -1225,7 +1225,7 @@ describe("РежимlInfoView", () => {
       error: null,
     });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     const testConnectionButton = await screen.findByTestId("test-connection-button");
     await userEvent.click(testConnectionButton);
 
@@ -1234,63 +1234,63 @@ describe("РежимlInfoView", () => {
         "Уровни сложности ещё не настроены — тестировать нечего.",
       );
     });
-    expect(mockTestModelGroupПодключение).not.toHaveBeenCalled();
+    expect(mockTestModelGroupConnection).not.toHaveBeenCalled();
   });
 
-  // Bugbot finding on #36615: complexity_router_config.default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is a UI-only bookkeeping
+  // Bugbot finding on #36615: complexity_router_config.default_model is a UI-only bookkeeping
   // marker — init_complexity_router_deployment (litellm/router.py) never reads it, falling back
-  // to tier-derivation instead when litellm_params.complexity_router_default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию is absent.
-  // Probing the blob field here would test a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию the running router never calls.
+  // to tier-derivation instead when litellm_params.complexity_router_default_model is absent.
+  // Probing the blob field here would test a model the running router never calls.
   it("ignores an unused config blob pin when litellm_params has no default, matching the backend's own tier-derivation fallback", async () => {
     const complexityRouterModelData = {
       ...defaultModelData,
       litellm_params: {
         ...defaultModelData.litellm_params,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/complexity_router",
+        model: "auto_router/complexity_router",
         complexity_router_config: {
           tiers: { SIMPLE: ["gpt-4o-mini"], MEDIUM: [], COMPLEX: [], REASONING: [] },
-          default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "unused-blob-pin",
+          default_model: "unused-blob-pin",
         },
-        // no complexity_router_default_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию
+        // no complexity_router_default_model
       },
     };
 
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [complexityRouterModelData],
       },
       isLoading: false,
       error: null,
     });
-    mockTestModelGroupПодключение.mockResolvedЗначение({ status: "success" });
+    mockTestModelGroupConnection.mockResolvedValue({ status: "success" });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     const testConnectionButton = await screen.findByTestId("test-connection-button");
     await userEvent.click(testConnectionButton);
 
     await waitFor(() => {
-      expect(mockTestModelGroupПодключение).toHaveBeenCalledWith("test-token", "gpt-4o-mini", "chat");
+      expect(mockTestModelGroupConnection).toHaveBeenCalledWith("test-token", "gpt-4o-mini", "chat");
     });
-    expect(mockTestModelGroupПодключение).not.toHaveBeenCalledWith("test-token", "unused-blob-pin", "chat");
-    expect(mockTestModelGroupПодключение).toHaveBeenCalledTimes(1);
+    expect(mockTestModelGroupConnection).not.toHaveBeenCalledWith("test-token", "unused-blob-pin", "chat");
+    expect(mockTestModelGroupConnection).toHaveBeenCalledTimes(1);
   });
 
-  it("should display Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию access groups field", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+  it("should display model access groups field", async () => {
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Группы доступа моделей")).toBeInTheDocument();
     });
   });
 
-  it("should display гардрейловs field", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+  it("should display guardrails field", async () => {
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText("Гардрейлы")).toBeInTheDocument();
     });
   });
 
   it("should display pricing information", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText(/Вход:/)).toBeInTheDocument();
       expect(screen.getByText(/Выход:/)).toBeInTheDocument();
@@ -1298,7 +1298,7 @@ describe("РежимlInfoView", () => {
   });
 
   it("should display created at and created by information", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
     await waitFor(() => {
       expect(screen.getByText(/Создано/)).toBeInTheDocument();
       expect(screen.getByText(/Создал/)).toBeInTheDocument();
@@ -1306,14 +1306,14 @@ describe("РежимlInfoView", () => {
   });
 
   it("renders the provider card logo from the bundled provider map", async () => {
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     const logo = await screen.findByAltText("openai logo");
     expect(logo).toHaveAttribute("src", expect.stringContaining("openai_small"));
   });
 
   it("renders a letter avatar instead of an img for an unknown provider slug", async () => {
-    mockUseModelsInfo.mockReturnЗначение({
+    mockUseModelsInfo.mockReturnValue({
       data: {
         data: [
           {
@@ -1329,7 +1329,7 @@ describe("РежимlInfoView", () => {
       error: null,
     });
 
-    render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
     await waitFor(() => {
       expect(screen.getAllByText("zzz-internal").length).toBeGreaterThan(0);
@@ -1340,11 +1340,11 @@ describe("РежимlInfoView", () => {
 
   // EditAutoRouterModal only speaks complexity and semantic. Offering it for an adaptive or
   // quality router lets a save write auto_router_config onto a row that stores its settings
-  // elsewhere. These rows stay reachable from Состояние and direct ?Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию= links even
-  // though the Режимls table now excludes auto-routers, so the button itself has to be gated.
+  // elsewhere. These rows stay reachable from Health Status and direct ?model= links even
+  // though the Models table now excludes auto-routers, so the button itself has to be gated.
   describe("Edit Auto Router affordance", () => {
     const withRouter = (litellmParams: Record<string, unknown>) => {
-      mockUseModelsInfo.mockReturnЗначение({
+      mockUseModelsInfo.mockReturnValue({
         data: { data: [{ ...defaultModelData, litellm_params: { ...litellmParams } }] },
         isLoading: false,
         error: null,
@@ -1354,17 +1354,17 @@ describe("РежимlInfoView", () => {
     it.each([
       ["auto_router/adaptive_router", "adaptive"],
       ["auto_router/quality_router", "quality"],
-    ])("is absent for a %s router", async (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию) => {
-      withRouter({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию });
-      render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    ])("is absent for a %s router", async (model) => {
+      withRouter({ model });
+      render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
       expect(await screen.findByText("GPT-4")).toBeInTheDocument();
       expect(screen.queryByRole("button", { name: /изменить автомаршрутизатор/i })).not.toBeInTheDocument();
     });
 
     it("is present for a complexity router, which the modal does understand", async () => {
-      withRouter({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/complexity_router", complexity_router_config: { tiers: {} } });
-      render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+      withRouter({ model: "auto_router/complexity_router", complexity_router_config: { tiers: {} } });
+      render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
       expect(await screen.findByRole("button", { name: /изменить автомаршрутизатор/i })).toBeInTheDocument();
     });
@@ -1374,7 +1374,7 @@ describe("РежимlInfoView", () => {
   // every strategy, and the destructive action should name what it actually removes.
   describe("auto-router header actions", () => {
     const withParams = (litellmParams: Record<string, unknown>) => {
-      mockUseModelsInfo.mockReturnЗначение({
+      mockUseModelsInfo.mockReturnValue({
         data: { data: [{ ...defaultModelData, litellm_params: { ...litellmParams } }] },
         isLoading: false,
         error: null,
@@ -1386,46 +1386,46 @@ describe("РежимlInfoView", () => {
       ["auto_router/adaptive_router"],
       ["auto_router/quality_router"],
       ["auto_router/my-semantic"],
-    ])("hides the credential actions and renames delete for %s", async (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию) => {
-      withParams({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию });
-      render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    ])("hides the credential actions and renames delete for %s", async (model) => {
+      withParams({ model });
+      render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
-      expect(await screen.findByTestId("delete-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-button")).toHaveTextContent("Delete Auto-Router");
+      expect(await screen.findByTestId("delete-model-button")).toHaveTextContent("Delete Auto-Router");
       expect(screen.queryByTestId("update-api-key-button")).not.toBeInTheDocument();
       expect(screen.queryByTestId("reuse-credentials-button")).not.toBeInTheDocument();
     });
 
-    it("keeps both credential actions and the Удалить модель label for an ordinary Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", async () => {
-      withParams({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4", api_base: "https://api.openai.com/v1" });
-      render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    it("keeps both credential actions and the Удалить модель label for an ordinary model", async () => {
+      withParams({ model: "gpt-4", api_base: "https://api.openai.com/v1" });
+      render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
-      expect(await screen.findByTestId("delete-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-button")).toHaveTextContent("Удалить модель");
+      expect(await screen.findByTestId("delete-model-button")).toHaveTextContent("Удалить модель");
       expect(screen.getByTestId("update-api-key-button")).toBeInTheDocument();
       expect(screen.getByTestId("reuse-credentials-button")).toBeInTheDocument();
     });
 
     it.each([["auto_router/adaptive_router"], ["auto_router/quality_router"]])(
       "offers no Test Подключение for %s, whose targets it cannot build",
-      async (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию) => {
-        withParams({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию });
-        render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+      async (model) => {
+        withParams({ model });
+        render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
-        await screen.findByTestId("delete-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-button");
+        await screen.findByTestId("delete-model-button");
         expect(screen.queryByTestId("test-connection-button")).not.toBeInTheDocument();
       },
     );
 
     it("keeps Test Подключение for a complexity router", async () => {
-      withParams({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "auto_router/complexity_router", complexity_router_config: { tiers: {} } });
-      render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+      withParams({ model: "auto_router/complexity_router", complexity_router_config: { tiers: {} } });
+      render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
 
       expect(await screen.findByTestId("test-connection-button")).toBeInTheDocument();
     });
   });
 
   describe("payload parity pins", () => {
-    const enterEditРежим = async (user: ReturnType<typeof userEvent.setup>) => {
-      render(<РежимlInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
+    const enterEditMode = async (user: ReturnType<typeof userEvent.setup>) => {
+      render(<ModelInfoView {...DEFAULT_ADMIN_PROPS} />, { wrapper });
       expect(await screen.findByRole("button", { name: /редактировать настройки/i })).toBeInTheDocument();
       await user.click(screen.getByRole("button", { name: /редактировать настройки/i }));
       expect(await screen.findByRole("button", { name: /сохранить изменения/i })).toBeInTheDocument();
@@ -1435,53 +1435,53 @@ describe("РежимlInfoView", () => {
       await user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
       await waitFor(() => expect(mockModelPatchUpdateCall).toHaveBeenCalled());
       return mockModelPatchUpdateCall.mock.calls[0][1] as {
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: string;
+        model_name: string;
         litellm_params: Record<string, unknown>;
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: Record<string, unknown>;
+        model_info: Record<string, unknown>;
       };
     };
 
     it("sends the whole edit payload for an untouched save", async () => {
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
       const payload = await save(user);
 
       expect(payload).toEqual({
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "GPT-4",
+        model_name: "GPT-4",
         litellm_params: {
-          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4",
+          model: "gpt-4",
           api_base: "https://api.openai.com/v1",
           custom_llm_provider: "openai",
           litellm_credential_name: "selected-credential",
           tags: [],
-          гардрейловs: [],
+          guardrails: [],
         },
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: {
+        model_info: {
           id: "123",
           created_by: "123",
           created_at: "2024-01-01T00:00:00Z",
-          db_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: true,
+          db_model: true,
           input_cost_per_token: 0.00003,
-          выходput_cost_per_token: 0.00006,
+          output_cost_per_token: 0.00006,
           access_groups: [],
         },
       });
     });
 
-    it("omits health_check_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию for a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию that is not a wildcard, whose field never renders", async () => {
+    it("omits health_check_model for a model that is not a wildcard, whose field never renders", async () => {
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
       const payload = await save(user);
 
-      expect(payload.model_info).not.toHaveСвойство("health_check_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
+      expect(payload.model_info).not.toHaveProperty("health_check_model");
     });
 
     it("routes each edited field into its own payload key", async () => {
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
 
       await user.clear(screen.getByPlaceholderText("Введите название модели"));
-      await user.type(screen.getByPlaceholderText("Введите название модели"), "renamed-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
+      await user.type(screen.getByPlaceholderText("Введите название модели"), "renamed-model");
       await user.clear(screen.getByPlaceholderText("Введите название модели LiteLLM"));
       await user.type(screen.getByPlaceholderText("Введите название модели LiteLLM"), "gpt-4o");
       await user.clear(screen.getByPlaceholderText("Введите базовый URL API"));
@@ -1497,23 +1497,23 @@ describe("РежимlInfoView", () => {
 
       const payload = await save(user);
 
-      expect(payload.model_name).toBe("renamed-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию");
+      expect(payload.model_name).toBe("renamed-model");
       expect(payload.litellm_params).toMatchObject({
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o",
+        model: "gpt-4o",
         api_base: "https://example.test/v1",
         custom_llm_provider: "azure",
         organization: "org-9",
         tpm: "111",
         rpm: "222",
         max_retries: "4",
-        timeвыход: "33",
-        stream_timeвыход: "44",
+        timeout: "33",
+        stream_timeout: "44",
       });
     });
 
     it("routes each edited pricing field into its own payload key", async () => {
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
 
       await user.clear(screen.getByPlaceholderText("Введите стоимость выходных токенов"));
       await user.type(screen.getByPlaceholderText("Введите стоимость выходных токенов"), "12");
@@ -1524,7 +1524,7 @@ describe("РежимlInfoView", () => {
       const payload = await save(user);
 
       expect(payload.litellm_params).toMatchObject({
-        выходput_cost_per_token: 0.000012,
+        output_cost_per_token: 0.000012,
         cache_read_input_token_cost: 0.000005,
         cache_creation_input_token_cost: 0.000009,
       });
@@ -1533,12 +1533,12 @@ describe("РежимlInfoView", () => {
     const addTag = async (user: ReturnType<typeof userEvent.setup>, placeholder: string, tag: string) => {
       const input = screen.getByPlaceholderText(placeholder);
       await user.type(input, tag);
-      await user.keyboard("{Введите}");
+      await user.keyboard("{Enter}");
     };
 
     it("routes each typed collection field into its own payload key", async () => {
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
 
       await addTag(user, "Выберите существующие группы или введите новые", "beta-testers");
       await addTag(user, "Выберите существующие гардрейлы или введите новые", "content_filter");
@@ -1551,12 +1551,12 @@ describe("РежимlInfoView", () => {
       expect(payload.litellm_params.tags).toEqual(["production_tag"]);
     });
 
-    it("sends the edited Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию info JSON", async () => {
+    it("sends the edited model info JSON", async () => {
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
 
-      const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo = screen.getByPlaceholderText('{"gpt-4": 100, "claude-v1": 200}');
-      await user.clear(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo);
+      const modelInfo = screen.getByPlaceholderText('{"gpt-4": 100, "claude-v1": 200}');
+      await user.clear(modelInfo);
       await user.paste('{"id":"123","team_id":"team-7"}');
 
       const payload = await save(user);
@@ -1566,7 +1566,7 @@ describe("РежимlInfoView", () => {
 
     it("sends the edited LiteLLM extra params", async () => {
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
 
       const extraParams = screen
         .getAllByRole("textbox")
@@ -1583,14 +1583,14 @@ describe("РежимlInfoView", () => {
     });
 
     it("sends the credential picked in the selector", async () => {
-      mockCredentialListCall.mockResolvedЗначение({
+      mockCredentialListCall.mockResolvedValue({
         credentials: [
           { credential_name: "selected-credential", credential_values: {}, credential_info: {} },
           { credential_name: "other-credential", credential_values: {}, credential_info: {} },
         ],
       } as never);
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
 
       await user.click(await screen.findByText("selected-credential"));
       await user.click(await screen.findByText("other-credential"));
@@ -1602,7 +1602,7 @@ describe("РежимlInfoView", () => {
 
     it("sends the vector stores picked in the knowledge base selector", async () => {
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
 
       await user.click(screen.getByPlaceholderText("Выберите базы знаний (необязательно)"));
       await user.click(await screen.findByText("Бета (vs-beta)"));
@@ -1613,27 +1613,27 @@ describe("РежимlInfoView", () => {
       expect(payload.litellm_params.vector_store_ids).toEqual(["vs-beta"]);
     });
 
-    it("sends the health check Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию picked for a wildcard deployment", async () => {
+    it("sends the health check model picked for a wildcard deployment", async () => {
       const wildcard = {
         ...defaultModelData,
-        litellm_params: { ...defaultModelData.litellm_params, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "openai/gpt-4*" },
+        litellm_params: { ...defaultModelData.litellm_params, model: "openai/gpt-4*" },
       };
-      mockUseModelsInfo.mockReturnЗначение({ data: { data: [wildcard] }, isLoading: false, error: null });
-      mockModelInfoV1Call.mockResolvedЗначение({ data: [wildcard] });
-      mockUseModelHub.mockReturnЗначение({
-        data: { data: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "openai/gpt-4o", providers: ["openai"] }] },
+      mockUseModelsInfo.mockReturnValue({ data: { data: [wildcard] }, isLoading: false, error: null });
+      mockModelInfoV1Call.mockResolvedValue({ data: [wildcard] });
+      mockUseModelHub.mockReturnValue({
+        data: { data: [{ model_group: "openai/gpt-4o", providers: ["openai"] }] },
         isLoading: false,
         error: null,
       });
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
 
       await user.click(screen.getByText("Выберите существующую модель проверки доступности"));
       await user.click(await screen.findByText("openai/gpt-4o"));
 
       const payload = await save(user);
 
-      expect(payload.model_info.health_check_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию).toBe("openai/gpt-4o");
+      expect(payload.model_info.health_check_model).toBe("openai/gpt-4o");
     });
 
     it("keeps a pricing field in the payload after the operator types a value and restores the original", async () => {
@@ -1641,16 +1641,16 @@ describe("РежимlInfoView", () => {
       // still ships the key. RHF's dirtyFields resets on a value returning to its default, which
       // would silently drop input_cost_per_token here.
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
 
-      const inputСтоимость = screen.getByPlaceholderText("Введите стоимость входных токенов") as HTMLInElement;
-      const seeded = inputСтоимость.value;
+      const inputCost = screen.getByPlaceholderText("Введите стоимость входных токенов") as HTMLInputElement;
+      const seeded = inputCost.value;
       expect(seeded).toBe("30");
 
-      await user.clear(inputСтоимость);
-      await user.type(inputСтоимость, "7");
-      await user.clear(inputСтоимость);
-      await user.type(inputСтоимость, seeded);
+      await user.clear(inputCost);
+      await user.type(inputCost, "7");
+      await user.clear(inputCost);
+      await user.type(inputCost, seeded);
 
       const payload = await save(user);
 
@@ -1660,13 +1660,13 @@ describe("РежимlInfoView", () => {
 
     it("clears a pricing override with an explicit null once the field is emptied", async () => {
       const user = userEvent.setup();
-      await enterEditРежим(user);
+      await enterEditMode(user);
 
       await user.clear(screen.getByPlaceholderText("Введите стоимость входных токенов"));
       const payload = await save(user);
 
       expect(payload.litellm_params.input_cost_per_token).toBeNull();
-      expect(payload.litellm_params).not.toHaveСвойство("cache_read_input_token_cost");
+      expect(payload.litellm_params).not.toHaveProperty("cache_read_input_token_cost");
     });
 
     describe("cache control injection points", () => {
@@ -1675,21 +1675,21 @@ describe("РежимlInfoView", () => {
           ...defaultModelData,
           litellm_params: { ...defaultModelData.litellm_params, cache_control_injection_points: points },
         };
-        mockUseModelsInfo.mockReturnЗначение({ data: { data: [data] }, isLoading: false, error: null });
-        mockModelInfoV1Call.mockResolvedЗначение({ data: [data] });
+        mockUseModelsInfo.mockReturnValue({ data: { data: [data] }, isLoading: false, error: null });
+        mockModelInfoV1Call.mockResolvedValue({ data: [data] });
       };
 
       it("omits the key when the deployment has none and the operator leaves the toggle alone", async () => {
         const user = userEvent.setup();
-        await enterEditРежим(user);
+        await enterEditMode(user);
         const payload = await save(user);
 
-        expect(payload.litellm_params).not.toHaveСвойство("cache_control_injection_points");
+        expect(payload.litellm_params).not.toHaveProperty("cache_control_injection_points");
       });
 
       it("hides the injection point rows until the toggle is on", async () => {
         const user = userEvent.setup();
-        await enterEditРежим(user);
+        await enterEditMode(user);
 
         expect(screen.queryByRole("button", { name: /add injection point/i })).not.toBeInTheDocument();
 
@@ -1701,7 +1701,7 @@ describe("РежимlInfoView", () => {
       it("round-trips the stored injection points on an untouched save", async () => {
         withCachePoints([{ location: "message", role: "user" }]);
         const user = userEvent.setup();
-        await enterEditРежим(user);
+        await enterEditMode(user);
         const payload = await save(user);
 
         expect(payload.litellm_params.cache_control_injection_points).toEqual([{ location: "message", role: "user" }]);
@@ -1710,18 +1710,18 @@ describe("РежимlInfoView", () => {
       it("drops the stored injection points when the operator turns the toggle off", async () => {
         withCachePoints([{ location: "message", role: "user" }]);
         const user = userEvent.setup();
-        await enterEditРежим(user);
+        await enterEditMode(user);
 
         await user.click(screen.getByRole("switch"));
         const payload = await save(user);
 
-        expect(payload.litellm_params).not.toHaveСвойство("cache_control_injection_points");
+        expect(payload.litellm_params).not.toHaveProperty("cache_control_injection_points");
       });
 
       it("adds a typed index as a string, matching what the deployment already stores", async () => {
         withCachePoints([{ location: "message" }]);
         const user = userEvent.setup();
-        await enterEditРежим(user);
+        await enterEditMode(user);
 
         await user.type(screen.getByPlaceholderText("Необязательно"), "2");
         const payload = await save(user);
@@ -1730,14 +1730,14 @@ describe("РежимlInfoView", () => {
       });
     });
 
-    const setВходСтоимость = (value: string) => {
+    const setInputCost = (value: string) => {
       fireEvent.change(screen.getByPlaceholderText("Введите стоимость входных токенов"), { target: { value } });
     };
 
-    it("carries an edited input cost and the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию identifier onto the wire", async () => {
+    it("carries an edited input cost and the model identifier onto the wire", async () => {
       const user = userEvent.setup();
-      await enterEditРежим(user);
-      setВходСтоимость("5");
+      await enterEditMode(user);
+      setInputCost("5");
       const payload = await save(user);
 
       expect(mockModelPatchUpdateCall.mock.calls[0][2]).toBe("123");
@@ -1748,8 +1748,8 @@ describe("РежимlInfoView", () => {
       "sends only the edited input cost (expected to fail until the forms revamp, tri-state PATCH tracker)",
       async () => {
         const user = userEvent.setup();
-        await enterEditРежим(user);
-        setВходСтоимость("5");
+        await enterEditMode(user);
+        setInputCost("5");
         const payload = await save(user);
 
         expect(payload).toStrictEqual({ litellm_params: { input_cost_per_token: 5 / 1_000_000 } });
@@ -1759,7 +1759,7 @@ describe("РежимlInfoView", () => {
     const savePayloadAfterCostEditOnResolvedModel = async () => {
       const resolved = {
         ...defaultModelData,
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: {
+        model_info: {
           ...defaultModelData.model_info,
           max_input_tokens: 128_000,
           mode: "chat",
@@ -1767,11 +1767,11 @@ describe("РежимlInfoView", () => {
           supports_function_calling: true,
         },
       };
-      mockUseModelsInfo.mockReturnЗначение({ data: { data: [resolved] }, isLoading: false, error: null });
-      mockModelInfoV1Call.mockResolvedЗначение({ data: [resolved] });
+      mockUseModelsInfo.mockReturnValue({ data: { data: [resolved] }, isLoading: false, error: null });
+      mockModelInfoV1Call.mockResolvedValue({ data: [resolved] });
       const user = userEvent.setup();
-      await enterEditРежим(user);
-      setВходСтоимость("5");
+      await enterEditMode(user);
+      setInputCost("5");
       return save(user);
     };
 
@@ -1780,7 +1780,7 @@ describe("РежимlInfoView", () => {
       async () => {
         const payload = await savePayloadAfterCostEditOnResolvedModel();
 
-        expect(payload.model_info).not.toHaveСвойство("max_input_tokens");
+        expect(payload.model_info).not.toHaveProperty("max_input_tokens");
       },
     );
 
@@ -1789,7 +1789,7 @@ describe("РежимlInfoView", () => {
       async () => {
         const payload = await savePayloadAfterCostEditOnResolvedModel();
 
-        expect(payload.model_info).not.toHaveСвойство("mode");
+        expect(payload.model_info).not.toHaveProperty("mode");
       },
     );
 

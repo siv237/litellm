@@ -4,35 +4,35 @@ import { describe, expect, it, vi } from "vitest";
 import RouterConfigBuilder from "./RouterConfigBuilder";
 
 const MOCK_MODEL_INFO = [
-  { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-4", mode: "chat" },
-  { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "gpt-3.5-turbo", mode: "chat" },
-  { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "claude-3-opus", mode: "chat" },
+  { model_group: "gpt-4", mode: "chat" },
+  { model_group: "gpt-3.5-turbo", mode: "chat" },
+  { model_group: "claude-3-opus", mode: "chat" },
 ];
 
-describe("RouterConfigBuilder", () => {
+describe("RouterКонфигурацияBuilder", () => {
   it("should render", () => {
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} />);
 
     expect(screen.getByText("Конфигурация маршрутов")).toBeInTheDocument();
   });
 
   it("should display Добавить маршрут button", () => {
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} />);
 
-    expect(screen.getByRole("button", { name: /add route/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Добавить маршрут/i })).toBeInTheDocument();
   });
 
-  it("should show empty state when no routes are configured", () => {
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} />);
+  it("should show empty state when Нет routes are configured", () => {
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} />);
 
-    expect(screen.getByText(/no routes configured/i)).toBeInTheDocument();
+    expect(screen.getByText(/Нет routes configured/i)).toBeInTheDocument();
   });
 
-  it("should add a route when Добавить маршрут is clicked", async () => {
+  it("should Добавить a route when Добавить маршрут is clicked", async () => {
     const user = userEvent.setup();
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} />);
 
-    await user.click(screen.getByRole("button", { name: /add route/i }));
+    await user.click(screen.getByRole("button", { name: /Добавить маршрут/i }));
 
     expect(screen.getByText("Route 1: Unnamed")).toBeInTheDocument();
   });
@@ -40,9 +40,9 @@ describe("RouterConfigBuilder", () => {
   it("should call onChange when a route is added", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} onChange={onChange} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} onChange={onChange} />);
 
-    await user.click(screen.getByRole("button", { name: /add route/i }));
+    await user.click(screen.getByRole("button", { name: /Добавить маршрут/i }));
 
     expect(onChange).toHaveBeenCalledWith({
       routes: [
@@ -56,7 +56,7 @@ describe("RouterConfigBuilder", () => {
     });
   });
 
-  it("should initialize routes from value prop", async () => {
+  it("should initialize routes from Значение prop", async () => {
     const value = {
       routes: [
         {
@@ -67,25 +67,25 @@ describe("RouterConfigBuilder", () => {
         },
       ],
     };
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} value={value} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} value={value} />);
 
     await waitFor(() => {
       expect(screen.getByText("Route 1: gpt-4")).toBeInTheDocument();
     });
   });
 
-  it("should support both name and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию fields in value prop", async () => {
+  it("should support both Название and Модель fields in Значение prop", async () => {
     const value = {
-      routes: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-3.5-turbo", utterances: [], description: "", score_threshold: 0.5 }],
+      routes: [{ model: "gpt-3.5-turbo", utterances: [], description: "", score_threshold: 0.5 }],
     };
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} value={value} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} value={value} />);
 
     await waitFor(() => {
       expect(screen.getByText("Route 1: gpt-3.5-turbo")).toBeInTheDocument();
     });
   });
 
-  it("should remove a route when delete button is clicked", async () => {
+  it("should Убрать a route when Удалить button is clicked", async () => {
     const user = userEvent.setup();
     const value = {
       routes: [
@@ -97,18 +97,18 @@ describe("RouterConfigBuilder", () => {
         },
       ],
     };
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} value={value} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} value={value} />);
 
     await waitFor(() => {
       expect(screen.getByText("Route 1: gpt-4")).toBeInTheDocument();
     });
 
-    const deleteButton = screen.getByRole("button", { name: "delete" });
+    const deleteButton = screen.getByRole("button", { name: "Удалить" });
     await user.click(deleteButton);
 
     await waitFor(() => {
       expect(screen.queryByText("Route 1: gpt-4")).not.toBeInTheDocument();
-      expect(screen.getByText(/no routes configured/i)).toBeInTheDocument();
+      expect(screen.getByText(/Нет routes configured/i)).toBeInTheDocument();
     });
   });
 
@@ -125,13 +125,13 @@ describe("RouterConfigBuilder", () => {
         },
       ],
     };
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} value={value} onChange={onChange} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} value={value} onChange={onChange} />);
 
     await waitFor(() => {
       expect(screen.getByText("Route 1: gpt-4")).toBeInTheDocument();
     });
 
-    const deleteButton = screen.getByRole("button", { name: "delete" });
+    const deleteButton = screen.getByRole("button", { name: "Удалить" });
     await user.click(deleteButton);
 
     await waitFor(() => {
@@ -139,7 +139,7 @@ describe("RouterConfigBuilder", () => {
     });
   });
 
-  it("should update route when description is changed", async () => {
+  it("should update route when Описание is changed", async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
     const value = {
@@ -152,14 +152,14 @@ describe("RouterConfigBuilder", () => {
         },
       ],
     };
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} value={value} onChange={onChange} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} value={value} onChange={onChange} />);
 
     await waitFor(() => {
       expect(screen.getByText("Route 1: gpt-4")).toBeInTheDocument();
     });
 
-    const descriptionВход = screen.getByPlaceholderText("Describe when this route should be used...");
-    fireEvent.change(descriptionВход, { target: { value: "For code generation" } });
+    const descriptionInput = screen.getByPlaceholderText("Describe when this route should be used...");
+    fireEvent.change(descriptionInput, { target: { value: "For code generation" } });
 
     await waitFor(() => {
       const lastCall = onChange.mock.calls[onChange.mock.calls.length - 1];
@@ -167,7 +167,7 @@ describe("RouterConfigBuilder", () => {
     });
   });
 
-  it("should update route when score threshold is changed", async () => {
+  it("should update route when Порог оценки is changed", async () => {
     const onChange = vi.fn();
     const value = {
       routes: [
@@ -179,14 +179,14 @@ describe("RouterConfigBuilder", () => {
         },
       ],
     };
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} value={value} onChange={onChange} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} value={value} onChange={onChange} />);
 
     await waitFor(() => {
       expect(screen.getByText("Route 1: gpt-4")).toBeInTheDocument();
     });
 
-    const scoreВход = screen.getByRole("spinbutton");
-    fireEvent.change(scoreВход, { target: { value: "0.9" } });
+    const scoreInput = screen.getByRole("spinbutton");
+    fireEvent.change(scoreInput, { target: { value: "0.9" } });
 
     await waitFor(() => {
       const lastCall = onChange.mock.calls[onChange.mock.calls.length - 1];
@@ -200,10 +200,10 @@ describe("RouterConfigBuilder", () => {
     const value = {
       routes: [{ name: "gpt-4", utterances: [], description: "", score_threshold: 0.5 }],
     };
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} value={value} onChange={onChange} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} value={value} onChange={onChange} />);
 
-    const utteranceВход = await screen.findByRole("textbox", { name: "Примеры фраз" });
-    await user.type(utteranceВход, "Compare Paris, France{Введите}");
+    const utteranceInput = await screen.findByRole("textbox", { name: "Примеры фраз" });
+    await user.type(utteranceInput, "Compare Paris, France{Enter}");
 
     await waitFor(() => {
       const lastCall = onChange.mock.calls[onChange.mock.calls.length - 1];
@@ -216,10 +216,10 @@ describe("RouterConfigBuilder", () => {
     const value = {
       routes: [{ name: "gpt-4", utterances: ["hello"], description: "", score_threshold: 0.5 }],
     };
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} value={value} onChange={onChange} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} value={value} onChange={onChange} />);
 
-    const utteranceВход = await screen.findByRole("textbox", { name: "Примеры фраз" });
-    fireEvent.paste(utteranceВход, {
+    const utteranceInput = await screen.findByRole("textbox", { name: "Примеры фраз" });
+    fireEvent.paste(utteranceInput, {
       clipboardData: { getData: () => "hello\nworld\nworld" },
     });
 
@@ -229,22 +229,22 @@ describe("RouterConfigBuilder", () => {
     });
   });
 
-  it("should add multiple routes", async () => {
+  it("should Добавить multiple routes", async () => {
     const user = userEvent.setup();
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} />);
 
-    await user.click(screen.getByRole("button", { name: /add route/i }));
-    await user.click(screen.getByRole("button", { name: /add route/i }));
+    await user.click(screen.getByRole("button", { name: /Добавить маршрут/i }));
+    await user.click(screen.getByRole("button", { name: /Добавить маршрут/i }));
 
     expect(screen.getByText("Route 1: Unnamed")).toBeInTheDocument();
     expect(screen.getByText("Route 2: Unnamed")).toBeInTheDocument();
   });
 
-  it("should toggle JSON preview visibility", async () => {
+  it("should toggle JSON-предпросмотр visibility", async () => {
     const user = userEvent.setup();
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} />);
 
-    expect(screen.getByText("JSON -предпросмотр")).toBeInTheDocument();
+    expect(screen.getByText("JSON-предпросмотр")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Show" })).toBeInTheDocument();
     expect(screen.queryByText(/"routes":/)).not.toBeInTheDocument();
 
@@ -259,11 +259,11 @@ describe("RouterConfigBuilder", () => {
     expect(screen.queryByText(/"routes":/)).not.toBeInTheDocument();
   });
 
-  it("should display JSON preview with route data when routes exist", async () => {
+  it("should display JSON-предпросмотр with route data when routes exist", async () => {
     const user = userEvent.setup();
     render(
       <RouterConfigBuilder
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO}
+        modelInfo={MOCK_MODEL_INFO}
         value={{
           routes: [{ name: "gpt-4", utterances: ["hello"], description: "test", score_threshold: 0.8 }],
         }}
@@ -276,16 +276,16 @@ describe("RouterConfigBuilder", () => {
 
     await user.click(screen.getByRole("button", { name: "Show" }));
 
-    const preview = screen.getByText(/"name": "gpt-4"/);
+    const preview = screen.getByText(/"Название": "gpt-4"/);
     expect(preview).toHaveTextContent('"utterances": [ "hello" ]');
     expect(preview).toHaveTextContent('"score_threshold": 0.8');
   });
 
-  it("should display Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию selector with options from Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo", async () => {
+  it("should display Модель selector with options from modelInfo", async () => {
     const value = {
       routes: [{ name: "", utterances: [], description: "", score_threshold: 0.5 }],
     };
-    render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} value={value} />);
+    render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} value={value} />);
 
     await waitFor(() => {
       expect(screen.getByText("Route 1: Unnamed")).toBeInTheDocument();
@@ -296,7 +296,7 @@ describe("RouterConfigBuilder", () => {
     expect(comboboxes.length).toBeGreaterThan(0);
   });
 
-  it("should clear routes when value prop changes to empty", async () => {
+  it("should clear routes when Значение prop changes to empty", async () => {
     const value = {
       routes: [
         {
@@ -307,16 +307,16 @@ describe("RouterConfigBuilder", () => {
         },
       ],
     };
-    const { rerender } = render(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} value={value} />);
+    const { rerender } = render(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} value={value} />);
 
     await waitFor(() => {
       expect(screen.getByText("Route 1: gpt-4")).toBeInTheDocument();
     });
 
-    rerender(<RouterConfigBuilder Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюInfo={MOCK_MODEL_INFO} value={{ routes: [] }} />);
+    rerender(<RouterConfigBuilder modelInfo={MOCK_MODEL_INFO} value={{ routes: [] }} />);
 
     await waitFor(() => {
-      expect(screen.getByText(/no routes configured/i)).toBeInTheDocument();
+      expect(screen.getByText(/Нет routes configured/i)).toBeInTheDocument();
     });
   });
 });

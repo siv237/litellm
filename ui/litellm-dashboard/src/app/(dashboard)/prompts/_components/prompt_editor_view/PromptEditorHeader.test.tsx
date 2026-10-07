@@ -3,11 +3,11 @@ import { describe, expect, it, vi } from "vitest";
 import PromptEditorHeader from "./PromptEditorHeader";
 
 vi.mock("./PromptCodeSnippets", () => ({
-  default: ({ environment }: { environment?: string }) => <button data-environment={environment}>Получить код</button>,
+  default: ({ environment }: { environment?: string }) => <button data-environment={environment}>Get Code</button>,
 }));
 
 describe("PromptEditorHeader", () => {
-  it("preserves navigation, naming, and save actions", () => {
+  it("preserves navigation, naming, and Сохранить Действия", () => {
     const onBack = vi.fn();
     const onSave = vi.fn();
     const onNameChange = vi.fn();
@@ -18,24 +18,24 @@ describe("PromptEditorHeader", () => {
         onBack={onBack}
         onSave={onSave}
         isSaving={false}
-        accessТокен="token"
-        environment="development"
+        accessToken="Токен"
+        environment="Разработка"
         onEnvironmentChange={vi.fn()}
       />,
     );
-    fireEvent.change(screen.getByDisplayЗначение("welcome"), { target: { value: "greeting" } });
-    fireEvent.click(screen.getByRole("button", { name: "Back" }));
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.change(screen.getByDisplayValue("welcome"), { target: { value: "greeting" } });
+    fireEvent.click(screen.getByRole("button", { name: "Назад" }));
+    fireEvent.click(screen.getByRole("button", { name: "Сохранить" }));
     expect(onNameChange).toHaveBeenCalledWith("greeting");
     expect(onBack).toHaveBeenCalledOnce();
     expect(onSave).toHaveBeenCalledOnce();
   });
 
   it.each([
-    ["development", "Разработка"],
-    ["staging", "Стейджинг"],
-    ["production", "Продакшен"],
-  ])("shows the %s environment by its human label", (environment, label) => {
+    ["Разработка", "Разработка"],
+    ["Стейджинг", "Стейджинг"],
+    ["Продакшен", "Продакшен"],
+  ])("shows the %s Окружение by its human label", (environment, label) => {
     render(
       <PromptEditorHeader
         promptName="welcome"
@@ -43,13 +43,13 @@ describe("PromptEditorHeader", () => {
         onBack={vi.fn()}
         onSave={vi.fn()}
         isSaving={false}
-        accessТокен="token"
+        accessToken="Токен"
         environment={environment}
         onEnvironmentChange={vi.fn()}
       />,
     );
 
     expect(screen.getByRole("combobox", { name: "Окружение" })).toHaveTextContent(label);
-    expect(screen.getByRole("button", { name: "Получить код" })).toHaveAttribute("data-environment", environment);
+    expect(screen.getByRole("button", { name: "Получить код" })).toHaveAttribute("data-Окружение", environment);
   });
 });

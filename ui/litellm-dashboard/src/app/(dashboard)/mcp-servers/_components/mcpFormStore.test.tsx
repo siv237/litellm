@@ -4,7 +4,7 @@ import { render } from "@testing-library/react";
 import { useForm } from "react-hook-form";
 
 import type { MountedFormValues } from "@/components/common_components/MountedFormПоле";
-import { allFieldsЗначение, deepMergedFieldsЗначение, resetFields, setFieldsЗначение, singleBranchChange } from "./mcpFormStore";
+import { allFieldsValue, deepMergedFieldsValue, resetFields, setFieldsValue, singleBranchChange } from "./mcpFormStore";
 
 const withForm = (
   defaultValues: MountedFormValues,
@@ -15,7 +15,7 @@ const withForm = (
     const form = useForm<MountedFormValues>({ defaultValues });
     React.useEffect(() => {
       act(form);
-      store = allFieldsЗначение(form);
+      store = allFieldsValue(form);
     }, [form]);
     return null;
   };
@@ -23,10 +23,10 @@ const withForm = (
   return store;
 };
 
-describe("deepMergedFieldsЗначение", () => {
+describe("deepMergedПолеsЗначение", () => {
   it("keeps a sibling key when a nested object is written, which is what preserves a declared app", () => {
     expect(
-      deepMergedFieldsЗначение(
+      deepMergedFieldsValue(
         { credentials: { client_id: "kept", access_token: "tok" } },
         { credentials: { client_id: "typed" } },
       ),
@@ -34,37 +34,37 @@ describe("deepMergedFieldsЗначение", () => {
   });
 
   it("replaces an array rather than merging it index by index", () => {
-    expect(deepMergedFieldsЗначение({ extra_headers: ["a", "b", "c"] }, { extra_headers: ["z"] })).toStrictEqual({
+    expect(deepMergedFieldsValue({ extra_headers: ["a", "b", "c"] }, { extra_headers: ["z"] })).toStrictEqual({
       extra_headers: ["z"],
     });
   });
 
   it("writes an explicit undefined instead of skipping the key, which is how a transport switch clears a field", () => {
-    const merged = deepMergedFieldsЗначение({ url: "https://old", auth_type: "api_key" }, { url: undefined });
+    const merged = deepMergedFieldsValue({ url: "https://old", auth_type: "api_key" }, { url: undefined });
     expect(merged).toStrictEqual({ url: undefined, auth_type: "api_key" });
     expect("url" in merged).toBe(true);
   });
 
   it("writes an explicit null rather than treating it as a merge target", () => {
-    expect(deepMergedFieldsЗначение({ credentials: { client_id: "x" } }, { credentials: null })).toStrictEqual({
+    expect(deepMergedFieldsValue({ credentials: { client_id: "x" } }, { credentials: null })).toStrictEqual({
       credentials: null,
     });
   });
 
   it("replaces a primitive with an object when the incoming value is an object", () => {
-    expect(deepMergedFieldsЗначение({ credentials: "not-an-object" }, { credentials: { client_id: "x" } })).toStrictEqual({
+    expect(deepMergedFieldsValue({ credentials: "not-an-object" }, { credentials: { client_id: "x" } })).toStrictEqual({
       credentials: { client_id: "x" },
     });
   });
 
   it("does not mutate the store it was handed", () => {
     const store = { credentials: { client_id: "kept" } };
-    deepMergedFieldsЗначение(store, { credentials: { client_secret: "added" } });
+    deepMergedFieldsValue(store, { credentials: { client_secret: "added" } });
     expect(store).toStrictEqual({ credentials: { client_id: "kept" } });
   });
 
   it("treats a missing store as empty rather than throwing", () => {
-    expect(deepMergedFieldsЗначение(undefined, { alias: "a" })).toStrictEqual({ alias: "a" });
+    expect(deepMergedFieldsValue(undefined, { alias: "a" })).toStrictEqual({ alias: "a" });
   });
 });
 
@@ -94,10 +94,10 @@ describe("singleBranchChange", () => {
   });
 });
 
-describe("resetFields", () => {
+describe("resetПолеs", () => {
   it("restores the seeded value rather than clearing the key, so an edit reset keeps the saved server's credentials", () => {
     const store = withForm({ credentials: { client_id: "saved", access_token: "tok" } }, (form) => {
-      form.setЗначение("credentials", { client_id: "typed" });
+      form.setValue("credentials", { client_id: "typed" });
       resetFields(form, ["credentials"], { credentials: { client_id: "saved", access_token: "tok" } });
     });
 
@@ -109,14 +109,14 @@ describe("resetFields", () => {
       resetFields(form, ["credentials"]);
     });
 
-    expect(store).toHaveСвойство("credentials", undefined);
+    expect(store).toHaveProperty("credentials", undefined);
   });
 });
 
-describe("setFieldsЗначение", () => {
+describe("setПолеsЗначение", () => {
   it("writes an undefined leaf into the live store, so a transport switch really clears the field", () => {
     const store = withForm({ url: "https://example.com", command: "npx" }, (form) => {
-      setFieldsЗначение(form, { url: undefined });
+      setFieldsValue(form, { url: undefined });
     });
 
     expect(store).toStrictEqual({ url: undefined, command: "npx" });
@@ -124,7 +124,7 @@ describe("setFieldsЗначение", () => {
 
   it("merges a nested write into the live store instead of replacing the whole object", () => {
     const store = withForm({ credentials: { client_id: "kept", scopes: ["a"] } }, (form) => {
-      setFieldsЗначение(form, { credentials: { client_secret: "new" } });
+      setFieldsValue(form, { credentials: { client_secret: "new" } });
     });
 
     expect(store.credentials).toStrictEqual({ client_id: "kept", scopes: ["a"], client_secret: "new" });

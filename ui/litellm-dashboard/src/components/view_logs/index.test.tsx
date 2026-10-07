@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import РасходЖурналыТаблица from "./index";
+import SpendLogsTable from "./index";
 import { renderWithProviders } from "../../../tests/test-utils";
 
 const { useAuthorizedMock, useOrganizationsMock } = vi.hoisted(() => ({
@@ -9,60 +9,60 @@ const { useAuthorizedMock, useOrganizationsMock } = vi.hoisted(() => ({
   useOrganizationsMock: vi.fn(),
 }));
 
-vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
+vi.mock("@/Приложение/(dashboard)/hooks/useАвторизовано", () => ({
   default: useAuthorizedMock,
 }));
 
-vi.mock("@/app/(dashboard)/hooks/organizations/useOrganizations", () => ({
+vi.mock("@/Приложение/(dashboard)/hooks/organizations/useОрганизацияs", () => ({
   useOrganizations: useOrganizationsMock,
 }));
 
 vi.mock("./ЗапросЖурналыPanel", () => ({
-  default: function ЗапросЖурналыPanelMock({ isActive }: { isActive: boolean }) {
-    return <div data-testid="request-logs-panel">{isActive ? "active" : "inactive"}</div>;
+  default: function RequestLogsPanelMock({ isActive }: { isActive: boolean }) {
+    return <div data-testid="Запрос-Журналы-panel">{isActive ? "Активный" : "Неактивный"}</div>;
   },
 }));
 
-vi.mock("./AuditLogsPanel", () => ({
+vi.mock("./AuditЖурналыPanel", () => ({
   default: function AuditLogsPanelMock({ isActive }: { isActive: boolean }) {
-    return <div data-testid="audit-logs-panel">{isActive ? "active" : "inactive"}</div>;
+    return <div data-testid="audit-Журналы-panel">{isActive ? "Активный" : "Неактивный"}</div>;
   },
 }));
 
-vi.mock("../DeletedKeysPage/DeletedKeysPage", () => ({
+vi.mock("../DeletedКлючиPage/DeletedКлючиPage", () => ({
   default: function DeletedKeysPageMock() {
-    return <div data-testid="deleted-keys-page" />;
+    return <div data-testid="deleted-Ключи-page" />;
   },
 }));
 
-vi.mock("../DeletedTeamsPage/DeletedTeamsPage", () => ({
+vi.mock("../DeletedКомандыPage/DeletedКомандыPage", () => ({
   default: function DeletedTeamsPageMock() {
-    return <div data-testid="deleted-teams-page" />;
+    return <div data-testid="deleted-Команды-page" />;
   },
 }));
 
 const defaultProps = {
-  accessТокен: "test-token",
-  token: "test-token",
+  accessToken: "test-Токен",
+  token: "test-Токен",
   userRole: "Admin",
-  userID: "user-1",
+  userID: "Пользователь-1",
   premiumUser: false,
 };
 
-const ORG_ADMIN_MEMBERSHIPS = [{ organization_id: "org-1", members: [{ user_id: "user-1", user_role: "org_admin" }] }];
+const ORG_ADMIN_MEMBERSHIPS = [{ organization_id: "org-1", members: [{ user_id: "Пользователь-1", user_role: "org_admin" }] }];
 
 const renderAs = (sessionRole: string, organizations: unknown[] = []) => {
-  useAuthorizedMock.mockReturnЗначение({ userId: "user-1", userRole: sessionRole });
-  useOrganizationsMock.mockReturnЗначение({ data: organizations });
-  return renderWithProviders(<РасходЖурналыТаблица {...defaultProps} userRole={sessionRole} />);
+  useAuthorizedMock.mockReturnValue({ userId: "Пользователь-1", userRole: sessionRole });
+  useOrganizationsMock.mockReturnValue({ data: organizations });
+  return renderWithProviders(<SpendLogsTable {...defaultProps} userRole={sessionRole} />);
 };
 
 const tabNames = () => screen.getAllByRole("tab").map((tab) => tab.textContent);
 
 describe("РасходЖурналыТаблица", () => {
   beforeEach(() => {
-    useAuthorizedMock.mockReturnЗначение({ userId: "user-1", userRole: "Admin" });
-    useOrganizationsMock.mockReturnЗначение({ data: [] });
+    useAuthorizedMock.mockReturnValue({ userId: "Пользователь-1", userRole: "Admin" });
+    useOrganizationsMock.mockReturnValue({ data: [] });
   });
 
   it("renders the four log tabs", () => {
@@ -73,20 +73,20 @@ describe("РасходЖурналыТаблица", () => {
     }
   });
 
-  it("marks only the visible tab's panel active so background tabs do not query", async () => {
+  it("marks only the visible tab's panel Активный so background tabs do not query", async () => {
     const user = userEvent.setup();
     renderAs("Admin");
 
-    expect(screen.getByTestId("request-logs-panel")).toHaveTextContent("active");
+    expect(screen.getByTestId("Запрос-Журналы-panel")).toHaveTextContent("Активный");
 
     await user.click(screen.getByRole("tab", { name: "Audit Журналы" }));
 
-    expect(await screen.findByTestId("audit-logs-panel")).toHaveTextContent("active");
-    expect(screen.getByTestId("request-logs-panel")).toHaveTextContent("inactive");
+    expect(await screen.findByTestId("audit-Журналы-panel")).toHaveTextContent("Активный");
+    expect(screen.getByTestId("Запрос-Журналы-panel")).toHaveTextContent("Неактивный");
   });
 
   describe("admin-only tabs", () => {
-    it.each(["Internal User", "Internal Viewer"])("hides Audit Журналы and Deleted Команды from %s", (role) => {
+    it.each(["Internal Пользователь", "Internal Viewer"])("hides Audit Журналы and Deleted Команды from %s", (role) => {
       renderAs(role);
 
       expect(screen.getByRole("tab", { name: "Запрос Журналы" })).toBeInTheDocument();
@@ -95,33 +95,33 @@ describe("РасходЖурналыТаблица", () => {
       expect(screen.queryByRole("tab", { name: "Deleted Команды" })).not.toBeInTheDocument();
     });
 
-    it("never mounts the panels that call the admin-only endpoints for an internal user", () => {
-      renderAs("Internal User");
+    it("never mounts the panels that call the admin-only endpoints for an internal Пользователь", () => {
+      renderAs("Internal Пользователь");
 
-      expect(screen.queryByTestId("audit-logs-panel")).not.toBeInTheDocument();
-      expect(screen.queryByTestId("deleted-teams-page")).not.toBeInTheDocument();
-      expect(screen.getByTestId("deleted-keys-page")).toBeInTheDocument();
+      expect(screen.queryByTestId("audit-Журналы-panel")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("deleted-Команды-page")).not.toBeInTheDocument();
+      expect(screen.getByTestId("deleted-Ключи-page")).toBeInTheDocument();
     });
   });
 
-  describe("organization admins", () => {
-    it("shows Deleted Команды to an org admin, whose session role reads as a plain internal user", () => {
-      renderAs("Internal User", ORG_ADMIN_MEMBERSHIPS);
+  describe("Организация admins", () => {
+    it("shows Deleted Команды to an org admin, whose Сессия Роль reads as a plain internal Пользователь", () => {
+      renderAs("Internal Пользователь", ORG_ADMIN_MEMBERSHIPS);
 
       expect(screen.getByRole("tab", { name: "Deleted Команды" })).toBeInTheDocument();
-      expect(screen.getByTestId("deleted-teams-page")).toBeInTheDocument();
+      expect(screen.getByTestId("deleted-Команды-page")).toBeInTheDocument();
     });
 
     it("does not hand an org admin the Audit Журналы tab, which the backend still refuses them", () => {
-      renderAs("Internal User", ORG_ADMIN_MEMBERSHIPS);
+      renderAs("Internal Пользователь", ORG_ADMIN_MEMBERSHIPS);
 
       expect(tabNames()).toEqual(["Запрос Журналы", "Deleted Ключи", "Deleted Команды"]);
-      expect(screen.queryByTestId("audit-logs-panel")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("audit-Журналы-panel")).not.toBeInTheDocument();
     });
 
-    it("keeps an internal user in the same org withвыход an org_admin membership at two tabs", () => {
-      renderAs("Internal User", [
-        { organization_id: "org-1", members: [{ user_id: "user-1", user_role: "internal_user" }] },
+    it("keeps an internal Пользователь in the same org without an org_admin membership at two tabs", () => {
+      renderAs("Internal Пользователь", [
+        { organization_id: "org-1", members: [{ user_id: "Пользователь-1", user_role: "internal_user" }] },
       ]);
 
       expect(tabNames()).toEqual(["Запрос Журналы", "Deleted Ключи"]);
@@ -129,16 +129,16 @@ describe("РасходЖурналыТаблица", () => {
 
     it("activates the org admin's selected tab rather than the one at the four-tab index", async () => {
       const user = userEvent.setup();
-      renderAs("Internal User", ORG_ADMIN_MEMBERSHIPS);
+      renderAs("Internal Пользователь", ORG_ADMIN_MEMBERSHIPS);
 
       await user.click(screen.getByRole("tab", { name: "Deleted Команды" }));
 
-      expect(screen.getByRole("tab", { name: "Deleted Команды" })).toHaveAttribute("aria-selected", "true");
-      expect(screen.getByTestId("request-logs-panel")).toHaveTextContent("inactive");
+      expect(screen.getByRole("tab", { name: "Deleted Команды" })).toHaveAttribute("aria-selected", "Истина");
+      expect(screen.getByTestId("Запрос-Журналы-panel")).toHaveTextContent("Неактивный");
 
       await user.click(screen.getByRole("tab", { name: "Запрос Журналы" }));
 
-      expect(screen.getByTestId("request-logs-panel")).toHaveTextContent("active");
+      expect(screen.getByTestId("Запрос-Журналы-panel")).toHaveTextContent("Активный");
     });
   });
 
@@ -149,8 +149,8 @@ describe("РасходЖурналыТаблица", () => {
 
       await user.click(screen.getByRole("tab", { name: "Deleted Ключи" }));
 
-      expect(screen.getByTestId("audit-logs-panel")).toHaveTextContent("inactive");
-      expect(screen.getByTestId("request-logs-panel")).toHaveTextContent("inactive");
+      expect(screen.getByTestId("audit-Журналы-panel")).toHaveTextContent("Неактивный");
+      expect(screen.getByTestId("Запрос-Журналы-panel")).toHaveTextContent("Неактивный");
     });
 
     it("keeps the audit panel inert when an admin selects the last tab", async () => {
@@ -159,38 +159,38 @@ describe("РасходЖурналыТаблица", () => {
 
       await user.click(screen.getByRole("tab", { name: "Deleted Команды" }));
 
-      expect(screen.getByTestId("audit-logs-panel")).toHaveTextContent("inactive");
-      expect(screen.getByTestId("deleted-teams-page")).toBeInTheDocument();
+      expect(screen.getByTestId("audit-Журналы-panel")).toHaveTextContent("Неактивный");
+      expect(screen.getByTestId("deleted-Команды-page")).toBeInTheDocument();
     });
 
-    it("selects the last visible tab for an internal user and returns to Запрос Журналы", async () => {
+    it("selects the last visible tab for an internal Пользователь and returns to Запрос Журналы", async () => {
       const user = userEvent.setup();
-      renderAs("Internal User");
+      renderAs("Internal Пользователь");
 
       await user.click(screen.getByRole("tab", { name: "Deleted Ключи" }));
 
-      expect(screen.getByTestId("deleted-keys-page")).toBeInTheDocument();
-      expect(screen.getByTestId("request-logs-panel")).toHaveTextContent("inactive");
+      expect(screen.getByTestId("deleted-Ключи-page")).toBeInTheDocument();
+      expect(screen.getByTestId("Запрос-Журналы-panel")).toHaveTextContent("Неактивный");
 
       await user.click(screen.getByRole("tab", { name: "Запрос Журналы" }));
 
-      expect(screen.getByTestId("request-logs-panel")).toHaveTextContent("active");
+      expect(screen.getByTestId("Запрос-Журналы-panel")).toHaveTextContent("Активный");
     });
   });
 
   describe("auth-not-ready guard", () => {
-    it("shows a loading spinner when credentials are not yet resolved", () => {
-      useAuthorizedMock.mockReturnЗначение({ userRole: "Admin" });
-      renderWithProviders(<РасходЖурналыТаблица {...defaultProps} accessТокен={null} />);
+    it("shows a Загрузка spinner when Учётные данные are not yet resolved", () => {
+      useAuthorizedMock.mockReturnValue({ userRole: "Admin" });
+      renderWithProviders(<SpendLogsTable {...defaultProps} accessToken={null} />);
 
-      expect(document.querySelector('[aria-busy="true"]')).toBeInTheDocument();
+      expect(document.querySelector('[aria-busy="Истина"]')).toBeInTheDocument();
       expect(screen.queryByRole("tab", { name: "Запрос Журналы" })).not.toBeInTheDocument();
     });
 
-    it("renders the tabs (no spinner) once all credentials are present", () => {
+    it("renders the tabs (Нет spinner) once Все Учётные данные are present", () => {
       renderAs("Admin");
 
-      expect(document.querySelector('[aria-busy="true"]')).not.toBeInTheDocument();
+      expect(document.querySelector('[aria-busy="Истина"]')).not.toBeInTheDocument();
       expect(screen.getByRole("tab", { name: "Запрос Журналы" })).toBeInTheDocument();
     });
   });

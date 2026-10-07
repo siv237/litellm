@@ -7,7 +7,7 @@ import {
   getMissingModelsInPreset,
   getRequiredModels,
   getMissingModels,
-  getReferencedModelsОшибка,
+  getReferencedModelsError,
   buildEmptyPrefill,
   buildPresetPrefill,
   buildModelAvailability,
@@ -15,15 +15,15 @@ import {
   normalizeModelName,
   resolveAvailableModels,
 } from "./autorouter_presets";
-import { DEFAULT_MATCH_THRESHOLD } from "@/components/add_model/SemanticKeywordMatching";
-import { DEFAULT_ESCALATION_KEYWORDS } from "@/components/add_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию/EscalationКлючевые слова";
+import { DEFAULT_MATCH_THRESHOLD } from "@/components/add_model/SemanticКлючwordMatching";
+import { DEFAULT_ESCALATION_KEYWORDS } from "@/components/add_model/EscalationКлючевые слова";
 
-const groupsOnly = (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: Iterable<string>) => buildModelAvailability(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs, []);
+const groupsOnly = (models: Iterable<string>) => buildModelAvailability(models, []);
 
 // Hydrated from the real bundled catalog so a catalog edit flows into these expectations.
 const PRESETS = hydratePresets(BUNDLED_PRESETS_RESPONSE);
 const getAllPresets = (): AutoRouterPreset[] => PRESETS;
-const getPresetByКлюч = (key: string): AutoRouterPreset | undefined => PRESETS.find((p) => p.key === key);
+const getPresetByKey = (key: string): AutoRouterPreset | undefined => PRESETS.find((p) => p.key === key);
 
 describe("autorouter_presets", () => {
   it("hydrates exactly the bundled presets", () => {
@@ -42,11 +42,11 @@ describe("autorouter_presets", () => {
     }
   });
 
-  // buildPresetPrefill resolves every Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию reference through normalizeModelName, so two spellings
-  // of the same Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию in one tier (e.g. "claude-sonnet-4-5" and "claude-sonnet-4.5") collapse to one
-  // key. For tier_model_configs that silently drops one Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию's litellm_params; catch it in the
+  // buildPresetPrefill resolves every model reference through normalizeModelName, so two spellings
+  // of the same model in one tier (e.g. "claude-sonnet-4-5" and "claude-sonnet-4.5") collapse to one
+  // key. For tier_model_configs that silently drops one model's litellm_params; catch it in the
   // bundled data itself, since nothing else validates preset authoring.
-  it("never spells the same Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию two ways within a single tier", () => {
+  it("never spells the same model two ways within a single tier", () => {
     for (const preset of getAllPresets()) {
       const { tiers, tier_model_configs: configs } = preset.complexity_router_config;
       for (const tier of Object.keys(tiers) as (keyof typeof tiers)[]) {
@@ -66,8 +66,8 @@ describe("autorouter_presets", () => {
   });
 
   it("resolves a preset by its stable JSON key, not its display label", () => {
-    expect(getPresetByКлюч("anthropic_family")?.label).toBe("Anthropic Family");
-    expect(getPresetByКлюч("does_not_exist")).toBeUndefined();
+    expect(getPresetByKey("anthropic_family")?.label).toBe("Anthropic Family");
+    expect(getPresetByKey("does_not_exist")).toBeUndefined();
   });
 
   it("keeps every preset free of adaptive/quality settings", () => {
@@ -92,54 +92,54 @@ describe("autorouter_presets", () => {
     for (const { complexity_router_config: config } of getAllPresets()) {
       expect(config.custom_dimensions).toBeUndefined();
     }
-    const config = getPresetByКлюч("anthropic_family")!.complexity_router_config;
-    expect(buildPresetPrefill(config, groupsOnly([])).complexityRouterКонфигурация.custom_dimensions).toBeUndefined();
+    const config = getPresetByKey("anthropic_family")!.complexity_router_config;
+    expect(buildPresetPrefill(config, groupsOnly([])).complexityRouterConfig.custom_dimensions).toBeUndefined();
   });
 
   it("resets both scoring overrides when the form falls back to an empty prefill", () => {
-    expect(buildEmptyPrefill().complexityRouterКонфигурация.custom_dimensions).toBeUndefined();
-    expect(buildEmptyPrefill().complexityRouterКонфигурация.dimension_weights).toBeUndefined();
+    expect(buildEmptyPrefill().complexityRouterConfig.custom_dimensions).toBeUndefined();
+    expect(buildEmptyPrefill().complexityRouterConfig.dimension_weights).toBeUndefined();
   });
 
   it("carries a preset's session affinity idle window into the prefilled form state", () => {
-    const config = getPresetByКлюч("anthropic_family")!.complexity_router_config;
+    const config = getPresetByKey("anthropic_family")!.complexity_router_config;
     const prefill = buildPresetPrefill({ ...config, session_affinity_ttl_seconds: 300 }, groupsOnly([]));
-    expect(prefill.complexityRouterКонфигурация.session_affinity_ttl_seconds).toBe(300);
+    expect(prefill.complexityRouterConfig.session_affinity_ttl_seconds).toBe(300);
     expect(
-      buildPresetPrefill(config, groupsOnly([])).complexityRouterКонфигурация.session_affinity_ttl_seconds,
+      buildPresetPrefill(config, groupsOnly([])).complexityRouterConfig.session_affinity_ttl_seconds,
     ).toBeUndefined();
   });
 
-  it("carries a preset's stored weights and custom dimensions into the prefill withвыход rebalancing them", () => {
-    const config = getPresetByКлюч("anthropic_family")!.complexity_router_config;
+  it("carries a preset's stored weights and custom dimensions into the prefill without rebalancing them", () => {
+    const config = getPresetByKey("anthropic_family")!.complexity_router_config;
     const weights = { codePresence: 0.4 };
     const dimension = { name: "domain", weight: 0.9, keywords: ["orbitmesh"] };
     const prefill = buildPresetPrefill(
       { ...config, dimension_weights: weights, custom_dimensions: [dimension] },
       groupsOnly([]),
-    ).complexityRouterКонфигурация;
+    ).complexityRouterConfig;
     expect(prefill.dimension_weights).toEqual(weights);
     expect(prefill.custom_dimensions).toEqual([{ ...dimension, id: "stored-0" }]);
-    const plain = buildPresetPrefill(config, groupsOnly([])).complexityRouterКонфигурация;
+    const plain = buildPresetPrefill(config, groupsOnly([])).complexityRouterConfig;
     expect(plain.dimension_weights).toBeUndefined();
     expect(plain.custom_dimensions).toBeUndefined();
   });
 
-  it("keeps the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-family presets on the heuristic classifier", () => {
+  it("keeps the model-family presets on the heuristic classifier", () => {
     for (const key of ["anthropic_family", "gemini_family", "openai_family"]) {
-      expect(getPresetByКлюч(key)!.complexity_router_config.classifier_type).toBe("heuristic");
+      expect(getPresetByKey(key)!.complexity_router_config.classifier_type).toBe("heuristic");
     }
   });
 
   // The lite preset ships the LLM classifier with the bundled agentic rubric rather than an inline
-  // system_prompt, so rubric tuning in the backend reaches it withвыход a JSON edit. Its classifier
-  // Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию doubles as the SIMPLE tier Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, so availability gating stays at exactly four Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs.
-  it("pins the lite preset's LLM classifier config and required Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs", () => {
-    const lite = getPresetByКлюч("lite")!;
+  // system_prompt, so rubric tuning in the backend reaches it without a JSON edit. Its classifier
+  // model doubles as the SIMPLE tier model, so availability gating stays at exactly four models.
+  it("pins the lite preset's LLM classifier config and required models", () => {
+    const lite = getPresetByKey("lite")!;
     const config = lite.complexity_router_config;
     expect(config.classifier_type).toBe("llm");
     expect(config.classifier_llm_config).toEqual({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "deepseek-v4-flash",
+      model: "deepseek-v4-flash",
       timeout_ms: 3000,
       classification_rubric: "agentic",
     });
@@ -151,24 +151,24 @@ describe("autorouter_presets", () => {
   });
 
   it("pins the anthropic preset's reasoning tier to Fable 5.1 at high thinking", () => {
-    const config = getPresetByКлюч("anthropic_family")!.complexity_router_config;
+    const config = getPresetByKey("anthropic_family")!.complexity_router_config;
     expect(config.tiers.COMPLEX).toEqual(["claude-opus-5"]);
     expect(config.tiers.REASONING).toEqual(["claude-fable-5-1"]);
     expect(config.tier_model_configs).toEqual({
-      REASONING: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "claude-fable-5-1", litellm_params: { reasoning_effort: "high" } }],
+      REASONING: [{ model_name: "claude-fable-5-1", litellm_params: { reasoning_effort: "high" } }],
     });
   });
 
   // Kimi K3 at max needs the map to declare max for kimi-k3, which is the commit below this one.
   it("pins the lite preset's per-tier reasoning efforts", () => {
-    expect(getPresetByКлюч("lite")!.complexity_router_config.tier_model_configs).toEqual({
-      MEDIUM: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "muse-spark-1.2", litellm_params: { reasoning_effort: "xhigh" } }],
-      COMPLEX: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "kimi-k3", litellm_params: { reasoning_effort: "max" } }],
+    expect(getPresetByKey("lite")!.complexity_router_config.tier_model_configs).toEqual({
+      MEDIUM: [{ model_name: "muse-spark-1.2", litellm_params: { reasoning_effort: "xhigh" } }],
+      COMPLEX: [{ model_name: "kimi-k3", litellm_params: { reasoning_effort: "max" } }],
     });
   });
 
-  // serializeTierModelConfigs filters on the tier's Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs, so a stray name drops silently.
-  it("never names a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию in tier_model_configs that its own tier does not hold", () => {
+  // serializeTierModelConfigs filters on the tier's models, so a stray name drops silently.
+  it("never names a model in tier_model_configs that its own tier does not hold", () => {
     for (const preset of getAllPresets()) {
       const { tiers, tier_model_configs: configs } = preset.complexity_router_config;
       for (const [tier, entries] of Object.entries(configs ?? {})) {
@@ -180,7 +180,7 @@ describe("autorouter_presets", () => {
   });
 
   it("carries a preset's modality_routing into the prefilled form state", () => {
-    const preset = getPresetByКлюч("anthropic_family")!;
+    const preset = getPresetByKey("anthropic_family")!;
     const withFlag = { ...preset.complexity_router_config, modality_routing: true };
     const prefill = buildPresetPrefill(withFlag, groupsOnly(getRequiredModelsInPreset(preset)));
     expect(prefill.complexityRouterConfig.modality_routing).toBe(true);
@@ -192,18 +192,18 @@ describe("autorouter_presets", () => {
   });
 
   it("carries a preset's modality_pin_override into the prefilled form state", () => {
-    const preset = getPresetByКлюч("anthropic_family")!;
+    const preset = getPresetByKey("anthropic_family")!;
     const withFlag = { ...preset.complexity_router_config, modality_routing: true, modality_pin_override: true };
     const prefill = buildPresetPrefill(withFlag, groupsOnly(getRequiredModelsInPreset(preset)));
-    expect(prefill.complexityRouterКонфигурация.modality_pin_override).toBe(true);
+    expect(prefill.complexityRouterConfig.modality_pin_override).toBe(true);
     const withoutFlag = buildPresetPrefill(
       preset.complexity_router_config,
       groupsOnly(getRequiredModelsInPreset(preset)),
     );
-    expect(withoutFlag.complexityRouterКонфигурация.modality_pin_override).toBe(false);
+    expect(withoutFlag.complexityRouterConfig.modality_pin_override).toBe(false);
   });
 
-  it("ships every bundled preset with both modality flags written выход, since the payload type requires them", () => {
+  it("ships every bundled preset with both modality flags written out, since the payload type requires them", () => {
     for (const preset of getAllPresets()) {
       expect(preset.complexity_router_config.modality_routing, preset.key).toBe(false);
       expect(preset.complexity_router_config.modality_pin_override, preset.key).toBe(false);
@@ -211,24 +211,24 @@ describe("autorouter_presets", () => {
   });
 
   it("prefills the anthropic preset's effort through to tier_model_params", () => {
-    const preset = getPresetByКлюч("anthropic_family")!;
+    const preset = getPresetByKey("anthropic_family")!;
     const prefill = buildPresetPrefill(preset.complexity_router_config, groupsOnly(getRequiredModelsInPreset(preset)));
-    expect(prefill.complexityRouterКонфигурация.tier_model_params).toEqual({
+    expect(prefill.complexityRouterConfig.tier_model_params).toEqual({
       REASONING: { "claude-fable-5-1": { reasoning_effort: "high" } },
     });
   });
 
   it("prefills the lite preset's efforts through to tier_model_params", () => {
-    const lite = getPresetByКлюч("lite")!;
+    const lite = getPresetByKey("lite")!;
     const prefill = buildPresetPrefill(lite.complexity_router_config, groupsOnly(getRequiredModelsInPreset(lite)));
-    expect(prefill.complexityRouterКонфигурация.tier_model_params).toEqual({
+    expect(prefill.complexityRouterConfig.tier_model_params).toEqual({
       MEDIUM: { "muse-spark-1.2": { reasoning_effort: "xhigh" } },
       COMPLEX: { "kimi-k3": { reasoning_effort: "max" } },
     });
   });
 
   it("pins the OpenAI preset to the Luna, Terra, Sol, and Astra progression", () => {
-    const preset = getPresetByКлюч("openai_family")!;
+    const preset = getPresetByKey("openai_family")!;
     const expectedTiers = {
       SIMPLE: ["gpt-5.6-luna"],
       MEDIUM: ["gpt-5.6-terra"],
@@ -237,16 +237,16 @@ describe("autorouter_presets", () => {
     };
     expect(preset.complexity_router_config.tiers).toEqual(expectedTiers);
     expect(preset.complexity_router_config.tier_model_configs).toEqual({
-      REASONING: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "gpt-6-astra", litellm_params: { reasoning_effort: "xhigh" } }],
+      REASONING: [{ model_name: "gpt-6-astra", litellm_params: { reasoning_effort: "xhigh" } }],
     });
     const prefill = buildPresetPrefill(preset.complexity_router_config, groupsOnly(getRequiredModelsInPreset(preset)));
-    expect(prefill.complexityRouterКонфигурация.tier_model_params).toEqual({
+    expect(prefill.complexityRouterConfig.tier_model_params).toEqual({
       REASONING: { "gpt-6-astra": { reasoning_effort: "xhigh" } },
     });
   });
 
   it("pins the 1M context preset to Luna, Terra, Sol, and Opus at high thinking", () => {
-    const preset = getPresetByКлюч("1m_context")!;
+    const preset = getPresetByKey("1m_context")!;
     const expectedTiers = {
       SIMPLE: ["gpt-5.6-luna"],
       MEDIUM: ["gpt-5.6-terra"],
@@ -256,16 +256,16 @@ describe("autorouter_presets", () => {
     expect(preset.complexity_router_config.classifier_type).toBe("heuristic_v2");
     expect(preset.complexity_router_config.tiers).toEqual(expectedTiers);
     expect(preset.complexity_router_config.tier_model_configs).toEqual({
-      REASONING: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "claude-opus-5", litellm_params: { reasoning_effort: "high" } }],
+      REASONING: [{ model_name: "claude-opus-5", litellm_params: { reasoning_effort: "high" } }],
     });
     const prefill = buildPresetPrefill(preset.complexity_router_config, groupsOnly(getRequiredModelsInPreset(preset)));
-    expect(prefill.complexityRouterКонфигурация.tier_model_params).toEqual({
+    expect(prefill.complexityRouterConfig.tier_model_params).toEqual({
       REASONING: { "claude-opus-5": { reasoning_effort: "high" } },
     });
   });
 
-  it("pins the gemini preset to concrete Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию ids, never Google's hot-swapping -latest aliases", () => {
-    const gemini = getPresetByКлюч("gemini_family")!;
+  it("pins the gemini preset to concrete model ids, never Google's hot-swapping -latest aliases", () => {
+    const gemini = getPresetByKey("gemini_family")!;
     const config = gemini.complexity_router_config;
     expect(config.classifier_type).toBe("heuristic");
     expect(config.classifier_llm_config).toBeUndefined();
@@ -277,20 +277,20 @@ describe("autorouter_presets", () => {
     };
     expect(config.tiers).toEqual(expectedTiers);
     const required = getRequiredModelsInPreset(gemini);
-    for (const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию of required) expect(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию).not.toMatch(/-latest$/);
+    for (const model of required) expect(model).not.toMatch(/-latest$/);
     expect(required.size).toBe(4);
   });
 
-  it("collects every tier Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию as a required Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
-    const preset = getPresetByКлюч("anthropic_family")!;
+  it("collects every tier model as a required model", () => {
+    const preset = getPresetByKey("anthropic_family")!;
     const required = getRequiredModelsInPreset(preset);
     const tierModels = Object.values(preset.complexity_router_config.tiers).flat();
     expect(tierModels.length).toBeGreaterThan(0);
-    for (const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию of tierModels) expect(required.has(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию)).toBe(true);
+    for (const model of tierModels) expect(required.has(model)).toBe(true);
   });
 
-  it("reports only the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs the caller is missing, and none when the family is fully available", () => {
-    const preset = getPresetByКлюч("openai_family")!;
+  it("reports only the models the caller is missing, and none when the family is fully available", () => {
+    const preset = getPresetByKey("openai_family")!;
     const required = [...getRequiredModelsInPreset(preset)];
     const [held] = required;
 
@@ -300,20 +300,20 @@ describe("autorouter_presets", () => {
 
   // Admins spell version numbers with either "-" or "." (claude-sonnet-4-5 vs claude-sonnet-4.5);
   // a caller who only registered one form still satisfies a preset that names the other. The
-  // caller's spellings are derived from the preset itself so that renaming a preset's Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs in
+  // caller's spellings are derived from the preset itself so that renaming a preset's models in
   // autorouter_presets.json can't quietly turn this into a no-op (the inequality below fails
-  // instead, if no preset Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию carries a version number at all).
-  it("treats a preset's Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию as available under either version-separator spelling", () => {
-    const preset = getPresetByКлюч("anthropic_family")!;
+  // instead, if no preset model carries a version number at all).
+  it("treats a preset's model as available under either version-separator spelling", () => {
+    const preset = getPresetByKey("anthropic_family")!;
     const required = [...getRequiredModelsInPreset(preset)];
-    const dottedSpellings = required.map((Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию.replace(/(\d)-(\d)/g, "$1.$2"));
+    const dottedSpellings = required.map((model) => model.replace(/(\d)-(\d)/g, "$1.$2"));
 
     expect(dottedSpellings).not.toEqual(required);
     expect(getMissingModelsInPreset(preset, groupsOnly(dottedSpellings))).toEqual([]);
   });
 
-  // The two-arm mirror: a differently-punctuated preset Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию must not be reported missing.
-  it("does not flag a differently-punctuated Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию as missing via getMissingModels directly", () => {
+  // The two-arm mirror: a differently-punctuated preset model must not be reported missing.
+  it("does not flag a differently-punctuated model as missing via getMissingРежимls directly", () => {
     const missing = getMissingModels(
       { tiers: { SIMPLE: ["claude-sonnet-4-5"], MEDIUM: [], COMPLEX: [], REASONING: [] } },
       groupsOnly(["claude-sonnet-4.5"]),
@@ -321,20 +321,20 @@ describe("autorouter_presets", () => {
     expect(missing).toEqual([]);
   });
 
-  // A classifier_llm_config placeholder is seeded with Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "" before a caller picks one; an
-  // empty string is not a real Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию reference and must not be reported as an unavailable Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию.
-  it("does not treat an empty-string classifier or embedding Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию as a required Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
+  // A classifier_llm_config placeholder is seeded with model: "" before a caller picks one; an
+  // empty string is not a real model reference and must not be reported as an unavailable model.
+  it("does not treat an empty-string classifier or embedding model as a required model", () => {
     const required = getRequiredModels({
       tiers: { SIMPLE: ["gpt-5-nano"], MEDIUM: [], COMPLEX: [], REASONING: [] },
-      classifier_llm_config: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "", timeout_ms: 5000 },
-      embedding_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "",
+      classifier_llm_config: { model: "", timeout_ms: 5000 },
+      embedding_model: "",
     });
     expect(required).toEqual(new Set(["gpt-5-nano"]));
   });
 
-  describe("deployment matching (underlying provider Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию IDs)", () => {
-    const availabilityFor = (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: string, underlyingModel: string) =>
-      buildModelAvailability([Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup], [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup, underlyingModels: [underlyingModel] }]);
+  describe("deployment matching (underlying provider model IDs)", () => {
+    const availabilityFor = (modelGroup: string, underlyingModel: string) =>
+      buildModelAvailability([modelGroup], [{ modelGroup, underlyingModels: [underlyingModel] }]);
 
     it.each([
       ["provider prefix", "my-claude-fast", "anthropic/claude-haiku-4-5", "claude-haiku-4-5"],
@@ -353,7 +353,7 @@ describe("autorouter_presets", () => {
         deployment_affinity: true,
       };
       expect(getMissingModels(config, availability)).toEqual([]);
-      expect(buildPresetPrefill(config, availability).complexityRouterКонфигурация.tiers.SIMPLE).toEqual([group]);
+      expect(buildPresetPrefill(config, availability).complexityRouterConfig.tiers.SIMPLE).toEqual([group]);
     });
 
     it.each([
@@ -361,7 +361,7 @@ describe("autorouter_presets", () => {
       ["gpt-5.4-mini", "openai/gpt-5.4"],
       ["o3", "openai/o3-mini"],
       ["o3-mini", "openai/o3"],
-      ["some-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", "prov/some-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-20991399"],
+      ["some-model", "prov/some-model-20991399"],
     ])("never lets %s be satisfied by a deployment of %s", (presetModel, underlying) => {
       const availability = availabilityFor("some-group", underlying);
       const config = { tiers: { SIMPLE: [presetModel], MEDIUM: [], COMPLEX: [], REASONING: [] } };
@@ -373,32 +373,32 @@ describe("autorouter_presets", () => {
       expect(availability.underlyingIndex.size).toBe(0);
     });
 
-    it("ignores a deployment whose group is not itself an available Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию group", () => {
+    it("ignores a deployment whose group is not itself an available model group", () => {
       const availability = buildModelAvailability(
         ["some-other-group"],
-        [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: "orphan-group", underlyingModels: ["anthropic/claude-opus-5"] }],
+        [{ modelGroup: "orphan-group", underlyingModels: ["anthropic/claude-opus-5"] }],
       );
       expect(availability.underlyingIndex.size).toBe(0);
     });
 
-    it("returns every configured group serving the same underlying Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
+    it("returns every configured group serving the same underlying model", () => {
       const availability = buildModelAvailability(
         ["z-group", "a-group"],
         [
-          { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: "z-group", underlyingModels: ["anthropic/claude-sonnet-5"] },
-          { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: "a-group", underlyingModels: ["bedrock/us.anthropic.claude-sonnet-5-v1:0"] },
+          { modelGroup: "z-group", underlyingModels: ["anthropic/claude-sonnet-5"] },
+          { modelGroup: "a-group", underlyingModels: ["bedrock/us.anthropic.claude-sonnet-5-v1:0"] },
         ],
       );
 
       expect(resolveAvailableModels("anthropic/claude-sonnet-5", availability)).toEqual(["a-group", "z-group"]);
     });
 
-    it("breaks ties between groups serving the same Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию deterministically, alphabetically", () => {
+    it("breaks ties between groups serving the same model deterministically, alphabetically", () => {
       const availability = buildModelAvailability(
         ["z-group", "a-group"],
         [
-          { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: "z-group", underlyingModels: ["anthropic/claude-opus-5"] },
-          { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: "a-group", underlyingModels: ["bedrock/us.anthropic.claude-opus-5-v1:0"] },
+          { modelGroup: "z-group", underlyingModels: ["anthropic/claude-opus-5"] },
+          { modelGroup: "a-group", underlyingModels: ["bedrock/us.anthropic.claude-opus-5-v1:0"] },
         ],
       );
       const config = {
@@ -408,13 +408,13 @@ describe("autorouter_presets", () => {
         session_affinity: false,
         deployment_affinity: true,
       };
-      expect(buildPresetPrefill(config, availability).complexityRouterКонфигурация.tiers.SIMPLE).toEqual(["a-group"]);
+      expect(buildPresetPrefill(config, availability).complexityRouterConfig.tiers.SIMPLE).toEqual(["a-group"]);
     });
 
     it("prefers an exact group-name match over the deployment index", () => {
       const availability = buildModelAvailability(
         ["claude-opus-5", "renamed-opus"],
-        [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: "renamed-opus", underlyingModels: ["anthropic/claude-opus-5"] }],
+        [{ modelGroup: "renamed-opus", underlyingModels: ["anthropic/claude-opus-5"] }],
       );
       const config = {
         tiers: { SIMPLE: ["claude-opus-5"], MEDIUM: [], COMPLEX: [], REASONING: [] },
@@ -423,34 +423,34 @@ describe("autorouter_presets", () => {
         session_affinity: false,
         deployment_affinity: true,
       };
-      expect(buildPresetPrefill(config, availability).complexityRouterКонфигурация.tiers.SIMPLE).toEqual(["claude-opus-5"]);
+      expect(buildPresetPrefill(config, availability).complexityRouterConfig.tiers.SIMPLE).toEqual(["claude-opus-5"]);
     });
 
     it.each(getAllPresets().map((preset) => [preset.key, preset] as const))(
       "fully resolves the %s preset through renamed deployments only",
       (_key, preset) => {
         const required = [...getRequiredModelsInPreset(preset)];
-        const groups = required.map((_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, index) => `renamed-${index}`);
+        const groups = required.map((_model, index) => `renamed-${index}`);
         const availability = buildModelAvailability(
           groups,
-          required.map((Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, index) => ({
-            Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: `renamed-${index}`,
-            underlyingModels: [`someprovider/${Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию}`],
+          required.map((model, index) => ({
+            modelGroup: `renamed-${index}`,
+            underlyingModels: [`someprovider/${model}`],
           })),
         );
         expect(getMissingModelsInPreset(preset, availability)).toEqual([]);
         const prefilled = buildPresetPrefill(preset.complexity_router_config, availability);
-        const prefilledModels = Object.values(prefilled.complexityRouterКонфигурация.tiers).flat();
+        const prefilledModels = Object.values(prefilled.complexityRouterConfig.tiers).flat();
         expect(prefilledModels.length).toBeGreaterThan(0);
-        for (const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию of prefilledModels) expect(groups).toContain(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию);
+        for (const model of prefilledModels) expect(groups).toContain(model);
       },
     );
   });
 
-  describe("wildcard deployment matching (expanded Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию groups)", () => {
-    const wildcardDeployment = (pattern: string) => ({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: pattern, underlyingModels: [pattern] });
+  describe("wildcard deployment matching (expanded model groups)", () => {
+    const wildcardDeployment = (pattern: string) => ({ modelGroup: pattern, underlyingModels: [pattern] });
 
-    const simpleУровеньКонфигурация = (presetModel: string) => ({
+    const simpleTierConfig = (presetModel: string) => ({
       tiers: { SIMPLE: [presetModel], MEDIUM: [], COMPLEX: [], REASONING: [] },
       classifier_type: "heuristic" as const,
       classification_mode: "every_request" as const,
@@ -458,14 +458,14 @@ describe("autorouter_presets", () => {
       deployment_affinity: true,
     });
 
-    it("resolves a preset Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию to a group expanded from a wildcard deployment", () => {
+    it("resolves a preset model to a group expanded from a wildcard deployment", () => {
       const availability = buildModelAvailability(
         ["anthropic/*", "anthropic/claude-opus-5", "bedrock/anthropic.claude-opus-5"],
         [wildcardDeployment("anthropic/*")],
       );
-      const config = simpleУровеньКонфигурация("claude-opus-5");
+      const config = simpleTierConfig("claude-opus-5");
       expect(getMissingModels(config, availability)).toEqual([]);
-      expect(buildPresetPrefill(config, availability).complexityRouterКонфигурация.tiers.SIMPLE).toEqual([
+      expect(buildPresetPrefill(config, availability).complexityRouterConfig.tiers.SIMPLE).toEqual([
         "anthropic/claude-opus-5",
       ]);
     });
@@ -475,7 +475,7 @@ describe("autorouter_presets", () => {
         ["bedrock/*", "bedrock/us.anthropic.claude-sonnet-5"],
         [wildcardDeployment("bedrock/*")],
       );
-      expect(getMissingModels(simpleУровеньКонфигурация("claude-sonnet-5"), availability)).toEqual([]);
+      expect(getMissingModels(simpleTierConfig("claude-sonnet-5"), availability)).toEqual([]);
     });
 
     it("anchors a partial wildcard pattern and treats its dots literally", () => {
@@ -483,8 +483,8 @@ describe("autorouter_presets", () => {
         ["bedrock/us.anthropic.claude-opus-5", "bedrock/usXanthropic.claude-fable-5"],
         [wildcardDeployment("bedrock/us.*")],
       );
-      expect(getMissingModels(simpleУровеньКонфигурация("claude-opus-5"), availability)).toEqual([]);
-      expect(getMissingModels(simpleУровеньКонфигурация("claude-fable-5"), availability)).toEqual(["claude-fable-5"]);
+      expect(getMissingModels(simpleTierConfig("claude-opus-5"), availability)).toEqual([]);
+      expect(getMissingModels(simpleTierConfig("claude-fable-5"), availability)).toEqual(["claude-fable-5"]);
     });
 
     it.each([
@@ -493,7 +493,7 @@ describe("autorouter_presets", () => {
       ["o3", "openai/o3-mini"],
     ])("never lets %s be satisfied by the expanded group %s", (presetModel, expandedGroup) => {
       const availability = buildModelAvailability(["openai/*", expandedGroup], [wildcardDeployment("openai/*")]);
-      expect(getMissingModels(simpleУровеньКонфигурация(presetModel), availability)).toEqual([presetModel]);
+      expect(getMissingModels(simpleTierConfig(presetModel), availability)).toEqual([presetModel]);
     });
 
     it("anchors the pattern's suffix and keeps middle segments in order", () => {
@@ -501,8 +501,8 @@ describe("autorouter_presets", () => {
         ["bedrock/us.anthropic.claude-opus-5", "bedrock/anthropic.us.claude-sonnet-5"],
         [wildcardDeployment("bedrock/*.anthropic.*")],
       );
-      expect(getMissingModels(simpleУровеньКонфигурация("claude-opus-5"), availability)).toEqual([]);
-      expect(getMissingModels(simpleУровеньКонфигурация("claude-sonnet-5"), availability)).toEqual(["claude-sonnet-5"]);
+      expect(getMissingModels(simpleTierConfig("claude-opus-5"), availability)).toEqual([]);
+      expect(getMissingModels(simpleTierConfig("claude-sonnet-5"), availability)).toEqual(["claude-sonnet-5"]);
     });
 
     it("matches a pathological many-star pattern in linear time instead of backtracking", () => {
@@ -512,28 +512,28 @@ describe("autorouter_presets", () => {
       expect(availability.underlyingIndex.size).toBe(0);
     });
 
-    it("expands a bare-star Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name through its underlying wildcard, not as match-all", () => {
+    it("expands a bare-star model_name through its underlying wildcard, not as match-all", () => {
       const availability = buildModelAvailability(
         ["openai/gpt-5.4", "team-a/claude-opus-5"],
-        [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: "*", underlyingModels: ["openai/*"] }],
+        [{ modelGroup: "*", underlyingModels: ["openai/*"] }],
       );
-      expect(getMissingModels(simpleУровеньКонфигурация("gpt-5.4"), availability)).toEqual([]);
-      expect(getMissingModels(simpleУровеньКонфигурация("claude-opus-5"), availability)).toEqual(["claude-opus-5"]);
+      expect(getMissingModels(simpleTierConfig("gpt-5.4"), availability)).toEqual([]);
+      expect(getMissingModels(simpleTierConfig("claude-opus-5"), availability)).toEqual(["claude-opus-5"]);
     });
 
     it.each([
       ["a bare-star underlying", "*"],
       ["a non-wildcard underlying", "openai/gpt-4o"],
       ["a slashless wildcard underlying", "gpt*"],
-    ])("derives no pattern from a bare-star Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name with %s", (_label, underlying) => {
+    ])("derives no pattern from a bare-star model_name with %s", (_label, underlying) => {
       const availability = buildModelAvailability(
         ["openai/gpt-5.4"],
-        [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: "*", underlyingModels: [underlying] }],
+        [{ modelGroup: "*", underlyingModels: [underlying] }],
       );
       expect(availability.underlyingIndex.size).toBe(0);
     });
 
-    it("derives no pattern from a slashless wildcard Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name", () => {
+    it("derives no pattern from a slashless wildcard model_name", () => {
       const availability = buildModelAvailability(["gpt-5.4"], [wildcardDeployment("gpt*")]);
       expect(availability.underlyingIndex.size).toBe(0);
     });
@@ -543,32 +543,32 @@ describe("autorouter_presets", () => {
         ["team-a/claude-opus-5", "openai/*"],
         [wildcardDeployment("openai/*")],
       );
-      expect(getMissingModels(simpleУровеньКонфигурация("claude-opus-5"), availability)).toEqual(["claude-opus-5"]);
+      expect(getMissingModels(simpleTierConfig("claude-opus-5"), availability)).toEqual(["claude-opus-5"]);
     });
 
     it("never resolves to the wildcard group itself when the hub lists no expansions", () => {
       const availability = buildModelAvailability(["openai/*"], [wildcardDeployment("openai/*")]);
-      expect(getMissingModels(simpleУровеньКонфигурация("gpt-5.4"), availability)).toEqual(["gpt-5.4"]);
+      expect(getMissingModels(simpleTierConfig("gpt-5.4"), availability)).toEqual(["gpt-5.4"]);
       expect(availability.underlyingIndex.size).toBe(0);
     });
 
     it("applies a wildcard deployment's pattern even when the wildcard group is not itself listed", () => {
       const availability = buildModelAvailability(["anthropic/claude-opus-5"], [wildcardDeployment("anthropic/*")]);
-      expect(getMissingModels(simpleУровеньКонфигурация("claude-opus-5"), availability)).toEqual([]);
+      expect(getMissingModels(simpleTierConfig("claude-opus-5"), availability)).toEqual([]);
     });
 
     it("keeps the groups-only availability strict even when expanded groups are listed", () => {
       const availability = groupsOnly(["anthropic/*", "anthropic/claude-opus-5"]);
-      expect(getMissingModels(simpleУровеньКонфигурация("claude-opus-5"), availability)).toEqual(["claude-opus-5"]);
+      expect(getMissingModels(simpleTierConfig("claude-opus-5"), availability)).toEqual(["claude-opus-5"]);
     });
 
-    it("prefers the alphabetically first covered group when several expansions serve the Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
+    it("prefers the alphabetically first covered group when several expansions serve the model", () => {
       const availability = buildModelAvailability(
         ["bedrock/us.anthropic.claude-opus-5", "anthropic/claude-opus-5", "bedrock/anthropic.claude-opus-5"],
         [wildcardDeployment("anthropic/*"), wildcardDeployment("bedrock/*")],
       );
-      const config = simpleУровеньКонфигурация("claude-opus-5");
-      expect(buildPresetPrefill(config, availability).complexityRouterКонфигурация.tiers.SIMPLE).toEqual([
+      const config = simpleTierConfig("claude-opus-5");
+      expect(buildPresetPrefill(config, availability).complexityRouterConfig.tiers.SIMPLE).toEqual([
         "anthropic/claude-opus-5",
       ]);
     });
@@ -577,41 +577,41 @@ describe("autorouter_presets", () => {
       "fully resolves the %s preset through wildcard-expanded groups only",
       (_key, preset) => {
         const required = [...getRequiredModelsInPreset(preset)];
-        const expandedGroups = required.map((Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию) => `someprovider/${Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию}`);
+        const expandedGroups = required.map((model) => `someprovider/${model}`);
         const availability = buildModelAvailability(
           ["someprovider/*", ...expandedGroups],
           [wildcardDeployment("someprovider/*")],
         );
         expect(getMissingModelsInPreset(preset, availability)).toEqual([]);
         const prefilled = buildPresetPrefill(preset.complexity_router_config, availability);
-        const prefilledModels = Object.values(prefilled.complexityRouterКонфигурация.tiers).flat();
+        const prefilledModels = Object.values(prefilled.complexityRouterConfig.tiers).flat();
         expect(prefilledModels.length).toBeGreaterThan(0);
-        for (const Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию of prefilledModels) expect(expandedGroups).toContain(Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию);
+        for (const model of prefilledModels) expect(expandedGroups).toContain(model);
       },
     );
   });
 
-  describe("deploymentRefsFromModelInfo", () => {
-    it("keeps litellm_params.Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию and Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info.base_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию, drops rows with neither or no name", () => {
+  describe("deploymentRefsFromРежимlInfo", () => {
+    it("keeps litellm_params.model and model_info.base_model, drops rows with neither or no name", () => {
       const refs = deploymentRefsFromModelInfo([
         {
-          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "azure-prod",
-          litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "azure/my-deployment" },
-          Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { base_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "azure/gpt-5.4" },
+          model_name: "azure-prod",
+          litellm_params: { model: "azure/my-deployment" },
+          model_info: { base_model: "azure/gpt-5.4" },
         },
-        { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "no-underlying", litellm_params: {}, Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: {} },
-        { litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "openai/gpt-5.4" } },
+        { model_name: "no-underlying", litellm_params: {}, model_info: {} },
+        { litellm_params: { model: "openai/gpt-5.4" } },
       ]);
-      expect(refs).toEqual([{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюGroup: "azure-prod", underlyingModels: ["azure/my-deployment", "azure/gpt-5.4"] }]);
+      expect(refs).toEqual([{ modelGroup: "azure-prod", underlyingModels: ["azure/my-deployment", "azure/gpt-5.4"] }]);
     });
 
-    it("lets an azure deployment resolve through base_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию declared under litellm_params", () => {
+    it("lets an azure deployment resolve through base_model declared under litellm_params", () => {
       const availability = buildModelAvailability(
         ["azure-lp"],
         deploymentRefsFromModelInfo([
           {
-            Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "azure-lp",
-            litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "azure/opaque-deployment-name", base_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "azure/gpt-5.4" },
+            model_name: "azure-lp",
+            litellm_params: { model: "azure/opaque-deployment-name", base_model: "azure/gpt-5.4" },
           },
         ]),
       );
@@ -619,14 +619,14 @@ describe("autorouter_presets", () => {
       expect(getMissingModels(config, availability)).toEqual([]);
     });
 
-    it("lets an azure deployment resolve through its admin-declared base_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
+    it("lets an azure deployment resolve through its admin-declared base_model", () => {
       const availability = buildModelAvailability(
         ["azure-prod"],
         deploymentRefsFromModelInfo([
           {
-            Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "azure-prod",
-            litellm_params: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "azure/opaque-deployment-name" },
-            Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { base_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "azure/gpt-5.4" },
+            model_name: "azure-prod",
+            litellm_params: { model: "azure/opaque-deployment-name" },
+            model_info: { base_model: "azure/gpt-5.4" },
           },
         ]),
       );
@@ -635,19 +635,19 @@ describe("autorouter_presets", () => {
     });
   });
 
-  describe("getReferencedModelsОшибка", () => {
+  describe("getReferencedРежимlsError", () => {
     const tiers = { SIMPLE: ["gpt-5-nano"], MEDIUM: [], COMPLEX: [], REASONING: [] };
     const available = groupsOnly(["gpt-5-nano"]);
-    // Both fields are always populated with a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию missing from `available`; only the
-    // enabled/disabled toggles below decide whether that missing Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию gets reported.
+    // Both fields are always populated with a model missing from `available`; only the
+    // enabled/disabled toggles below decide whether that missing model gets reported.
     const params = {
-      classifierLlmКонфигурация: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "missing-classifier", timeout_ms: 5000 },
+      classifierLlmConfig: { model: "missing-classifier", timeout_ms: 5000 },
       embeddingModel: "missing-embed",
     };
 
-    // Bugbot-found bug class from #35199's history: a classifier/embedding Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию left selected
+    // Bugbot-found bug class from #35199's history: a classifier/embedding model left selected
     // from a prior toggle must not block submit once that toggle is off again, since
-    // buildComplexityRouterКонфигурация never emits the field in that state - only a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию whose toggle
+    // buildComplexityRouterConfig never emits the field in that state - only a model whose toggle
     // is on should ever be reported.
     it.each([
       ["both toggles off", "heuristic", false, null],
@@ -656,24 +656,24 @@ describe("autorouter_presets", () => {
       ["both toggles on", "llm", true, "missing-classifier, missing-embed"],
     ] as const)("%s", (_label, classifierType, semanticMatchingEnabled, missingModels) => {
       const config = { tiers, classifierType, semanticMatchingEnabled, ...params };
-      const error = getReferencedModelsОшибка(config, available);
-      expect(error).toBe(missingModels ? `Режимl(s) no longer available: ${missingModels}` : null);
+      const error = getReferencedModelsError(config, available);
+      expect(error).toBe(missingModels ? `Режимl(s) no longer available: ${missingРежимls}` : null);
     });
   });
 
   describe("buildEmptyPrefill", () => {
     it("resets every field to its default, empty state", () => {
       const expected = {
-        complexityRouterКонфигурация: {
+        complexityRouterConfig: {
           tiers: { SIMPLE: [], MEDIUM: [], COMPLEX: [], REASONING: [] },
           classifier_type: "heuristic",
         },
-        customTechnicalКлючевые слова: [],
+        customTechnicalKeywords: [],
         keywordTierRules: [],
         semanticMatchingEnabled: false,
         embeddingModel: undefined,
         matchThreshold: DEFAULT_MATCH_THRESHOLD,
-        escalationКлючевые слова: DEFAULT_ESCALATION_KEYWORDS,
+        escalationKeywords: DEFAULT_ESCALATION_KEYWORDS,
       };
       expect(buildEmptyPrefill()).toEqual(expected);
     });
@@ -689,31 +689,31 @@ describe("autorouter_presets", () => {
         deployment_affinity: true,
         modality_routing: false,
         modality_pin_override: false,
-        jev_classifier_config: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "jev-test", timeout_ms: 4000, circuit_breaker_enabled: false },
-        classifier_llm_config: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "stale-judge", timeout_ms: 6000 },
+        jev_classifier_config: { model: "jev-test", timeout_ms: 4000, circuit_breaker_enabled: false },
+        classifier_llm_config: { model: "stale-judge", timeout_ms: 6000 },
         classifier_context_window_size: 6,
       };
       const prefill = buildPresetPrefill(config, groupsOnly(["fast"]));
-      const expectedJevКонфигурация = {
+      const expectedJevConfig = {
         classifier_type: "jev",
         jev_classifier_config: config.jev_classifier_config,
         classifier_context_window_size: 6,
         classifier_llm_config: undefined,
       };
-      expect(prefill.complexityRouterКонфигурация).toMatchObject(expectedJevКонфигурация);
-      const llmКонфигурация = { ...config, classifier_type: "llm" as const };
-      const llmPrefill = buildPresetPrefill(llmКонфигурация, groupsOnly(["fast"]));
-      expect(llmPrefill.complexityRouterКонфигурация.jev_classifier_config).toBeUndefined();
-      expect(llmPrefill.complexityRouterКонфигурация.classifier_llm_config).toEqual(config.classifier_llm_config);
+      expect(prefill.complexityRouterConfig).toMatchObject(expectedJevConfig);
+      const llmConfig = { ...config, classifier_type: "llm" as const };
+      const llmPrefill = buildPresetPrefill(llmConfig, groupsOnly(["fast"]));
+      expect(llmPrefill.complexityRouterConfig.jev_classifier_config).toBeUndefined();
+      expect(llmPrefill.complexityRouterConfig.classifier_llm_config).toEqual(config.classifier_llm_config);
     });
 
     it("prefills a real bundled preset's tiers into the config", () => {
-      const preset = getPresetByКлюч("anthropic_family")!;
+      const preset = getPresetByKey("anthropic_family")!;
       const prefill = buildPresetPrefill(
         preset.complexity_router_config,
         groupsOnly(getRequiredModelsInPreset(preset)),
       );
-      expect(prefill.complexityRouterКонфигурация.tiers).toEqual(preset.complexity_router_config.tiers);
+      expect(prefill.complexityRouterConfig.tiers).toEqual(preset.complexity_router_config.tiers);
     });
 
     // `??`, not `||`: match_threshold: 0 and an empty escalation_keywords array are deliberate,
@@ -732,10 +732,10 @@ describe("autorouter_presets", () => {
       };
       const prefill = buildPresetPrefill(config, groupsOnly(["gpt-5-nano"]));
       expect(prefill.matchThreshold).toBe(0);
-      expect(prefill.escalationКлючевые слова).toEqual([]);
+      expect(prefill.escalationKeywords).toEqual([]);
     });
 
-    it("carries a preset's context-window escalation opt-выход and buffer through the prefill", () => {
+    it("carries a preset's context-window escalation opt-out and buffer through the prefill", () => {
       const prefill = buildPresetPrefill(
         {
           tiers: { SIMPLE: ["gpt-5-nano"], MEDIUM: [], COMPLEX: [], REASONING: [] },
@@ -748,8 +748,8 @@ describe("autorouter_presets", () => {
         },
         groupsOnly(["gpt-5-nano"]),
       );
-      expect(prefill.complexityRouterКонфигурация.enable_context_window_escalation).toBe(false);
-      expect(prefill.complexityRouterКонфигурация.context_window_escalation_buffer).toBe(0.9);
+      expect(prefill.complexityRouterConfig.enable_context_window_escalation).toBe(false);
+      expect(prefill.complexityRouterConfig.context_window_escalation_buffer).toBe(0.9);
     });
 
     it("carries a preset's classification_mode and defaults it when the preset omits one", () => {
@@ -763,10 +763,10 @@ describe("autorouter_presets", () => {
       };
       const availability = groupsOnly(["gpt-5-nano"]);
       expect(
-        buildPresetPrefill({ ...base, classification_mode: "user_turn" }, availability).complexityRouterКонфигурация
+        buildPresetPrefill({ ...base, classification_mode: "user_turn" }, availability).complexityRouterConfig
           .classification_mode,
       ).toBe("user_turn");
-      expect(buildPresetPrefill(base, availability).complexityRouterКонфигурация.classification_mode).toBe("every_request");
+      expect(buildPresetPrefill(base, availability).complexityRouterConfig.classification_mode).toBe("every_request");
     });
 
     it("falls back to the defaults when a preset omits match_threshold and escalation_keywords", () => {
@@ -781,11 +781,11 @@ describe("autorouter_presets", () => {
         groupsOnly(["gpt-5-nano"]),
       );
       expect(prefill.matchThreshold).toBe(DEFAULT_MATCH_THRESHOLD);
-      expect(prefill.escalationКлючевые слова).toEqual(DEFAULT_ESCALATION_KEYWORDS);
+      expect(prefill.escalationKeywords).toEqual(DEFAULT_ESCALATION_KEYWORDS);
     });
 
     // The whole point of the separator normalization: a caller whose proxy only registered the
-    // dotted form of a version number still gets that Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию written into the tier, not the
+    // dotted form of a version number still gets that model written into the tier, not the
     // preset's own hyphenated spelling (which the caller never actually registered).
     it("prefills a preset's tier_labels and leaves them undefined when the preset has none", () => {
       const base = {
@@ -799,11 +799,11 @@ describe("autorouter_presets", () => {
         { ...base, tier_labels: { SIMPLE: "Cheap", REASONING: "Deep" } },
         groupsOnly(["gpt-5-nano"]),
       );
-      expect(labeled.complexityRouterКонфигурация.tier_labels).toEqual({ SIMPLE: "Cheap", REASONING: "Deep" });
-      expect(buildPresetPrefill(base, groupsOnly(["gpt-5-nano"])).complexityRouterКонфигурация.tier_labels).toBeUndefined();
+      expect(labeled.complexityRouterConfig.tier_labels).toEqual({ SIMPLE: "Cheap", REASONING: "Deep" });
+      expect(buildPresetPrefill(base, groupsOnly(["gpt-5-nano"])).complexityRouterConfig.tier_labels).toBeUndefined();
     });
 
-    it("rewrites a preset's Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name to the caller's differently-punctuated registered spelling", () => {
+    it("rewrites a preset's model name to the caller's differently-punctuated registered spelling", () => {
       const config = {
         tiers: { SIMPLE: ["claude-sonnet-4-5"], MEDIUM: [], COMPLEX: [], REASONING: [] },
         classifier_type: "heuristic" as const,
@@ -812,14 +812,14 @@ describe("autorouter_presets", () => {
         deployment_affinity: true,
       };
       const prefill = buildPresetPrefill(config, groupsOnly(["claude-sonnet-4.5"]));
-      expect(prefill.complexityRouterКонфигурация.tiers.SIMPLE).toEqual(["claude-sonnet-4.5"]);
+      expect(prefill.complexityRouterConfig.tiers.SIMPLE).toEqual(["claude-sonnet-4.5"]);
     });
 
-    it("prefills the per-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию litellm_params a preset carries in tier_model_configs", () => {
+    it("prefills the per-model litellm_params a preset carries in tier_model_configs", () => {
       const config = {
         tiers: { SIMPLE: ["gpt-5-nano"], MEDIUM: [], COMPLEX: [], REASONING: ["o3"] },
         tier_model_configs: {
-          REASONING: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "o3", litellm_params: { reasoning_effort: "high" } }],
+          REASONING: [{ model_name: "o3", litellm_params: { reasoning_effort: "high" } }],
         },
         classifier_type: "heuristic" as const,
         classification_mode: "every_request" as const,
@@ -827,19 +827,19 @@ describe("autorouter_presets", () => {
         deployment_affinity: true,
       };
       const prefill = buildPresetPrefill(config, groupsOnly(["gpt-5-nano", "o3"]));
-      expect(prefill.complexityRouterКонфигурация.tier_model_params).toEqual({
+      expect(prefill.complexityRouterConfig.tier_model_params).toEqual({
         REASONING: { o3: { reasoning_effort: "high" } },
       });
     });
 
     // The params key on the preset's own spelling while the tier entry gets rewritten to the
-    // caller's. Leaving the key alone names a Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию the tier no longer holds, and
-    // serializeTierModelConfigs then drops the params on submit withвыход saying so.
+    // caller's. Leaving the key alone names a model the tier no longer holds, and
+    // serializeTierModelConfigs then drops the params on submit without saying so.
     it("rewrites a param key to the same registered spelling its tier entry was rewritten to", () => {
       const config = {
         tiers: { SIMPLE: [], MEDIUM: [], COMPLEX: [], REASONING: ["claude-sonnet-4-5"] },
         tier_model_configs: {
-          REASONING: [{ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "claude-sonnet-4-5", litellm_params: { reasoning_effort: "high" } }],
+          REASONING: [{ model_name: "claude-sonnet-4-5", litellm_params: { reasoning_effort: "high" } }],
         },
         classifier_type: "heuristic" as const,
         classification_mode: "every_request" as const,
@@ -847,21 +847,21 @@ describe("autorouter_presets", () => {
         deployment_affinity: true,
       };
       const prefill = buildPresetPrefill(config, groupsOnly(["claude-sonnet-4.5"]));
-      expect(prefill.complexityRouterКонфигурация.tier_model_params).toEqual({
+      expect(prefill.complexityRouterConfig.tier_model_params).toEqual({
         REASONING: { "claude-sonnet-4.5": { reasoning_effort: "high" } },
       });
     });
 
-    // Two spellings of one Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию in a tier collapse to a single registered key, and one Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию can
+    // Two spellings of one model in a tier collapse to a single registered key, and one model can
     // only hold one param set downstream. Merging keeps whatever only one spelling set instead of
     // dropping that spelling's params wholesale.
-    it("merges rather than drops params when two spellings resolve to the same registered Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию", () => {
+    it("merges rather than drops params when two spellings resolve to the same registered model", () => {
       const config = {
         tiers: { SIMPLE: [], MEDIUM: [], COMPLEX: [], REASONING: ["claude-sonnet-4-5", "claude-sonnet-4.5"] },
         tier_model_configs: {
           REASONING: [
-            { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "claude-sonnet-4-5", litellm_params: { reasoning_effort: "high", temperature: 0.2 } },
-            { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: "claude-sonnet-4.5", litellm_params: { reasoning_effort: "low" } },
+            { model_name: "claude-sonnet-4-5", litellm_params: { reasoning_effort: "high", temperature: 0.2 } },
+            { model_name: "claude-sonnet-4.5", litellm_params: { reasoning_effort: "low" } },
           ],
         },
         classifier_type: "heuristic" as const,
@@ -872,12 +872,12 @@ describe("autorouter_presets", () => {
       const prefill = buildPresetPrefill(config, groupsOnly(["claude-sonnet-4.5"]));
       // temperature survives from the spelling that would otherwise have been overwritten;
       // reasoning_effort, set by both, resolves last-wins.
-      expect(prefill.complexityRouterКонфигурация.tier_model_params).toEqual({
+      expect(prefill.complexityRouterConfig.tier_model_params).toEqual({
         REASONING: { "claude-sonnet-4.5": { reasoning_effort: "low", temperature: 0.2 } },
       });
     });
 
-    it("leaves tier_model_params undefined for a preset that carries no per-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию params", () => {
+    it("leaves tier_model_params undefined for a preset that carries no per-model params", () => {
       const config = {
         tiers: { SIMPLE: ["gpt-5-nano"], MEDIUM: [], COMPLEX: [], REASONING: [] },
         classifier_type: "heuristic" as const,
@@ -886,7 +886,7 @@ describe("autorouter_presets", () => {
         deployment_affinity: true,
       };
       const prefill = buildPresetPrefill(config, groupsOnly(["gpt-5-nano"]));
-      expect(prefill.complexityRouterКонфигурация.tier_model_params).toBeUndefined();
+      expect(prefill.complexityRouterConfig.tier_model_params).toBeUndefined();
     });
   });
 });

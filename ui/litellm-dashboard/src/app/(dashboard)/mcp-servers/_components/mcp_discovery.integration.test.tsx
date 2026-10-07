@@ -2,57 +2,57 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import MCPDiscovery from "./mcp_discovery";
-import { fetchDiscoverableMCP-серверы } from "@/components/networking";
-import type { DiscoverableMCPСервер } from "@/components/mcp_tools/types";
+import { fetchDiscoverableMCPServers } from "@/components/networking";
+import type { DiscoverableMCPServer } from "@/components/mcp_tools/types";
 import { renderWithProviders } from "../../../../../tests/test-utils";
-import { setServerRootПуть } from "@/lib/serverRootПуть";
+import { setServerRootPath } from "@/lib/serverRootПуть";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { fileURLToПуть } from "node:url";
+import { fileURLToPath } from "node:url";
 
 vi.mock("@/components/networking", () => ({
-  fetchDiscoverableMCP-серверы: vi.fn(),
+  fetchDiscoverableMCPServers: vi.fn(),
 }));
 
-const githubСервер = {
+const githubServer = {
   name: "github",
   title: "GitHub",
   description: "Code hosting",
   category: "Developer Инструменты",
   icon_url: "",
-} as DiscoverableMCPСервер;
+} as DiscoverableMCPServer;
 
-const slackСервер = {
+const slackServer = {
   name: "slack",
   title: "Slack",
   description: "Team chat",
   category: "Communication",
   icon_url: "",
-} as DiscoverableMCPСервер;
+} as DiscoverableMCPServer;
 
 const defaultProps = {
   isVisible: true,
   onClose: vi.fn(),
-  onВыбратьСервер: vi.fn(),
-  onCustomСервер: vi.fn(),
-  accessТокен: "tok",
+  onSelectServer: vi.fn(),
+  onCustomServer: vi.fn(),
+  accessToken: "tok",
 };
 
 describe("MCPDiscovery", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    setServerRootПуть("/");
-    vi.mocked(fetchDiscoverableMCP-серверы).mockResolvedЗначение({
-      servers: [githubСервер, slackСервер],
+    setServerRootPath("/");
+    vi.mocked(fetchDiscoverableMCPServers).mockResolvedValue({
+      servers: [githubServer, slackServer],
       categories: ["Developer Инструменты", "Communication"],
     });
   });
 
   it.each(["", "/litellm"])("should render available catalog logos under the %s server root", async (root) => {
-    const testDirectory = dirname(fileURLToПуть(import.meta.url));
+    const testDirectory = dirname(fileURLToPath(import.meta.url));
     const registry = JSON.parse(
       readFileSync(resolve(testDirectory, "../../../../../../../litellm/proxy/mcp_registry.json"), "utf8"),
-    ) as { servers: DiscoverableMCPСервер[] };
+    ) as { servers: DiscoverableMCPServer[] };
     const expectedLogos = [
       ["exa", "/ui/assets/logos/exa_ai.png"],
       ["tavily", "/ui/assets/logos/tavily.png"],
@@ -65,8 +65,8 @@ describe("MCPDiscovery", () => {
       ["browserbase", "https://www.browserbase.com/favicon.svg"],
       ["aws", "/ui/assets/logos/aws.svg"],
     ] as const;
-    setServerRootПуть(root);
-    vi.mocked(fetchDiscoverableMCP-серверы).mockResolvedЗначение({
+    setServerRootPath(root);
+    vi.mocked(fetchDiscoverableMCPServers).mockResolvedValue({
       servers: expectedLogos.map(([name]) => {
         const server = registry.servers.find((entry) => entry.name === name)!;
         return server;
@@ -99,7 +99,7 @@ describe("MCPDiscovery", () => {
     expect(screen.getByText("Slack")).toBeInTheDocument();
     expect(groupHeading("Developer Инструменты")).toHaveLength(1);
     expect(groupHeading("Communication")).toHaveLength(1);
-    expect(screen.getByText("Add MCP Сервер")).toBeInTheDocument();
+    expect(screen.getByText("Add MCP Server")).toBeInTheDocument();
   });
 
   it("filters the list down to the chosen category", async () => {
@@ -123,25 +123,25 @@ describe("MCPDiscovery", () => {
   });
 
   it("hands the picked server back to the caller", async () => {
-    const onВыбратьСервер = vi.fn();
-    render(<MCPDiscovery {...defaultProps} onВыбратьСервер={onВыбратьСервер} />);
+    const onSelectServer = vi.fn();
+    render(<MCPDiscovery {...defaultProps} onSelectServer={onSelectServer} />);
 
     await userEvent.click(await screen.findByText("GitHub"));
 
-    expect(onВыбратьСервер).toHaveBeenCalledWith(githubСервер);
+    expect(onSelectServer).toHaveBeenCalledWith(githubServer);
   });
 
   it("offers a custom-server escape hatch", async () => {
-    const onCustomСервер = vi.fn();
-    render(<MCPDiscovery {...defaultProps} onCustomСервер={onCustomСервер} />);
+    const onCustomServer = vi.fn();
+    render(<MCPDiscovery {...defaultProps} onCustomServer={onCustomServer} />);
 
-    await userEvent.click(await screen.findByRole("button", { name: "+ Custom Сервер" }));
+    await userEvent.click(await screen.findByRole("button", { name: "+ Custom Server" }));
 
-    expect(onCustomСервер).toHaveBeenCalled();
+    expect(onCustomServer).toHaveBeenCalled();
   });
 
   it("surfaces a fetch failure", async () => {
-    vi.mocked(fetchDiscoverableMCP-серверы).mockRejectedЗначение(new Ошибка("registry down"));
+    vi.mocked(fetchDiscoverableMCPServers).mockRejectedValue(new Error("registry down"));
 
     render(<MCPDiscovery {...defaultProps} />);
 
@@ -149,7 +149,7 @@ describe("MCPDiscovery", () => {
   });
 
   it("offers the custom-server link when nothing matches", async () => {
-    vi.mocked(fetchDiscoverableMCP-серверы).mockResolvedЗначение({ servers: [], categories: [] });
+    vi.mocked(fetchDiscoverableMCPServers).mockResolvedValue({ servers: [], categories: [] });
 
     render(<MCPDiscovery {...defaultProps} />);
 
@@ -167,20 +167,20 @@ describe("MCPDiscovery", () => {
     expect(width).not.toContain("sm:max-w-md");
   });
 
-  // The close button is absolutely positioned, so it is выход of flow and the header
-  // row lays выход as if it were not there. Withвыход a reserved margin the custom-server
-  // action sits underneath it. jsdom has no layвыход engine, so this pins the class.
+  // The close button is absolutely positioned, so it is out of flow and the header
+  // row lays out as if it were not there. Without a reserved margin the custom-server
+  // action sits underneath it. jsdom has no layout engine, so this pins the class.
   it("keeps the custom-server action clear of the close button", async () => {
     render(<MCPDiscovery {...defaultProps} />);
     await screen.findByText("GitHub");
 
     expect(document.querySelector("[data-slot='dialog-close']")).toHaveClass("absolute");
-    expect(screen.getByRole("button", { name: "+ Custom Сервер" })).toHaveClass("mr-8");
+    expect(screen.getByRole("button", { name: "+ Custom Server" })).toHaveClass("mr-8");
   });
 
   it("does not fetch while hidden", () => {
     render(<MCPDiscovery {...defaultProps} isVisible={false} />);
 
-    expect(fetchDiscoverableMCP-серверы).not.toHaveBeenCalled();
+    expect(fetchDiscoverableMCPServers).not.toHaveBeenCalled();
   });
 });

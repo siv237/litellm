@@ -1,26 +1,26 @@
-import { ЗапросClientПровайдер } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import moment from "moment";
 import { NuqsTestingAdapter, type UrlUpdateEvent } from "nuqs/adapters/testing";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { render, renderWithProviders, testRequestClient } from "../../../tests/test-utils";
+import { render, renderWithProviders, testQueryClient } from "../../../tests/test-utils";
 import type { LogEntry } from "./columns";
-import ЗапросЖурналыPanel from "./ЗапросЖурналыPanel";
+import RequestLogsPanel from "./ЗапросЖурналыPanel";
 
 vi.mock("../networking", async (importOriginal) => {
   const actual = await importOriginal<typeof import("../networking")>();
   return {
     ...actual,
     uiSpendLogsCall: vi.fn(),
-    keyInfoV1Call: vi.fn().mockResolvedЗначение({ info: {} }),
-    allEndUsersCall: vi.fn().mockResolvedЗначение([]),
+    keyInfoV1Call: vi.fn().mockResolvedValue({ info: {} }),
+    allEndUsersCall: vi.fn().mockResolvedValue([]),
   };
 });
 
 vi.mock("@/components/key_team_helpers/filter_helpers", () => ({
-  fetchВсеКоманды: vi.fn().mockResolvedЗначение([]),
+  fetchAllTeams: vi.fn().mockResolvedValue([]),
 }));
 
 vi.mock("./LogDetailsDrawer", () => ({
@@ -29,17 +29,17 @@ vi.mock("./LogDetailsDrawer", () => ({
     logEntry,
     sessionId,
     onClose,
-    allЖурналы = [],
+    allLogs = [],
     onSelectLog,
   }: {
     open: boolean;
     logEntry?: { request_id: string } | null;
     sessionId?: string | null;
     onClose: () => void;
-    allЖурналы?: { request_id: string }[];
+    allLogs?: { request_id: string }[];
     onSelectLog?: (log: { request_id: string }) => void;
   }) {
-    const nextLog = allЖурналы.find((log) => log.request_id !== logEntry?.request_id);
+    const nextLog = allLogs.find((log) => log.request_id !== logEntry?.request_id);
     return (
       <div data-testid="log-details-drawer" data-log-id={logEntry?.request_id ?? ""} data-session-id={sessionId ?? ""}>
         {open ? "open" : "closed"}
@@ -57,10 +57,10 @@ vi.mock("./LogDetailsDrawer", () => ({
 const debounce = vi.hoisted(() => ({ settled: null as string | null }));
 
 vi.mock("@tanstack/react-pacer/debouncer", () => ({
-  useDebouncedЗначение: vi.fn((value: unknown) => [debounce.settled ?? value, { cancel: vi.fn(), flush: vi.fn() }]),
+  useDebouncedValue: vi.fn((value: unknown) => [debounce.settled ?? value, { cancel: vi.fn(), flush: vi.fn() }]),
 }));
 
-import { useDebouncedЗначение } from "@tanstack/react-pacer/debouncer";
+import { useDebouncedValue } from "@tanstack/react-pacer/debouncer";
 import { DEBOUNCE_WAIT_MS } from "@/utils/debounceConstants";
 import { uiSpendLogsCall } from "../networking";
 
@@ -68,15 +68,15 @@ const logEntry = (overrides: Partial<LogEntry>): LogEntry => ({
   request_id: "req-1",
   api_key: "key-1",
   team_id: "team-1",
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "gpt-4o",
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_id: "Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-1",
+  model: "gpt-4o",
+  model_id: "model-1",
   call_type: "acompletion",
   spend: 0.01,
   total_tokens: 10,
   prompt_tokens: 5,
   completion_tokens: 5,
-  startВремя: "2026-07-07T09:50:13Z",
-  endВремя: "2026-07-07T09:50:14Z",
+  startTime: "2026-07-07T09:50:13Z",
+  endTime: "2026-07-07T09:50:14Z",
   cache_hit: "false",
   messages: [],
   response: {},
@@ -84,7 +84,7 @@ const logEntry = (overrides: Partial<LogEntry>): LogEntry => ({
 });
 
 const respondWith = (data: LogEntry[]) =>
-  vi.mocked(uiSpendLogsCall).mockResolvedЗначение({
+  vi.mocked(uiSpendLogsCall).mockResolvedValue({
     data,
     total: data.length,
     page: 1,
@@ -93,7 +93,7 @@ const respondWith = (data: LogEntry[]) =>
   });
 
 const defaultProps = {
-  accessТокен: "test-token",
+  accessToken: "test-token",
   token: "test-token",
   userRole: "Admin",
   userID: "user-1",
@@ -105,9 +105,9 @@ const lastCall = () => vi.mocked(uiSpendLogsCall).mock.calls.at(-1)?.[0];
 
 const onUrlUpdate = vi.fn<(event: UrlUpdateEvent) => void>();
 const renderPanel = (searchParams?: string) =>
-  renderWithProviders(<ЗапросЖурналыPanel {...defaultProps} />, { searchParams, onUrlUpdate });
+  renderWithProviders(<RequestLogsPanel {...defaultProps} />, { searchParams, onUrlUpdate });
 
-const renderPanelWithИстория = () => {
+const renderPanelWithHistory = () => {
   const stack = [""];
   const handleUrlUpdate = (event: UrlUpdateEvent) => {
     onUrlUpdate(event);
@@ -118,10 +118,10 @@ const renderPanelWithИстория = () => {
     }
   };
   const tree = (searchParams: string) => (
-    <NuqsTestingAdapter searchParams={searchParams} onUrlUpdate={handleUrlUpdate} hasПамять>
-      <ЗапросClientПровайдер client={testRequestClient}>
-        <ЗапросЖурналыPanel {...defaultProps} />
-      </ЗапросClientПровайдер>
+    <NuqsTestingAdapter searchParams={searchParams} onUrlUpdate={handleUrlUpdate} hasMemory>
+      <QueryClientProvider client={testQueryClient}>
+        <RequestLogsPanel {...defaultProps} />
+      </QueryClientProvider>
     </NuqsTestingAdapter>
   );
   const view = render(tree(""));
@@ -142,13 +142,13 @@ describe("ЗапросЖурналыPanel", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     sessionStorage.clear();
-    testRequestClient.clear();
+    testQueryClient.clear();
     respondWith([]);
     debounce.settled = null;
   });
 
   describe("server-grouped session pagination (#38060)", () => {
-    it("requests session-grouped pages of 25 rows by default withвыход a cursor", async () => {
+    it("requests session-grouped pages of 25 rows by default without a cursor", async () => {
       renderPanel();
 
       await waitFor(() => expect(uiSpendLogsCall).toHaveBeenCalled());
@@ -179,7 +179,7 @@ describe("ЗапросЖурналыPanel", () => {
         next_session_cursor: null,
         has_more: false,
       };
-      vi.mocked(uiSpendLogsCall).mockResolvedЗначение(lastPage);
+      vi.mocked(uiSpendLogsCall).mockResolvedValue(lastPage);
       renderPanel();
 
       await waitFor(() => expect(row("req-a")).not.toBeNull());
@@ -197,7 +197,7 @@ describe("ЗапросЖурналыPanel", () => {
         next_session_cursor: "2026-07-07 09:50:13|key-1|sess-1",
         has_more: true,
       };
-      vi.mocked(uiSpendLogsCall).mockResolvedЗначение(firstPage);
+      vi.mocked(uiSpendLogsCall).mockResolvedValue(firstPage);
       renderPanel();
 
       await waitFor(() => expect(row("req-0")).not.toBeNull());
@@ -205,7 +205,7 @@ describe("ЗапросЖурналыPanel", () => {
       expect(screen.getByTestId("pagination-next")).toBeEnabled();
     });
 
-    it("renders every row the server returns withвыход client-side collapsing", async () => {
+    it("renders every row the server returns without client-side collapsing", async () => {
       respondWith([
         logEntry({ request_id: "req-a", session_id: "sess-1", session_total_count: 3 }),
         logEntry({ request_id: "req-b", session_id: "sess-1", session_total_count: 3 }),
@@ -237,7 +237,7 @@ describe("ЗапросЖурналыPanel", () => {
 
     it("passes the server keyset cursor when navigating to the next page", async () => {
       const firstPage = Array.from({ length: 50 }, (_, index) => logEntry({ request_id: `req-${index}` }));
-      vi.mocked(uiSpendLogsCall).mockResolvedЗначение({
+      vi.mocked(uiSpendLogsCall).mockResolvedValue({
         data: firstPage,
         total: 80,
         page: 1,
@@ -258,7 +258,7 @@ describe("ЗапросЖурналыPanel", () => {
       });
     });
 
-    it("jumps straight to the last page withвыход a cursor when the last-page button is clicked", async () => {
+    it("jumps straight to the last page without a cursor when the last-page button is clicked", async () => {
       const firstPage = Array.from({ length: 25 }, (_, index) => logEntry({ request_id: `req-${index}` }));
       const lastPage = Array.from({ length: 10 }, (_, index) => logEntry({ request_id: `req-last-${index}` }));
       vi.mocked(uiSpendLogsCall).mockImplementation(async ({ page }) =>
@@ -298,7 +298,7 @@ describe("ЗапросЖурналыPanel", () => {
 
     it("drops the cursor and returns to the first page when a filter changes", async () => {
       const firstPage = Array.from({ length: 50 }, (_, index) => logEntry({ request_id: `req-${index}` }));
-      vi.mocked(uiSpendLogsCall).mockResolvedЗначение({
+      vi.mocked(uiSpendLogsCall).mockResolvedValue({
         data: firstPage,
         total: 80,
         page: 1,
@@ -324,7 +324,7 @@ describe("ЗапросЖурналыPanel", () => {
 
     it("ignores another next click while the next page is still fetching", async () => {
       const firstPage = Array.from({ length: 50 }, (_, index) => logEntry({ request_id: `req-${index}` }));
-      const firstОтвет = {
+      const firstResponse = {
         data: firstPage,
         total: 150,
         page: 1,
@@ -334,7 +334,7 @@ describe("ЗапросЖурналыPanel", () => {
         has_more: true,
       };
       vi.mocked(uiSpendLogsCall)
-        .mockResolvedValueOnce(firstОтвет)
+        .mockResolvedValueOnce(firstResponse)
         .mockImplementation(() => new Promise(() => {}));
       renderPanel();
 
@@ -350,7 +350,7 @@ describe("ЗапросЖурналыPanel", () => {
 
     it("still moves to the next page while a live-tail refetch of the current page is in flight", async () => {
       const firstPage = Array.from({ length: 50 }, (_, index) => logEntry({ request_id: `req-${index}` }));
-      const firstОтвет = {
+      const firstResponse = {
         data: firstPage,
         total: 150,
         page: 1,
@@ -360,12 +360,12 @@ describe("ЗапросЖурналыPanel", () => {
         has_more: true,
       };
       vi.mocked(uiSpendLogsCall)
-        .mockResolvedValueOnce(firstОтвет)
+        .mockResolvedValueOnce(firstResponse)
         .mockImplementation(() => new Promise(() => {}));
       renderPanel();
 
       await waitFor(() => expect(row("req-0")).not.toBeNull());
-      void testRequestClient.refetchQueries({ queryКлюч: ["logs", "table"] });
+      void testQueryClient.refetchQueries({ queryKey: ["logs", "table"] });
       await waitFor(() => expect(uiSpendLogsCall).toHaveBeenCalledTimes(2));
 
       fireEvent.click(screen.getByTestId("pagination-next"));
@@ -380,7 +380,7 @@ describe("ЗапросЖурналыPanel", () => {
     it("drops the cursor and returns to the first page when Custom Range is toggled", async () => {
       const user = userEvent.setup();
       const firstPage = Array.from({ length: 50 }, (_, index) => logEntry({ request_id: `req-${index}` }));
-      vi.mocked(uiSpendLogsCall).mockResolvedЗначение({
+      vi.mocked(uiSpendLogsCall).mockResolvedValue({
         data: firstPage,
         total: 80,
         page: 1,
@@ -427,7 +427,7 @@ describe("ЗапросЖурналыPanel", () => {
 
       await waitFor(() => {
         const call = lastCall();
-        if (!call) throw new Ошибка("uiSpendLogsCall was not called");
+        if (!call) throw new Error("uiSpendЖурналыCall was not called");
         expect(call.params?.search).toBe("req-on-another-page");
         expect(call.page).toBe(1);
       });
@@ -443,15 +443,15 @@ describe("ЗапросЖурналыPanel", () => {
 
       fireEvent.change(screen.getByTestId("datatable-search"), { target: { value: "still-typing" } });
 
-      expect(screen.getByTestId("datatable-search")).toHaveЗначение("still-typing");
+      expect(screen.getByTestId("datatable-search")).toHaveValue("still-typing");
       await waitFor(() =>
-        expect(useDebouncedЗначение).toHaveBeenLastCalledWith("still-typing", { wait: DEBOUNCE_WAIT_MS }),
+        expect(useDebouncedValue).toHaveBeenLastCalledWith("still-typing", { wait: DEBOUNCE_WAIT_MS }),
       );
       await waitFor(() => expect(lastCall()?.params?.search).toBe("settled-id"));
-      const sentLiveЗначение = vi
+      const sentLiveValue = vi
         .mocked(uiSpendLogsCall)
         .mock.calls.some(([options]) => options.params?.search === "still-typing");
-      expect(sentLiveЗначение).toBe(false);
+      expect(sentLiveValue).toBe(false);
     });
 
     it("shows a Search chip whose remove button clears the box and restores the unsearched listing", async () => {
@@ -473,7 +473,7 @@ describe("ЗапросЖурналыPanel", () => {
 
       await user.click(screen.getByRole("button", { name: "Remove Search filter" }));
 
-      expect(screen.getByTestId("datatable-search")).toHaveЗначение("");
+      expect(screen.getByTestId("datatable-search")).toHaveValue("");
       await waitFor(() => expect(row("req-initial")).not.toBeNull());
       expect(row("req-sess")).toBeNull();
     });
@@ -490,7 +490,7 @@ describe("ЗапросЖурналыPanel", () => {
 
       const windowSeconds = () => {
         const call = lastCall();
-        if (!call) throw new Ошибка("no call");
+        if (!call) throw new Error("no call");
         return moment
           .utc(call.end_date, "YYYY-MM-DD HH:mm:ss")
           .diff(moment.utc(call.start_date, "YYYY-MM-DD HH:mm:ss"), "seconds");
@@ -517,7 +517,7 @@ describe("ЗапросЖурналыPanel", () => {
 
       await waitFor(() => {
         const call = lastCall();
-        if (!call) throw new Ошибка("no call");
+        if (!call) throw new Error("no call");
         const diff = moment
           .utc(call.end_date, "YYYY-MM-DD HH:mm:ss")
           .diff(moment.utc(call.start_date, "YYYY-MM-DD HH:mm:ss"), "seconds");
@@ -571,7 +571,7 @@ describe("ЗапросЖурналыPanel", () => {
       const byIdCall = vi
         .mocked(uiSpendLogsCall)
         .mock.calls.find(([options]) => options.params?.request_id === "req-old")?.[0];
-      if (!byIdCall) throw new Ошибка("expected a by-id uiSpendLogsCall");
+      if (!byIdCall) throw new Error("expected a by-id uiSpendЖурналыCall");
       expect(byIdCall.page).toBe(1);
       expect(byIdCall.page_size).toBe(1);
       expect(byIdCall.params?.group_by_session).toBeUndefined();
@@ -595,7 +595,7 @@ describe("ЗапросЖурналыPanel", () => {
     it("switching logs inside the drawer replaces the URL, so back closes the drawer in one step", async () => {
       const user = userEvent.setup();
       respondWith([logEntry({ request_id: "req-1" }), logEntry({ request_id: "req-2" })]);
-      const { goBack } = renderPanelWithИстория();
+      const { goBack } = renderPanelWithHistory();
 
       await waitFor(() => expect(row("req-1")).not.toBeNull());
       await user.click(row("req-1") as HTMLElement);
@@ -714,7 +714,7 @@ describe("ЗапросЖурналыPanel", () => {
   describe("hide health checks", () => {
     const toggle = () => screen.getByRole("switch", { name: "Hide Health Checks" });
 
-    it("defaults to showing health checks and refetches withвыход them from page 1 when toggled on", async () => {
+    it("defaults to showing health checks and refetches without them from page 1 when toggled on", async () => {
       const user = userEvent.setup();
       renderPanel();
 

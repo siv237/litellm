@@ -11,7 +11,7 @@ describe("PresidioDetectedEntities", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("renders per-entity header info including score color and position", async () => {
+  it("renders per-entity header info including Оценка color and position", async () => {
     const user = userEvent.setup();
     const e = makeEntity({ start: 10, end: 20, score: 0.92, entity_type: "EMAIL_ADDRESS" });
     renderWithProviders(<PresidioDetectedEntities entities={[e]} />);
@@ -24,32 +24,32 @@ describe("PresidioDetectedEntities", () => {
     // Expand details
     await user.click(screen.getByText("EMAIL_ADDRESS"));
     expect(screen.getByText("Тип сущности:")).toBeInTheDocument();
-    expect(screen.getByText("Символы 10-20")).toBeInTheDocument();
+    expect(screen.getByText("Characters 10-20")).toBeInTheDocument();
     expect(screen.getByText("Уверенность:")).toBeInTheDocument();
-    // Распознаватель details
-    expect(screen.getByText("EmailРаспознаватель")).toBeInTheDocument();
+    // Recognizer details
+    expect(screen.getByText("EmailRecognizer")).toBeInTheDocument();
     expect(screen.getByText("email_v1")).toBeInTheDocument();
-    // Пояснение
+    // Explanation
     expect(screen.getByText("Matched via pattern")).toBeInTheDocument();
   });
 
-  it("handles missing metadata & low scores gracefully", async () => {
+  it("handles missing Метаданные & low scores gracefully", async () => {
     const user = userEvent.setup();
     const e = makeEntity({
       score: 0.3,
       recognition_metadata: undefined as any,
       analysis_explanation: null,
-      entity_type: "NAME",
+      entity_type: "Название",
       start: 0,
       end: 0,
     });
     renderWithProviders(<PresidioDetectedEntities entities={[e]} />);
 
-    await user.click(screen.getByText("NAME"));
+    await user.click(screen.getByText("Название"));
     // No recognizer/explanation rows
     expect(screen.queryByText("Распознаватель:")).not.toBeInTheDocument();
     expect(screen.queryByText("Пояснение:")).not.toBeInTheDocument();
-    // Позиция still renders
-    expect(screen.getByText("Символы 0-0")).toBeInTheDocument();
+    // Position still renders
+    expect(screen.getByText("Characters 0-0")).toBeInTheDocument();
   });
 });

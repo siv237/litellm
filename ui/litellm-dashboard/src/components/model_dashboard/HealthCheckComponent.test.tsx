@@ -15,31 +15,31 @@ vi.mock("../networking", () => ({
   latestHealthChecksCall: (...args: unknown[]) => mockLatestHealthChecksCall(...args),
 }));
 
-const getDisplayModelName = (Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name?: string }) => Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию.model_name ?? "";
+const getDisplayModelName = (model: { model_name?: string }) => model.model_name ?? "";
 
 const makeModel = (id: string, name = "gpt-4") => ({
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_name: name,
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_info: { id },
+  model_name: name,
+  model_info: { id },
   litellm_model_name: name,
 });
 
 interface HarnessProps {
-  Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: ReturnType<typeof makeModel>[] };
+  modelData: { data: ReturnType<typeof makeModel>[] };
   allModelsOnProxy: string[];
   rowCount?: number;
   onPageIndexChange?: (pageIndex: number) => void;
 }
 
 /** Holds pagination state so page changes exercise the real controlled wiring. */
-function Harness({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData, allModelsOnProxy, rowCount = 1, onPageIndexChange }: HarnessProps) {
+function Harness({ modelData, allModelsOnProxy, rowCount = 1, onPageIndexChange }: HarnessProps) {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 50 });
 
   return (
     <>
       <span data-testid="page-index">{pagination.pageIndex}</span>
       <HealthCheckComponent
-        accessТокен="token"
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData={Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData}
+        accessToken="token"
+        modelData={modelData}
         all_models_on_proxy={allModelsOnProxy}
         getDisplayModelName={getDisplayModelName}
         pagination={pagination}
@@ -61,15 +61,15 @@ const renderHealthCheck = async (props: HarnessProps) => {
     render(<Harness {...props} />);
   });
   await act(async () => {
-    await new Promise((r) => setВремявыход(r, 0));
+    await new Promise((r) => setTimeout(r, 0));
   });
 };
 
 describe("HealthCheckComponent", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockLatestHealthChecksCall.mockResolvedЗначение({ latest_health_checks: {} });
-    mockIndividualModelHealthCheckCall.mockResolvedЗначение({
+    mockLatestHealthChecksCall.mockResolvedValue({ latest_health_checks: {} });
+    mockIndividualModelHealthCheckCall.mockResolvedValue({
       healthy_count: 1,
       unhealthy_count: 0,
       healthy_endpoints: [],
@@ -78,17 +78,17 @@ describe("HealthCheckComponent", () => {
   });
 
   it("should render the health check section", async () => {
-    await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeModel("deployment-1")] }, allModelsOnProxy: ["deployment-1"] });
+    await renderHealthCheck({ modelData: { data: [makeModel("deployment-1")] }, allModelsOnProxy: ["deployment-1"] });
 
     expect(screen.getByText("Режимl Состояние")).toBeInTheDocument();
     expect(
-      screen.getByText("Run health checks on individual Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs to verify they are working correctly"),
+      screen.getByText("Run health checks on individual models to verify they are working correctly"),
     ).toBeInTheDocument();
   });
 
-  it("should call individualModelHealthCheckCall with Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию id when run health check is triggered", async () => {
+  it("should call individualРежимlHealthCheckCall with model id when run health check is triggered", async () => {
     render(
-      <Harness Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData={{ data: [makeModel("deployment-abc-123")] }} allModelsOnProxy={["deployment-abc-123"]} />,
+      <Harness modelData={{ data: [makeModel("deployment-abc-123")] }} allModelsOnProxy={["deployment-abc-123"]} />,
     );
 
     const runButtons = screen.getAllByTestId("run-health-check-btn");
@@ -98,7 +98,7 @@ describe("HealthCheckComponent", () => {
       runButtons[0].click();
     });
     await act(async () => {
-      await new Promise((r) => setВремявыход(r, 50));
+      await new Promise((r) => setTimeout(r, 50));
     });
 
     expect(mockIndividualModelHealthCheckCall).toHaveBeenCalledWith("token", "deployment-abc-123");
@@ -108,7 +108,7 @@ describe("HealthCheckComponent", () => {
   it("should page through results with the shared pagination footer", async () => {
     const onPageIndexChange = vi.fn();
     await renderHealthCheck({
-      Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeModel("deployment-1")] },
+      modelData: { data: [makeModel("deployment-1")] },
       allModelsOnProxy: ["deployment-1"],
       rowCount: 75,
       onPageIndexChange,
@@ -127,34 +127,34 @@ describe("HealthCheckComponent", () => {
     const twoModels = { data: [makeModel("id-alpha", "alpha"), makeModel("id-beta", "beta")] };
     const bothIds = ["id-alpha", "id-beta"];
 
-    it("runs only the selected Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs and labels the button accordingly", async () => {
-      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
+    it("runs only the selected models and labels the button accordingly", async () => {
+      await renderHealthCheck({ modelData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
       const user = userEvent.setup();
 
       expect(screen.getByTestId("run-health-checks")).toHaveTextContent("Run Все Checks");
 
       await user.click(screen.getByTestId("datatable-select-row-id-beta"));
-      expect(screen.getByTestId("run-health-checks")).toHaveTextContent("Run Выбрано Checks");
+      expect(screen.getByTestId("run-health-checks")).toHaveTextContent("Run Выбратьed Checks");
 
       await act(async () => {
         screen.getByTestId("run-health-checks").click();
       });
       await act(async () => {
-        await new Promise((r) => setВремявыход(r, 50));
+        await new Promise((r) => setTimeout(r, 50));
       });
 
       expect(mockIndividualModelHealthCheckCall).toHaveBeenCalledWith("token", "id-beta");
       expect(mockIndividualModelHealthCheckCall).not.toHaveBeenCalledWith("token", "id-alpha");
     });
 
-    it("falls back to every Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию on the page when nothing is selected", async () => {
-      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
+    it("falls back to every model on the page when nothing is selected", async () => {
+      await renderHealthCheck({ modelData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
 
       await act(async () => {
         screen.getByTestId("run-health-checks").click();
       });
       await act(async () => {
-        await new Promise((r) => setВремявыход(r, 50));
+        await new Promise((r) => setTimeout(r, 50));
       });
 
       expect(mockIndividualModelHealthCheckCall).toHaveBeenCalledWith("token", "id-alpha");
@@ -162,7 +162,7 @@ describe("HealthCheckComponent", () => {
     });
 
     it("treats a full page selection as running everything", async () => {
-      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
+      await renderHealthCheck({ modelData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
       const user = userEvent.setup();
 
       await user.click(screen.getByTestId("datatable-select-all"));
@@ -171,7 +171,7 @@ describe("HealthCheckComponent", () => {
     });
 
     it("clears the selection from the Clear Выбратьion button", async () => {
-      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
+      await renderHealthCheck({ modelData: twoModels, allModelsOnProxy: bothIds, rowCount: 2 });
       const user = userEvent.setup();
 
       expect(screen.queryByTestId("clear-health-selection")).not.toBeInTheDocument();
@@ -184,9 +184,9 @@ describe("HealthCheckComponent", () => {
     });
 
     // The pager swaps the underlying rows, so a carried-over selection would target
-    // Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs that are no longer on screen.
+    // models that are no longer on screen.
     it("wipes the selection when the page changes", async () => {
-      await renderHealthCheck({ Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: twoModels, allModelsOnProxy: bothIds, rowCount: 120 });
+      await renderHealthCheck({ modelData: twoModels, allModelsOnProxy: bothIds, rowCount: 120 });
       const user = userEvent.setup();
 
       await user.click(screen.getByTestId("datatable-select-row-id-alpha"));
@@ -199,9 +199,9 @@ describe("HealthCheckComponent", () => {
     });
   });
 
-  describe("latest_health_checks keyed by Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию id", () => {
-    it("should show status from latest_health_checks when keys match Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию ids", async () => {
-      mockLatestHealthChecksCall.mockResolvedЗначение({
+  describe("latest_health_checks keyed by model id", () => {
+    it("should show status from latest_health_checks when keys match model ids", async () => {
+      mockLatestHealthChecksCall.mockResolvedValue({
         latest_health_checks: {
           "id-alpha": { status: "healthy", checked_at: "2024-01-15T10:00:00Z", error_message: null },
           "id-beta": { status: "unhealthy", checked_at: "2024-01-15T10:05:00Z", error_message: "Подключение failed" },
@@ -209,7 +209,7 @@ describe("HealthCheckComponent", () => {
       });
 
       await renderHealthCheck({
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeModel("id-alpha"), makeModel("id-beta")] },
+        modelData: { data: [makeModel("id-alpha"), makeModel("id-beta")] },
         allModelsOnProxy: ["id-alpha", "id-beta"],
         rowCount: 2,
       });
@@ -219,33 +219,33 @@ describe("HealthCheckComponent", () => {
       expect(screen.getAllByText("unhealthy").length).toBeGreaterThanOrEqual(1);
     });
 
-    it("should skip latest_health_checks entries whose key is not a known Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию id", async () => {
-      mockLatestHealthChecksCall.mockResolvedЗначение({
+    it("should skip latest_health_checks entries whose key is not a known model id", async () => {
+      mockLatestHealthChecksCall.mockResolvedValue({
         latest_health_checks: {
-          "current-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id": { status: "healthy", checked_at: "2024-01-15T10:00:00Z", error_message: null },
+          "current-model-id": { status: "healthy", checked_at: "2024-01-15T10:00:00Z", error_message: null },
           "deleted-or-unknown-id": { status: "unhealthy", checked_at: "2024-01-15T10:05:00Z", error_message: "Stale" },
         },
       });
 
       await renderHealthCheck({
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeModel("current-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id")] },
-        allModelsOnProxy: ["current-Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id"],
+        modelData: { data: [makeModel("current-model-id")] },
+        allModelsOnProxy: ["current-model-id"],
       });
 
       expect(screen.getByText("healthy")).toBeInTheDocument();
       expect(screen.queryByText("unhealthy")).not.toBeInTheDocument();
     });
 
-    it("should not apply status when latest_health_checks key is Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию name not Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию id", async () => {
-      mockLatestHealthChecksCall.mockResolvedЗначение({
+    it("should not apply status when latest_health_checks key is model name not model id", async () => {
+      mockLatestHealthChecksCall.mockResolvedValue({
         latest_health_checks: {
           "gpt-4": { status: "healthy", checked_at: "2024-01-15T10:00:00Z", error_message: null },
         },
       });
 
       await renderHealthCheck({
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюData: { data: [makeModel("Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id-123")] },
-        allModelsOnProxy: ["Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию-id-123"],
+        modelData: { data: [makeModel("model-id-123")] },
+        allModelsOnProxy: ["model-id-123"],
       });
 
       expect(screen.queryByText("healthy")).not.toBeInTheDocument();

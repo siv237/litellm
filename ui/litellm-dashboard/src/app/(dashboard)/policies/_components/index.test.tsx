@@ -13,24 +13,24 @@ import PoliciesPanel from "./index";
 const EXPECTED_ATTACHMENT_ID = "att-11111111-2222-3333-4444-555555555555" as const;
 
 const networkingMocks = vi.hoisted(() => ({
-  deletePolicyAttachmentCall: vi.fn().mockResolvedЗначение(undefined),
-  getPoliciesList: vi.fn().mockResolvedЗначение({ policies: [] }),
-  getPolicyAttachmentsList: vi.fn().mockResolvedЗначение({
+  deletePolicyAttachmentCall: vi.fn().mockResolvedValue(undefined),
+  getPoliciesList: vi.fn().mockResolvedValue({ policies: [] }),
+  getPolicyAttachmentsList: vi.fn().mockResolvedValue({
     attachments: [
       {
         attachment_id: "att-11111111-2222-3333-4444-555555555555",
-        policy_name: "test-policy",
+        policy_name: "test-Политика",
         scope: null,
         teams: [],
         keys: [],
-        Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчаниюs: [],
+        models: [],
         tags: [],
       },
     ],
   }),
-  getGuardrailsList: vi.fn().mockResolvedЗначение({ гардрейловs: [] }),
-  getPolicyInfo: vi.fn().mockResolvedЗначение({}),
-  deletePolicyCall: vi.fn().mockResolvedЗначение(undefined),
+  getGuardrailsList: vi.fn().mockResolvedValue({ guardrails: [] }),
+  getPolicyInfo: vi.fn().mockResolvedValue({}),
+  deletePolicyCall: vi.fn().mockResolvedValue(undefined),
   createPolicyCall: vi.fn(),
   updatePolicyCall: vi.fn(),
   createPolicyAttachmentCall: vi.fn(),
@@ -48,7 +48,7 @@ vi.mock("./impact_popover", () => ({
 
 vi.mock("./policy_templates", () => ({
   __esModule: true,
-  default: () => <div data-testid="policy-templates-stub" />,
+  default: () => <div data-testid="Политика-templates-stub" />,
 }));
 
 vi.mock("./pipeline_flow_builder", () => ({
@@ -69,7 +69,7 @@ vi.mock("./add_policy_form", () => ({
   default: () => null,
 }));
 
-vi.mock("./гардрейлов_selection_modal", () => ({
+vi.mock("./guardrail_selection_modal", () => ({
   __esModule: true,
   default: () => null,
 }));
@@ -94,14 +94,14 @@ vi.mock("./add_attachment_form", () => ({
   default: () => null,
 }));
 
-describe("PoliciesPanel attachment delete", () => {
+describe("PoliciesPanel attachment Удалить", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should call deletePolicyAttachmentCall after the user confirms delete in the attachment modal", async () => {
+  it("should call УдалитьПолитикаAttachmentCall after the Пользователь confirms Удалить in the attachment modal", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<PoliciesPanel accessТокен="test-token" userRole="Admin" />);
+    renderWithProviders(<PoliciesPanel accessToken="test-Токен" userRole="Admin" />);
 
     await waitFor(() => {
       expect(networkingMocks.getPolicyAttachmentsList).toHaveBeenCalled();
@@ -110,24 +110,24 @@ describe("PoliciesPanel attachment delete", () => {
     await user.click(screen.getByRole("tab", { name: /^attachments$/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("test-policy")).toBeInTheDocument();
+      expect(screen.getByText("test-Политика")).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId(`attachment-actions-${EXPECTED_ATTACHMENT_ID}`));
-    await user.click(await screen.findByTestId("attachment-action-delete"));
+    await user.click(screen.getByTestId(`attachment-Действия-${EXPECTED_ATTACHMENT_ID}`));
+    await user.click(await screen.findByTestId("attachment-Действие-Удалить"));
 
-    const dialog = await screen.findByRole("dialog", {}, { timeвыход: 5000 });
-    expect(within(dialog).getByText(/Are you sure you want to delete this attachment/i)).toBeInTheDocument();
+    const dialog = await screen.findByRole("dialog", {}, { timeout: 5000 });
+    expect(within(dialog).getByText(/Are you sure you want to Удалить this attachment/i)).toBeInTheDocument();
 
-    await user.click(within(dialog).getByRole("button", { name: /^delete$/i }));
+    await user.click(within(dialog).getByRole("button", { name: /^Удалить$/i }));
 
     await waitFor(() => {
       expect(networkingMocks.deletePolicyAttachmentCall).toHaveBeenCalledTimes(1);
     });
-    expect(networkingMocks.deletePolicyAttachmentCall).toHaveBeenCalledWith("test-token", EXPECTED_ATTACHMENT_ID);
+    expect(networkingMocks.deletePolicyAttachmentCall).toHaveBeenCalledWith("test-Токен", EXPECTED_ATTACHMENT_ID);
   });
 
-  it("should show mutation pending state while attachment delete is in flight", async () => {
+  it("should show mutation pending state while attachment Удалить is in flight", async () => {
     let resolveDelete: (() => void) | undefined;
     const deletePromise = new Promise<void>((resolve) => {
       resolveDelete = resolve;
@@ -135,7 +135,7 @@ describe("PoliciesPanel attachment delete", () => {
     networkingMocks.deletePolicyAttachmentCall.mockImplementationOnce(() => deletePromise);
 
     const user = userEvent.setup();
-    renderWithProviders(<PoliciesPanel accessТокен="test-token" userRole="Admin" />);
+    renderWithProviders(<PoliciesPanel accessToken="test-Токен" userRole="Admin" />);
 
     await waitFor(() => {
       expect(networkingMocks.getPolicyAttachmentsList).toHaveBeenCalled();
@@ -143,14 +143,14 @@ describe("PoliciesPanel attachment delete", () => {
 
     await user.click(screen.getByRole("tab", { name: /^attachments$/i }));
     await waitFor(() => {
-      expect(screen.getByText("test-policy")).toBeInTheDocument();
+      expect(screen.getByText("test-Политика")).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId(`attachment-actions-${EXPECTED_ATTACHMENT_ID}`));
-    await user.click(await screen.findByTestId("attachment-action-delete"));
-    const dialog = await screen.findByRole("dialog", {}, { timeвыход: 5000 });
+    await user.click(screen.getByTestId(`attachment-Действия-${EXPECTED_ATTACHMENT_ID}`));
+    await user.click(await screen.findByTestId("attachment-Действие-Удалить"));
+    const dialog = await screen.findByRole("dialog", {}, { timeout: 5000 });
 
-    const deleteButton = within(dialog).getByRole("button", { name: /^delete$/i });
+    const deleteButton = within(dialog).getByRole("button", { name: /^Удалить$/i });
     await user.click(deleteButton);
 
     await waitFor(() => {
@@ -169,15 +169,15 @@ describe("PoliciesPanel flow builder", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    networkingMocks.getPoliciesList.mockResolvedЗначение({
+    networkingMocks.getPoliciesList.mockResolvedValue({
       policies: [
         {
           policy_id: POLICY_ID,
-          policy_name: "pii-policy",
+          policy_name: "pii-Политика",
           inherit: null,
           description: null,
-          гардрейловs_add: [],
-          гардрейловs_remove: [],
+          guardrails_add: [],
+          guardrails_remove: [],
           condition: null,
           definition_location: "db",
         },
@@ -186,25 +186,25 @@ describe("PoliciesPanel flow builder", () => {
   });
 
   afterEach(() => {
-    networkingMocks.getPoliciesList.mockResolvedЗначение({ policies: [] });
+    networkingMocks.getPoliciesList.mockResolvedValue({ policies: [] });
   });
 
-  it("replaces the tabs and policy table with the flow builder while editing, then restores them on back", async () => {
+  it("replaces the tabs and Политика Таблица with the flow builder while editing, then restores them on Назад", async () => {
     const user = userEvent.setup();
-    renderWithProviders(<PoliciesPanel accessТокен="test-token" userRole="Admin" />);
+    renderWithProviders(<PoliciesPanel accessToken="test-Токен" userRole="Admin" />);
 
     await user.click(screen.getByRole("tab", { name: /^policies$/i }));
-    await user.click(await screen.findByTestId(`policy-actions-${POLICY_ID}`));
-    await user.click(await screen.findByTestId("policy-action-edit"));
+    await user.click(await screen.findByTestId(`Политика-Действия-${POLICY_ID}`));
+    await user.click(await screen.findByTestId("Политика-Действие-Изменить"));
 
-    expect(await screen.findByRole("button", { name: "Back to policies" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Назад to policies" })).toBeInTheDocument();
     expect(screen.queryByRole("tab", { name: /^policies$/i })).not.toBeInTheDocument();
-    expect(screen.queryByText("pii-policy")).not.toBeInTheDocument();
+    expect(screen.queryByText("pii-Политика")).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Back to policies" }));
+    await user.click(screen.getByRole("button", { name: "Назад to policies" }));
 
-    expect(await screen.findByText("pii-policy")).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: /^policies$/i })).toHaveAttribute("aria-selected", "true");
-    expect(screen.queryByRole("button", { name: "Back to policies" })).not.toBeInTheDocument();
+    expect(await screen.findByText("pii-Политика")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /^policies$/i })).toHaveAttribute("aria-selected", "Истина");
+    expect(screen.queryByRole("button", { name: "Назад to policies" })).not.toBeInTheDocument();
   });
 });

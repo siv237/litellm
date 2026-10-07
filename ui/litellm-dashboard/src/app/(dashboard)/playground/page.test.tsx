@@ -7,7 +7,7 @@ const authState = { userRole: "Admin" };
 vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
   default: () => ({
     token: "token-1",
-    accessТокен: "sk-test",
+    accessToken: "sk-test",
     userId: "user-1",
     userRole: authState.userRole,
     isViewOnly: ["Admin Viewer", "Internal Viewer"].includes(authState.userRole),
@@ -16,7 +16,7 @@ vi.mock("@/app/(dashboard)/hooks/useАвторизовано", () => ({
 }));
 
 vi.mock("@/utils/proxyUtils", () => ({
-  fetchProxySettings: vi.fn().mockResolvedЗначение(null),
+  fetchProxySettings: vi.fn().mockResolvedValue(null),
 }));
 
 vi.mock("@/app/(dashboard)/playground/components/chat_ui/ChatUI", () => ({

@@ -5,12 +5,12 @@ import userEvent from "@testing-library/user-event";
 import { renderWithProviders } from "@/../tests/test-utils";
 import PipelineFlowBuilder, { FlowBuilderPage, PipelineInfoDisplay } from "./pipeline_flow_builder";
 import { GuardrailPipeline, PipelineStep } from "@/components/policies/types";
-import { Guardrail } from "@/components/гардрейловs/types";
+import { Guardrail } from "@/components/guardrails/types";
 
 vi.mock("@/components/networking");
 
 const step = (overrides: Partial<PipelineStep> = {}): PipelineStep => ({
-  гардрейлов: "pii-masker",
+  guardrail: "pii-masker",
   on_pass: "next",
   on_fail: "block",
   on_error: null,
@@ -20,9 +20,9 @@ const step = (overrides: Partial<PipelineStep> = {}): PipelineStep => ({
 
 const pipeline = (steps: PipelineStep[]): GuardrailPipeline => ({ mode: "pre_call", steps });
 
-const гардрейловs = [
-  { гардрейлов_id: "g1", гардрейлов_name: "pii-masker" },
-  { гардрейлов_id: "g2", гардрейлов_name: "prompt-injection" },
+const guardrails = [
+  { guardrail_id: "g1", guardrail_name: "pii-masker" },
+  { guardrail_id: "g2", guardrail_name: "prompt-injection" },
 ] as Guardrail[];
 
 describe("PipelineInfoDisplay", () => {
@@ -33,8 +33,8 @@ describe("PipelineInfoDisplay", () => {
     expect(screen.getByText("Входящий LLM-запрос")).toBeInTheDocument();
   });
 
-  it("renders one numbered card per step, naming its гардрейлов", () => {
-    renderWithProviders(<PipelineInfoDisplay pipeline={pipeline([step(), step({ гардрейлов: "prompt-injection" })])} />);
+  it("renders one numbered card per step, naming its guardrail", () => {
+    renderWithProviders(<PipelineInfoDisplay pipeline={pipeline([step(), step({ guardrail: "prompt-injection" })])} />);
 
     expect(screen.getByText("Шаг 1")).toBeInTheDocument();
     expect(screen.getByText("Шаг 2")).toBeInTheDocument();
@@ -67,7 +67,7 @@ describe("PipelineInfoDisplay", () => {
 describe("PipelineFlowBuilder", () => {
   it("renders the trigger and end cards around the steps", () => {
     renderWithProviders(
-      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableГардрейлы={гардрейловs} />,
+      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableGuardrails={guardrails} />,
     );
 
     expect(screen.getByText("TRIGGER")).toBeInTheDocument();
@@ -77,7 +77,7 @@ describe("PipelineFlowBuilder", () => {
 
   it("labels each decision section of a step", () => {
     renderWithProviders(
-      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableГардрейлы={гардрейловs} />,
+      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableGuardrails={guardrails} />,
     );
 
     expect(screen.getByText("ПРИ ПРОХОЖДЕНИИ")).toBeInTheDocument();
@@ -89,7 +89,7 @@ describe("PipelineFlowBuilder", () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
     renderWithProviders(
-      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={onChange} availableГардрейлы={гардрейловs} />,
+      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={onChange} availableGuardrails={guardrails} />,
     );
 
     await user.click(screen.getAllByRole("button", { name: "Вставить шаг" })[0]);
@@ -103,21 +103,21 @@ describe("PipelineFlowBuilder", () => {
     const user = userEvent.setup();
     renderWithProviders(
       <PipelineFlowBuilder
-        pipeline={pipeline([step(), step({ гардрейлов: "prompt-injection" })])}
+        pipeline={pipeline([step(), step({ guardrail: "prompt-injection" })])}
         onChange={onChange}
-        availableГардрейлы={гардрейловs}
+        availableGuardrails={guardrails}
       />,
     );
 
     await user.click(screen.getAllByRole("button", { name: "Удалить шаг" })[0]);
 
     expect(onChange.mock.calls[0][0].steps).toHaveLength(1);
-    expect(onChange.mock.calls[0][0].steps[0].гардрейлов).toBe("prompt-injection");
+    expect(onChange.mock.calls[0][0].steps[0].guardrail).toBe("prompt-injection");
   });
 
   it("disables deletion of the only remaining step", () => {
     renderWithProviders(
-      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableГардрейлы={гардрейловs} />,
+      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableGuardrails={guardrails} />,
     );
 
     expect(screen.getByRole("button", { name: "Удалить шаг" })).toBeDisabled();
@@ -125,7 +125,7 @@ describe("PipelineFlowBuilder", () => {
 
   it("offers a custom response field only when the action is modify_response", () => {
     const { rerender } = renderWithProviders(
-      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableГардрейлы={гардрейловs} />,
+      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableGuardrails={guardrails} />,
     );
     expect(screen.queryByPlaceholderText("Введите свой ответ...")).not.toBeInTheDocument();
 
@@ -133,7 +133,7 @@ describe("PipelineFlowBuilder", () => {
       <PipelineFlowBuilder
         pipeline={pipeline([step({ on_fail: "modify_response" })])}
         onChange={vi.fn()}
-        availableГардрейлы={гардрейловs}
+        availableGuardrails={guardrails}
       />,
     );
 
@@ -147,7 +147,7 @@ describe("PipelineFlowBuilder", () => {
       <PipelineFlowBuilder
         pipeline={pipeline([step({ on_fail: "modify_response" })])}
         onChange={onChange}
-        availableГардрейлы={гардрейловs}
+        availableGuardrails={guardrails}
       />,
     );
 
@@ -156,13 +156,13 @@ describe("PipelineFlowBuilder", () => {
     expect(onChange.mock.calls[0][0].steps[0].modify_response_message).toBe("x");
   });
 
-  it("offers a гардрейлов picker for the step", () => {
+  it("offers a guardrail picker for the step", () => {
     renderWithProviders(
-      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableГардрейлы={гардрейловs} />,
+      <PipelineFlowBuilder pipeline={pipeline([step()])} onChange={vi.fn()} availableGuardrails={guardrails} />,
     );
 
     // Which control surfaces the selection is a presentation detail; that the step's
-    // гардрейлов is the one displayed is covered by the PipelineInfoDisplay tests above.
+    // guardrail is the one displayed is covered by the PipelineInfoDisplay tests above.
     expect(screen.getByText("Гардрейл")).toBeInTheDocument();
     expect(screen.getAllByRole("combobox").length).toBeGreaterThan(0);
   });
@@ -174,10 +174,10 @@ describe("FlowBuilderPage", () => {
       <FlowBuilderPage
         onBack={vi.fn()}
         onSuccess={vi.fn()}
-        accessТокен="sk-test"
-        availableГардрейлы={гардрейловs}
-        createПолитика={vi.fn()}
-        updateПолитика={vi.fn()}
+        accessToken="sk-test"
+        availableGuardrails={guardrails}
+        createPolicy={vi.fn()}
+        updatePolicy={vi.fn()}
       />,
     );
 

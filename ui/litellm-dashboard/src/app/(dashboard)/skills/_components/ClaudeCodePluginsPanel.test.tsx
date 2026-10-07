@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getClaudeCodePluginsList, deleteClaudeCodePlugin } from "@/components/networking";
 import type { Plugin } from "@/components/claude_code_plugins/types";
 
-import ClaudeCodePluginsPanel from "./ClaudeCodePluginsPanel";
+import ClaudeCodePluginsPanel from "./ClaudeCodeПлагиныPanel";
 
 vi.mock("@/components/networking", () => ({
   getClaudeCodePluginsList: vi.fn(),
@@ -51,25 +51,25 @@ const skill: Plugin = {
   enabled: true,
 };
 
-describe("ClaudeCodePluginsPanel loading state", () => {
+describe("ClaudeCodeПлагиныPanel loading state", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("should resolve the loading state when accessТокен is null instead of showing the skeleton forever", async () => {
-    render(<ClaudeCodePluginsPanel accessТокен={null} />);
+  it("should resolve the loading state when accessToken is null instead of showing the skeleton forever", async () => {
+    render(<ClaudeCodePluginsPanel accessToken={null} />);
     expect(await screen.findByText("table-loaded")).toBeInTheDocument();
     expect(mockGetClaudeCodePluginsList).not.toHaveBeenCalled();
   });
 
   it("should show the loading state until the skills fetch settles", async () => {
     let resolveFetch: (value: { plugins: never[]; count: number }) => void = () => {};
-    mockGetClaudeCodePluginsList.mockReturnЗначение(
+    mockGetClaudeCodePluginsList.mockReturnValue(
       new Promise((resolve) => {
         resolveFetch = resolve;
       }),
     );
-    render(<ClaudeCodePluginsPanel accessТокен="sk-test" userRole="Admin" />);
+    render(<ClaudeCodePluginsPanel accessToken="sk-test" userRole="Admin" />);
     expect(screen.getByText("table-loading")).toBeInTheDocument();
 
     resolveFetch({ plugins: [], count: 0 });
@@ -78,28 +78,28 @@ describe("ClaudeCodePluginsPanel loading state", () => {
   });
 });
 
-describe("ClaudeCodePluginsPanel delete confirmation", () => {
+describe("ClaudeCodeПлагиныPanel delete confirmation", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockGetClaudeCodePluginsList.mockResolvedЗначение({ plugins: [skill], count: 1 });
+    mockGetClaudeCodePluginsList.mockResolvedValue({ plugins: [skill], count: 1 });
   });
 
   it("should ask for confirmation before deleting and name the skill", async () => {
     const user = userEvent.setup();
-    render(<ClaudeCodePluginsPanel accessТокен="sk-test" userRole="Admin" />);
+    render(<ClaudeCodePluginsPanel accessToken="sk-test" userRole="Admin" />);
 
     await user.click(await screen.findByTestId("row-delete-plugin-1"));
 
     expect(await screen.findByText(/are you sure you want to delete skill/i)).toBeInTheDocument();
     expect(screen.getByText("my-skill")).toBeInTheDocument();
-    expect(screen.getByText("Это действие нельзя отменить.")).toBeInTheDocument();
+    expect(screen.getByText("This action cannot be undone.")).toBeInTheDocument();
     expect(mockDeleteClaudeCodePlugin).not.toHaveBeenCalled();
   });
 
   it("should delete the skill and refresh the list once confirmed", async () => {
     const user = userEvent.setup();
-    mockDeleteClaudeCodePlugin.mockResolvedЗначение({});
-    render(<ClaudeCodePluginsPanel accessТокен="sk-test" userRole="Admin" />);
+    mockDeleteClaudeCodePlugin.mockResolvedValue({});
+    render(<ClaudeCodePluginsPanel accessToken="sk-test" userRole="Admin" />);
 
     await user.click(await screen.findByTestId("row-delete-plugin-1"));
     await screen.findByText(/are you sure you want to delete skill/i);
@@ -112,7 +112,7 @@ describe("ClaudeCodePluginsPanel delete confirmation", () => {
 
   it("should not delete the skill when the confirmation is cancelled", async () => {
     const user = userEvent.setup();
-    render(<ClaudeCodePluginsPanel accessТокен="sk-test" userRole="Admin" />);
+    render(<ClaudeCodePluginsPanel accessToken="sk-test" userRole="Admin" />);
 
     await user.click(await screen.findByTestId("row-delete-plugin-1"));
     await screen.findByText(/are you sure you want to delete skill/i);

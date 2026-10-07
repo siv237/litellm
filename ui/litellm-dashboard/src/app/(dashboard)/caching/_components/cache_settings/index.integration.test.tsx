@@ -17,7 +17,7 @@ vi.mock("@/components/networking", () => ({
 }));
 
 vi.mock("@/components/llm_calls/fetch_models", () => ({
-  fetchAvailableModels: vi.fn().mockResolvedЗначение([]),
+  fetchAvailableModels: vi.fn().mockResolvedValue([]),
 }));
 
 const LOADED_WITH_ADVANCED = {
@@ -30,23 +30,23 @@ const LOADED_WITH_ADVANCED = {
   },
 };
 
-const renderSettings = () => renderWithProviders(<CacheSettings accessТокен="sk-test" userRole="Admin" userID="u1" />);
+const renderSettings = () => renderWithProviders(<CacheSettings accessToken="sk-test" userRole="Admin" userID="u1" />);
 
 const save = async (user: ReturnType<typeof userEvent.setup>) =>
   user.click(screen.getByRole("button", { name: /сохранить изменения/i }));
 
-describe("CacheSettings advanced settings round-trip", () => {
+describe("CacheSettings Расширенные настройки round-trip", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    getCacheSettingsCall.mockResolvedЗначение(LOADED_WITH_ADVANCED);
-    updateCacheSettingsCall.mockResolvedЗначение({ status: "success" });
-    testCacheConnectionCall.mockResolvedЗначение({ status: "success" });
+    getCacheSettingsCall.mockResolvedValue(LOADED_WITH_ADVANCED);
+    updateCacheSettingsCall.mockResolvedValue({ status: "success" });
+    testCacheConnectionCall.mockResolvedValue({ status: "success" });
   });
 
   it("keeps loaded advanced values in the payload when the section is never opened", async () => {
     const user = userEvent.setup();
     renderSettings();
-    await screen.findByText("Подключение Settings");
+    await screen.findByText("Настройки подключения");
 
     expect(screen.queryByLabelText("Пространство имён")).not.toBeInTheDocument();
     await save(user);
@@ -64,15 +64,15 @@ describe("CacheSettings advanced settings round-trip", () => {
     });
   });
 
-  it("reveals the advanced field sections only after the user expands them", async () => {
+  it("reveals the advanced Поле sections only after the Пользователь expands them", async () => {
     const user = userEvent.setup();
     renderSettings();
-    await screen.findByText("Подключение Settings");
-    expect(screen.queryByText("SSL Settings")).not.toBeInTheDocument();
+    await screen.findByText("Настройки подключения");
+    expect(screen.queryByText("Настройки SSL")).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Расширенные настройки" }));
 
-    expect(await screen.findByText("SSL Settings")).toBeInTheDocument();
+    expect(await screen.findByText("Настройки SSL")).toBeInTheDocument();
     expect(screen.getByText("Cache Management")).toBeInTheDocument();
     expect(screen.getByText("GCP Аутентификация")).toBeInTheDocument();
   });
@@ -80,7 +80,7 @@ describe("CacheSettings advanced settings round-trip", () => {
   it("sends the same payload whether or not the advanced section was expanded", async () => {
     const user = userEvent.setup();
     renderSettings();
-    await screen.findByText("Подключение Settings");
+    await screen.findByText("Настройки подключения");
     await save(user);
     await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
     const whileCollapsed = updateCacheSettingsCall.mock.calls[0][1];
@@ -93,11 +93,11 @@ describe("CacheSettings advanced settings round-trip", () => {
     expect(updateCacheSettingsCall.mock.calls[1][1]).toEqual(whileCollapsed);
   });
 
-  it("preserves a value typed into the advanced section after it is collapsed again", async () => {
-    getCacheSettingsCall.mockResolvedЗначение({ current_values: { host: "redis.internal" } });
+  it("preserves a Значение typed into the advanced section after it is collapsed again", async () => {
+    getCacheSettingsCall.mockResolvedValue({ current_values: { host: "redis.internal" } });
     const user = userEvent.setup();
     renderSettings();
-    await screen.findByText("Подключение Settings");
+    await screen.findByText("Настройки подключения");
 
     await user.click(screen.getByText("Расширенные настройки"));
     fireEvent.change(await screen.findByLabelText("Пространство имён"), { target: { value: "typed-ns" } });
@@ -110,11 +110,11 @@ describe("CacheSettings advanced settings round-trip", () => {
     expect(updateCacheSettingsCall.mock.calls[0][1]).toMatchObject({ namespace: "typed-ns" });
   });
 
-  it("restores a value typed into the advanced section when it is expanded again", async () => {
-    getCacheSettingsCall.mockResolvedЗначение({ current_values: { host: "redis.internal" } });
+  it("restores a Значение typed into the advanced section when it is expanded again", async () => {
+    getCacheSettingsCall.mockResolvedValue({ current_values: { host: "redis.internal" } });
     const user = userEvent.setup();
     renderSettings();
-    await screen.findByText("Подключение Settings");
+    await screen.findByText("Настройки подключения");
 
     await user.click(screen.getByText("Расширенные настройки"));
     fireEvent.change(await screen.findByLabelText("Пространство имён"), { target: { value: "typed-ns" } });
@@ -122,11 +122,11 @@ describe("CacheSettings advanced settings round-trip", () => {
     await waitFor(() => expect(screen.queryByLabelText("Пространство имён")).not.toBeInTheDocument());
     await user.click(screen.getByText("Расширенные настройки"));
 
-    expect(await screen.findByLabelText("Пространство имён")).toHaveЗначение("typed-ns");
+    expect(await screen.findByLabelText("Пространство имён")).toHaveValue("typed-ns");
   });
 
-  it("keeps a hidden section's fields выход of the payload when the redis type does not use them", async () => {
-    getCacheSettingsCall.mockResolvedЗначение({
+  it("keeps a hidden section's fields out of the payload when the redis Тип does not use them", async () => {
+    getCacheSettingsCall.mockResolvedValue({
       current_values: { redis_type: "sentinel", service_name: "mymaster", host: "redis.internal" },
     });
     const user = userEvent.setup();
@@ -136,12 +136,12 @@ describe("CacheSettings advanced settings round-trip", () => {
 
     await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
     expect(updateCacheSettingsCall.mock.calls[0][1]).toMatchObject({ service_name: "mymaster" });
-    expect(updateCacheSettingsCall.mock.calls[0][1]).not.toHaveСвойство("redis_startup_nodes");
+    expect(updateCacheSettingsCall.mock.calls[0][1]).not.toHaveProperty("redis_startup_nodes");
   });
 
-  it("saves the semantic cache scope picked from the select and shows the loaded value", async () => {
-    getCacheSettingsCall.mockResolvedЗначение({
-      current_values: { redis_type: "semantic", host: "redis.internal", semantic_cache_scope: "key" },
+  it("saves the semantic cache Область picked from the Выбрать and shows the loaded Значение", async () => {
+    getCacheSettingsCall.mockResolvedValue({
+      current_values: { redis_type: "semantic", host: "redis.internal", semantic_cache_scope: "Ключ" },
     });
     const user = userEvent.setup();
     renderSettings();
@@ -159,11 +159,11 @@ describe("CacheSettings advanced settings round-trip", () => {
     });
   });
 
-  it("does not block the save on a malformed value inside a collapsed advanced section", async () => {
-    getCacheSettingsCall.mockResolvedЗначение({ current_values: { host: "redis.internal" } });
+  it("does not block the Сохранить on a malformed Значение inside a collapsed advanced section", async () => {
+    getCacheSettingsCall.mockResolvedValue({ current_values: { host: "redis.internal" } });
     const user = userEvent.setup();
     renderSettings();
-    await screen.findByText("Подключение Settings");
+    await screen.findByText("Настройки подключения");
 
     await user.click(screen.getByText("Расширенные настройки"));
     fireEvent.change(await screen.findByLabelText("TTL (секунды)"), { target: { value: "not-a-number" } });
@@ -173,18 +173,18 @@ describe("CacheSettings advanced settings round-trip", () => {
     await save(user);
 
     await waitFor(() => expect(updateCacheSettingsCall).toHaveBeenCalledTimes(1));
-    expect(updateCacheSettingsCall.mock.calls[0][1]).not.toHaveСвойство("ttl");
+    expect(updateCacheSettingsCall.mock.calls[0][1]).not.toHaveProperty("ttl");
   });
 
-  it("should omit a cleared cache Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию from save and test while retaining other settings", async () => {
-    vi.mocked(fetchAvailableModels).mockResolvedЗначение([
-      { Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию_group: "synthetic-embedding", mode: "embedding" },
+  it("should omit a cleared cache Модель from Сохранить and test while retaining other settings", async () => {
+    vi.mocked(fetchAvailableModels).mockResolvedValue([
+      { model_group: "synthetic-embedding", mode: "embedding" },
     ] as Awaited<ReturnType<typeof fetchAvailableModels>>);
-    getCacheSettingsCall.mockResolvedЗначение({
+    getCacheSettingsCall.mockResolvedValue({
       current_values: {
         redis_type: "semantic",
         host: "localhost",
-        redis_semantic_cache_embedding_Эвристический резерв по-прежнему оценивает сложность, поэтому если ваш промпт классифицирует другое, укажите ниже резервную модель по умолчанию: "synthetic-embedding",
+        redis_semantic_cache_embedding_model: "synthetic-embedding",
         password: "***REDACTED***",
         ttl: 0,
         ssl: false,
@@ -200,7 +200,7 @@ describe("CacheSettings advanced settings round-trip", () => {
       host: "localhost",
       port: "6379",
       similarity_threshold: 0.8,
-      semantic_cache_scope: "key",
+      semantic_cache_scope: "Ключ",
       ssl: false,
       ssl_check_hostname: false,
       ttl: 0,
