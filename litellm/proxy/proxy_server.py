@@ -675,6 +675,7 @@ from litellm.proxy.spend_tracking.spend_management_endpoints import (
 from litellm.proxy.spend_tracking.spend_tracking_utils import get_logging_payload
 from litellm.proxy.gantt.gantt_endpoints import router as gantt_router
 from litellm.proxy.dashboard.dashboard_endpoints import router as dashboard_router
+from litellm.proxy.dashboard.journal_endpoints import router as journal_router
 from litellm.proxy.types_utils.utils import get_instance_fn
 from litellm.proxy.ui_crud_endpoints.proxy_setting_endpoints import (
     router as ui_crud_endpoints_router,
@@ -18775,6 +18776,7 @@ app.include_router(management_v1_router)
 app.include_router(spend_management_router)
 app.include_router(gantt_router)
 app.include_router(dashboard_router)
+app.include_router(journal_router)
 app.include_router(caching_router)
 app.include_router(analytics_router)
 app.include_router(callback_management_endpoints_router)

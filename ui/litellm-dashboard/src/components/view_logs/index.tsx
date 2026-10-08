@@ -1,8 +1,9 @@
 import { useState } from "react";
 import useCan from "@/app/(dashboard)/hooks/useCan";
+import { isAdminRole } from "@/utils/roles";
 import DeletedKeysPage from "../DeletedKeysPage/DeletedKeysPage";
 import DeletedTeamsPage from "../DeletedTeamsPage/DeletedTeamsPage";
-import AuditLogsPanel from "./AuditLogsPanel";
+import Journal from "@/app/(dashboard)/journal/_components";
 import RequestLogsPanel from "./RequestLogsPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UiLoadingSpinner } from "@/components/ui/ui-loading-spinner";
@@ -23,16 +24,16 @@ interface LogsTab {
 }
 
 const REQUEST_LOGS_TAB: LogsTab = { id: "request logs", label: "Журнал запросов" };
-const AUDIT_LOGS_TAB: LogsTab = { id: "audit logs", label: "Журнал аудита" };
+// fork: enterprise-вкладка «Журнал аудита» заменена нашим журналом активности (admin-only)
+const AUDIT_LOGS_TAB: LogsTab = { id: "audit logs", label: "Журнал активности" };
 const DELETED_KEYS_TAB: LogsTab = { id: "deleted keys", label: "Удалённые ключи" };
 const DELETED_TEAMS_TAB: LogsTab = { id: "deleted teams", label: "Удалённые команды" };
 
 const tabContentClassName = (tabId: LogsTabId): string =>
   tabId === REQUEST_LOGS_TAB.id ? "flex min-h-0 flex-1 flex-col" : "min-h-0 flex-1 overflow-y-auto";
 
-export default function SpendLogsTable({ accessToken, token, userRole, userID, premiumUser }: SpendLogsTableProps) {
+export default function SpendLogsTable({ accessToken, token, userRole, userID }: SpendLogsTableProps) {
   const [activeTab, setActiveTab] = useState<LogsTabId>(REQUEST_LOGS_TAB.id);
-  const canViewAuditLogs = useCan("viewAuditLogs");
   const canViewDeletedTeams = useCan("viewDeletedTeams");
 
   if (!accessToken || !token || !userRole || !userID) {
@@ -45,7 +46,9 @@ export default function SpendLogsTable({ accessToken, token, userRole, userID, p
 
   const tabs: LogsTab[] = [
     REQUEST_LOGS_TAB,
-    ...(canViewAuditLogs ? [AUDIT_LOGS_TAB] : []),
+    // fork: наш журнал не требует enterprise-подписки — вкладка для админов прокси
+    // (роль из useAuthorized нормализована: "Admin"/"Admin Viewer", не "proxy_admin")
+    ...(isAdminRole(userRole || "") ? [AUDIT_LOGS_TAB] : []),
     DELETED_KEYS_TAB,
     ...(canViewDeletedTeams ? [DELETED_TEAMS_TAB] : []),
   ];
@@ -63,16 +66,7 @@ export default function SpendLogsTable({ accessToken, token, userRole, userID, p
           />
         );
       case "audit logs":
-        return (
-          <AuditLogsPanel
-            userID={userID}
-            userRole={userRole}
-            token={token}
-            accessToken={accessToken}
-            isActive={activeTab === "audit logs"}
-            premiumUser={premiumUser}
-          />
-        );
+        return <Journal accessToken={accessToken} />;
       case "deleted keys":
         return <DeletedKeysPage />;
       case "deleted teams":

@@ -31,6 +31,7 @@ const LEGACY_PAGE_ROUTES: ReadonlyMap<string, string> = new Map(
     logs: "logs",
     "request-gantt": "request-gantt",
     monitoring: "monitoring",
+    journal: "journal",
     "admin-panel": "admin-panel",
     "logging-and-alerts": "logging-and-alerts",
     "model-hub-table": "model-hub-table",
