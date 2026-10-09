@@ -11,6 +11,7 @@ CustomLogger-хуки закрывают разрыв: `async_pre_call_hook` р�
 """
 from __future__ import annotations
 
+import asyncio
 import threading
 import time
 import uuid
@@ -74,6 +75,9 @@ class InFlightRegistry(CustomLogger):
                 # запрошенный алиас НЕ перезаписывается разыменованием на FIN —
                 # по нему ключуется калибровка токенов/символ конкретной модели
                 "alias": str(data.get("model") or ""),
+                # таска запроса: /dashboard/abort отменяет её — соединение с
+                # бэкендом закрывается, бэкенд (vLLM) бросает запрос при disconnect
+                "task": asyncio.current_task(),
             }
             with self._lock:
                 self.counters["requests"] += 1
@@ -279,6 +283,7 @@ class InFlightRegistry(CustomLogger):
             self._prune_locked(now)
             return [
                 {
+                    "id": rid,
                     "t0": int(e["t0"] * 1000),
                     "t1": int(e["t1"] * 1000) if e.get("t1") else None,
                     "tf": int(e["tf"] * 1000) if e.get("tf") else None,
@@ -292,9 +297,36 @@ class InFlightRegistry(CustomLogger):
                     "key_short": e["token"][:12],
                     "model": e["model"],
                     "alias": e.get("alias", ""),
+                    "aborted": bool(e.get("aborted")),
                 }
-                for e in self._items.values()
+                for rid, e in self._items.items()
             ]
+
+    def abort(self, ids: Optional[List[str]] = None) -> int:
+        """Прервать live-запросы: отменить их таски (клиент получит обрыв,
+        бэкенд — disconnect и сам бросит генерацию). ids=None — все live.
+        Возвращает число помеченных записей."""
+        wanted = set(ids) if ids is not None else None
+        targets: List[Any] = []
+        with self._lock:
+            for rid, e in self._items.items():
+                if e.get("t1") is not None:
+                    continue
+                if wanted is not None and rid not in wanted:
+                    continue
+                e["t1"] = time.time()
+                e["aborted"] = True
+                targets.append(e.get("task"))
+            self.counters["failure"] = self.counters.get("failure", 0) + len(targets)
+        n = 0
+        for task in targets:
+            try:
+                if task is not None and not task.done():
+                    task.cancel()
+                    n += 1
+            except Exception:
+                pass
+        return n
 
     def counters_snapshot(self) -> Dict[str, Any]:
         with self._lock:

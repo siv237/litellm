@@ -1,4 +1,5 @@
-"""fork: read-only эндпоинт `/dashboard/state` — живой дашборд мониторинга.
+"""fork: эндпоинты дашборда мониторинга: read-only `/dashboard/state`
+и действие `/dashboard/abort` (прерывание live-запросов кнопкой).
 
 Источник данных — ТОЛЬКО процесс LiteLLM-прокси (рамка пользователя 06.10.2026):
 in-flight реестр (`proxy/gantt/inflight.py`), его накопительные счёты, состояние
@@ -12,7 +13,7 @@ import json
 import time
 from typing import Any, Dict, Final, List
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Response
 
 from litellm.proxy._types import LitellmUserRoles, UserAPIKeyAuth
 from litellm.proxy.auth.user_api_key_auth import user_api_key_auth
@@ -360,3 +361,28 @@ async def get_dashboard_state(
             "series": _gen_series(recent_rows, live, now_ms),
         },
     }
+
+
+@router.post(
+    "/dashboard/abort",
+    tags=["dashboard"],
+    include_in_schema=False,
+)
+async def post_dashboard_abort(
+    payload: Dict[str, Any] = Body(default_factory=dict),
+    user_api_key_dict: UserAPIKeyAuth = Depends(user_api_key_auth),
+):
+    """Прервать live-запросы: {"ids": [...]} — конкретные (id из inflight),
+    {"all": true} — все. Отмена таски закрывает соединение до бэкенда."""
+    if user_api_key_dict.user_role not in _DASHBOARD_ALLOWED_ROLES:
+        raise HTTPException(
+            status_code=403,
+            detail={"error": "Дашборд доступен только администраторам прокси"},
+        )
+    ids = payload.get("ids")
+    if ids is not None and (
+        not isinstance(ids, list) or not all(isinstance(i, str) and i for i in ids)
+    ):
+        raise HTTPException(status_code=422, detail={"error": "ids — список строк"})
+    aborted = _inflight.abort(None if payload.get("all") else ids)
+    return {"aborted": aborted}

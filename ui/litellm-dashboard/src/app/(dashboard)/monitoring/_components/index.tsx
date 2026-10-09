@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties } from "re
 import { apiClient } from "@/components/networking";
 
 interface InflightT {
+  id?: string;
   t0: number;
   t1: number | null;
   tf: number | null;
@@ -19,6 +20,8 @@ interface InflightT {
   elapsed_ms: number;
   ttft_ms: number | null;
   tok_s: number;
+  nchars?: number;
+  aborted?: boolean;
 }
 
 interface RecentT {
@@ -144,6 +147,7 @@ interface InflightGroupT {
   alias: string;
   key_alias: string;
   key_short: string;
+  ids: string[];
   count: number;
   stream: boolean;
   elapsed_ms: number;
@@ -167,6 +171,7 @@ function groupInflight(items: InflightT[]): InflightGroupT[] {
         alias: e.alias || e.model,
         key_alias: e.key_alias,
         key_short: e.key_short,
+        ids: e.id ? [e.id] : [],
         count: 1,
         stream: e.stream,
         elapsed_ms: e.elapsed_ms,
@@ -176,6 +181,7 @@ function groupInflight(items: InflightT[]): InflightGroupT[] {
       });
     } else {
       g.count += 1;
+      if (e.id) g.ids.push(e.id);
       g.elapsed_ms = Math.max(g.elapsed_ms, e.elapsed_ms);
       g.ntok += e.ntok;
       g.tok_s += e.tok_s;
@@ -226,6 +232,10 @@ export default function Monitoring({ accessToken }: { accessToken: string | null
   const [error, setError] = useState<string | null>(null);
   // клик по чипсу выделяет его строки, повторный клик — сброс
   const [selPair, setSelPair] = useState<string | null>(null);
+  // модалка «подробно»: ключ группы (u+модель+ключ), сессии берутся из живых данных
+  const [detailKey, setDetailKey] = useState<string | null>(null);
+  const [abortBusy, setAbortBusy] = useState(false);
+  const [abortErr, setAbortErr] = useState<string | null>(null);
 
   // суммарное время в кулдауне за окно 60 мин: по каждому опросу засчитываем паузу
   // между опросами моделям, бывшим в кулдауне (накапливается, пока открыта страница)
@@ -266,6 +276,27 @@ export default function Monitoring({ accessToken }: { accessToken: string | null
     const t = setInterval(load, REFRESH_MS);
     return () => clearInterval(t);
   }, [load]);
+
+  const groupKeyOf = (e: InflightT) => `${e.u}\u0000${e.model}\u0000${e.key_alias || e.key_short}`;
+
+  const abortSessions = useCallback(
+    async (ids: string[]) => {
+      if (!accessToken || ids.length === 0) return;
+      setAbortBusy(true);
+      setAbortErr(null);
+      try {
+        await apiClient.post("/dashboard/abort", { accessToken, body: { ids } });
+        await load();
+      } catch (e) {
+        setAbortErr(e instanceof Error ? e.message : String(e));
+      } finally {
+        setAbortBusy(false);
+      }
+    },
+    [accessToken, load],
+  );
+
+  const detailSessions = detailKey ? (data?.inflight || []).filter((e) => groupKeyOf(e) === detailKey) : [];
 
   const liveTok = data ? data.inflight.reduce((a, e) => a + (e.tok_s || 0), 0) : 0;
   const genSeries = data?.gen?.series || [];
@@ -444,7 +475,8 @@ export default function Monitoring({ accessToken }: { accessToken: string | null
                     1-й отв.
                   </th>
                   <th className="pr-2 text-right font-normal">Токенов</th>
-                  <th className="text-right font-normal">Ток/с</th>
+                  <th className="pr-2 text-right font-normal">Ток/с</th>
+                  <th className="text-right font-normal">Действие</th>
                 </tr>
               </thead>
               <tbody>
@@ -469,7 +501,18 @@ export default function Monitoring({ accessToken }: { accessToken: string | null
                       <td className="pr-2 text-right tabular-nums">{fmtDur(g.elapsed_ms)}</td>
                       <td className="pr-2 text-right tabular-nums">{g.ttft_ms != null ? fmtDur(g.ttft_ms) : "…"}</td>
                       <td className="pr-2 text-right tabular-nums">{g.stream ? fnum(g.ntok) : "—"}</td>
-                      <td className="text-right tabular-nums">{g.stream ? g.tok_s.toFixed(1) : "—"}</td>
+                      <td className="pr-2 text-right tabular-nums">{g.stream ? g.tok_s.toFixed(1) : "—"}</td>
+                      <td className="text-right">
+                        <button
+                          onClick={() => {
+                            setDetailKey(`${g.u}\u0000${g.model}\u0000${g.key_alias || g.key_short}`);
+                            setAbortErr(null);
+                          }}
+                          className="rounded border border-input px-1.5 py-0.5 text-[10px] hover:bg-accent"
+                        >
+                          подробно
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -543,6 +586,85 @@ export default function Monitoring({ accessToken }: { accessToken: string | null
         </table>
         </div>
       </div>
+
+      {detailKey && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setDetailKey(null)}>
+          <div
+            className="max-h-[80vh] w-full max-w-3xl overflow-y-auto rounded-lg border border-input bg-card p-4 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <div className="truncate text-sm font-medium">
+                Сессии: {detailSessions[0]?.display || detailKey.split("\u0000")[0] || "—"} ·{" "}
+                {detailSessions[0] ? normModel(detailSessions[0].model) : normModel(detailKey.split("\u0000")[1] || "")}
+                <span className="ml-1 text-xs font-normal text-muted-foreground">· {detailSessions.length}</span>
+              </div>
+              <button
+                onClick={() => setDetailKey(null)}
+                className="shrink-0 rounded border border-input px-2 py-0.5 text-xs hover:bg-accent"
+              >
+                Закрыть
+              </button>
+            </div>
+            {abortErr && (
+              <div className="mb-2 rounded bg-red-600/10 px-2 py-1 text-xs text-red-600 dark:text-red-400">{abortErr}</div>
+            )}
+            {detailSessions.length > 0 ? (
+              <table className="w-full text-xs whitespace-nowrap">
+                <thead>
+                  <tr className="text-left text-muted-foreground">
+                    <th className="pr-2 font-normal">Начало</th>
+                    <th className="pr-2 font-normal">Идёт</th>
+                    <th className="pr-2 font-normal">1-й отв.</th>
+                    <th className="pr-2 font-normal">Стрим</th>
+                    <th className="pr-2 text-right font-normal">Токенов (оценка)</th>
+                    <th className="pr-2 text-right font-normal">Ток/с</th>
+                    <th className="pr-2 text-right font-normal">Символов</th>
+                    <th className="pr-2 font-normal">ID</th>
+                    <th className="text-right font-normal"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {detailSessions.map((s, i) => (
+                    <tr key={s.id || `${s.t0}-${i}`} className="border-t border-input/40">
+                      <td className="py-1 pr-2 tabular-nums">{fmtTime(s.t0)}</td>
+                      <td className="pr-2 tabular-nums">{fmtDur(s.elapsed_ms)}</td>
+                      <td className="pr-2 tabular-nums">{s.ttft_ms != null ? fmtDur(s.ttft_ms) : "…"}</td>
+                      <td className="pr-2">{s.stream ? "да" : "нет"}</td>
+                      <td className="pr-2 text-right tabular-nums">{s.stream ? fnum(s.ntok) : "—"}</td>
+                      <td className="pr-2 text-right tabular-nums">{s.tok_s ? s.tok_s.toFixed(1) : "0.0"}</td>
+                      <td className="pr-2 text-right tabular-nums">{fnum(s.nchars || 0)}</td>
+                      <td className="pr-2 font-mono text-muted-foreground" title={s.id}>
+                        {s.id ? s.id.slice(0, 8) : "—"}
+                      </td>
+                      <td className="text-right">
+                        <button
+                          disabled={abortBusy || !s.id}
+                          onClick={() => s.id && abortSessions([s.id])}
+                          className="rounded border border-red-500/50 px-1.5 py-0.5 text-[10px] text-red-600 hover:bg-red-600/10 disabled:opacity-40 dark:text-red-400"
+                        >
+                          ✕ прервать
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="py-4 text-center text-xs text-muted-foreground">нет активных сессий этой группы</div>
+            )}
+            <div className="mt-3 flex justify-end gap-2">
+              <button
+                disabled={abortBusy || detailSessions.length === 0}
+                onClick={() => abortSessions(detailSessions.map((s) => s.id).filter((x): x is string => !!x))}
+                className="rounded border border-red-500/60 bg-red-600/10 px-3 py-1 text-xs font-medium text-red-700 hover:bg-red-600/20 disabled:opacity-40 dark:text-red-300"
+              >
+                {abortBusy ? "прерываю…" : `Прервать все (${detailSessions.length})`}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {counters && (
         <div className="flex shrink-0 flex-wrap gap-x-6 gap-y-1 rounded border border-input bg-card p-3 text-xs text-muted-foreground">
