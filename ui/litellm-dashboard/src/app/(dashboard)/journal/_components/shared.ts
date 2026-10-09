@@ -88,6 +88,8 @@ export interface EvaluationT {
   error: string;
   targetU?: string;
   targetSid?: string;
+  periodFrom?: string;
+  periodTo?: string;
   createdBy: string;
   preview: string;
 }
@@ -146,6 +148,14 @@ export function periodRange(created: string, days: number): string {
   const f = (x: Date) =>
     `${String(x.getUTCDate()).padStart(2, "0")}.${String(x.getUTCMonth() + 1).padStart(2, "0")} ${String(x.getUTCHours()).padStart(2, "0")}:${String(x.getUTCMinutes()).padStart(2, "0")}`;
   return `${f(new Date(endMs - days * 86400_000))} → ${f(new Date(endMs))}`;
+}
+
+// подпись периода оценки: абсолютный период из летописи либо «created-Ndays → created»
+export function periodLabel(ev: EvaluationT): string {
+  if (ev.periodFrom && ev.periodTo) {
+    return `${ev.periodFrom.slice(5, 10)} ${ev.periodFrom.slice(11, 16)} → ${ev.periodTo.slice(5, 10)} ${ev.periodTo.slice(11, 16)}`;
+  }
+  return periodRange(ev.created, ev.periodDays);
 }
 
 export const REPORT_PROSE_CLS =

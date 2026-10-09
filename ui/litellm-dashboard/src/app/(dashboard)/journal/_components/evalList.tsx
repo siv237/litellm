@@ -6,7 +6,7 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { apiClient } from "@/components/networking";
-import { downloadMd, fnum, periodRange, REPORT_PROSE_CLS, type EvaluationT } from "./shared";
+import { downloadMd, fnum, periodLabel, REPORT_PROSE_CLS, type EvaluationT } from "./shared";
 
 interface Props {
   accessToken: string;
@@ -47,7 +47,7 @@ export default function EvalList({ accessToken, items, empty }: Props) {
           >
             <div className="flex items-baseline justify-between gap-2">
               <span className="font-medium tabular-nums">
-                период {periodRange(ev.created, ev.periodDays)} · {ev.periodDays} сут{ev.targetSid ? " · сессия" : ""}
+                период {periodLabel(ev)} · {ev.periodDays} сут{ev.targetSid ? " · сессия" : ""}
               </span>
               <span className="truncate text-[10px] text-muted-foreground">{ev.model}</span>
             </div>
@@ -65,7 +65,7 @@ export default function EvalList({ accessToken, items, empty }: Props) {
           >
             <div className="mb-1 flex items-center justify-between gap-2">
               <div className="text-sm font-semibold tabular-nums">
-                Анализ ИИ · период {periodRange(open.created, open.periodDays)} ({open.periodDays} сут){open.targetSid ? " · сессия" : ""}
+                Анализ ИИ · период {periodLabel(open)} ({open.periodDays} сут){open.targetSid ? " · сессия" : ""}
               </div>
               <button className="shrink-0 text-xs text-muted-foreground hover:text-foreground" onClick={() => setOpen(null)}>
                 ✕
@@ -86,8 +86,8 @@ export default function EvalList({ accessToken, items, empty }: Props) {
                 className="rounded border border-input px-3 py-1.5 text-xs hover:bg-muted/50"
                 onClick={() =>
                   downloadMd(
-                    `ai-otsenka-${periodRange(open.created, open.periodDays).replace(/[ :→]+/g, "-")}.md`,
-                    `# Анализ ИИ · период ${periodRange(open.created, open.periodDays)} (${open.periodDays} сут)\n\nмодель ${open.model} · оценено ${open.created}\n\n---\n\n${fullReport}`,
+                    `ai-otsenka-${periodLabel(open).replace(/[ :→]+/g, "-")}.md`,
+                    `# Анализ ИИ · период ${periodLabel(open)} (${open.periodDays} сут)\n\nмодель ${open.model} · оценено ${open.created}\n\n---\n\n${fullReport}`,
                   )
                 }
                 disabled={loading || !fullReport}

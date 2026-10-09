@@ -1,14 +1,26 @@
 "use client";
 
-// fork: слой 2 — ручная «оценка периода» (дайджест → один запрос к выбранной модели)
+// fork: слой 2 — ручная «оценка периода» (дайджест → один запрос к выбранной модели); период свой или пресет
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { apiClient } from "@/components/networking";
-import { downloadMd, REPORT_PROSE_CLS } from "./shared";
+import { downloadMd, REPORT_PROSE_CLS, type CellT } from "./shared";
 
 const LS_MODEL = "journal-eval-model";
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
+// epoch ms → «YYYY-MM-DDTHH:MM» по Владивостоку (UTC+10, без DST)
+function localIso(ms: number): string {
+  return new Date(ms + 10 * 3600_000).toISOString().slice(0, 16);
+}
+
+function cellRange(c: CellT): { from: string; to: string } {
+  const start = Date.UTC(+c.d.slice(0, 4), +c.d.slice(5, 7) - 1, +c.d.slice(8, 10), c.h);
+  return { from: new Date(start).toISOString().slice(0, 16), to: new Date(start + 3600_000).toISOString().slice(0, 16) };
+}
 
 interface Props {
   accessToken: string;
@@ -16,11 +28,16 @@ interface Props {
   onClose: () => void;
   onDone: () => void;
   target?: { u?: string; sid?: string; display?: string };
+  cell?: CellT | null;
 }
 
-export default function EvaluateDialog({ accessToken, models, onClose, onDone, target }: Props) {
+export default function EvaluateDialog({ accessToken, models, onClose, onDone, target, cell }: Props) {
   const isSession = !!target?.sid;
+  const [custom, setCustom] = useState(!!cell && !isSession);
   const [days, setDays] = useState(isSession ? 7 : 1);
+  const init = useMemo(() => (cell && !isSession ? cellRange(cell) : { from: localIso(Date.now() - 86400_000), to: localIso(Date.now()) }), [cell, isSession]);
+  const [from, setFrom] = useState(init.from);
+  const [to, setTo] = useState(init.to);
   const [model, setModel] = useState("");
   const [busy, setBusy] = useState(false);
   const [report, setReport] = useState("");
@@ -38,6 +55,15 @@ export default function EvaluateDialog({ accessToken, models, onClose, onDone, t
     setModel(saved && models.includes(saved) ? saved : models[0] || "");
   }, [models, model]);
 
+  useEffect(() => {
+    if (cell && !isSession) {
+      const r = cellRange(cell);
+      setCustom(true);
+      setFrom(r.from);
+      setTo(r.to);
+    }
+  }, [cell, isSession]);
+
   const pickModel = (m: string) => {
     setModel(m);
     try {
@@ -47,18 +73,25 @@ export default function EvaluateDialog({ accessToken, models, onClose, onDone, t
     }
   };
 
+  const spanDays = (new Date(to).getTime() - new Date(from).getTime()) / 86400_000;
+  const customOk = !custom || (from < to && spanDays > 0 && spanDays <= 31);
+  const periodTxt = custom ? `${from.replace("T", " ")} → ${to.replace("T", " ")}` : `последние ${days} сут`;
+
   const run = async () => {
     setBusy(true);
     setError("");
     setReport("");
     try {
+      const body = custom
+        ? { days: 0, model, u: target?.u || "", sid: target?.sid || "", from: from.replace("T", " "), to: to.replace("T", " ") }
+        : { days, model, u: target?.u || "", sid: target?.sid || "" };
       const r = await apiClient.post<{ report: string; error: string; gen_s: number; digest_chars: number }>(
         "/dashboard/journal/evaluate",
-        { accessToken, body: { days, model, u: target?.u || "", sid: target?.sid || "" } },
+        { accessToken, body },
       );
       setReport(r.report || "");
       setError(r.error || "");
-      setMeta(`модель ${model} · дайджест ${r.digest_chars} симв. · генерация ${r.gen_s} с`);
+      setMeta(`модель ${model} · период ${periodTxt} · дайджест ${r.digest_chars} симв. · генерация ${r.gen_s} с`);
       onDone();
     } catch (e) {
       setError(String(e instanceof Error ? e.message : e));
@@ -76,10 +109,20 @@ export default function EvaluateDialog({ accessToken, models, onClose, onDone, t
         <div className="mb-3 flex items-center justify-between">
           <div>
             <div className="text-sm font-semibold">
-              {isSession ? `Оценка сессии · ${target?.display || ""}` : target?.u ? `Оценка периода · ${target.display}` : "Оценка периода"}
+              {isSession
+                ? `Оценка сессии · ${target?.display || ""}`
+                : cell
+                  ? `Оценка · кирпич ${cell.d.slice(5)} ${pad(cell.h)}:00`
+                  : target?.u
+                    ? `Оценка периода · ${target.display}`
+                    : "Оценка периода"}
             </div>
             <div className="text-[11px] text-muted-foreground">
-              {isSession ? "дайджест сессии → один запрос к модели. Запуск только вручную." : "дайджест журнала → один запрос к модели → отчёт «кто чем занят». Запуск только вручную, окно ≤ 7 суток."}
+              {isSession
+                ? "дайджест сессии → один запрос к модели. Запуск только вручную."
+                : cell
+                  ? "период подставлен по кирпичику тепловой карты — начало и конец можно поменять"
+                  : "дайджест журнала → один запрос к модели → отчёт «кто чем занят». Запуск только вручную."}
             </div>
           </div>
           <button className="text-xs text-muted-foreground hover:text-foreground" onClick={onClose} disabled={busy}>
@@ -92,15 +135,47 @@ export default function EvaluateDialog({ accessToken, models, onClose, onDone, t
             Период
             <select
               className="rounded border border-input bg-background px-2 py-1 text-xs"
-              value={days}
-              onChange={(e) => setDays(Number(e.target.value))}
-              disabled={busy}
+              value={custom ? "custom" : days}
+              onChange={(e) => {
+                if (e.target.value === "custom") {
+                  setCustom(true);
+                  setFrom(localIso(Date.now() - 86400_000));
+                  setTo(localIso(Date.now()));
+                } else {
+                  setCustom(false);
+                  setDays(Number(e.target.value));
+                }
+              }}
+              disabled={busy || isSession}
             >
               <option value={1}>последние 24 часа</option>
               <option value={3}>3 суток</option>
               <option value={7}>7 суток</option>
+              {!isSession && <option value="custom">свой период…</option>}
             </select>
           </label>
+          {custom && (
+            <>
+              <input
+                type="datetime-local"
+                className="rounded border border-input bg-background px-2 py-1 text-xs tabular-nums"
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+                disabled={busy}
+                title="начало (Владивосток)"
+              />
+              <span className="text-xs text-muted-foreground">→</span>
+              <input
+                type="datetime-local"
+                className="rounded border border-input bg-background px-2 py-1 text-xs tabular-nums"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+                disabled={busy}
+                title="конец (Владивосток)"
+              />
+              {!customOk && <span className="text-[10px] text-red-500">проверьте границы (≤ 31 сут)</span>}
+            </>
+          )}
           <label className="flex items-center gap-2 text-xs">
             Модель
             <select
@@ -119,7 +194,7 @@ export default function EvaluateDialog({ accessToken, models, onClose, onDone, t
           <button
             className="rounded bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
             onClick={run}
-            disabled={busy || !model}
+            disabled={busy || !model || !customOk}
           >
             {busy ? "генерация ~1 мин…" : "Оценить"}
           </button>
@@ -128,8 +203,8 @@ export default function EvaluateDialog({ accessToken, models, onClose, onDone, t
               className="rounded border border-input px-3 py-1.5 text-xs hover:bg-muted/50"
               onClick={() =>
                 downloadMd(
-                  `ai-otsenka-${target?.u || target?.sid || "period"}-${days}d.md`,
-                  `# Оценка ИИ · ${target?.display || target?.u || target?.sid || "период журнала"} · ${days} сут\n\nмодель ${model}${meta ? ` · ${meta}` : ""}\n\n---\n\n${report}`,
+                  `ai-otsenka-${(target?.u || target?.sid || "period").slice(0, 24)}-${periodTxt.replace(/[^0-9A-Za-zА-Яа-я.]+/g, "-")}.md`,
+                  `# Оценка ИИ · ${target?.display || target?.u || target?.sid || "период журнала"} · ${periodTxt}\n\nмодель ${model}${meta ? ` · ${meta}` : ""}\n\n---\n\n${report}`,
                 )
               }
             >

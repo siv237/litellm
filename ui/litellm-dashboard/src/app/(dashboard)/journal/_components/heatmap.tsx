@@ -5,7 +5,7 @@
 import { useMemo } from "react";
 import { fmtKtok, fnum, type CellT } from "./shared";
 
-export default function Heatmap({ cells }: { cells: CellT[] }) {
+export default function Heatmap({ cells, onCellClick }: { cells: CellT[]; onCellClick?: (c: CellT) => void }) {
   const { days, byDay, max } = useMemo(() => {
     const m = new Map<string, Map<number, CellT>>();
     let mx = 1;
@@ -42,11 +42,12 @@ export default function Heatmap({ cells }: { cells: CellT[] }) {
                   return (
                     <div
                       key={h}
-                      className="h-4 rounded-[3px] border border-input/30"
+                      className={`h-4 rounded-[3px] border border-input/30 ${c && onCellClick ? "cursor-pointer hover:ring-1 hover:ring-primary/70" : ""}`}
                       style={c ? { backgroundColor: `hsl(243 70% 56% / ${a.toFixed(2)})` } : undefined}
+                      onClick={c && onCellClick ? () => onCellClick(c) : undefined}
                       title={
                         c
-                          ? `${d} ${String(h).padStart(2, "0")}:00 — ${fnum(c.n)} запросов · ${fmtKtok(c.tok)} токенов · ${c.ppl} уч.`
+                          ? `${d} ${String(h).padStart(2, "0")}:00 — ${fnum(c.n)} запросов · ${fmtKtok(c.tok)} токенов · ${c.ppl} уч.${onCellClick ? " · клик — оценить период" : ""}`
                           : `${d} ${String(h).padStart(2, "0")}:00 — нет запросов`
                       }
                     />

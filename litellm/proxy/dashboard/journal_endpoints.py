@@ -15,9 +15,11 @@ TZ: startTime хранится naive-UTC; витрина — Asia/Vladivostok
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
 import time
+from datetime import datetime
 from typing import Any, Dict, Final, List, Tuple
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
@@ -37,7 +39,7 @@ _JOURNAL_ALLOWED_ROLES: Final = {
 
 _MAX_DAYS: Final = 92
 _EVAL_MAX_DAYS: Final = 7
-_RECENT_LIMIT: Final = 40
+_RECENT_LIMIT: Final = 500
 
 # «живой» интерактивный клиент vs скрипт/система (UA из request_tags)
 _INTERACTIVE_RE: Final = "kilo|opencode|claude[- _]?code|cursor|cline|jetbrains|copilot"
@@ -48,7 +50,7 @@ _TXT_FILTER: Final = """txt NOT ILIKE '%Generate a title%'
     AND txt NOT LIKE '%kilo-memory-evidence-v1%' AND txt NOT ILIKE '%consolidation%'
     AND txt NOT LIKE '%внутреннего гейтвея%'"""
 
-# оконный CTE: витрина + фильтры; {p} — номер параметра days, дальше — model/agent/key
+# оконный CTE: витрина + фильтры; {win} — оконное условие, дальше {filt} — model/agent/key
 _W_CTE: Final = """
 WITH w AS (
   SELECT
@@ -61,11 +63,27 @@ WITH w AS (
     COALESCE(vt."key_alias", '') AS ka
   FROM "LiteLLM_SpendLogs" s
   LEFT JOIN "LiteLLM_VerificationToken" vt ON vt."token" = s."api_key"
-  WHERE s."startTime" >= (now() AT TIME ZONE 'utc') - make_interval(days => ${p}::int)
+  WHERE {win}
     AND NOT (COALESCE(s."status", '') = 'failure' AND COALESCE(s."model", '') = ''
              AND COALESCE(s."prompt_tokens", 0) + COALESCE(s."completion_tokens", 0) = 0)
 )
 """
+
+
+def _win_clause(col: str, days: int, dt_from: str = "", dt_to: str = "") -> Tuple[str, List[Any], int]:
+    """Окно выборки: абсолютное локальное [from,to) (Владивосток) либо относительное «последние days суток».
+    Возвращает (условие WHERE, параметры, номер следующего параметра)."""
+    if dt_from and dt_to:
+        win = (
+            f"{col} >= ($1::timestamp AT TIME ZONE '{_TZ}' AT TIME ZONE 'UTC')"
+            f" AND {col} < ($2::timestamp AT TIME ZONE '{_TZ}' AT TIME ZONE 'UTC')"
+        )
+        return win, [dt_from, dt_to], 3
+    return f"{col} >= (now() AT TIME ZONE 'utc') - make_interval(days => $1::int)", [days], 2
+
+
+_WIN_S_REL: Final = """s."startTime" >= (now() AT TIME ZONE 'utc') - make_interval(days => $1::int)"""
+_WIN_REL: Final = """"startTime" >= (now() AT TIME ZONE 'utc') - make_interval(days => $1::int)"""
 
 
 def _filters(model: str, agent: str, key: str, start_param: int) -> Tuple[str, List[Any]]:
@@ -185,7 +203,7 @@ SELECT COALESCE(json_agg(r ORDER BY r.t0 DESC), '[]') AS data FROM (
                count(*) OVER (PARTITION BY COALESCE("user", ''), session_id) AS turns,
                proxy_server_request AS psr
         FROM "LiteLLM_SpendLogs"
-        WHERE "startTime" >= (now() AT TIME ZONE 'utc') - make_interval(days => ${p}::int)
+        WHERE {win}
           AND call_type = 'acompletion' AND proxy_server_request IS NOT NULL
           AND coalesce(session_id, '') <> ''
           AND COALESCE("user", '') <> '{eu}'
@@ -239,10 +257,10 @@ async def get_journal_state(
 
     filt, fparams = _filters(model, agent, key, 2)
 
-    cells_sql = _SQL_CELLS.format(tz=_TZ, p=1, filt=filt)
-    parts_sql = _SQL_PARTICIPANTS.format(tz=_TZ, p=1, filt=filt, ire=_INTERACTIVE_RE)
+    cells_sql = _SQL_CELLS.format(tz=_TZ, filt=filt, win=_WIN_S_REL)
+    parts_sql = _SQL_PARTICIPANTS.format(tz=_TZ, filt=filt, ire=_INTERACTIVE_RE, win=_WIN_S_REL)
     exch_sql = _SQL_EXCH.replace("{p}", "1")
-    first_sql = _SQL_FIRST.format(tz=_TZ, p=1, txtf=_TXT_FILTER, eu=_EVAL_USER)
+    first_sql = _SQL_FIRST.format(tz=_TZ, txtf=_TXT_FILTER, eu=_EVAL_USER, win=_WIN_REL)
     prev_sql = _SQL_PREV.replace("{p}", "1")
 
     try:
@@ -567,6 +585,8 @@ CREATE TABLE IF NOT EXISTS "LiteLLM_DGK_ActivitySnapshots" (
   "periodDays" int NOT NULL,
   "targetU" text NOT NULL DEFAULT '',
   "targetSid" text NOT NULL DEFAULT '',
+  "periodFrom" text NOT NULL DEFAULT '',
+  "periodTo" text NOT NULL DEFAULT '',
   model text NOT NULL,
   "digestChars" int NOT NULL DEFAULT 0,
   report text NOT NULL,
@@ -575,7 +595,7 @@ CREATE TABLE IF NOT EXISTS "LiteLLM_DGK_ActivitySnapshots" (
 );
 """
 
-_EVAL_PROMPT: Final = """Это сводка с нашего внутреннего гейтвея LiteLLM за последние {days} суток: статистика \
+_EVAL_PROMPT: Final = """Это сводка с нашего внутреннего гейтвея LiteLLM {win}: статистика \
 по сотрудникам и реальные первые реплики их сессий с ИИ. Проанализируй конкретно: ЧЕМ ИМЕННО занят \
 каждый — проекты, задачи, системы из реплик. Только по данным, не выдумай. По-русски, сразу итоговый ответ \
 без черновика. ОБЯЗАТЕЛЬНО отдельным разделом КАЖДЫЙ пользователь из блока СТАТИСТИКА (включая сервисные, \
@@ -676,8 +696,29 @@ async def post_journal_evaluate(
     body = await request.json()
     days = int(body.get("days") or 1)
     model = str(body.get("model") or "")
-    if not 1 <= days <= _EVAL_MAX_DAYS:
-        raise HTTPException(status_code=400, detail={"error": f"Окно оценки: 1–{_EVAL_MAX_DAYS} суток"})
+    dt_from = str(body.get("from") or "").replace("T", " ")[:16]
+    dt_to = str(body.get("to") or "").replace("T", " ")[:16]
+    target_u = str(body.get("u") or "")
+    target_sid = str(body.get("sid") or "")
+    absolute = bool(dt_from and dt_to) and not target_sid
+    if absolute:
+        try:
+            f_dt = datetime.strptime(dt_from, "%Y-%m-%d %H:%M")
+            t_dt = datetime.strptime(dt_to, "%Y-%m-%d %H:%M")
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail={"error": "Период: ждём «YYYY-MM-DD HH:MM»"}) from e
+        span = (t_dt - f_dt).total_seconds()
+        if span <= 0:
+            raise HTTPException(status_code=400, detail={"error": "Период: начало должно быть раньше конца"})
+        if span > 31 * 86400:
+            raise HTTPException(status_code=400, detail={"error": "Период: не больше 31 суток"})
+        days_eff = max(1, math.ceil(span / 86400))
+        win_txt = f"за период {dt_from} → {dt_to} (Владивосток)"
+    else:
+        if not 1 <= days <= _EVAL_MAX_DAYS:
+            raise HTTPException(status_code=400, detail={"error": f"Окно оценки: 1–{_EVAL_MAX_DAYS} суток"})
+        days_eff = days
+        win_txt = f"за последние {days} суток"
     if not model:
         raise HTTPException(status_code=400, detail={"error": "Не выбрана модель"})
 
@@ -689,10 +730,13 @@ async def post_journal_evaluate(
         await prisma_client.db.execute_raw(
             f'ALTER TABLE {_SNAP_TABLE} ADD COLUMN IF NOT EXISTS "targetSid" text NOT NULL DEFAULT \'\''
         )
+        await prisma_client.db.execute_raw(
+            f'ALTER TABLE {_SNAP_TABLE} ADD COLUMN IF NOT EXISTS "periodFrom" text NOT NULL DEFAULT \'\''
+        )
+        await prisma_client.db.execute_raw(
+            f'ALTER TABLE {_SNAP_TABLE} ADD COLUMN IF NOT EXISTS "periodTo" text NOT NULL DEFAULT \'\''
+        )
         _table_ready["ok"] = True
-
-    target_u = str(body.get("u") or "")
-    target_sid = str(body.get("sid") or "")
 
     if target_sid:
         srows = await prisma_client.db.query_raw(_SQL_SESSION_DIGEST, target_sid, days)
@@ -706,15 +750,19 @@ async def post_journal_evaluate(
             "2–3 строки. Только по данным, без выдумок. По-русски, без черновика.\n\n" + digest
         )
     else:
-        parts_sql = _SQL_PARTICIPANTS.format(tz=_TZ, p=1, filt="", ire=_INTERACTIVE_RE)
-        first_sql = _SQL_FIRST.format(tz=_TZ, p=1, txtf=_TXT_FILTER, eu=_EVAL_USER)
-        parts = await _rows(prisma_client, parts_sql, days)
-        first = await _rows(prisma_client, first_sql, days)
+        a_from = dt_from if absolute else ""
+        a_to = dt_to if absolute else ""
+        win_s, wparams, _ = _win_clause('s."startTime"', days_eff, a_from, a_to)
+        win_p, _, _ = _win_clause('"startTime"', days_eff, a_from, a_to)
+        parts_sql = _SQL_PARTICIPANTS.format(tz=_TZ, filt="", ire=_INTERACTIVE_RE, win=win_s)
+        first_sql = _SQL_FIRST.format(tz=_TZ, txtf=_TXT_FILTER, eu=_EVAL_USER, win=win_p)
+        parts = await _rows(prisma_client, parts_sql, *wparams)
+        first = await _rows(prisma_client, first_sql, *wparams)
         if target_u:
             tgt = next((p for p in parts if p["u"] == target_u), None)
             disp = _disp(target_u, (tgt or {}).get("email") or "", await _safe_names(prisma_client))
             prompt = (
-                f"Это сводка с нашего внутреннего гейтвея LiteLLM за последние {days} суток по сотруднику "
+                f"Это сводка с нашего внутреннего гейтвея LiteLLM {win_txt} по сотруднику "
                 f"**{disp}**. Только по данным, без выдумок, по-русски, сразу итоговый ответ без черновика. "
                 "Структура (markdown): ## Чем занят — 2–4 буллета (проекты, задачи, системы из реплик); "
                 "строка **Характер:** реальная работа / обучение-эксперименты / развлечения / сервисная "
@@ -723,7 +771,7 @@ async def post_journal_evaluate(
             digest = _build_digest(parts, first, await _safe_names(prisma_client), target_u)
         else:
             digest = _build_digest(parts, first, await _safe_names(prisma_client))
-            prompt = _EVAL_PROMPT.format(days=days)
+            prompt = _EVAL_PROMPT.format(win=win_txt)
         prompt = prompt + "\n\n" + digest
 
     base = os.environ.get("LITELLM_SELF_BASE", "https://dgk00srv937d.dgk.ru")
@@ -757,9 +805,9 @@ async def post_journal_evaluate(
     gen_s = round(time.time() - t0, 1)
     rows = await prisma_client.db.query_raw(
         f"INSERT INTO {_SNAP_TABLE} (\"periodDays\", model, \"digestChars\", report, \"createdBy\", error, "
-        "\"targetU\", \"targetSid\") "
-        "VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
-        days,
+        "\"targetU\", \"targetSid\", \"periodFrom\", \"periodTo\") "
+        "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id",
+        days_eff,
         model,
         len(digest),
         report,
@@ -767,6 +815,8 @@ async def post_journal_evaluate(
         error,
         target_u,
         target_sid,
+        dt_from if absolute else "",
+        dt_to if absolute else "",
     )
     return {
         "id": rows[0]["id"] if rows else None,
@@ -797,11 +847,17 @@ async def get_journal_evaluations(
         await prisma_client.db.execute_raw(
             f'ALTER TABLE {_SNAP_TABLE} ADD COLUMN IF NOT EXISTS "targetSid" text NOT NULL DEFAULT \'\''
         )
+        await prisma_client.db.execute_raw(
+            f'ALTER TABLE {_SNAP_TABLE} ADD COLUMN IF NOT EXISTS "periodFrom" text NOT NULL DEFAULT \'\''
+        )
+        await prisma_client.db.execute_raw(
+            f'ALTER TABLE {_SNAP_TABLE} ADD COLUMN IF NOT EXISTS "periodTo" text NOT NULL DEFAULT \'\''
+        )
         _table_ready["ok"] = True
     rows = await prisma_client.db.query_raw(
         f"SELECT id, to_char(\"createdAt\" AT TIME ZONE 'UTC' AT TIME ZONE '{_TZ}', 'YYYY-MM-DD HH24:MI') AS created, "
         "\"periodDays\", model, \"digestChars\", length(report) AS rlen, error, \"createdBy\", "
-        "\"targetU\", \"targetSid\", "
+        "\"targetU\", \"targetSid\", \"periodFrom\", \"periodTo\", "
         "left(report, 200) AS preview "
         f"FROM {_SNAP_TABLE} ORDER BY id DESC LIMIT $1",
         limit,

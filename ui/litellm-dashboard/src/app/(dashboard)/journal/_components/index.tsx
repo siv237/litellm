@@ -4,7 +4,7 @@
 // Слой 1 — журнал (тепловая карта, участники, последние начала сессий) — чистый SQL.
 // Слой 2 — «Оценить период» — ручной вызов модели, летопись оценок.
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { apiClient } from "@/components/networking";
 import Heatmap from "./heatmap";
 import DetailModal from "./detailModal";
@@ -19,6 +19,7 @@ import {
   fnum,
   TYPE_BADGE,
   userHues,
+  type CellT,
   type EvaluationT,
   type RecentT,
   type StateResponse,
@@ -42,6 +43,14 @@ export default function Journal({ accessToken }: Props) {
   const [showEval, setShowEval] = useState(false);
   const [evalTarget, setEvalTarget] = useState<{ u?: string; sid?: string; display?: string } | null>(null);
   const [detail, setDetail] = useState<RecentGroupT | null>(null);
+  const [evalCell, setEvalCell] = useState<CellT | null>(null);
+  const [hideSys, setHideSys] = useState(() => {
+    try {
+      return localStorage.getItem("journal-hide-sys") !== "0";
+    } catch {
+      return true;
+    }
+  });
 
   const load = useCallback(async () => {
     if (!accessToken) return;
@@ -96,6 +105,24 @@ export default function Journal({ accessToken }: Props) {
     return out;
   }, [data]);
 
+  const sysDisplays = useMemo(
+    () => new Set((data?.participants || []).filter((p) => p.type !== "human").map((p) => p.display)),
+    [data],
+  );
+  const visibleRecent = useMemo(
+    () => (hideSys ? recentGroups.filter((g) => !sysDisplays.has(g.display)) : recentGroups),
+    [recentGroups, hideSys, sysDisplays],
+  );
+  const [shown, setShown] = useState(50);
+  const feedRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    setShown(50);
+  }, [data, hideSys]);
+  const onFeedScroll = () => {
+    const el = feedRef.current;
+    if (el && el.scrollTop + el.clientHeight >= el.scrollHeight - 120) setShown((s) => s + 50);
+  };
+
   // не-anализирующие модели (эмбеддинги, rerank, decision-класс clef) не могут писать отчёты — исключаем из выбора оценки
   const chatModels = useMemo(() => (data?.models || []).filter((m) => !/(embed|rerank|moderation|clip|clef|judge|bge|snowflake)/i.test(m)), [data]);
 
@@ -108,6 +135,7 @@ export default function Journal({ accessToken }: Props) {
           onBack={() => setSelected(null)}
           onEvaluate={(t) => {
             setEvalTarget(t || null);
+            setEvalCell(null);
             setShowEval(true);
           }}
           evaluations={evaluations}
@@ -117,7 +145,11 @@ export default function Journal({ accessToken }: Props) {
             accessToken={accessToken}
             models={chatModels}
             target={evalTarget || undefined}
-            onClose={() => setShowEval(false)}
+            cell={evalCell}
+            onClose={() => {
+              setShowEval(false);
+              setEvalCell(null);
+            }}
             onDone={loadEvals}
           />
         )}
@@ -161,9 +193,20 @@ export default function Journal({ accessToken }: Props) {
             <option value={90}>90 дней</option>
           </select>
           <button
+            className="rounded border border-input bg-background px-3 py-1.5 text-xs hover:bg-muted"
+            onClick={() => {
+              load();
+              loadEvals();
+            }}
+            title="перечитать журнал и летопись"
+          >
+            ⟳ Обновить
+          </button>
+          <button
             className="rounded border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20"
             onClick={() => {
               setEvalTarget(null);
+              setEvalCell(null);
               setShowEval(true);
             }}
           >
@@ -181,7 +224,18 @@ export default function Journal({ accessToken }: Props) {
       <div className="grid shrink-0 gap-3 xl:grid-cols-[1.35fr_1fr]">
         <div className="min-w-0 overflow-hidden rounded border border-input bg-card p-3">
           <div className="mb-2 text-sm font-medium">Активность</div>
-          {data ? <Heatmap cells={data.cells} /> : <div className="text-xs text-muted-foreground">загрузка…</div>}
+          {data ? (
+            <Heatmap
+              cells={data.cells}
+              onCellClick={(c) => {
+                setEvalCell(c);
+                setEvalTarget(null);
+                setShowEval(true);
+              }}
+            />
+          ) : (
+            <div className="text-xs text-muted-foreground">загрузка…</div>
+          )}
         </div>
         <div className="grid min-w-0 grid-cols-[1fr_1.2fr] gap-3">
           <div className="grid content-start gap-2">
@@ -294,9 +348,27 @@ export default function Journal({ accessToken }: Props) {
         </div>
 
         <div className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded border border-input bg-card p-3">
-          <div className="mb-2 text-sm font-medium">Последняя активность</div>
-          <div className="min-h-0 flex-1 overflow-y-auto">
-            {recentGroups.map((g, i) => (
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <span className="text-sm font-medium">Последняя активность</span>
+            <label className="flex cursor-pointer select-none items-center gap-1.5 text-[10px] text-muted-foreground" title="скрыть сервисные аккаунты, ботов и анонимов">
+              <input
+                type="checkbox"
+                className="h-3 w-3 accent-primary"
+                checked={hideSys}
+                onChange={(e) => {
+                  setHideSys(e.target.checked);
+                  try {
+                    localStorage.setItem("journal-hide-sys", e.target.checked ? "1" : "0");
+                  } catch {
+                    /* localStorage может быть недоступен */
+                  }
+                }}
+              />
+              скрыть системных
+            </label>
+          </div>
+          <div ref={feedRef} onScroll={onFeedScroll} className="min-h-0 flex-1 overflow-y-auto">
+            {visibleRecent.slice(0, shown).map((g, i) => (
               <div
                 key={i}
                 className="cursor-pointer border-t border-input/40 py-1.5 first:border-t-0 hover:bg-muted/40"
@@ -322,7 +394,16 @@ export default function Journal({ accessToken }: Props) {
                 <div className="mt-0.5 line-clamp-2 pl-3.5 text-[11px] leading-snug break-words text-muted-foreground">{cleanTxt(g.txt)}</div>
               </div>
             ))}
-            {data && !recentGroups.length && <div className="py-6 text-center text-xs text-muted-foreground">нет сессий с текстами за период</div>}
+            {visibleRecent.length > shown && (
+              <div className="py-2 text-center text-[10px] text-muted-foreground">
+                показано {shown} из {visibleRecent.length} — листайте вниз, подгрузим дальше в прошлое
+              </div>
+            )}
+            {data && !visibleRecent.length && (
+              <div className="py-6 text-center text-xs text-muted-foreground">
+                {recentGroups.length ? "все записи за период — системные; снимите галочку" : "нет сессий с текстами за период"}
+              </div>
+            )}
           </div>
         </div>
       </div>
