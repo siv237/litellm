@@ -6,8 +6,8 @@ import type { CompliancePrompt } from "./compliancePrompts";
 export const insultsCompliancePrompts: CompliancePrompt[] = [
   {
     id: "denied_insults-1",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -16,8 +16,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-2",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -26,8 +26,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-3",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -36,8 +36,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-4",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -46,8 +46,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-5",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -56,8 +56,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-6",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -66,8 +66,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-7",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -76,8 +76,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-8",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -86,8 +86,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-9",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -96,8 +96,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-10",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -106,8 +106,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-11",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -116,8 +116,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-12",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -126,8 +126,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-13",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -136,8 +136,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-14",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -146,8 +146,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-15",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -156,8 +156,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-16",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -166,8 +166,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-17",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -176,8 +176,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-18",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -186,8 +186,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-19",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -196,8 +196,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-20",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -206,8 +206,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-21",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -216,8 +216,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-22",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -226,8 +226,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-23",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -236,8 +236,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-24",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -246,8 +246,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-25",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -256,8 +256,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-26",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -266,8 +266,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-27",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -276,8 +276,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-28",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -286,8 +286,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-29",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -296,8 +296,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-30",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -306,8 +306,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-31",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -316,8 +316,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-32",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -326,8 +326,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-33",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -336,8 +336,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-34",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -346,8 +346,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-35",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -356,8 +356,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-36",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -366,8 +366,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-37",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -376,8 +376,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-38",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -386,8 +386,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-39",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -396,8 +396,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-40",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -406,8 +406,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-41",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -416,8 +416,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-42",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -426,8 +426,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-43",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -436,8 +436,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-44",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -446,8 +446,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-45",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -456,8 +456,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-46",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -466,8 +466,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-47",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -476,8 +476,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-48",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -486,8 +486,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-49",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -496,8 +496,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-50",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -506,8 +506,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-51",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -516,8 +516,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-52",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -526,8 +526,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-53",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -536,8 +536,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-54",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -546,8 +546,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-55",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -556,8 +556,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-56",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -566,8 +566,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-57",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -576,8 +576,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-58",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -586,8 +586,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-59",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -596,8 +596,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-60",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -606,8 +606,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-61",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -616,8 +616,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-62",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -626,8 +626,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-63",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -636,8 +636,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-64",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -646,8 +646,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-65",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -656,8 +656,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-66",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -666,8 +666,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-67",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -676,8 +676,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-68",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -686,8 +686,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-69",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -696,8 +696,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-70",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -706,8 +706,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-71",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -716,8 +716,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-72",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -726,8 +726,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-73",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -736,8 +736,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-74",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -746,8 +746,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-75",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -756,8 +756,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-76",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -766,8 +766,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-77",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -776,8 +776,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-78",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -786,8 +786,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-79",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -796,8 +796,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-80",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -806,8 +806,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-81",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -816,8 +816,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-82",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -826,8 +826,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-83",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -836,8 +836,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-84",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -846,8 +846,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-85",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -856,8 +856,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-86",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -866,8 +866,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-87",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -876,8 +876,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-88",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -886,8 +886,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-89",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -896,8 +896,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-90",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -906,8 +906,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-91",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -916,8 +916,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-92",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -926,8 +926,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-93",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -936,8 +936,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-94",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -946,8 +946,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-95",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -956,8 +956,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-96",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -966,8 +966,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-97",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -976,8 +976,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-98",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -986,8 +986,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-99",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -996,8 +996,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-100",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1006,8 +1006,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-101",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1016,8 +1016,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-102",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1026,8 +1026,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-103",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1036,8 +1036,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-104",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1046,8 +1046,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-105",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1056,8 +1056,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-106",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1066,8 +1066,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-107",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1076,8 +1076,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-108",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1086,8 +1086,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-109",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1096,8 +1096,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-110",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1106,8 +1106,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-111",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1116,8 +1116,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-112",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1126,8 +1126,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-113",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1136,8 +1136,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-114",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1146,8 +1146,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-115",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1156,8 +1156,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-116",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1166,8 +1166,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-117",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1176,8 +1176,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-118",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1186,8 +1186,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-119",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1196,8 +1196,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-120",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1206,8 +1206,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-121",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1216,8 +1216,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-122",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1226,8 +1226,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-123",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1236,8 +1236,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-124",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1246,8 +1246,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-125",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1256,8 +1256,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-126",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1266,8 +1266,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-127",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1276,8 +1276,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-128",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1286,8 +1286,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-129",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1296,8 +1296,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-130",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1306,8 +1306,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-131",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1316,8 +1316,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-132",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1326,8 +1326,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-133",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1336,8 +1336,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-134",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1346,8 +1346,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-135",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1356,8 +1356,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-136",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1366,8 +1366,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-137",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1376,8 +1376,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-138",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1386,8 +1386,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-139",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1396,8 +1396,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-140",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1406,8 +1406,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-141",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1416,8 +1416,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-142",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1426,8 +1426,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-143",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1436,8 +1436,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-144",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1446,8 +1446,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-145",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1456,8 +1456,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-146",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1466,8 +1466,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-147",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1476,8 +1476,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-148",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1486,8 +1486,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-149",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1496,8 +1496,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-150",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1506,8 +1506,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-151",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1516,8 +1516,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-152",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1526,8 +1526,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-153",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1536,8 +1536,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-154",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1546,8 +1546,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-155",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1556,8 +1556,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-156",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1566,8 +1566,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-157",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1576,8 +1576,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-158",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1586,8 +1586,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-159",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1596,8 +1596,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-160",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1606,8 +1606,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-161",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1616,8 +1616,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-162",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1626,8 +1626,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-163",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1636,8 +1636,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-164",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1646,8 +1646,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-165",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1656,8 +1656,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-166",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1666,8 +1666,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-167",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1676,8 +1676,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-168",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1686,8 +1686,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-169",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1696,8 +1696,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-170",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1706,8 +1706,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-171",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1716,8 +1716,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-172",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1726,8 +1726,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-173",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1736,8 +1736,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-174",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1746,8 +1746,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-175",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1756,8 +1756,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-176",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1766,8 +1766,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-177",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1776,8 +1776,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-178",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1786,8 +1786,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-179",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1796,8 +1796,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-180",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1806,8 +1806,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-181",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1816,8 +1816,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-182",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1826,8 +1826,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-183",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1836,8 +1836,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-184",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1846,8 +1846,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-185",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1856,8 +1856,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-186",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1866,8 +1866,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-187",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1876,8 +1876,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-188",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1886,8 +1886,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-189",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1896,8 +1896,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-190",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1906,8 +1906,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-191",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1916,8 +1916,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-192",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1926,8 +1926,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-193",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1936,8 +1936,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-194",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1946,8 +1946,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-195",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1956,8 +1956,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-196",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1966,8 +1966,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-197",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1976,8 +1976,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-198",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1986,8 +1986,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-199",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -1996,8 +1996,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-200",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2006,8 +2006,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-201",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2016,8 +2016,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-202",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2026,8 +2026,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-203",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2036,8 +2036,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-204",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2046,8 +2046,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-205",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2056,8 +2056,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-206",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2066,8 +2066,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-207",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2076,8 +2076,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-208",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2086,8 +2086,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-209",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2096,8 +2096,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-210",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2106,8 +2106,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-211",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2116,8 +2116,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-212",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2126,8 +2126,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-213",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2136,8 +2136,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-214",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2146,8 +2146,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-215",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2156,8 +2156,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-216",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2166,8 +2166,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-217",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2176,8 +2176,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-218",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2186,8 +2186,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-219",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2196,8 +2196,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-220",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2206,8 +2206,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-221",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2216,8 +2216,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-222",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2226,8 +2226,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-223",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2236,8 +2236,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-224",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2246,8 +2246,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-225",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2256,8 +2256,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-226",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2266,8 +2266,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-227",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2276,8 +2276,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-228",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2286,8 +2286,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-229",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2296,8 +2296,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-230",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2306,8 +2306,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-231",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2316,8 +2316,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-232",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2326,8 +2326,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-233",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2336,8 +2336,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-234",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2346,8 +2346,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-235",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2356,8 +2356,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-236",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2366,8 +2366,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-237",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2376,8 +2376,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-238",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2386,8 +2386,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-239",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2396,8 +2396,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-240",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2406,8 +2406,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-241",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2416,8 +2416,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-242",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2426,8 +2426,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-243",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2436,8 +2436,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-244",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2446,8 +2446,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-245",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2456,8 +2456,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-246",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2466,8 +2466,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-247",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2476,8 +2476,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-248",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2486,8 +2486,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-249",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2496,8 +2496,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-250",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2506,8 +2506,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-251",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2516,8 +2516,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-252",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2526,8 +2526,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-253",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2536,8 +2536,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-254",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2546,8 +2546,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-255",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2556,8 +2556,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-256",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2566,8 +2566,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-257",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2576,8 +2576,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-258",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2586,8 +2586,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-259",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2596,8 +2596,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-260",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2606,8 +2606,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-261",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2616,8 +2616,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-262",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2626,8 +2626,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-263",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2636,8 +2636,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-264",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2646,8 +2646,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-265",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2656,8 +2656,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-266",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2666,8 +2666,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-267",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2676,8 +2676,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-268",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2686,8 +2686,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-269",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2696,8 +2696,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-270",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2706,8 +2706,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-271",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2716,8 +2716,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-272",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2726,8 +2726,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-273",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2736,8 +2736,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-274",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2746,8 +2746,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-275",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2756,8 +2756,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-276",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2766,8 +2766,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-277",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2776,8 +2776,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-278",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2786,8 +2786,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-279",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2796,8 +2796,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-280",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2806,8 +2806,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-281",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2816,8 +2816,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-282",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2826,8 +2826,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-283",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2836,8 +2836,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-284",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2846,8 +2846,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-285",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2856,8 +2856,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-286",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2866,8 +2866,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-287",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2876,8 +2876,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-288",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2886,8 +2886,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-289",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2896,8 +2896,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-290",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2906,8 +2906,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-291",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2916,8 +2916,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-292",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2926,8 +2926,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-293",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2936,8 +2936,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-294",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2946,8 +2946,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-295",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2956,8 +2956,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-296",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2966,8 +2966,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-297",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2976,8 +2976,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-298",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2986,8 +2986,8 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_insults-299",
-    framework: "Topic Blocking",
-    category: "Insults & Personal Attacks",
+    framework: "Блокировка тем",
+    category: "Оскорбления и личные выпады",
     categoryIcon: "alert-triangle",
     categoryDescription:
       "Detects insults, name-calling, and personal attacks directed at the chatbot, staff, or other people",
@@ -2997,7 +2997,7 @@ export const insultsCompliancePrompts: CompliancePrompt[] = [
 ];
 
 export const insultsFrameworkMeta = {
-  name: "Topic Blocking",
+  name: "Блокировка тем",
   icon: "shield",
   description:
     "Гардрейлы контент-фильтра, блокирующие сообщения по запрещённым темам и сохраняющие легитимное употребление связанных слов в контексте.",

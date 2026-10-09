@@ -40,7 +40,7 @@ export const LITELLM_CONTENT_FILTER_CARDS: GuardrailCardInfo[] = [
   },
   {
     id: "cf_denied_insults",
-    name: "Insults & Personal Attacks",
+    name: "Оскорбления и личные выпады",
     description: "Определяет оскорбления, ругань и личные выпады в адрес чат-бота, сотрудников или других людей.",
     category: "litellm",
     subcategory: "Content Category",

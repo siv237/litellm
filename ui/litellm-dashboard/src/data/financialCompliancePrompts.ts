@@ -6,8 +6,8 @@ import type { CompliancePrompt } from "./compliancePrompts";
 export const financialCompliancePrompts: CompliancePrompt[] = [
   {
     id: "denied_financial_advice-1",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -16,8 +16,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-2",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -26,8 +26,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-3",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -36,8 +36,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-4",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -46,8 +46,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-5",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -56,8 +56,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-6",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -66,8 +66,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-7",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -76,8 +76,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-8",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -86,8 +86,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-9",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -96,8 +96,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-10",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -106,8 +106,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-11",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -116,8 +116,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-12",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -126,8 +126,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-13",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -136,8 +136,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-14",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -146,8 +146,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-15",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -156,8 +156,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-16",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -166,8 +166,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-17",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -176,8 +176,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-18",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -186,8 +186,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-19",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -196,8 +196,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-20",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -206,8 +206,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-21",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -216,8 +216,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-22",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -226,8 +226,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-23",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -236,8 +236,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-24",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -246,8 +246,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-25",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -256,8 +256,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-26",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -266,8 +266,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-27",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -276,8 +276,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-28",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -286,8 +286,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-29",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -296,8 +296,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-30",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -306,8 +306,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-31",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -316,8 +316,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-32",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -326,8 +326,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-33",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -336,8 +336,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-34",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -346,8 +346,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-35",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -356,8 +356,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-36",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -366,8 +366,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-37",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -376,8 +376,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-38",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -386,8 +386,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-39",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -396,8 +396,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-40",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -406,8 +406,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-41",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -416,8 +416,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-42",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -426,8 +426,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-43",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -436,8 +436,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-44",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -446,8 +446,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-45",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -456,8 +456,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-46",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -466,8 +466,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-47",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -476,8 +476,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-48",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -486,8 +486,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-49",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -496,8 +496,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-50",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -506,8 +506,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-51",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -516,8 +516,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-52",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -526,8 +526,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-53",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -536,8 +536,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-54",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -546,8 +546,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-55",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -556,8 +556,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-56",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -566,8 +566,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-57",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -576,8 +576,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-58",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -586,8 +586,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-59",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -596,8 +596,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-60",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -606,8 +606,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-61",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -616,8 +616,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-62",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -626,8 +626,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-63",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -636,8 +636,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-64",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -646,8 +646,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-65",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -656,8 +656,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-66",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -666,8 +666,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-67",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -676,8 +676,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-68",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -686,8 +686,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-69",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -696,8 +696,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-70",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -706,8 +706,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-71",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -716,8 +716,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-72",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -726,8 +726,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-73",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -736,8 +736,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-74",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -746,8 +746,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-75",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -756,8 +756,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-76",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -766,8 +766,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-77",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -776,8 +776,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-78",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -786,8 +786,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-79",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -796,8 +796,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-80",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -806,8 +806,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-81",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -816,8 +816,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-82",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -826,8 +826,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-83",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -836,8 +836,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-84",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -846,8 +846,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-85",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -856,8 +856,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-86",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -866,8 +866,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-87",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -876,8 +876,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-88",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -886,8 +886,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-89",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -896,8 +896,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-90",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -906,8 +906,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-91",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -916,8 +916,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-92",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -926,8 +926,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-93",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -936,8 +936,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-94",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -946,8 +946,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-95",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -956,8 +956,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-96",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -966,8 +966,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-97",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -976,8 +976,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-98",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -986,8 +986,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-99",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -996,8 +996,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-100",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1006,8 +1006,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-101",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1016,8 +1016,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-102",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1026,8 +1026,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-103",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1036,8 +1036,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-104",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1046,8 +1046,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-105",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1056,8 +1056,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-106",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1066,8 +1066,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-107",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1076,8 +1076,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-108",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1086,8 +1086,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-109",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1096,8 +1096,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-110",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1106,8 +1106,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-111",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1116,8 +1116,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-112",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1126,8 +1126,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-113",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1136,8 +1136,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-114",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1146,8 +1146,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-115",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1156,8 +1156,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-116",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1166,8 +1166,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-117",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1176,8 +1176,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-118",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1186,8 +1186,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-119",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1196,8 +1196,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-120",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1206,8 +1206,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-121",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1216,8 +1216,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-122",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1226,8 +1226,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-123",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1236,8 +1236,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-124",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1246,8 +1246,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-125",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1256,8 +1256,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-126",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1266,8 +1266,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-127",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1276,8 +1276,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-128",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1286,8 +1286,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-129",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1296,8 +1296,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-130",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1306,8 +1306,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-131",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1316,8 +1316,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-132",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1326,8 +1326,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-133",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1336,8 +1336,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-134",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1346,8 +1346,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-135",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1356,8 +1356,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-136",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1366,8 +1366,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-137",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1376,8 +1376,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-138",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1386,8 +1386,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-139",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1396,8 +1396,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-140",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1406,8 +1406,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-141",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1416,8 +1416,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-142",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1426,8 +1426,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-143",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1436,8 +1436,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-144",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1446,8 +1446,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-145",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1456,8 +1456,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-146",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1466,8 +1466,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-147",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1476,8 +1476,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-148",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1486,8 +1486,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-149",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1496,8 +1496,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-150",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1506,8 +1506,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-151",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1516,8 +1516,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-152",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1526,8 +1526,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-153",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1536,8 +1536,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-154",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1546,8 +1546,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-155",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1556,8 +1556,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-156",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1566,8 +1566,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-157",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1576,8 +1576,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-158",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1586,8 +1586,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-159",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1596,8 +1596,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-160",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1606,8 +1606,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-161",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1616,8 +1616,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-162",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1626,8 +1626,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-163",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1636,8 +1636,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-164",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1646,8 +1646,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-165",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1656,8 +1656,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-166",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1666,8 +1666,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-167",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1676,8 +1676,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-168",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1686,8 +1686,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-169",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1696,8 +1696,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-170",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1706,8 +1706,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-171",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1716,8 +1716,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-172",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1726,8 +1726,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-173",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1736,8 +1736,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-174",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1746,8 +1746,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-175",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1756,8 +1756,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-176",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1766,8 +1766,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-177",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1776,8 +1776,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-178",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1786,8 +1786,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-179",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1796,8 +1796,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-180",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1806,8 +1806,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-181",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1816,8 +1816,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-182",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1826,8 +1826,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-183",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1836,8 +1836,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-184",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1846,8 +1846,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-185",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1856,8 +1856,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-186",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1866,8 +1866,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-187",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1876,8 +1876,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-188",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1886,8 +1886,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-189",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1896,8 +1896,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-190",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1906,8 +1906,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-191",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1916,8 +1916,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-192",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1926,8 +1926,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-193",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1936,8 +1936,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-194",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1946,8 +1946,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-195",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1956,8 +1956,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-196",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1966,8 +1966,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-197",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1976,8 +1976,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-198",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1986,8 +1986,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-199",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -1996,8 +1996,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-200",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -2006,8 +2006,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-201",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -2016,8 +2016,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-202",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -2026,8 +2026,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-203",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -2036,8 +2036,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-204",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -2046,8 +2046,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-205",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -2056,8 +2056,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-206",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -2066,8 +2066,8 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
   },
   {
     id: "denied_financial_advice-207",
-    framework: "Topic Blocking",
-    category: "Financial Advice",
+    framework: "Блокировка тем",
+    category: "Финансовая консультация",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Blocks requests for personalized financial advice, investment recommendations, or financial planning that should be provided by licensed financial advisors",
@@ -2077,7 +2077,7 @@ export const financialCompliancePrompts: CompliancePrompt[] = [
 ];
 
 export const financialFrameworkMeta = {
-  name: "Topic Blocking",
+  name: "Блокировка тем",
   icon: "shield",
   description:
     "Гардрейлы контент-фильтра, блокирующие сообщения по запрещённым темам и сохраняющие легитимное употребление связанных слов в контексте.",

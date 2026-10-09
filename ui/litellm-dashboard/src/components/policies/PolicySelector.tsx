@@ -90,7 +90,7 @@ const PolicySelector: React.FC<PolicySelectorProps> = ({
       <MultiSelect
         disabled={disabled}
         placeholder={
-          disabled ? "Setting policies is a premium feature." : "Select policies (production or published versions)"
+          disabled ? "Setting policies is a premium feature." : "Выберите политики (продуктовые или опубликованные версии)"
         }
         onValueChange={handlePolicyChange}
         value={value}

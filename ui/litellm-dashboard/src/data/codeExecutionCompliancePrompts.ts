@@ -18,7 +18,7 @@ const createPrompt = (
   expectedResult,
 });
 
-const FW = "Code Execution Safety";
+const FW = "Безопасность выполнения кода";
 const ICON = "terminal";
 const CAT_DESC =
   "Requests that ask the assistant to execute code, run commands, access the filesystem/network, or otherwise perform runtime actions should be blocked; static explanation/analysis is allowed.";

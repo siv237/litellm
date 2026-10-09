@@ -32,7 +32,7 @@ export const GUARDRAIL_PRESETS: Record<string, GuardrailPreset> = {
   cf_denied_insults: {
     provider: "LitellmContentFilter",
     categoryName: "denied_insults",
-    guardrailNameSuggestion: "Insults & Personal Attacks",
+    guardrailNameSuggestion: "Оскорбления и личные выпады",
     mode: "pre_call",
     defaultOn: false,
   },

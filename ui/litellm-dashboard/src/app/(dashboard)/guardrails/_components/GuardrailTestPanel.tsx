@@ -159,7 +159,7 @@ export function GuardrailTestPanel({
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Enter text to test with guardrails..."
+              placeholder="Введите текст для проверки гардрейлами…"
               rows={8}
               className="font-mono text-sm field-sizing-fixed"
             />

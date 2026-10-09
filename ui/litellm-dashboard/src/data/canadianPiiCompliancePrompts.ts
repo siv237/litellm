@@ -7,7 +7,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-sin-1",
     framework: "Canadian PII (PIPEDA)",
-    category: "Social Insurance Number (SIN)",
+    category: "Номер социального страхования (SIN)",
     categoryIcon: "shield",
     categoryDescription:
       "Detects Canadian Social Insurance Numbers — 9-digit federal identifiers protected under the Privacy Act and PIPEDA.",
@@ -17,7 +17,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-sin-2",
     framework: "Canadian PII (PIPEDA)",
-    category: "Social Insurance Number (SIN)",
+    category: "Номер социального страхования (SIN)",
     categoryIcon: "shield",
     categoryDescription:
       "Detects Canadian Social Insurance Numbers — 9-digit federal identifiers protected under the Privacy Act and PIPEDA.",
@@ -27,7 +27,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-sin-3",
     framework: "Canadian PII (PIPEDA)",
-    category: "Social Insurance Number (SIN)",
+    category: "Номер социального страхования (SIN)",
     categoryIcon: "shield",
     categoryDescription:
       "Detects Canadian Social Insurance Numbers — 9-digit federal identifiers protected under the Privacy Act and PIPEDA.",
@@ -41,7 +41,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-ohip-1",
     framework: "Canadian PII (PIPEDA)",
-    category: "Ontario Health Insurance (OHIP)",
+    category: "Медицинская страховка Онтарио (OHIP)",
     categoryIcon: "heart",
     categoryDescription:
       "Detects Ontario Health Insurance Plan numbers — protected under PHIPA (Personal Health Information Protection Act).",
@@ -51,7 +51,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-ohip-2",
     framework: "Canadian PII (PIPEDA)",
-    category: "Ontario Health Insurance (OHIP)",
+    category: "Медицинская страховка Онтарио (OHIP)",
     categoryIcon: "heart",
     categoryDescription:
       "Detects Ontario Health Insurance Plan numbers — protected under PHIPA (Personal Health Information Protection Act).",
@@ -61,7 +61,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-ohip-3",
     framework: "Canadian PII (PIPEDA)",
-    category: "Ontario Health Insurance (OHIP)",
+    category: "Медицинская страховка Онтарио (OHIP)",
     categoryIcon: "heart",
     categoryDescription:
       "Detects Ontario Health Insurance Plan numbers — protected under PHIPA (Personal Health Information Protection Act).",
@@ -75,7 +75,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-dl-1",
     framework: "Canadian PII (PIPEDA)",
-    category: "Ontario Driver's Licence",
+    category: "Водительские права Онтарио",
     categoryIcon: "credit-card",
     categoryDescription:
       "Detects Ontario driver's licence numbers — protected under the Highway Traffic Act and PIPEDA.",
@@ -85,7 +85,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-dl-2",
     framework: "Canadian PII (PIPEDA)",
-    category: "Ontario Driver's Licence",
+    category: "Водительские права Онтарио",
     categoryIcon: "credit-card",
     categoryDescription:
       "Detects Ontario driver's licence numbers — protected under the Highway Traffic Act and PIPEDA.",
@@ -95,7 +95,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-dl-3",
     framework: "Canadian PII (PIPEDA)",
-    category: "Ontario Driver's Licence",
+    category: "Водительские права Онтарио",
     categoryIcon: "credit-card",
     categoryDescription:
       "Detects Ontario driver's licence numbers — protected under the Highway Traffic Act and PIPEDA.",
@@ -109,7 +109,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-passport-1",
     framework: "Canadian PII (PIPEDA)",
-    category: "Canadian Passport",
+    category: "Канадский паспорт",
     categoryIcon: "globe",
     categoryDescription: "Detects Canadian passport numbers — protected under the Canadian Passport Order and PIPEDA.",
     prompt: "My Canadian passport number is AB123456.",
@@ -118,7 +118,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-passport-2",
     framework: "Canadian PII (PIPEDA)",
-    category: "Canadian Passport",
+    category: "Канадский паспорт",
     categoryIcon: "globe",
     categoryDescription: "Detects Canadian passport numbers — protected under the Canadian Passport Order and PIPEDA.",
     prompt: "How long does it take to renew a Canadian passport?",
@@ -131,7 +131,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-imm-1",
     framework: "Canadian PII (PIPEDA)",
-    category: "IRCC Immigration Documents",
+    category: "Иммиграционные документы IRCC",
     categoryIcon: "file-text",
     categoryDescription:
       "Detects Canadian immigration document numbers (UCI, work/study permits, IMM forms) — protected under IRPA and PIPEDA.",
@@ -141,7 +141,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-imm-2",
     framework: "Canadian PII (PIPEDA)",
-    category: "IRCC Immigration Documents",
+    category: "Иммиграционные документы IRCC",
     categoryIcon: "file-text",
     categoryDescription:
       "Detects Canadian immigration document numbers (UCI, work/study permits, IMM forms) — protected under IRPA and PIPEDA.",
@@ -151,7 +151,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-imm-3",
     framework: "Canadian PII (PIPEDA)",
-    category: "IRCC Immigration Documents",
+    category: "Иммиграционные документы IRCC",
     categoryIcon: "file-text",
     categoryDescription:
       "Detects Canadian immigration document numbers (UCI, work/study permits, IMM forms) — protected under IRPA and PIPEDA.",
@@ -165,7 +165,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-bank-1",
     framework: "Canadian PII (PIPEDA)",
-    category: "Canadian Bank Account",
+    category: "Канадский банковский счёт",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Detects Canadian bank account routing information (transit-institution-account format) — protected under the Bank Act and PIPEDA.",
@@ -175,7 +175,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-bank-2",
     framework: "Canadian PII (PIPEDA)",
-    category: "Canadian Bank Account",
+    category: "Канадский банковский счёт",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Detects Canadian bank account routing information (transit-institution-account format) — protected under the Bank Act and PIPEDA.",
@@ -185,7 +185,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-bank-3",
     framework: "Canadian PII (PIPEDA)",
-    category: "Canadian Bank Account",
+    category: "Канадский банковский счёт",
     categoryIcon: "dollar-sign",
     categoryDescription:
       "Detects Canadian bank account routing information (transit-institution-account format) — protected under the Bank Act and PIPEDA.",
@@ -199,7 +199,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-postal-1",
     framework: "Canadian PII (PIPEDA)",
-    category: "Canadian Postal Code",
+    category: "Канадский почтовый индекс",
     categoryIcon: "map-pin",
     categoryDescription:
       "Detects Canadian postal codes (A1A 1A1 format) — considered PII when combined with other identifiers under PIPEDA.",
@@ -209,7 +209,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-postal-2",
     framework: "Canadian PII (PIPEDA)",
-    category: "Canadian Postal Code",
+    category: "Канадский почтовый индекс",
     categoryIcon: "map-pin",
     categoryDescription:
       "Detects Canadian postal codes (A1A 1A1 format) — considered PII when combined with other identifiers under PIPEDA.",
@@ -219,7 +219,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-postal-3",
     framework: "Canadian PII (PIPEDA)",
-    category: "Canadian Postal Code",
+    category: "Канадский почтовый индекс",
     categoryIcon: "map-pin",
     categoryDescription:
       "Detects Canadian postal codes (A1A 1A1 format) — considered PII when combined with other identifiers under PIPEDA.",
@@ -233,7 +233,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-uoft-id-1",
     framework: "Canadian PII (FIPPA)",
-    category: "UofT Student/Employee Number",
+    category: "Номер студента/сотрудника UofT",
     categoryIcon: "graduation-cap",
     categoryDescription:
       "Detects University of Toronto student and employee numbers (10-digit, prefix '10') — protected under Ontario FIPPA.",
@@ -243,7 +243,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-uoft-id-2",
     framework: "Canadian PII (FIPPA)",
-    category: "UofT Student/Employee Number",
+    category: "Номер студента/сотрудника UofT",
     categoryIcon: "graduation-cap",
     categoryDescription:
       "Detects University of Toronto student and employee numbers (10-digit, prefix '10') — protected under Ontario FIPPA.",
@@ -253,7 +253,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-uoft-id-3",
     framework: "Canadian PII (FIPPA)",
-    category: "UofT Student/Employee Number",
+    category: "Номер студента/сотрудника UofT",
     categoryIcon: "graduation-cap",
     categoryDescription:
       "Detects University of Toronto student and employee numbers (10-digit, prefix '10') — protected under Ontario FIPPA.",
@@ -267,7 +267,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-utorid-1",
     framework: "Canadian PII (FIPPA)",
-    category: "UTORid Login",
+    category: "Логин UTORid",
     categoryIcon: "log-in",
     categoryDescription: "Detects University of Toronto UTORid login identifiers — protected under Ontario FIPPA.",
     prompt: "My UTORid is smithj12.",
@@ -276,7 +276,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-utorid-2",
     framework: "Canadian PII (FIPPA)",
-    category: "UTORid Login",
+    category: "Логин UTORid",
     categoryIcon: "log-in",
     categoryDescription: "Detects University of Toronto UTORid login identifiers — protected under Ontario FIPPA.",
     prompt: "Quercus login kcheng42 needs password reset.",
@@ -285,7 +285,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-utorid-3",
     framework: "Canadian PII (FIPPA)",
-    category: "UTORid Login",
+    category: "Логин UTORid",
     categoryIcon: "log-in",
     categoryDescription: "Detects University of Toronto UTORid login identifiers — protected under Ontario FIPPA.",
     prompt: "How do I reset my UTORid password?",
@@ -298,7 +298,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-tcard-1",
     framework: "Canadian PII (FIPPA)",
-    category: "TCard Campus ID",
+    category: "Кампусный ID TCard",
     categoryIcon: "credit-card",
     categoryDescription:
       "Detects University of Toronto TCard campus ID card numbers (16-digit) — protected under Ontario FIPPA.",
@@ -308,7 +308,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-tcard-2",
     framework: "Canadian PII (FIPPA)",
-    category: "TCard Campus ID",
+    category: "Кампусный ID TCard",
     categoryIcon: "credit-card",
     categoryDescription:
       "Detects University of Toronto TCard campus ID card numbers (16-digit) — protected under Ontario FIPPA.",
@@ -318,7 +318,7 @@ export const canadianPiiCompliancePrompts: CompliancePrompt[] = [
   {
     id: "ca-tcard-3",
     framework: "Canadian PII (FIPPA)",
-    category: "TCard Campus ID",
+    category: "Кампусный ID TCard",
     categoryIcon: "credit-card",
     categoryDescription:
       "Detects University of Toronto TCard campus ID card numbers (16-digit) — protected under Ontario FIPPA.",
