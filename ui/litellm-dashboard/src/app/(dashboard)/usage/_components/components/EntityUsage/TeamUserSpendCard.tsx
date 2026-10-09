@@ -77,9 +77,9 @@ const TeamUserSpendCard: React.FC<TeamUserSpendCardProps> = ({ accessToken, star
       <CardContent className="flex flex-col space-y-4">
         <div className="flex items-start justify-between">
           <div className="flex flex-col space-y-2">
-            <h3 className="text-lg font-medium text-foreground">Spend Per User Within Team</h3>
+            <h3 className="text-lg font-medium text-foreground">Расход по пользователям внутри команды</h3>
             <p className="text-xs text-muted-foreground">
-              Attributed per request from spend logs, so it includes JWT/SSO traffic that does not use a virtual key
+              Начисляется по запросам из журналов расхода, включая JWT/SSO-трафик без виртуального ключа
             </p>
           </div>
           <Button
@@ -89,7 +89,7 @@ const TeamUserSpendCard: React.FC<TeamUserSpendCardProps> = ({ accessToken, star
             onClick={() => data && downloadCsv(buildTeamUserSpendCsv(data), teamUserSpendCsvFileName(data))}
           >
             <Download />
-            Download CSV
+            Скачать CSV
           </Button>
         </div>
         <DataTable

@@ -8,7 +8,7 @@ export default function NewBadge({ children, dot = false }: { children?: React.R
     return children ? <>{children}</> : null;
   }
 
-  const badge = dot ? <Badge className="size-1.5 p-0" /> : <Badge>New</Badge>;
+  const badge = dot ? <Badge className="size-1.5 p-0" /> : <Badge>Новый</Badge>;
 
   return children ? (
     <span className="relative inline-flex">

@@ -32,13 +32,12 @@ const NonReasoningTierToggle: React.FC<{
           checked={value.enable_non_reasoning_tier === true}
           disabled={!available}
           onCheckedChange={handleToggle}
-          aria-label="Add a non-reasoning tier"
+          aria-label="Добавить уровень без рассуждений"
         />
-        <strong className="font-semibold">Add a non-reasoning tier</strong>
+        <strong className="font-semibold">Добавить уровень без рассуждений</strong>
       </div>
       <span className="block text-xs text-muted-foreground">
-        Adds NON_REASONING below Simple, for operational agent traffic that relays or reformats information rather than
-        reasoning about it. Escalation still moves up out of it when a request needs more.
+        Добавляет NON_REASONING под Simple — для служебного агентного трафика, который передаёт или переформатирует информацию, а не рассуждает. Эскалация по-прежнему поднимает запрос выше, когда нужно больше.
         {!available && " Requires the LLM or JEV classification method"}
       </span>
       <Separator className="my-4" />

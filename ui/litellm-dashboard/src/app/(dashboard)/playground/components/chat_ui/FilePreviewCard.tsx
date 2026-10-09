@@ -21,7 +21,7 @@ function FilePreviewCard({ file, previewUrl, onRemove }: FilePreviewCardProps) {
           ) : (
             <img
               src={previewUrl || ""}
-              alt="Upload preview"
+              alt="Предпросмотр загрузки"
               className="w-10 h-10 rounded-md border border-border object-cover"
             />
           )}

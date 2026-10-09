@@ -24,9 +24,9 @@ export function AddFallbacksModal({ open, onCancel, children }: AddFallbacksModa
                 <ArrowRight className="w-5 h-5 text-indigo-600 dark:text-indigo-300" />
               </div>
               <div>
-                <DialogTitle className="text-lg font-bold m-0">Configure Model Fallbacks</DialogTitle>
+                <DialogTitle className="text-lg font-bold m-0">Настроить резервирование моделей</DialogTitle>
                 <p className="text-sm text-muted-foreground font-normal m-0">
-                  Manage multiple fallback chains for different models (up to 5 groups at a time)
+                  Управляйте несколькими цепочками резервирования для разных моделей (до 5 групп одновременно)
                 </p>
               </div>
             </div>

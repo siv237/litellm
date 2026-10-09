@@ -41,12 +41,12 @@ const AutoRotationView: React.FC<AutoRotationViewProps> = ({
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <RefreshIcon className="h-4 w-4 text-info" />
-          <p className="text-sm font-semibold text-foreground">Auto-Rotation</p>
+          <p className="text-sm font-semibold text-foreground">Автоповорот</p>
           <StatusBadge tone={autoRotate ? "success" : "neutral"} label={autoRotate ? "Enabled" : "Disabled"} />
           {autoRotate && rotationInterval && (
             <>
               <p className="text-sm text-muted-foreground">•</p>
-              <p className="text-sm text-muted-foreground">Every {rotationInterval}</p>
+              <p className="text-sm text-muted-foreground">Каждые {rotationInterval}</p>
             </>
           )}
         </div>
@@ -58,7 +58,7 @@ const AutoRotationView: React.FC<AutoRotationViewProps> = ({
             <div className="flex items-center gap-2 rounded-md border border-border bg-muted p-3">
               <ClockIcon className="h-4 w-4 text-muted-foreground" />
               <div className="flex-1">
-                <p className="text-sm font-medium text-foreground">Last Rotation</p>
+                <p className="text-sm font-medium text-foreground">Последний поворот</p>
                 <p className="text-sm text-muted-foreground">{formatTimestamp(lastRotationAt)}</p>
               </div>
             </div>
@@ -68,7 +68,7 @@ const AutoRotationView: React.FC<AutoRotationViewProps> = ({
             <div className="flex items-center gap-2 rounded-md border border-border bg-muted p-3">
               <ClockIcon className="h-4 w-4 text-muted-foreground" />
               <div className="flex-1">
-                <p className="text-sm font-medium text-foreground">Next Scheduled Rotation</p>
+                <p className="text-sm font-medium text-foreground">Следующий поворот по расписанию</p>
                 <p className="text-sm text-muted-foreground">
                   {formatTimestamp(nextRotationAt || keyRotationAt || "")}
                 </p>
@@ -79,7 +79,7 @@ const AutoRotationView: React.FC<AutoRotationViewProps> = ({
           {autoRotate && !lastRotationAt && !keyRotationAt && !nextRotationAt && (
             <div className="flex items-center gap-2 rounded-md border border-border bg-muted p-3">
               <ClockIcon className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">No rotation history available</p>
+              <p className="text-sm text-muted-foreground">История поворотов отсутствует</p>
             </div>
           )}
         </div>
@@ -88,7 +88,7 @@ const AutoRotationView: React.FC<AutoRotationViewProps> = ({
       {!autoRotate && !lastRotationAt && !keyRotationAt && !nextRotationAt && (
         <div className="flex items-center gap-2 rounded-md border border-border bg-muted p-3">
           <RefreshIcon className="h-4 w-4 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">Auto-rotation is not enabled for this key</p>
+          <p className="text-sm text-muted-foreground">Автоповорот не включён для этого ключа</p>
         </div>
       )}
     </div>
@@ -99,8 +99,8 @@ const AutoRotationView: React.FC<AutoRotationViewProps> = ({
       <div className={`rounded-lg border border-border bg-card p-6 ${className}`}>
         <div className="mb-6 flex items-center gap-2">
           <div>
-            <p className="text-sm font-semibold text-foreground">Auto-Rotation</p>
-            <p className="text-xs text-muted-foreground">Automatic key rotation settings and status for this key</p>
+            <p className="text-sm font-semibold text-foreground">Автоповорот</p>
+            <p className="text-xs text-muted-foreground">Настройки и статус автоповорота ключа</p>
           </div>
         </div>
         {content}
@@ -110,7 +110,7 @@ const AutoRotationView: React.FC<AutoRotationViewProps> = ({
 
   return (
     <div className={`${className}`}>
-      <p className="mb-3 text-sm font-medium text-foreground">Auto-Rotation</p>
+      <p className="mb-3 text-sm font-medium text-foreground">Автоповорот</p>
       {content}
     </div>
   );

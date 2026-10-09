@@ -104,11 +104,9 @@ const CacheLeakageCard: React.FC<CacheLeakageCardProps> = ({ activity }) => {
         <CardHeader>
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div className="min-w-0">
-              <CardTitle>Cache leakage by {dimension === "model" ? "model" : "virtual key"}</CardTitle>
+              <CardTitle>Утечка кэша по {dimension === "model" ? "model" : "virtual key"}</CardTitle>
               <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
-                {subject} sending large volumes of uncached input with a low cache hit rate are likely missing prompt
-                caching. Potential savings is approximate: uncached input priced at what your cached traffic nets per
-                cached token, after cache-write premiums.
+                {subject} отправляющих большие объёмы некэшированного входа при низком попадании в кэш, вероятно, не используют кэширование промптов. Потенциальная экономия приблизительна: некэшированный вход оценён по цене вашего кэшированного трафика за кэшированный токен с учётом надбавки за запись в кэш.
               </p>
             </div>
             <div className="shrink-0">
@@ -117,8 +115,8 @@ const CacheLeakageCard: React.FC<CacheLeakageCardProps> = ({ activity }) => {
           </div>
           <Tabs value={dimension} onValueChange={(value) => setDimension(value === "model" ? "model" : "key")}>
             <TabsList>
-              <TabsTrigger value="key">By virtual key</TabsTrigger>
-              <TabsTrigger value="model">By model</TabsTrigger>
+              <TabsTrigger value="key">По виртуальным ключам</TabsTrigger>
+              <TabsTrigger value="model">По моделям</TabsTrigger>
             </TabsList>
           </Tabs>
         </CardHeader>
@@ -139,21 +137,21 @@ const CacheLeakageCard: React.FC<CacheLeakageCardProps> = ({ activity }) => {
                   <TableHead>{firstColumn}</TableHead>
                   <SortableHead
                     column="uncachedPromptTokens"
-                    label="Uncached input tokens"
+                    label="Некэшированные входные токены"
                     info="Input tokens you sent in this range that weren't served from or written to the cache"
                     sort={sort}
                     onSort={onSort}
                   />
                   <SortableHead
                     column="cacheHitRatio"
-                    label="Cache hit rate"
+                    label="Доля попаданий в кэш"
                     info="Share of your input tokens that were served from the cache"
                     sort={sort}
                     onSort={onSort}
                   />
                   <SortableHead
                     column="potentialSavings"
-                    label="Potential savings"
+                    label="Потенциальная экономия"
                     info="About how much you'd save if this uncached input used prompt caching. Estimated as uncached input tokens times what your cached traffic already nets per cached token (realized cache savings, after write premiums, ÷ cache read and write tokens). Blank when caching is not currently saving anything overall."
                     sort={sort}
                     onSort={onSort}

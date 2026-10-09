@@ -286,7 +286,7 @@ export default function RequestLogsPanel({ accessToken, token, userRole, userID,
   return (
     <AutoRouterModelGroupsProvider>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-semibold">Request Logs</h1>
+        <h1 className="text-xl font-semibold">Журнал запросов</h1>
       </div>
 
       {isLiveTail && pagination.pageIndex === 0 && <LiveTailBanner onStop={() => setIsLiveTail(false)} />}

@@ -25,13 +25,12 @@ const APIReferenceView: React.FC<ApiRefProps> = ({ proxySettings }) => {
       <div className="mb-5">
         {/* Header row with Docs link on the right */}
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-foreground">OpenAI Compatible Proxy: API Reference</h1>
+          <h1 className="text-2xl font-semibold text-foreground">Совместимость с OpenAI: справочник API</h1>
           <DocLink className="ml-3 shrink-0" href="https://docs.litellm.ai/docs/proxy/user_keys" />
         </div>
 
         <p className="mt-2 mb-2 text-sm text-muted-foreground">
-          LiteLLM is OpenAI Compatible. This means your API Key works with the OpenAI SDK. Just replace the base_url to
-          point to your litellm proxy. Example Below{" "}
+          ruLiteLLM совместим с OpenAI. Ваш API-ключ работает с SDK OpenAI — достаточно указать base_url на ваш прокси ruLiteLLM. Пример ниже{" "}
         </p>
 
         <Tabs defaultValue="openai">
@@ -122,10 +121,10 @@ chat = ChatOpenAI(
 
 messages = [
     SystemMessage(
-        content="You are a helpful assistant that im using to make a test request to."
+        content="Ты полезный ассистент, которому я отправляю тестовый запрос."
     ),
     HumanMessage(
-        content="test from litellm. tell me why it's amazing in 1 sentence"
+        content="тест из ruLiteLLM. скажи в одном предложении, чем ты крут"
     ),
 ]
 response = chat(messages)

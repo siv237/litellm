@@ -28,8 +28,8 @@ export default function DcrBridgeToggle({
     <MountedFormField
       label={
         <span className="text-sm font-medium text-foreground flex items-center">
-          Gateway-hosted sign-in (DCR bridge)
-          <SimpleTooltip content="Lets OAuth-only clients like Claude Desktop register and sign in through the gateway. Turn off to relay the upstream server's own OAuth metadata instead (for clients pre-registered with the upstream IdP).">
+          Вход на стороне гейтвея (DCR-мост)
+          <SimpleTooltip content="Позволяет OAuth-клиентам вроде Claude Desktop регистрироваться и входить через гейтвей. Выключите, чтобы передавать собственные OAuth-метаданные апстрима (для клиентов, заранее зарегистрированных у IdP апстрима).">
             <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
           </SimpleTooltip>
         </span>

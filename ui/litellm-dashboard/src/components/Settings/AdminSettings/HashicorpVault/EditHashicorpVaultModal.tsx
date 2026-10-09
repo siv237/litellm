@@ -25,16 +25,16 @@ interface VaultFieldGroup {
 
 const FIELD_GROUPS: VaultFieldGroup[] = [
   {
-    title: "Connection",
+    title: "Подключение",
     fields: ["vault_addr", "vault_namespace", "vault_mount_name", "vault_path_prefix"],
   },
   {
-    title: "Token Authentication",
+    title: "Токенная аутентификация",
     subtitle: "Use a Vault token to authenticate. Only one auth method is required.",
     fields: ["vault_token"],
   },
   {
-    title: "AppRole Authentication",
+    title: "AppRole-аутентификация",
     subtitle: "Use AppRole credentials to authenticate. Only one auth method is required.",
     fields: ["approle_role_id", "approle_secret_id", "approle_mount_path"],
   },
@@ -54,7 +54,7 @@ const buildSchema = (fields: readonly string[]): z.ZodType<VaultFormValues, Vaul
         name,
         name === "vault_addr"
           ? z.string().refine((value) => value.length === 0 || /^https?:\/\/.+/.test(value), {
-              message: "Must start with http:// or https://",
+              message: "Должно начинаться с http:// или https://",
             })
           : z.string(),
       ]),
@@ -105,7 +105,7 @@ const EditHashicorpVaultModal: React.FC<EditHashicorpVaultModalProps> = ({ isVis
 
     mutate(config, {
       onSuccess: () => {
-        toast.success("Hashicorp Vault configuration updated successfully");
+        toast.success("Конфигурация Hashicorp Vault обновлена");
         onSuccess();
       },
       onError: (err) => {
@@ -145,7 +145,7 @@ const EditHashicorpVaultModal: React.FC<EditHashicorpVaultModalProps> = ({ isVis
     <Dialog open={isVisible} onOpenChange={(open) => !open && handleCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>Edit Hashicorp Vault Configuration</DialogTitle>
+          <DialogTitle>Изменить конфигурацию Hashicorp Vault</DialogTitle>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           {FIELD_GROUPS.map((group, index) => (

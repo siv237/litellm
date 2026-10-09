@@ -107,11 +107,11 @@ const MCPDiscovery: React.FC<MCPDiscoveryProps> = ({
         <DialogHeader>
           <div className="flex items-center justify-between border-b border-border pb-4">
             <div className="flex items-center space-x-3">
-              <img src={resolveLogoSrc(mcpLogoImg)} alt="MCP Logo" className="mr-2 size-5 object-contain" />
-              <DialogTitle className="text-xl font-semibold">Add MCP Server</DialogTitle>
+              <img src={resolveLogoSrc(mcpLogoImg)} alt="Логотип MCP" className="mr-2 size-5 object-contain" />
+              <DialogTitle className="text-xl font-semibold">Добавить сервер MCP</DialogTitle>
             </div>
             <Button variant="link" size="sm" className="mr-8" onClick={onCustomServer}>
-              + Custom Server
+              + Свой сервер
             </Button>
           </div>
         </DialogHeader>
@@ -157,16 +157,16 @@ const MCPDiscovery: React.FC<MCPDiscoveryProps> = ({
 
           {error && (
             <div className="py-8 text-center text-muted-foreground">
-              <p className="text-sm">Failed to load servers: {error}</p>
+              <p className="text-sm">Не удалось загрузить серверы: {error}</p>
             </div>
           )}
 
           {!loading && !error && filteredServers.length === 0 && (
             <div className="py-8 text-center text-muted-foreground">
               <p className="text-sm">
-                No servers found.{" "}
+                Серверы не найдены.{" "}
                 <Button variant="link" size="sm" onClick={onCustomServer}>
-                  Add a custom server
+                  Добавить свой сервер
                 </Button>
               </p>
             </div>

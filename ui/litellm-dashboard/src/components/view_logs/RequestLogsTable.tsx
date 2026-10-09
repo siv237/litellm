@@ -120,8 +120,8 @@ export function RequestLogsTable({
             table={table}
             open={filtersOpen}
             onOpenChange={setFiltersOpen}
-            title="Filters"
-            description="Narrow down request logs"
+            title="Фильтры"
+            description="Сузить журнал запросов"
           >
             {({ get, set }) => <RequestLogsFilters get={get} set={set} teams={teams} logsWindow={logsWindow} />}
           </DataTableFilterDrawer>

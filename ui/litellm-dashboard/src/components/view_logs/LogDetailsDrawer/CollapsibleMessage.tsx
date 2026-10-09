@@ -30,7 +30,7 @@ export function CollapsibleMessage({ label, content, defaultExpanded = false }: 
           <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
         )}
         <span className="text-[10px] uppercase tracking-[0.5px] text-muted-foreground">{label}</span>
-        <span className="text-[10px] text-muted-foreground">({charCount.toLocaleString()} chars)</span>
+        <span className="text-[10px] text-muted-foreground">({charCount.toLocaleString()} симв.)</span>
       </CollapsibleTrigger>
 
       <CollapsibleContent

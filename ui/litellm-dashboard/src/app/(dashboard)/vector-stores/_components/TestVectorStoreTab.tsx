@@ -25,7 +25,7 @@ const TestVectorStoreTab: React.FC<TestVectorStoreTabProps> = ({ accessToken, ve
     return (
       <Card>
         <CardContent>
-          <p className="text-sm text-muted-foreground">Access token is required to test vector stores.</p>
+          <p className="text-sm text-muted-foreground">Для тестирования векторных хранилищ требуется access token.</p>
         </CardContent>
       </Card>
     );
@@ -36,7 +36,7 @@ const TestVectorStoreTab: React.FC<TestVectorStoreTabProps> = ({ accessToken, ve
       <Card>
         <CardContent>
           <div className="py-8 text-center">
-            <p className="text-sm text-muted-foreground">No vector stores available. Create one first to test it.</p>
+            <p className="text-sm text-muted-foreground">Нет доступных векторных хранилищ. Сначала создайте и протестируйте его.</p>
           </div>
         </CardContent>
       </Card>
@@ -48,8 +48,8 @@ const TestVectorStoreTab: React.FC<TestVectorStoreTabProps> = ({ accessToken, ve
       <Card>
         <CardContent className="space-y-4">
           <div>
-            <h5 className="text-base font-medium text-foreground">Select Vector Store</h5>
-            <p className="text-sm text-muted-foreground">Choose a vector store to test search queries against</p>
+            <h5 className="text-base font-medium text-foreground">Выберите векторное хранилище</h5>
+            <p className="text-sm text-muted-foreground">Выберите векторное хранилище для проверки поисковых запросов</p>
           </div>
 
           <Combobox
@@ -58,9 +58,9 @@ const TestVectorStoreTab: React.FC<TestVectorStoreTabProps> = ({ accessToken, ve
             onValueChange={setSelectedVectorStore}
             itemToStringLabel={storeLabel}
           >
-            <ComboboxInput className="w-full" placeholder="Select a vector store" />
+            <ComboboxInput className="w-full" placeholder="Выберите векторное хранилище" />
             <ComboboxContent>
-              <ComboboxEmpty>No matching vector stores</ComboboxEmpty>
+              <ComboboxEmpty>Нет подходящих векторных хранилищ</ComboboxEmpty>
               <ComboboxList>
                 {(store: VectorStore) => (
                   <ComboboxItem key={store.vector_store_id} value={store}>

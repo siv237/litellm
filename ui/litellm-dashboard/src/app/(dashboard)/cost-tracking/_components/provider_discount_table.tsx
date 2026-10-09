@@ -153,7 +153,7 @@ const ProviderDiscountTable: React.FC<ProviderDiscountTableProps> = ({
         },
       ]}
       getRowKey={(row) => row.provider}
-      emptyMessage="No provider discounts configured"
+      emptyMessage="Скидки провайдеров не настроены"
     />
   );
 };

@@ -15,7 +15,7 @@ interface CoordinationRedisTypeSelectorProps {
 const CoordinationRedisTypeSelector: React.FC<CoordinationRedisTypeSelectorProps> = ({ redisType, onTypeChange }) => (
   <div className="space-y-2">
     <label htmlFor="coordination-redis-type" className="text-sm font-medium">
-      Redis Type
+      Тип Redis
     </label>
     <Select value={redisType} onValueChange={(value) => value !== null && onTypeChange(value)}>
       <SelectTrigger id="coordination-redis-type" className="w-full">

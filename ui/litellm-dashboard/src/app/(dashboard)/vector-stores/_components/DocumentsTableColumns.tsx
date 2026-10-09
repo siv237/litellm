@@ -16,10 +16,10 @@ import { cn } from "@/lib/cva.config";
 import { copyToClipboard } from "@/utils/dataUtils";
 
 const STATUS_CONFIG: Record<DocumentUpload["status"], { tone: StatusTone; label: string }> = {
-  uploading: { tone: "info", label: "Uploading" },
-  done: { tone: "success", label: "Ready" },
+  uploading: { tone: "info", label: "Загружается" },
+  done: { tone: "success", label: "Готов" },
   error: { tone: "error", label: "Ошибка" },
-  removed: { tone: "neutral", label: "Removed" },
+  removed: { tone: "neutral", label: "Удалён" },
 };
 
 function formatFileSize(bytes?: number): string {
@@ -33,7 +33,7 @@ function DocumentRowActions({ document, onRemove }: { document: DocumentUpload; 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open document actions"
+        aria-label="Действия документа"
         data-testid={`document-actions-${document.uid}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -45,7 +45,7 @@ function DocumentRowActions({ document, onRemove }: { document: DocumentUpload; 
           onClick={() => void copyToClipboard(document.uid, "Document ID copied to clipboard")}
         >
           <Copy />
-          Copy document ID
+          Скопировать ID документа
         </DropdownMenuItem>
         <DropdownMenuItem
           variant="destructive"

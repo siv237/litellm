@@ -57,7 +57,7 @@ const TierModelEffortRows: React.FC<TierModelEffortRowsProps> = ({
   return (
     <div className="mt-2 space-y-1">
       <div className="flex items-center gap-1">
-        <span className="text-xs font-medium text-muted-foreground">Reasoning effort</span>
+        <span className="text-xs font-medium text-muted-foreground">Усилие рассуждения</span>
         <SimpleTooltip
           content={`Sent as reasoning_effort on requests this tier routes to the model, overriding the caller's value. Default leaves the request untouched.`}
         >
@@ -69,7 +69,7 @@ const TierModelEffortRows: React.FC<TierModelEffortRowsProps> = ({
           <span className="truncate text-xs">{model}</span>
           <Select
             items={[
-              { value: PROVIDER_DEFAULT, label: "Default" },
+              { value: PROVIDER_DEFAULT, label: "По умолчанию" },
               ...options.map((option) => ({ value: option, label: option })),
             ]}
             value={effort ?? PROVIDER_DEFAULT}
@@ -85,7 +85,7 @@ const TierModelEffortRows: React.FC<TierModelEffortRowsProps> = ({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={PROVIDER_DEFAULT}>Default</SelectItem>
+              <SelectItem value={PROVIDER_DEFAULT}>По умолчанию</SelectItem>
               {options.map((option) => (
                 <SelectItem key={option} value={option}>
                   {option}

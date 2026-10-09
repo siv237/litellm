@@ -41,7 +41,7 @@ function GuardrailRowActions({ guardrail, onDeleteClick }: GuardrailRowActionsPr
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open guardrail actions"
+        aria-label="Действия гардрейла"
         data-testid={`guardrail-actions-${guardrail.guardrail_id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -75,8 +75,8 @@ export const getGuardrailTableColumns = ({
   {
     id: "guardrail_id",
     accessorKey: "guardrail_id",
-    meta: { title: "Guardrail ID" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Guardrail ID" />,
+    meta: { title: "ID гардрейла" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="ID гардрейла" />,
     size: 200,
     enableSorting: true,
     cell: ({ row }) => (
@@ -113,8 +113,8 @@ export const getGuardrailTableColumns = ({
   },
   {
     id: "mode",
-    meta: { title: "Mode" },
-    header: "Mode",
+    meta: { title: "Режим" },
+    header: "Режим",
     size: 130,
     enableSorting: false,
     cell: ({ row }) => {
@@ -128,8 +128,8 @@ export const getGuardrailTableColumns = ({
   },
   {
     id: "default_on",
-    meta: { title: "Default On" },
-    header: "Default On",
+    meta: { title: "Включён по умолчанию" },
+    header: "Включён по умолчанию",
     size: 120,
     enableSorting: false,
     cell: ({ row }) => {
@@ -142,8 +142,8 @@ export const getGuardrailTableColumns = ({
   {
     id: "created_at",
     accessorKey: "created_at",
-    meta: { title: "Created At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created At" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 150,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.created_at} />,
@@ -151,8 +151,8 @@ export const getGuardrailTableColumns = ({
   {
     id: "updated_at",
     accessorKey: "updated_at",
-    meta: { title: "Updated At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Updated At" />,
+    meta: { title: "Обновлён" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Обновлён" />,
     size: 150,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.updated_at} />,

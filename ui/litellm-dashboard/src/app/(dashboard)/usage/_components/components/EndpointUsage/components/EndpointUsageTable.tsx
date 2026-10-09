@@ -56,7 +56,7 @@ const EndpointUsageTable: React.FC<EndpointUsageTableProps> = ({ endpointData })
         return (
           <div className="flex items-center space-x-3">
             <div className="flex-1 relative">
-              <Meter value={successPercentage} max={totalPercentage || 100} aria-label="Successful requests">
+              <Meter value={successPercentage} max={totalPercentage || 100} aria-label="Успешные запросы">
                 <MeterTrack className={failurePercentage > 0 ? "bg-destructive" : undefined}>
                   <MeterIndicator className="bg-success" />
                 </MeterTrack>

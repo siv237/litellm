@@ -25,7 +25,7 @@ function TagNameCell({ tag, onSelectTag }: { tag: Tag; onSelectTag: (tagName: st
   if (isDynamicSpendTag(tag)) {
     return (
       <CellTooltip
-        content="You cannot view the information of a dynamically generated spend tag"
+        content="Нельзя просмотреть информацию динамически созданного тега расхода"
         trigger={<span className="block max-w-60 truncate font-mono text-xs text-muted-foreground">{tag.name}</span>}
       />
     );
@@ -43,7 +43,7 @@ function TagNameCell({ tag, onSelectTag }: { tag: Tag; onSelectTag: (tagName: st
 function TagModelsCell({ tag }: { tag: Tag }) {
   const models = tag.models ?? [];
   if (models.length === 0) {
-    return <Badge variant="secondary">All Models</Badge>;
+    return <Badge variant="secondary">Все модели</Badge>;
   }
   return (
     <div className="flex flex-wrap items-center gap-1">
@@ -74,7 +74,7 @@ function TagRowActions({ tag, onEdit, onDelete }: TagRowActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open tag actions"
+        aria-label="Действия тега"
         data-testid={`tag-actions-${tag.name}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -115,8 +115,8 @@ export const getTagTableColumns = ({ onSelectTag, onEdit, onDelete }: TagTableCo
   {
     id: "name",
     accessorKey: "name",
-    meta: { title: "Tag Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Tag Name" />,
+    meta: { title: "Имя тега" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Имя тега" />,
     size: 260,
     enableSorting: true,
     cell: ({ row }) => <TagNameCell tag={row.original} onSelectTag={onSelectTag} />,
@@ -139,8 +139,8 @@ export const getTagTableColumns = ({ onSelectTag, onEdit, onDelete }: TagTableCo
   },
   {
     id: "models",
-    meta: { title: "Allowed Models", skeleton: "chips" },
-    header: "Allowed Models",
+    meta: { title: "Разрешённые модели", skeleton: "chips" },
+    header: "Разрешённые модели",
     size: 240,
     enableSorting: false,
     cell: ({ row }) => <TagModelsCell tag={row.original} />,
@@ -149,8 +149,8 @@ export const getTagTableColumns = ({ onSelectTag, onEdit, onDelete }: TagTableCo
     id: "created_at",
     accessorKey: "created_at",
     sortingFn: "datetime",
-    meta: { title: "Created" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 150,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.created_at} precision="date" />,

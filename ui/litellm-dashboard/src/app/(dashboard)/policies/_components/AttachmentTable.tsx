@@ -25,9 +25,9 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Inbox className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No attachments found</div>
+      <div className="text-sm font-medium text-foreground">Вложения не найдены</div>
       <div className="text-sm text-muted-foreground">
-        Attach a policy to teams, keys, models, or tags to control where it applies.
+        Прикрепите политику к командам, ключам, моделям или тегам, чтобы задать область действия.
       </div>
     </div>
   );

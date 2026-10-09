@@ -18,12 +18,12 @@ const ResponsesImageRenderer: React.FC<ResponsesImageRendererProps> = ({ message
     <div className="mb-2">
       {isPdf ? (
         <div className="flex h-32 w-64 items-center justify-center rounded-md border border-border bg-destructive/10">
-          <FileText className="size-12 text-destructive" aria-label="PDF attachment" />
+          <FileText className="size-12 text-destructive" aria-label="Вложение PDF" />
         </div>
       ) : (
         <img
           src={message.imagePreviewUrl}
-          alt="User uploaded image"
+          alt="Пользователь загрузил изображение"
           className="max-h-[200px] max-w-64 rounded-md border border-border shadow-xs"
         />
       )}

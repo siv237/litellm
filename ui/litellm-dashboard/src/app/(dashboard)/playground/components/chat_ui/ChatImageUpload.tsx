@@ -55,7 +55,7 @@ const ChatImageUpload: React.FC<ChatImageUploadProps> = ({ chatUploadedImage, on
               variant="ghost"
               size="icon-sm"
               disabled={disabled}
-              aria-label="Attach image or PDF"
+              aria-label="Прикрепить изображение или PDF"
               className="text-muted-foreground hover:text-foreground"
               onClick={() => inputRef.current?.click()}
             />
@@ -63,7 +63,7 @@ const ChatImageUpload: React.FC<ChatImageUploadProps> = ({ chatUploadedImage, on
         >
           <Paperclip className="size-4" />
         </TooltipTrigger>
-        <TooltipContent>Attach image or PDF</TooltipContent>
+        <TooltipContent>Прикрепить изображение или PDF</TooltipContent>
       </Tooltip>
     </>
   );

@@ -26,18 +26,17 @@ const ContextWindowEscalationConfig: React.FC<{
         <Switch
           checked={enabled}
           onCheckedChange={(next) => onChange({ ...value, enable_context_window_escalation: next })}
-          aria-label="Escalate oversized prompts to a tier that fits"
+          aria-label="Эскалировать слишком большие промпты на подходящий уровень"
         />
-        <strong className="font-semibold">Escalate oversized prompts to a tier that fits</strong>
+        <strong className="font-semibold">Эскалировать слишком большие промпты на подходящий уровень</strong>
       </div>
       <span className="block text-xs mb-3 text-muted-foreground">
-        When a prompt provably cannot fit the decided tier&apos;s context windows, route it to the lowest tier whose
-        window holds it instead of letting the provider reject it. Off means requests dispatch on complexity alone.
+        Если промпт заведомо не помещается в контекстные окна выбранного уровня, направить его на наименьший уровень, куда он помещается, вместо отказа провайдером. «Выкл.» — запросы распределяются только по сложности.
       </span>
       {enabled && (
         <div style={{ maxWidth: 320 }}>
           <label className="block text-sm font-medium mb-1" htmlFor="context-window-escalation-buffer">
-            Window fit buffer
+            Буфер помещения в окно
           </label>
           <Input
             id="context-window-escalation-buffer"
@@ -48,8 +47,7 @@ const ContextWindowEscalationConfig: React.FC<{
             onBlur={(event) => commitBuffer(event.target.value)}
           />
           <span className="block text-xs mt-1 text-muted-foreground">
-            Fraction of a model&apos;s window the counted prompt must fit within, above 0 up to 1. Empty tracks the
-            backend default of 0.95.
+            Доля окна модели, в которую должен помещаться подсчитанный промпт, от 0 до 1. Пустое значение — системное значение по умолчанию 0,95.
           </span>
         </div>
       )}

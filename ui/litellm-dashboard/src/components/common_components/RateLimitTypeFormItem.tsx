@@ -36,17 +36,17 @@ const rateLimitTypeOptions = (type: RateLimitType): RateLimitTypeOption[] => {
   return [
     {
       value: "best_effort_throughput",
-      label: "Default",
+      label: "По умолчанию",
       description: `Best effort throughput - no error if we're overallocating ${lower} (Team/Key Limits checked at runtime).`,
     },
     {
       value: "guaranteed_throughput",
-      label: "Guaranteed throughput",
+      label: "Гарантированная пропускная способность",
       description: `Guaranteed throughput - raise an error if we're overallocating ${lower} (also checks model-specific limits)`,
     },
     {
       value: "dynamic",
-      label: "Dynamic",
+      label: "Динамический",
       description: `If the key has a set ${upper} (e.g. 2 ${upper}) and there are no 429 errors, it can dynamically exceed the limit when the model being called is not erroring.`,
     },
   ];
@@ -98,7 +98,7 @@ export const RateLimitTypeFormItem: React.FC<RateLimitTypeFormItemProps> = ({
         disabled={disabled}
       >
         <SelectTrigger id={controlId} className="w-full" aria-invalid={ariaInvalid} aria-describedby={ariaDescribedBy}>
-          <SelectValue placeholder="Select rate limit type">
+          <SelectValue placeholder="Выберите тип лимита">
             {(selected: string | null) =>
               selected === null ? "Select rate limit type" : plainLabels[selected] ?? selected
             }

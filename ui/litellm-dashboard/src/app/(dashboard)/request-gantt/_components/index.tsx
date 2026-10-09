@@ -236,7 +236,7 @@ export default function RequestGantt({ accessToken }: { accessToken: string | nu
         const key = i.key_alias || (i.key_short ? `key ${i.key_short}` : "");
         let lane = grouped ? idx.get(`${i.display}|${normModel(i.model)}|${key}`) : undefined;
         if (grouped && !lane) {
-          // алиас может быть префиксом разыменённого имени деployment'а (или наоборот)
+          // алиас может быть префиксом разыменённого имени deployment'а (или наоборот)
           const nm = normModel(i.model);
           lane =
             lines.find(

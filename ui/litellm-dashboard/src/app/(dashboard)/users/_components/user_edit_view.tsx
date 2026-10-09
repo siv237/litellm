@@ -183,7 +183,7 @@ export function UserEditView({
 
   const modelOptions = [
     { label: "Все модели прокси", value: "all-proxy-models" },
-    { label: "No Default Models", value: "no-default-models" },
+    { label: "Нет моделей по умолчанию", value: "no-default-models" },
     ...userModels.map((model) => ({ label: getModelDisplayName(model), value: model })),
   ];
 
@@ -255,7 +255,7 @@ export function UserEditView({
                 options={modelOptions}
                 value={value}
                 onValueChange={onChange}
-                placeholder="Select models"
+                placeholder="Выберите модели"
                 disabled={!all_admin_roles.includes(userRole || "")}
               />
             )}
@@ -269,7 +269,7 @@ export function UserEditView({
                 Макс. бюджет (USD)
                 <label className="ml-3 inline-flex items-center gap-2 font-normal">
                   <Checkbox checked={unlimitedBudget} onCheckedChange={handleUnlimitedBudgetChange} />
-                  Unlimited Budget
+                  Безлимитный бюджет
                 </label>
               </>
             }
@@ -283,7 +283,7 @@ export function UserEditView({
                 value={value ?? ""}
                 onChange={(event) => onChange(event.target.value)}
                 onWheel={(event) => event.currentTarget.blur()}
-                placeholder="Enter a numerical value"
+                placeholder="Введите число"
                 disabled={unlimitedBudget}
               />
             )}
@@ -303,13 +303,13 @@ export function UserEditView({
               onChange={setModelMaxBudget}
               availableModels={userModels}
               usage={userData.user_info?.model_max_budget_usage}
-              hint="Cap this user's spend on individual models, each with its own reset window. Applies across every key the user holds."
+              hint="Ограничьте расход этого пользователя по отдельным моделям, у каждой — свой период сброса. Действует для всех ключей пользователя."
             />
           )}
 
           <FormField control={form.control} name="metadata" label="Метаданные">
             {({ ref, value, ...control }) => (
-              <Textarea {...control} ref={ref} value={value ?? ""} rows={4} placeholder="Enter metadata as JSON" />
+              <Textarea {...control} ref={ref} value={value ?? ""} rows={4} placeholder="Введите метаданные в JSON" />
             )}
           </FormField>
 

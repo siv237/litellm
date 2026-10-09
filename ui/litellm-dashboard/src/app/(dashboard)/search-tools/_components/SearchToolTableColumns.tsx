@@ -35,7 +35,7 @@ function SearchToolRowActions({ tool, onEdit, onDelete }: SearchToolRowActionsPr
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open search tool actions"
+        aria-label="Действия поискового инструмента"
         data-testid={`search-tool-actions-${searchToolKey(tool)}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -49,7 +49,7 @@ function SearchToolRowActions({ tool, onEdit, onDelete }: SearchToolRowActionsPr
           onClick={() => toolId && onEdit(toolId)}
         >
           <Pencil />
-          Edit search tool
+          Изменить поисковый инструмент
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -60,7 +60,7 @@ function SearchToolRowActions({ tool, onEdit, onDelete }: SearchToolRowActionsPr
           onClick={() => toolId && onDelete(toolId)}
         >
           <Trash2 />
-          Delete search tool
+          Удалить поисковый инструмент
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -83,8 +83,8 @@ export const getSearchToolTableColumns = ({
   {
     id: "search_tool_id",
     accessorKey: "search_tool_id",
-    meta: { title: "Search Tool ID" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Search Tool ID" />,
+    meta: { title: "ID поискового инструмента" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="ID поискового инструмента" />,
     size: 200,
     enableSorting: true,
     cell: ({ row }) => {
@@ -126,8 +126,8 @@ export const getSearchToolTableColumns = ({
   {
     id: "created_at",
     accessorKey: "created_at",
-    meta: { title: "Created At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created At" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 130,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.created_at} precision="date" />,
@@ -135,16 +135,16 @@ export const getSearchToolTableColumns = ({
   {
     id: "updated_at",
     accessorKey: "updated_at",
-    meta: { title: "Updated At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Updated At" />,
+    meta: { title: "Обновлён" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Обновлён" />,
     size: 130,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.updated_at} precision="date" />,
   },
   {
     id: "source",
-    meta: { title: "Source", skeleton: "badge" },
-    header: "Source",
+    meta: { title: "Источник", skeleton: "badge" },
+    header: "Источник",
     size: 100,
     enableSorting: false,
     cell: ({ row }) => {

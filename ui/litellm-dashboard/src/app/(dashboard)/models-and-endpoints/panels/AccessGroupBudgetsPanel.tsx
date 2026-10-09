@@ -26,9 +26,9 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Inbox className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No model access groups yet</div>
+      <div className="text-sm font-medium text-foreground">Групп доступа к моделям пока нет</div>
       <div className="text-sm text-muted-foreground">
-        Put a deployment in an access group from its model settings, then give the group a shared budget here.
+        Добавьте деплоймент в группу доступа в настройках модели, затем выдайте группе общий бюджет здесь.
       </div>
     </div>
   );
@@ -78,8 +78,7 @@ export default function AccessGroupBudgetsPanel() {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-muted-foreground">
-        A model access group can carry one budget that every key granted the group by name draws from together. Keys
-        that reach the group&apos;s models through a wildcard or all-proxy-models are not charged against it.
+        Группа доступа к моделям имеет один бюджет, из которого вместе расходуют все ключи, получившие группу по имени. Ключи, попадающие к моделям группы через wildcard или all-proxy-models, в него не расходуются.
       </p>
 
       <DataTable
@@ -105,12 +104,12 @@ export default function AccessGroupBudgetsPanel() {
 
       <DeleteResourceModal
         isOpen={clearing !== null}
-        title="Clear Budget"
+        title="Сбросить бюджет"
         message="Are you sure you want to clear this access group's budget? The recorded shared spend is cleared with it, and the group's models stay available."
         resourceInformationTitle="Access Group"
         resourceInformation={[
-          { label: "Access Group", value: clearing?.access_group ?? null, code: true },
-          { label: "Max Budget", value: clearing?.budget?.max_budget?.toString() ?? null },
+          { label: "Группа доступа", value: clearing?.access_group ?? null, code: true },
+          { label: "Макс. бюджет", value: clearing?.budget?.max_budget?.toString() ?? null },
         ]}
         onCancel={() => setClearing(null)}
         onOk={handleConfirmClear}

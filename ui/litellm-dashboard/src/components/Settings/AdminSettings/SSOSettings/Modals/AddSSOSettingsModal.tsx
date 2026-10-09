@@ -30,11 +30,11 @@ const AddSSOSettingsModal: React.FC<AddSSOSettingsModalProps> = ({ isVisible, on
 
     await mutateAsync(payload, {
       onSuccess: () => {
-        toast.success("SSO settings added successfully");
+        toast.success("Настройки SSO добавлены");
         onSuccess();
       },
       onError: (error) => {
-        toast.fromError("Failed to save SSO settings: " + parseErrorMessage(error));
+        toast.fromError("Не удалось сохранить настройки SSO: " + parseErrorMessage(error));
       },
     });
   };
@@ -48,7 +48,7 @@ const AddSSOSettingsModal: React.FC<AddSSOSettingsModalProps> = ({ isVisible, on
     <Dialog open={isVisible} onOpenChange={(open) => !open && handleCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Add SSO</DialogTitle>
+          <DialogTitle>Добавить SSO</DialogTitle>
         </DialogHeader>
         <BaseSSOSettingsForm form={form} onFormSubmit={handleFormSubmit} />
         <DialogFooter>

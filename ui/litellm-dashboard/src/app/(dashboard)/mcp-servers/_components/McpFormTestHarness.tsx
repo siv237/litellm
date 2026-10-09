@@ -26,7 +26,7 @@ export const McpFormHarness: React.FC<{
           }}
         >
           {children}
-          <button type="submit">Submit</button>
+          <button type="submit">Отправить</button>
         </form>
       </MountedFormProvider>
     </FormProvider>

@@ -123,7 +123,7 @@ const GuardrailTestPlayground: React.FC<GuardrailTestPlaygroundProps> = ({
             <div className="flex w-1/4 flex-col overflow-hidden border-r border-border">
               <div className="border-b border-border p-4">
                 <div className="mb-3">
-                  <h3 className="mb-3 text-lg font-semibold">Guardrails</h3>
+                  <h3 className="mb-3 text-lg font-semibold">Гардрейлы</h3>
                   <InputGroup>
                     <InputGroupAddon>
                       <Search className="size-4 text-muted-foreground" />
@@ -168,11 +168,11 @@ const GuardrailTestPlayground: React.FC<GuardrailTestPlaygroundProps> = ({
                         </div>
                         <div className="mt-1 space-y-1 text-xs">
                           <div>
-                            <span className="font-medium">Type: </span>
+                            <span className="font-medium">Тип: </span>
                             <span className="text-muted-foreground">{guardrail.litellm_params.guardrail}</span>
                           </div>
                           <div>
-                            <span className="font-medium">Mode: </span>
+                            <span className="font-medium">Режим: </span>
                             <span className="text-muted-foreground">
                               {formatGuardrailMode(guardrail.litellm_params.mode)}
                             </span>
@@ -194,16 +194,16 @@ const GuardrailTestPlayground: React.FC<GuardrailTestPlaygroundProps> = ({
             {/* Right Panel - Test Area */}
             <div className="flex w-3/4 flex-col">
               <div className="flex items-center justify-between border-b border-border p-4">
-                <h2 className="mb-0 text-xl font-semibold">Guardrail Testing Playground</h2>
+                <h2 className="mb-0 text-xl font-semibold">Playground тестирования гардрейлов</h2>
               </div>
 
               <div className="flex-1 overflow-auto p-4">
                 {selectedGuardrails.size === 0 ? (
                   <div className="flex h-full flex-col items-center justify-center text-muted-foreground">
                     <FlaskConical className="mb-4 size-12" />
-                    <p className="mb-2 text-lg font-medium">Select Guardrails to Test</p>
+                    <p className="mb-2 text-lg font-medium">Выберите гардрейлы для теста</p>
                     <p className="max-w-md text-center">
-                      Choose one or more guardrails from the left sidebar to start testing and comparing results.
+                      Выберите один или несколько гардрейлов в левой панели, чтобы протестировать и сравнить результаты.
                     </p>
                   </div>
                 ) : (

@@ -24,8 +24,8 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Inbox className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No guardrails yet</div>
-      <div className="text-sm text-muted-foreground">Add a guardrail to start filtering requests and responses.</div>
+      <div className="text-sm font-medium text-foreground">Гардрейлов пока нет</div>
+      <div className="text-sm text-muted-foreground">Добавьте гардрейл, чтобы фильтровать запросы и ответы.</div>
     </div>
   );
 }

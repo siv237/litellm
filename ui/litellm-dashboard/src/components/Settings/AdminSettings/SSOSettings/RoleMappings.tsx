@@ -38,7 +38,7 @@ export default function RoleMappings({ roleMappings }: { roleMappings: RoleMappi
             ))}
           </div>
         ) : (
-          <span className="text-muted-foreground italic">No groups mapped</span>
+          <span className="text-muted-foreground italic">Группы не сопоставлены</span>
         ),
     },
   ];
@@ -47,7 +47,7 @@ export default function RoleMappings({ roleMappings }: { roleMappings: RoleMappi
       <CardContent>
         <div className="flex items-center gap-3">
           <Users className="w-6 h-6 text-muted-foreground mb-2" />
-          <h3 className="mb-2 text-2xl font-semibold text-foreground">Role Mappings</h3>
+          <h3 className="mb-2 text-2xl font-semibold text-foreground">Сопоставления ролей</h3>
         </div>
         <div className="space-y-8">
           <div className="grid grid-cols-2 gap-4">
@@ -58,7 +58,7 @@ export default function RoleMappings({ roleMappings }: { roleMappings: RoleMappi
               </div>
             </div>
             <div>
-              <h5 className="mb-2 text-base font-semibold text-foreground">Default Role</h5>
+              <h5 className="mb-2 text-base font-semibold text-foreground">Роль по умолчанию</h5>
               <div>
                 <strong className="font-semibold">{defaultRoleDisplayNames[roleMappings.default_role]}</strong>
               </div>

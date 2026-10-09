@@ -44,7 +44,7 @@ const startsWith = (params: AutoRouterParams, prefix: string): boolean => params
 export const AUTO_ROUTER_STRATEGIES: readonly AutoRouterStrategy[] = [
   {
     kind: "complexity",
-    label: "Complexity",
+    label: "Сложность",
     configKey: "complexity_router_config",
     defaultModelKey: "complexity_router_default_model",
     hasEditor: true,
@@ -54,7 +54,7 @@ export const AUTO_ROUTER_STRATEGIES: readonly AutoRouterStrategy[] = [
   },
   {
     kind: "adaptive",
-    label: "Adaptive",
+    label: "Адаптивный",
     configKey: "adaptive_router_config",
     defaultModelKey: "adaptive_router_default_model",
     hasEditor: false,
@@ -62,7 +62,7 @@ export const AUTO_ROUTER_STRATEGIES: readonly AutoRouterStrategy[] = [
   },
   {
     kind: "quality",
-    label: "Quality",
+    label: "Качество",
     configKey: "quality_router_config",
     defaultModelKey: "quality_router_default_model",
     hasEditor: false,
@@ -70,7 +70,7 @@ export const AUTO_ROUTER_STRATEGIES: readonly AutoRouterStrategy[] = [
   },
   {
     kind: "semantic",
-    label: "Semantic",
+    label: "Семантика",
     configKey: "auto_router_config",
     defaultModelKey: "auto_router_default_model",
     hasEditor: true,

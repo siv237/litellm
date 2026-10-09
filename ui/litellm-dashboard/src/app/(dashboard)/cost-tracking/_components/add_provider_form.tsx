@@ -87,7 +87,7 @@ const AddProviderForm: React.FC<AddProviderFormProps> = ({
               itemToStringLabel={(option: ProviderOption) => option.label}
               isItemEqualToValue={(option: ProviderOption, value: ProviderOption) => option.value === value.value}
             >
-              <ComboboxInput id={PROVIDER_FIELD_ID} placeholder="Select provider" className="w-full">
+              <ComboboxInput id={PROVIDER_FIELD_ID} placeholder="Выберите провайдера" className="w-full">
                 {selectedOption && (
                   <InputGroupAddon align="inline-start">
                     <Logo provider={selectedOption.value} label={selectedOption.label} className="w-5 h-5" />
@@ -95,7 +95,7 @@ const AddProviderForm: React.FC<AddProviderFormProps> = ({
                 )}
               </ComboboxInput>
               <ComboboxContent>
-                <ComboboxEmpty>No providers found</ComboboxEmpty>
+                <ComboboxEmpty>Провайдеры не найдены</ComboboxEmpty>
                 <ComboboxList>
                   {(option: ProviderOption) => (
                     <ComboboxItem key={option.value} value={option}>
@@ -129,7 +129,7 @@ const AddProviderForm: React.FC<AddProviderFormProps> = ({
 
         <div className="flex items-center justify-end space-x-3 pt-6 border-t border-border">
           <Button type="submit" onClick={onAddProvider} disabled={!selectedProvider || !newDiscount}>
-            Add Provider Discount
+            Добавить скидку провайдера
           </Button>
         </div>
       </div>

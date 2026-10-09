@@ -47,7 +47,7 @@ export const ErrorCodeTooltip = ({ active, payload, label }: ChartTooltipProps) 
   return (
     <div className="min-w-40 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl">
       <p className="mb-1.5 font-medium text-foreground">
-        Error code {String(label)}: {datum[FAILED_REQUESTS_SERIES].toLocaleString()} failed
+        Код ошибки {String(label)}: {datum[FAILED_REQUESTS_SERIES].toLocaleString()} неудач
       </p>
       <div className="grid gap-1.5">
         {datum.classes.map((errorClass) => (
@@ -73,13 +73,13 @@ interface ErrorDrilldownCardProps {
 export const ErrorDrilldownCard = ({ callType, buckets, valueFormatter, onClose }: ErrorDrilldownCardProps) => (
   <Card className="mt-4">
     <CardHeader className="flex flex-row items-center justify-between">
-      <CardTitle className="text-base font-semibold">Failed requests by error code: {callType}</CardTitle>
-      <Button variant="outline" size="icon-sm" onClick={onClose} aria-label="Close error breakdown">
+      <CardTitle className="text-base font-semibold">Неудачные запросы по кодам ошибок: {callType}</CardTitle>
+      <Button variant="outline" size="icon-sm" onClick={onClose} aria-label="Закрыть разбивку по ошибкам">
         <X />
       </Button>
     </CardHeader>
     <CardContent>
-      <p className="text-sm text-muted-foreground">Hover a bar to see the error classes behind that code.</p>
+      <p className="text-sm text-muted-foreground">Наведите на столбец, чтобы увидеть классы ошибок за этим кодом.</p>
       <BarChart
         data={groupErrorBuckets(buckets, callType)}
         index="error_code"

@@ -72,8 +72,8 @@ export function AgentControlPlaneView() {
     return (
       <div className="flex flex-1 items-center justify-center text-muted-foreground">
         <div className="text-center">
-          <p className="text-lg font-medium mb-2">Plugin</p>
-          <p className="text-sm">Configure the plugin URL in settings</p>
+          <p className="text-lg font-medium mb-2">Плагин</p>
+          <p className="text-sm">Укажите URL плагина в настройках</p>
         </div>
       </div>
     );

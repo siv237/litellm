@@ -66,13 +66,13 @@ const MCPLogoSelector: React.FC<MCPLogoSelectorProps> = ({ value, onChange }) =>
     <TooltipProvider>
       <div>
         <div className="mb-2 flex items-center gap-2">
-          <span className="text-sm font-medium">Logo</span>
+          <span className="text-sm font-medium">Логотип</span>
           <Tooltip>
             <TooltipTrigger
-              render={<Info className="size-4 cursor-help text-muted-foreground" aria-label="About the logo" />}
+              render={<Info className="size-4 cursor-help text-muted-foreground" aria-label="О логотипе" />}
             />
             <TooltipContent>
-              Select a well-known logo or paste a URL to any image. The logo is shown on the admin and chat pages.
+              Выберите известный логотип или вставьте URL любого изображения. Логотип показывается на админских страницах и в чате.
             </TooltipContent>
           </Tooltip>
         </div>
@@ -82,7 +82,7 @@ const MCPLogoSelector: React.FC<MCPLogoSelectorProps> = ({ value, onChange }) =>
           <div className="mb-3 flex items-center gap-3 rounded-lg border border-border bg-muted p-3">
             <Logo
               src={selectedWellKnown?.src ?? value}
-              label="Selected"
+              label="Выбрано"
               className="h-10 w-10 rounded-sm object-contain"
             />
             <div className="min-w-0 flex-1">

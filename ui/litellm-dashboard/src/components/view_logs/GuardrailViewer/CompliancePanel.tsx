@@ -173,7 +173,7 @@ const CompliancePanel: React.FC<CompliancePanelProps> = ({ accessToken, logEntry
   return (
     <div>
       <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-        Regulatory Compliance
+        Регуляторное соответствие
       </h4>
       <div className="space-y-3">
         <ComplianceCard title="EU AI Act" data={euAiActData} loading={euAiActLoading} error={euAiActError} />

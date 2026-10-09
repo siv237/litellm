@@ -90,7 +90,7 @@ const SaveSuccessAlert = () => {
   return (
     <Alert variant="success" className="mb-4">
       <CircleCheck />
-      <AlertTitle>Settings saved successfully</AlertTitle>
+      <AlertTitle>Настройки сохранены</AlertTitle>
       <AlertAction>
         <Button variant="ghost" size="icon-sm" aria-label="Закрыть" onClick={() => setDismissed(true)}>
           <X className="size-4" />
@@ -164,7 +164,7 @@ export default function MCPSemanticFilterSettings({ accessToken }: MCPSemanticFi
         setIsDirty(false);
         setSaveSuccess(true);
         setTimeout(() => setSaveSuccess(false), 3000);
-        toast.success("Settings updated successfully. Changes will be applied across all pods within 10 seconds.");
+        toast.success("Настройки обновлены. Изменения применятся на всех подах в течение 10 секунд.");
       },
       onError: (error) => {
         toast.fromError(error);
@@ -189,7 +189,7 @@ export default function MCPSemanticFilterSettings({ accessToken }: MCPSemanticFi
 
   if (!accessToken) {
     return (
-      <div className="p-6 text-center text-muted-foreground">Please log in to configure semantic filter settings.</div>
+      <div className="p-6 text-center text-muted-foreground">Войдите, чтобы настроить семантический фильтр.</div>
     );
   }
 
@@ -204,18 +204,16 @@ export default function MCPSemanticFilterSettings({ accessToken }: MCPSemanticFi
         </div>
       ) : isError ? (
         <Alert variant="error" className="mb-6">
-          <AlertTitle>Could not load MCP Semantic Filter settings</AlertTitle>
+          <AlertTitle>Не удалось загрузить настройки семантического фильтра MCP</AlertTitle>
           {error instanceof Error && <AlertDescription>{error.message}</AlertDescription>}
         </Alert>
       ) : (
         <>
           <Alert variant="info" className="mb-6">
             <Info />
-            <AlertTitle>Semantic Tool Filtering</AlertTitle>
+            <AlertTitle>Семантическая фильтрация инструментов</AlertTitle>
             <AlertDescription>
-              Filter MCP tools semantically based on query relevance. This reduces context window size and improves tool
-              selection accuracy. Click &apos;Save Settings&apos; to apply changes across all pods (takes effect within
-              10 seconds).
+              Семантическая фильтрация инструментов MCP по релевантности запросу. Это уменьшает размер контекстного окна и повышает точность выбора инструментов. Нажмите «Сохранить настройки», чтобы применить изменения на всех подах (вступит в силу в течение 10 секунд).
             </AlertDescription>
           </Alert>
 
@@ -223,7 +221,7 @@ export default function MCPSemanticFilterSettings({ accessToken }: MCPSemanticFi
 
           {updateError && (
             <Alert variant="error" className="mb-4">
-              <AlertTitle>Could not update settings</AlertTitle>
+              <AlertTitle>Не удалось обновить настройки</AlertTitle>
               {updateError instanceof Error && <AlertDescription>{updateError.message}</AlertDescription>}
             </Alert>
           )}
@@ -261,7 +259,7 @@ export default function MCPSemanticFilterSettings({ accessToken }: MCPSemanticFi
 
                   <Card className="mb-4">
                     <CardHeader className="border-b">
-                      <CardTitle>Configuration</CardTitle>
+                      <CardTitle>Конфигурация</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <FieldGroup>

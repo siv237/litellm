@@ -117,7 +117,7 @@ function ChatMessageBubble({
           {message.isImage ? (
             <img
               src={typeof message.content === "string" ? message.content : ""}
-              alt="Generated image"
+              alt="Сгенерированное изображение"
               className="max-w-full rounded-md border border-border shadow-xs"
               style={{ maxHeight: "500px" }}
             />
@@ -175,7 +175,7 @@ function ChatMessageBubble({
                 <div className="mt-3">
                   <img
                     src={message.image.url}
-                    alt="Generated image"
+                    alt="Сгенерированное изображение"
                     className="max-w-full rounded-md border border-border shadow-xs"
                     style={{ maxHeight: "500px" }}
                   />

@@ -40,14 +40,14 @@ const ClassifierReasoningEffortSelect = ({
   return (
     <div>
       <div className="flex items-center gap-2 mb-1">
-        <strong className="font-semibold">Reasoning Effort</strong>
-        <SimpleTooltip content="Sent only to the classifier call. Default leaves the classifier deployment or provider setting unchanged.">
+        <strong className="font-semibold">Усилие рассуждения</strong>
+        <SimpleTooltip content="Отправляется только вызову классификатора. «По умолчанию» оставляет настройку деплоймента классификатора или провайдера без изменений.">
           <Info className="size-4 text-muted-foreground" />
         </SimpleTooltip>
       </div>
       <Select
         items={[
-          { value: PROVIDER_DEFAULT, label: "Default" },
+          { value: PROVIDER_DEFAULT, label: "По умолчанию" },
           ...options.map((effort) => ({ value: effort, label: optionLabel(effort) })),
         ]}
         value={value ?? PROVIDER_DEFAULT}
@@ -59,7 +59,7 @@ const ClassifierReasoningEffortSelect = ({
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={PROVIDER_DEFAULT}>Default</SelectItem>
+          <SelectItem value={PROVIDER_DEFAULT}>По умолчанию</SelectItem>
           {options.map((effort) => (
             <SelectItem key={effort} value={effort}>
               {optionLabel(effort)}
@@ -69,14 +69,12 @@ const ClassifierReasoningEffortSelect = ({
       </Select>
       {status === "unverified" && (
         <p className="mt-1 text-xs text-amber-700 dark:text-amber-400">
-          This saved effort cannot be verified for the selected model. Choose Default unless you have confirmed provider
-          support.
+          Сохранённое усилие нельзя проверить для выбранной модели. Выбирайте «По умолчанию», пока поддержка провайдером не подтверждена.
         </p>
       )}
       {status === "unsupported" && (
         <p className="mt-1 text-xs text-destructive">
-          This saved effort is not supported by every deployment in the selected model group. Choose Default or a
-          supported value before saving.
+          Сохранённое усилие поддерживают не все деплойменты выбранной группы моделей. Выберите «По умолчанию» или поддерживаемое значение перед сохранением.
         </p>
       )}
     </div>

@@ -334,7 +334,7 @@ export function LogDetailsDrawer({
                         type="button"
                         onClick={handleCopyLeftPanelId}
                         className="text-muted-foreground hover:text-foreground"
-                        aria-label="Copy trace id"
+                        aria-label="Скопировать trace id"
                       >
                         {copiedLeftPanelId ? <Check className="size-3" /> : <Copy className="size-3" />}
                       </button>
@@ -392,10 +392,10 @@ export function LogDetailsDrawer({
                   >
                     <TabsList className="w-full">
                       <TabsTrigger value="duration" className="text-[11px]">
-                        Duration
+                        Длительность
                       </TabsTrigger>
                       <TabsTrigger value="start_time" className="text-[11px]">
-                        Start time
+                        Время начала
                       </TabsTrigger>
                     </TabsList>
                   </Tabs>

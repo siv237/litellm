@@ -46,12 +46,12 @@ export function SectionHeader({
         <span className="text-sm font-medium">{type === "input" ? "Input" : "Output"}</span>
       </div>
 
-      {tokens !== undefined && <span className="text-xs text-muted-foreground">Tokens: {tokens.toLocaleString()}</span>}
+      {tokens !== undefined && <span className="text-xs text-muted-foreground">Токены: {tokens.toLocaleString()}</span>}
 
-      {cost !== undefined && <span className="text-xs text-muted-foreground">Cost: ${cost.toFixed(6)}</span>}
+      {cost !== undefined && <span className="text-xs text-muted-foreground">Стоимость: ${cost.toFixed(6)}</span>}
 
       {turnCount !== undefined && turnCount > 0 && (
-        <span className="text-xs text-muted-foreground">Turns: {turnCount}</span>
+        <span className="text-xs text-muted-foreground">Обороты: {turnCount}</span>
       )}
     </>
   );

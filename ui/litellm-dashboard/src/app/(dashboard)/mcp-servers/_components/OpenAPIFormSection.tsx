@@ -68,8 +68,8 @@ const OpenAPIFormSection: React.FC<OpenAPIFormSectionProps> = ({
       <MountedFormField
         label={
           <span className="text-sm font-medium text-foreground flex items-center">
-            OpenAPI Spec URL
-            <SimpleTooltip content="URL to an OpenAPI specification (JSON or YAML). MCP tools will be automatically generated from the API endpoints defined in the spec.">
+            URL спецификации OpenAPI
+            <SimpleTooltip content="URL спецификации OpenAPI (JSON или YAML). Инструменты MCP будут автоматически созданы из эндпоинтов API в спецификации.">
               <Info className="ml-2 size-4 text-info hover:text-info/80 cursor-help" />
             </SimpleTooltip>
           </span>

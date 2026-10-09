@@ -34,8 +34,8 @@ const argumentLabel = (field: ToolArgumentField): React.ReactNode => (
 );
 
 const BOOLEAN_ITEMS = [
-  { value: true, label: "True" },
-  { value: false, label: "False" },
+  { value: true, label: "Да" },
+  { value: false, label: "Нет" },
 ];
 
 const booleanTitle = (value: unknown): string | undefined => {
@@ -84,7 +84,7 @@ const ToolArgumentControl: React.FC<{
         className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-colors focus:border-ring focus:ring-3 focus:ring-ring/50 focus:outline-hidden"
       >
         <option value={-1} disabled={field.required}>
-          Select {field.key}
+          Выбрать {field.key}
         </option>
         {prop.enum.map((option, index) => (
           <option key={option} value={index}>
@@ -124,9 +124,9 @@ const ToolArgumentControl: React.FC<{
           <SelectValue placeholder={`Select ${field.key}`} />
         </SelectTrigger>
         <SelectContent>
-          {!field.required && <SelectItem value={null}>Select {field.key}</SelectItem>}
-          <SelectItem value={true}>True</SelectItem>
-          <SelectItem value={false}>False</SelectItem>
+          {!field.required && <SelectItem value={null}>Выбрать {field.key}</SelectItem>}
+          <SelectItem value={true}>Да</SelectItem>
+          <SelectItem value={false}>Нет</SelectItem>
         </SelectContent>
       </Select>
     );
@@ -159,7 +159,7 @@ const ToolArgumentFields: React.FC<{
           name="args.0"
           label={
             <span>
-              Input <span className="text-destructive">*</span>
+              Вход <span className="text-destructive">*</span>
             </span>
           }
         >
@@ -167,7 +167,7 @@ const ToolArgumentFields: React.FC<{
             <Input
               {...field}
               value={(field.value as string) ?? ""}
-              placeholder="Enter input for this tool"
+              placeholder="Введите вход для этого инструмента"
               className="rounded-lg"
             />
           )}
@@ -180,8 +180,8 @@ const ToolArgumentFields: React.FC<{
     return (
       <div className="rounded-lg border border-border bg-muted py-6 text-center">
         <div className="mx-auto max-w-sm">
-          <h4 className="mb-1 text-sm font-medium text-foreground">No Parameters Required</h4>
-          <p className="text-xs text-muted-foreground">This tool can be called without any input parameters.</p>
+          <h4 className="mb-1 text-sm font-medium text-foreground">Параметры не требуются</h4>
+          <p className="text-xs text-muted-foreground">Этот инструмент можно вызывать без входных параметров.</p>
         </div>
       </div>
     );

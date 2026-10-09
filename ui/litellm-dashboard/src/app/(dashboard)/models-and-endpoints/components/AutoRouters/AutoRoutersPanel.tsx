@@ -75,16 +75,15 @@ export function AutoRoutersPanel({
     <div className="w-full space-y-4">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-base font-semibold text-foreground">Auto routers</h2>
+          <h2 className="text-base font-semibold text-foreground">Авто-роутеры</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Auto routers sit above your deployments and pick a model per request. They are called like any other model,
-            so clients keep using a single model name.
+            Авто-роутеры стоят над деплойментами и выбирают модель для каждого запроса. Вызываются как обычная модель — клиенты продолжают использовать одно имя модели.
           </p>
         </div>
         {canCreate && (
           <Button onClick={() => setIsCreating(true)} className="shrink-0">
             <Plus />
-            Add Auto Router
+            Добавить авто-роутер
           </Button>
         )}
       </div>
@@ -102,10 +101,9 @@ export function AutoRoutersPanel({
             growing past the viewport. */}
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Add Auto Router</DialogTitle>
+            <DialogTitle>Добавить авто-роутер</DialogTitle>
             <DialogDescription>
-              Routes each request to a model by classifying its complexity. Called like any other model, so clients keep
-              using a single model name.
+              Направляет каждый запрос к модели, классифицируя сложность. Вызывается как обычная модель — клиенты продолжают использовать одно имя модели.
             </DialogDescription>
           </DialogHeader>
           <AddAutoRouterTab
@@ -121,7 +119,7 @@ export function AutoRoutersPanel({
       {deletingRouter && (
         <DeleteResourceModal
           isOpen
-          title="Delete Auto Router"
+          title="Удалить авто-роутер"
           message={`Are you sure you want to delete "${deletingRouter.name}"? Any client still calling this model name will start failing.`}
           resourceInformationTitle="Auto router"
           resourceInformation={[

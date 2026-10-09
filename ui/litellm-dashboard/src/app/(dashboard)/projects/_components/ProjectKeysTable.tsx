@@ -25,8 +25,8 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <KeyRound className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No keys found</div>
-      <div className="text-sm text-muted-foreground">Keys created in this project will show up here.</div>
+      <div className="text-sm font-medium text-foreground">Ключи не найдены</div>
+      <div className="text-sm text-muted-foreground">Созданные в проекте ключи появятся здесь.</div>
     </div>
   );
 }

@@ -9,13 +9,13 @@ const CONTENT_WIDTHS = ["w-24", "w-48", "w-60", "w-44", "w-52"];
 
 export default function SSOSettingsLoadingSkeleton() {
   return (
-    <Card role="status" aria-label="Loading SSO configuration">
+    <Card role="status" aria-label="Загрузка конфигурации SSO">
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex items-center gap-3">
           <Shield className="size-6 text-muted-foreground" />
           <div>
-            <h3 className="text-lg font-semibold text-foreground">SSO Configuration</h3>
-            <p className="text-sm text-muted-foreground">Manage Single Sign-On authentication settings</p>
+            <h3 className="text-lg font-semibold text-foreground">Конфигурация SSO</h3>
+            <p className="text-sm text-muted-foreground">Управление настройками единого входа</p>
           </div>
         </div>
         <div className="flex items-center gap-3">

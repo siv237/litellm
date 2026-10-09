@@ -32,7 +32,7 @@ const budgetSchema = z
     budget_duration: z.string().optional(),
   })
   .refine(hasAnyBudgetValue, {
-    message: "Set at least one of max budget, soft budget or reset window",
+    message: "Задайте хотя бы одно: макс. бюджет, мягкий бюджет или период сброса",
     path: ["max_budget"],
   });
 
@@ -61,8 +61,7 @@ const AccessGroupBudgetModal: React.FC<AccessGroupBudgetModalProps> = ({
           </DialogTitle>
         </DialogHeader>
         <p className="text-sm text-muted-foreground">
-          Every key granted this access group by name draws from this one budget. A key that reaches the group&apos;s
-          models through a wildcard or <code>all-proxy-models</code> is not charged against it.
+          Все ключи, получившие эту группу доступа по имени, расходуют один этот бюджет. Ключ, попадающий к моделям группы через wildcard или <code>all-proxy-models</code> , в него не расходует.
         </p>
         <form onSubmit={form.handleSubmit((values) => onSubmit(buildAccessGroupBudgetBody(values)))} noValidate>
           <TooltipProvider>
@@ -108,7 +107,7 @@ const AccessGroupBudgetModal: React.FC<AccessGroupBudgetModalProps> = ({
             </FieldGroup>
 
             <p className="mt-3 text-xs text-muted-foreground">
-              A field left blank keeps whatever the budget already has. Use Clear budget to remove the budget itself.
+              Пустое поле сохраняет текущие значения бюджета. Чтобы удалить сам бюджет, используйте «Сбросить бюджет».
             </p>
 
             <div className="mt-6 flex justify-end gap-2">

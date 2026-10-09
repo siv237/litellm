@@ -31,12 +31,12 @@ const PatternTable: React.FC<PatternTableProps> = ({ patterns, onActionChange, o
       cell: ({ row }) => <Badge variant="secondary">{row.original.type === "prebuilt" ? "Prebuilt" : "Custom"}</Badge>,
     },
     {
-      header: "Pattern name",
+      header: "Название паттерна",
       accessorKey: "name",
       cell: ({ row }) => row.original.display_name || row.original.name,
     },
     {
-      header: "Regex pattern",
+      header: "Regex-паттерн",
       accessorKey: "pattern",
       cell: ({ row }) =>
         row.original.pattern ? (
@@ -46,7 +46,7 @@ const PatternTable: React.FC<PatternTableProps> = ({ patterns, onActionChange, o
         ),
     },
     {
-      header: "Action",
+      header: "Действие",
       accessorKey: "action",
       size: 150,
       cell: ({ row }) => (
@@ -55,7 +55,7 @@ const PatternTable: React.FC<PatternTableProps> = ({ patterns, onActionChange, o
           value={row.original.action}
           onValueChange={(value: string | null) => value && onActionChange(row.original.id, value as "BLOCK" | "MASK")}
         >
-          <SelectTrigger size="sm" className="w-[120px]" aria-label="Action">
+          <SelectTrigger size="sm" className="w-[120px]" aria-label="Действие">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -82,7 +82,7 @@ const PatternTable: React.FC<PatternTableProps> = ({ patterns, onActionChange, o
   ];
 
   if (patterns.length === 0) {
-    return <div className="py-10 text-center text-muted-foreground">No patterns added.</div>;
+    return <div className="py-10 text-center text-muted-foreground">Паттерны не добавлены.</div>;
   }
 
   return <DataTable data={patterns} columns={columns} getRowId={(row) => row.id} size="compact" />;

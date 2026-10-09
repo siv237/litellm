@@ -15,14 +15,14 @@ const ToolsCard: React.FC<ToolsCardProps> = ({ tools, onAddTool, onEditTool, onR
   return (
     <Card className="p-3">
       <div className="flex items-center justify-between mb-2">
-        <p className="text-sm font-medium">Tools</p>
+        <p className="text-sm font-medium">Инструменты</p>
         <Button variant="ghost" size="sm" onClick={onAddTool}>
           <PlusIcon size={14} className="mr-1" />
           Добавить
         </Button>
       </div>
       {tools.length === 0 ? (
-        <p className="text-muted-foreground text-xs">No tools added</p>
+        <p className="text-muted-foreground text-xs">Инструменты не добавлены</p>
       ) : (
         <div className="space-y-2">
           {tools.map((tool, index) => (

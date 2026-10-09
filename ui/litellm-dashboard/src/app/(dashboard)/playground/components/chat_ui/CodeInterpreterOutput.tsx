@@ -144,7 +144,7 @@ const CodeInterpreterOutput: React.FC<CodeInterpreterOutputProps> = ({ code, ann
             }
           >
             <Code className="size-4" />
-            Python Code Executed
+            Код Python выполнен
           </CollapsibleTrigger>
           <CollapsibleContent>
             <div className="border-t border-border p-2">
@@ -193,13 +193,13 @@ const CodeInterpreterOutput: React.FC<CodeInterpreterOutputProps> = ({ code, ann
                   onClick={() => void handleDownload(annotation)}
                 >
                   <Download className="size-3" />
-                  Download
+                  Скачать
                 </Button>
               </div>
             </div>
           ) : (
             <div className="flex items-center justify-center bg-muted p-4">
-              <span className="text-sm text-muted-foreground">Image not available</span>
+              <span className="text-sm text-muted-foreground">Изображение недоступно</span>
             </div>
           )}
         </div>

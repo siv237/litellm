@@ -97,7 +97,7 @@ export function LogsTableToolbar({
                 onResetToFirstPage();
               }}
             >
-              Custom Range
+              Свой период
             </Button>
           </div>
         </PopoverContent>
@@ -128,21 +128,21 @@ export function LogsTableToolbar({
       )}
 
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">Live Tail</span>
-        <Switch checked={isLiveTail} onCheckedChange={onIsLiveTailChange} aria-label="Live Tail" />
+        <span className="text-sm font-medium">Живой хвост</span>
+        <Switch checked={isLiveTail} onCheckedChange={onIsLiveTailChange} aria-label="Живой хвост" />
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium">Hide Health Checks</span>
+        <span className="text-sm font-medium">Скрывать health-чеки</span>
         <Switch
           checked={excludeInternalHealthChecks}
           onCheckedChange={onExcludeInternalHealthChecksChange}
-          aria-label="Hide Health Checks"
+          aria-label="Скрывать health-чеки"
         />
       </div>
 
       <Button variant="outline" size="sm" onClick={onResetFilters}>
-        Reset Filters
+        Сбросить фильтры
       </Button>
     </div>
   );
@@ -151,9 +151,9 @@ export function LogsTableToolbar({
 export function LiveTailBanner({ onStop }: { onStop: () => void }) {
   return (
     <div className="mb-4 flex items-center justify-between rounded-md border border-success/20 bg-success/10 px-4 py-2">
-      <span className="text-sm text-success">Auto-refreshing every 15 seconds</span>
+      <span className="text-sm text-success">Автообновление каждые 15 секунд</span>
       <button type="button" onClick={onStop} className="text-sm text-success hover:text-success/80">
-        Stop
+        Стоп
       </button>
     </div>
   );

@@ -100,16 +100,16 @@ export default function AuditLogsPanel({
   if (!premiumUser) {
     return (
       <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <h1 style={{ display: "block", marginBottom: "10px" }}>✨ Enterprise Feature.</h1>
+        <h1 style={{ display: "block", marginBottom: "10px" }}>✨ Функция Enterprise.</h1>
         <p style={{ display: "block", marginBottom: "10px" }}>
-          This is a LiteLLM Enterprise feature, and requires a valid key to use.
+          Это функция ruLiteLLM Enterprise, требуется действующий ключ.
         </p>
         <p style={{ display: "block", marginBottom: "20px", fontStyle: "italic" }}>
           Here&apos;s a preview of what Audit Logs offer:
         </p>
         <img
           src={resolveLogoSrc(auditLogsPreviewImg)}
-          alt="Audit Logs Preview"
+          alt="Предпросмотр Audit Logs"
           style={{
             maxWidth: "100%",
             maxHeight: "700px",
@@ -128,7 +128,7 @@ export default function AuditLogsPanel({
   return (
     <>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-semibold">Audit Logs</h1>
+        <h1 className="text-xl font-semibold">Журнал аудита</h1>
       </div>
 
       <AuditLogsTable

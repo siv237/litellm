@@ -10,10 +10,10 @@ export function ClassifyTag({ origin, className }: { origin?: string | null; cla
   return (
     <Badge
       variant="secondary"
-      title="Tier classification call made by the auto-router, not a request the caller sent"
+      title="Вызов классификации уровня от авто-роутера, а не запрос от вызывающего"
       className={cn("px-2 py-0 text-[10px] font-normal", className)}
     >
-      Classify
+      Классифицировать
     </Badge>
   );
 }

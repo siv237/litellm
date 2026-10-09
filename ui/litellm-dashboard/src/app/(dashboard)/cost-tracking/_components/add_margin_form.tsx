@@ -38,7 +38,7 @@ interface ProviderOption {
 
 const GLOBAL_OPTION: ProviderOption = {
   value: "global",
-  label: "Global (All Providers)",
+  label: "Глобально (все провайдеры)",
   providerEnum: null,
 };
 
@@ -95,9 +95,9 @@ const AddMarginForm: React.FC<AddMarginFormProps> = ({
             itemToStringLabel={(option: ProviderOption) => option.label}
             isItemEqualToValue={(option: ProviderOption, selected: ProviderOption) => option.value === selected.value}
           >
-            <ComboboxInput id="margin-provider" placeholder="Select provider or 'Global'" className="w-full" />
+            <ComboboxInput id="margin-provider" placeholder="Выберите провайдера или «Глобально»" className="w-full" />
             <ComboboxContent>
-              <ComboboxEmpty>No matching providers</ComboboxEmpty>
+              <ComboboxEmpty>Нет подходящих провайдеров</ComboboxEmpty>
               <ComboboxList>
                 {(option: ProviderOption) => (
                   <ComboboxItem key={option.value} value={option}>
@@ -125,11 +125,11 @@ const AddMarginForm: React.FC<AddMarginFormProps> = ({
           >
             <FieldLabel className="font-normal">
               <RadioGroupItem value="percentage" />
-              Percentage-based
+              Процентная
             </FieldLabel>
             <FieldLabel className="font-normal">
               <RadioGroupItem value="fixed" />
-              Fixed Amount
+              Фиксированная сумма
             </FieldLabel>
           </RadioGroup>
         </Field>
@@ -180,7 +180,7 @@ const AddMarginForm: React.FC<AddMarginFormProps> = ({
               (marginType === "fixed" && !fixedAmountValue)
             }
           >
-            Add Provider Margin
+            Добавить наценку провайдера
           </Button>
         </div>
       </div>

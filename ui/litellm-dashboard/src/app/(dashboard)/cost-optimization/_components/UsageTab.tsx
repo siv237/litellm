@@ -126,7 +126,7 @@ const UsageTab: React.FC<UsageTabProps> = ({ accessToken, activity }) => {
   return (
     <div className="w-full space-y-6">
       <div className="flex flex-wrap items-center justify-end gap-4">
-        <span className="text-sm text-muted-foreground">Spend is bucketed by UTC day</span>
+        <span className="text-sm text-muted-foreground">Расход группируется по UTC-суткам</span>
         <AdvancedDatePicker value={dateValue} onValueChange={onDateChange} />
       </div>
 
@@ -139,13 +139,13 @@ const UsageTab: React.FC<UsageTabProps> = ({ accessToken, activity }) => {
               never competes with the controls for width and neither moves when it grows.
               The controls wrap within their column instead of pushing past the card */}
           <CardHeader>
-            <CardTitle>Savings</CardTitle>
+            <CardTitle>Экономия</CardTitle>
             <CardDescription>{savingsSubtitle}</CardDescription>
             <CardAction className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
               <CustomLegend categories={SAVINGS_SERIES} colors={SAVINGS_COLORS} />
               <Tabs value={accumulation} onValueChange={(value) => setAccumulation(value as SavingsAccumulation)}>
                 <TabsList>
-                  <TabsTrigger value="cumulative">Cumulative</TabsTrigger>
+                  <TabsTrigger value="cumulative">Накопительная</TabsTrigger>
                   <TabsTrigger value="per-interval">{intervalLabel}</TabsTrigger>
                 </TabsList>
               </Tabs>
@@ -179,7 +179,7 @@ const UsageTab: React.FC<UsageTabProps> = ({ accessToken, activity }) => {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Savings by driver</CardTitle>
+            <CardTitle>Экономия по источникам</CardTitle>
           </CardHeader>
           <CardContent>
             <DonutChart
@@ -199,7 +199,7 @@ const UsageTab: React.FC<UsageTabProps> = ({ accessToken, activity }) => {
       {canViewProxyWideCostData && (
         <Card>
           <CardHeader>
-            <CardTitle>Spend by tool</CardTitle>
+            <CardTitle>Расход по инструментам</CardTitle>
             <p className="text-sm text-muted-foreground">
               Spend on requests that invoked each tool (MCP and client-side tools); declaring a tool without invoking it
               does not count. A request that invoked multiple tools counts its full spend toward each, so this
@@ -214,7 +214,7 @@ const UsageTab: React.FC<UsageTabProps> = ({ accessToken, activity }) => {
             ) : (
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <div>
-                  <p className="mb-2 text-sm font-medium text-muted-foreground">Total by tool</p>
+                  <p className="mb-2 text-sm font-medium text-muted-foreground">Всего по инструментам</p>
                   <BarChart
                     data={topToolsChart}
                     index="tool_name"
@@ -229,7 +229,7 @@ const UsageTab: React.FC<UsageTabProps> = ({ accessToken, activity }) => {
                   />
                 </div>
                 <div>
-                  <p className="mb-2 text-sm font-medium text-muted-foreground">Daily spend by tool</p>
+                  <p className="mb-2 text-sm font-medium text-muted-foreground">Дневной расход по инструментам</p>
                   <CustomLegend categories={topToolNames} colors={toolColors} />
                   <BarChart
                     data={dailyToolSeries}

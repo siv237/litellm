@@ -72,7 +72,7 @@ function PromptRowActions({ prompt, isAdmin, onDeleteClick }: PromptRowActionsPr
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open prompt actions"
+        aria-label="Действия промпта"
         data-testid={`prompt-actions-${prompt.prompt_id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -84,7 +84,7 @@ function PromptRowActions({ prompt, isAdmin, onDeleteClick }: PromptRowActionsPr
           onClick={() => void copyToClipboard(prompt.prompt_id, "Prompt ID copied")}
         >
           <Copy />
-          Copy prompt ID
+          Скопировать ID промпта
         </DropdownMenuItem>
         {isAdmin && (
           <>
@@ -126,8 +126,8 @@ export const getPromptTableColumns = ({
   {
     id: "prompt_id",
     accessorKey: "prompt_id",
-    meta: { title: "Prompt ID" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Prompt ID" />,
+    meta: { title: "ID промпта" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="ID промпта" />,
     size: 220,
     enableSorting: true,
     cell: ({ row }) => (
@@ -155,8 +155,8 @@ export const getPromptTableColumns = ({
     id: "created_at",
     accessorKey: "created_at",
     sortingFn: "datetime",
-    meta: { title: "Created At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created At" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 160,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.created_at} />,
@@ -165,8 +165,8 @@ export const getPromptTableColumns = ({
     id: "updated_at",
     accessorKey: "updated_at",
     sortingFn: "datetime",
-    meta: { title: "Updated At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Updated At" />,
+    meta: { title: "Обновлён" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Обновлён" />,
     size: 160,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.updated_at} />,
@@ -174,8 +174,8 @@ export const getPromptTableColumns = ({
   {
     id: "environment",
     accessorKey: "environment",
-    meta: { title: "Environment", skeleton: "badge" },
-    header: "Environment",
+    meta: { title: "Окружение", skeleton: "badge" },
+    header: "Окружение",
     size: 130,
     enableSorting: false,
     cell: ({ row }) => {
@@ -186,8 +186,8 @@ export const getPromptTableColumns = ({
   {
     id: "created_by",
     accessorKey: "created_by",
-    meta: { title: "Created By" },
-    header: "Created By",
+    meta: { title: "Создал" },
+    header: "Создал",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => {

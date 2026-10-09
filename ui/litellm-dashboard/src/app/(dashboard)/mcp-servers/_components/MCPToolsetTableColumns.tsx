@@ -44,7 +44,7 @@ function ToolsetRowActions({ toolset, isAdmin, onEditClick, onDeleteClick }: Too
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open toolset actions"
+        aria-label="Действия набора инструментов"
         data-testid={`toolset-actions-${toolset.toolset_id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -56,14 +56,14 @@ function ToolsetRowActions({ toolset, isAdmin, onEditClick, onDeleteClick }: Too
           onClick={() => void copyToClipboard(toolsetEndpointUrl(toolset.toolset_name), "Endpoint URL copied")}
         >
           <Link2 />
-          Copy endpoint URL
+          Скопировать URL эндпоинта
         </DropdownMenuItem>
         <DropdownMenuItem
           data-testid="toolset-action-copy-id"
           onClick={() => void copyToClipboard(toolset.toolset_id, "Toolset ID copied")}
         >
           <Copy />
-          Copy toolset ID
+          Скопировать ID набора инструментов
         </DropdownMenuItem>
         {isAdmin && (
           <>
@@ -103,8 +103,8 @@ export const getMCPToolsetTableColumns = ({
   {
     id: "toolset_id",
     accessorKey: "toolset_id",
-    meta: { title: "Toolset ID" },
-    header: "Toolset ID",
+    meta: { title: "ID набора инструментов" },
+    header: "ID набора инструментов",
     size: 140,
     enableSorting: false,
     cell: ({ row }) => <IdCell value={row.original.toolset_id} />,
@@ -141,8 +141,8 @@ export const getMCPToolsetTableColumns = ({
   },
   {
     id: "tools",
-    meta: { title: "Tools", skeleton: "chips" },
-    header: "Tools",
+    meta: { title: "Инструменты", skeleton: "chips" },
+    header: "Инструменты",
     size: 260,
     enableSorting: false,
     cell: ({ row }) => {
@@ -158,7 +158,7 @@ export const getMCPToolsetTableColumns = ({
             </span>
           ))}
           {tools.length > 4 && (
-            <span className="self-center text-xs text-muted-foreground">+{tools.length - 4} more</span>
+            <span className="self-center text-xs text-muted-foreground">+{tools.length - 4} ещё</span>
           )}
         </div>
       );
@@ -167,8 +167,8 @@ export const getMCPToolsetTableColumns = ({
   {
     id: "created_at",
     accessorKey: "created_at",
-    meta: { title: "Created" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 120,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.created_at} precision="date" />,

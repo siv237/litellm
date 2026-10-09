@@ -42,12 +42,12 @@ const DeleteSSOSettingsModal: React.FC<DeleteSSOSettingsModalProps> = ({ isVisib
 
     await editSSOSettings(clearSettings, {
       onSuccess: () => {
-        toast.success("SSO settings cleared successfully");
+        toast.success("Настройки SSO очищены");
         onCancel();
         onSuccess();
       },
       onError: (error) => {
-        toast.fromError("Failed to clear SSO settings: " + parseErrorMessage(error));
+        toast.fromError("Не удалось очистить настройки SSO: " + parseErrorMessage(error));
       },
     });
   };
@@ -55,7 +55,7 @@ const DeleteSSOSettingsModal: React.FC<DeleteSSOSettingsModalProps> = ({ isVisib
   return (
     <DeleteResourceModal
       isOpen={isVisible}
-      title="Confirm Clear SSO Settings"
+      title="Подтвердить очистку настроек SSO"
       alertMessage="This action cannot be undone."
       message="Are you sure you want to clear all SSO settings? Users will no longer be able to login using SSO after this change."
       resourceInformationTitle="SSO Settings"

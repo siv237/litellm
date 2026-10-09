@@ -50,7 +50,7 @@ export function SearchResultsDisplay({ searchResults }: SearchResultsDisplayProp
               {searchResults.map((resultPage, pageIndex) => (
                 <div key={pageIndex}>
                   <div className="text-xs text-muted-foreground mb-2 flex items-center gap-2">
-                    <span className="font-medium">Query:</span>
+                    <span className="font-medium">Запрос:</span>
                     <span className="italic">&quot;{resultPage.search_query}&quot;</span>
                     <span className="text-muted-foreground">•</span>
                     <span className="text-muted-foreground">
@@ -97,7 +97,7 @@ export function SearchResultsDisplay({ searchResults }: SearchResultsDisplayProp
 
                                 {result.attributes && Object.keys(result.attributes).length > 0 && (
                                   <div className="mt-2 pt-2 border-t border-border">
-                                    <div className="text-xs text-muted-foreground mb-1 font-medium">Metadata:</div>
+                                    <div className="text-xs text-muted-foreground mb-1 font-medium">Метаданные:</div>
                                     <div className="space-y-1">
                                       {Object.entries(result.attributes).map(([key, value]) => (
                                         <div key={key} className="text-xs flex gap-2">

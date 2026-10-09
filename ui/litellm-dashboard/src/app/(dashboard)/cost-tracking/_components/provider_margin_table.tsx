@@ -108,7 +108,7 @@ const ProviderMarginTable: React.FC<ProviderMarginTableProps> = ({
             if (row.provider === "global") {
               return (
                 <div className="flex items-center space-x-2">
-                  <span className="font-medium">Global (All Providers)</span>
+                  <span className="font-medium">Глобально (все провайдеры)</span>
                 </div>
               );
             }
@@ -205,7 +205,7 @@ const ProviderMarginTable: React.FC<ProviderMarginTableProps> = ({
         },
       ]}
       getRowKey={(row) => row.provider}
-      emptyMessage="No provider margins configured"
+      emptyMessage="Наценки провайдеров не настроены"
     />
   );
 };

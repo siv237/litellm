@@ -7,7 +7,7 @@ interface DefaultProxyAdminTagProps {
 
 export default function DefaultProxyAdminTag({ userId }: DefaultProxyAdminTagProps) {
   if (userId === DEFAULT_PROXY_ADMIN_USER_ID) {
-    return <Badge variant="secondary">Default Proxy Admin</Badge>;
+    return <Badge variant="secondary">Админ прокси по умолчанию</Badge>;
   }
 
   return <span>{userId}</span>;

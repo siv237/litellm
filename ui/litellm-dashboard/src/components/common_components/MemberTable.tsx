@@ -119,22 +119,22 @@ const buildColumns = ({
   {
     id: "user_email",
     accessorFn: (member) => member.user_email || undefined,
-    header: ({ column }) => <DataTableSortHeader column={column} title="User Email" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="Email пользователя" />,
     sortingFn: "text",
     sortUndefined: "last",
     enableGlobalFilter: true,
-    meta: { title: "User Email" },
+    meta: { title: "Email пользователя" },
     cell: ({ row }) => row.original.user_email || "-",
   },
   {
     id: "user_id",
     accessorFn: (member) => member.user_id ?? undefined,
-    header: "User ID",
+    header: "ID пользователя",
     enableSorting: false,
     enableGlobalFilter: true,
     cell: ({ row }) =>
       row.original.user_id === "default_user_id" ? (
-        <StatusBadge tone="info" label="Default Proxy Admin" />
+        <StatusBadge tone="info" label="Админ прокси по умолчанию" />
       ) : (
         row.original.user_id || "-"
       ),
@@ -213,7 +213,7 @@ export default function MemberTable({
   };
   const columns = buildColumns(columnDeps);
   const roleFilterItems = [
-    { value: ALL_ROLES, label: "All Roles" },
+    { value: ALL_ROLES, label: "Все роли" },
     ...memberRoleOptions(members).map((role) => ({ value: role, label: role })),
   ];
 
@@ -222,7 +222,7 @@ export default function MemberTable({
   return (
     <div className="flex w-full flex-col gap-2">
       <span className="inline-flex text-sm text-foreground">
-        {members.length} Member{members.length !== 1 ? "s" : ""}
+        {members.length} {members.length === 1 ? "участник" : "участников"}
       </span>
       <DataTable
         data={members}
@@ -254,8 +254,8 @@ export default function MemberTable({
               table={table}
               open={filtersOpen}
               onOpenChange={setFiltersOpen}
-              title="Filters"
-              description="Narrow down members"
+              title="Фильтры"
+              description="Сузить список участников"
             >
               {({ get, set }) => (
                 <DataTableFilterField label={roleColumnTitle}>
@@ -265,7 +265,7 @@ export default function MemberTable({
                     onValueChange={(value) => set("role", value === ALL_ROLES ? undefined : value)}
                   >
                     <SelectTrigger className="w-full" data-testid="filter-role">
-                      <SelectValue placeholder="All Roles" />
+                      <SelectValue placeholder="Все роли" />
                     </SelectTrigger>
                     <SelectContent>
                       {roleFilterItems.map((item) => (
@@ -284,7 +284,7 @@ export default function MemberTable({
       {onAddMember && canEdit && (
         <Button onClick={onAddMember} className="self-start">
           <UserPlus className="size-4" />
-          Add Member
+          Добавить участника
         </Button>
       )}
     </div>

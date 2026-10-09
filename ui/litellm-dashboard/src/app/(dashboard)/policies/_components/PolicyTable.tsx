@@ -43,9 +43,9 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Inbox className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No policies found</div>
+      <div className="text-sm font-medium text-foreground">Политики не найдены</div>
       <div className="text-sm text-muted-foreground">
-        Create a policy to bundle guardrails and apply them across teams.
+        Создайте политику, чтобы объединять гардрейлы и применять их к командам.
       </div>
     </div>
   );

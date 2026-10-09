@@ -91,7 +91,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
               value: model_group,
               label: model_group,
             })),
-            { value: "custom", label: "Enter custom model" },
+            { value: "custom", label: "Введите свою модель" },
           ]}
           value={selectedModel}
           placeholder={placeholder}
@@ -102,7 +102,7 @@ const ModelSelector: React.FC<ModelSelectorProps> = ({
       {showCustomModelInput && (
         <Input
           className="mt-2"
-          placeholder="Enter custom model name"
+          placeholder="Введите имя своей модели"
           onChange={(e) => debouncedSelect(e.target.value)}
           disabled={disabled}
         />

@@ -32,8 +32,8 @@ const PublishModal: React.FC<PublishModalProps> = ({
     <Dialog open={visible} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Publish Prompt</DialogTitle>
-          <DialogDescription>Published prompts are versioned and can be used in API calls.</DialogDescription>
+          <DialogTitle>Опубликовать промпт</DialogTitle>
+          <DialogDescription>Опубликованные промпты версионируются и доступны в вызовах API.</DialogDescription>
         </DialogHeader>
         <div className="py-4">
           <label htmlFor="publish-prompt-name" className="mb-2 block">
@@ -43,12 +43,12 @@ const PublishModal: React.FC<PublishModalProps> = ({
             id="publish-prompt-name"
             value={promptName}
             onChange={(e) => onNameChange(e.target.value)}
-            placeholder="Enter prompt name"
+            placeholder="Введите имя промпта"
             onKeyDown={(event) => event.key === "Enter" && onPublish()}
             autoFocus
           />
           <p className="text-muted-foreground text-xs mt-2">
-            Published prompts can be used in API calls and are versioned for easy tracking.
+            Опубликованные промпты доступны в вызовах API и версионируются для удобного отслеживания.
           </p>
         </div>
         <DialogFooter>

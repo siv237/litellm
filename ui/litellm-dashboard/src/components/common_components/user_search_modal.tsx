@@ -57,9 +57,9 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({
     {
       label: "admin",
       value: "admin",
-      description: "Admin role. Can create team keys, add members, and manage settings.",
+      description: "Роль администратора: может создавать ключи команды, добавлять участников и управлять настройками.",
     },
-    { label: "user", value: "user", description: "User role. Can view team info, but not manage it." },
+    { label: "user", value: "user", description: "Роль пользователя: может просматривать сведения о команде, но не управлять ими." },
   ],
   defaultRole = "user",
   teamId,
@@ -172,7 +172,7 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({
           autoHighlight="always"
           isLoading={loading}
           placeholder={placeholder}
-          emptyText="No results"
+          emptyText="Нет результатов"
           loadingText="Loading..."
           inputId={controlProps.id}
         />
@@ -191,8 +191,7 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({
             <Alert variant="info" className="mb-4" data-testid="member-existing-users-notice">
               <Info />
               <AlertTitle>
-                Search selects from users that already exist. To add someone new, ask a proxy admin to create their
-                account first.
+                Поиск выбирает среди существующих пользователей. Чтобы добавить нового, попросите администратора прокси сначала создать ему аккаунт.
               </AlertTitle>
             </Alert>
 
@@ -205,11 +204,11 @@ const UserSearchModal: React.FC<UserSearchModalProps> = ({
 
               <div className="text-center">OR</div>
 
-              <FormField control={form.control} name="user_id" label="User ID">
+              <FormField control={form.control} name="user_id" label="ID пользователя">
                 {({ id, value, onChange }) => renderUserSearch("user_id", "Search by user ID", { id, value, onChange })}
               </FormField>
 
-              <FormField control={form.control} name="role" label="Member Role">
+              <FormField control={form.control} name="role" label="Роль участника">
                 {({ id, value, onChange }) => (
                   <Select items={roles} value={value} onValueChange={(next) => onChange(next as string)}>
                     <SelectTrigger id={id}>

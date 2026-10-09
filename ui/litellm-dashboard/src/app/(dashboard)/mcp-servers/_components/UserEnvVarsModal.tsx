@@ -56,7 +56,7 @@ const UserEnvVarsForm: React.FC<UserEnvVarsFormProps> = ({ required, isSaving, o
             label={
               <span className="flex items-center gap-2">
                 <span className="font-mono text-sm font-semibold">{spec.name}</span>
-                {spec.is_set && <Badge variant="secondary">Set</Badge>}
+                {spec.is_set && <Badge variant="secondary">Задать</Badge>}
               </span>
             }
           >
@@ -106,7 +106,7 @@ const UserEnvVarsModal: React.FC<UserEnvVarsModalProps> = ({ server, open, acces
   const saveMutation = useMutation({
     mutationFn: (values: Record<string, string>) => storeMCPUserEnvVars(accessToken!, server!.server_id, values),
     onSuccess: (saved) => {
-      toast.success("Credentials saved");
+      toast.success("Реквизиты сохранены");
       onSaved?.(saved);
       onClose();
     },
@@ -133,8 +133,8 @@ const UserEnvVarsModal: React.FC<UserEnvVarsModalProps> = ({ server, open, acces
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[520px]">
         <DialogHeader>
           <div className="flex items-center gap-2">
-            <DialogTitle className="text-base font-semibold">Set your credentials</DialogTitle>
-            <StatusBadge tone="info" label="Per-user" />
+            <DialogTitle className="text-base font-semibold">Укажите ваши реквизиты</DialogTitle>
+            <StatusBadge tone="info" label="Для каждого пользователя" />
           </div>
           <span className="text-xs text-muted-foreground">{displayName}</span>
         </DialogHeader>
@@ -147,12 +147,12 @@ const UserEnvVarsModal: React.FC<UserEnvVarsModalProps> = ({ server, open, acces
           ) : isError ? (
             <Alert variant="error">
               <CircleAlert />
-              <AlertTitle>Failed to load env vars</AlertTitle>
+              <AlertTitle>Не удалось загрузить переменные окружения</AlertTitle>
             </Alert>
           ) : required.length === 0 ? (
             <Alert variant="info">
               <Info />
-              <AlertTitle>No per-user fields configured for this server.</AlertTitle>
+              <AlertTitle>Для этого сервера не настроены поля для отдельных пользователей.</AlertTitle>
             </Alert>
           ) : (
             <>

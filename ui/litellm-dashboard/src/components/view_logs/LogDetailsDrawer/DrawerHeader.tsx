@@ -233,7 +233,7 @@ function NavigationSection({
           <TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={onClose} />}>
             <X className="size-4" />
           </TooltipTrigger>
-          <TooltipContent>ESC to close</TooltipContent>
+          <TooltipContent>ESC — закрыть</TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </div>
@@ -257,7 +257,7 @@ function StatusBar({
   return (
     <div className="flex items-center gap-3">
       <Badge variant={statusColor === "error" ? "destructive" : "secondary"}>{statusLabel}</Badge>
-      <Badge variant="outline">Env: {environment}</Badge>
+      <Badge variant="outline">Окружение: {environment}</Badge>
       <div className="flex items-center gap-2">
         <span className="text-muted-foreground" style={{ fontSize: FONT_SIZE_MEDIUM }}>
           {moment(log.startTime).format("MMM D, YYYY h:mm:ss A")}

@@ -87,18 +87,18 @@ const SpendByProvider: React.FC<SpendByProviderProps> = ({ loading, isDateChangi
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>Spend by Provider</CardTitle>
+        <CardTitle>Расход по провайдерам</CardTitle>
         <CardAction className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <label className="text-sm text-foreground">Show Zero Spend</label>
+            <label className="text-sm text-foreground">Показывать нулевой расход</label>
             <Switch checked={includeZeroSpend} onCheckedChange={setIncludeZeroSpend} />
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
-              <label className="text-sm text-foreground">Show Unknown</label>
+              <label className="text-sm text-foreground">Показывать неизвестных</label>
               <Tooltip>
                 <TooltipTrigger render={<Info className="size-4 text-muted-foreground hover:text-foreground" />} />
-                <TooltipContent>Requests that failed to route to a provider</TooltipContent>
+                <TooltipContent>Запросы, которые не удалось направить провайдеру</TooltipContent>
               </Tooltip>
             </div>
             <Switch checked={includeUnknown} onCheckedChange={setIncludeUnknown} />

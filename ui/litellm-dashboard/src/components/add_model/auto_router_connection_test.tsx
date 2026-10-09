@@ -79,7 +79,7 @@ const AutoRouterConnectionTest: React.FC<AutoRouterConnectionTestProps> = ({
   if (targets.length === 0 && !jevRequest) {
     return (
       <p className="text-sm text-muted-foreground">
-        No complexity tiers are configured yet, so there is nothing to test.
+        Уровни сложности ещё не настроены — тестировать нечего.
       </p>
     );
   }
@@ -87,12 +87,11 @@ const AutoRouterConnectionTest: React.FC<AutoRouterConnectionTestProps> = ({
   return (
     <div className="space-y-3">
       <p className="mb-2 text-sm text-muted-foreground">
-        Test Connection sends a minimal request to every configured tier, classifier, default, and embedding model. The
-        classifier probe includes its reasoning effort override.
+        «Проверить подключение» отправляет минимальный запрос каждому настроенному уровню, классификатору, модели по умолчанию и эмбеддинг-модели. Проба классификатора включает его переопределение усилия рассуждения.
       </p>
       {jevRequest && (
-        <div role="status" aria-label="JEV connection" className="rounded-lg border p-3 text-sm">
-          <strong>JEV Classifier</strong>
+        <div role="status" aria-label="Соединение JEV" className="rounded-lg border p-3 text-sm">
+          <strong>Классификатор JEV</strong>
           <p>
             {jevResult.status === "pending" && "Testing JEV classification"}
             {jevResult.status === "success" && "JEV classification succeeded"}
@@ -150,7 +149,7 @@ export function AutoRouterConnectionTestDialog({
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>Connection Test Results</DialogTitle>
+          <DialogTitle>Результаты проверки подключения</DialogTitle>
         </DialogHeader>
         {open && <AutoRouterConnectionTest key={testId} {...props} />}
         <DialogFooter>

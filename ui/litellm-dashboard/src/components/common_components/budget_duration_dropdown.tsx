@@ -37,7 +37,7 @@ const BudgetDurationDropdown: React.FC<BudgetDurationDropdownProps> = ({
       </SelectTrigger>
       <SelectContent>
         <SelectItem value={null}>{placeholder}</SelectItem>
-        {showNeverResets ? <SelectItem value={NEVER_RESETS_BUDGET_DURATION}>Never resets</SelectItem> : null}
+        {showNeverResets ? <SelectItem value={NEVER_RESETS_BUDGET_DURATION}>Без сброса</SelectItem> : null}
         <SelectItem value="1h">hourly</SelectItem>
         <SelectItem value="24h">daily</SelectItem>
         <SelectItem value="7d">weekly</SelectItem>

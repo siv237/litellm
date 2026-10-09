@@ -54,7 +54,7 @@ const ModelRetrySettingsTab = ({
 }: ModelRetrySettingsTabProps) => {
   const isGlobalScope = selectedModelGroup === "global";
   const scopeItems = [
-    { value: "global", label: "Global Default" },
+    { value: "global", label: "Глобально по умолчанию" },
     ...availableModelGroups.map((group) => ({ value: group, label: group })),
   ];
 
@@ -85,7 +85,7 @@ const ModelRetrySettingsTab = ({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Label htmlFor="retry-policy-scope">Retry Policy Scope:</Label>
+        <Label htmlFor="retry-policy-scope">Область политики повторов:</Label>
         <div className="w-48">
           <Select
             items={scopeItems}
@@ -108,16 +108,16 @@ const ModelRetrySettingsTab = ({
 
       {isGlobalScope ? (
         <div>
-          <h2 className="text-lg font-semibold">Global Retry Policy</h2>
+          <h2 className="text-lg font-semibold">Глобальная политика повторов</h2>
           <p className="text-sm text-muted-foreground">
-            Default retry settings applied to all model groups unless overridden
+            Настройки повторов по умолчанию для всех групп моделей, если не переопределены
           </p>
         </div>
       ) : (
         <div>
-          <h2 className="text-lg font-semibold">Retry Policy for {selectedModelGroup}</h2>
+          <h2 className="text-lg font-semibold">Политика повторов для {selectedModelGroup}</h2>
           <p className="text-sm text-muted-foreground">
-            Model-specific retry settings. Falls back to global defaults if not set.
+            Настройки повторов для модели. Если не заданы — используются глобальные значения по умолчанию.
           </p>
         </div>
       )}

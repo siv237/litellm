@@ -73,14 +73,14 @@ export default function MCPToolSearchSettings({ accessToken }: MCPToolSearchSett
     updateSettings(formToPayload(formValues), {
       onSuccess: () => {
         form.reset(formValues);
-        toast.success("Settings updated successfully. Changes will be applied across all pods within 10 seconds.");
+        toast.success("Настройки обновлены. Изменения применятся на всех подах в течение 10 секунд.");
       },
       onError: (saveError) => toast.fromError(saveError),
     });
   };
 
   if (!accessToken) {
-    return <div className="p-6 text-center text-muted-foreground">Please log in to configure tool search.</div>;
+    return <div className="p-6 text-center text-muted-foreground">Войдите, чтобы настроить поиск инструментов.</div>;
   }
 
   if (isLoading) {
@@ -96,7 +96,7 @@ export default function MCPToolSearchSettings({ accessToken }: MCPToolSearchSett
   if (isError) {
     return (
       <Alert variant="error" className="mb-6">
-        <AlertTitle>Could not load MCP tool search settings</AlertTitle>
+        <AlertTitle>Не удалось загрузить настройки поиска инструментов MCP</AlertTitle>
         {error instanceof Error && <AlertDescription>{error.message}</AlertDescription>}
       </Alert>
     );
@@ -106,12 +106,9 @@ export default function MCPToolSearchSettings({ accessToken }: MCPToolSearchSett
     <div className="w-full">
       <Alert variant="info" className="mb-6">
         <Info />
-        <AlertTitle>Native MCP Tool Search</AlertTitle>
+        <AlertTitle>Нативный поиск инструментов MCP</AlertTitle>
         <AlertDescription>
-          Controls the <code>mcp_tool_search</code> virtual tool that native MCP clients call to discover tools. With an
-          embedding model set, tools are ranked by the meaning of their name and description, so a query like
-          &quot;FX&quot; finds a &quot;foreign exchange rates&quot; tool. Without one, keyword matching is used. Callers
-          only ever see tools their key, team and server permissions already allow.
+          Управляет <code>mcp_tool_search</code> виртуальным инструментом, через который нативные MCP-клиенты ищут инструменты. При заданной эмбеддинг-модели инструменты ранжируются по смыслу их названия и описания, поэтому запрос вроде FX найдёт инструмент курсов валют. Без неё используется совпадение по ключевым словам. Вызывающая сторона видит только те инструменты, которые ей уже разрешают права ключа, команды и сервера.
         </AlertDescription>
       </Alert>
 
@@ -119,7 +116,7 @@ export default function MCPToolSearchSettings({ accessToken }: MCPToolSearchSett
         <form onSubmit={(event) => event.preventDefault()} noValidate>
           <Card className="mb-4">
             <CardHeader className="border-b">
-              <CardTitle>Ranking</CardTitle>
+              <CardTitle>Ранжирование</CardTitle>
             </CardHeader>
             <CardContent>
               <FieldGroup>
@@ -206,7 +203,7 @@ export default function MCPToolSearchSettings({ accessToken }: MCPToolSearchSett
 
           <Card className="mb-4">
             <CardHeader className="border-b">
-              <CardTitle>Core Tools</CardTitle>
+              <CardTitle>Базовые инструменты</CardTitle>
             </CardHeader>
             <CardContent>
               <FieldGroup>

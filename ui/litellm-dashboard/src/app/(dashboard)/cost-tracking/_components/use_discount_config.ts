@@ -43,7 +43,7 @@ export function useDiscountConfig({ accessToken }: UseDiscountConfigProps): UseD
       }
     } catch (error) {
       console.error("Error fetching discount config:", error);
-      toast.fromError("Failed to fetch discount configuration");
+      toast.fromError("Не удалось получить конфигурацию скидок");
     }
   }, [accessToken]);
 
@@ -63,7 +63,7 @@ export function useDiscountConfig({ accessToken }: UseDiscountConfigProps): UseD
         });
 
         if (response.ok) {
-          toast.success("Discount configuration updated successfully");
+          toast.success("Конфигурация скидок обновлена");
           await fetchDiscountConfig();
         } else {
           const errorData = await response.json();
@@ -72,7 +72,7 @@ export function useDiscountConfig({ accessToken }: UseDiscountConfigProps): UseD
         }
       } catch (error) {
         console.error("Error updating discount config:", error);
-        toast.fromError("Failed to update discount configuration");
+        toast.fromError("Не удалось обновить конфигурацию скидок");
       }
     },
     [accessToken, fetchDiscountConfig],
@@ -81,20 +81,20 @@ export function useDiscountConfig({ accessToken }: UseDiscountConfigProps): UseD
   const handleAddProvider = useCallback(
     async (selectedProvider: string | undefined, newDiscount: string): Promise<boolean> => {
       if (!selectedProvider || !newDiscount) {
-        toast.fromError("Please select a provider and enter discount percentage");
+        toast.fromError("Выберите провайдера и укажите процент скидки");
         return false;
       }
 
       const percentageValue = parseFloat(newDiscount);
       if (isNaN(percentageValue) || percentageValue < 0 || percentageValue > 100) {
-        toast.fromError("Discount must be between 0% and 100%");
+        toast.fromError("Скидка должна быть от 0% до 100%");
         return false;
       }
 
       const providerValue = getProviderBackendValue(selectedProvider);
 
       if (!providerValue) {
-        toast.fromError("Invalid provider selected");
+        toast.fromError("Выбран некорректный провайдер");
         return false;
       }
 

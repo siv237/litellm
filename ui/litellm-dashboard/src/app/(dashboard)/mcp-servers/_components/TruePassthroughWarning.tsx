@@ -13,12 +13,9 @@ export default function TruePassthroughWarning({ authType }: { authType?: string
   return (
     <Alert className="mb-4">
       <TriangleAlert />
-      <AlertTitle>True Passthrough disables LiteLLM authentication for this server</AlertTitle>
+      <AlertTitle>Passthrough без проверки отключает аутентификацию ruLiteLLM для этого сервера</AlertTitle>
       <AlertDescription>
-        Anyone who can reach the gateway can call this server without a LiteLLM key. The caller&apos;s Authorization
-        header is forwarded to the upstream verbatim, per-key and per-team rate limits and spend tracking do not apply,
-        and the upstream is fully responsible for authenticating callers. Choose OAuth Delegate instead if callers
-        should still authenticate to LiteLLM.
+        Любой, кто достигает гейтвея, может вызывать этот сервер без ключа ruLiteLLM. Заголовок Authorization вызывающего передаётся апстриму дословно; лимиты и учёт расхода по ключам и командам не применяются, а аутентификацию вызывающих полностью обеспечивает апстрим. Если вызывающие должны по-прежнему проходить через ruLiteLLM, выберите OAuth Delegate.
       </AlertDescription>
     </Alert>
   );

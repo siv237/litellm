@@ -33,11 +33,11 @@ export function FormattedToolView({ tool }: FormattedToolViewProps) {
       {/* Parameters Table */}
       {parameterRows.length > 0 && (
         <div>
-          <span className="mb-2 block text-xs text-muted-foreground">Parameters</span>
+          <span className="mb-2 block text-xs text-muted-foreground">Параметры</span>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Parameter</TableHead>
+                <TableHead>Параметр</TableHead>
                 <TableHead>Тип</TableHead>
                 <TableHead>Описание</TableHead>
               </TableRow>
@@ -67,7 +67,7 @@ export function FormattedToolView({ tool }: FormattedToolViewProps) {
       {/* If tool was called, show the arguments used */}
       {tool.called && tool.callData && (
         <div className="mt-4">
-          <span className="mb-2 block text-xs text-muted-foreground">Called With</span>
+          <span className="mb-2 block text-xs text-muted-foreground">Вызван с</span>
           <div className="rounded border border-success/30 bg-success/10 p-3">
             <pre className="m-0 whitespace-pre-wrap break-words text-xs text-foreground">
               {JSON.stringify(tool.callData.arguments, null, 2)}

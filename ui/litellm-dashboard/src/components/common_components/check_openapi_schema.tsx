@@ -216,7 +216,7 @@ const SchemaFormFields: React.FC<SchemaFormFieldsProps> = ({
                 {...control}
                 value={control.value as string | undefined}
                 rows={4}
-                placeholder="Enter as JSON"
+                placeholder="Ввести как JSON"
                 className="font-mono"
               />
             );
@@ -256,7 +256,7 @@ const SchemaFormFields: React.FC<SchemaFormFieldsProps> = ({
           }
           if (key === "duration") {
             return (
-              <Input {...control} value={(control.value as string | undefined) ?? ""} placeholder="eg: 30s, 30h, 30d" />
+              <Input {...control} value={(control.value as string | undefined) ?? ""} placeholder="напр.: 30s, 30h, 30d" />
             );
           }
           return <Input {...control} value={(control.value as string | undefined) ?? ""} placeholder={tooltip || ""} />;
@@ -266,7 +266,7 @@ const SchemaFormFields: React.FC<SchemaFormFieldsProps> = ({
   };
 
   if (error) {
-    return <div className="text-destructive">Error: {error}</div>;
+    return <div className="text-destructive">Ошибка: {error}</div>;
   }
 
   if (!schemaProperties?.properties) {

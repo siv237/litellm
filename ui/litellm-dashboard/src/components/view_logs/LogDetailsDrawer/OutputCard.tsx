@@ -23,7 +23,7 @@ export function OutputCard({ message, completionTokens, outputCost }: OutputCard
     if (!message) return;
 
     navigator.clipboard.writeText(message.content || "");
-    toast.success("Output copied");
+    toast.success("Вывод скопирован");
   };
 
   return (
@@ -45,7 +45,7 @@ export function OutputCard({ message, completionTokens, outputCost }: OutputCard
           {message ? (
             <SimpleMessageBlock label="ASSISTANT" content={message.content} toolCalls={message.toolCalls} />
           ) : (
-            <span className="text-[13px] text-muted-foreground italic">No response data available</span>
+            <span className="text-[13px] text-muted-foreground italic">Данные ответа отсутствуют</span>
           )}
         </div>
       </div>

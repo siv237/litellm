@@ -67,22 +67,22 @@ export function FallbackGroupConfig({
       {/* Primary Model Section */}
       <div className="relative">
         <label htmlFor={primaryModelInputId} className="block text-sm font-semibold text-foreground mb-2">
-          Primary Model <span className="text-destructive">*</span>
+          Основная модель <span className="text-destructive">*</span>
         </label>
         <SearchSelect
           inputId={primaryModelInputId}
           options={availableModels.map((m) => ({ label: m, value: m }))}
           value={group.primaryModel}
           onValueChange={handlePrimaryChange}
-          placeholder="Select primary model"
-          emptyText="No models found"
+          placeholder="Выберите основную модель"
+          emptyText="Модели не найдены"
           disabled={disablePrimaryModel}
           className="h-12"
         />
         {!disablePrimaryModel && !group.primaryModel && (
           <div className="mt-2 flex items-center gap-2 text-warning text-xs bg-warning/10 p-2 rounded-sm">
             <AlertCircle className="w-4 h-4" />
-            <span>Select a model to begin configuring fallbacks</span>
+            <span>Выберите модель, чтобы настроить резервирование</span>
           </div>
         )}
       </div>
@@ -100,9 +100,9 @@ export function FallbackGroupConfig({
         className={`transition-opacity duration-300 ${!group.primaryModel ? "opacity-50 pointer-events-none" : "opacity-100"}`}
       >
         <label className="block text-sm font-semibold text-foreground mb-2">
-          Fallback Chain <span className="text-destructive">*</span>
+          Цепочка резервирования <span className="text-destructive">*</span>
           <span className="text-xs text-muted-foreground font-normal ml-2">
-            (Max {maxFallbacks} fallbacks at a time)
+            (макс. {maxFallbacks} резервных попыток одновременно)
           </span>
         </label>
 
@@ -114,16 +114,16 @@ export function FallbackGroupConfig({
               value={group.fallbackModels}
               onValueChange={handleFallbackSelect}
               placeholder={
-                canAddMoreFallbacks ? "Select fallback models to add..." : `Maximum ${maxFallbacks} fallbacks reached`
+                canAddMoreFallbacks ? "Выберите резервные модели…" : `Максимум ${maxFallbacks} резервных моделей`
               }
-              emptyText="No models found"
+              emptyText="Модели не найдены"
               disabled={!group.primaryModel}
               className="w-full"
             />
             <p className="text-xs text-muted-foreground mt-1 ml-1">
               {canAddMoreFallbacks
                 ? `Search and select multiple models. Selected models will appear below in order. (${group.fallbackModels.length}/${maxFallbacks} used)`
-                : `Maximum ${maxFallbacks} fallbacks reached. Remove some to add more.`}
+                : `Максимум ${maxFallbacks} резервных моделей достигнут. Remove some to add more.`}
             </p>
           </div>
 
@@ -131,11 +131,11 @@ export function FallbackGroupConfig({
           <div className="space-y-2 min-h-[100px]">
             {group.fallbackModels.length === 0 ? (
               <div className="h-32 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center text-muted-foreground">
-                <span className="text-sm">No fallback models selected</span>
-                <span className="text-xs mt-1">Add models from the dropdown above</span>
+                <span className="text-sm">Резервные модели не выбраны</span>
+                <span className="text-xs mt-1">Добавьте модели из списка выше</span>
               </div>
             ) : (
-              <ol aria-label="Fallback chain" className="space-y-2">
+              <ol aria-label="Цепочка резервирования" className="space-y-2">
                 {group.fallbackModels.map((modelValue, index) => (
                   <li
                     key={`${modelValue}-${index}`}

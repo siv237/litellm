@@ -14,7 +14,7 @@ const VariableInput: React.FC<VariableInputProps> = ({ extractedVariables, varia
 
   return (
     <div className="p-4 border-b border-border bg-accent">
-      <h3 className="text-sm font-semibold text-foreground mb-3">Fill in template variables to start testing</h3>
+      <h3 className="text-sm font-semibold text-foreground mb-3">Заполните переменные шаблона, чтобы начать тестирование</h3>
       <div className="space-y-2">
         {extractedVariables.map((varName) => (
           <div key={varName}>

@@ -25,21 +25,21 @@ interface CyberArkFieldGroup {
 
 const FIELD_GROUPS: CyberArkFieldGroup[] = [
   {
-    title: "Connection",
+    title: "Подключение",
     fields: ["cyberark_api_base", "cyberark_account", "cyberark_username"],
   },
   {
-    title: "API Key Authentication",
+    title: "Аутентификация по API-ключу",
     subtitle: "Use a Conjur API key to authenticate. Only one auth method is required.",
     fields: ["cyberark_api_key"],
   },
   {
-    title: "Certificate Authentication",
+    title: "Сертификатная аутентификация",
     subtitle: "Use a client TLS certificate and key to authenticate. Only one auth method is required.",
     fields: ["client_cert", "client_key"],
   },
   {
-    title: "Advanced",
+    title: "Дополнительно",
     subtitle: "Optional TLS and token caching settings.",
     fields: ["ssl_verify", "refresh_interval"],
   },
@@ -54,7 +54,7 @@ const buildSchema = (fields: readonly string[]): z.ZodType<CyberArkFormValues, C
         name,
         name === "cyberark_api_base"
           ? z.string().refine((value) => value.length === 0 || /^https?:\/\/.+/.test(value), {
-              message: "Must start with http:// or https://",
+              message: "Должно начинаться с http:// или https://",
             })
           : z.string(),
       ]),
@@ -105,7 +105,7 @@ const EditCyberArkModal: React.FC<EditCyberArkModalProps> = ({ isVisible, onCanc
 
     mutate(config, {
       onSuccess: () => {
-        toast.success("CyberArk configuration updated successfully");
+        toast.success("Конфигурация CyberArk обновлена");
         onSuccess();
       },
       onError: (err) => {
@@ -145,7 +145,7 @@ const EditCyberArkModal: React.FC<EditCyberArkModalProps> = ({ isVisible, onCanc
     <Dialog open={isVisible} onOpenChange={(open) => !open && handleCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>Edit CyberArk Configuration</DialogTitle>
+          <DialogTitle>Изменить конфигурацию CyberArk</DialogTitle>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           {FIELD_GROUPS.map((group, index) => (

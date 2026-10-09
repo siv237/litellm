@@ -70,21 +70,19 @@ const StallEscalationConfig: React.FC<{
           // this back off, since the backend rejects saving both together.
           disabled={blockedReason !== null && !enabled}
           onCheckedChange={toggle}
-          aria-label="Escalate a stalled task to a stronger model"
+          aria-label="Эскалировать зависшую задачу на более сильную модель"
         />
-        <strong className="font-semibold">Escalate a stalled task to a stronger model</strong>
+        <strong className="font-semibold">Эскалировать зависшую задачу на более сильную модель</strong>
       </div>
       <span className="block text-xs mb-3 text-muted-foreground">
-        When the model keeps repeating the same tool call, or the same call keeps erroring, bump the request one tier
-        higher for as long as it looks stuck. The automatic counterpart to an escalation keyword: nobody has to notice
-        the loop and ask. Off means a stuck task keeps the model it was classified onto.
+        Когда модель повторяет один и тот же вызов инструмента или один и тот же вызов снова и снова ошибается, запрос поднимается на уровень выше, пока выглядит зависшим. Автоматический аналог ключевого слова эскалации: петлю никто не обязан замечать. «Выкл.» означает, что зависшая задача остаётся на назначенной модели.
         {blockedReason !== null && ` ${blockedReason}`}
       </span>
       {enabled && blockedReason === null && (
         <div className="flex flex-wrap gap-4">
           <div style={{ maxWidth: 240 }}>
             <label className="block text-sm font-medium mb-1" htmlFor="stall-escalation-repeat-threshold">
-              Repeats before escalating
+              Повторов до эскалации
             </label>
             <Input
               id="stall-escalation-repeat-threshold"
@@ -98,7 +96,7 @@ const StallEscalationConfig: React.FC<{
           </div>
           <div style={{ maxWidth: 240 }}>
             <label className="block text-sm font-medium mb-1" htmlFor="stall-escalation-window">
-              Recent calls examined
+              Проверяемых последних вызовов
             </label>
             <Input
               id="stall-escalation-window"
@@ -107,7 +105,7 @@ const StallEscalationConfig: React.FC<{
               onChange={(event) => commitWindow(event.target.value)}
             />
             <span className="block text-xs mt-1 text-muted-foreground">
-              How far back to look, in tool calls. Never below the repeat count, since that could never be reached.
+              Как далеко смотреть назад, в вызовах инструментов. Не меньше числа повторов — иначе недостижимо.
             </span>
           </div>
         </div>

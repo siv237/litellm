@@ -113,7 +113,7 @@ export function MessageDisplay({ messages, isLoading }: MessageDisplayProps) {
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-info/15 text-info">
                     <UserRound size={16} />
                   </div>
-                  <div className="text-sm font-semibold text-foreground">You</div>
+                  <div className="text-sm font-semibold text-foreground">Вы</div>
                 </div>
                 {renderMessageBody(block.user)}
               </div>

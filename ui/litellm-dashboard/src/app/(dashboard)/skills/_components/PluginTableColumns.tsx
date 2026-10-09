@@ -51,7 +51,7 @@ function PluginRowActions({ plugin, isAdmin, onDeleteClick }: PluginRowActionsPr
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open skill actions"
+        aria-label="Действия скилла"
         data-testid={`plugin-actions-${plugin.name}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -63,7 +63,7 @@ function PluginRowActions({ plugin, isAdmin, onDeleteClick }: PluginRowActionsPr
           onClick={() => void copyToClipboard(plugin.id, "Skill ID copied")}
         >
           <Copy />
-          Copy skill ID
+          Скопировать ID скилла
         </DropdownMenuItem>
         {isAdmin && (
           <>
@@ -97,8 +97,8 @@ export const getPluginTableColumns = ({
   {
     id: "name",
     accessorKey: "name",
-    meta: { title: "Skill Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Skill Name" />,
+    meta: { title: "Имя скилла" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Имя скилла" />,
     size: 220,
     enableSorting: true,
     cell: ({ row }) => (
@@ -113,8 +113,8 @@ export const getPluginTableColumns = ({
   {
     id: "version",
     accessorKey: "version",
-    meta: { title: "Version" },
-    header: "Version",
+    meta: { title: "Версия" },
+    header: "Версия",
     size: 100,
     enableSorting: false,
     cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.version || "N/A"}</span>,
@@ -138,8 +138,8 @@ export const getPluginTableColumns = ({
   {
     id: "category",
     accessorKey: "category",
-    meta: { title: "Category", skeleton: "badge" },
-    header: "Category",
+    meta: { title: "Категория", skeleton: "badge" },
+    header: "Категория",
     size: 150,
     enableSorting: false,
     cell: ({ row }) => <PluginCategoryBadge category={row.original.category} />,
@@ -147,8 +147,8 @@ export const getPluginTableColumns = ({
   {
     id: "enabled",
     accessorKey: "enabled",
-    meta: { title: "Public", skeleton: "badge" },
-    header: "Public",
+    meta: { title: "Публичный", skeleton: "badge" },
+    header: "Публичный",
     size: 100,
     enableSorting: false,
     cell: ({ row }) => (
@@ -159,8 +159,8 @@ export const getPluginTableColumns = ({
     id: "created_at",
     accessorKey: "created_at",
     sortingFn: "datetime",
-    meta: { title: "Created At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created At" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 160,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.created_at} />,

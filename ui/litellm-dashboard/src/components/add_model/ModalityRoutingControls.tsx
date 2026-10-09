@@ -15,27 +15,24 @@ export const ModalityRoutingControls: React.FC<{
         <Switch
           checked={modalityRouting}
           onCheckedChange={(nextModalityRouting) => onChange({ ...value, modality_routing: nextModalityRouting })}
-          aria-label="Route image requests to vision-capable models"
+          aria-label="Направлять запросы с изображениями к vision-моделям"
         />
-        <strong className="font-semibold">Route image requests to vision-capable models</strong>
+        <strong className="font-semibold">Направлять запросы с изображениями к vision-моделям</strong>
       </div>
       <span className="block text-xs mb-3 text-muted-foreground">
-        Replaces a routed model that cannot take image input with the nearest higher tier that can, then the default
-        model, instead of failing with a provider 400. Only models explicitly declared supports_vision false are
-        replaced, and a kept session pin still wins unless you turn on the override below.
+        Заменяет выбранную модель без входных изображений на ближайший более высокий уровень с такой возможностью, затем на модель по умолчанию, вместо ошибки 400 от провайдера. Заменяются только модели с явным supports_vision: false, а закрепление сессии по-прежнему приоритетнее, если не включить переопределение ниже.
       </span>
       <div className="flex items-center gap-2 mb-2">
         <Switch
           checked={value.modality_pin_override ?? false}
           onCheckedChange={(modalityPinOverride) => onChange({ ...value, modality_pin_override: modalityPinOverride })}
           disabled={!modalityRouting}
-          aria-label="Override session pin for image requests"
+          aria-label="Переопределять закрепление сессии для запросов с изображениями"
         />
-        <strong className="font-semibold">Override session pin for image requests</strong>
+        <strong className="font-semibold">Переопределять закрепление сессии для запросов с изображениями</strong>
       </div>
       <span className="block text-xs text-muted-foreground">
-        Route an image turn to a capable model even when the session is pinned to one that cannot take images. The pin
-        is kept, so the next text turn goes back to it. Needs image routing turned on.
+        Направить оборот с изображением на способную модель, даже если сессия закреплена за моделью без изображений. Закрепление сохраняется — следующий текстовый оборот вернётся к нему. Требуется включённая маршрутизация изображений.
       </span>
     </>
   );

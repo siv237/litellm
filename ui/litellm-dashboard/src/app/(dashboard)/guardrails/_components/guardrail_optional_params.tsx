@@ -42,8 +42,8 @@ interface DictFieldProps {
 }
 
 const BOOLEAN_ITEMS = [
-  { label: "True", value: true },
-  { label: "False", value: false },
+  { label: "Да", value: true },
+  { label: "Нет", value: false },
 ];
 
 const isSecretKey = (fieldKey: string): boolean =>
@@ -71,8 +71,8 @@ const BooleanSelect: React.FC<{ control: GuardrailFieldControlProps; placeholder
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value={true}>True</SelectItem>
-        <SelectItem value={false}>False</SelectItem>
+        <SelectItem value={true}>Да</SelectItem>
+        <SelectItem value={false}>Нет</SelectItem>
       </SelectContent>
     </Select>
   );
@@ -184,7 +184,7 @@ const DictField: React.FC<DictFieldProps> = ({ field, fullFieldKey, control, val
             onValueChange={(next: string | null) => next && addEntry(next)}
           >
             <SelectTrigger className="w-50">
-              <SelectValue placeholder="Select category to configure" />
+              <SelectValue placeholder="Выберите категорию для настройки" />
             </SelectTrigger>
             <SelectContent>
               {availableKeys.map((key) => (
@@ -194,7 +194,7 @@ const DictField: React.FC<DictFieldProps> = ({ field, fullFieldKey, control, val
               ))}
             </SelectContent>
           </Select>
-          <span className="text-sm text-muted-foreground">Select a category to add threshold configuration</span>
+          <span className="text-sm text-muted-foreground">Выберите категорию, чтобы добавить порог</span>
         </div>
       )}
     </div>
@@ -334,7 +334,7 @@ const GuardrailOptionalParams: React.FC<GuardrailOptionalParamsProps> = ({
   return (
     <div className="guardrail-optional-params">
       <div className="mb-8 border-b border-border pb-4">
-        <h3 className="mb-2 text-lg font-semibold text-foreground">Optional Parameters</h3>
+        <h3 className="mb-2 text-lg font-semibold text-foreground">Необязательные параметры</h3>
         <p className="text-sm text-muted-foreground">
           {optionalParams.description || "Configure additional settings for this guardrail provider"}
         </p>

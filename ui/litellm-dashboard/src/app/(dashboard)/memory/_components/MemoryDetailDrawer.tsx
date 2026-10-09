@@ -40,40 +40,40 @@ export function MemoryDetailDrawer({ row, onClose }: MemoryDetailDrawerProps) {
           <div className="flex flex-col gap-4 px-4 pb-4">
             <div className="flex flex-wrap gap-x-8 gap-y-3">
               <div>
-                <span className={`block ${LABEL_CLASS}`}>Memory ID</span>
+                <span className={`block ${LABEL_CLASS}`}>ID памяти</span>
                 <code className={CODE_CLASS}>{row.memory_id}</code>
               </div>
               <div>
-                <span className={`block ${LABEL_CLASS}`}>User ID</span>
+                <span className={`block ${LABEL_CLASS}`}>ID пользователя</span>
                 <span className={row.user_id ? "text-sm text-foreground" : "text-sm text-muted-foreground"}>
                   {row.user_id ?? "-"}
                 </span>
               </div>
               <div>
-                <span className={`block ${LABEL_CLASS}`}>Team ID</span>
+                <span className={`block ${LABEL_CLASS}`}>ID команды</span>
                 <span className={row.team_id ? "text-sm text-foreground" : "text-sm text-muted-foreground"}>
                   {row.team_id ?? "-"}
                 </span>
               </div>
             </div>
             <div>
-              <span className={LABEL_CLASS}>Value</span>
+              <span className={LABEL_CLASS}>Значение</span>
               <p className={`${BLOCK_CLASS} text-[13px]`}>{row.value}</p>
             </div>
             {row.metadata !== undefined && row.metadata !== null && (
               <div>
-                <span className={LABEL_CLASS}>Metadata</span>
+                <span className={LABEL_CLASS}>Метаданные</span>
                 <p className={`${BLOCK_CLASS} text-xs`}>{JSON.stringify(row.metadata, null, 2)}</p>
               </div>
             )}
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               <span>
-                Created {formatTimestamp(row.created_at)}
+                Создан {formatTimestamp(row.created_at)}
                 {row.created_by ? ` by ${row.created_by}` : ""}
               </span>
               <span aria-hidden="true">·</span>
               <span>
-                Updated {formatTimestamp(row.updated_at)}
+                Обновлён {formatTimestamp(row.updated_at)}
                 {row.updated_by ? ` by ${row.updated_by}` : ""}
               </span>
             </div>

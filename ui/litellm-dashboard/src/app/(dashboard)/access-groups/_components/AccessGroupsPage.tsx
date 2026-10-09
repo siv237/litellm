@@ -62,13 +62,13 @@ export function AccessGroupsPage() {
     <div className="p-8">
       <PageHeader
         icon={<Boxes />}
-        title="Access Groups"
+        title="Группы доступа"
         subtitle="Manage resource permissions for your organization"
         primaryAction={
           canModify ? (
             <Button onClick={() => setIsCreateModalVisible(true)}>
               <Plus className="size-4" />
-              Create Access Group
+              Создать группу доступа
             </Button>
           ) : undefined
         }
@@ -86,7 +86,7 @@ export function AccessGroupsPage() {
           />
           {searchText && (
             <InputGroupAddon align="inline-end">
-              <InputGroupButton size="icon-xs" aria-label="Clear search" onClick={() => setSearchText("")}>
+              <InputGroupButton size="icon-xs" aria-label="Очистить поиск" onClick={() => setSearchText("")}>
                 <X />
               </InputGroupButton>
             </InputGroupAddon>
@@ -107,7 +107,7 @@ export function AccessGroupsPage() {
 
       <DeleteResourceModal
         isOpen={!!groupToDelete}
-        title="Delete Access Group"
+        title="Удалить группу доступа"
         message="Are you sure you want to delete this access group? This action cannot be undone."
         resourceInformationTitle="Access Group Information"
         resourceInformation={[

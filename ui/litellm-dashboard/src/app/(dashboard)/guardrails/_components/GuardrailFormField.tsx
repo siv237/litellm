@@ -100,9 +100,9 @@ export const GuardrailField: React.FC<GuardrailFieldProps> = ({
 };
 
 const SKIP_MESSAGE_ITEMS = [
-  { label: "Use global default", value: "inherit" },
-  { label: "Yes — exclude from guardrail scan", value: "yes" },
-  { label: "No — always include in scan", value: "no" },
+  { label: "Использовать глобальное значение по умолчанию", value: "inherit" },
+  { label: "Да — исключить из проверки гардрейлами", value: "yes" },
+  { label: "Нет — всегда проверять", value: "no" },
 ];
 
 export const SkipMessageSelect: React.FC<{ control: GuardrailFieldControlProps }> = ({ control }) => {
@@ -111,7 +111,7 @@ export const SkipMessageSelect: React.FC<{ control: GuardrailFieldControlProps }
   return (
     <Select items={SKIP_MESSAGE_ITEMS} value={asText(value) || null} onValueChange={onChange}>
       <SelectTrigger id={id} aria-invalid={ariaInvalid} aria-describedby={ariaDescribedBy} className="w-full">
-        <SelectValue placeholder="Select an option" />
+        <SelectValue placeholder="Выберите вариант" />
       </SelectTrigger>
       <SelectContent>
         {SKIP_MESSAGE_ITEMS.map((item) => (

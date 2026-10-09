@@ -50,7 +50,7 @@ const OpenAPIQuickPicker: React.FC<OpenAPIQuickPickerProps> = ({ accessToken, se
   if (loading) {
     return (
       <div className="mb-4">
-        <span className="text-sm font-medium">Popular APIs</span>
+        <span className="text-sm font-medium">Популярные API</span>
         <div className="flex justify-center py-6">
           <UiLoadingSpinner className="size-5 text-muted-foreground" />
         </div>
@@ -62,7 +62,7 @@ const OpenAPIQuickPicker: React.FC<OpenAPIQuickPickerProps> = ({ accessToken, se
 
   return (
     <div className="mb-4">
-      <span className="mb-2 block text-sm font-medium">Popular APIs</span>
+      <span className="mb-2 block text-sm font-medium">Популярные API</span>
 
       <div className="grid grid-cols-5 gap-2">
         {apis.map((api) => {
@@ -98,7 +98,7 @@ const OpenAPIQuickPicker: React.FC<OpenAPIQuickPickerProps> = ({ accessToken, se
       </div>
 
       <p className="mt-2 text-xs text-muted-foreground">
-        Select an API to pre-fill the spec URL and OAuth 2.0 settings, or enter your own spec URL below.
+        Выберите API, чтобы подставить URL спецификации и настройки OAuth 2.0, или введите свой URL ниже.
       </p>
     </div>
   );

@@ -128,7 +128,7 @@ export const prepareModelAddRequest = async (formValues: Record<string, any>, ac
             try {
               litellmExtraParams = JSON.parse(value);
             } catch (error) {
-              toast.fromError("Failed to parse LiteLLM Extra Params: " + error);
+              toast.fromError("Не удалось разобрать LiteLLM Extra Params: " + error);
               throw new Error("Failed to parse litellm_extra_params: " + error);
             }
             if ("litellm_credential_name" in litellmExtraParams && formValues.litellm_credential_name) {
@@ -144,7 +144,7 @@ export const prepareModelAddRequest = async (formValues: Record<string, any>, ac
             try {
               modelInfoParams = JSON.parse(value);
             } catch (error) {
-              toast.fromError("Failed to parse LiteLLM Extra Params: " + error);
+              toast.fromError("Не удалось разобрать LiteLLM Extra Params: " + error);
               throw new Error("Failed to parse litellm_extra_params: " + error);
             }
             for (const [key, value] of Object.entries(modelInfoParams)) {
@@ -196,7 +196,7 @@ export const prepareModelAddRequest = async (formValues: Record<string, any>, ac
 
     return deployments;
   } catch (error) {
-    toast.fromError("Failed to create model: " + error);
+    toast.fromError("Не удалось создать модель: " + error);
   }
 };
 
@@ -224,6 +224,6 @@ export const handleAddModelSubmit = async (values: any, accessToken: string, for
     callback && callback();
     form.resetFields();
   } catch (error) {
-    toast.fromError("Failed to add model: " + error);
+    toast.fromError("Не удалось добавить модель: " + error);
   }
 };

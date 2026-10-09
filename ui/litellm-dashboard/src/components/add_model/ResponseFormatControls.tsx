@@ -11,12 +11,12 @@ const ResponseFormatControls: React.FC<{
       <Switch
         checked={value.return_raw_model_name ?? false}
         onCheckedChange={(returnRawModelName) => onChange({ ...value, return_raw_model_name: returnRawModelName })}
-        aria-label="Return raw model name"
+        aria-label="Возвращать сырое имя модели"
       />
-      <strong className="font-semibold">Return raw model name</strong>
+      <strong className="font-semibold">Возвращать сырое имя модели</strong>
     </div>
     <span className="block text-xs text-muted-foreground">
-      Return the resolved underlying model name in responses instead of the autorouter alias.
+      Возвращать в ответах разрешение имя базовой модели вместо алиаса авто-роутера.
     </span>
   </>
 );

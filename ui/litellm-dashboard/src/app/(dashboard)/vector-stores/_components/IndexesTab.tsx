@@ -54,8 +54,8 @@ const IndexesTab: React.FC<IndexesTabProps> = ({ accessToken, vectorStores, onVi
         const response = await indexesListCall(accessToken);
         setIndexes(response.data || []);
       } catch (error) {
-        console.error("Error fetching indexes:", error);
-        toast.fromError("Error fetching indexes: " + error);
+        console.error("Ошибка получения индексов:", error);
+        toast.fromError("Ошибка получения индексов: " + error);
       } finally {
         setIsLoading(false);
       }
@@ -66,7 +66,7 @@ const IndexesTab: React.FC<IndexesTabProps> = ({ accessToken, vectorStores, onVi
   return (
     <div className="w-full">
       <p className="mb-4 text-sm text-muted-foreground">
-        Vector store indexes registered on this proxy via the <code>/v1/indexes</code> API. See the{" "}
+        Индексы векторных хранилищ, зарегистрированные на этом прокси через <code>/v1/indexes</code> API. См.{" "}
         <a
           href="https://docs.litellm.ai/docs/providers/azure_ai/azure_ai_vector_stores_passthrough"
           target="_blank"
@@ -83,7 +83,7 @@ const IndexesTab: React.FC<IndexesTabProps> = ({ accessToken, vectorStores, onVi
           rel="noopener noreferrer"
           className="text-info hover:underline"
         >
-          file a GitHub issue
+          создайте issue на GitHub
         </a>{" "}
         if you want your provider supported.
       </p>

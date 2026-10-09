@@ -56,8 +56,8 @@ interface ProviderParamsResponse {
 }
 
 const BOOLEAN_ITEMS = [
-  { label: "True", value: true },
-  { label: "False", value: false },
+  { label: "Да", value: true },
+  { label: "Нет", value: false },
 ];
 
 const isSecretKey = (fieldKey: string): boolean =>
@@ -90,7 +90,7 @@ const commitObjectField = (raw: string, onChange: (value: unknown) => void): voi
   if (isPlainObject(parsed)) {
     onChange(parsed);
   } else {
-    toast.error("Enter a valid JSON object for this configuration");
+    toast.error("Введите корректный JSON-объект для этой конфигурации");
   }
 };
 
@@ -154,8 +154,8 @@ const ProviderFieldInput: React.FC<ProviderFieldInputProps> = ({ descriptor, fie
           <SelectValue placeholder={descriptor.description} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value={true}>True</SelectItem>
-          <SelectItem value={false}>False</SelectItem>
+          <SelectItem value={true}>Да</SelectItem>
+          <SelectItem value={false}>Нет</SelectItem>
         </SelectContent>
       </Select>
     );
@@ -318,7 +318,7 @@ const GuardrailProviderFields: React.FC<GuardrailProviderFieldsProps> = ({
   const providerFields = providerParams && providerParams[providerKey];
 
   if (!providerFields || Object.keys(providerFields).length === 0) {
-    return <div>No configuration fields available for this provider.</div>;
+    return <div>Для этого провайдера нет полей конфигурации.</div>;
   }
 
   // Fields to skip for content filter provider (handled in dedicated steps)

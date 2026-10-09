@@ -26,7 +26,7 @@ export const metadataPairsSchema = z
   .superRefine((pairs, ctx) => {
     pairs.forEach((pair, index) => {
       if (pair.key && pairs.filter((other) => other.key === pair.key).length > 1) {
-        ctx.addIssue({ code: "custom", message: "Duplicate key", path: [index, "key"] });
+        ctx.addIssue({ code: "custom", message: "Дублирующийся ключ", path: [index, "key"] });
       }
     });
   });
@@ -118,18 +118,18 @@ const MetadataKeyValueFields = <TFieldValues extends FieldValues>({
         <div key={field.id} className="mb-2 flex items-start gap-2">
           <FormField control={control} name={`${name}.${index}.key` as FieldPath<TFieldValues>}>
             {({ ref, value, ...rest }) => (
-              <Input {...rest} ref={ref} value={(value as string) ?? ""} placeholder="Key" />
+              <Input {...rest} ref={ref} value={(value as string) ?? ""} placeholder="Ключ" />
             )}
           </FormField>
           <FormField control={control} name={`${name}.${index}.value` as FieldPath<TFieldValues>}>
             {({ ref, value, ...rest }) => (
-              <Input {...rest} ref={ref} value={(value as string) ?? ""} placeholder="Value" />
+              <Input {...rest} ref={ref} value={(value as string) ?? ""} placeholder="Значение" />
             )}
           </FormField>
           <Button
             variant="ghost"
             size="icon"
-            aria-label="Remove key-value pair"
+            aria-label="Удалить пару ключ-значение"
             className="mt-1 text-destructive"
             onClick={() => remove(index)}
           >
@@ -143,7 +143,7 @@ const MetadataKeyValueFields = <TFieldValues extends FieldValues>({
         onClick={() => append({ key: "", value: "" } as never, { shouldFocus: false })}
       >
         <Plus className="size-4" />
-        Add Key-Value Pair
+        Добавить пару ключ-значение
       </Button>
     </>
   );

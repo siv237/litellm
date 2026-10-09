@@ -101,7 +101,7 @@ export default function CredentialModal({
               }}
             >
               <MountedFormField
-                label="Credential Name:"
+                label="Имя реквизита:"
                 name="credential_name"
                 required
                 rules={{ validate: { required: requiredRule("Credential name is required") } }}
@@ -113,7 +113,7 @@ export default function CredentialModal({
                     value={typeof control.value === "string" ? control.value : ""}
                     onChange={control.onChange}
                     onBlur={control.onBlur}
-                    placeholder="Enter a friendly name for these credentials"
+                    placeholder="Введите понятное имя этих реквизитов"
                     disabled={isEdit}
                   />
                 )}
@@ -129,7 +129,7 @@ export default function CredentialModal({
                 {(control) => (
                   <SearchSelect
                     inputId={control.id}
-                    placeholder="Select a provider"
+                    placeholder="Выберите провайдера"
                     options={providerOptions}
                     value={typeof control.value === "string" ? control.value : null}
                     onValueChange={(value) => {
@@ -143,9 +143,9 @@ export default function CredentialModal({
               <ProviderSpecificFields selectedProvider={selectedProvider} />
 
               <div className="flex justify-between items-center">
-                <SimpleTooltip content="Get help on our github">
+                <SimpleTooltip content="Получить помощь на нашем GitHub">
                   <a href="https://github.com/BerriAI/litellm/issues" className="text-sm text-primary hover:underline">
-                    Need Help?
+                    Нужна помощь?
                   </a>
                 </SimpleTooltip>
 

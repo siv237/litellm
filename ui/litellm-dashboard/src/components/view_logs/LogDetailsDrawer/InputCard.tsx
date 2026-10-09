@@ -33,7 +33,7 @@ export function InputCard({ messages, promptTokens, inputCost }: InputCardProps)
   const handleCopy = () => {
     const content = lastMessage?.content || "";
     navigator.clipboard.writeText(content);
-    toast.success("Input copied");
+    toast.success("Вход скопирован");
   };
 
   return (

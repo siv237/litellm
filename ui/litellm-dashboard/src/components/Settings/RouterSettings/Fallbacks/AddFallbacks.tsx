@@ -110,7 +110,7 @@ export default function AddFallbacks({ accessToken, value = [], onChange }: AddF
         setIsSaving(false);
       }
     } else {
-      toast.fromError("onChange callback not provided");
+      toast.fromError("onChange коллбэк не передан");
     }
   };
 
@@ -118,7 +118,7 @@ export default function AddFallbacks({ accessToken, value = [], onChange }: AddF
     <div>
       <Button className="mx-auto" onClick={() => setIsModalVisible(true)}>
         <span>+</span>
-        Add Fallbacks
+        Добавить резервирование
       </Button>
       <AddFallbacksModal open={isModalVisible} onCancel={handleCancel}>
         <FallbackSelectionForm

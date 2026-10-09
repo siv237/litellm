@@ -45,7 +45,7 @@ export const getRequestLogsTableColumns = ({
   {
     id: "startTime",
     accessorKey: "startTime",
-    header: ({ column }) => <DataTableSortHeader column={column} title="Time" variant="dropdown-tristate" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="Время" variant="dropdown-tristate" />,
     size: 200,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.startTime} />,
@@ -155,7 +155,7 @@ export const getRequestLogsTableColumns = ({
   {
     id: "spend",
     accessorKey: "spend",
-    header: ({ column }) => <DataTableSortHeader column={column} title="Cost" variant="dropdown-tristate" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="Стоимость" variant="dropdown-tristate" />,
     size: 110,
     enableSorting: true,
     meta: { numeric: true, skeleton: "twoLine" },
@@ -177,7 +177,7 @@ export const getRequestLogsTableColumns = ({
           {isMultiCallSession && <span className="text-[10px] text-muted-foreground">session total</span>}
           {mcpCount > 0 && mcpSpend > 0 && (
             <span className="text-[10px] text-warning">
-              incl. {getSpendString(mcpSpend)} from {mcpCount} MCP
+              вкл. {getSpendString(mcpSpend)} из {mcpCount} MCP
             </span>
           )}
         </div>
@@ -187,7 +187,7 @@ export const getRequestLogsTableColumns = ({
   {
     id: "request_duration_ms",
     accessorKey: "request_duration_ms",
-    header: ({ column }) => <DataTableSortHeader column={column} title="Duration (s)" variant="dropdown-tristate" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="Длительность (с)" variant="dropdown-tristate" />,
     enableSorting: true,
     meta: { numeric: true },
     cell: ({ row }) => {
@@ -204,7 +204,7 @@ export const getRequestLogsTableColumns = ({
   {
     id: "ttft_ms",
     accessorKey: "completionStartTime",
-    header: ({ column }) => <DataTableSortHeader column={column} title="TTFT (s)" variant="dropdown-tristate" />,
+    header: ({ column }) => <DataTableSortHeader column={column} title="TTFT (с)" variant="dropdown-tristate" />,
     enableSorting: true,
     meta: { numeric: true },
     cell: ({ row }) => {

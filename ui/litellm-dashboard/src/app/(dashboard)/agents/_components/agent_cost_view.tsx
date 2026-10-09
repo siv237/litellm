@@ -26,7 +26,7 @@ const AgentCostView: React.FC<AgentCostViewProps> = ({ agent }) => {
 
   return (
     <div className="mt-6">
-      <h3 className="text-lg font-semibold text-foreground">Cost Configuration</h3>
+      <h3 className="text-lg font-semibold text-foreground">Конфигурация стоимости</h3>
       <dl className="mt-4 divide-y divide-border overflow-hidden rounded-lg border border-border">
         {rows.map(([label, value]) => (
           <div key={label} className="grid grid-cols-1 sm:grid-cols-3">

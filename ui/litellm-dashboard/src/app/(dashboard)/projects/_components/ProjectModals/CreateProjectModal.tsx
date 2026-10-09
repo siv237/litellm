@@ -31,7 +31,7 @@ function CreateProjectForm({ onClose }: { onClose: () => void }) {
 
     createMutation.mutate(params, {
       onSuccess: () => {
-        toast.success("Project created successfully");
+        toast.success("Проект создан");
         form.reset(emptyProjectFormValues);
         onClose();
       },
@@ -68,7 +68,7 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[720px]">
         <DialogHeader>
-          <DialogTitle className="text-lg">Create New Project</DialogTitle>
+          <DialogTitle className="text-lg">Создать проект</DialogTitle>
         </DialogHeader>
         <CreateProjectForm onClose={onClose} />
       </DialogContent>

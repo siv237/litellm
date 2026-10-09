@@ -80,12 +80,12 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ visible, onCancel, onSu
     <Dialog open={visible} onOpenChange={(open) => !open && handleCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Create New Tag</DialogTitle>
+          <DialogTitle>Создать тег</DialogTitle>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(handleFinish)} noValidate>
           <TooltipProvider>
             <FieldGroup>
-              <FormField control={form.control} name="tag_name" label="Tag Name">
+              <FormField control={form.control} name="tag_name" label="Имя тега">
                 {({ ref, ...field }) => <Input {...field} ref={ref} />}
               </FormField>
 
@@ -106,7 +106,7 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ visible, onCancel, onSu
                     options={modelOptions}
                     value={value}
                     onValueChange={onChange}
-                    placeholder="Select Models"
+                    placeholder="Выберите модели"
                   />
                 )}
               </FormField>
@@ -118,7 +118,7 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ visible, onCancel, onSu
               className="mt-4 mb-4 rounded-md border border-border"
             >
               <CollapsibleTrigger className="group flex w-full items-center justify-between px-4 py-3 text-base font-medium text-foreground">
-                Budget & Rate Limits (Optional)
+                Бюджет и лимиты (необязательно)
                 <ChevronRight className="size-4 text-muted-foreground transition-transform group-data-panel-open:rotate-90" />
               </CollapsibleTrigger>
               <CollapsibleContent className="px-4 pb-4">
@@ -154,14 +154,14 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ visible, onCancel, onSu
 
                 <div className="mt-4 rounded-md border border-border bg-muted p-3">
                   <p className="text-sm text-muted-foreground">
-                    TPM/RPM limits for tags are not currently supported. If you need this feature, please{" "}
+                    Лимиты TPM/RPM для тегов пока не поддерживаются. Если вам нужна эта возможность, —{" "}
                     <a
                       href="https://github.com/BerriAI/litellm/issues/new"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-info underline hover:text-info/80"
                     >
-                      create a GitHub issue
+                      создайте issue на GitHub
                     </a>
                     .
                   </p>
@@ -170,7 +170,7 @@ const CreateTagModal: React.FC<CreateTagModalProps> = ({ visible, onCancel, onSu
             </Collapsible>
 
             <div className="mt-2.5 text-right">
-              <Button type="submit">Create Tag</Button>
+              <Button type="submit">Создать тег</Button>
             </div>
           </TooltipProvider>
         </form>

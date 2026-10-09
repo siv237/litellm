@@ -34,8 +34,8 @@ const RESOURCE_TONES: Record<"models" | "mcpServers" | "agents", ResourceTone> =
 function ResourcesCell({ group }: { group: AccessGroup }) {
   const items = [
     { key: "models" as const, label: "Модели", count: group.modelIds.length },
-    { key: "mcpServers" as const, label: "MCP Servers", count: group.mcpServerIds.length },
-    { key: "agents" as const, label: "Agents", count: group.agentIds.length },
+    { key: "mcpServers" as const, label: "Серверы MCP", count: group.mcpServerIds.length },
+    { key: "agents" as const, label: "Агенты", count: group.agentIds.length },
   ];
 
   return (
@@ -71,7 +71,7 @@ function AccessGroupRowActions({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open access group actions"
+        aria-label="Действия группы доступа"
         data-testid={`access-group-actions-${group.id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -84,7 +84,7 @@ function AccessGroupRowActions({
           onClick={() => onDeleteClick(group)}
         >
           <Trash2 />
-          Delete access group
+          Удалить группу доступа
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -136,8 +136,8 @@ export const getAccessGroupsTableColumns = ({
     },
     {
       id: "resources",
-      meta: { title: "Resources" },
-      header: "Resources",
+      meta: { title: "Ресурсы" },
+      header: "Ресурсы",
       size: 220,
       enableSorting: false,
       cell: ({ row }) => <ResourcesCell group={row.original} />,
@@ -145,8 +145,8 @@ export const getAccessGroupsTableColumns = ({
     {
       id: "createdAt",
       accessorKey: "createdAt",
-      meta: { title: "Created" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Created" />,
+      meta: { title: "Создан" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
       size: 150,
       enableSorting: true,
       sortingFn: "datetime",
@@ -155,8 +155,8 @@ export const getAccessGroupsTableColumns = ({
     {
       id: "updatedAt",
       accessorKey: "updatedAt",
-      meta: { title: "Updated" },
-      header: "Updated",
+      meta: { title: "Обновлён" },
+      header: "Обновлён",
       size: 150,
       enableSorting: false,
       cell: ({ row }) => <DateCell value={row.original.updatedAt} precision="date" />,

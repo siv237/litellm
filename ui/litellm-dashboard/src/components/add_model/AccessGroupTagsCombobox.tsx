@@ -79,14 +79,14 @@ const AccessGroupTagsCombobox: React.FC<AccessGroupTagsComboboxProps> = ({
                 id={id}
                 aria-invalid={ariaInvalid}
                 aria-describedby={ariaDescribedBy}
-                placeholder="Select existing groups or type to create new ones"
+                placeholder="Выберите существующие группы или введите новые"
               />
             </>
           )}
         </ComboboxValue>
       </ComboboxChips>
       <ComboboxContent anchor={anchor}>
-        <ComboboxEmpty>No access groups found</ComboboxEmpty>
+        <ComboboxEmpty>Группы доступа не найдены</ComboboxEmpty>
         <ComboboxList>
           {(group: string) => (
             <ComboboxItem key={group} value={group}>

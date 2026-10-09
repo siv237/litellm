@@ -69,7 +69,7 @@ const ContentFilterDisplay: React.FC<ContentFilterDisplayProps> = ({
         <Card className="mt-6">
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <p className="text-lg font-semibold">Content Categories</p>
+              <p className="text-lg font-semibold">Категории контента</p>
               <Badge variant="secondary">{categories.length} categories configured</Badge>
             </div>
             <CategoryTable
@@ -87,7 +87,7 @@ const ContentFilterDisplay: React.FC<ContentFilterDisplayProps> = ({
         <Card className="mt-6">
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <p className="text-lg font-semibold">Pattern Detection</p>
+              <p className="text-lg font-semibold">Обнаружение паттернов</p>
               <Badge variant="secondary">{patterns.length} patterns configured</Badge>
             </div>
             <PatternTable
@@ -103,7 +103,7 @@ const ContentFilterDisplay: React.FC<ContentFilterDisplayProps> = ({
         <Card className="mt-6">
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <p className="text-lg font-semibold">Blocked Keywords</p>
+              <p className="text-lg font-semibold">Блокируемые слова</p>
               <Badge variant="secondary">{blockedWords.length} keywords configured</Badge>
             </div>
             <KeywordTable

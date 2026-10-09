@@ -61,7 +61,7 @@ export function FallbackSelectionForm({
 
   const handleRemoveGroup = (targetId: string) => {
     if (groups.length === 1) {
-      toast.warning("At least one group is required");
+      toast.warning("Требуется хотя бы одна группа");
       return;
     }
     const newGroups = groups.filter((g) => g.id !== targetId);
@@ -82,10 +82,10 @@ export function FallbackSelectionForm({
   if (groups.length === 0) {
     return (
       <div className="text-center py-12 bg-muted rounded-lg border border-dashed border-border">
-        <p className="text-muted-foreground mb-4">No fallback groups configured</p>
+        <p className="text-muted-foreground mb-4">Группы резервирования не настроены</p>
         <Button onClick={handleAddGroup}>
           <Plus className="w-4 h-4" />
-          Create First Group
+          Создать первую группу
         </Button>
       </div>
     );
@@ -118,7 +118,7 @@ export function FallbackSelectionForm({
           ))}
         </TabsList>
         {groups.length < maxGroups && (
-          <Button variant="ghost" size="icon-sm" aria-label="Add fallback group" onClick={handleAddGroup}>
+          <Button variant="ghost" size="icon-sm" aria-label="Добавить группу резервирования" onClick={handleAddGroup}>
             <Plus />
           </Button>
         )}

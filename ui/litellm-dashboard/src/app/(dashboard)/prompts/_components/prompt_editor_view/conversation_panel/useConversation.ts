@@ -37,12 +37,12 @@ export const useConversation = (prompt: any, accessToken: string | null) => {
 
   const handleSendMessage = async () => {
     if (!accessToken) {
-      toast.fromError("Access token is required");
+      toast.fromError("Требуется access token");
       return;
     }
 
     if (extractedVariables.length > 0 && !allVariablesFilled) {
-      toast.fromError("Please fill in all template variables");
+      toast.fromError("Заполните все переменные шаблона");
       return;
     }
 
@@ -198,14 +198,14 @@ export const useConversation = (prompt: any, accessToken: string | null) => {
       abortController.abort();
       setAbortController(null);
       setIsLoading(false);
-      toast.info("Request cancelled");
+      toast.info("Запрос отменён");
     }
   };
 
   const handleClearConversation = () => {
     setMessages([]);
     setVariablesFilled(false);
-    toast.success("Chat history cleared.");
+    toast.success("История чата очищена.");
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {

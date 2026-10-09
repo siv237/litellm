@@ -22,7 +22,7 @@ export default function RedactableField({
             value
           )
         ) : (
-          <span className="text-muted-foreground italic">Not configured</span>
+          <span className="text-muted-foreground italic">Не настроено</span>
         )}
       </span>
       {value && (

@@ -34,19 +34,19 @@ const ModelConfigCard: React.FC<ModelConfigCardProps> = ({
 
       <Button type="button" variant="outline" onClick={() => setShowConfig(!showConfig)} className="gap-2">
         <SettingsIcon size={16} />
-        <span>Parameters</span>
+        <span>Параметры</span>
       </Button>
 
       <Dialog open={showConfig} onOpenChange={setShowConfig}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Model Parameters</DialogTitle>
+            <DialogTitle>Параметры модели</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label htmlFor="prompt-temperature" className="text-sm text-foreground">
-                  Temperature
+                  Температура
                 </label>
                 <Input
                   id="prompt-temperature"
@@ -63,7 +63,7 @@ const ModelConfigCard: React.FC<ModelConfigCardProps> = ({
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label htmlFor="prompt-max-tokens" className="text-sm text-foreground">
-                  Max Tokens
+                  Макс. токенов
                 </label>
                 <Input
                   id="prompt-max-tokens"

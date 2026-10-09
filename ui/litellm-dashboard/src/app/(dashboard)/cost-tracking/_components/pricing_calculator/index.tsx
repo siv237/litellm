@@ -80,11 +80,11 @@ const PricingCalculator: React.FC<PricingCalculatorProps> = ({ accessToken, mode
         >
           <label className="flex cursor-pointer items-center gap-2 text-sm">
             <RadioGroupItem value="day" />
-            Per Day
+            В день
           </label>
           <label className="flex cursor-pointer items-center gap-2 text-sm">
             <RadioGroupItem value="month" />
-            Per Month
+            В месяц
           </label>
         </RadioGroup>
       </div>
@@ -93,9 +93,9 @@ const PricingCalculator: React.FC<PricingCalculatorProps> = ({ accessToken, mode
         <TableHeader>
           <TableRow>
             <TableHead className="w-[35%]">Модель</TableHead>
-            <TableHead className="w-[18%]">Input Tokens</TableHead>
-            <TableHead className="w-[18%]">Output Tokens</TableHead>
-            <TableHead className="w-[20%]">Requests/{timePeriod === "day" ? "Day" : "Month"}</TableHead>
+            <TableHead className="w-[18%]">Входные токены</TableHead>
+            <TableHead className="w-[18%]">Выходные токены</TableHead>
+            <TableHead className="w-[20%]">Запросов/{timePeriod === "day" ? "Day" : "Month"}</TableHead>
             <TableHead className="w-[50px]">
               <span className="sr-only">Действия</span>
             </TableHead>
@@ -109,7 +109,7 @@ const PricingCalculator: React.FC<PricingCalculatorProps> = ({ accessToken, mode
                   options={modelOptions}
                   value={record.model || undefined}
                   onValueChange={(value) => handleEntryChange(record.id, "model", value)}
-                  placeholder="Select a model"
+                  placeholder="Выберите модель"
                 />
               </TableCell>
               <TableCell>
@@ -170,7 +170,7 @@ const PricingCalculator: React.FC<PricingCalculatorProps> = ({ accessToken, mode
             <TableCell colSpan={5}>
               <Button variant="outline" onClick={handleAddEntry} className="w-full border-dashed">
                 <Plus className="size-3.5" />
-                Add Another Model
+                Добавить ещё модель
               </Button>
             </TableCell>
           </TableRow>

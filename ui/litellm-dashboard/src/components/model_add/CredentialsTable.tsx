@@ -25,8 +25,8 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <KeyRound className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No credentials configured</div>
-      <div className="text-sm text-muted-foreground">Add a credential to connect an AI provider.</div>
+      <div className="text-sm font-medium text-foreground">Реквизиты не настроены</div>
+      <div className="text-sm text-muted-foreground">Добавьте реквизит, чтобы подключить ИИ-провайдера.</div>
     </div>
   );
 }

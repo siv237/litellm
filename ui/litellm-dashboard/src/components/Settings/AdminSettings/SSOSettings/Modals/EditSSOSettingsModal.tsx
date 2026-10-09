@@ -90,11 +90,11 @@ const EditSSOSettingsModal: React.FC<EditSSOSettingsModalProps> = ({ isVisible, 
 
       await mutateAsync(payload, {
         onSuccess: () => {
-          toast.success("SSO settings updated successfully");
+          toast.success("Настройки SSO обновлены");
           onSuccess();
         },
         onError: (error) => {
-          toast.fromError("Failed to save SSO settings: " + parseErrorMessage(error));
+          toast.fromError("Не удалось сохранить настройки SSO: " + parseErrorMessage(error));
         },
       });
     } catch (error) {
@@ -111,7 +111,7 @@ const EditSSOSettingsModal: React.FC<EditSSOSettingsModalProps> = ({ isVisible, 
     <Dialog open={isVisible} onOpenChange={(open) => !open && handleCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Edit SSO Settings</DialogTitle>
+          <DialogTitle>Изменить настройки SSO</DialogTitle>
         </DialogHeader>
         <BaseSSOSettingsForm form={form} onFormSubmit={handleFormSubmit} />
         <DialogFooter>

@@ -56,14 +56,14 @@ const ReuseCredentialsModal: React.FC<ReuseCredentialsModalProps> = ({
     <Dialog open={isVisible} onOpenChange={(open) => !open && handleCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Reuse Credentials</DialogTitle>
+          <DialogTitle>Повторно использовать реквизиты</DialogTitle>
         </DialogHeader>
         <TooltipProvider>
           <form onSubmit={form.handleSubmit(handleSubmit)} noValidate>
             <FieldGroup>
-              <FormField control={form.control} name="credential_name" label="Credential Name:">
+              <FormField control={form.control} name="credential_name" label="Имя реквизита:">
                 {({ ref, ...field }) => (
-                  <Input {...field} ref={ref} placeholder="Enter a friendly name for these credentials" />
+                  <Input {...field} ref={ref} placeholder="Введите понятное имя этих реквизитов" />
                 )}
               </FormField>
 
@@ -88,18 +88,18 @@ const ReuseCredentialsModal: React.FC<ReuseCredentialsModalProps> = ({
                         href="https://github.com/BerriAI/litellm/issues"
                         className="text-sm text-primary underline-offset-4 hover:underline"
                       >
-                        Need Help?
+                        Нужна помощь?
                       </a>
                     }
                   />
-                  <TooltipContent>Get help on our github</TooltipContent>
+                  <TooltipContent>Получить помощь на нашем GitHub</TooltipContent>
                 </Tooltip>
 
                 <div className="flex gap-2.5">
                   <Button type="button" variant="outline" onClick={handleCancel}>
                     Отмена
                   </Button>
-                  <Button type="submit">Reuse Credentials</Button>
+                  <Button type="submit">Повторно использовать реквизиты</Button>
                 </div>
               </div>
             </FieldGroup>

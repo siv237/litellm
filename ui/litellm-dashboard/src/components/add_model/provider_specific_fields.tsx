@@ -253,7 +253,7 @@ const ProviderSpecificFields: React.FC<ProviderSpecificFieldsProps> = ({ selecte
         <>
           <Button type="button" variant="outline" className="w-fit" onClick={() => credentialsFileRef.current?.click()}>
             <UploadIcon />
-            Click to Upload
+            Нажмите для загрузки
           </Button>
           <input
             ref={credentialsFileRef}
@@ -336,14 +336,14 @@ const ProviderSpecificFields: React.FC<ProviderSpecificFieldsProps> = ({ selecte
 
           {/* Special case for Vertex Credentials help text */}
           {field.key === "vertex_credentials" && (
-            <p className="text-sm mb-3 mt-1">Give a gcp service account(.json file)</p>
+            <p className="text-sm mb-3 mt-1">Укажите сервисный аккаунт GCP (файл .json)</p>
           )}
 
           {/* Special case for Azure Base Model help text */}
           {field.key === "base_model" && (
             <div className="grid grid-cols-24">
               <p className="col-start-11 col-span-10 text-sm mb-2">
-                The actual model your azure deployment uses. Used for accurate cost tracking. Select name from{" "}
+                Фактическая модель, которую использует ваше развертывание Azure. Нужна для точного учёта стоимости. Выберите имя из{" "}
                 <a
                   href="https://github.com/BerriAI/litellm/blob/main/model_prices_and_context_window.json"
                   target="_blank"

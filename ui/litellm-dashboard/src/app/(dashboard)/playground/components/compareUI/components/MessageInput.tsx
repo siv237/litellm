@@ -43,7 +43,7 @@ export function MessageInput({ value, onChange, onSend, disabled, hasAttachment,
           size="icon-sm"
           variant="outline"
           className="rounded-full"
-          aria-label="Send message"
+          aria-label="Отправить сообщение"
         >
           <ArrowUp />
         </Button>

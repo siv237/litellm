@@ -42,7 +42,7 @@ export function ToolsSection({ log }: ToolsSectionProps) {
             <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
           )}
           <div className="flex flex-wrap items-center gap-3">
-            <h3 className="text-lg font-medium text-foreground">Tools</h3>
+            <h3 className="text-lg font-medium text-foreground">Инструменты</h3>
             <span className="text-sm text-muted-foreground">
               {totalTools} provided, {calledTools} called
             </span>

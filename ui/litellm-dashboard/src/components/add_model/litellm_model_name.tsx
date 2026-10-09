@@ -134,8 +134,8 @@ const LiteLLMModelNameField: React.FC<LiteLLMModelNameFieldProps> = ({
           ) : providerModels.length > 0 ? (
             <MultiSelect
               id={control.id}
-              placeholder="Select models"
-              emptyText="No models found"
+              placeholder="Выберите модели"
+              emptyText="Модели не найдены"
               value={(control.value as string[] | undefined) ?? []}
               onValueChange={(value: string[]) => {
                 control.onChange(value);
@@ -143,7 +143,7 @@ const LiteLLMModelNameField: React.FC<LiteLLMModelNameFieldProps> = ({
               }}
               options={[
                 {
-                  label: "Custom Model Name (Enter below)",
+                  label: "Имя своей модели (введите ниже)",
                   value: "custom",
                 },
                 {

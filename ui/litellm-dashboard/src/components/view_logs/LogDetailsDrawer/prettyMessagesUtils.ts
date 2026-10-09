@@ -38,7 +38,7 @@ export const ROLE_STYLES: Record<string, RoleStyle> = {
   tool: {
     background: "transparent",
     borderColor: "var(--color-warning)",
-    label: "TOOL RESULT",
+    label: "РЕЗУЛЬТАТ ИНСТРУМЕНТА",
     labelColor: "var(--color-warning)",
   },
 };

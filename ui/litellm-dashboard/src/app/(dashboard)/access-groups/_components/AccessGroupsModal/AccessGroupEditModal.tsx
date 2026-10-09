@@ -59,7 +59,7 @@ function AccessGroupEditForm({ accessGroup, onCancel, onSuccess }: Omit<AccessGr
         { accessGroupId: accessGroup.access_group_id, params },
         {
           onSuccess: () => {
-            toast.success("Access group updated successfully");
+            toast.success("Группа доступа обновлена");
             onSuccess?.();
             onCancel();
           },
@@ -90,7 +90,7 @@ export function AccessGroupEditModal({ visible, accessGroup, onCancel, onSuccess
     <Dialog open={visible} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>Edit Access Group</DialogTitle>
+          <DialogTitle>Изменить группу доступа</DialogTitle>
         </DialogHeader>
         <AccessGroupEditForm
           key={accessGroup.access_group_id}

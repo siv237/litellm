@@ -49,17 +49,17 @@ const ClassifierVisionConfig: React.FC<ClassifierVisionConfigProps> = ({ value, 
               },
             });
           }}
-          aria-label="Use images for classification"
+          aria-label="Использовать изображения для классификации"
         />
-        <strong className="font-semibold">Use images for classification</strong>
+        <strong className="font-semibold">Использовать изображения для классификации</strong>
       </div>
       <span className="block text-xs text-muted-foreground">
-        Send inline image data to the classifier so it can choose a tier from what the image shows.
+        Передавайте классификатору встроенные данные изображения, чтобы он выбирал уровень по тому, что на нём изображено.
       </span>
       {enabled && (
         <div>
           <Label htmlFor={MAX_IMAGES_ID} className="block mb-1 font-semibold">
-            Maximum images per request
+            Максимум изображений на запрос
           </Label>
           <Input
             id={MAX_IMAGES_ID}

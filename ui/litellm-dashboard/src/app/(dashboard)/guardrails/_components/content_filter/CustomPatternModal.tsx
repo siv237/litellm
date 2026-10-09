@@ -32,42 +32,42 @@ const CustomPatternModal: React.FC<CustomPatternModalProps> = ({
     <Dialog open={visible} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Add custom regex pattern</DialogTitle>
+          <DialogTitle>Добавить свой regex-паттерн</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
           <div>
-            <p className="font-semibold">Pattern name</p>
+            <p className="font-semibold">Название паттерна</p>
             <Input
               className="mt-2"
-              placeholder="e.g., internal_id, employee_code"
+              placeholder="напр., internal_id, employee_code"
               value={patternName}
               onChange={(e) => onNameChange(e.target.value)}
             />
           </div>
 
           <div>
-            <p className="font-semibold">Regex pattern</p>
+            <p className="font-semibold">Regex-паттерн</p>
             <Input
               className="mt-2"
               placeholder="e.g., ID-[0-9]{6}"
               value={patternRegex}
               onChange={(e) => onRegexChange(e.target.value)}
             />
-            <p className="text-xs text-muted-foreground">Enter a valid regular expression to match sensitive data</p>
+            <p className="text-xs text-muted-foreground">Введите корректное регулярное выражение для поиска чувствительных данных</p>
           </div>
 
           <div>
-            <p className="font-semibold">Action</p>
+            <p className="font-semibold">Действие</p>
             <p className="mt-1 mb-2 text-muted-foreground">
-              Choose what action the guardrail should take when this pattern is detected
+              Выберите действие гардрейла при обнаружении этого паттерна
             </p>
             <Select
               items={ACTION_ITEMS}
               value={patternAction}
               onValueChange={(value: string | null) => value && onActionChange(value as "BLOCK" | "MASK")}
             >
-              <SelectTrigger className="w-full" aria-label="Action">
+              <SelectTrigger className="w-full" aria-label="Действие">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

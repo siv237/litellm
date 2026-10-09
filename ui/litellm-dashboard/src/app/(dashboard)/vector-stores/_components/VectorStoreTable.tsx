@@ -25,9 +25,9 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Inbox className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No vector stores</div>
+      <div className="text-sm font-medium text-foreground">Векторные хранилища отсутствуют</div>
       <div className="text-sm text-muted-foreground">
-        Connect a vector store to enable retrieval-augmented generation.
+        Подключите векторное хранилище для генерации с дополненной выборкой.
       </div>
     </div>
   );

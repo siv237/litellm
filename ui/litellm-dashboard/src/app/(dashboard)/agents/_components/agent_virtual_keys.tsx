@@ -13,11 +13,11 @@ interface AgentVirtualKeysProps {
 const AgentVirtualKeys: React.FC<AgentVirtualKeysProps> = ({ keys, isLoading, onKeyClick }) => {
   return (
     <div className="mt-6">
-      <h4 className="text-base font-semibold text-foreground">Virtual Keys</h4>
+      <h4 className="text-base font-semibold text-foreground">Виртуальные ключи</h4>
       {isLoading ? (
         <p className="mt-2 text-sm text-muted-foreground">Loading keys...</p>
       ) : keys.length === 0 ? (
-        <p className="mt-2 text-sm text-muted-foreground">No virtual key assigned to this agent.</p>
+        <p className="mt-2 text-sm text-muted-foreground">Для этого агента не назначен виртуальный ключ.</p>
       ) : (
         <div className="mt-3 flex flex-col gap-2">
           {keys.map((key) => (

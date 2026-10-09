@@ -11,9 +11,9 @@ const PriceDataManagementTab = () => {
     <div>
       <div className="p-6">
         <div className="mb-6">
-          <h2 className="text-lg font-semibold">Price Data Management</h2>
+          <h2 className="text-lg font-semibold">Управление данными о ценах</h2>
           <p className="text-sm text-muted-foreground">
-            Manage model pricing data and configure automatic reload schedules
+            Управляйте ценами моделей и расписанием автоперезагрузки
           </p>
         </div>
         <PriceDataReload
@@ -21,7 +21,7 @@ const PriceDataManagementTab = () => {
           onReloadSuccess={() => {
             refetchModelCostMap();
           }}
-          buttonText="Reload Price Data"
+          buttonText="Перезагрузить данные о ценах"
           size="middle"
           type="primary"
           className="w-full"

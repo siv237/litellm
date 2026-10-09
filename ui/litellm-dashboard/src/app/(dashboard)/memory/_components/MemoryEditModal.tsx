@@ -94,7 +94,7 @@ export const MemoryEditModal: React.FC<MemoryEditModalProps> = ({ open, mode, in
                 )}
               >
                 {({ ref, ...field }) => (
-                  <Input {...field} ref={ref} placeholder="e.g. user_role" disabled={mode === "edit"} />
+                  <Input {...field} ref={ref} placeholder="напр. user_role" disabled={mode === "edit"} />
                 )}
               </FormField>
 
@@ -104,7 +104,7 @@ export const MemoryEditModal: React.FC<MemoryEditModalProps> = ({ open, mode, in
                 label={labelWithHint("Value", "Markdown/text injected into LLM context. Plain strings are fine.")}
               >
                 {({ ref, ...field }) => (
-                  <Textarea {...field} ref={ref} rows={8} placeholder="What the agent should remember…" />
+                  <Textarea {...field} ref={ref} rows={8} placeholder="Что агент должен запомнить…" />
                 )}
               </FormField>
 
@@ -113,7 +113,7 @@ export const MemoryEditModal: React.FC<MemoryEditModalProps> = ({ open, mode, in
                 name="metadata"
                 label={labelWithHint(
                   <span>
-                    Metadata <span className="text-muted-foreground">(optional JSON)</span>
+                    Метаданные <span className="text-muted-foreground">(необязательно JSON)</span>
                   </span>,
                   "Optional structured metadata — must be valid JSON if provided.",
                 )}

@@ -37,7 +37,7 @@ const ProjectDropdown: React.FC<ProjectDropdownProps> = ({
       }
       value={value}
       onValueChange={(projectId) => onChange?.(projectId)}
-      placeholder="Search or select a project"
+      placeholder="Найдите или выберите проект"
       emptyText={loading ? "Loading projects…" : "No projects found"}
       disabled={disabled}
       inputId={id}

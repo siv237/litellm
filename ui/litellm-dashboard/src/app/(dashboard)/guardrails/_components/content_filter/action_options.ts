@@ -1,10 +1,10 @@
 export const ACTION_ITEMS = [
-  { value: "BLOCK", label: "Block" },
-  { value: "MASK", label: "Mask" },
+  { value: "BLOCK", label: "Блокировать" },
+  { value: "MASK", label: "Маскировать" },
 ] as const;
 
 export const SEVERITY_ITEMS = [
-  { value: "high", label: "High" },
-  { value: "medium", label: "Medium" },
-  { value: "low", label: "Low" },
+  { value: "high", label: "Высокий" },
+  { value: "medium", label: "Средний" },
+  { value: "low", label: "Низкий" },
 ] as const;

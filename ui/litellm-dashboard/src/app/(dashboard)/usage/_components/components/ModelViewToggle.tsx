@@ -1,8 +1,8 @@
 export type ModelViewType = "groups" | "individual";
 
 const MODEL_VIEW_OPTIONS: readonly { value: ModelViewType; label: string }[] = [
-  { value: "groups", label: "Public Model Name" },
-  { value: "individual", label: "Litellm Model Name" },
+  { value: "groups", label: "Публичное имя модели" },
+  { value: "individual", label: "Имя модели ruLiteLLM" },
 ];
 
 interface ModelViewToggleProps {

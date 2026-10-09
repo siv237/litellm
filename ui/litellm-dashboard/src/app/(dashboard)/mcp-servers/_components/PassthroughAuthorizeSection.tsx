@@ -75,10 +75,7 @@ export default function PassthroughAuthorizeSection({
   return (
     <div className="rounded-lg border border-dashed border-border p-4 space-y-2 mb-4">
       <p className="text-sm text-muted-foreground">
-        Callers bring their own upstream token for this auth type, so LiteLLM never stores tokens. To preview tools and
-        configure the tool allowlist, authorize against the upstream here: the token stays in this browser session only
-        and is never saved to LiteLLM. An OAuth app configured below IS saved with the server, so internal users who
-        authorize from the Tools page go through it.
+        Для этого типа аутентификации вызывающие приносят свой токен апстрима, и ruLiteLLM никогда не хранит токены. Чтобы предпросмотреть инструменты и настроить allowlist инструментов, авторизуйтесь у апстрима здесь: токен остаётся только в этой сессии браузера и не сохраняется в ruLiteLLM. Настроенное ниже OAuth-приложение СОХРАНЯЕТСЯ вместе с сервером, поэтому внутренние пользователи, авторизующиеся со страницы «Инструменты», проходят через него.
       </p>
       {appMayNotMatchUpstream && (
         <p className="text-sm text-warning">
@@ -87,7 +84,7 @@ export default function PassthroughAuthorizeSection({
         </p>
       )}
       <MountedFormField
-        label={<span className="text-sm font-medium text-foreground">OAuth Client ID (optional)</span>}
+        label={<span className="text-sm font-medium text-foreground">OAuth Client ID (необязательно)</span>}
         name={["credentials", "client_id"]}
         help={clientIdExtra}
       >
@@ -101,7 +98,7 @@ export default function PassthroughAuthorizeSection({
         )}
       </MountedFormField>
       <MountedFormField
-        label={<span className="text-sm font-medium text-foreground">OAuth Client Secret (optional)</span>}
+        label={<span className="text-sm font-medium text-foreground">OAuth Client Secret (необязательно)</span>}
         name={["credentials", "client_secret"]}
       >
         {(control) => (
@@ -117,7 +114,7 @@ export default function PassthroughAuthorizeSection({
       {isEditing && onRemoveStoredAppChange && (
         <Label className="items-start leading-normal font-normal text-foreground">
           <Checkbox className="mt-0.5" checked={removeStoredApp} onCheckedChange={onRemoveStoredAppChange} />
-          Remove the saved OAuth app on save (the server goes back to dynamic client registration)
+          При сохранении удалить сохранённое OAuth-приложение (сервер вернётся к динамической регистрации клиентов)
         </Label>
       )}
       <Button

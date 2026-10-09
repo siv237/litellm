@@ -110,7 +110,7 @@ export function ChatComposer({
               <InputGroupButton
                 type="button"
                 size="icon-sm"
-                aria-label="Stop request"
+                aria-label="Остановить запрос"
                 data-testid="chat-stop-button"
                 className="size-8 rounded-xl bg-foreground text-background hover:bg-foreground/90"
                 onClick={onCancel}
@@ -121,7 +121,7 @@ export function ChatComposer({
               <InputGroupButton
                 type="button"
                 size="icon-sm"
-                aria-label="Send message"
+                aria-label="Отправить сообщение"
                 data-testid="chat-send-button"
                 disabled={submitDisabled || isLoading}
                 onClick={submitIfAllowed}

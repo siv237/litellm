@@ -28,17 +28,16 @@ export const AffinityControls: React.FC<{
         <Switch
           checked={value.deployment_affinity ?? DEFAULT_DEPLOYMENT_AFFINITY}
           onCheckedChange={(deploymentAffinity) => onChange({ ...value, deployment_affinity: deploymentAffinity })}
-          aria-label="Pin a session to one deployment per model group"
+          aria-label="Закреплять сессию за одним деплойментом в группе моделей"
         />
-        <strong className="font-semibold">Pin a session to one deployment per model group</strong>
+        <strong className="font-semibold">Закреплять сессию за одним деплойментом в группе моделей</strong>
       </div>
       <span className="block text-xs mb-3 text-muted-foreground">
-        Keeps a session on the same deployment within a group, so provider prompt caches stay warm. Turn off to
-        load-balance every turn.
+        Держит сессию на одном деплойменте внутри группы — кэш промптов провайдера остаётся прогретым. Выключите, чтобы балансировать каждый оборот.
       </span>
       <div style={{ maxWidth: 320 }}>
         <label className="block text-sm font-medium mb-1" htmlFor="session-affinity-ttl">
-          How long a pin survives idle (seconds)
+          Сколько времени закрепление переживает простой (сек)
         </label>
         <Input
           id="session-affinity-ttl"

@@ -57,12 +57,12 @@ export function ProjectsPage() {
     <div className="p-8">
       <PageHeader
         icon={<Folder />}
-        title="Projects"
+        title="Проекты"
         subtitle="Manage projects within your teams"
         primaryAction={
           <Button onClick={() => setIsCreateModalVisible(true)}>
             <Plus className="size-4" />
-            Create Project
+            Создать проект
           </Button>
         }
       />
@@ -79,7 +79,7 @@ export function ProjectsPage() {
           />
           {searchText && (
             <InputGroupAddon align="inline-end">
-              <InputGroupButton size="icon-xs" aria-label="Clear search" onClick={() => setSearchText("")}>
+              <InputGroupButton size="icon-xs" aria-label="Очистить поиск" onClick={() => setSearchText("")}>
                 <X />
               </InputGroupButton>
             </InputGroupAddon>

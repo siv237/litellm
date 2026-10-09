@@ -87,7 +87,7 @@ function AutoRouterRowActions({
           onClick={() => onDeleteClick(row)}
         >
           <Trash2 />
-          Delete auto router
+          Удалить авто-роутер
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -125,8 +125,8 @@ export const getAutoRoutersTableColumns = ({
   },
   {
     id: "targets",
-    meta: { title: "Routes to" },
-    header: "Routes to",
+    meta: { title: "Направляет к" },
+    header: "Направляет к",
     size: 320,
     enableSorting: false,
     cell: ({ row }) => <TargetsCell targets={row.original.targets} />,
@@ -134,8 +134,8 @@ export const getAutoRoutersTableColumns = ({
   {
     id: "defaultModel",
     accessorKey: "defaultModel",
-    meta: { title: "Default model" },
-    header: "Default model",
+    meta: { title: "Модель по умолчанию" },
+    header: "Модель по умолчанию",
     size: 200,
     enableSorting: false,
     cell: ({ row }) =>
@@ -150,8 +150,8 @@ export const getAutoRoutersTableColumns = ({
   {
     id: "createdAt",
     accessorKey: "createdAt",
-    meta: { title: "Created" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 150,
     enableSorting: true,
     sortingFn: "datetime",

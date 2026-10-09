@@ -44,14 +44,14 @@ export const SearchToolView: React.FC<SearchToolViewProps> = ({
         <div>
           <Button variant="ghost" size="sm" className="mb-4 -ml-2 text-muted-foreground" onClick={onBack}>
             <ArrowLeft className="mr-2 size-4" />
-            Back to All Search Tools
+            Ко всем поисковым инструментам
           </Button>
           <div className="flex items-center gap-1">
             <h1 className="text-2xl font-semibold text-foreground">{searchTool.search_tool_name}</h1>
             <Button
               variant="ghost"
               size="icon-xs"
-              aria-label="Copy search tool name"
+              aria-label="Скопировать имя поискового инструмента"
               className="text-muted-foreground"
               onClick={() => copyToClipboard(searchTool.search_tool_name, "search-tool-name")}
             >
@@ -63,7 +63,7 @@ export const SearchToolView: React.FC<SearchToolViewProps> = ({
             <Button
               variant="ghost"
               size="icon-xs"
-              aria-label="Copy search tool ID"
+              aria-label="Скопировать ID поискового инструмента"
               className="text-muted-foreground"
               onClick={() => copyToClipboard(searchTool.search_tool_id, "search-tool-id")}
             >
@@ -85,14 +85,14 @@ export const SearchToolView: React.FC<SearchToolViewProps> = ({
 
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">API Key</p>
+            <p className="text-sm text-muted-foreground">API-ключ</p>
             <p className="mt-2 text-foreground">{searchTool.litellm_params.api_key ? "****" : "Not set"}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Created At</p>
+            <p className="text-sm text-muted-foreground">Создан</p>
             <p className="mt-2 text-foreground">
               {searchTool.created_at ? new Date(searchTool.created_at).toLocaleString() : "Unknown"}
             </p>

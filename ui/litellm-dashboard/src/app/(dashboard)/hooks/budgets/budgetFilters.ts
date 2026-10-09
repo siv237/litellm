@@ -7,7 +7,7 @@ export const BUDGET_DURATION_FILTER_OPTIONS: readonly { value: string; label: st
   { value: "24h", label: "daily" },
   { value: "7d", label: "weekly" },
   { value: "30d", label: "monthly" },
-  { value: BUDGET_DURATION_UNSET, label: "Not set" },
+  { value: BUDGET_DURATION_UNSET, label: "Не задано" },
 ];
 
 export interface MaxBudgetFilterValue {

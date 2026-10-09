@@ -21,7 +21,7 @@ const PromptEditorView: React.FC<PromptEditorViewProps> = ({ onClose, onSuccess,
         return parseExistingPrompt(initialPromptData);
       } catch (error) {
         console.error("Error parsing existing prompt:", error);
-        toast.fromError("Failed to parse prompt data");
+        toast.fromError("Не удалось разобрать данные промпта");
       }
     }
     return {
@@ -142,7 +142,7 @@ const PromptEditorView: React.FC<PromptEditorViewProps> = ({ onClose, onSuccess,
       setShowToolModal(false);
       setEditingToolIndex(null);
     } catch (error) {
-      toast.fromError("Invalid JSON format");
+      toast.fromError("Неверный формат JSON");
     }
   };
 
@@ -171,7 +171,7 @@ const PromptEditorView: React.FC<PromptEditorViewProps> = ({ onClose, onSuccess,
       setActiveVersionId(`${versionData.prompt_id}.v${versionNum}`);
     } catch (error) {
       console.error("Error loading version:", error);
-      toast.fromError("Failed to load prompt version");
+      toast.fromError("Не удалось загрузить версию промпта");
     }
   };
 
@@ -185,12 +185,12 @@ const PromptEditorView: React.FC<PromptEditorViewProps> = ({ onClose, onSuccess,
 
   const handleSave = async () => {
     if (!accessToken) {
-      toast.fromError("Access token is required");
+      toast.fromError("Требуется access token");
       return;
     }
 
     if (!prompt.name || prompt.name.trim() === "") {
-      toast.fromError("Please enter a valid prompt name");
+      toast.fromError("Введите корректное имя промпта");
       return;
     }
 
@@ -214,10 +214,10 @@ const PromptEditorView: React.FC<PromptEditorViewProps> = ({ onClose, onSuccess,
 
       if (editMode && initialPromptData?.prompt_spec?.prompt_id) {
         await updatePromptCall(accessToken, initialPromptData.prompt_spec.prompt_id, promptData);
-        toast.success("Prompt updated successfully!");
+        toast.success("Промпт обновлён!");
       } else {
         await createPromptCall(accessToken, promptData);
-        toast.success("Prompt created successfully!");
+        toast.success("Промпт создан!");
       }
       onSuccess();
       onClose();

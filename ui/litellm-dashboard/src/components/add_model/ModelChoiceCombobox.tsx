@@ -53,7 +53,7 @@ const ModelChoiceCombobox: React.FC<ModelChoiceComboboxProps> = ({
         showClear={value != null && value !== ""}
       />
       <ComboboxContent>
-        <ComboboxEmpty>No models found</ComboboxEmpty>
+        <ComboboxEmpty>Модели не найдены</ComboboxEmpty>
         <ComboboxList>
           {(choice: ModelChoice) => (
             <ComboboxItem key={choice.value} value={choice}>

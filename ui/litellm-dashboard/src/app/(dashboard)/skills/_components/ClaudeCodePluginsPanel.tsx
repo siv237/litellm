@@ -70,7 +70,7 @@ const ClaudeCodePluginsPanel: React.FC<ClaudeCodePluginsPanelProps> = ({ accessT
       fetchPlugins();
     } catch (error) {
       console.error("Error deleting skill:", error);
-      toast.error("Failed to delete skill");
+      toast.error("Не удалось удалить скилл");
     } finally {
       setIsDeleting(false);
       setPluginToDelete(null);
@@ -90,14 +90,14 @@ const ClaudeCodePluginsPanel: React.FC<ClaudeCodePluginsPanelProps> = ({ accessT
       ) : (
         <>
           <div className="flex flex-col gap-2 mb-4">
-            <h1 className="text-2xl font-bold">Skills</h1>
+            <h1 className="text-2xl font-bold">Скиллы</h1>
             <p className="text-sm text-muted-foreground">
-              Register Claude Code skills. Published skills appear in the Skill Hub for all users and are served via{" "}
+              Регистрируйте скиллы Claude Code. Опубликованные скиллы появляются в Skill Hub для всех пользователей и отдаются через{" "}
               <code className="bg-muted px-1 rounded-sm">/claude-code/marketplace.json</code>.
             </p>
             <div className="mt-2 flex gap-2">
               <Button onClick={() => setIsAddModalVisible(true)} disabled={!accessToken || !isAdmin}>
-                + Add Skill
+                + Добавить скилл
               </Button>
             </div>
           </div>
@@ -131,11 +131,11 @@ const ClaudeCodePluginsPanel: React.FC<ClaudeCodePluginsPanelProps> = ({ accessT
         >
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Skill</AlertDialogTitle>
+              <AlertDialogTitle>Удалить скилл</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete skill: <strong>{pluginToDelete.displayName}</strong>?
+                Вы действительно хотите удалить скилл: <strong>{pluginToDelete.displayName}</strong>?
               </AlertDialogDescription>
-              <p className="text-sm text-muted-foreground">This action cannot be undone.</p>
+              <p className="text-sm text-muted-foreground">Это действие необратимо.</p>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Отмена</AlertDialogCancel>

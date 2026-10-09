@@ -24,8 +24,8 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Inbox className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No indexes registered yet</div>
-      <div className="text-sm text-muted-foreground">Indexes registered on this proxy will appear here.</div>
+      <div className="text-sm font-medium text-foreground">Индексы ещё не зарегистрированы</div>
+      <div className="text-sm text-muted-foreground">Зарегистрированные на этом прокси индексы появятся здесь.</div>
     </div>
   );
 }

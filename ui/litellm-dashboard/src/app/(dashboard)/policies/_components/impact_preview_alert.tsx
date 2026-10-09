@@ -38,16 +38,16 @@ const ImpactPreviewAlert: React.FC<ImpactPreviewAlertProps> = ({ impactResult })
   return (
     <Alert className="mb-4">
       {isGlobal ? <AlertTriangle /> : <Info />}
-      <AlertTitle>Impact Preview</AlertTitle>
+      <AlertTitle>Предпросмотр влияния</AlertTitle>
       <AlertDescription>
         {isGlobal ? (
           <span>
-            Global scope — this will affect <strong>all keys and teams</strong>.
+            Глобальная область — это затронет <strong>all keys and teams</strong>.
           </span>
         ) : (
           <div>
             <span>
-              This attachment would affect{" "}
+              Это прикрепление затронет{" "}
               <strong>
                 {impactResult.affected_keys_count} key{impactResult.affected_keys_count !== 1 ? "s" : ""}
               </strong>{" "}
@@ -59,14 +59,14 @@ const ImpactPreviewAlert: React.FC<ImpactPreviewAlertProps> = ({ impactResult })
             </span>
             {impactResult.sample_keys.length > 0 && (
               <SampleList
-                label="Keys"
+                label="Ключи"
                 samples={impactResult.sample_keys}
                 totalCount={impactResult.affected_keys_count}
               />
             )}
             {impactResult.sample_teams.length > 0 && (
               <SampleList
-                label="Teams"
+                label="Команды"
                 samples={impactResult.sample_teams}
                 totalCount={impactResult.affected_teams_count}
               />

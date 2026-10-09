@@ -25,14 +25,14 @@ export default function JevClassifierConfig({
   return (
     <div className="mt-4 space-y-3">
       <p className="text-sm text-muted-foreground">
-        Uses TypeSafe System One Choice evaluation with your configured tiers
+        Использует оценку TypeSafe System One Choice с настроенными уровнями
       </p>
       <div>
-        <Label htmlFor={`${id}-model`}>JEV Model</Label>
+        <Label htmlFor={`${id}-model`}>Модель JEV</Label>
         <Input id={`${id}-model`} value={config.model} onChange={(event) => update({ model: event.target.value })} />
       </div>
       <div>
-        <Label htmlFor={`${id}-timeout`}>JEV Timeout (ms)</Label>
+        <Label htmlFor={`${id}-timeout`}>Таймаут JEV (мс)</Label>
         <Input
           id={`${id}-timeout`}
           type="number"
@@ -52,7 +52,7 @@ export default function JevClassifierConfig({
         }
       />
       <div>
-        <Label htmlFor={`${id}-instructions`}>JEV Instructions</Label>
+        <Label htmlFor={`${id}-instructions`}>Инструкции JEV</Label>
         <SimpleTooltip
           content={!premiumUser ? "Custom JEV instructions require a LiteLLM Enterprise license" : undefined}
         >
@@ -61,14 +61,14 @@ export default function JevClassifierConfig({
               id={`${id}-instructions`}
               value={config.instructions ?? ""}
               disabled={!premiumUser}
-              placeholder="Leave blank to use the built-in instructions"
+              placeholder="Оставьте пустым для встроенных инструкций"
               onChange={(event) => update({ instructions: event.target.value || undefined })}
             />
           </div>
         </SimpleTooltip>
         {config.instructions && (
           <Button variant="outline" type="button" onClick={() => update({ instructions: undefined })}>
-            Restore built-in JEV instructions
+            Восстановить встроенные инструкции JEV
           </Button>
         )}
         <p className="text-xs text-muted-foreground">

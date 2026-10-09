@@ -25,7 +25,7 @@ function AgentRowActions({ agent, onDeleteClick }: AgentRowActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open agent actions"
+        aria-label="Действия агента"
         data-testid={`agent-actions-${agent.agent_id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -59,8 +59,8 @@ export const getAgentsTableColumns = ({
   {
     id: "agent_name",
     accessorKey: "agent_name",
-    meta: { title: "Agent Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Agent Name" />,
+    meta: { title: "Имя агента" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Имя агента" />,
     size: 200,
     enableSorting: true,
     cell: ({ row }) => {
@@ -75,8 +75,8 @@ export const getAgentsTableColumns = ({
   {
     id: "agent_id",
     accessorKey: "agent_id",
-    meta: { title: "Agent ID" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Agent ID" />,
+    meta: { title: "ID агента" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="ID агента" />,
     size: 200,
     enableSorting: true,
     cell: ({ row }) => (
@@ -122,8 +122,8 @@ export const getAgentsTableColumns = ({
       const timestamp = agent.created_at ? new Date(agent.created_at).getTime() : 0;
       return Number.isNaN(timestamp) ? 0 : timestamp;
     },
-    meta: { title: "Created" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 150,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.created_at} precision="date" />,
@@ -139,7 +139,7 @@ export const getAgentsTableColumns = ({
       return hasKeys ? (
         <StatusBadge tone="success" label="Активный" />
       ) : (
-        <StatusBadge tone="warning" label="Needs Setup" />
+        <StatusBadge tone="warning" label="Требует настройки" />
       );
     },
   },

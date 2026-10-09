@@ -11,14 +11,14 @@ interface ClassifierAuditViewProps {
 export function ClassifierAuditView({ request, response }: ClassifierAuditViewProps) {
   return (
     <div className="mb-6 space-y-4">
-      <AuditField title="Classifier input" value={request.classifier_input}>
-        Provider request payload. A cached call or disabled message logging may have no capture.
+      <AuditField title="Вход классификатора" value={request.classifier_input}>
+        Тело запроса провайдеру. Кэшированный вызов или отключённое логирование сообщений может не захватываться.
       </AuditField>
-      <AuditField title="Originating request, credentials masked" value={request.originating_request_masked}>
-        Comparison only. This source request was not appended to the classifier input.
+      <AuditField title="Исходный запрос, реквизиты скрыты" value={request.originating_request_masked}>
+        Только для сравнения. Этот исходный запрос не добавлялся во вход классификатора.
       </AuditField>
-      <AuditField title="Classifier response" value={response}>
-        The returned verdict and any explanation supplied by the classifier. Later routing rules may change the tier.
+      <AuditField title="Ответ классификатора" value={response}>
+        Возвращённый вердикт и пояснения классификатора. Последующие правила маршрутизации могут изменить уровень.
       </AuditField>
     </div>
   );
@@ -38,11 +38,11 @@ function AuditField({ title, value, children }: { title: string; value: unknown;
         <p className="mb-3 text-sm text-muted-foreground">{children}</p>
         {truncated && (
           <p role="status" className="mb-3 text-sm text-warning">
-            This stored copy is truncated. The complete payload is unavailable from the configured log storage.
+            Сохранённая копия усечена. Полный payload недоступен в настроенном хранилище логов.
           </p>
         )}
         {value == null ? (
-          <p className="text-sm text-muted-foreground">Not captured or message logging disabled</p>
+          <p className="text-sm text-muted-foreground">Не захвачено или отключено логирование сообщений</p>
         ) : (
           <JsonViewer data={value} mode="formatted" />
         )}

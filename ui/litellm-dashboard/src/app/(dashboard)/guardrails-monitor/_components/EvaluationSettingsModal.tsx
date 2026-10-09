@@ -92,7 +92,7 @@ export function EvaluationSettingsModal({
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[640px]">
         <DialogHeader>
-          <DialogTitle>Evaluation Settings</DialogTitle>
+          <DialogTitle>Настройки оценки</DialogTitle>
           <DialogDescription>
             {guardrailName
               ? `Configure AI evaluation for ${guardrailName}`
@@ -104,10 +104,10 @@ export function EvaluationSettingsModal({
           <div>
             <div className="mb-1.5 flex items-center justify-between">
               <label htmlFor="evaluation-prompt" className="text-sm font-medium text-foreground">
-                Evaluation Prompt
+                Промпт оценки
               </label>
               <Button variant="link" size="xs" onClick={handleResetPrompt}>
-                Reset to default
+                Сбросить к значениям по умолчанию
               </Button>
             </div>
             <Textarea
@@ -118,13 +118,13 @@ export function EvaluationSettingsModal({
               className="field-sizing-fixed font-mono text-sm"
             />
             <p className="mt-1 text-xs text-muted-foreground">
-              System prompt sent to the evaluation model. Output is structured via response_format.
+              Системный промпт для модели оценки. Вывод структурируется через response_format.
             </p>
           </div>
 
           <div>
             <label htmlFor="evaluation-schema" className="mb-1.5 block text-sm font-medium text-foreground">
-              Response Schema
+              Схема ответа
             </label>
             <p className="mb-1 text-xs text-muted-foreground">response_format: json_schema</p>
             <Textarea
@@ -154,7 +154,7 @@ export function EvaluationSettingsModal({
           </Button>
           <Button onClick={handleRun} disabled={!model}>
             <Play className="size-4" />
-            Run Evaluation
+            Запустить оценку
           </Button>
         </DialogFooter>
       </DialogContent>

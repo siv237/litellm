@@ -71,7 +71,7 @@ function AccessGroupRowActions({ accessGroup, canWrite, onSetBudget, onClearBudg
           onClick={() => onClearBudget(accessGroup)}
         >
           <Trash2 />
-          Clear budget
+          Сбросить бюджет
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -92,8 +92,8 @@ export const getAccessGroupBudgetColumns = ({
   {
     id: "access_group",
     accessorKey: "access_group",
-    meta: { title: "Access Group" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Access Group" />,
+    meta: { title: "Группа доступа" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Группа доступа" />,
     size: 220,
     enableSorting: true,
     cell: ({ row }) => (
@@ -113,8 +113,8 @@ export const getAccessGroupBudgetColumns = ({
   {
     id: "deployment_count",
     accessorKey: "deployment_count",
-    meta: { title: "Deployments", numeric: true },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Deployments" />,
+    meta: { title: "Деплойменты", numeric: true },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Деплойменты" />,
     size: 120,
     enableSorting: true,
     cell: ({ row }) => row.original.deployment_count,
@@ -122,8 +122,8 @@ export const getAccessGroupBudgetColumns = ({
   {
     id: "spend",
     accessorKey: "spend",
-    meta: { title: "Shared Spend" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Shared Spend" />,
+    meta: { title: "Общий расход" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Общий расход" />,
     size: 180,
     enableSorting: true,
     cell: ({ row }) => (
@@ -136,8 +136,8 @@ export const getAccessGroupBudgetColumns = ({
   },
   {
     id: "budget_duration",
-    meta: { title: "Resets" },
-    header: "Resets",
+    meta: { title: "Сброс" },
+    header: "Сброс",
     size: 110,
     enableSorting: false,
     cell: ({ row }) => (

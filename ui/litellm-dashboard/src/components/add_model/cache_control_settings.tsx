@@ -30,12 +30,12 @@ export interface CacheControlInjectionPoint {
 
 export const NEW_CACHE_CONTROL_POINT: CacheControlInjectionPoint = { location: "message" };
 
-const LOCATION_ITEMS = [{ value: "message", label: "Message" }] as const;
+const LOCATION_ITEMS = [{ value: "message", label: "Сообщение" }] as const;
 
 const ROLE_ITEMS = [
   { value: "user", label: "Пользователь" },
-  { value: "system", label: "System" },
-  { value: "assistant", label: "Assistant" },
+  { value: "system", label: "Система" },
+  { value: "assistant", label: "Ассистент" },
 ] as const;
 
 const LabelWithHint: React.FC<{ label: string; hint: string }> = ({ label, hint }) => (
@@ -108,7 +108,7 @@ const CacheControlInjectionPoints: React.FC<CacheControlInjectionPointsProps> = 
               }
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a role" />
+                <SelectValue placeholder="Выберите роль" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={null}>Нет</SelectItem>
@@ -122,7 +122,7 @@ const CacheControlInjectionPoints: React.FC<CacheControlInjectionPointsProps> = 
           </div>
 
           <div className="w-[180px] space-y-1">
-            <LabelWithHint label="Index" hint={CACHE_CONTROL_INDEX_HINT} />
+            <LabelWithHint label="Индекс" hint={CACHE_CONTROL_INDEX_HINT} />
             <NumericalInput
               type="number"
               placeholder="Необязательно"
@@ -159,7 +159,7 @@ const CacheControlInjectionPoints: React.FC<CacheControlInjectionPointsProps> = 
         onClick={() => onChange?.([...points, NEW_CACHE_CONTROL_POINT])}
       >
         <Plus className="mr-2 size-4" />
-        Add Injection Point
+        Добавить точку вставки
       </Button>
     </div>
   );

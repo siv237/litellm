@@ -30,7 +30,7 @@ export function ToolExpandedContent({ tool }: ToolExpandedContentProps) {
         <span className="text-xs text-muted-foreground">Описание</span>
         <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as ViewMode)}>
           <TabsList>
-            <TabsTrigger value="formatted">Formatted</TabsTrigger>
+            <TabsTrigger value="formatted">Формат</TabsTrigger>
             <TabsTrigger value="json">JSON</TabsTrigger>
           </TabsList>
         </Tabs>

@@ -26,8 +26,8 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Inbox className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No search tools configured</div>
-      <div className="text-sm text-muted-foreground">Add a search tool to enable web search for your models.</div>
+      <div className="text-sm font-medium text-foreground">Поисковые инструменты не настроены</div>
+      <div className="text-sm text-muted-foreground">Добавьте поисковый инструмент, чтобы включить веб-поиск для ваших моделей.</div>
     </div>
   );
 }

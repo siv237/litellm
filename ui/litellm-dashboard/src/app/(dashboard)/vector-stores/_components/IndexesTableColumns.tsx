@@ -20,8 +20,8 @@ export const getIndexesTableColumns = ({
   {
     id: "index_name",
     accessorKey: "index_name",
-    meta: { title: "Index Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Index Name" />,
+    meta: { title: "Имя индекса" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Имя индекса" />,
     size: 220,
     enableSorting: true,
     cell: ({ row }) => (
@@ -33,8 +33,8 @@ export const getIndexesTableColumns = ({
   {
     id: "vector_store_name",
     accessorFn: (row) => row.litellm_params.vector_store_name,
-    meta: { title: "Vector Store" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Vector Store" />,
+    meta: { title: "Векторное хранилище" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Векторное хранилище" />,
     size: 200,
     enableSorting: true,
     cell: ({ row }) => {
@@ -60,8 +60,8 @@ export const getIndexesTableColumns = ({
   {
     id: "vector_store_index",
     accessorFn: (row) => row.litellm_params.vector_store_index,
-    meta: { title: "Provider Index" },
-    header: "Provider Index",
+    meta: { title: "Индекс провайдера" },
+    header: "Индекс провайдера",
     size: 220,
     enableSorting: false,
     cell: ({ row }) => (
@@ -76,8 +76,8 @@ export const getIndexesTableColumns = ({
   {
     id: "created_by",
     accessorKey: "created_by",
-    meta: { title: "Created By" },
-    header: "Created By",
+    meta: { title: "Создал" },
+    header: "Создал",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => {
@@ -99,8 +99,8 @@ export const getIndexesTableColumns = ({
     id: "created_at",
     accessorKey: "created_at",
     sortingFn: "datetime",
-    meta: { title: "Created At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created At" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 150,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.created_at} precision="date" />,

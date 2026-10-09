@@ -61,7 +61,7 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({ userRole, acces
     try {
       setIsDeleting(true);
       await organizationDeleteCall(accessToken, orgToDelete);
-      toast.success("Organization deleted successfully");
+      toast.success("Организация удалена");
 
       setIsDeleteModalOpen(false);
       setOrgToDelete(null);
@@ -82,7 +82,7 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({ userRole, acces
     return (
       <div className="mx-4 mt-4">
         <p className="text-sm text-muted-foreground">
-          This is a LiteLLM Enterprise feature, and requires a valid key to use. Get a trial key{" "}
+          Это функция ruLiteLLM Enterprise, требуется действующий ключ. Получить пробный ключ{" "}
           <a
             href="https://www.litellm.ai/#pricing"
             target="_blank"
@@ -101,7 +101,7 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({ userRole, acces
     <div className="mx-4 mt-4 flex flex-col gap-4">
       {(userRole === "Admin" || userRole === "Org Admin") && (
         <Button className="w-fit" onClick={() => setIsOrgModalVisible(true)}>
-          + Create New Organization
+          + Создать организацию
         </Button>
       )}
 
@@ -120,7 +120,7 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({ userRole, acces
         />
       ) : (
         <>
-          <p className="text-sm text-muted-foreground">Click on an organization ID to view its details.</p>
+          <p className="text-sm text-muted-foreground">Нажмите на ID организации, чтобы посмотреть подробности.</p>
           <OrganizationFilters
             filters={filters}
             showFilters={showFilters}
@@ -150,10 +150,10 @@ const OrganizationsPanel: React.FC<OrganizationsPanelProps> = ({ userRole, acces
 
       <DeleteResourceModal
         isOpen={isDeleteModalOpen}
-        title="Delete Organization?"
+        title="Удалить организацию?"
         message="Are you sure you want to delete this organization? This action cannot be undone."
         resourceInformationTitle="Organization Information"
-        resourceInformation={[{ label: "Organization ID", value: orgToDelete, code: true }]}
+        resourceInformation={[{ label: "ID организации", value: orgToDelete, code: true }]}
         onCancel={cancelDelete}
         onOk={confirmDelete}
         confirmLoading={isDeleting}

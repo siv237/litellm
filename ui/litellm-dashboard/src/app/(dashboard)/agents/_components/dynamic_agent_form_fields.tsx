@@ -111,7 +111,7 @@ const DynamicAgentFormFields: React.FC<DynamicAgentFormFieldsProps> = ({ agentTy
           <Input
             {...control}
             ref={ref}
-            placeholder="e.g., my-langgraph-agent"
+            placeholder="напр., my-langgraph-agent"
             value={typeof value === "string" ? value : ""}
             onChange={onChange}
           />
@@ -194,7 +194,7 @@ export const buildDynamicAgentData = (values: AgentFormValues, agentTypeInfo: Ag
         {
           id: "chat",
           name: "Chat",
-          description: "General chat capability",
+          description: "Общая чатовая возможность",
           tags: ["chat", "conversation"],
         },
       ],

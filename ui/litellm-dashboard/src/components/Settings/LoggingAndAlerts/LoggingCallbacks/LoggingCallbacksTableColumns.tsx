@@ -54,16 +54,16 @@ function CallbackRowActions({ callback, onTest, onEdit, onDelete }: CallbackRowA
     return (
       <span
         className="text-xs text-muted-foreground"
-        title="Active callback that was not added through the dashboard. Edit it where it was configured."
+        title="Активный коллбэк, добавленный не через дашборд. Изменяйте его там, где он настроен."
       >
-        Read only
+        Только чтение
       </span>
     );
   }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open callback actions"
+        aria-label="Действия коллбэка"
         data-testid={`callback-actions-${callback.name}-${callbackRowMode(callback)}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -72,7 +72,7 @@ function CallbackRowActions({ callback, onTest, onEdit, onDelete }: CallbackRowA
       <DropdownMenuContent align="end" className="w-52">
         <DropdownMenuItem data-testid="callback-action-test" onClick={() => void onTest(callback)}>
           <Play />
-          Test
+          Тест
         </DropdownMenuItem>
         <DropdownMenuItem data-testid="callback-action-edit" onClick={() => onEdit(callback)}>
           <Pencil />
@@ -104,8 +104,8 @@ export const getLoggingCallbacksTableColumns = ({
   {
     id: "name",
     accessorKey: "name",
-    meta: { title: "Callback Name" },
-    header: "Callback Name",
+    meta: { title: "Имя коллбэка" },
+    header: "Имя коллбэка",
     enableSorting: false,
     cell: ({ row }) => {
       const id = row.original.name;
@@ -119,8 +119,8 @@ export const getLoggingCallbacksTableColumns = ({
   },
   {
     id: "mode",
-    meta: { title: "Mode", skeleton: "badge" },
-    header: "Mode",
+    meta: { title: "Режим", skeleton: "badge" },
+    header: "Режим",
     size: 240,
     enableSorting: false,
     cell: ({ row }) => {

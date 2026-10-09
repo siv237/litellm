@@ -67,7 +67,7 @@ function VectorStoreRowActions({ vectorStore, onEdit, onDelete }: VectorStoreRow
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open vector store actions"
+        aria-label="Действия векторного хранилища"
         data-testid={`vector-store-actions-${vectorStore.vector_store_id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -83,7 +83,7 @@ function VectorStoreRowActions({ vectorStore, onEdit, onDelete }: VectorStoreRow
           onClick={() => void copyToClipboard(vectorStore.vector_store_id, "Vector store ID copied")}
         >
           <Copy />
-          Copy vector store ID
+          Скопировать ID векторного хранилища
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -113,8 +113,8 @@ export const getVectorStoreTableColumns = ({
   {
     id: "vector_store_id",
     accessorKey: "vector_store_id",
-    meta: { title: "Vector Store ID" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Vector Store ID" />,
+    meta: { title: "ID векторного хранилища" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="ID векторного хранилища" />,
     size: 220,
     enableSorting: true,
     cell: ({ row }) => (
@@ -160,8 +160,8 @@ export const getVectorStoreTableColumns = ({
   },
   {
     id: "files",
-    meta: { title: "Files" },
-    header: "Files",
+    meta: { title: "Файлы" },
+    header: "Файлы",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => <VectorStoreFilesCell vectorStore={row.original} />,
@@ -179,8 +179,8 @@ export const getVectorStoreTableColumns = ({
     id: "created_at",
     accessorKey: "created_at",
     sortingFn: "datetime",
-    meta: { title: "Created At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Created At" />,
+    meta: { title: "Создан" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Создан" />,
     size: 150,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.created_at} precision="date" />,
@@ -189,8 +189,8 @@ export const getVectorStoreTableColumns = ({
     id: "updated_at",
     accessorKey: "updated_at",
     sortingFn: "datetime",
-    meta: { title: "Updated At" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Updated At" />,
+    meta: { title: "Обновлён" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Обновлён" />,
     size: 150,
     enableSorting: true,
     cell: ({ row }) => <DateCell value={row.original.updated_at} precision="date" />,

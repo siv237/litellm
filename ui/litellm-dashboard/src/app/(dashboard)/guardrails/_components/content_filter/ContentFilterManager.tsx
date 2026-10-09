@@ -234,14 +234,14 @@ const ContentFilterManager: React.FC<ContentFilterManagerProps> = ({
   return (
     <>
       <div className="my-6 flex items-center gap-4">
-        <span className="shrink-0 font-medium">Content Filter Configuration</span>
+        <span className="shrink-0 font-medium">Конфигурация Content Filter</span>
         <Separator className="flex-1" />
       </div>
       {hasUnsavedChanges && (
         <Alert variant="warning" className="mb-4">
           <TriangleAlert />
           <AlertDescription>
-            You have unsaved changes to patterns or keywords. Remember to click &quot;Save Changes&quot; at the bottom.
+            У вас несохранённые изменения паттернов или слов. Не забудьте нажать «Сохранить изменения» внизу.
           </AlertDescription>
         </Alert>
       )}

@@ -95,7 +95,7 @@ const AgentsTable: React.FC<AgentsTableProps> = ({
             />
             {searchTerm && (
               <InputGroupAddon align="inline-end">
-                <InputGroupButton size="icon-xs" aria-label="Clear search" onClick={() => setSearchTerm("")}>
+                <InputGroupButton size="icon-xs" aria-label="Очистить поиск" onClick={() => setSearchTerm("")}>
                   <X />
                 </InputGroupButton>
               </InputGroupAddon>
@@ -109,7 +109,7 @@ const AgentsTable: React.FC<AgentsTableProps> = ({
                     <CircleCheck
                       className={healthCheckEnabled ? "size-4 text-success" : "size-4 text-muted-foreground"}
                     />
-                    <span className="text-sm text-muted-foreground">Health Check</span>
+                    <span className="text-sm text-muted-foreground">Health-чек</span>
                     <Switch
                       size="sm"
                       checked={healthCheckEnabled}
@@ -119,7 +119,7 @@ const AgentsTable: React.FC<AgentsTableProps> = ({
                   </div>
                 }
               />
-              <TooltipContent>When enabled, only agents with reachable URLs are shown</TooltipContent>
+              <TooltipContent>При включении показаны только агенты с доступными URL</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>

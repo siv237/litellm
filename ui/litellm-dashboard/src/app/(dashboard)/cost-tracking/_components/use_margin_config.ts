@@ -53,7 +53,7 @@ export function useMarginConfig({ accessToken }: UseMarginConfigProps): UseMargi
       }
     } catch (error) {
       console.error("Error fetching margin config:", error);
-      toast.fromError("Failed to fetch margin configuration");
+      toast.fromError("Не удалось получить конфигурацию наценки");
     }
   }, [accessToken]);
 
@@ -73,7 +73,7 @@ export function useMarginConfig({ accessToken }: UseMarginConfigProps): UseMargi
         });
 
         if (response.ok) {
-          toast.success("Margin configuration updated successfully");
+          toast.success("Конфигурация наценки обновлена");
           await fetchMarginConfig();
         } else {
           const errorData = await response.json();
@@ -82,7 +82,7 @@ export function useMarginConfig({ accessToken }: UseMarginConfigProps): UseMargi
         }
       } catch (error) {
         console.error("Error updating margin config:", error);
-        toast.fromError("Failed to update margin configuration");
+        toast.fromError("Не удалось обновить конфигурацию наценки");
       }
     },
     [accessToken, fetchMarginConfig],
@@ -93,7 +93,7 @@ export function useMarginConfig({ accessToken }: UseMarginConfigProps): UseMargi
       const { selectedProvider, marginType, percentageValue, fixedAmountValue } = params;
 
       if (!selectedProvider) {
-        toast.fromError("Please select a provider");
+        toast.fromError("Выберите провайдера");
         return false;
       }
 
@@ -103,7 +103,7 @@ export function useMarginConfig({ accessToken }: UseMarginConfigProps): UseMargi
       } else {
         const backendValue = getProviderBackendValue(selectedProvider);
         if (!backendValue) {
-          toast.fromError("Invalid provider selected");
+          toast.fromError("Выбран некорректный провайдер");
           return false;
         }
         providerValue = backendValue;
@@ -120,14 +120,14 @@ export function useMarginConfig({ accessToken }: UseMarginConfigProps): UseMargi
       if (marginType === "percentage") {
         const percentValue = parseFloat(percentageValue);
         if (isNaN(percentValue) || percentValue < 0 || percentValue > 1000) {
-          toast.fromError("Percentage must be between 0% and 1000%");
+          toast.fromError("Процент должен быть от 0% до 1000%");
           return false;
         }
         marginValue = percentValue / 100;
       } else {
         const fixedValue = parseFloat(fixedAmountValue);
         if (isNaN(fixedValue) || fixedValue < 0) {
-          toast.fromError("Fixed amount must be non-negative");
+          toast.fromError("Фиксированная сумма не может быть отрицательной");
           return false;
         }
         marginValue = { fixed_amount: fixedValue };

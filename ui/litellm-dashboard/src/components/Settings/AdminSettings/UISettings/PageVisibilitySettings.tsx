@@ -57,7 +57,7 @@ export default function PageVisibilitySettings({
     <div className="space-y-4">
       <div className="space-y-1">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-medium text-foreground">Internal User Page Visibility</p>
+          <p className="text-sm font-medium text-foreground">Видимость страниц для внутренних пользователей</p>
           <Badge variant={isPageVisibilitySet ? "secondary" : "outline"}>
             {isPageVisibilitySet
               ? `${selectedPages.length} page${selectedPages.length !== 1 ? "s" : ""} selected`
@@ -68,17 +68,16 @@ export default function PageVisibilitySettings({
           <p className="text-sm text-muted-foreground">{enabledPagesPropertyDescription}</p>
         )}
         <p className="text-xs italic text-muted-foreground">
-          By default, all pages are visible to internal users. Select specific pages to restrict visibility.
+          По умолчанию все страницы видны внутренним пользователям. Отметьте страницы, чтобы ограничить видимость.
         </p>
         <p className="text-xs text-primary">
-          Note: Only pages accessible to internal user roles are shown here. Admin-only pages are excluded as they
-          cannot be made visible to internal users regardless of this setting.
+          Примечание: здесь показаны только страницы, доступные внутренним ролям. Страницы только для админов исключены — они не станут видны внутренним пользователям независимо от этой настройки.
         </p>
       </div>
 
       <Collapsible className="rounded-lg border border-border">
         <CollapsibleTrigger className="group flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium hover:bg-muted">
-          Configure Page Visibility
+          Настроить видимость страниц
           <ChevronDown className="size-4 transition-transform group-data-[panel-open]:rotate-180" />
         </CollapsibleTrigger>
         <CollapsibleContent className="border-t border-border p-4">
@@ -111,11 +110,11 @@ export default function PageVisibilitySettings({
 
             <div className="flex flex-wrap gap-2">
               <Button type="button" onClick={handleSavePageVisibility} disabled={isUpdating}>
-                Save Page Visibility Settings
+                Сохранить настройки видимости страниц
               </Button>
               {isPageVisibilitySet && (
                 <Button type="button" variant="outline" onClick={handleResetToDefault} disabled={isUpdating}>
-                  Reset to Default (All Pages)
+                  Сбросить (все страницы)
                 </Button>
               )}
             </div>

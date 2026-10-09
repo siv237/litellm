@@ -8,8 +8,8 @@ import { Select as ShadcnSelect, SelectContent, SelectItem, SelectTrigger, Selec
 
 const ROLE_ITEMS = [
   { value: "user", label: "Пользователь" },
-  { value: "assistant", label: "Assistant" },
-  { value: "system", label: "System" },
+  { value: "assistant", label: "Ассистент" },
+  { value: "system", label: "Система" },
 ] as const;
 
 interface PromptMessagesCardProps {
@@ -56,9 +56,9 @@ const PromptMessagesCard: React.FC<PromptMessagesCardProps> = ({
   return (
     <Card className="p-3">
       <div className="mb-2">
-        <p className="text-sm font-medium">Prompt messages</p>
+        <p className="text-sm font-medium">Сообщения промпта</p>
         <p className="text-muted-foreground text-xs mt-1">
-          Use <code className="bg-muted px-1 rounded-sm text-xs">{"{{variable}}"}</code> syntax for template variables
+          Использовать <code className="bg-muted px-1 rounded-sm text-xs">{"{{variable}}"}</code> syntax for template variables
         </p>
       </div>
       <div className="space-y-2">
@@ -124,7 +124,7 @@ const PromptMessagesCard: React.FC<PromptMessagesCardProps> = ({
       </div>
       <Button variant="ghost" size="sm" onClick={onAddMessage} className="mt-2">
         <PlusIcon size={14} className="mr-1" />
-        Add message
+        Добавить сообщение
       </Button>
     </Card>
   );

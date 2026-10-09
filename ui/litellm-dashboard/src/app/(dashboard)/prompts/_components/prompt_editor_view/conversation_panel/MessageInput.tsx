@@ -41,7 +41,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
           onClick={onSend}
           disabled={isDisabled}
           className="ml-2 shrink-0 rounded-full"
-          aria-label="Send message"
+          aria-label="Отправить сообщение"
         >
           <ArrowUp aria-hidden="true" />
         </Button>

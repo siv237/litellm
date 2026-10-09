@@ -60,7 +60,7 @@ export const getEditToolPreview = (
     return {
       kind: "incomplete",
       message:
-        "The server origin changed. Enter credentials and replace or remove saved static headers to preview tools.",
+        "Origin сервера изменился. Введите реквизиты и замените или удалите сохранённые статические заголовки, чтобы предпросмотреть инструменты.",
     };
   }
   return { kind: "preview", config };

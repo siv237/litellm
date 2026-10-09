@@ -111,7 +111,7 @@ const MCPNetworkSettings: React.FC<MCPNetworkSettingsProps> = ({ accessToken }) 
     <div className="space-y-6 p-4">
       <DeprecationBanner featureName="MCP Network Settings and the internal-network-only flag" />
       <div>
-        <p className="text-lg font-semibold">Private IP Ranges</p>
+        <p className="text-lg font-semibold">Диапазоны частных IP</p>
         <p className="mt-1 text-sm text-muted-foreground">
           Define which IP ranges are part of your private network. Callers from these IPs can see all MCP servers.
           Callers from any other IP can only see servers marked &quot;Available on Public Internet&quot;.
@@ -122,11 +122,11 @@ const MCPNetworkSettings: React.FC<MCPNetworkSettingsProps> = ({ accessToken }) 
         {currentIp && (
           <div className="mb-4 rounded-lg bg-muted p-3">
             <p className="text-sm">
-              Your current IP: <span className="font-mono font-medium">{currentIp}</span>
+              Ваш текущий IP: <span className="font-mono font-medium">{currentIp}</span>
             </p>
             {suggestedRange && !privateRanges.includes(suggestedRange) && (
               <div className="mt-1 flex items-center gap-2">
-                <p className="text-sm">Suggested range: </p>
+                <p className="text-sm">Рекомендуемый диапазон: </p>
                 <Button
                   variant="outline"
                   size="sm"
@@ -142,7 +142,7 @@ const MCPNetworkSettings: React.FC<MCPNetworkSettingsProps> = ({ accessToken }) 
         )}
 
         <div className="mb-2 flex items-center">
-          <p className="text-sm font-medium">Your Private Network Ranges</p>
+          <p className="text-sm font-medium">Диапазоны вашей частной сети</p>
         </div>
         {privateRanges.length > 0 && (
           <div className="mb-2 flex flex-wrap gap-1.5">
@@ -163,7 +163,7 @@ const MCPNetworkSettings: React.FC<MCPNetworkSettingsProps> = ({ accessToken }) 
         )}
         <Input
           value={rangeDraft}
-          placeholder="Leave empty to use defaults: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8"
+          placeholder="Оставьте пустым для значений по умолчанию: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8"
           onChange={(e) => setRangeDraft(e.target.value)}
           onBlur={commitDraft}
           onKeyDown={(e) => {
@@ -174,7 +174,7 @@ const MCPNetworkSettings: React.FC<MCPNetworkSettingsProps> = ({ accessToken }) 
           }}
         />
         <p className="mt-2 text-xs text-muted-foreground">
-          Enter CIDR ranges (e.g., 10.0.0.0/8). When empty, standard private IP ranges are used.
+          Введите CIDR-диапазоны (напр., 10.0.0.0/8). Если пусто — используются стандартные частные диапазоны.
         </p>
       </Card>
 

@@ -60,7 +60,7 @@ const PassThroughRoutesSelector: React.FC<PassThroughRoutesSelectorProps> = ({
       value={value}
       onValueChange={(routes) => onChange?.(routes)}
       placeholder={placeholder}
-      emptyText="No pass through routes found"
+      emptyText="Pass-through маршруты не найдены"
       loading={loading}
       allowCustomValues
       disabled={disabled}

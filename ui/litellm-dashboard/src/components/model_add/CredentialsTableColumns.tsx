@@ -50,7 +50,7 @@ function CredentialRowActions({ credential, onEdit, onDelete }: CredentialRowAct
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open credential actions"
+        aria-label="Действия реквизита"
         data-testid={`credential-actions-${credential.credential_name}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -66,7 +66,7 @@ function CredentialRowActions({ credential, onEdit, onDelete }: CredentialRowAct
           onClick={() => void copyToClipboard(credential.credential_name, "Credential name copied")}
         >
           <Copy />
-          Copy credential name
+          Скопировать имя реквизита
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -97,8 +97,8 @@ export const getCredentialsTableColumns = ({
     {
       id: "credential_name",
       accessorKey: "credential_name",
-      meta: { title: "Credential Name" },
-      header: ({ column }) => <DataTableSortHeader column={column} title="Credential Name" />,
+      meta: { title: "Имя реквизита" },
+      header: ({ column }) => <DataTableSortHeader column={column} title="Имя реквизита" />,
       size: 260,
       enableSorting: true,
       cell: ({ row }) => (

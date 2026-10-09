@@ -27,7 +27,7 @@ const PromptCachingTab: React.FC<PromptCachingTabProps> = ({ accessToken, activi
       .then((data: generalSettingsItem[]) => setSettings(data))
       .catch((error) => {
         console.error("Failed to load prompt caching settings:", error);
-        toast.fromError("Failed to load prompt caching settings");
+        toast.fromError("Не удалось загрузить настройки кэширования промптов");
       });
   }, [accessToken]);
 

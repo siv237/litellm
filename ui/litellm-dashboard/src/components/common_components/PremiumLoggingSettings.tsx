@@ -30,8 +30,7 @@ export function PremiumLoggingSettings({
         </div>
         <div className="p-3 bg-muted border border-border rounded-lg">
           <p className="text-sm text-muted-foreground">
-            Setting Key/Team logging settings is a LiteLLM Enterprise feature. Global Logging Settings are available for
-            all free users. Get a trial key{" "}
+            Настройки логирования для ключей/команд — функция ruLiteLLM Enterprise. Общие настройки логирования доступны всем бесплатно. Получить пробный ключ{" "}
             <a href="https://www.litellm.ai/#pricing" target="_blank" rel="noopener noreferrer" className="underline">
               here
             </a>

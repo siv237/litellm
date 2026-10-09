@@ -54,20 +54,20 @@ export function ModelSelector({ value, onChange, models, loading, disabled }: Mo
       <SearchSelect
         options={[
           ...displayOptions.map((model) => ({ label: model, value: model })),
-          { label: "+ Add custom model", value: "__custom__" },
+          { label: "+ Добавить свою модель", value: "__custom__" },
         ]}
         value={selectValue ?? ""}
         onValueChange={handleSelectChange}
         disabled={disabled}
         placeholder={loading ? "Loading models..." : "Select a model"}
-        emptyText="No models found"
+        emptyText="Модели не найдены"
         allowClear={false}
         className="rounded-md"
       />
       {isAddingCustom && (
         <Input
           className="mt-2"
-          placeholder="Custom Model Name (Enter to add)"
+          placeholder="Имя своей модели (Enter — добавить)"
           value={customValue}
           onChange={(e) => setCustomValue(e.target.value)}
           onKeyDown={(event) => {

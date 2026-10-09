@@ -33,31 +33,31 @@ const KeywordModal: React.FC<KeywordModalProps> = ({
     <Dialog open={visible} onOpenChange={(open) => !open && onCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Add blocked keyword</DialogTitle>
+          <DialogTitle>Добавить блокируемое слово</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
           <div>
-            <p className="font-semibold">Keyword</p>
+            <p className="font-semibold">Слово</p>
             <Input
               className="mt-2"
-              placeholder="Enter sensitive keyword or phrase"
+              placeholder="Введите чувствительное слово или фразу"
               value={keyword}
               onChange={(e) => onKeywordChange(e.target.value)}
             />
           </div>
 
           <div>
-            <p className="font-semibold">Action</p>
+            <p className="font-semibold">Действие</p>
             <p className="mt-1 mb-2 text-muted-foreground">
-              Choose what action the guardrail should take when this keyword is detected
+              Выберите действие гардрейла при обнаружении этого слова
             </p>
             <Select
               items={ACTION_ITEMS}
               value={action}
               onValueChange={(value: string | null) => value && onActionChange(value as "BLOCK" | "MASK")}
             >
-              <SelectTrigger className="w-full" aria-label="Action">
+              <SelectTrigger className="w-full" aria-label="Действие">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -71,10 +71,10 @@ const KeywordModal: React.FC<KeywordModalProps> = ({
           </div>
 
           <div>
-            <p className="font-semibold">Description (optional)</p>
+            <p className="font-semibold">Описание (необязательно)</p>
             <Textarea
               className="mt-2 field-sizing-fixed"
-              placeholder="Explain why this keyword is sensitive"
+              placeholder="Поясните, почему это слово чувствительное"
               value={description}
               onChange={(e) => onDescriptionChange(e.target.value)}
               rows={3}

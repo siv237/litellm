@@ -44,7 +44,7 @@ export const handleAddAutoRouterSubmit = async (
       callback();
     }
   } catch (error) {
-    console.error("Failed to add auto router:", error);
-    toast.fromError("Failed to add auto router: " + error);
+    console.error("Не удалось добавить авто-роутер:", error);
+    toast.fromError("Не удалось добавить авто-роутер: " + error);
   }
 };

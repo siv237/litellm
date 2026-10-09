@@ -49,7 +49,7 @@ const GuardrailGarden: React.FC<GuardrailGardenProps> = ({ accessToken, onGuardr
             <Search className="size-4 text-muted-foreground" />
           </InputGroupAddon>
           <InputGroupInput
-            placeholder="Search guardrails"
+            placeholder="Поиск гардрейлов"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -58,13 +58,13 @@ const GuardrailGarden: React.FC<GuardrailGardenProps> = ({ accessToken, onGuardr
 
       <div className="mb-10">
         <div className="mb-1 flex items-center justify-between">
-          <h2 className="m-0 text-xl font-semibold text-foreground">LiteLLM Content Filter</h2>
+          <h2 className="m-0 text-xl font-semibold text-foreground">Content Filter ruLiteLLM</h2>
           <span
             className="inline-flex cursor-pointer items-center gap-1.5 text-sm text-primary"
             onClick={() => setShowAllLitellm(!showAllLitellm)}
           >
             {showAllLitellm ? (
-              <>Show less</>
+              <>Свернуть</>
             ) : (
               <>
                 <ArrowRight className="size-3" />
@@ -74,7 +74,7 @@ const GuardrailGarden: React.FC<GuardrailGardenProps> = ({ accessToken, onGuardr
           </span>
         </div>
         <p className="mt-1 mb-5 text-[13px] text-muted-foreground">
-          Built-in guardrails powered by LiteLLM. Zero latency, no external dependencies, no additional cost.
+          Встроенные гардрейлы ruLiteLLM. Нулевая задержка, без внешних зависимостей и доплат.
         </p>
         <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
           {(showAllLitellm ? litellmCards : litellmCards.slice(0, CARDS_PER_ROW * VISIBLE_ROWS)).map((card) => (
@@ -84,9 +84,9 @@ const GuardrailGarden: React.FC<GuardrailGardenProps> = ({ accessToken, onGuardr
       </div>
 
       <div className="mb-10">
-        <h2 className="mt-0 mb-1 text-xl font-semibold text-foreground">Partner Guardrails</h2>
+        <h2 className="mt-0 mb-1 text-xl font-semibold text-foreground">Партнёрские гардрейлы</h2>
         <p className="mt-1 mb-5 text-[13px] text-muted-foreground">
-          Third-party guardrail integrations from leading AI security providers.
+          Интеграции гардрейлов от ведущих провайдеров ИИ-безопасности.
         </p>
         <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
           {partnerCards.map((card) => (

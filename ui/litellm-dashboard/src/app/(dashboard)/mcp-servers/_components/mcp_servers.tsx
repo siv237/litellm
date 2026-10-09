@@ -617,8 +617,7 @@ const MCPServers: React.FC<MCPServerProps> = ({ accessToken, userRole, userID })
                               }
                             />
                             <TooltipContent>
-                              An MCP Access Group is a set of users or teams that have permission to access specific MCP
-                              servers. Use access groups to control and organize who can connect to which servers.
+                              Группа доступа MCP — это пользователи или команды с правом доступа к определённым серверам MCP. Используйте группы доступа, чтобы управлять тем, кто к каким серверам подключается.
                             </TooltipContent>
                           </Tooltip>
                         </p>

@@ -33,7 +33,7 @@ export function ProjectKeysSection({ projectId }: ProjectKeysSectionProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <KeyIcon className="size-4" />
-          Keys
+          Ключи
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -49,7 +49,7 @@ export function ProjectKeysSection({ projectId }: ProjectKeysSectionProps) {
             />
             {keyAlias && (
               <InputGroupAddon align="inline-end">
-                <InputGroupButton size="icon-xs" aria-label="Clear key filter" onClick={() => setKeyAlias("")}>
+                <InputGroupButton size="icon-xs" aria-label="Сбросить фильтр по ключу" onClick={() => setKeyAlias("")}>
                   <X />
                 </InputGroupButton>
               </InputGroupAddon>

@@ -38,7 +38,7 @@ export const defaultUserSettingsSchema = z.object(defaultUserSettingsShape).supe
   repeatedRows.forEach((index) =>
     ctx.addIssue({
       code: "custom",
-      message: "This team is already listed",
+      message: "Эта команда уже добавлена",
       path: ["teams", index, "team_id"],
     }),
   );

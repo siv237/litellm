@@ -15,7 +15,7 @@ const EndpointSelector: React.FC<EndpointSelectorProps> = ({ endpointType, onEnd
         value={endpointType}
         onValueChange={onEndpointChange}
         options={ENDPOINT_OPTIONS}
-        placeholder="Select an endpoint"
+        placeholder="Выберите эндпоинт"
       />
     </div>
   );
