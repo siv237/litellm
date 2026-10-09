@@ -128,7 +128,7 @@ export const getRequestLogsTableColumns = ({
   {
     id: "session_id",
     accessorKey: "session_id",
-    header: "Session ID",
+    header: "ID сессии",
     size: 120,
     enableSorting: false,
     cell: ({ row }) => <IdCell value={row.original.session_id} onClick={() => onSessionClick(row.original)} />,
@@ -136,7 +136,7 @@ export const getRequestLogsTableColumns = ({
   {
     id: "request_id",
     accessorKey: "request_id",
-    header: "Request ID",
+    header: "ID запроса",
     enableSorting: false,
     cell: ({ row }) => {
       const log = row.original;
@@ -224,14 +224,14 @@ export const getRequestLogsTableColumns = ({
   },
   {
     id: "team_alias",
-    header: "Team Name",
+    header: "Имя команды",
     size: 150,
     enableSorting: false,
     cell: ({ row }) => <TruncatedText value={readMetaString(row.original.metadata, "user_api_key_team_alias")} />,
   },
   {
     id: "key_hash",
-    header: "Key Hash",
+    header: "Хеш ключа",
     size: 110,
     enableSorting: false,
     cell: ({ row }) => (
@@ -240,7 +240,7 @@ export const getRequestLogsTableColumns = ({
   },
   {
     id: "key_alias",
-    header: "Key Alias",
+    header: "Алиас ключа",
     size: 150,
     enableSorting: false,
     cell: ({ row }) => <TruncatedText value={readMetaString(row.original.metadata, "user_api_key_alias")} />,
@@ -311,7 +311,7 @@ export const getRequestLogsTableColumns = ({
   {
     id: "user",
     accessorKey: "user",
-    header: "Internal User",
+    header: "Внутренний пользователь",
     size: 150,
     enableSorting: false,
     cell: ({ row }) => <TruncatedText value={getInternalUserDisplay(row.original)} />,
@@ -319,7 +319,7 @@ export const getRequestLogsTableColumns = ({
   {
     id: "end_user",
     accessorKey: "end_user",
-    header: "End User",
+    header: "Конечный пользователь",
     size: 140,
     enableSorting: false,
     cell: ({ row }) => <TruncatedText value={row.original.end_user} />,
@@ -327,7 +327,7 @@ export const getRequestLogsTableColumns = ({
   {
     id: "request_tags",
     accessorKey: "request_tags",
-    header: "Tags",
+    header: "Теги",
     size: 150,
     enableSorting: false,
     meta: { skeleton: "chips" },

@@ -61,22 +61,22 @@ const UnpricedUnitsCell = ({ unpriced }: { unpriced: number }) =>
   );
 
 const unpricedColumn = <TRow extends { unpriced: number }>( ): ColumnDef<TRow> => ({
-  header: "Unpriced Units",
+  header: "Неоценённые единицы",
   accessorKey: "unpriced",
   meta: { numeric: true },
   cell: ({ row }) => <UnpricedUnitsCell unpriced={row.original.unpriced} />,
 });
 
 const counterColumns: ColumnDef<CounterRow>[] = [
-  { header: "Counter", accessorKey: "counter", cell: ({ row }) => counterLabel(row.original.counter) },
+  { header: "Счётчик", accessorKey: "counter", cell: ({ row }) => counterLabel(row.original.counter) },
   {
-    header: "Units",
+    header: "Единицы",
     accessorKey: "units",
     meta: { numeric: true },
     cell: ({ row }) => row.original.units.toLocaleString(),
   },
   {
-    header: "Cost",
+    header: "Стоимость",
     accessorKey: "cost",
     meta: { numeric: true },
     cell: ({ row }) => <MoneyCell value={row.original.cost} emptyText="—" showZero />,
@@ -96,13 +96,13 @@ const groupColumns = (label: string, emptyLabel: string): ColumnDef<GroupRow>[] 
       ),
   },
   {
-    header: "Units",
+    header: "Единицы",
     accessorKey: "units",
     meta: { numeric: true },
     cell: ({ row }) => row.original.units.toLocaleString(),
   },
   {
-    header: "Cost",
+    header: "Стоимость",
     accessorKey: "cost",
     meta: { numeric: true },
     cell: ({ row }) => <MoneyCell value={row.original.cost} emptyText="—" showZero />,

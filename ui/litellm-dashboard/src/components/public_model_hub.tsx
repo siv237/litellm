@@ -565,7 +565,7 @@ const PublicModelHub: React.FC<PublicModelHubProps> = ({ accessToken, isEmbedded
                       noDataMessage={
                         <PublicHubEmptyState
                           title="Подходящие агенты не найдены"
-                          body="Adjust the search or skill filter to see more agents."
+                          body="Измените поиск или фильтр скиллов, чтобы увидеть больше агентов."
                         />
                       }
                       size="compact"
@@ -632,7 +632,7 @@ const PublicModelHub: React.FC<PublicModelHubProps> = ({ accessToken, isEmbedded
                       noDataMessage={
                         <PublicHubEmptyState
                           title="Подходящие серверы MCP не найдены"
-                          body="Adjust the search or transport filter to see more servers."
+                          body="Измените поиск или фильтр транспорта, чтобы увидеть больше серверов."
                         />
                       }
                       size="compact"
@@ -842,7 +842,7 @@ const PublicModelHub: React.FC<PublicModelHubProps> = ({ accessToken, isEmbedded
                             apiKey: "your_api_key",
                             inputMessage: "Hello, how are you?",
                             chatHistory: [
-                              { role: "user", content: "Hello, how are you?", isImage: false } as MessageType,
+                              { role: "user", content: "Привет, как дела?", isImage: false } as MessageType,
                             ],
                             selectedTags: [],
                             selectedVectorStores: [],
@@ -866,7 +866,7 @@ const PublicModelHub: React.FC<PublicModelHubProps> = ({ accessToken, isEmbedded
                             apiKey: "your_api_key",
                             inputMessage: "Hello, how are you?",
                             chatHistory: [
-                              { role: "user", content: "Hello, how are you?", isImage: false } as MessageType,
+                              { role: "user", content: "Привет, как дела?", isImage: false } as MessageType,
                             ],
                             selectedTags: [],
                             selectedVectorStores: [],

@@ -39,12 +39,12 @@ const EndpointUsageTable: React.FC<EndpointUsageTableProps> = ({ endpointData })
 
   const columns: ColumnDef<EndpointRow>[] = [
     {
-      header: "Endpoint",
+      header: "Эндпоинт",
       accessorKey: "endpoint",
       cell: ({ row }) => <span className="font-medium">{row.original.endpoint}</span>,
     },
     {
-      header: "Successful / Failed",
+      header: "Успешно / с ошибкой",
       id: "requests",
       cell: ({ row }) => {
         const record = row.original;
@@ -72,13 +72,13 @@ const EndpointUsageTable: React.FC<EndpointUsageTableProps> = ({ endpointData })
       },
     },
     {
-      header: "Total Request",
+      header: "Всего запросов",
       accessorKey: "api_requests",
       meta: { numeric: true },
       cell: ({ row }) => row.original.api_requests.toLocaleString(),
     },
     {
-      header: "Success Rate",
+      header: "Доля успеха",
       accessorKey: "successRate",
       meta: { numeric: true },
       cell: ({ row }) => {
@@ -100,7 +100,7 @@ const EndpointUsageTable: React.FC<EndpointUsageTableProps> = ({ endpointData })
       },
     },
     {
-      header: "Total Tokens",
+      header: "Всего токенов",
       accessorKey: "total_tokens",
       meta: { numeric: true },
       cell: ({ row }) => row.original.total_tokens.toLocaleString(),

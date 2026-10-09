@@ -228,8 +228,8 @@ const CustomCodeModal: React.FC<CustomCodeModalProps> = ({ visible, onClose, onS
         ],
         tool_calls: [],
         structured_messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: "Hello, my SSN is 123-45-6789" },
+          { role: "system", content: "Ты полезный ассистент." },
+          { role: "user", content: "Привет, мой номер социального страхования 123-45-6789" },
         ],
         model: "gpt-4",
       },

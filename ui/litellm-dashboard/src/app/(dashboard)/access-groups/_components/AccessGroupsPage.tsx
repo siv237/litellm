@@ -63,7 +63,7 @@ export function AccessGroupsPage() {
       <PageHeader
         icon={<Boxes />}
         title="Группы доступа"
-        subtitle="Manage resource permissions for your organization"
+        subtitle="Управление правами на ресурсы вашей организации"
         primaryAction={
           canModify ? (
             <Button onClick={() => setIsCreateModalVisible(true)}>

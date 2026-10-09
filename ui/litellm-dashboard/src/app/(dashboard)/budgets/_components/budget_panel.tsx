@@ -83,7 +83,7 @@ const BudgetPanel: React.FC<BudgetSettingsPageProps> = ({ accessToken }) => {
         <PageHeader
           icon={<Wallet />}
           title="Бюджеты"
-          subtitle="Spend, TPM and RPM limits you can assign to customers."
+          subtitle="Лимиты расхода, TPM и RPM, которые можно назначать клиентам."
           primaryAction={
             canModify ? (
               <Button onClick={() => setIsCreateModelVisible(true)}>

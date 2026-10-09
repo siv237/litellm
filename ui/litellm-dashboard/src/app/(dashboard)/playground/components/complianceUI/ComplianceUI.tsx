@@ -478,7 +478,7 @@ export default function ComplianceUI({
         const sysMsg: QuickTestMessage = {
           id: `msg-${Date.now()}-sys`,
           type: "system",
-          text: "Allowed — model response received.",
+          text: "Разрешено — ответ модели получен.",
           result: "allowed",
           returnedText: fullResponse,
           timestamp: new Date(),

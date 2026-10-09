@@ -667,7 +667,7 @@ const Teams: React.FC<TeamProps> = ({ accessToken, userID, userRole, premiumUser
           <PageHeader
             icon={<Users />}
             title="Команды"
-            subtitle="Manage teams, members, and their access to models and budgets"
+            subtitle="Управление командами, участниками и их доступом к моделям и бюджетам"
             primaryAction={
               canCreateOrManageTeams(userRole, userID, organizations) ? (
                 <UIButton onClick={openCreateTeamModal} data-testid="create-team-button">

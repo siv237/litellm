@@ -11,7 +11,7 @@ export default function Workflows() {
   const canViewWorkflowRuns = useCan("viewWorkflowRuns");
 
   if (!canViewWorkflowRuns) {
-    return <AdminOnlyNotice pageTitle="Workflow Runs" />;
+    return <AdminOnlyNotice pageTitle="Запуски процессов" />;
   }
 
   return (

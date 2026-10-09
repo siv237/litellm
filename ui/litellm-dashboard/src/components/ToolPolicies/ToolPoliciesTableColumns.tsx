@@ -113,7 +113,7 @@ export const getToolPoliciesTableColumns = ({
   {
     id: "key_hash",
     accessorFn: (row) => row.key_hash ?? "",
-    header: "Key Hash",
+    header: "Хеш ключа",
     size: 150,
     enableSorting: false,
     cell: ({ row }) => <IdCell value={row.original.key_hash} />,

@@ -261,7 +261,7 @@ export function VirtualKeysTable({ headerActions }: VirtualKeysTableProps) {
       <PageHeader
         icon={<KeyRound />}
         title="Виртуальные ключи"
-        subtitle="Every key that authenticates requests to the gateway."
+        subtitle="Все ключи, аутентифицирующие запросы к гейтвею."
         primaryAction={headerActions}
       />
       <DataTable

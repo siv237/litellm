@@ -36,7 +36,7 @@ const PromptEditorView: React.FC<PromptEditorViewProps> = ({ onClose, onSuccess,
       messages: [
         {
           role: "user",
-          content: "Enter task specifics. Use {{template_variables}} for dynamic inputs",
+          content: "Укажите детали задачи. Используйте {{template_variables}} для динамических входов",
         },
       ],
       environment: "development",

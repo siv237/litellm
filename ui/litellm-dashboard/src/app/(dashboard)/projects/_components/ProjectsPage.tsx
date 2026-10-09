@@ -58,7 +58,7 @@ export function ProjectsPage() {
       <PageHeader
         icon={<Folder />}
         title="Проекты"
-        subtitle="Manage projects within your teams"
+        subtitle="Управление проектами внутри команд"
         primaryAction={
           <Button onClick={() => setIsCreateModalVisible(true)}>
             <Plus className="size-4" />

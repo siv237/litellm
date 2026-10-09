@@ -227,7 +227,7 @@ async function main() {
     const response = await client.chat.completions.create({
         model: "${model}",
         messages: [
-            { role: "user", content: "Who are u" }
+            { role: "user", content: "Кто ты?" }
         ],
         prompt_id: "${promptId}"${jsEnvironment},
         prompt_version: ${version}

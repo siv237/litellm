@@ -48,7 +48,7 @@ function expiryLabel(isoString: string | null | undefined): {
   text: string;
   variant: "secondary" | "destructive" | "outline";
 } {
-  if (!isoString) return { text: "Does not expire", variant: "secondary" };
+  if (!isoString) return { text: "Бессрочно", variant: "secondary" };
   try {
     const exp = new Date(isoString);
     const diffMs = exp.getTime() - Date.now();

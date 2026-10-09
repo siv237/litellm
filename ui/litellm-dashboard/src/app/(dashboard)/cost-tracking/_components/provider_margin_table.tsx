@@ -122,7 +122,7 @@ const ProviderMarginTable: React.FC<ProviderMarginTableProps> = ({
           },
         },
         {
-          header: "Margin",
+          header: "Наценка",
           cell: (row) => {
             const displayName = marginRowDisplayName(row.provider);
             return (

@@ -86,19 +86,19 @@ const TopKeyView: React.FC<TopKeyViewProps> = ({ topKeys, teams, showTags = fals
   // Define columns for the table view
   const baseColumns = [
     {
-      header: "Key ID",
+      header: "ID ключа",
       accessorKey: "api_key",
       cell: (info: any) => <IdCell value={info.getValue()} onClick={() => handleKeyClick(info.row.original)} />,
     },
     {
-      header: "Key Alias",
+      header: "Алиас ключа",
       accessorKey: "key_alias",
       cell: (info: any) => info.getValue() || "-",
     },
   ];
 
   const tagsColumn = {
-    header: "Tags",
+    header: "Теги",
     accessorKey: "tags",
     cell: (info: any) => {
       const tags = info.getValue() as TagUsage[] | undefined;

@@ -71,8 +71,8 @@ interface TeamOption {
 }
 
 const MEMBER_ROLE_OPTIONS = [
-  { value: "user", hint: "Can view team info, but not manage it" },
-  { value: "admin", hint: "Can create team keys, add members, and manage settings" },
+  { value: "user", hint: "Может просматривать сведения о команде, но не управлять ими" },
+  { value: "admin", hint: "Может создавать ключи команды, добавлять участников и управлять настройками" },
 ] as const;
 
 export default function UserInfoView({

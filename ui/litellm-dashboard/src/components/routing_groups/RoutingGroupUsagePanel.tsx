@@ -50,7 +50,7 @@ const client = new OpenAI({
 
 const response = await client.chat.completions.create({
   model: "${exampleModel(group)}",
-  messages: [{ role: "user", content: "Hello!" }],
+  messages: [{ role: "user", content: "Привет!" }],
 });
 
 console.log(response);`;

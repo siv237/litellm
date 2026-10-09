@@ -177,7 +177,7 @@ export function GuardrailsOverview({
       ),
     },
     {
-      header: "Guardrail",
+      header: "Гардрейл",
       accessorKey: "name",
       enableSorting: false,
       cell: ({ row }) => (
@@ -254,7 +254,7 @@ export function GuardrailsOverview({
       ),
     },
     {
-      header: "Usage Units",
+      header: "Единицы использования",
       accessorKey: "usageUnits",
       enableSorting: false,
       meta: { numeric: true },
@@ -285,7 +285,7 @@ export function GuardrailsOverview({
       <PageHeader
         icon={<HeartPulse />}
         title="Монитор гардрейлов"
-        subtitle="Monitor guardrail performance across all requests"
+        subtitle="Мониторинг работы гардрейлов на всех запросах"
         utilities={
           <>
             {dateRangeControl}

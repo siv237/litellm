@@ -10,7 +10,7 @@ export default function GuardrailsMonitor() {
   const canViewGuardrailUsage = useCan("viewGuardrailUsage");
 
   if (!canViewGuardrailUsage) {
-    return <AdminOnlyNotice pageTitle="Guardrails Monitor" />;
+    return <AdminOnlyNotice pageTitle="Монитор гардрейлов" />;
   }
 
   return <GuardrailsMonitorView accessToken={accessToken} />;

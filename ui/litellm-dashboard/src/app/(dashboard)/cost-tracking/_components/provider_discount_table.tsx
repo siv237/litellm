@@ -79,7 +79,7 @@ const ProviderDiscountTable: React.FC<ProviderDiscountTableProps> = ({
           },
         },
         {
-          header: "Discount Percentage",
+          header: "Процент скидки",
           cell: (row) => {
             const { displayName } = getProviderLogoAndName(row.provider);
             return (

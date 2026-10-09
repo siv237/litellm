@@ -29,7 +29,7 @@ export default function RoleMappings({ roleMappings }: { roleMappings: RoleMappi
     {
       id: "groups",
       accessorKey: "groups",
-      header: "Mapped Groups",
+      header: "Сопоставленные группы",
       cell: ({ row }) =>
         row.original.groups.length > 0 ? (
           <div className="flex flex-wrap gap-1">

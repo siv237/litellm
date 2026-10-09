@@ -30,17 +30,17 @@ const FIELD_GROUPS: VaultFieldGroup[] = [
   },
   {
     title: "Токенная аутентификация",
-    subtitle: "Use a Vault token to authenticate. Only one auth method is required.",
+    subtitle: "Для аутентификации используйте токен Vault. Достаточно одного метода.",
     fields: ["vault_token"],
   },
   {
     title: "AppRole-аутентификация",
-    subtitle: "Use AppRole credentials to authenticate. Only one auth method is required.",
+    subtitle: "Для аутентификации используйте реквизиты AppRole. Достаточно одного метода.",
     fields: ["approle_role_id", "approle_secret_id", "approle_mount_path"],
   },
   {
     title: "TLS",
-    subtitle: "Optional client certificate for mTLS.",
+    subtitle: "Необязательный клиентский сертификат для mTLS.",
     fields: ["client_cert", "client_key", "vault_cert_role"],
   },
 ];

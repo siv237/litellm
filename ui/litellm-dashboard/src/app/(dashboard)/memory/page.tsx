@@ -11,7 +11,7 @@ export default function Memory() {
   const canViewMemory = useCan("viewMemory");
 
   if (!canViewMemory) {
-    return <AdminOnlyNotice pageTitle="Memory" />;
+    return <AdminOnlyNotice pageTitle="Память" />;
   }
 
   return (

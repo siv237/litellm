@@ -38,7 +38,7 @@ const CostOptimizationView: React.FC<CostOptimizationViewProps> = ({ accessToken
         <PageHeader
           icon={<PiggyBank />}
           title="Оптимизация затрат"
-          subtitle="Track and configure the mechanisms that save you money: prompt compression and prompt caching. Auto routers live under Models + Endpoints, on the Auto-Routers tab"
+          subtitle="Отслеживайте и настраивайте механизмы экономии: сжатие и кэширование промптов. Авто-роутеры находятся в «Модели и эндпоинты», на вкладке «Авто-роутеры»"
           tabs={({ leadingControls }) => (
             <TabsList
               variant="line"

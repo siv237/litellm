@@ -43,7 +43,7 @@ export const getAuditLogsTableColumns = ({ onViewLog }: AuditLogsTableColumnsDep
   {
     id: "updated_at",
     accessorKey: "updated_at",
-    header: "Timestamp",
+    header: "Отметка времени",
     size: 200,
     enableSorting: false,
     cell: ({ row }) => <DateCell value={row.original.updated_at} />,
@@ -51,7 +51,7 @@ export const getAuditLogsTableColumns = ({ onViewLog }: AuditLogsTableColumnsDep
   {
     id: "action",
     accessorKey: "action",
-    header: "Action",
+    header: "Действие",
     size: 110,
     enableSorting: false,
     cell: ({ row }) => (
@@ -61,7 +61,7 @@ export const getAuditLogsTableColumns = ({ onViewLog }: AuditLogsTableColumnsDep
   {
     id: "table_name",
     accessorKey: "table_name",
-    header: "Table",
+    header: "Таблица",
     size: 130,
     enableSorting: false,
     cell: ({ row }) => (
@@ -71,7 +71,7 @@ export const getAuditLogsTableColumns = ({ onViewLog }: AuditLogsTableColumnsDep
   {
     id: "object_id",
     accessorKey: "object_id",
-    header: "Object ID",
+    header: "ID объекта",
     minSize: 220,
     enableSorting: false,
     cell: ({ row }) => (
@@ -86,7 +86,7 @@ export const getAuditLogsTableColumns = ({ onViewLog }: AuditLogsTableColumnsDep
   {
     id: "changed_by",
     accessorKey: "changed_by",
-    header: "Changed By",
+    header: "Изменил",
     size: 200,
     enableSorting: false,
     cell: ({ row }) => <DefaultProxyAdminTag userId={row.original.changed_by} />,
@@ -94,7 +94,7 @@ export const getAuditLogsTableColumns = ({ onViewLog }: AuditLogsTableColumnsDep
   {
     id: "changed_by_api_key",
     accessorKey: "changed_by_api_key",
-    header: "API Key (Hash)",
+    header: "API-ключ (хеш)",
     size: 160,
     enableSorting: false,
     cell: ({ row }) => <IdCell value={row.original.changed_by_api_key} variant="plain" />,

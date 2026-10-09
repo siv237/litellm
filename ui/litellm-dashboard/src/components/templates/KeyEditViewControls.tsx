@@ -20,9 +20,9 @@ export const labelWithHint = (label: React.ReactNode, hint: string): React.React
 );
 
 const KEY_TYPE_OPTIONS = [
-  { value: "default", label: "Полный доступ", hint: "Can call all routes (AI APIs, Management, and read-only)" },
-  { value: "llm_api", label: "AI APIs", hint: "Can call only AI API routes (chat/completions, embeddings, etc.)" },
-  { value: "management", label: "Управление", hint: "Can call only management routes (user/team/key management)" },
+  { value: "default", label: "Полный доступ", hint: "Может вызывать все маршруты (AI API, управление и только чтение)" },
+  { value: "llm_api", label: "AI APIs", hint: "Может вызывать только маршруты AI API (chat/completions, embeddings и т.п.)" },
+  { value: "management", label: "Управление", hint: "Может вызывать только маршруты управления (пользователи/команды/ключи)" },
 ];
 
 export const KeyTypeSelect = ({

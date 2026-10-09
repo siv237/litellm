@@ -94,7 +94,7 @@ async function testFallbackModelResponse(selectedModel: string, accessToken: str
       messages: [
         {
           role: "user",
-          content: "Hi, this is a test message",
+          content: "Привет, это тестовое сообщение",
         },
       ],
       // @ts-ignore

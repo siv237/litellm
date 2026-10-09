@@ -30,17 +30,17 @@ const FIELD_GROUPS: CyberArkFieldGroup[] = [
   },
   {
     title: "Аутентификация по API-ключу",
-    subtitle: "Use a Conjur API key to authenticate. Only one auth method is required.",
+    subtitle: "Для аутентификации используйте API-ключ Conjur. Достаточно одного метода.",
     fields: ["cyberark_api_key"],
   },
   {
     title: "Сертификатная аутентификация",
-    subtitle: "Use a client TLS certificate and key to authenticate. Only one auth method is required.",
+    subtitle: "Для аутентификации используйте клиентский TLS-сертификат и ключ. Достаточно одного метода.",
     fields: ["client_cert", "client_key"],
   },
   {
     title: "Дополнительно",
-    subtitle: "Optional TLS and token caching settings.",
+    subtitle: "Необязательные настройки TLS и кэширования токенов.",
     fields: ["ssl_verify", "refresh_interval"],
   },
 ];

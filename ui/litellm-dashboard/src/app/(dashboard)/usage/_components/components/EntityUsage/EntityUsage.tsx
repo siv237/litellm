@@ -299,13 +299,13 @@ const EntityUsage: React.FC<EntityUsageProps> = ({
         cell: ({ row }) => <MoneyCell value={row.original.metrics.spend} decimals={4} />,
       },
       {
-        header: "Successful",
+        header: "Успешные",
         accessorKey: "metrics.successful_requests",
         meta: { numeric: true, className: "text-success" },
         cell: ({ row }) => row.original.metrics.successful_requests.toLocaleString(),
       },
       {
-        header: "Failed",
+        header: "Сбойные",
         accessorKey: "metrics.failed_requests",
         meta: { numeric: true, className: "text-destructive" },
         cell: ({ row }) => row.original.metrics.failed_requests.toLocaleString(),
@@ -338,13 +338,13 @@ const EntityUsage: React.FC<EntityUsageProps> = ({
         cell: ({ row }) => <MoneyCell value={row.original.spend} decimals={2} />,
       },
       {
-        header: "Successful",
+        header: "Успешные",
         accessorKey: "successful_requests",
         meta: { numeric: true, className: "text-success" },
         cell: ({ row }) => row.original.successful_requests.toLocaleString(),
       },
       {
-        header: "Failed",
+        header: "Сбойные",
         accessorKey: "failed_requests",
         meta: { numeric: true, className: "text-destructive" },
         cell: ({ row }) => row.original.failed_requests.toLocaleString(),

@@ -585,7 +585,7 @@ const ModelHubTable: React.FC<ModelHubTableProps> = ({ accessToken, publicPage, 
                     noDataMessage={
                       <HubEmptyState
                         title="Серверов MCP пока нет"
-                        body="MCP servers added to this proxy will appear here."
+                        body="Добавленные на прокси серверы MCP появятся здесь."
                       />
                     }
                     size="compact"
