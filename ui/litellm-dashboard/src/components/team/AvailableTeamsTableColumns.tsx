@@ -26,7 +26,7 @@ function AvailableTeamRowActions({ team, onJoinTeam }: { team: AvailableTeam; on
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open team actions"
+        aria-label="Действия команды"
         data-testid={`available-team-actions-${team.team_id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -35,7 +35,7 @@ function AvailableTeamRowActions({ team, onJoinTeam }: { team: AvailableTeam; on
       <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuItem data-testid="available-team-action-join" onClick={() => onJoinTeam(team.team_id)}>
           <UserPlus />
-          Join team
+          Вступить в команду
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -52,8 +52,8 @@ export const getAvailableTeamsTableColumns = ({
   {
     id: "team_alias",
     accessorKey: "team_alias",
-    meta: { title: "Team Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Team Name" />,
+    meta: { title: "Имя команды" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Имя команды" />,
     size: 220,
     enableSorting: true,
     cell: ({ row }) => (
@@ -79,8 +79,8 @@ export const getAvailableTeamsTableColumns = ({
   {
     id: "members",
     accessorFn: (team) => team.members_with_roles.length,
-    meta: { title: "Members" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Members" />,
+    meta: { title: "Участники" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Участники" />,
     size: 120,
     enableSorting: true,
     cell: ({ row }) => (

@@ -23,12 +23,12 @@ const QueryParamInput: React.FC<QueryParamInputProps> = ({ value = [], onChange 
       {value.map(([key, val], index) => (
         <div key={index} className="flex items-center gap-2">
           <Input
-            placeholder="Parameter Name (e.g., version)"
+            placeholder="Имя параметра (напр., version)"
             value={key}
             onChange={(e) => handleChange(index, [e.target.value, val])}
           />
           <Input
-            placeholder="Parameter Value (e.g., v1)"
+            placeholder="Значение параметра (напр., v1)"
             value={val}
             onChange={(e) => handleChange(index, [key, e.target.value])}
           />
@@ -45,7 +45,7 @@ const QueryParamInput: React.FC<QueryParamInputProps> = ({ value = [], onChange 
       ))}
       <Button type="button" variant="outline" onClick={handleAdd}>
         <Plus />
-        Add Query Parameter
+        Добавить query-параметр
       </Button>
     </div>
   );

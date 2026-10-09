@@ -105,7 +105,7 @@ export default function AuditLogsPanel({
           Это функция ruLiteLLM Enterprise, требуется действующий ключ.
         </p>
         <p style={{ display: "block", marginBottom: "20px", fontStyle: "italic" }}>
-          Here&apos;s a preview of what Audit Logs offer:
+          Предпросмотр возможностей Audit Logs:
         </p>
         <img
           src={resolveLogoSrc(auditLogsPreviewImg)}

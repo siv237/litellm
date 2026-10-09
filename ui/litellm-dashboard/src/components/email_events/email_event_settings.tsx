@@ -49,7 +49,7 @@ const EmailEventSettings: React.FC<EmailEventSettingsProps> = ({ accessToken }) 
 
     try {
       await updateEmailEventSettings(accessToken, { settings: eventSettings });
-      toast.success("Email event settings updated successfully");
+      toast.success("Настройки email-событий обновлены");
     } catch (error) {
       console.error("Failed to update email event settings:", error);
       toast.fromError(error);
@@ -61,7 +61,7 @@ const EmailEventSettings: React.FC<EmailEventSettingsProps> = ({ accessToken }) 
 
     try {
       await resetEmailEventSettings(accessToken);
-      toast.success("Email event settings reset to defaults");
+      toast.success("Настройки email-событий сброшены к значениям по умолчанию");
       // Refresh settings after reset
       fetchEventSettings();
     } catch (error) {
@@ -90,8 +90,8 @@ const EmailEventSettings: React.FC<EmailEventSettingsProps> = ({ accessToken }) 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Email Notifications</CardTitle>
-        <p className="text-sm text-muted-foreground">Select which events should trigger email notifications.</p>
+        <CardTitle className="text-base">Email-уведомления</CardTitle>
+        <p className="text-sm text-muted-foreground">Выберите события, которые присылают email-уведомления.</p>
       </CardHeader>
 
       <CardContent>
@@ -125,7 +125,7 @@ const EmailEventSettings: React.FC<EmailEventSettingsProps> = ({ accessToken }) 
             Сохранить изменения
           </Button>
           <Button variant="secondary" onClick={handleResetSettings} disabled={loading}>
-            Reset to Defaults
+            Сбросить к значениям по умолчанию
           </Button>
         </div>
       </CardContent>

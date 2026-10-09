@@ -91,7 +91,7 @@ export function DataTableToolbar<TData>({
             onClick={() => table.setColumnFilters([])}
             data-testid="datatable-clear-filters"
           >
-            Clear all
+            Очистить всё
           </Button>
         )}
       </div>
@@ -110,7 +110,7 @@ export function DataTableToolbar<TData>({
             <RefreshCw className={isRefreshing ? "animate-spin" : ""} />
           </Button>
         )}
-        {showViewOptions && <DataTableViewOptions table={table} label="Columns" />}
+        {showViewOptions && <DataTableViewOptions table={table} label="Колонки" />}
         {onOpenFilters !== undefined && (
           <Button variant="outline" size="sm" onClick={onOpenFilters} data-testid="datatable-filters-trigger">
             <SlidersHorizontal />

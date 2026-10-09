@@ -36,7 +36,7 @@ export default function MyUserTab({ teamId }: MyUserTabProps) {
   if (isLoading) {
     return (
       <Card>
-        <CardContent className="text-muted-foreground">Loading your membership info…</CardContent>
+        <CardContent className="text-muted-foreground">Загрузка сведений об участии…</CardContent>
       </Card>
     );
   }
@@ -55,7 +55,7 @@ export default function MyUserTab({ teamId }: MyUserTabProps) {
     return (
       <Card>
         <CardContent className="text-muted-foreground">
-          No membership info available for the current user in this team.
+          У текущего пользователя нет сведений об участии в этой команде.
         </CardContent>
       </Card>
     );
@@ -81,7 +81,7 @@ export default function MyUserTab({ teamId }: MyUserTabProps) {
               <span className="font-mono text-xs text-muted-foreground">{data.user_id}</span>
             </div>
             <div>
-              <span className="text-muted-foreground">Team Role</span>
+              <span className="text-muted-foreground">Роль в команде</span>
               <div className="mt-1">
                 <Badge variant={data.role === "admin" ? "default" : "secondary"}>{data.role || "user"}</Badge>
               </div>
@@ -103,7 +103,7 @@ export default function MyUserTab({ teamId }: MyUserTabProps) {
                 of {maxBudget === null ? "Unlimited" : `$${formatNumber(maxBudget, 4)}`}
               </span>
             </div>
-            {budgetReset && <div className="mt-1 text-muted-foreground">Resets {budgetReset}</div>}
+            {budgetReset && <div className="mt-1 text-muted-foreground">Сброс {budgetReset}</div>}
           </CardContent>
         </Card>
 
@@ -138,7 +138,7 @@ export default function MyUserTab({ teamId }: MyUserTabProps) {
                   ))}
                 </div>
               ) : (
-                <span>All Team Models</span>
+                <span>Все модели команды</span>
               )}
             </div>
           </CardContent>

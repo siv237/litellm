@@ -12,7 +12,7 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin", "cyrillic", "cyrillic-ext"] });
 
 export const metadata: Metadata = {
-  title: "ruLiteLLM Dashboard",
+  title: "Панель ruLiteLLM",
   description: "Админ-интерфейс ruLiteLLM-прокси",
   icons: { icon: "/ui/assets/logos/rulitellm_mark.png" },
 };

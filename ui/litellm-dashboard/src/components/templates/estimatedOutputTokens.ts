@@ -53,7 +53,7 @@ export const estimateChecks = {
   positive: {
     isValid: (value: unknown): boolean =>
       value === "" || value === null || value === undefined ? true : isPositiveInteger(Number(value)),
-    message: "Enter a positive integer",
+    message: "Введите положительное целое число",
   },
 };
 

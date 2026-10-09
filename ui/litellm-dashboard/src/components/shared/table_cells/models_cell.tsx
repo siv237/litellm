@@ -32,13 +32,13 @@ export function ModelsCell({ models, maxVisible = 3, allowedRoutes, keyType }: M
           content={`Scoped to ${scope.label} routes; this key cannot call any models`}
           trigger={
             <Badge variant="secondary" className="cursor-default">
-              No model access
+              Нет доступа к моделям
             </Badge>
           }
         />
       );
     }
-    return <Badge variant="secondary">All Proxy Models</Badge>;
+    return <Badge variant="secondary">Все модели прокси</Badge>;
   }
 
   const visible = models.slice(0, maxVisible);
@@ -62,7 +62,7 @@ export function ModelsCell({ models, maxVisible = 3, allowedRoutes, keyType }: M
           }
           trigger={
             <Badge variant="outline" className="cursor-default">
-              +{overflow.length} more
+              +{overflow.length} ещё
             </Badge>
           }
         />

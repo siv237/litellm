@@ -378,7 +378,7 @@ export const handleError = async (errorData: string | any) => {
     // Convert errorData to string if it isn't already
     const errorString = typeof errorData === "string" ? errorData : JSON.stringify(errorData);
     if (errorString.includes("Authentication Error - Expired Key")) {
-      toast.info("UI Session Expired. Logging out.");
+      toast.info("Сессия UI истекла. Выход.");
       lastErrorTime = currentTime;
       clearTokenCookies();
       const browserLocation = getWindowLocation();
@@ -2525,7 +2525,7 @@ export const keyInfoV1Call = async (accessToken: string, key: string) => {
     if (!response.ok) {
       const errorData = await response.text();
       handleError(errorData);
-      toast.fromError("Failed to fetch key info - " + errorData);
+      toast.fromError("Не удалось получить сведения о ключе — " + errorData);
     }
 
     const data = await response.json();
@@ -2890,7 +2890,7 @@ export const teamUpdateCall = async (
       const errorData = await response.text();
       handleError(errorData);
       console.error("Error response from the server:", errorData);
-      toast.fromError("Failed to update team settings: " + unwrapProxyErrorMessage(errorData));
+      toast.fromError("Не удалось обновить настройки команды: " + unwrapProxyErrorMessage(errorData));
       throw new Error(errorData);
     }
     const data = (await response.json()) as { data: Team; team_id: string };
@@ -3544,7 +3544,7 @@ export const updateConfigFieldSetting = async (accessToken: string, fieldName: s
       config_type: "general_settings",
     };
     const data = await apiClient.post(`/config/field/update`, { accessToken, body: formData });
-    toast.success("Successfully updated value!");
+    toast.success("Значение обновлено!");
     return data;
     // Handle success - you might want to update some state or UI based on the created key
   } catch (error) {
@@ -3560,7 +3560,7 @@ export const deleteConfigFieldSetting = async (accessToken: string, fieldName: s
       config_type: "general_settings",
     };
     const data = await apiClient.post(`/config/field/delete`, { accessToken, body: formData });
-    toast.success("Field reset on proxy");
+    toast.success("Поле сброшено на прокси");
     return data;
     // Handle success - you might want to update some state or UI based on the created key
   } catch (error) {
@@ -5295,7 +5295,7 @@ export const listMCPTools = async (
     return {
       tools: [],
       error: "parse_error",
-      message: "Failed to parse MCP tools response",
+      message: "Не удалось разобрать ответ инструментов MCP",
       status: response.status,
       statusText: response.statusText,
       stack_trace: null,
@@ -6728,7 +6728,7 @@ export const updatePassThroughEndpoint = async (
     }
 
     const data = await response.json();
-    toast.success("Pass through endpoint updated successfully");
+    toast.success("Pass-through эндпоинт обновлён");
     return data;
   } catch (error) {
     console.error("Failed to update pass through endpoint:", error);

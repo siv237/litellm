@@ -24,7 +24,7 @@ const CodeBlock = ({ code, language }: CodeBlockProps) => {
       <button
         onClick={copyToClipboard}
         className="absolute top-3 right-3 p-2 rounded-md border border-border bg-background text-muted-foreground hover:bg-accent hover:text-foreground z-raised"
-        aria-label="Copy code"
+        aria-label="Скопировать код"
       >
         {copied ? <CheckIcon size={16} /> : <ClipboardIcon size={16} />}
       </button>

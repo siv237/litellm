@@ -97,7 +97,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             <TableCell>
               <Button className="flex items-center justify-center">
                 <a href="https://forms.gle/W3U4PZpJGFHWtHyA9" target="_blank">
-                  ✨ Enterprise Feature
+                  ✨ Функция Enterprise
                 </a>
               </Button>
             </TableCell>
@@ -108,12 +108,12 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             {value.stored_in_db == true ? (
               <Badge variant="secondary">
                 <CircleCheck />
-                In DB
+                В БД
               </Badge>
             ) : value.stored_in_db == false ? (
-              <Badge variant="outline">In Config</Badge>
+              <Badge variant="outline">В конфиге</Badge>
             ) : (
-              <Badge variant="outline">Not Set</Badge>
+              <Badge variant="outline">Не задано</Badge>
             )}
           </TableCell>
           <TableCell>
@@ -131,7 +131,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         </TableRow>
       ))}
       <div>
-        <Button type="submit">Update Settings</Button>
+        <Button type="submit">Обновить настройки</Button>
       </div>
     </form>
   );

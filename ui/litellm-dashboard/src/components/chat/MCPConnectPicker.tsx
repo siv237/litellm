@@ -89,7 +89,7 @@ const MCPConnectPicker: React.FC<Props> = ({ accessToken, selectedServers, onCha
           ))}
         </div>
       ) : servers.length === 0 ? (
-        <div className="px-3 py-4 text-muted-foreground text-[13px] text-center">No MCP servers configured</div>
+        <div className="px-3 py-4 text-muted-foreground text-[13px] text-center">Серверы MCP не настроены</div>
       ) : (
         servers.map((server) => {
           const name = server.server_name ?? server.alias ?? server.server_id;

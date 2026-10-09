@@ -85,7 +85,7 @@ const IndexesTab: React.FC<IndexesTabProps> = ({ accessToken, vectorStores, onVi
         >
           создайте issue на GitHub
         </a>{" "}
-        if you want your provider supported.
+        , если хотите поддержку своего провайдера.
       </p>
       <div className="grid grid-cols-1 gap-2 pt-2 pb-2 w-full">
         <IndexesTable

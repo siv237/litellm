@@ -65,8 +65,8 @@ export const getRoutingGroupsTableColumns = ({
   {
     id: "group_name",
     accessorKey: "group_name",
-    meta: { title: "Group Name", skeleton: "text" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Group Name" />,
+    meta: { title: "Имя группы", skeleton: "text" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Имя группы" />,
     size: 240,
     enableSorting: true,
     cell: ({ row }) => (
@@ -84,8 +84,8 @@ export const getRoutingGroupsTableColumns = ({
   {
     id: "routing_strategy",
     accessorKey: "routing_strategy",
-    meta: { title: "Strategy", skeleton: "text" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Strategy" />,
+    meta: { title: "Стратегия", skeleton: "text" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Стратегия" />,
     size: 180,
     enableSorting: true,
     cell: ({ row }) => (

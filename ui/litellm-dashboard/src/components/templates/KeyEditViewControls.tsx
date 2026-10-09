@@ -20,9 +20,9 @@ export const labelWithHint = (label: React.ReactNode, hint: string): React.React
 );
 
 const KEY_TYPE_OPTIONS = [
-  { value: "default", label: "Full Access", hint: "Can call all routes (AI APIs, Management, and read-only)" },
+  { value: "default", label: "Полный доступ", hint: "Can call all routes (AI APIs, Management, and read-only)" },
   { value: "llm_api", label: "AI APIs", hint: "Can call only AI API routes (chat/completions, embeddings, etc.)" },
-  { value: "management", label: "Management", hint: "Can call only management routes (user/team/key management)" },
+  { value: "management", label: "Управление", hint: "Can call only management routes (user/team/key management)" },
 ];
 
 export const KeyTypeSelect = ({
@@ -40,7 +40,7 @@ export const KeyTypeSelect = ({
     onValueChange={(next: string | null) => next != null && onChange(next)}
   >
     <SelectTrigger id={id} className="w-full">
-      <SelectValue placeholder="Select key type" />
+      <SelectValue placeholder="Выберите тип ключа" />
     </SelectTrigger>
     <SelectContent>
       {KEY_TYPE_OPTIONS.map((option) => (
@@ -66,13 +66,13 @@ export const KeyAgentAndSkillFields = ({
   accessToken: string;
 }) => (
   <>
-    <FormField control={control} name="agents_and_groups" label="Agents / Access Groups">
+    <FormField control={control} name="agents_and_groups" label="Агенты / группы доступа">
       {({ value, onChange }) => (
         <AgentSelector
           onChange={onChange}
           value={value as AgentsAndGroups | undefined}
           accessToken={accessToken}
-          placeholder="Select agents or access groups (optional)"
+          placeholder="Выберите агентов или группы доступа (необязательно)"
         />
       )}
     </FormField>

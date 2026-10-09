@@ -61,11 +61,11 @@ export function BudgetFallbacksEditor({ value, onChange, availableModels }: Budg
     return (
       <div>
         <div className="text-xs text-muted-foreground mb-2">
-          When a model exceeds its per-model budget, requests automatically reroute to fallback models
+          При превышении бюджета модели запросы автоматически перенаправляются на резервные модели
         </div>
         <Button variant="outline" size="sm" onClick={addEntry}>
           <Plus className="w-3 h-3" />
-          Add Budget Fallback
+          Добавить резерв по бюджету
         </Button>
       </div>
     );
@@ -74,7 +74,7 @@ export function BudgetFallbacksEditor({ value, onChange, availableModels }: Budg
   return (
     <div className="space-y-4">
       <div className="text-xs text-muted-foreground">
-        When a model exceeds its per-model budget, requests automatically reroute to fallback models
+        При превышении бюджета модели запросы автоматически перенаправляются на резервные модели
       </div>
       {entries.map((entry) => {
         const availablePrimaryOptions = availableModels.filter(
@@ -93,7 +93,7 @@ export function BudgetFallbacksEditor({ value, onChange, availableModels }: Budg
             </button>
 
             <div className="mb-3">
-              <label className="block text-xs font-medium text-muted-foreground mb-1">Primary Model</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Основная модель</label>
               <SearchSelect
                 options={availablePrimaryOptions.map((m) => ({ label: m, value: m }))}
                 value={entry.primaryModel}
@@ -101,26 +101,26 @@ export function BudgetFallbacksEditor({ value, onChange, availableModels }: Budg
                   const newFallbacks = entry.fallbackModels.filter((m) => m !== v);
                   updateEntry(entry.id, { primaryModel: v, fallbackModels: newFallbacks });
                 }}
-                placeholder="Select model"
-                emptyText="No models found"
+                placeholder="Выберите модель"
+                emptyText="Модели не найдены"
               />
             </div>
 
             <div className="flex items-center justify-center -my-1 mb-2">
               <div className="bg-warning/10 text-warning px-3 py-0.5 rounded-full text-[10px] font-bold border border-warning/15 flex items-center gap-1">
                 <ArrowDown className="w-3 h-3" />
-                IF BUDGET EXCEEDED, TRY
+                ПРИ ПРЕВЫШЕНИИ БЮДЖЕТА ИСПОЛЬЗОВАТЬ
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-muted-foreground mb-1">Fallback Models</label>
+              <label className="block text-xs font-medium text-muted-foreground mb-1">Резервные модели</label>
               <MultiSelect
                 options={availableFallbackOptions.map((m) => ({ label: m, value: m }))}
                 value={entry.fallbackModels}
                 onValueChange={(values) => updateEntry(entry.id, { fallbackModels: values })}
                 placeholder={entry.primaryModel ? "Select fallback models" : "Select a primary model first"}
-                emptyText="No models found"
+                emptyText="Модели не найдены"
                 disabled={!entry.primaryModel}
                 className="w-full"
               />
@@ -135,7 +135,7 @@ export function BudgetFallbacksEditor({ value, onChange, availableModels }: Budg
       })}
       <Button variant="outline" size="sm" onClick={addEntry}>
         <Plus className="w-3 h-3" />
-        Add Budget Fallback
+        Добавить резерв по бюджету
       </Button>
     </div>
   );

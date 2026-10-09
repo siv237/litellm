@@ -110,7 +110,7 @@ export function useChatHistory(
     const now = Date.now();
     const newConversation: Conversation = {
       id,
-      title: "New conversation",
+      title: "Новый разговор",
       model,
       messages: [],
       mcpServerNames: [],

@@ -33,15 +33,15 @@ const uiAccessControlSchema = z
     ctx.addIssue({
       code: "custom",
       path: ["restricted_sso_group"],
-      message: "Please enter the restricted SSO group",
+      message: "Введите ограниченную SSO-группу",
     });
   });
 
 type UIAccessControlFormValues = z.output<typeof uiAccessControlSchema>;
 
 const UI_ACCESS_MODE_OPTIONS = [
-  { value: "all_authenticated_users", label: "All Authenticated Users" },
-  { value: "restricted_sso_group", label: "Restricted SSO Group" },
+  { value: "all_authenticated_users", label: "Все аутентифицированные пользователи" },
+  { value: "restricted_sso_group", label: "Ограниченная SSO-группа" },
 ] as const;
 
 const asRecord = (value: unknown): Record<string, unknown> | null =>
@@ -112,7 +112,7 @@ const UIAccessControlForm: React.FC<UIAccessControlFormProps> = ({ accessToken, 
 
   const handleUIAccessSubmit = async (formValues: UIAccessControlFormValues) => {
     if (!accessToken) {
-      toast.fromError("No access token available");
+      toast.fromError("Access token недоступен");
       return;
     }
 
@@ -133,7 +133,7 @@ const UIAccessControlForm: React.FC<UIAccessControlFormProps> = ({ accessToken, 
       onSuccess();
     } catch (error) {
       console.error("Failed to save UI access settings:", error);
-      toast.fromError("Failed to save UI access settings");
+      toast.fromError("Не удалось сохранить настройки доступа UI");
     } finally {
       setLoading(false);
     }
@@ -174,7 +174,7 @@ const UIAccessControlForm: React.FC<UIAccessControlFormProps> = ({ accessToken, 
                     aria-invalid={ariaInvalid}
                     aria-describedby={ariaDescribedBy}
                   >
-                    <SelectValue placeholder="Select access mode" />
+                    <SelectValue placeholder="Выберите режим доступа" />
                   </SelectTrigger>
                   <SelectContent>
                     {UI_ACCESS_MODE_OPTIONS.map((option) => (
@@ -188,7 +188,7 @@ const UIAccessControlForm: React.FC<UIAccessControlFormProps> = ({ accessToken, 
             </FormField>
 
             {uiAccessModeType === "restricted_sso_group" && (
-              <FormField control={form.control} name="restricted_sso_group" label="Restricted SSO Group">
+              <FormField control={form.control} name="restricted_sso_group" label="Ограниченная SSO-группа">
                 {({ ref, value, ...field }) => (
                   <Input {...field} ref={ref} value={value ?? ""} placeholder="ui-access-group" />
                 )}

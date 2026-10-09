@@ -86,7 +86,7 @@ const SkillSelector: React.FC<SkillSelectorProps> = ({
           }
         </ComboboxValue>
         <ComboboxChipsInput placeholder={placeholder} aria-label={placeholder} disabled={disabled} />
-        {value && value.length > 0 && <ComboboxClear aria-label="Clear all skills" disabled={disabled} />}
+        {value && value.length > 0 && <ComboboxClear aria-label="Очистить все скиллы" disabled={disabled} />}
       </ComboboxChips>
       <ComboboxContent anchor={anchor}>
         <ComboboxEmpty>{loading ? "Loading skills…" : "No skills found"}</ComboboxEmpty>

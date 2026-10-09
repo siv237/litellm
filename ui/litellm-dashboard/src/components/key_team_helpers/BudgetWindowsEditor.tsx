@@ -9,10 +9,10 @@ export interface BudgetWindowEntry {
 }
 
 export const BUDGET_WINDOW_OPTIONS = [
-  { value: "1h", label: "Hourly", resetHint: "Resets every hour" },
-  { value: "24h", label: "Daily", resetHint: "Resets daily at midnight UTC" },
-  { value: "7d", label: "Weekly", resetHint: "Resets every Sunday at midnight UTC" },
-  { value: "30d", label: "Monthly", resetHint: "Resets on the 1st of every month at midnight UTC" },
+  { value: "1h", label: "Час", resetHint: "Resets every hour" },
+  { value: "24h", label: "Сутки", resetHint: "Resets daily at midnight UTC" },
+  { value: "7d", label: "Неделя", resetHint: "Resets every Sunday at midnight UTC" },
+  { value: "30d", label: "Месяц", resetHint: "Resets on the 1st of every month at midnight UTC" },
 ];
 
 interface BudgetWindowsEditorProps {
@@ -76,7 +76,7 @@ export function BudgetWindowsEditor({ value, onChange }: BudgetWindowsEditorProp
                       updateWindow(idx, "max_budget", Number(typed.toFixed(2)));
                     }
                   }}
-                  placeholder="Max spend ($)"
+                  placeholder="Макс. расход ($)"
                 />
               </InputGroup>
               <Button
@@ -100,7 +100,7 @@ export function BudgetWindowsEditor({ value, onChange }: BudgetWindowsEditorProp
           addWindow();
         }}
       >
-        + Add Budget Window
+        + Добавить окно бюджета
       </Button>
     </div>
   );

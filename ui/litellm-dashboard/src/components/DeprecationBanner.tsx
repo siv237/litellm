@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Info, X } from "lucide-react";
 
 const DEPRECATION_DISCUSSION_URL = "https://github.com/BerriAI/litellm/discussions/32090";
-const DEPRECATION_TARGET_DATE = "September 1, 2026";
+const DEPRECATION_TARGET_DATE = "1 сентября 2026";
 
 interface DeprecationBannerProps {
   featureName: string;
@@ -25,16 +25,16 @@ export const DeprecationBanner: React.FC<DeprecationBannerProps> = ({ featureNam
     >
       <Info className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
       <div className="min-w-0 flex-1">
-        <p className="font-medium">{`${featureName} is on a draft deprecation list`}</p>
+        <p className="font-medium">{`${featureName} — в черновом списке на удаление`}</p>
         <p className="mt-1 break-words text-muted-foreground">
-          {`${featureName} is one of several experimental features we're considering removing, potentially as early as ${DEPRECATION_TARGET_DATE}. This list is a draft and is not final. If you rely on this feature, please share feedback on the `}
+          {`${featureName} — одна из экспериментальных функций, которые мы рассматриваем к удалению, возможно уже с ${DEPRECATION_TARGET_DATE}. Список черновой и не окончательный. Если вы полагаетесь на эту функцию, оставьте отзыв в `}
           <Link
             href={DEPRECATION_DISCUSSION_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="underline underline-offset-4"
           >
-            deprecation discussion
+            обсуждении депрекации
           </Link>
           .
         </p>

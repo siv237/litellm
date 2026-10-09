@@ -66,10 +66,10 @@ export function DataTableSortHeader<TData, TValue>({
             <Menu.Positioner side="bottom" align="start" sideOffset={4} className="isolate z-popup">
               <Menu.Popup className="min-w-[9rem] rounded-md bg-popover p-1 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden">
                 <Menu.Item className={MENU_ITEM_CLASS} onClick={() => column.toggleSorting(false)}>
-                  <ChevronUp className="size-3.5" /> Ascending
+                  <ChevronUp className="size-3.5" /> По возрастанию
                 </Menu.Item>
                 <Menu.Item className={MENU_ITEM_CLASS} onClick={() => column.toggleSorting(true)}>
-                  <ChevronDown className="size-3.5" /> Descending
+                  <ChevronDown className="size-3.5" /> По убыванию
                 </Menu.Item>
                 <Menu.Item className={MENU_ITEM_CLASS} onClick={() => column.clearSorting()}>
                   <X className="size-3.5" /> Сброс

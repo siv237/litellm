@@ -221,7 +221,7 @@ export const useUserMcpOAuthFlow = ({
 
       setStatus("success");
       setError(null);
-      toast.success("Connected successfully");
+      toast.success("Подключено");
       onSuccess();
     } catch (err) {
       const msg = extractErrorMessage(err);

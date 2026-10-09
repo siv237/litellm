@@ -112,7 +112,7 @@ const fallbackCopyToClipboard = (text: string, messageText: string): boolean => 
       throw new Error("execCommand failed");
     }
   } catch (err) {
-    toast.fromError("Failed to copy to clipboard");
+    toast.fromError("Не удалось скопировать");
     console.error("Failed to copy: ", err);
     return false;
   }

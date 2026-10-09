@@ -41,7 +41,7 @@ export default function CloudZeroCreationModal({ open, onOk, onCancel }: CloudZe
   const handleSubmit = (values: CloudZeroFormValues) => {
     createMutation.mutate(buildCloudZeroPayload(values), {
       onSuccess: () => {
-        toast.success("CloudZero integration created successfully");
+        toast.success("Интеграция CloudZero создана");
         form.reset(EMPTY_CLOUDZERO_FORM_VALUES);
         onOk();
       },
@@ -60,18 +60,18 @@ export default function CloudZeroCreationModal({ open, onOk, onCancel }: CloudZe
     <Dialog open={open} onOpenChange={(open) => !open && handleCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create CloudZero Integration</DialogTitle>
+          <DialogTitle>Создать интеграцию CloudZero</DialogTitle>
         </DialogHeader>
         <TooltipProvider>
           <form onSubmit={(event) => event.preventDefault()} noValidate>
             <FieldGroup>
-              <FormField control={form.control} name="api_key" label="CloudZero API Key">
+              <FormField control={form.control} name="api_key" label="API-ключ CloudZero">
                 {({ ref, ...field }) => (
-                  <CloudZeroApiKeyInput {...field} ref={ref} placeholder="Enter your CloudZero API key" />
+                  <CloudZeroApiKeyInput {...field} ref={ref} placeholder="Введите ваш API-ключ CloudZero" />
                 )}
               </FormField>
-              <FormField control={form.control} name="connection_id" label="Connection ID">
-                {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="Enter your CloudZero connection ID" />}
+              <FormField control={form.control} name="connection_id" label="ID соединения">
+                {({ ref, ...field }) => <Input {...field} ref={ref} placeholder="Введите ID соединения CloudZero" />}
               </FormField>
               <FormField
                 control={form.control}

@@ -61,7 +61,7 @@ export function LoggingSettingsView({
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <CogIcon className="h-4 w-4 text-info" />
-          <span className="font-semibold text-foreground">Logging Integrations</span>
+          <span className="font-semibold text-foreground">Интеграции логирования</span>
           <Badge variant="secondary">{loggingConfigs.length}</Badge>
         </div>
 
@@ -98,7 +98,7 @@ export function LoggingSettingsView({
         ) : (
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted border border-border">
             <CogIcon className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground text-sm">No logging integrations configured</span>
+            <span className="text-muted-foreground text-sm">Интеграции логирования не настроены</span>
           </div>
         )}
       </div>
@@ -107,7 +107,7 @@ export function LoggingSettingsView({
       <div className="space-y-3">
         <div className="flex items-center gap-2">
           <BanIcon className="h-4 w-4 text-destructive" />
-          <span className="font-semibold text-foreground">Disabled Callbacks</span>
+          <span className="font-semibold text-foreground">Отключённые коллбэки</span>
           <Badge variant="destructive">{disabledCallbacks.length}</Badge>
         </div>
 
@@ -130,7 +130,7 @@ export function LoggingSettingsView({
                     />
                     <div>
                       <span className="block font-medium text-destructive">{displayName}</span>
-                      <span className="block text-xs text-destructive">Disabled for this key</span>
+                      <span className="block text-xs text-destructive">Отключено для этого ключа</span>
                     </div>
                   </div>
                   <Badge variant="destructive">Выключено</Badge>
@@ -141,7 +141,7 @@ export function LoggingSettingsView({
         ) : (
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted border border-border">
             <BanIcon className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground text-sm">No callbacks disabled</span>
+            <span className="text-muted-foreground text-sm">Отключённых коллбэков нет</span>
           </div>
         )}
       </div>
@@ -153,9 +153,9 @@ export function LoggingSettingsView({
       <div className={`bg-card border border-border rounded-lg p-6 ${className}`}>
         <div className="flex items-center gap-2 mb-6">
           <div>
-            <span className="block font-semibold text-foreground">Logging Settings</span>
+            <span className="block font-semibold text-foreground">Настройки логирования</span>
             <span className="block text-xs text-muted-foreground">
-              Active logging integrations and disabled callbacks for this key
+              Активные интеграции логирования и отключённые коллбэки этого ключа
             </span>
           </div>
         </div>
@@ -166,7 +166,7 @@ export function LoggingSettingsView({
 
   return (
     <div className={`${className}`}>
-      <span className="block font-medium text-foreground mb-3">Logging Settings</span>
+      <span className="block font-medium text-foreground mb-3">Настройки логирования</span>
       {content}
     </div>
   );

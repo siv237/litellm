@@ -90,7 +90,7 @@ const ConnectFlowBanner: React.FC<Props> = ({ flowHandle, flow, accessToken, onC
                 type="submit"
                 className="h-[38px] rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
               >
-                Finish connecting
+                Завершить подключение
               </button>
             )}
             {canCancel && (
@@ -106,7 +106,7 @@ const ConnectFlowBanner: React.FC<Props> = ({ flowHandle, flow, accessToken, onC
             {loopbackClient && (
               <label className="mt-2 flex items-center gap-2 text-[13px] text-muted-foreground">
                 <input type="checkbox" name="delivery" value="manual" />
-                My client is on a remote or SSH machine
+                Мой клиент на удалённой или SSH-машине
               </label>
             )}
           </form>

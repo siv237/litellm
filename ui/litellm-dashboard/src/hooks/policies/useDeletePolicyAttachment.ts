@@ -17,14 +17,14 @@ export const useDeletePolicyAttachment = ({ accessToken, onSuccess, onError }: U
       return deletePolicyAttachmentCall(accessToken, attachmentId);
     },
     onSuccess: () => {
-      toast.success("Attachment deleted successfully");
+      toast.success("Вложение удалено");
       if (onSuccess) {
         onSuccess();
       }
     },
     onError: (error) => {
       console.error("Error deleting attachment:", error);
-      toast.error("Failed to delete attachment");
+      toast.error("Не удалось удалить вложение");
       if (onError) {
         onError(error);
       }

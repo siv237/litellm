@@ -30,9 +30,9 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Inbox className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No routing groups yet</div>
+      <div className="text-sm font-medium text-foreground">Групп маршрутизации пока нет</div>
       <div className="text-sm text-muted-foreground">
-        Create a group to load-balance a set of models behind one name.
+        Создайте группу, чтобы балансировать набор моделей под одним именем.
       </div>
     </div>
   );

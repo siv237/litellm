@@ -57,20 +57,20 @@ const KeyModelUsageView: React.FC<KeyModelUsageViewProps> = ({ topModels }) => {
   return (
     <Card className="mt-4">
       <CardHeader>
-        <CardTitle className="text-base font-semibold">Model Usage</CardTitle>
+        <CardTitle className="text-base font-semibold">Использование моделей</CardTitle>
         <CardAction>
           <div className="flex space-x-2">
             <button
               onClick={() => setViewMode("table")}
               className={`px-3 py-1 text-sm rounded-md ${viewMode === "table" ? "bg-info/15 text-info" : "bg-muted text-foreground"}`}
             >
-              Table
+              Таблица
             </button>
             <button
               onClick={() => setViewMode("chart")}
               className={`px-3 py-1 text-sm rounded-md ${viewMode === "chart" ? "bg-info/15 text-info" : "bg-muted text-foreground"}`}
             >
-              Chart
+              График
             </button>
           </div>
         </CardAction>

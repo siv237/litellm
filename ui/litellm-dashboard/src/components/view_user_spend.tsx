@@ -115,11 +115,11 @@ const ViewUserSpend: React.FC<ViewUserSpendProps> = ({ userSpend, userMaxBudget,
     <div className="flex items-center">
       <div className="flex justify-between gap-x-6">
         <div>
-          <p className="text-sm text-muted-foreground">Total Spend</p>
+          <p className="text-sm text-muted-foreground">Общий расход</p>
           <p className="text-2xl font-semibold text-foreground">${roundedSpend}</p>
         </div>
         <div>
-          <p className="text-sm text-muted-foreground">Max Budget</p>
+          <p className="text-sm text-muted-foreground">Макс. бюджет</p>
           <p className="text-2xl font-semibold text-foreground">{displayMaxBudget}</p>
         </div>
       </div>

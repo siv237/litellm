@@ -65,12 +65,12 @@ const AgentSelector: React.FC<AgentSelectorProps> = ({
     ...accessGroups.map((group) => ({
       label: group,
       value: `group:${group}`,
-      description: "Access Group",
+      description: "Группа доступа",
     })),
     ...agents.map((agent) => ({
       label: `${agent.agent_name || agent.agent_id}`,
       value: agent.agent_id,
-      description: "Agent",
+      description: "Агент",
     })),
   ];
 
@@ -91,7 +91,7 @@ const AgentSelector: React.FC<AgentSelectorProps> = ({
         value={selectedValues}
         onValueChange={handleChange}
         placeholder={placeholder}
-        emptyText="No agents found"
+        emptyText="Агенты не найдены"
         loading={loading}
         disabled={disabled}
         className={`w-full ${className ?? ""}`}

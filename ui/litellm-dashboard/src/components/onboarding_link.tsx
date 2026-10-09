@@ -82,7 +82,7 @@ export default function OnboardingModal({
             : "Copy and send the generated link to the user to reset their password."}
         </p>
         <div className="flex justify-between pt-5 pb-2">
-          <p className="text-base">User ID</p>
+          <p className="text-base">ID пользователя</p>
           <p className="text-sm">{invitationLinkData?.user_id}</p>
         </div>
         <div className="flex justify-between pt-5 pb-2">

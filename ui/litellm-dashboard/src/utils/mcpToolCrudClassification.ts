@@ -59,28 +59,28 @@ export const CRUD_GROUP_META: Record<
   { label: string; description: string; risk: "low" | "medium" | "high" | "unknown" }
 > = {
   read: {
-    label: "Read",
-    description: "Safe operations — fetch, list, search. No side effects.",
+    label: "Чтение",
+    description: "Безопасные операции — чтение, списки, поиск. Без побочных эффектов.",
     risk: "low",
   },
   create: {
     label: "Создать",
-    description: "Add new resources — insert, upload, register.",
+    description: "Добавление ресурсов — вставка, загрузка, регистрация.",
     risk: "medium",
   },
   update: {
-    label: "Update",
-    description: "Modify existing resources — edit, patch, rename.",
+    label: "Изменение",
+    description: "Изменение ресурсов — правка, патч, переименование.",
     risk: "medium",
   },
   delete: {
     label: "Удалить",
-    description: "Destructive operations — remove, purge, destroy.",
+    description: "Разрушительные операции — удаление, очистка, уничтожение.",
     risk: "high",
   },
   unknown: {
-    label: "Other",
-    description: "Operations that could not be automatically classified.",
+    label: "Прочее",
+    description: "Операции, не поддающиеся автоматической классификации.",
     risk: "unknown",
   },
 };

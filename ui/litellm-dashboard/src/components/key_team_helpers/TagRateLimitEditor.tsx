@@ -73,14 +73,14 @@ export function TagRateLimitEditor({ value, onChange }: TagRateLimitEditorProps)
       {value.map((row, idx) => (
         <div key={row.id} style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 12 }}>
           <Input
-            aria-label="Tag"
+            aria-label="Тег"
             value={row.tag}
             onChange={(e) => updateRow(idx, "tag", e.target.value)}
-            placeholder="Tag (e.g. cell-1)"
+            placeholder="Тег (напр. cell-1)"
             style={{ width: 180 }}
           />
           <Input
-            aria-label="RPM limit"
+            aria-label="Лимит RPM"
             type="number"
             min={0}
             value={row.rpm_limit ?? ""}
@@ -88,7 +88,7 @@ export function TagRateLimitEditor({ value, onChange }: TagRateLimitEditorProps)
             placeholder="RPM"
             style={{ width: 120 }}
           />
-          <Button variant="destructive" size="sm" aria-label="Remove tag limit" onClick={() => removeRow(idx)}>
+          <Button variant="destructive" size="sm" aria-label="Удалить лимит тега" onClick={() => removeRow(idx)}>
             ✕
           </Button>
         </div>
@@ -101,7 +101,7 @@ export function TagRateLimitEditor({ value, onChange }: TagRateLimitEditorProps)
           addRow();
         }}
       >
-        + Add Tag Limit
+        + Добавить лимит тега
       </Button>
     </div>
   );

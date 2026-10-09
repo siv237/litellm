@@ -218,7 +218,7 @@ export const useToolsOAuthFlow = ({
 
       setStatus("success");
       setError(null);
-      toast.success("Connected successfully");
+      toast.success("Подключено");
       onSuccessRef.current(token.access_token);
     } catch (err) {
       const msg = extractErrorMessage(err);

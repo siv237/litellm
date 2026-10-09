@@ -46,7 +46,7 @@ export function PageHeader({ title, subtitle, icon, primaryAction, tabs, utiliti
         <div className="mt-5">{tabs({ leadingControls, utilities: utilityControls })}</div>
       ) : (
         hasControlRow && (
-          <div className="mt-5 flex h-9 items-center" role="group" aria-label="Page controls">
+          <div className="mt-5 flex h-9 items-center" role="group" aria-label="Управление страницами">
             {leadingControls}
             {tabs}
             {utilityControls != null && <div className="ml-auto">{utilityControls}</div>}

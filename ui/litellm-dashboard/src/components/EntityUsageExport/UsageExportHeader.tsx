@@ -65,7 +65,7 @@ const UsageExportHeader: React.FC<UsageExportHeaderProps> = ({
 
   const filterList = (
     <ComboboxContent anchor={anchor}>
-      <ComboboxEmpty>No options found</ComboboxEmpty>
+      <ComboboxEmpty>Варианты не найдены</ComboboxEmpty>
       <ComboboxList>
         {(value: string) => (
           <ComboboxItem key={value} value={value}>
@@ -123,7 +123,7 @@ const UsageExportHeader: React.FC<UsageExportHeaderProps> = ({
           <div className="justify-self-end">
             <Button onClick={() => setIsExportModalOpen(true)}>
               <Download />
-              Export Data
+              Экспорт данных
             </Button>
           </div>
         </div>

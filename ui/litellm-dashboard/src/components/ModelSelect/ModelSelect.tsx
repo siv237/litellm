@@ -23,12 +23,12 @@ import { Organization, Team } from "../networking";
 import { splitWildcardModels } from "./modelUtils";
 
 const MODEL_SELECT_ALL_PROXY_MODELS_SPECIAL_VALUE = {
-  label: "All Proxy Models",
+  label: "Все модели прокси",
   value: "all-proxy-models",
 } as const;
 
 const MODEL_SELECT_NO_DEFAULT_MODELS_SPECIAL_VALUE = {
-  label: "No Default Models",
+  label: "Нет моделей по умолчанию",
   value: "no-default-models",
 } as const;
 
@@ -170,7 +170,7 @@ export const ModelSelect = (props: ModelSelectProps) => {
     ...(includeSpecialOptions
       ? [
           {
-            label: "Special Options",
+            label: "Особые опции",
             items: [
               ...(shouldShowAllProxyModels
                 ? [
@@ -199,7 +199,7 @@ export const ModelSelect = (props: ModelSelectProps) => {
     ...(wildcard.length > 0
       ? [
           {
-            label: "Wildcard Options",
+            label: "Опции wildcard",
             items: wildcard.map((model) => {
               const provider = model.replace("/*", "");
               const capitalizedProvider = provider.charAt(0).toUpperCase() + provider.slice(1);
@@ -257,10 +257,10 @@ export const ModelSelect = (props: ModelSelectProps) => {
               </>
             )}
           </ComboboxValue>
-          <ComboboxChipsInput id={id} placeholder="Select Models" aria-label="Select Models" className="min-w-24" />
+          <ComboboxChipsInput id={id} placeholder="Выберите модели" aria-label="Выберите модели" className="min-w-24" />
         </ComboboxChips>
         <ComboboxContent anchor={anchor}>
-          <ComboboxEmpty>No models found</ComboboxEmpty>
+          <ComboboxEmpty>Модели не найдены</ComboboxEmpty>
           <ComboboxList>
             {(group: ModelOptionGroup) => (
               <ComboboxGroup key={group.label} items={group.items}>

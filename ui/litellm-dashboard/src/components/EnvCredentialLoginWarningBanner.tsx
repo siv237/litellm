@@ -32,16 +32,13 @@ export const EnvCredentialLoginWarningBanner: React.FC<{ accessToken: string | n
     >
       <TriangleAlert className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
       <div className="min-w-0 flex-1">
-        <p className="font-semibold">Environment-credential login is enabled</p>
+        <p className="font-semibold">Включён вход по реквизитам окружения</p>
         <p>
-          Anyone with <code className="font-mono">UI_USERNAME</code>/<code className="font-mono">UI_PASSWORD</code> (or
-          the master key, when <code className="font-mono">UI_PASSWORD</code> is unset) can sign in as a proxy admin
-          with a shared static secret. First create a regular admin account with its own password, then set{" "}
-          <code className="font-mono">general_settings.disable_env_credential_login: true</code> to turn this login path
-          off.
+          Любой, у кого есть <code className="font-mono">UI_USERNAME</code>/<code className="font-mono">UI_PASSWORD</code> (или master-ключ, когда <code className="font-mono">UI_PASSWORD</code> не задан) может войти как админ прокси по общему статическому секрету. Сначала создайте обычный админский аккаунт с паролем, затем задайте{" "}
+          <code className="font-mono">general_settings.disable_env_credential_login: true</code> чтобы отключить этот вход.
         </p>
       </div>
-      <Button variant="ghost" size="icon-sm" className="shrink-0" aria-label="Dismiss banner" onClick={handleDismiss}>
+      <Button variant="ghost" size="icon-sm" className="shrink-0" aria-label="Скрыть баннер" onClick={handleDismiss}>
         <X />
       </Button>
     </div>

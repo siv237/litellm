@@ -63,16 +63,16 @@ const ModelSettingsModal: React.FC<ModelSettingsModalProps> = ({ isVisible, onCa
     try {
       await mutateAsync(formValues, {
         onSuccess: () => {
-          toast.success("Model storage settings updated successfully");
+          toast.success("Настройки хранения моделей обновлены");
           refetch();
           onSuccess?.();
         },
         onError: (error) => {
-          toast.fromError("Failed to save model storage settings: " + parseErrorMessage(error));
+          toast.fromError("Не удалось сохранить настройки хранения моделей: " + parseErrorMessage(error));
         },
       });
     } catch (error) {
-      toast.fromError("Failed to save model storage settings: " + parseErrorMessage(error));
+      toast.fromError("Не удалось сохранить настройки хранения моделей: " + parseErrorMessage(error));
     }
   };
 
@@ -85,7 +85,7 @@ const ModelSettingsModal: React.FC<ModelSettingsModalProps> = ({ isVisible, onCa
     <Dialog open={isVisible} onOpenChange={(open) => !open && handleCancel()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-base">Model Settings</DialogTitle>
+          <DialogTitle className="text-base">Настройки модели</DialogTitle>
         </DialogHeader>
         <TooltipProvider>
           <form onSubmit={(event) => event.preventDefault()}>
@@ -103,7 +103,7 @@ const ModelSettingsModal: React.FC<ModelSettingsModalProps> = ({ isVisible, onCa
                   isLoadingConfig ? (
                     <Skeleton
                       role="status"
-                      aria-label="Loading model settings"
+                      aria-label="Загрузка настроек модели"
                       className="h-[18.4px] w-8 rounded-full"
                     />
                   ) : (

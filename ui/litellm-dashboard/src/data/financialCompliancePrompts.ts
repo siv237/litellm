@@ -2080,5 +2080,5 @@ export const financialFrameworkMeta = {
   name: "Topic Blocking",
   icon: "shield",
   description:
-    "Content filter guardrails that block messages matching specific prohibited topics while allowing legitimate use of related words in context.",
+    "Гардрейлы контент-фильтра, блокирующие сообщения по запрещённым темам и сохраняющие легитимное употребление связанных слов в контексте.",
 };

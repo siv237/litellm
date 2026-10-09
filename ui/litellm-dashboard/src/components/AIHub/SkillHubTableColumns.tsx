@@ -41,7 +41,7 @@ function SkillHubRowActions({ skill, onSkillClick }: SkillHubRowActionsProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        aria-label="Open skill actions"
+        aria-label="Действия скилла"
         data-testid={`skill-hub-actions-${skill.id}`}
         className={cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), "text-muted-foreground")}
       >
@@ -50,14 +50,14 @@ function SkillHubRowActions({ skill, onSkillClick }: SkillHubRowActionsProps) {
       <DropdownMenuContent align="end" className="w-52">
         <DropdownMenuItem data-testid="skill-hub-action-details" onClick={() => onSkillClick(skill)}>
           <Info />
-          View details
+          Подробнее
         </DropdownMenuItem>
         <DropdownMenuItem
           data-testid="skill-hub-action-copy"
           onClick={() => void copyToClipboard(skill.name, "Skill name copied")}
         >
           <Copy />
-          Copy skill name
+          Скопировать имя скилла
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -72,8 +72,8 @@ export const getSkillHubTableColumns = ({ onSkillClick }: SkillHubTableColumnsDe
   {
     id: "name",
     accessorKey: "name",
-    meta: { title: "Skill Name" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Skill Name" />,
+    meta: { title: "Имя скилла" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Имя скилла" />,
     size: 200,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -97,8 +97,8 @@ export const getSkillHubTableColumns = ({ onSkillClick }: SkillHubTableColumnsDe
   {
     id: "category",
     accessorKey: "category",
-    meta: { title: "Category", skeleton: "badge" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Category" />,
+    meta: { title: "Категория", skeleton: "badge" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Категория" />,
     size: 130,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -112,8 +112,8 @@ export const getSkillHubTableColumns = ({ onSkillClick }: SkillHubTableColumnsDe
   {
     id: "domain",
     accessorKey: "domain",
-    meta: { title: "Domain" },
-    header: ({ column }) => <DataTableSortHeader column={column} title="Domain" />,
+    meta: { title: "Домен" },
+    header: ({ column }) => <DataTableSortHeader column={column} title="Домен" />,
     size: 130,
     enableSorting: true,
     sortingFn: "alphanumeric",
@@ -121,8 +121,8 @@ export const getSkillHubTableColumns = ({ onSkillClick }: SkillHubTableColumnsDe
   },
   {
     id: "source",
-    meta: { title: "Source" },
-    header: "Source",
+    meta: { title: "Источник" },
+    header: "Источник",
     size: 200,
     enableSorting: false,
     cell: ({ row }) => {

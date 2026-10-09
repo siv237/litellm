@@ -194,7 +194,7 @@ const MemberModal = <T extends BaseMember>({
             )}
 
             {config.showUserId && (
-              <FormField control={form.control} name="user_id" label="User ID">
+              <FormField control={form.control} name="user_id" label="ID пользователя">
                 {({ ref, value, onChange, ...rest }) => (
                   <Input
                     {...rest}
@@ -214,7 +214,7 @@ const MemberModal = <T extends BaseMember>({
                 <span className="flex items-center gap-2">
                   <span>Роль</span>
                   {mode === "edit" && initialData && (
-                    <span className="text-sm text-muted-foreground">(Current: {getRoleLabel(initialData.role)})</span>
+                    <span className="text-sm text-muted-foreground">(Текущий: {getRoleLabel(initialData.role)})</span>
                   )}
                 </span>
               }

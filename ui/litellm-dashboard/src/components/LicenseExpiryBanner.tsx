@@ -33,12 +33,12 @@ const describeCountdown = (days: number): string => {
 
 const expiryDescription = (tier: "warning" | "critical" | "expired"): React.ReactNode => {
   if (tier === "expired") {
-    return <>Enterprise features are now disabled. Reach out to {salesLink} to restore access</>;
+    return <>Функции Enterprise отключены. Обратитесь к {salesLink}, чтобы восстановить доступ</>;
   }
   if (tier === "critical") {
-    return <>Renew now to avoid losing enterprise features. Reach out to {salesLink}</>;
+    return <>Продлите сейчас, чтобы не потерять функции Enterprise. Обратитесь к нам {salesLink}</>;
   }
-  return <>Renew before it lapses to keep enterprise features. Reach out to {salesLink}</>;
+  return <>Продлите до истечения, чтобы сохранить функции Enterprise. Обратитесь к нам {salesLink}</>;
 };
 
 export const LicenseExpiryBannerView: React.FC<LicenseExpiryBannerViewProps> = ({ licenseInfo }) => {

@@ -18,7 +18,7 @@ export function CalcPopover({ title, formula, children }: { title: string; formu
         }
       >
         <CircleHelp className="mt-px size-3.5 shrink-0" />
-        How is this calculated?
+        Как это рассчитывается?
       </PopoverTrigger>
       <PopoverContent side="bottom" align="start" className="w-auto min-w-72 max-w-md gap-3">
         <PopoverTitle>{title}</PopoverTitle>

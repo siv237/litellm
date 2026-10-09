@@ -122,10 +122,10 @@ const TopKeyView: React.FC<TopKeyViewProps> = ({ topKeys, teams, showTags = fals
                 content={
                   <div>
                     <div>
-                      <span className="text-muted-foreground">Tag Name:</span> {tag.tag}
+                      <span className="text-muted-foreground">Имя тега:</span> {tag.tag}
                     </div>
                     <div>
-                      <span className="text-muted-foreground">Spend:</span>{" "}
+                      <span className="text-muted-foreground">Расход:</span>{" "}
                       {tag.usage > 0 && tag.usage < 0.01 ? "<$0.01" : `$${formatNumberWithCommas(tag.usage, 2)}`}
                     </div>
                   </div>
@@ -171,7 +171,7 @@ const TopKeyView: React.FC<TopKeyViewProps> = ({ topKeys, teams, showTags = fals
     <>
       <div className="mb-4 flex justify-between items-center">
         <RadioGroup
-          aria-label="Number of top keys to show"
+          aria-label="Сколько топ-ключей показывать"
           value={String(topKeysLimit)}
           onValueChange={(limit: unknown) => setTopKeysLimit(Number(limit))}
           className="inline-flex w-fit items-center gap-1 rounded-lg bg-muted p-[3px]"
@@ -191,13 +191,13 @@ const TopKeyView: React.FC<TopKeyViewProps> = ({ topKeys, teams, showTags = fals
             onClick={() => setViewMode("table")}
             className={`px-3 py-1 text-sm rounded-md ${viewMode === "table" ? "bg-info/15 text-info" : "bg-muted text-foreground"}`}
           >
-            Table View
+            Таблица
           </button>
           <button
             onClick={() => setViewMode("chart")}
             className={`px-3 py-1 text-sm rounded-md ${viewMode === "chart" ? "bg-info/15 text-info" : "bg-muted text-foreground"}`}
           >
-            Chart View
+            График
           </button>
         </div>
       </div>
@@ -224,15 +224,15 @@ const TopKeyView: React.FC<TopKeyViewProps> = ({ topKeys, teams, showTags = fals
                 <div className="relative z-floating p-3 bg-black/90 shadow-lg rounded-lg text-white max-w-xs">
                   <div className="space-y-1.5">
                     <div className="text-sm">
-                      <span className="text-muted-foreground">Key Alias: </span>
+                      <span className="text-muted-foreground">Алиас ключа: </span>
                       <span className="font-mono text-gray-100 break-all">{item?.key_alias}</span>
                     </div>
                     <div className="text-sm">
-                      <span className="text-muted-foreground">Key ID: </span>
+                      <span className="text-muted-foreground">ID ключа: </span>
                       <span className="font-mono text-gray-100 break-all">{item?.api_key}</span>
                     </div>
                     <div className="text-sm">
-                      <span className="text-muted-foreground">Spend: </span>
+                      <span className="text-muted-foreground">Расход: </span>
                       <span className="text-white font-medium">${formatNumberWithCommas(item?.spend, 2)}</span>
                     </div>
                   </div>

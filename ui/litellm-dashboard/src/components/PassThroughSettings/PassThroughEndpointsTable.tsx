@@ -21,8 +21,8 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Waypoints className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No pass-through endpoints configured</div>
-      <div className="text-sm text-muted-foreground">Add a pass-through endpoint to route custom paths.</div>
+      <div className="text-sm font-medium text-foreground">Pass-through эндпоинты не настроены</div>
+      <div className="text-sm text-muted-foreground">Добавьте pass-through эндпоинт для маршрутизации своих путей.</div>
     </div>
   );
 }

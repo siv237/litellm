@@ -24,10 +24,9 @@ const CostOptimizationFeedbackBanner: React.FC = () => {
         <MessageSquare className="size-4 text-muted-foreground" />
       </div>
       <div className="min-w-0 flex-1">
-        <h4 className="m-0 text-sm font-semibold text-foreground">Help shape cost optimization</h4>
+        <h4 className="m-0 text-sm font-semibold text-foreground">Помогите улучшить оптимизацию затрат</h4>
         <p className="m-0 mt-0.5 text-xs text-muted-foreground">
-          We&apos;re collecting suggestions for cost optimization improvements across routing, budgets, and more. Let us
-          know what you&apos;d like to see.
+          We&apos;re Мы собираем предложения по улучшению оптимизации затрат — маршрутизация, бюджеты и другое. Напишите, что вы хотели бы видеть.&apos;d like to see.
         </p>
       </div>
       <Button
@@ -35,7 +34,7 @@ const CostOptimizationFeedbackBanner: React.FC = () => {
         nativeButton={false}
         render={<a href={DISCUSSION_URL} target="_blank" rel="noopener noreferrer" />}
       >
-        Share Feedback
+        Оставить отзыв
         <ExternalLink />
       </Button>
       <Button
@@ -47,7 +46,7 @@ const CostOptimizationFeedbackBanner: React.FC = () => {
           localStorage.setItem(STORAGE_KEY, "true");
         }}
         className="shrink-0"
-        aria-label="Dismiss banner"
+        aria-label="Скрыть баннер"
       >
         <X />
       </Button>

@@ -48,7 +48,7 @@ export const AffinityControls: React.FC<{
           onBlur={(event) => commitTtl(event.target.value)}
         />
         <span className="block text-xs mt-1 text-muted-foreground">
-          Refreshes after every request that reuses a pin. Empty tracks the backend default of{" "}
+          Обновляется после каждого запроса, повторно использующего закрепление. Пустое значение — системное значение по умолчанию{" "}
           {DEFAULT_SESSION_AFFINITY_TTL_SECONDS} seconds.
         </span>
       </div>

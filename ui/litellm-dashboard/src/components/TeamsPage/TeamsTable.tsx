@@ -196,7 +196,7 @@ export function TeamsTable({ userRole, userID, onSelectTeam, onEditTeam, onDelet
             open={filtersOpen}
             onOpenChange={setFiltersOpen}
             title="Фильтры"
-            description="Narrow down your teams"
+            description="Сузить список команд"
           >
             {({ get, set }) => (
               <>
@@ -209,18 +209,18 @@ export function TeamsTable({ userRole, userID, onSelectTeam, onEditTeam, onDelet
                     emptyText="Организации не найдены"
                   />
                 </DataTableFilterField>
-                <DataTableFilterField label="Team alias">
+                <DataTableFilterField label="Алиас команды">
                   <Input
                     value={(get("alias") as string) ?? ""}
                     onChange={(event) => set("alias", event.target.value)}
-                    placeholder="Enter team alias…"
+                    placeholder="Введите алиас команды…"
                   />
                 </DataTableFilterField>
                 <DataTableFilterField label="ID команды">
                   <Input
                     value={(get("team_id") as string) ?? ""}
                     onChange={(event) => set("team_id", event.target.value)}
-                    placeholder="Enter team ID…"
+                    placeholder="Введите ID команды…"
                   />
                 </DataTableFilterField>
               </>

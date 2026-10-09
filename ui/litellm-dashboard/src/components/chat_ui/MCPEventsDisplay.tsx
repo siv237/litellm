@@ -85,7 +85,7 @@ function MCPEventsPanels({ toolsEvent, mcpCallEvents, defaultOpenKeys }: MCPEven
         {toolsEvent && (
           <MCPEventPanel
             panelKey="list-tools"
-            title="List tools"
+            title="Список инструментов"
             open={openKeys.has("list-tools")}
             onOpenChange={(open) => toggleKey("list-tools", open)}
           >
@@ -114,7 +114,7 @@ function MCPEventsPanels({ toolsEvent, mcpCallEvents, defaultOpenKeys }: MCPEven
             >
               <div>
                 <div className="relative z-raised mb-3 bg-card last:mb-0">
-                  <div className="mb-1 text-[13px] font-medium text-muted-foreground">Request</div>
+                  <div className="mb-1 text-[13px] font-medium text-muted-foreground">Запрос</div>
                   <div className="rounded-md border border-border bg-muted p-2 text-xs">
                     {callEvent.item?.arguments && (
                       <pre className="m-0 whitespace-pre-wrap break-words font-mono text-foreground">
@@ -129,13 +129,13 @@ function MCPEventsPanels({ toolsEvent, mcpCallEvents, defaultOpenKeys }: MCPEven
                     <span className="mr-1.5 font-bold text-success" aria-hidden="true">
                       ✓
                     </span>
-                    Approved
+                    Одобрено
                   </div>
                 </div>
 
                 {callEvent.item?.output && (
                   <div className="relative z-raised mb-3 bg-card last:mb-0">
-                    <div className="mb-1 text-[13px] font-medium text-muted-foreground">Response</div>
+                    <div className="mb-1 text-[13px] font-medium text-muted-foreground">Ответ</div>
                     <div className="whitespace-pre-wrap font-mono text-[13px] leading-normal text-foreground">
                       {callEvent.item.output}
                     </div>

@@ -33,7 +33,7 @@ const TagSelector: React.FC<TagSelectorProps> = ({ onChange, value, className, a
 
   return (
     <MultiSelect
-      placeholder="Select or create tags"
+      placeholder="Выберите или создайте теги"
       onValueChange={onChange}
       value={value}
       loading={loading}

@@ -40,7 +40,7 @@ export default function CloudZeroCostTracking() {
       <Card>
         <CardContent>
           <p className="text-sm text-destructive">
-            Error loading CloudZero settings: {error instanceof Error ? error.message : String(error)}
+            Ошибка загрузки настроек CloudZero: {error instanceof Error ? error.message : String(error)}
           </p>
         </CardContent>
       </Card>

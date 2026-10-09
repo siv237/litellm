@@ -46,7 +46,7 @@ export default function UpdateModelCredentialsModal({
   const handleSubmit = async (values: UpdateCredentialsValues) => {
     const apiKey = values.api_key?.trim();
     if (!apiKey) {
-      toast.fromError("Enter a new API key");
+      toast.fromError("Введите новый API-ключ");
       return;
     }
     setIsSaving(true);
@@ -56,13 +56,13 @@ export default function UpdateModelCredentialsModal({
         { litellm_params: { api_key: apiKey }, model_info: { id: modelId } },
         modelId,
       );
-      toast.success("API key updated");
+      toast.success("API-ключ обновлён");
       form.reset(EMPTY_VALUES);
       onUpdated();
       onCancel();
     } catch (error) {
       console.error("Error updating API key:", error);
-      toast.fromError("Failed to update API key");
+      toast.fromError("Не удалось обновить API-ключ");
     } finally {
       setIsSaving(false);
     }
@@ -72,7 +72,7 @@ export default function UpdateModelCredentialsModal({
     <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && close()}>
       <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[520px]">
         <DialogHeader>
-          <DialogTitle>Update API Key</DialogTitle>
+          <DialogTitle>Обновить API-ключ</DialogTitle>
         </DialogHeader>
         <span className="block mb-4 text-sm text-muted-foreground">
           Update this model&apos;s API key. Only the new key is sent; the rest of the deployment configuration is left
@@ -88,9 +88,9 @@ export default function UpdateModelCredentialsModal({
         </Alert>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <FieldGroup>
-            <FormField control={form.control} name="api_key" label="New API Key">
+            <FormField control={form.control} name="api_key" label="Новый API-ключ">
               {({ ref, ...field }) => (
-                <PasswordInput {...field} ref={ref} placeholder="Enter the new API key" autoComplete="new-password" />
+                <PasswordInput {...field} ref={ref} placeholder="Введите новый API-ключ" autoComplete="new-password" />
               )}
             </FormField>
           </FieldGroup>

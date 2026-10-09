@@ -62,7 +62,7 @@ export const UserBanner: React.FC<UserBannerProps> = ({ accessToken }) => {
         <UserBannerMarkdown message={banner.message} />
       </AlertDescription>
       <AlertAction>
-        <Button variant="ghost" size="icon-sm" aria-label="Dismiss banner" onClick={handleDismiss}>
+        <Button variant="ghost" size="icon-sm" aria-label="Скрыть баннер" onClick={handleDismiss}>
           <X />
         </Button>
       </AlertAction>

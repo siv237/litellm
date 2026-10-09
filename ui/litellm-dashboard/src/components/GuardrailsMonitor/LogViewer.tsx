@@ -18,21 +18,21 @@ const actionConfig: Record<
     color: "text-destructive",
     bg: "bg-destructive/10",
     border: "border-destructive/20",
-    label: "Blocked",
+    label: "Заблокировано",
   },
   passed: {
     icon: CircleCheck,
     color: "text-success",
     bg: "bg-success/10",
     border: "border-success/20",
-    label: "Passed",
+    label: "Пропущено",
   },
   flagged: {
     icon: TriangleAlert,
     color: "text-warning",
     bg: "bg-warning/10",
     border: "border-warning/20",
-    label: "Flagged",
+    label: "Отмечено",
   },
 };
 
@@ -136,7 +136,7 @@ export function LogViewer({
               </div>
               <div className="h-4 w-px bg-border" />
               <div className="flex items-center gap-1">
-                <span className="text-xs text-muted-foreground mr-1">Sample:</span>
+                <span className="text-xs text-muted-foreground mr-1">Пример:</span>
                 {sampleSizes.map((size) => (
                   <Button
                     key={size}
@@ -160,7 +160,7 @@ export function LogViewer({
       )}
       {!logsLoading && displayLogs.length === 0 && (
         <div className="py-12 text-center text-sm text-muted-foreground">
-          No logs to display. Adjust filters or date range.
+          Нет логов для показа. Измените фильтры или период.
         </div>
       )}
       {!logsLoading && displayLogs.length > 0 && (

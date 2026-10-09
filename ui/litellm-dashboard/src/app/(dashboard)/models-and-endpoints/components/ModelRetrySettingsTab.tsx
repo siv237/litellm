@@ -133,7 +133,7 @@ const ModelRetrySettingsTab = ({
                 <td className="text-sm">
                   <span>{exceptionType}</span>
                   {!isGlobalScope && (
-                    <span className="ml-2 text-xs text-muted-foreground">(Global: {inheritedValue})</span>
+                    <span className="ml-2 text-xs text-muted-foreground">(Глобально: {inheritedValue})</span>
                   )}
                 </td>
                 <td className="flex items-center gap-2">

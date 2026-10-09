@@ -62,11 +62,11 @@ export const HelpLink: React.FC<HelpLinkProps> = ({
       target="_blank"
       rel="noopener noreferrer"
       className={`${baseClasses} ${variantClasses[variant]} ${className}`}
-      title="Open documentation in a new tab"
+      title="Открыть документацию в новой вкладке"
     >
       <span>{children}</span>
       <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-      <span className="sr-only">(opens in a new tab)</span>
+      <span className="sr-only">(откроется в новой вкладке)</span>
     </a>
   );
 };
@@ -93,7 +93,7 @@ export const HelpIcon: React.FC<HelpIconProps> = ({ content, learnMoreHref, lear
         onMouseLeave={() => setShowTooltip(false)}
         onFocus={() => setShowTooltip(true)}
         onBlur={() => setShowTooltip(false)}
-        aria-label="Help information"
+        aria-label="Справочная информация"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="10" strokeWidth="1.5" />

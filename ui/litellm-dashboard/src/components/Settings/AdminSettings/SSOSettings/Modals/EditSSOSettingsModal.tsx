@@ -98,7 +98,7 @@ const EditSSOSettingsModal: React.FC<EditSSOSettingsModalProps> = ({ isVisible, 
         },
       });
     } catch (error) {
-      toast.fromError("Failed to process SSO settings: " + parseErrorMessage(error));
+      toast.fromError("Не удалось обработать настройки SSO: " + parseErrorMessage(error));
     }
   };
 

@@ -102,8 +102,7 @@ const TierTurnsChart: React.FC<TierTurnsChartProps> = ({ view, autoRouters }) =>
       <CardHeader>
         <CardTitle>Маршрутизация по уровням</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Turns each tier served. Turns the classifier sent to the default model belong to no tier and are not counted
-          here, so this can total less than the router&apos;s turns.
+          Обороты каждого уровня. Обороты, отправленные классификатором на модель по умолчанию, не относятся к уровням и здесь не считаются — сумма может быть меньше общего числа оборотов роутера.
         </p>
       </CardHeader>
       <CardContent>

@@ -84,7 +84,7 @@ const McpOAuthCallbackContent = () => {
           Authorization complete. You may close this window and return to the LiteLLM dashboard.
         </p>
         <p className="text-xs text-muted-foreground">
-          If the window does not close automatically, everything is still saved—you can close it manually.
+          Если окно не закрылось само, всё сохранено — закройте его вручную.
         </p>
       </div>
     </div>

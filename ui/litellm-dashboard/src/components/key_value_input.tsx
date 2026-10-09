@@ -23,8 +23,8 @@ const KeyValueInput: React.FC<KeyValueInputProps> = ({ value = [], onChange }) =
     <div className="space-y-2">
       {value.map(([key, val], index) => (
         <div key={index} className="flex items-center gap-2">
-          <Input placeholder="Header Name" value={key} onChange={(e) => handleChange(index, [e.target.value, val])} />
-          <Input placeholder="Header Value" value={val} onChange={(e) => handleChange(index, [key, e.target.value])} />
+          <Input placeholder="Имя заголовка" value={key} onChange={(e) => handleChange(index, [e.target.value, val])} />
+          <Input placeholder="Значение заголовка" value={val} onChange={(e) => handleChange(index, [key, e.target.value])} />
           <Button
             type="button"
             variant="ghost"
@@ -38,7 +38,7 @@ const KeyValueInput: React.FC<KeyValueInputProps> = ({ value = [], onChange }) =
       ))}
       <Button type="button" variant="outline" onClick={handleAdd}>
         <Plus />
-        Add Header
+        Добавить заголовок
       </Button>
     </div>
   );

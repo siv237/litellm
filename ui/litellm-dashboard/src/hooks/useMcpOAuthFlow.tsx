@@ -126,7 +126,7 @@ export const useMcpOAuthFlow = ({
 
     if (!accessToken) {
       setError("Missing admin token");
-      toast.error("Access token missing. Please re-authenticate and try again.");
+      toast.error("Access token отсутствует. Войдите заново и повторите.");
       return;
     }
 
@@ -263,7 +263,7 @@ export const useMcpOAuthFlow = ({
       processingRef.current = false;
       setError("Failed to resume OAuth flow. Please retry.");
       setStatus("error");
-      toast.error("Failed to resume OAuth flow. Please retry.");
+      toast.error("Не удалось возобновить поток OAuth. Повторите.");
       return;
     }
 
@@ -330,7 +330,7 @@ export const useMcpOAuthFlow = ({
       setTokenResponse(token);
       setStatus("success");
       setError(null);
-      toast.success("OAuth token retrieved successfully");
+      toast.success("Токен OAuth получен");
     } catch (err) {
       if (resetVersion !== resetVersionRef.current) {
         return;

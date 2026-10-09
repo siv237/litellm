@@ -116,7 +116,7 @@ const RoutingGroups: React.FC = () => {
               />
               {searchQuery && (
                 <InputGroupAddon align="inline-end">
-                  <InputGroupButton size="icon-xs" aria-label="Clear search" onClick={() => setSearchQuery("")}>
+                  <InputGroupButton size="icon-xs" aria-label="Очистить поиск" onClick={() => setSearchQuery("")}>
                     <X />
                   </InputGroupButton>
                 </InputGroupAddon>
@@ -134,10 +134,10 @@ const RoutingGroups: React.FC = () => {
               </Button>
               <Button onClick={openCreate}>
                 <Plus />
-                Create Group
+                Создать группу
               </Button>
               <span className="text-sm whitespace-nowrap text-muted-foreground">
-                Showing {filteredGroups.length} {filteredGroups.length === 1 ? "result" : "results"}
+                Показано {filteredGroups.length} {filteredGroups.length === 1 ? "result" : "results"}
               </span>
             </div>
           </div>
@@ -168,11 +168,10 @@ const RoutingGroups: React.FC = () => {
       <Dialog open={Boolean(deletingGroup)} onOpenChange={(open) => !open && setDeletingGroup(null)}>
         <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Delete routing group?</DialogTitle>
+            <DialogTitle>Удалить группу маршрутизации?</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-foreground">
-            Models in <span className="font-medium">{deletingGroup?.group_name}</span> will fall back to the
-            proxy&apos;s top-level routing strategy. This cannot be undone.
+            Модели из <span className="font-medium">{deletingGroup?.group_name}</span> вернутся к общей стратегии маршрутизации прокси. Это необратимо.
           </p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeletingGroup(null)}>

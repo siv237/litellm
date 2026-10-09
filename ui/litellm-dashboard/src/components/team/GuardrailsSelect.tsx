@@ -62,8 +62,8 @@ export const GuardrailsSelect: React.FC<GuardrailsSelectProps> = ({
   const grouped = globalGuardrails.length > 0 && otherGuardrails.length > 0;
   const groups: GuardrailGroup[] = grouped
     ? [
-        { label: "Global", icon: true, items: [...globalGuardrails] },
-        { label: "Other", icon: false, items: [...otherGuardrails] },
+        { label: "Глобально", icon: true, items: [...globalGuardrails] },
+        { label: "Прочее", icon: false, items: [...otherGuardrails] },
       ]
     : [{ label: "", icon: false, items: known }];
 
@@ -89,7 +89,7 @@ export const GuardrailsSelect: React.FC<GuardrailsSelectProps> = ({
             <>
               {chips.map((option) => (
                 <ComboboxChip key={option.name} aria-label={option.name}>
-                  {globalGuardrailNames.has(option.name) && <Globe className="size-3" aria-label="Global guardrail" />}
+                  {globalGuardrailNames.has(option.name) && <Globe className="size-3" aria-label="Глобальный гардрейл" />}
                   {option.name}
                 </ComboboxChip>
               ))}

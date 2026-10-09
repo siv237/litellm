@@ -170,7 +170,7 @@ const RouterSettings: React.FC<RouterSettingsProps> = ({ accessToken, userRole, 
       await setCallbacksCall(accessToken, payload);
       toast.success("router settings updated successfully");
     } catch (error) {
-      toast.fromError("Failed to update router settings: " + error);
+      toast.fromError("Не удалось обновить настройки роутера: " + error);
     }
   };
 

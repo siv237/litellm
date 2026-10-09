@@ -82,14 +82,13 @@ const KeySavingsTab: React.FC<KeySavingsTabProps> = ({ accessToken, keyToken, us
   return (
     <div className="w-full space-y-6">
       <div className="flex flex-wrap items-center justify-end gap-4">
-        <span className="text-sm text-muted-foreground">Spend is bucketed by UTC day</span>
+        <span className="text-sm text-muted-foreground">Расход группируется по UTC-суткам</span>
         <AdvancedDatePicker value={dateValue} onValueChange={onDateChange} />
       </div>
 
       {!readsWholeKey && (
         <p className="text-sm text-muted-foreground" data-testid="key-savings-scope-note">
-          Showing your own requests on this key. A key shared across a team will have spend from other members that is
-          not counted here.
+          Показаны ваши запросы по этому ключу. У ключа, разделяемого командой, есть расход других участников, который здесь не учитывается.
         </p>
       )}
 
@@ -97,13 +96,13 @@ const KeySavingsTab: React.FC<KeySavingsTabProps> = ({ accessToken, keyToken, us
 
       <Card>
         <CardHeader>
-          <CardTitle>Savings</CardTitle>
+          <CardTitle>Экономия</CardTitle>
           <CardDescription>{savingsSubtitle}</CardDescription>
           <CardAction className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
             <CustomLegend categories={SAVINGS_SERIES} colors={SAVINGS_COLORS} />
             <Tabs value={accumulation} onValueChange={(value) => setAccumulation(value as SavingsAccumulation)}>
               <TabsList>
-                <TabsTrigger value="cumulative">Cumulative</TabsTrigger>
+                <TabsTrigger value="cumulative">Накопительная</TabsTrigger>
                 <TabsTrigger value="per-interval">{intervalLabel}</TabsTrigger>
               </TabsList>
             </Tabs>

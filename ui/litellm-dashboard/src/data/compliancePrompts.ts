@@ -525,30 +525,30 @@ export function getCategories(): ComplianceCategory[] {
 const frameworkMeta: Record<string, { icon: string; description: string }> = {
   "EU AI Act": {
     icon: "shield",
-    description: "Article 5 prohibited AI practices under the European Union AI Act.",
+    description: "Запрещённая ИИ-практика по статье 5 Закона ЕС об искусственном интеллекте.",
   },
   GDPR: {
     icon: "lock",
-    description: "General Data Protection Regulation — data privacy and protection requirements.",
+    description: "Общий регламент по защите данных (GDPR) — требования приватности и защиты данных.",
   },
   "Topic Blocking": {
     icon: "shield",
     description:
-      "Content filter guardrails that block messages matching specific prohibited topics while allowing legitimate use of related words in context.",
+      "Гардрейлы контент-фильтра, блокирующие сообщения по запрещённым темам и сохраняющие легитимное употребление связанных слов в контексте.",
   },
   "Canadian PII (PIPEDA)": {
     icon: "shield",
     description:
-      "Canadian PII detection under PIPEDA and provincial privacy legislation — masks SIN, OHIP, driver's licence, passport, immigration docs, bank accounts, and postal codes.",
+      "Канадский поиск PII по PIPEDA и провинциальным законам о приватности — маскирует SIN, OHIP, водительские права, паспорта, иммиграционные документы, банковские счета и почтовые индексы.",
   },
   "Canadian PII (FIPPA)": {
     icon: "graduation-cap",
     description:
-      "Ontario FIPPA institutional identifier detection — masks University of Toronto student/employee numbers, UTORid logins, and TCard campus IDs.",
+      "Поиск институциональных идентификаторов Ontario FIPPA — маскирует номера студентов/сотрудников Университета Торонто, логины UTORid и ID карт TCard.",
   },
   "Airline Brand Protection": {
     icon: "plane",
-    description: "Destination vs competitor intent — avoid answering competitor comparison questions.",
+    description: "Интент назначения vs конкурент — избегать ответов на сравнения с конкурентами.",
   },
   "Code Execution Safety": {
     icon: "terminal",
@@ -558,7 +558,7 @@ const frameworkMeta: Record<string, { icon: string; description: string }> = {
   "Claims Assistant": {
     icon: "shield",
     description:
-      "Security + UX validation prompts for an AI claims assistant supporting out-of-network claim submissions.",
+      "Промпты проверки безопасности и UX для ИИ-ассистента по заявлениям на возмещение вне сети.",
   },
 };
 

@@ -14,7 +14,7 @@ export function UnpricedNote({ unpriced, provider }: { unpriced: UsageUnits; pro
         rel="noreferrer"
         className="underline underline-offset-2"
       >
-        Request pricing on GitHub
+        Запросить цены на GitHub
       </a>
     </p>
   );

@@ -21,13 +21,13 @@ export function KeyProjectField({ projectId, canDetach, pending, disabled, onTog
   const display = alias ? `${alias} (${projectId})` : projectId;
   return (
     <Field>
-      <FieldLabel htmlFor={id}>Project</FieldLabel>
+      <FieldLabel htmlFor={id}>Проект</FieldLabel>
       <Input id={id} value={display ?? ""} disabled readOnly />
       {canDetach && (
         <>
           {pending && (
             <p className="text-sm text-muted-foreground">
-              The project will be removed when you save. Team, organization, and key limits will stay the same.
+              Проект будет удалён при сохранении. Лимиты команды, организации и ключа останутся прежними.
             </p>
           )}
           <Button type="button" variant="outline" disabled={disabled} onClick={onToggle}>

@@ -132,7 +132,7 @@ function UserBubble({ message, onEdit, isStreaming }: UserBubbleProps) {
               Отмена
             </Button>
             <Button size="sm" onClick={handleSave} disabled={!editValue.trim()}>
-              Save & Send
+              Сохранить и отправить
             </Button>
           </div>
         </div>
@@ -166,7 +166,7 @@ function UserBubble({ message, onEdit, isStreaming }: UserBubbleProps) {
                 }
               />
               <TooltipContent>
-                <p>Edit message</p>
+                <p>Изменить сообщение</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -357,7 +357,7 @@ function ToolCard({ message }: ToolCardProps) {
           {redactedArgs !== undefined && (
             <div className={message.toolResult ? "mb-3" : ""}>
               <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                Arguments
+                Аргументы
               </div>
               <pre className="m-0 p-2 bg-muted rounded-md text-xs font-mono whitespace-pre-wrap break-words text-foreground">
                 {JSON.stringify(redactedArgs, null, 2)}
@@ -367,7 +367,7 @@ function ToolCard({ message }: ToolCardProps) {
           {message.toolResult && (
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                Result
+                Результат
               </div>
               <div className="text-[13px] text-foreground whitespace-pre-wrap break-words font-mono">
                 {message.toolResult}

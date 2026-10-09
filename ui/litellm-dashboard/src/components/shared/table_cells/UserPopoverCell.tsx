@@ -24,9 +24,9 @@ export function UserPopoverCell({ userAlias, userEmail, userId, width }: UserPop
   const popoverContent = (
     <div className="flex flex-col gap-2 text-xs min-w-[200px] max-w-[300px]">
       {[
-        { label: "User Alias", value: userAlias },
-        { label: "User Email", value: userEmail },
-        { label: "User ID", value: userId },
+        { label: "Алиас пользователя", value: userAlias },
+        { label: "Email пользователя", value: userEmail },
+        { label: "ID пользователя", value: userId },
       ].map(({ label, value }) => (
         <div key={label} className="flex flex-col min-w-0">
           <span className="text-muted-foreground">{label}</span>

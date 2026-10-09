@@ -123,7 +123,7 @@ export function MultiSelect({
                 className="min-w-24"
                 aria-label={placeholder || undefined}
               />
-              {canClear(selected) && <ComboboxClear className="ml-auto self-center" aria-label="Clear all" />}
+              {canClear(selected) && <ComboboxClear className="ml-auto self-center" aria-label="Очистить всё" />}
             </>
           )}
         </ComboboxValue>

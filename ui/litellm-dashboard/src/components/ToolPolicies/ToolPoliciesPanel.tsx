@@ -131,11 +131,11 @@ export const ToolPoliciesPanel: React.FC<ToolPoliciesPanelProps> = ({ accessToke
 
   return (
     <div className="w-full">
-      <h1 className="text-2xl font-semibold text-foreground mb-6">Tool Policies</h1>
+      <h1 className="text-2xl font-semibold text-foreground mb-6">Политики инструментов</h1>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <MetricCard
-          label="New Today"
+          label="Новых сегодня"
           value={newToday}
           valueColor="text-success"
           subtitle={trendSubtitle}
@@ -145,21 +145,21 @@ export const ToolPoliciesPanel: React.FC<ToolPoliciesPanelProps> = ({ accessToke
             </svg>
           }
         />
-        <MetricCard label="Total Tools Discovered" value={totalTools} />
+        <MetricCard label="Всего обнаружено инструментов" value={totalTools} />
         <MetricCard
-          label="Blocked Tools"
+          label="Заблокированные инструменты"
           value={blockedCount}
           valueColor={blockedCount > 0 ? "text-destructive" : undefined}
         />
-        <MetricCard label="Active Teams" value={activeTeamsCount > 0 ? activeTeamsCount : "—"} />
+        <MetricCard label="Активные команды" value={activeTeamsCount > 0 ? activeTeamsCount : "—"} />
       </div>
 
       {needsReviewTools.length > 0 && (
         <div className="bg-warning/10 border border-warning/20 rounded-lg p-4 mb-6">
-          <h2 className="text-sm font-semibold text-warning mb-1">Needs Review</h2>
+          <h2 className="text-sm font-semibold text-warning mb-1">Требует проверки</h2>
           <p className="text-sm text-warning mb-3">
-            {needsReviewTools.length} new tool{needsReviewTools.length !== 1 ? "s" : ""} discovered that require policy
-            decisions.
+            {needsReviewTools.length} новых инструмента{needsReviewTools.length !== 1 ? "ов" : ""} требуют решений
+            по политикам.
           </p>
           <div className="flex flex-wrap gap-2">
             {needsReviewTools.map((tool) => (
@@ -175,7 +175,7 @@ export const ToolPoliciesPanel: React.FC<ToolPoliciesPanelProps> = ({ accessToke
                   onClick={() => scrollToToolRow(tool.tool_id)}
                   className="text-warning hover:text-warning/80 font-medium text-xs whitespace-nowrap"
                 >
-                  Review
+                  На проверку
                 </button>
               </span>
             ))}

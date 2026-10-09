@@ -84,10 +84,10 @@ const PassThroughSettings: React.FC<PassThroughSettingsProps> = ({ accessToken, 
       const updatedSettings = generalSettings.filter((setting) => setting.id !== endpointToDelete);
       setGeneralSettings(updatedSettings);
 
-      toast.success("Endpoint deleted successfully.");
+      toast.success("Эндпоинт удалён.");
     } catch (error) {
-      console.error("Error deleting the endpoint:", error);
-      toast.fromError("Error deleting the endpoint: " + error);
+      console.error("Ошибка удаления эндпоинта:", error);
+      toast.fromError("Ошибка удаления эндпоинта: " + error);
     }
 
     setIsDeleteModalOpen(false);
@@ -107,7 +107,7 @@ const PassThroughSettings: React.FC<PassThroughSettingsProps> = ({ accessToken, 
     const selectedEndpoint = generalSettings.find((endpoint) => endpoint.id === selectedEndpointId);
 
     if (!selectedEndpoint) {
-      return <div>Endpoint not found</div>;
+      return <div>Эндпоинт не найден</div>;
     }
 
     return (
@@ -125,8 +125,8 @@ const PassThroughSettings: React.FC<PassThroughSettingsProps> = ({ accessToken, 
   return (
     <div>
       <div className="mb-4">
-        <h2 className="text-lg font-semibold text-foreground">Pass Through Endpoints</h2>
-        <p className="text-sm text-muted-foreground">Configure and manage your pass-through endpoints</p>
+        <h2 className="text-lg font-semibold text-foreground">Pass-through эндпоинты</h2>
+        <p className="text-sm text-muted-foreground">Настройка и управление pass-through эндпоинтами</p>
       </div>
 
       <AddPassThroughEndpoint
@@ -146,9 +146,9 @@ const PassThroughSettings: React.FC<PassThroughSettingsProps> = ({ accessToken, 
       <AlertDialog open={isDeleteModalOpen} onOpenChange={(open) => !open && cancelDelete()}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Pass-Through Endpoint</AlertDialogTitle>
+            <AlertDialogTitle>Удалить pass-through эндпоинт</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this pass-through endpoint? This action cannot be undone.
+              Удалить этот pass-through эндпоинт? Это действие необратимо.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

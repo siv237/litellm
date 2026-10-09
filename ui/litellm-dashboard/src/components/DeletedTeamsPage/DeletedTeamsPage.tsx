@@ -21,9 +21,9 @@ export default function DeletedTeamsPage() {
       {!premiumUser && (
         <Alert>
           <Info />
-          <AlertTitle>Coming soon to Enterprise</AlertTitle>
+          <AlertTitle>Скоро в Enterprise</AlertTitle>
           <AlertDescription>
-            Deleted team auditing is graduating from beta into our Enterprise audit &amp; compliance suite.
+            Аудит удалённых команд выходит из беты в Enterprise-набор аудита и соответствия.
           </AlertDescription>
         </Alert>
       )}

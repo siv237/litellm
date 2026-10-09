@@ -44,8 +44,8 @@ const RouterSettingsForm: React.FC<RouterSettingsFormProps> = ({
       {/* Routing Settings Section */}
       <div className="space-y-6">
         <div className="max-w-3xl">
-          <h3 className="text-sm font-medium text-foreground">Routing Settings</h3>
-          <p className="text-xs text-muted-foreground mt-1">Configure how requests are routed to deployments</p>
+          <h3 className="text-sm font-medium text-foreground">Настройки маршрутизации</h3>
+          <p className="text-xs text-muted-foreground mt-1">Настройка направления запросов к деплойментам</p>
         </div>
 
         {/* Routing Strategy */}

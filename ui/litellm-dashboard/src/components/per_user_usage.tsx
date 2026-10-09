@@ -79,12 +79,12 @@ const PerUserUsage: React.FC<PerUserUsageProps> = ({ accessToken, selectedTags, 
 
   const columns: ColumnDef<PerUserMetrics>[] = [
     {
-      header: "User ID",
+      header: "ID пользователя",
       accessorKey: "user_id",
       cell: ({ row }) => <span className="font-medium">{row.original.user_id}</span>,
     },
     {
-      header: "User Email",
+      header: "Email пользователя",
       accessorKey: "user_email",
       cell: ({ row }) => row.original.user_email || "N/A",
     },
@@ -121,16 +121,16 @@ const PerUserUsage: React.FC<PerUserUsageProps> = ({ accessToken, selectedTags, 
 
   return (
     <div className="mb-6">
-      <h3 className="text-lg font-medium text-foreground">Per User Usage</h3>
-      <p className="text-sm text-muted-foreground">Individual developer usage metrics</p>
+      <h3 className="text-lg font-medium text-foreground">Расход по пользователям</h3>
+      <p className="text-sm text-muted-foreground">Метрики использования по отдельным разработчикам</p>
 
       <Tabs defaultValue="details">
         <TabsList variant="line" className="mb-6 h-auto w-full justify-start rounded-none border-b p-0">
           <TabsTrigger value="details" className="flex-none rounded-none px-4 py-2">
-            User Details
+            Сведения о пользователе
           </TabsTrigger>
           <TabsTrigger value="distribution" className="flex-none rounded-none px-4 py-2">
-            Usage Distribution
+            Распределение использования
           </TabsTrigger>
         </TabsList>
 
@@ -152,8 +152,8 @@ const PerUserUsage: React.FC<PerUserUsageProps> = ({ accessToken, selectedTags, 
         {/* Tab 2: Usage Distribution Histogram */}
         <TabsContent value="distribution" keepMounted>
           <div className="mb-4">
-            <h4 className="text-lg font-medium text-foreground">User Usage Distribution</h4>
-            <p className="text-sm text-muted-foreground">Number of users by successful request frequency</p>
+            <h4 className="text-lg font-medium text-foreground">Распределение использования по пользователям</h4>
+            <p className="text-sm text-muted-foreground">Число пользователей по частоте успешных запросов</p>
           </div>
 
           <BarChart

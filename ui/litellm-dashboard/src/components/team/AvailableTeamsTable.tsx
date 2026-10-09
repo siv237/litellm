@@ -22,9 +22,9 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <Users className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No available teams to join</div>
+      <div className="text-sm font-medium text-foreground">Нет команд для вступления</div>
       <div className="text-sm text-muted-foreground">
-        See how to set available teams{" "}
+        Смотрите, как задать доступные команды{" "}
         <a
           href="https://docs.litellm.ai/docs/proxy/self_serve#all-settings-for-self-serve--sso-flow"
           target="_blank"

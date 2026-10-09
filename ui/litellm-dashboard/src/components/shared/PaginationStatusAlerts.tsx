@@ -24,7 +24,7 @@ const PaginationStatusAlerts = ({
         <AlertDescription className="flex items-center justify-between text-inherit">
           <span>
             <Loader2 className="mr-2 inline size-4 animate-spin align-text-bottom" />
-            Currently fetching {subject}: fetched {progress.currentPage} / {progress.totalPages} pages. Charts will
+            Сейчас загружается: {subject}: получено {progress.currentPage} / {progress.totalPages} pages. Charts will
             update periodically as data loads. Moving off of this page will stop and reset this. To continue using the
             UI in the meantime,{" "}
             <a href={window.location.href} target="_blank" rel="noopener noreferrer">
@@ -33,7 +33,7 @@ const PaginationStatusAlerts = ({
             .
           </span>
           <Button variant="destructive" onClick={cancel}>
-            Stop
+            Стоп
           </Button>
         </AlertDescription>
       </Alert>
@@ -41,7 +41,7 @@ const PaginationStatusAlerts = ({
     {cancelled && (
       <Alert variant="info" className="mb-2">
         <AlertDescription className="text-inherit">
-          Showing partial {subject} ({progress.currentPage}/{progress.totalPages} pages loaded)
+          Showing partial {subject} ({progress.currentPage}/{progress.totalPages} страниц загружено)
         </AlertDescription>
       </Alert>
     )}

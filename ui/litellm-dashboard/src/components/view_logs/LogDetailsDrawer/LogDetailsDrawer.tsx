@@ -381,7 +381,7 @@ export function LogDetailsDrawer({
                 )}
                 {isSessionMode && sessionTruncated && (
                   <div className="mt-1 text-[11px] text-warning font-mono">
-                    Showing most recent {logsForList.length} of {sessionTotalCount}
+                    Показаны последние {logsForList.length} из {sessionTotalCount}
                   </div>
                 )}
                 {isSessionMode && (

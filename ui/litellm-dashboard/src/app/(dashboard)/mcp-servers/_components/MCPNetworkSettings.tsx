@@ -113,8 +113,7 @@ const MCPNetworkSettings: React.FC<MCPNetworkSettingsProps> = ({ accessToken }) 
       <div>
         <p className="text-lg font-semibold">Диапазоны частных IP</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          Define which IP ranges are part of your private network. Callers from these IPs can see all MCP servers.
-          Callers from any other IP can only see servers marked &quot;Available on Public Internet&quot;.
+          Укажите, какие IP-диапазоны относятся к вашей частной сети. Вызывающие с этих IP видят все серверы MCP. С остальных IP видны только серверы с пометкой «Доступен в публичном интернете».
         </p>
       </div>
 

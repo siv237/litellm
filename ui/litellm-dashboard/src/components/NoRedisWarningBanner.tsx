@@ -24,15 +24,13 @@ export const NoRedisWarningBanner: React.FC<NoRedisWarningBannerProps> = ({ acce
     >
       <TriangleAlert className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
       <div>
-        <p className="font-semibold">No Redis configured. Redis is highly recommended</p>
+        <p className="font-semibold">Redis не настроен. Redis настоятельно рекомендуется</p>
         <p>
-          This proxy is running more than one worker (or the worker count could not be verified). Without Redis, rate
-          limits, budgets, router state, and cache invalidation are per worker, so limits are enforced once per worker
-          and spend can overshoot.{" "}
+          Этот прокси работает с несколькими воркерами (или число воркеров не проверить). Без Redis лимиты, бюджеты, состояние роутера и инвалидация кэша действуют на каждый воркер отдельно — лимиты срабатывают по разу на воркер, и расход может превысить заданное.{" "}
           <a className="underline" href={REDIS_DOCS_URL} target="_blank" rel="noreferrer">
-            See everything that does not work without Redis
+            Смотреть, что не работает без Redis
           </a>
-          . Set <code className="font-mono">LITELLM_DISABLE_NO_REDIS_WARNING=true</code> to hide this banner anyway.
+          . Set <code className="font-mono">LITELLM_DISABLE_NO_REDIS_WARNING=true</code> чтобы всё равно скрыть баннер.
         </p>
       </div>
     </div>

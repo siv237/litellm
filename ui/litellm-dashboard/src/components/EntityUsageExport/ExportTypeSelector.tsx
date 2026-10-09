@@ -23,13 +23,13 @@ const ExportTypeSelector: React.FC<ExportTypeSelectorProps> = ({ value, onChange
     {
       value: "daily_with_models",
       title: `Day-by-day by ${entityType} and model`,
-      description: "Daily metrics split by model",
+      description: "Дневные метрики в разрезе моделей",
     },
   ];
 
   return (
     <div>
-      <label className="text-sm font-medium text-foreground block mb-2">Export type</label>
+      <label className="text-sm font-medium text-foreground block mb-2">Тип экспорта</label>
       <RadioGroup value={value} onValueChange={(next) => onChange(next as ExportScope)} className="gap-2">
         {scopes.map((scope) => (
           <label

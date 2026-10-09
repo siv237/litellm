@@ -153,7 +153,7 @@ const ConversationRow: React.FC<ConversationRowProps> = ({ conv, isActive, onSel
                   }
                 />
                 <TooltipContent side="bottom">
-                  <p>Rename</p>
+                  <p>Переименовать</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -183,8 +183,8 @@ const ConversationRow: React.FC<ConversationRowProps> = ({ conv, isActive, onSel
               </TooltipProvider>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Delete this conversation?</AlertDialogTitle>
-                  <AlertDialogDescription>This action cannot be undone</AlertDialogDescription>
+                  <AlertDialogTitle>Удалить этот разговор?</AlertDialogTitle>
+                  <AlertDialogDescription>Это действие необратимо</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Отмена</AlertDialogCancel>
@@ -236,7 +236,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ open, conversations, onSelect
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             autoFocus
-            placeholder="Search conversations\u2026"
+            placeholder="Поиск разговоров…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="pl-9"
@@ -245,7 +245,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ open, conversations, onSelect
 
         <ScrollArea className="max-h-[320px]">
           {filtered.length === 0 ? (
-            <div className="text-center py-6 text-muted-foreground text-sm">No conversations found</div>
+            <div className="text-center py-6 text-muted-foreground text-sm">Разговоры не найдены</div>
           ) : (
             filtered.map((conv) => {
               const truncated = conv.title.length > 55 ? conv.title.slice(0, 55) + "\u2026" : conv.title;
@@ -293,9 +293,9 @@ const ConversationList: React.FC<Props> = ({ conversations, activeConversationId
         <ScrollArea className="flex-1 h-0 px-1.5 pt-2">
           {grouped.length === 0 ? (
             <div className="text-center text-muted-foreground/60 text-xs mt-8 px-3">
-              No conversations yet
+              Разговоров пока нет
               <br />
-              Start a new chat above
+              Начните новый чат выше
             </div>
           ) : (
             grouped.map(({ group, items }) => (

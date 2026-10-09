@@ -32,8 +32,8 @@ function EmptyState() {
       <div className="mb-1 flex size-10 items-center justify-center rounded-lg bg-muted">
         <HeartPulse className="size-5 text-muted-foreground" />
       </div>
-      <div className="text-sm font-medium text-foreground">No models found</div>
-      <div className="text-sm text-muted-foreground">Models added to this proxy will show their health here.</div>
+      <div className="text-sm font-medium text-foreground">Модели не найдены</div>
+      <div className="text-sm text-muted-foreground">Добавленные на прокси модели покажут здесь своё здоровье.</div>
     </div>
   );
 }

@@ -16,19 +16,18 @@ const CreatedKeyDisplay: React.FC<CreatedKeyDisplayProps> = ({ apiKey }) => {
 
   const handleCopy = () => {
     setCopied(true);
-    toast.success("Key copied to clipboard");
+    toast.success("Ключ скопирован");
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
     <div>
       <p className="mb-2">
-        Please save this secret key somewhere safe and accessible. For security reasons,{" "}
-        <b>you will not be able to view it again</b> through your LiteLLM account. If you lose this secret key, you will
-        need to generate a new one.
+        Сохраните этот секретный ключ в надёжном и доступном месте. Из соображений безопасности{" "}
+        <b>you will not be able to view it again</b> через аккаунт ruLiteLLM. Если потеряете секретный ключ, придётся выпустить новый.
       </p>
 
-      <p className="text-sm text-muted-foreground mt-3 mb-1">Virtual Key:</p>
+      <p className="text-sm text-muted-foreground mt-3 mb-1">Виртуальный ключ:</p>
       <div className="bg-muted rounded-md p-2.5 mb-2.5">
         <pre className="m-0 whitespace-normal break-words text-foreground">{apiKey}</pre>
       </div>

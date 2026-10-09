@@ -27,26 +27,26 @@ const KeyActivityPanel: React.FC<KeyActivityPanelProps> = ({ keyMetrics, hidePro
             <Search className="size-4 text-muted-foreground" />
           </InputGroupAddon>
           <InputGroupInput
-            aria-label="Search keys"
-            placeholder="Search by key alias, key hash, user ID, or email"
+            aria-label="Поиск ключей"
+            placeholder="Поиск по алиасу ключа, хешу, ID пользователя или email"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
           {isFiltering && (
             <InputGroupAddon align="inline-end">
-              <InputGroupButton size="icon-xs" aria-label="Clear key search" onClick={() => setQuery("")}>
+              <InputGroupButton size="icon-xs" aria-label="Очистить поиск ключей" onClick={() => setQuery("")}>
                 <X />
               </InputGroupButton>
             </InputGroupAddon>
           )}
         </InputGroup>
         <span className="text-sm text-muted-foreground">
-          Showing {shownKeys.toLocaleString()} of {totalKeys.toLocaleString()} keys
+          Показано {shownKeys.toLocaleString()} of {totalKeys.toLocaleString()} keys
         </span>
       </div>
       {isFiltering && totalKeys > 0 && shownKeys === 0 ? (
         <p className="rounded-lg border p-6 text-center text-sm text-muted-foreground">
-          No keys match &quot;{query.trim()}&quot; in this date range
+          В этом периоде ключей не найдено
         </p>
       ) : (
         <ActivityMetrics modelMetrics={filtered} hidePromptCachingMetrics={hidePromptCachingMetrics} />

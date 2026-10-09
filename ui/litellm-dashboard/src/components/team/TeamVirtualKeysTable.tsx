@@ -322,7 +322,7 @@ export function TeamVirtualKeysTable({ teamId, teamAlias, organization }: TeamVi
           const emptyModelsBadge = !scope.hasModelAccess ? (
             <SimpleTooltip content={`Scoped to ${scope.label} routes; this key cannot call any models`}>
               <Badge variant="secondary" className="mb-1">
-                No model access
+                Нет доступа к моделям
               </Badge>
             </SimpleTooltip>
           ) : (
@@ -483,7 +483,7 @@ export function TeamVirtualKeysTable({ teamId, teamAlias, organization }: TeamVi
                         <Input
                           value={(get("user_id") as string) ?? ""}
                           onChange={(event) => set("user_id", event.target.value)}
-                          placeholder="Filter by user ID…"
+                          placeholder="Фильтр по ID пользователя…"
                         />
                       </DataTableFilterField>
                       <DataTableFilterField label="ID ключа">
