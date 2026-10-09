@@ -3,18 +3,12 @@ import { buttonVariants } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/cva.config";
-import { Github, Slack } from "lucide-react";
+import { Github } from "lucide-react";
 import React from "react";
 
 const COMMUNITY_LINKS = [
   {
-    href: "https://www.litellm.ai/support",
-    label: "Сообщество в Slack",
-    tooltip: "Сообщество ruLiteLLM в Slack",
-    Icon: Slack,
-  },
-  {
-    href: "https://github.com/BerriAI/litellm",
+    href: "https://github.com/siv237/ruLiteLLM",
     label: "ruLiteLLM на GitHub",
     tooltip: "ruLiteLLM на GitHub",
     Icon: Github,

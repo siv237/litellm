@@ -637,7 +637,9 @@ const Sidebar_: React.FC<SidebarProps> = ({
             {version && (
               <Badge
                 variant="outline"
-                render={<a href="https://docs.litellm.ai/release_notes" target="_blank" rel="noopener noreferrer" />}
+                render={
+                  <a href="https://github.com/siv237/ruLiteLLM/commits" target="_blank" rel="noopener noreferrer" />
+                }
                 className="px-1.5 py-0 font-mono text-[10px] font-medium text-muted-foreground group-data-[collapsed=true]/sidebar:hidden"
               >
                 v{version}
@@ -679,6 +681,22 @@ const Sidebar_: React.FC<SidebarProps> = ({
           />
         )}
         <SidebarAccountMenu onLogout={logout} collapsed={collapsed} />
+        <div
+          className={`px-2 pb-1 text-[10px] leading-tight text-muted-foreground group-data-[collapsed=true]/sidebar:hidden ${
+            collapsed ? "hidden" : ""
+          }`}
+        >
+          Разработано на базе{" "}
+          <a
+            href="https://github.com/BerriAI/litellm"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-muted-foreground/50 underline-offset-2 hover:text-foreground"
+          >
+            LiteLLM
+          </a>{" "}
+          (BerriAI, MIT)
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

@@ -17,7 +17,7 @@ import { cn } from "@/lib/cva.config";
 import { ChevronsUpDown, Crown, IdCard, LogOut, Mail, ShieldCheck } from "lucide-react";
 import React from "react";
 
-const RELEASE_NOTES_URL = "https://docs.litellm.ai/release_notes";
+const RELEASE_NOTES_URL = "https://github.com/siv237/ruLiteLLM/commits";
 
 function hueFromString(seed: string): number {
   let h = 0;
