@@ -144,7 +144,7 @@ const GuardrailsPanel: React.FC<GuardrailsPanelProps> = ({ accessToken, userRole
                 Гардрейлы
               </TabsTrigger>
               <TabsTrigger value="playground" className="flex-none" disabled={!accessToken}>
-                Тестовый Playground
+                Тестовая песочница
               </TabsTrigger>
             </>
           )}

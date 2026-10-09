@@ -6,7 +6,7 @@
 // Page descriptions for UI Settings configuration
 export const pageDescriptions: Record<string, string> = {
   "api-keys": "Управление виртуальными ключами доступа к API",
-  "llm-playground": "Интерактивный playground тестовых запросов к LLM",
+  "llm-playground": "Интерактивная песочница тестовых запросов к LLM",
   models: "Настройка и управление моделями LLM и эндпоинтами",
   agents: "Создание и управление ИИ-агентами",
   agentic: "Управление агентными ресурсами: агенты, запуски процессов и память",

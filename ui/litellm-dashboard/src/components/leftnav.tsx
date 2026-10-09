@@ -126,7 +126,7 @@ const menuGroups: MenuGroup[] = [
         key: "llm-playground",
         page: "llm-playground",
         route: "playground",
-        label: "Playground",
+        label: "Песочница",
         icon: <PlayCircle {...ICON} />,
         roles: rolesWithWriteAccess,
       },
@@ -229,7 +229,7 @@ const menuGroups: MenuGroup[] = [
       {
         key: "request-gantt",
         page: "request-gantt",
-        label: "Gantt запросов",
+        label: "Диаграмма запросов",
         roles: [...all_admin_roles, ...internalUserRoles],
         icon: <ChartGantt {...ICON} />,
       },
@@ -310,7 +310,7 @@ const menuGroups: MenuGroup[] = [
           {
             key: "transform-request",
             page: "transform-request",
-            label: "API Playground",
+            label: "Справочник API",
             icon: <Terminal {...ICON} />,
             roles: [...all_admin_roles, ...internalUserRoles],
           },

@@ -548,7 +548,7 @@ const MCPToolsViewer = ({
           {/* Main Testing Area */}
           <div className="col-span-3 flex flex-col">
             <div className="flex items-center justify-between border-b border-border p-4">
-              <h2 className="mb-0 text-xl font-semibold">Playground тестирования инструментов</h2>
+              <h2 className="mb-0 text-xl font-semibold">Песочница тестирования инструментов</h2>
             </div>
 
             <div className="flex-1 overflow-auto p-4">

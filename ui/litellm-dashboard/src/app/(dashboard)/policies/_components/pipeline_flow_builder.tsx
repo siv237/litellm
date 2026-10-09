@@ -1370,7 +1370,7 @@ const PolicyVersionsSidebar: React.FC<PolicyVersionsSidebarProps> = ({
                       marginBottom: canPromote ? 8 : 0,
                     }}
                   >
-                    Опубликованные версии можно протестировать в Playground перед переводом в production.
+                    Опубликованные версии можно протестировать в «Песочнице» перед переводом в production.
                   </span>
                 </>
               )}
@@ -1547,7 +1547,7 @@ export const FlowBuilderPage: React.FC<FlowBuilderPageProps> = ({
     try {
       const updated = await updatePolicyVersionStatus(accessToken, editingPolicy.policy_id, "published");
       toast.success(
-        "Версия опубликована. Её можно протестировать в Playground, выбрав эту версию в списке политик.",
+        "Версия опубликована. Её можно протестировать в «Песочнице», выбрав эту версию в списке политик.",
       );
       const list = await listPolicyVersions(accessToken, editingPolicy.policy_name ?? "");
       setVersions(list.versions ?? []);

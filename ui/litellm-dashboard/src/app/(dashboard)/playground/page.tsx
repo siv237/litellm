@@ -84,7 +84,7 @@ export default function PlaygroundPage() {
           <ComplianceUI accessToken={accessToken} disabledPersonalKeyCreation={disabledPersonalKeyCreation} />
         </TabsContent>
         <TabsContent value="agent-builder" className="mt-0 h-full data-hidden:hidden" keepMounted>
-          <DeprecationBanner featureName="The Playground's Agent Builder" />
+          <DeprecationBanner featureName="Конструктор агентов в «Песочнице»" />
           <AgentBuilderView
             accessToken={accessToken}
             token={token}

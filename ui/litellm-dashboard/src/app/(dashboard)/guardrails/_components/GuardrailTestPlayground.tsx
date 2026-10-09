@@ -194,7 +194,7 @@ const GuardrailTestPlayground: React.FC<GuardrailTestPlaygroundProps> = ({
             {/* Right Panel - Test Area */}
             <div className="flex w-3/4 flex-col">
               <div className="flex items-center justify-between border-b border-border p-4">
-                <h2 className="mb-0 text-xl font-semibold">Playground тестирования гардрейлов</h2>
+                <h2 className="mb-0 text-xl font-semibold">Песочница тестирования гардрейлов</h2>
               </div>
 
               <div className="flex-1 overflow-auto p-4">

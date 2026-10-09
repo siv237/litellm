@@ -126,7 +126,7 @@ ${formattedBody}
 
   return (
     <div className="p-2">
-      <h1 className="text-lg font-medium text-foreground">Playground</h1>
+      <h1 className="text-lg font-medium text-foreground">Песочница</h1>
       <p className="text-sm text-muted-foreground">
         Посмотрите, как ruLiteLLM преобразует ваш запрос для выбранного провайдера.
       </p>
