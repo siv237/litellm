@@ -20,7 +20,7 @@ export const classificationRatePer1kTurns = (classifierCost: number, turns: numb
 export const pct = (ratio: number): string => `${formatNumberWithCommas(ratio * 100, 1)}%`;
 
 export const shortDate = (iso: string): string =>
-  new Date(`${iso}T00:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  new Date(`${iso}T00:00:00`).toLocaleDateString("ru-RU", { month: "short", day: "numeric" });
 
 export const compressionOf = (m: SpendMetrics): number => m.compression_savings_spend ?? 0;
 export const cachingOf = (m: SpendMetrics): number => m.prompt_caching_savings_spend ?? 0;
@@ -184,9 +184,9 @@ export type SavingsAccumulation = "cumulative" | "per-interval";
 // that the chart wrappers' `Record<string, unknown>` datum bound requires.
 export type SavingsPoint = {
   date: string;
-  Compression: number;
-  "Prompt caching": number;
-  "Auto-router": number;
+  "Сжатие": number;
+  "Кэширование промптов": number;
+  "Авто-роутер": number;
 };
 
 /**
@@ -200,9 +200,9 @@ export type SavingsPoint = {
  * mapping. Colour travels with the driver so filtering cannot separate them.
  */
 export const SAVINGS_DRIVERS = [
-  { name: "Compression", color: "emerald", of: compressionOf },
-  { name: "Prompt caching", color: "blue", of: gatewayAttributedCachingOf },
-  { name: "Auto-router", color: "amber", of: autorouterOf },
+  { name: "Сжатие", color: "emerald", of: compressionOf },
+  { name: "Кэширование промптов", color: "blue", of: gatewayAttributedCachingOf },
+  { name: "Авто-роутер", color: "amber", of: autorouterOf },
 ] as const;
 
 export const SAVINGS_SERIES = SAVINGS_DRIVERS.map((d) => d.name);
@@ -244,9 +244,9 @@ export const toCumulative = (points: readonly SavingsPoint[]): SavingsPoint[] =>
       ...acc,
       {
         date: point.date,
-        Compression: (previous?.Compression ?? 0) + point.Compression,
-        "Prompt caching": (previous?.["Prompt caching"] ?? 0) + point["Prompt caching"],
-        "Auto-router": (previous?.["Auto-router"] ?? 0) + point["Auto-router"],
+        "Сжатие": (previous?.["Сжатие"] ?? 0) + point["Сжатие"],
+        "Кэширование промптов": (previous?.["Кэширование промптов"] ?? 0) + point["Кэширование промптов"],
+        "Авто-роутер": (previous?.["Авто-роутер"] ?? 0) + point["Авто-роутер"],
       },
     ];
   }, []);
@@ -261,12 +261,12 @@ export const toCumulative = (points: readonly SavingsPoint[]): SavingsPoint[] =>
 export const withStartAnchor = (cumulative: readonly SavingsPoint[], startLabel: string): SavingsPoint[] =>
   cumulative.length === 0
     ? [...cumulative]
-    : [{ date: startLabel, Compression: 0, "Prompt caching": 0, "Auto-router": 0 }, ...cumulative];
+    : [{ date: startLabel, "Сжатие": 0, "Кэширование промптов": 0, "Авто-роутер": 0 }, ...cumulative];
 
 /** "Jul 16 – Jul 23", collapsing to a single date when the range is one day. */
 export const formatRangeLabel = (from: Date | undefined, to: Date | undefined): string => {
   if (!from || !to) return "";
-  const short = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const short = (d: Date) => d.toLocaleDateString("ru-RU", { month: "short", day: "numeric" });
   const start = short(from);
   const end = short(to);
   return start === end ? start : `${start} – ${end}`;

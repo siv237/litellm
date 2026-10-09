@@ -39,13 +39,13 @@ const SavingsTiles = ({ results, isLoading }: { results: DailyData[]; isLoading:
       <SummaryCard
         label="Всего сэкономлено"
         value={usd(totals.total)}
-        hint={isLoading ? "Loading..." : "Compression + prompt caching + auto-router"}
+        hint={isLoading ? "Loading..." : "Сжатие + кэширование промптов + авто-роутер"}
         info="The sum of the three tiles beside it. Its caching term is the LiteLLM-injected share, so this total is what the gateway itself delivered; caching that clients or providers brought on their own appears only in the caching tile's Total figure."
       />
       <SummaryCard
         label="Экономия на сжатии"
         value={usd(totals.compression)}
-        hint={`${formatNumberWithCommas(totals.savedTokens)} tokens compressed`}
+        hint={`${formatNumberWithCommas(totals.savedTokens)} токенов сжато`}
         info="Tokens Headroom removed before the call, priced at the model's input rate."
       />
       <SummaryCard

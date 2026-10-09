@@ -26,7 +26,7 @@ const CostOptimizationFeedbackBanner: React.FC = () => {
       <div className="min-w-0 flex-1">
         <h4 className="m-0 text-sm font-semibold text-foreground">Помогите улучшить оптимизацию затрат</h4>
         <p className="m-0 mt-0.5 text-xs text-muted-foreground">
-          We&apos;re Мы собираем предложения по улучшению оптимизации затрат — маршрутизация, бюджеты и другое. Напишите, что вы хотели бы видеть.&apos;d like to see.
+          Мы собираем предложения по улучшению оптимизации затрат — маршрутизация, бюджеты и другое. Напишите, что вы хотели бы видеть.
         </p>
       </div>
       <Button

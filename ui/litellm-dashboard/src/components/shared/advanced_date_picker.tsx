@@ -69,7 +69,7 @@ const relativeTimeOptions: RelativeTimeOption[] = [
 const AdvancedDatePicker: React.FC<AdvancedDatePickerProps> = ({
   value,
   onValueChange,
-  label = "Select Time Range",
+  label = "Выберите период",
   className,
   showTimeRange = true,
   align = "right",
@@ -163,7 +163,7 @@ const AdvancedDatePicker: React.FC<AdvancedDatePickerProps> = ({
     if (!from || !to) return "Select date range";
 
     const formatDateTime = (date: Date) => {
-      return moment(date).format("D MMM, HH:mm");
+      const m=["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"][date.getMonth()]; return `${date.getDate()} ${m}, ${String(date.getHours()).padStart(2,"0")}:${String(date.getMinutes()).padStart(2,"0")}`;
     };
 
     return `${formatDateTime(from)} - ${formatDateTime(to)}`;

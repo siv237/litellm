@@ -79,7 +79,7 @@ const CostOptimizationView: React.FC<CostOptimizationViewProps> = ({ accessToken
               rel="noopener noreferrer"
               className="text-primary underline underline-offset-2"
             >
-              here
+              здесь
             </a>
           </p>
         </div>
