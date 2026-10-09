@@ -42,9 +42,11 @@ _RECENT_LIMIT: Final = 40
 # «живой» интерактивный клиент vs скрипт/система (UA из request_tags)
 _INTERACTIVE_RE: Final = "kilo|opencode|claude[- _]?code|cursor|cline|jetbrains|copilot"
 
-# мусорные pseudo-сессии в первых репликах (см. страницу-анализ)
+# мусорные pseudo-сессии в первых репликах (см. страницу-анализ); _EVAL_USER — собственные оценки журнала
+_EVAL_USER: Final = "journal-eval"
 _TXT_FILTER: Final = """txt NOT ILIKE '%Generate a title%'
-    AND txt NOT LIKE '%kilo-memory-evidence-v1%' AND txt NOT ILIKE '%consolidation%'"""
+    AND txt NOT LIKE '%kilo-memory-evidence-v1%' AND txt NOT ILIKE '%consolidation%'
+    AND txt NOT LIKE '%внутреннего гейтвея%'"""
 
 # оконный CTE: витрина + фильтры; {p} — номер параметра days, дальше — model/agent/key
 _W_CTE: Final = """
@@ -186,6 +188,7 @@ SELECT COALESCE(json_agg(r ORDER BY r.t0 DESC), '[]') AS data FROM (
         WHERE "startTime" >= (now() AT TIME ZONE 'utc') - make_interval(days => ${p}::int)
           AND call_type = 'acompletion' AND proxy_server_request IS NOT NULL
           AND coalesce(session_id, '') <> ''
+          AND COALESCE("user", '') <> '{eu}'
       ) fr,
       jsonb_array_elements(fr.psr -> 'messages') WITH ORDINALITY e(m, ord)
       WHERE m ->> 'role' = 'user'
@@ -239,7 +242,7 @@ async def get_journal_state(
     cells_sql = _SQL_CELLS.format(tz=_TZ, p=1, filt=filt)
     parts_sql = _SQL_PARTICIPANTS.format(tz=_TZ, p=1, filt=filt, ire=_INTERACTIVE_RE)
     exch_sql = _SQL_EXCH.replace("{p}", "1")
-    first_sql = _SQL_FIRST.format(tz=_TZ, p=1, txtf=_TXT_FILTER)
+    first_sql = _SQL_FIRST.format(tz=_TZ, p=1, txtf=_TXT_FILTER, eu=_EVAL_USER)
     prev_sql = _SQL_PREV.replace("{p}", "1")
 
     try:
@@ -290,6 +293,7 @@ async def get_journal_state(
     recent = [
         {
             "u": r["u"],
+            "sid": r.get("sid") or "",
             "display": _disp(r["u"], "", names),
             "t": r["t0"],
             "txt": r["txt"],
@@ -326,6 +330,55 @@ async def get_journal_state(
         "recent": recent,
         "models": models,
     }
+
+
+# полный текст первой содержательной user-реплики сессии (для модалки «последняя активность»)
+_SQL_MESSAGE: Final = """
+SELECT COALESCE(json_agg(r ORDER BY r.ord), '[]') AS data FROM (
+  SELECT e.ord,
+         CASE jsonb_typeof(m -> 'content')
+           WHEN 'string' THEN m ->> 'content'
+           ELSE (SELECT string_agg(p ->> 'text', chr(10))
+                 FROM jsonb_array_elements(m -> 'content') p WHERE p ->> 'type' = 'text')
+         END AS txt
+  FROM (
+    SELECT proxy_server_request AS psr
+    FROM "LiteLLM_SpendLogs"
+    WHERE session_id = $1 AND call_type = 'acompletion' AND proxy_server_request IS NOT NULL
+    ORDER BY "startTime" ASC
+    LIMIT 1
+  ) fr,
+  jsonb_array_elements(fr.psr -> 'messages') WITH ORDINALITY e(m, ord)
+  WHERE m ->> 'role' = 'user'
+) r;
+"""
+
+_MSG_MAX_CHARS: Final = 30000
+
+
+@router.get("/dashboard/journal/message", tags=["journal"], include_in_schema=False)
+async def get_journal_message(
+    sid: str = Query(min_length=1, max_length=200),
+    user_api_key_dict: UserAPIKeyAuth = Depends(user_api_key_auth),
+):
+    from litellm.proxy.proxy_server import prisma_client
+
+    if user_api_key_dict.user_role not in _JOURNAL_ALLOWED_ROLES:
+        raise HTTPException(status_code=403, detail={"error": "Журнал доступен только администраторам"})
+    if prisma_client is None:
+        raise HTTPException(status_code=503, detail={"error": "Нет БД"})
+
+    try:
+        rows = await _rows(prisma_client, _SQL_MESSAGE, sid)
+    except Exception as e:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail={"error": f"SQL журнала: {str(e)[:400]}"}) from e
+
+    txt = ""
+    for r in rows:
+        if (r.get("txt") or "").strip():
+            txt = r["txt"]
+            break
+    return {"sid": sid, "txt": txt[:_MSG_MAX_CHARS], "chars": len(txt), "truncated": len(txt) > _MSG_MAX_CHARS}
 
 
 # ---------------- страница участника ----------------
@@ -512,6 +565,8 @@ CREATE TABLE IF NOT EXISTS "LiteLLM_DGK_ActivitySnapshots" (
   id serial PRIMARY KEY,
   "createdAt" timestamp NOT NULL DEFAULT (now() AT TIME ZONE 'utc'),
   "periodDays" int NOT NULL,
+  "targetU" text NOT NULL DEFAULT '',
+  "targetSid" text NOT NULL DEFAULT '',
   model text NOT NULL,
   "digestChars" int NOT NULL DEFAULT 0,
   report text NOT NULL,
@@ -522,14 +577,28 @@ CREATE TABLE IF NOT EXISTS "LiteLLM_DGK_ActivitySnapshots" (
 
 _EVAL_PROMPT: Final = """Это сводка с нашего внутреннего гейтвея LiteLLM за последние {days} суток: статистика \
 по сотрудникам и реальные первые реплики их сессий с ИИ. Проанализируй конкретно: ЧЕМ ИМЕННО занят \
-каждый — какие проекты/задачи, что обсуждает. Для каждого укажи характер: реальная работа / \
-обучение-эксперименты / развлечения. Ориентируйся только на данные, не выдумай. Формат: раздел на \
-каждого человека 3–5 строк, в конце общий вывод. По-русски. Пиши сразу итоговый ответ, без черновика. \
-ОБЯЗАТЕЛЬНО выдели отдельным разделом КАЖДОГО пользователя из блока СТАТИСТИКА (включая сервисные, \
-default_user_id и анонимных); если текстов нет — напиши, что видна только статистика."""
+каждый — проекты, задачи, системы из реплик. Только по данным, не выдумай. По-русски, сразу итоговый ответ \
+без черновика. ОБЯЗАТЕЛЬНО отдельным разделом КАЖДЫЙ пользователь из блока СТАТИСТИКА (включая сервисные, \
+default_user_id и анонимных); если текстов нет — напиши «видна только статистика». Структура ответа (markdown):
+
+## Сводка
+таблица, одной строкой на участника: | Участник | Характер | Запросов | Чем занят |
+(характер: реальная работа / обучение-эксперименты / развлечения / сервисная автоматизация)
+
+## Имя_участника
+заголовок h2 на каждого; под ним строка **Характер: …** и 2–4 буллета конкретики \
+(проекты, задачи, системы, тон общения — только из данных)
+
+## Общий вывод
+3–5 строк: кто чем загружен, повторы и аномалии, заметные изменения."""
 
 
-def _build_digest(parts: List[Dict[str, Any]], first: List[Dict[str, Any]], names: Dict[str, str]) -> str:
+def _build_digest(
+    parts: List[Dict[str, Any]], first: List[Dict[str, Any]], names: Dict[str, str], target_u: str = ""
+) -> str:
+    if target_u:
+        parts = [p for p in parts if p["u"] == target_u]
+        first = [r for r in first if r["u"] == target_u]
     lines = ["СТАТИСТИКА за период (участник|запросов|токенов|сессий|топ-модели):"]
     for p in parts:
         disp = _disp(p["u"], p.get("email") or "", names)
@@ -550,6 +619,44 @@ def _build_digest(parts: List[Dict[str, Any]], first: List[Dict[str, Any]], name
     for u, n in skipped.items():
         lines.append(f"{_disp(u, '', names)} => … ещё {n} сессий (повторы)")
     return "\n".join(lines)
+
+
+async def _safe_names(client: Any) -> Dict[str, str]:
+    try:
+        return await _user_names(client)
+    except Exception:
+        return {}
+
+
+# дайджест одной сессии: статистика + все user-реплики из ПОСЛЕДнего тела (полная переписка)
+_SQL_SESSION_DIGEST: Final = """
+WITH m AS (
+  SELECT COALESCE(s."user", '') AS u, count(*)::int AS turns, COALESCE(sum(s.total_tokens), 0)::bigint AS tok,
+         (SELECT string_agg(g.m, ', ') FROM (
+            SELECT COALESCE(NULLIF(s2."model_group", ''), NULLIF(s2."model", ''), '?') m
+            FROM "LiteLLM_SpendLogs" s2 WHERE s2.session_id = $1 GROUP BY m ORDER BY count(*) DESC LIMIT 3) g) AS models
+  FROM "LiteLLM_SpendLogs" s
+  WHERE s.session_id = $1 AND s."startTime" >= (now() AT TIME ZONE 'utc') - make_interval(days => $2::int)
+  GROUP BY s."user"
+), last AS (
+  SELECT proxy_server_request AS psr FROM "LiteLLM_SpendLogs"
+  WHERE session_id = $1 AND proxy_server_request IS NOT NULL
+  ORDER BY "startTime" DESC LIMIT 1
+), rep AS (
+  SELECT string_agg(left(regexp_replace(
+           CASE jsonb_typeof(m2 -> 'content')
+             WHEN 'string' THEN m2 ->> 'content'
+             ELSE (SELECT string_agg(p ->> 'text', ' ') FROM jsonb_array_elements(m2 -> 'content') p
+                   WHERE p ->> 'type' = 'text')
+           END, '\\s+', ' ', 'g'), 400), E'\n---\n') AS txts
+  FROM last, jsonb_array_elements(last.psr -> 'messages') e(m2)
+  WHERE e.m2 ->> 'role' = 'user'
+)
+SELECT 'сессия ' || $1 || ' | участник ' || COALESCE(nullif(uu.user_email, ''), nullif(m.u, ''), 'аноним')
+  || ' | запросов ' || m.turns || ' | токенов ' || m.tok || ' | модели: ' || COALESCE(m.models, '')
+  || E'\nРЕПЛИКИ:\n' || left(COALESCE(rep.txts, '(текстов нет)'), 12000) AS dig
+FROM m LEFT JOIN "LiteLLM_UserTable" uu ON uu.user_id = m.u, rep;
+"""
 
 
 @router.post("/dashboard/journal/evaluate", tags=["journal"], include_in_schema=False)
@@ -576,20 +683,48 @@ async def post_journal_evaluate(
 
     if not _table_ready["ok"]:
         await prisma_client.db.execute_raw(_CREATE_TABLE)
+        await prisma_client.db.execute_raw(
+            f'ALTER TABLE {_SNAP_TABLE} ADD COLUMN IF NOT EXISTS "targetU" text NOT NULL DEFAULT \'\''
+        )
+        await prisma_client.db.execute_raw(
+            f'ALTER TABLE {_SNAP_TABLE} ADD COLUMN IF NOT EXISTS "targetSid" text NOT NULL DEFAULT \'\''
+        )
         _table_ready["ok"] = True
 
-    parts_sql = _SQL_PARTICIPANTS.format(tz=_TZ, p=1, filt="", ire=_INTERACTIVE_RE)
-    first_sql = _SQL_FIRST.format(tz=_TZ, p=1, txtf=_TXT_FILTER)
-    parts = await _rows(prisma_client, parts_sql, days)
-    first = await _rows(prisma_client, first_sql, days)
-    names: Dict[str, str] = {}
-    try:
-        names = await _user_names(prisma_client)
-    except Exception:
-        pass
+    target_u = str(body.get("u") or "")
+    target_sid = str(body.get("sid") or "")
 
-    digest = _build_digest(parts, first, names)
-    prompt = _EVAL_PROMPT.format(days=days) + "\n\n" + digest
+    if target_sid:
+        srows = await prisma_client.db.query_raw(_SQL_SESSION_DIGEST, target_sid, days)
+        digest = srows[0]["dig"] if srows else ""
+        if not digest:
+            raise HTTPException(status_code=404, detail={"error": "сессия не найдена за окно ≤ 7 суток"})
+        prompt = (
+            "Это начало и статистика одной сессии сотрудника с нашего внутреннего гейтвея ИИ. Кратко "
+            "(10–15 строк, markdown): ## Чем занимались — буллеты; ## Чем закончилось — 1–2 строки; "
+            "**Характер:** реальная работа / обучение / развлечения / автоматика; ## Оценка полезности — "
+            "2–3 строки. Только по данным, без выдумок. По-русски, без черновика.\n\n" + digest
+        )
+    else:
+        parts_sql = _SQL_PARTICIPANTS.format(tz=_TZ, p=1, filt="", ire=_INTERACTIVE_RE)
+        first_sql = _SQL_FIRST.format(tz=_TZ, p=1, txtf=_TXT_FILTER, eu=_EVAL_USER)
+        parts = await _rows(prisma_client, parts_sql, days)
+        first = await _rows(prisma_client, first_sql, days)
+        if target_u:
+            tgt = next((p for p in parts if p["u"] == target_u), None)
+            disp = _disp(target_u, (tgt or {}).get("email") or "", await _safe_names(prisma_client))
+            prompt = (
+                f"Это сводка с нашего внутреннего гейтвея LiteLLM за последние {days} суток по сотруднику "
+                f"**{disp}**. Только по данным, без выдумок, по-русски, сразу итоговый ответ без черновика. "
+                "Структура (markdown): ## Чем занят — 2–4 буллета (проекты, задачи, системы из реплик); "
+                "строка **Характер:** реальная работа / обучение-эксперименты / развлечения / сервисная "
+                "автоматизация; ## Сессии — частота, длина, тон (2–3 строки); ## Итог — 2–3 строки."
+            )
+            digest = _build_digest(parts, first, await _safe_names(prisma_client), target_u)
+        else:
+            digest = _build_digest(parts, first, await _safe_names(prisma_client))
+            prompt = _EVAL_PROMPT.format(days=days)
+        prompt = prompt + "\n\n" + digest
 
     base = os.environ.get("LITELLM_SELF_BASE", "https://dgk00srv937d.dgk.ru")
     master = os.environ.get("LITELLM_MASTER_KEY", "")
@@ -606,6 +741,7 @@ async def post_journal_evaluate(
                     "messages": [{"role": "user", "content": prompt}],
                     "max_tokens": 9000,
                     "temperature": 0.3,
+                    "user": _EVAL_USER,
                     # qwen3.8 через гейт без thinking=false отдаёт content:null (ответ в reasoning_content)
                     "chat_template_kwargs": {"thinking": False},
                 },
@@ -620,14 +756,17 @@ async def post_journal_evaluate(
 
     gen_s = round(time.time() - t0, 1)
     rows = await prisma_client.db.query_raw(
-        f"INSERT INTO {_SNAP_TABLE} (\"periodDays\", model, \"digestChars\", report, \"createdBy\", error) "
-        "VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+        f"INSERT INTO {_SNAP_TABLE} (\"periodDays\", model, \"digestChars\", report, \"createdBy\", error, "
+        "\"targetU\", \"targetSid\") "
+        "VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
         days,
         model,
         len(digest),
         report,
         user_api_key_dict.user_id or "admin",
         error,
+        target_u,
+        target_sid,
     )
     return {
         "id": rows[0]["id"] if rows else None,
@@ -652,10 +791,17 @@ async def get_journal_evaluations(
         raise HTTPException(status_code=503, detail={"error": "Нет БД"})
     if not _table_ready["ok"]:
         await prisma_client.db.execute_raw(_CREATE_TABLE)
+        await prisma_client.db.execute_raw(
+            f'ALTER TABLE {_SNAP_TABLE} ADD COLUMN IF NOT EXISTS "targetU" text NOT NULL DEFAULT \'\''
+        )
+        await prisma_client.db.execute_raw(
+            f'ALTER TABLE {_SNAP_TABLE} ADD COLUMN IF NOT EXISTS "targetSid" text NOT NULL DEFAULT \'\''
+        )
         _table_ready["ok"] = True
     rows = await prisma_client.db.query_raw(
         f"SELECT id, to_char(\"createdAt\" AT TIME ZONE 'UTC' AT TIME ZONE '{_TZ}', 'YYYY-MM-DD HH24:MI') AS created, "
         "\"periodDays\", model, \"digestChars\", length(report) AS rlen, error, \"createdBy\", "
+        "\"targetU\", \"targetSid\", "
         "left(report, 200) AS preview "
         f"FROM {_SNAP_TABLE} ORDER BY id DESC LIMIT $1",
         limit,

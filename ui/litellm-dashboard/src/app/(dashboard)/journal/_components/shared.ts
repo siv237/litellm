@@ -24,6 +24,7 @@ export interface ParticipantT {
 
 export interface RecentT {
   u: string;
+  sid: string;
   display: string;
   t: string;
   txt: string;
@@ -85,6 +86,8 @@ export interface EvaluationT {
   digestChars: number;
   rlen: number;
   error: string;
+  targetU?: string;
+  targetSid?: string;
   createdBy: string;
   preview: string;
 }
@@ -120,6 +123,44 @@ export const TYPE_BADGE: Record<string, { label: string; cls: string }> = {
     cls: "border-border bg-muted/50 text-muted-foreground",
   },
 };
+
+// «2026-10-09 10:14» (уже местное, UTC+10) → «10:14» сегодня, иначе «10-09 10:14»
+export function fmtWhen(t: string, nowMs: number): string {
+  const today = new Date(nowMs + 10 * 3600_000).toISOString().slice(0, 10);
+  const [d, hm] = t.split(" ");
+  if (!hm) return t;
+  return d === today ? hm : `${d.slice(5)} ${hm}`;
+}
+
+// текст из psr приходит с литеральными «\n» (два символа) — чистим для показа
+export function cleanTxt(s: string, multiline = false): string {
+  const t = s.replace(/\\r\\n|\\n/g, multiline ? "\n" : " ").replace(/\\t/g, " ");
+  return multiline ? t.replace(/[^\S\n]+/g, " ").replace(/\n{3,}/g, "\n\n").trim() : t.replace(/\s+/g, " ").trim();
+}
+
+// «2026-10-09 09:22» (Владивосток) + глубина → читабельный диапазон «06.10 09:22 → 09.10 09:22»
+export function periodRange(created: string, days: number): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})$/.exec(created);
+  if (!m) return "";
+  const endMs = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
+  const f = (x: Date) =>
+    `${String(x.getUTCDate()).padStart(2, "0")}.${String(x.getUTCMonth() + 1).padStart(2, "0")} ${String(x.getUTCHours()).padStart(2, "0")}:${String(x.getUTCMinutes()).padStart(2, "0")}`;
+  return `${f(new Date(endMs - days * 86400_000))} → ${f(new Date(endMs))}`;
+}
+
+export const REPORT_PROSE_CLS =
+  "prose prose-sm dark:prose-invert max-w-none text-[13px] leading-relaxed " +
+  "[&_h1]:mt-1 [&_h1]:text-lg [&_h2]:mt-5 [&_h2]:mb-1.5 [&_h2]:border-b [&_h2]:border-input/40 [&_h2]:pb-1 [&_h2]:text-base " +
+  "[&_h3]:mt-3 [&_h3]:text-[13px] [&_p]:my-1.5 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0.5 " +
+  "[&_table]:my-2 [&_th]:text-[11px] [&_td]:text-[12px] [&_code]:text-[12px]";
+
+export function downloadMd(filename: string, text: string): void {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], { type: "text/markdown;charset=utf-8" }));
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
 
 export function fmtDelta(cur: number, prev: number): { txt: string; up: boolean } | null {
   if (!prev) return null;

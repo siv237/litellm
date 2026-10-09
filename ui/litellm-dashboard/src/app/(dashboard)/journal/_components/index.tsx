@@ -7,17 +7,24 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { apiClient } from "@/components/networking";
 import Heatmap from "./heatmap";
+import DetailModal from "./detailModal";
+import EvalList from "./evalList";
 import EvaluateDialog from "./evaluate";
 import UserView from "./userView";
 import {
+  cleanTxt,
   fmtDelta,
   fmtKtok,
+  fmtWhen,
   fnum,
   TYPE_BADGE,
   userHues,
   type EvaluationT,
+  type RecentT,
   type StateResponse,
 } from "./shared";
+
+type RecentGroupT = RecentT & { n: number };
 
 interface Props {
   accessToken: string;
@@ -33,6 +40,8 @@ export default function Journal({ accessToken }: Props) {
   const [selected, setSelected] = useState<string | null>(null);
   const [evaluations, setEvaluations] = useState<EvaluationT[]>([]);
   const [showEval, setShowEval] = useState(false);
+  const [evalTarget, setEvalTarget] = useState<{ u?: string; sid?: string; display?: string } | null>(null);
+  const [detail, setDetail] = useState<RecentGroupT | null>(null);
 
   const load = useCallback(async () => {
     if (!accessToken) return;
@@ -71,6 +80,25 @@ export default function Journal({ accessToken }: Props) {
     [data],
   );
 
+  // серваки шлют один и тот же промпт поминутно — склеиваем повторы в одну строку со счётчиком
+  const recentGroups = useMemo<RecentGroupT[]>(() => {
+    const out: RecentGroupT[] = [];
+    const at = new Map<string, number>();
+    for (const r of data?.recent || []) {
+      const k = `${r.u}\u0000${r.txt}`;
+      const i = at.get(k);
+      if (i !== undefined) out[i].n += 1;
+      else {
+        at.set(k, out.length);
+        out.push({ ...r, n: 1 });
+      }
+    }
+    return out;
+  }, [data]);
+
+  // не-anализирующие модели (эмбеддинги, rerank, decision-класс clef) не могут писать отчёты — исключаем из выбора оценки
+  const chatModels = useMemo(() => (data?.models || []).filter((m) => !/(embed|rerank|moderation|clip|clef|judge|bge|snowflake)/i.test(m)), [data]);
+
   if (selected) {
     return (
       <>
@@ -78,13 +106,17 @@ export default function Journal({ accessToken }: Props) {
           accessToken={accessToken}
           u={selected}
           onBack={() => setSelected(null)}
-          onEvaluate={() => setShowEval(true)}
+          onEvaluate={(t) => {
+            setEvalTarget(t || null);
+            setShowEval(true);
+          }}
           evaluations={evaluations}
         />
         {showEval && (
           <EvaluateDialog
             accessToken={accessToken}
-            models={data?.models || []}
+            models={chatModels}
+            target={evalTarget || undefined}
             onClose={() => setShowEval(false)}
             onDone={loadEvals}
           />
@@ -98,11 +130,16 @@ export default function Journal({ accessToken }: Props) {
   const dPeople = t && fmtDelta(t.people, t.prev_people);
 
   const kpi = (label: string, value: string, delta?: { txt: string; up: boolean } | null, hint?: string) => (
-    <div className="rounded border border-input bg-card p-3">
-      <div className="text-[11px] text-muted-foreground">{label}</div>
-      <div className="text-2xl font-bold tabular-nums">{value}</div>
-      {delta && <div className={`text-[11px] ${delta.up ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"}`}>{delta.txt}</div>}
-      <div className="text-[10px] text-muted-foreground">{hint || "к предыдущему периоду"}</div>
+    <div className="rounded border border-input bg-card px-3 py-2">
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="text-[11px] text-muted-foreground">{label}</span>
+        {delta ? (
+          <span className={`text-[10px] ${delta.up ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"}`}>{delta.txt}</span>
+        ) : (
+          <span className="text-[10px] text-muted-foreground">{hint || "к предыдущему периоду"}</span>
+        )}
+      </div>
+      <div className="text-xl font-bold leading-tight tabular-nums">{value}</div>
     </div>
   );
 
@@ -125,7 +162,10 @@ export default function Journal({ accessToken }: Props) {
           </select>
           <button
             className="rounded border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20"
-            onClick={() => setShowEval(true)}
+            onClick={() => {
+              setEvalTarget(null);
+              setShowEval(true);
+            }}
           >
             Оценить период
           </button>
@@ -138,22 +178,37 @@ export default function Journal({ accessToken }: Props) {
 
       {error && <div className="shrink-0 rounded border border-red-500/40 bg-red-500/10 p-2 text-xs text-red-600">{error}</div>}
 
-      <div className="grid shrink-0 gap-3 xl:grid-cols-[1.7fr_1fr]">
-        <div className="rounded border border-input bg-card p-3">
+      <div className="grid shrink-0 gap-3 xl:grid-cols-[1.35fr_1fr]">
+        <div className="min-w-0 overflow-hidden rounded border border-input bg-card p-3">
           <div className="mb-2 text-sm font-medium">Активность</div>
           {data ? <Heatmap cells={data.cells} /> : <div className="text-xs text-muted-foreground">загрузка…</div>}
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          {kpi("Запросы", t ? fnum(t.reqs) : "…", dReqs)}
-          {kpi("Участники", t ? fnum(t.participants) : "…", null, "люди + системы")}
-          {kpi("Люди", t ? fnum(t.people) : "…", dPeople)}
-          {kpi("Системы", t ? fnum(t.systems) : "…", null, "боты и сервисы")}
-          {kpi("Пиковый час", t?.peak_hour != null ? `${String(t.peak_hour).padStart(2, "0")}:00` : "…", null, "максимум запросов по часам")}
+        <div className="grid min-w-0 grid-cols-[1fr_1.2fr] gap-3">
+          <div className="grid content-start gap-2">
+            {kpi("Запросы", t ? fnum(t.reqs) : "…", dReqs)}
+            {kpi("Участники", t ? fnum(t.participants) : "…", null, "люди + системы")}
+            {kpi("Люди", t ? fnum(t.people) : "…", dPeople)}
+            {kpi("Системы", t ? fnum(t.systems) : "…", null, "боты и сервисы")}
+            {kpi("Пиковый час", t?.peak_hour != null ? `${String(t.peak_hour).padStart(2, "0")}:00` : "…", null, "максимум запросов по часам")}
+          </div>
+          <div className="flex min-h-0 min-w-0 flex-col rounded border border-input bg-card p-3">
+            <div className="mb-2 flex items-baseline justify-between gap-2 whitespace-nowrap">
+              <span className="text-sm font-medium">Анализ ИИ</span>
+              <span className="truncate text-[10px] text-muted-foreground">оценки периодов · клик — читать</span>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <EvalList
+                accessToken={accessToken}
+                items={evaluations.filter((ev) => !ev.targetU && !ev.targetSid)}
+                empty="Общих оценок пока нет. Нажмите «Оценить период» — модель прочитает дайджест журнала и напишет отчёт (~1 мин)."
+              />
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="grid min-h-0 flex-1 gap-3 xl:grid-cols-[1.7fr_1fr]">
-        <div className="flex min-h-0 flex-col rounded border border-input bg-card p-3">
+      <div className="grid min-h-0 flex-1 gap-3 xl:grid-cols-[1.35fr_1fr]">
+        <div className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded border border-input bg-card p-3">
           <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
             <span className="text-sm font-medium">Участники</span>
             <div className="flex items-center gap-2 text-[11px]">
@@ -201,7 +256,6 @@ export default function Journal({ accessToken }: Props) {
                     Обмены
                   </th>
                   <th className="pr-2 font-normal">Активные часы</th>
-                  <th className="pr-2 font-normal">Топ-модели</th>
                   <th className="text-right font-normal">Последняя активность</th>
                 </tr>
               </thead>
@@ -230,9 +284,6 @@ export default function Journal({ accessToken }: Props) {
                     <td className="pr-2 text-right tabular-nums">{fnum(p.sess)}</td>
                     <td className="pr-2 text-right tabular-nums">{fnum(p.exch)}</td>
                     <td className="pr-2 tabular-nums text-muted-foreground">{p.hours}</td>
-                    <td className="max-w-[12rem] truncate pr-2 text-muted-foreground" title={p.models}>
-                      {p.models}
-                    </td>
                     <td className="text-right tabular-nums text-muted-foreground">{p.t_last}</td>
                   </tr>
                 ))}
@@ -242,38 +293,58 @@ export default function Journal({ accessToken }: Props) {
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-col rounded border border-input bg-card p-3">
+        <div className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded border border-input bg-card p-3">
           <div className="mb-2 text-sm font-medium">Последняя активность</div>
           <div className="min-h-0 flex-1 overflow-y-auto">
-            {(data?.recent || []).map((r2, i) => (
-              <div key={i} className="flex gap-2 border-t border-input/40 py-1.5 first:border-t-0">
-                <span
-                  className="mt-1 h-2 w-2 shrink-0 rounded-full"
-                  style={{ backgroundColor: `hsl(${hues.get(r2.display) ?? 0} 65% 55%)` }}
-                />
-                <div className="min-w-0 flex-1">
-                  <div className="flex justify-between text-[11px]">
-                    <span className="font-medium">{r2.display}</span>
-                    <span className="tabular-nums text-muted-foreground">{r2.t}</span>
-                  </div>
-                  <div className="truncate text-[11px] text-muted-foreground" title={r2.txt}>
-                    {r2.txt}
-                  </div>
+            {recentGroups.map((g, i) => (
+              <div
+                key={i}
+                className="cursor-pointer border-t border-input/40 py-1.5 first:border-t-0 hover:bg-muted/40"
+                onClick={() => setDetail(g)}
+                title="показать строку целиком"
+              >
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className="h-2 w-2 shrink-0 rounded-full"
+                    style={{ backgroundColor: `hsl(${hues.get(g.display) ?? 0} 65% 55%)` }}
+                  />
+                  <span className="min-w-0 flex-1 truncate text-[11px] font-medium">{g.display}</span>
+                  {g.n > 1 && (
+                    <span className="shrink-0 rounded-full border border-input px-1.5 text-[10px] tabular-nums text-muted-foreground" title="повторов такой же строки">
+                      ×{g.n}
+                    </span>
+                  )}
+                  <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground" title="запросов в сессии">
+                    {g.turns} зап.
+                  </span>
+                  <span className="w-[7.5rem] shrink-0 text-right text-[10px] tabular-nums text-muted-foreground">{fmtWhen(g.t, data?.now || 0)}</span>
                 </div>
-                <span className="shrink-0 self-center text-[10px] tabular-nums text-muted-foreground" title="запросов в сессии">
-                  {r2.turns} зап.
-                </span>
+                <div className="mt-0.5 line-clamp-2 pl-3.5 text-[11px] leading-snug break-words text-muted-foreground">{cleanTxt(g.txt)}</div>
               </div>
             ))}
-            {data && !data.recent.length && <div className="py-6 text-center text-xs text-muted-foreground">нет сессий с текстами за период</div>}
+            {data && !recentGroups.length && <div className="py-6 text-center text-xs text-muted-foreground">нет сессий с текстами за период</div>}
           </div>
         </div>
       </div>
 
+      {detail && (
+        <DetailModal
+          accessToken={accessToken}
+          item={detail}
+          hue={hues.get(detail.display) ?? 0}
+          onClose={() => setDetail(null)}
+          onOpenUser={(u) => {
+            setSelected(u);
+            setDetail(null);
+          }}
+        />
+      )}
+
       {showEval && (
         <EvaluateDialog
           accessToken={accessToken}
-          models={data?.models || []}
+          models={chatModels}
+          target={evalTarget || undefined}
           onClose={() => setShowEval(false)}
           onDone={loadEvals}
         />

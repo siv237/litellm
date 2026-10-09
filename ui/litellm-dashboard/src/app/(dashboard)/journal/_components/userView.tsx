@@ -3,10 +3,9 @@
 // fork: страница участника журнала (v1 — без тем/проектов, темы появятся из оценок)
 
 import { useCallback, useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { apiClient } from "@/components/networking";
-import { fmtKtok, fnum, TYPE_BADGE, type EvaluationT, type UserResponse } from "./shared";
+import EvalList from "./evalList";
+import { cleanTxt, fmtKtok, fnum, type EvaluationT, type UserResponse } from "./shared";
 
 function Spark({ values }: { values: number[] }) {
   if (values.length < 2) return null;
@@ -23,7 +22,7 @@ interface Props {
   accessToken: string;
   u: string;
   onBack: () => void;
-  onEvaluate: () => void;
+  onEvaluate: (target?: { u?: string; sid?: string; display?: string }) => void;
   evaluations: EvaluationT[];
 }
 
@@ -31,23 +30,6 @@ export default function UserView({ accessToken, u, onBack, onEvaluate, evaluatio
   const [days, setDays] = useState(7);
   const [data, setData] = useState<UserResponse | null>(null);
   const [error, setError] = useState("");
-  const [openEval, setOpenEval] = useState<EvaluationT | null>(null);
-  const [fullReport, setFullReport] = useState("");
-
-  const toggleEval = async (ev: EvaluationT) => {
-    if (openEval?.id === ev.id) {
-      setOpenEval(null);
-      return;
-    }
-    setOpenEval(ev);
-    setFullReport("");
-    try {
-      const r = await apiClient.get<{ report: string }>(`/dashboard/journal/evaluation?id=${ev.id}`, { accessToken });
-      setFullReport(r.report || "");
-    } catch {
-      setFullReport(ev.preview);
-    }
-  };
 
   const load = useCallback(async () => {
     try {
@@ -126,7 +108,7 @@ export default function UserView({ accessToken, u, onBack, onEvaluate, evaluatio
           </button>
           <button
             className="rounded bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-            onClick={onEvaluate}
+            onClick={() => onEvaluate({ u, display: data?.display })}
           >
             Оценить период
           </button>
@@ -156,7 +138,7 @@ export default function UserView({ accessToken, u, onBack, onEvaluate, evaluatio
       </div>
 
       <div className="grid min-h-0 flex-1 gap-3 xl:grid-cols-[1.6fr_1fr]">
-        <div className="flex min-h-0 flex-col rounded border border-input bg-card p-3">
+        <div className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded border border-input bg-card p-3">
           <div className="mb-2 flex items-center justify-between">
             <span className="text-sm font-medium">Журнал сессий</span>
             <span className="text-[10px] text-muted-foreground">
@@ -168,63 +150,60 @@ export default function UserView({ accessToken, u, onBack, onEvaluate, evaluatio
             <div className="mb-1 text-muted-foreground">
               <Spark values={(data?.daily || []).map((d) => d.n)} />
             </div>
+            <div className="grid grid-cols-[8.5rem_5rem_minmax(0,1fr)_5rem_6rem_7rem] items-center gap-x-3 border-b border-input/40 pb-1 text-[10px] text-muted-foreground">
+              <span>начало</span>
+              <span className="text-right">длит.</span>
+              <span>модель</span>
+              <span className="text-right">токены</span>
+              <span className="text-right" title="обмены · запросы">
+                обм. · зап.
+              </span>
+              <span className="text-right">ИИ-оценка</span>
+            </div>
             {(data?.sessions || []).map((s) => (
-              <div key={s.sid} className="border-t border-input/40 py-2">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px]">
+              <div key={s.sid} className="border-b border-input/30 py-1.5">
+                <div className="grid grid-cols-[8.5rem_5rem_minmax(0,1fr)_5rem_6rem_7rem] items-center gap-x-3 text-[11px]">
                   <span className="font-medium tabular-nums">{s.t0}</span>
-                  <span className="text-muted-foreground">
+                  <span className="text-right tabular-nums text-muted-foreground">
                     {s.dur_min >= 60 ? `${Math.floor(s.dur_min / 60)} ч ${s.dur_min % 60} мин` : `${s.dur_min} мин`}
                   </span>
-                  <span className="truncate" title={s.model}>
+                  <span className="truncate text-muted-foreground" title={s.model}>
                     {s.model}
                   </span>
-                  <span className="tabular-nums text-muted-foreground">{fmtKtok(s.tok)} ток</span>
-                  <span className="tabular-nums text-muted-foreground" title="user-реплики в последнем теле сессии">
-                    {s.exch} обм. · {s.turns} зап.
+                  <span className="text-right tabular-nums">{fmtKtok(s.tok)}</span>
+                  <span className="text-right tabular-nums text-muted-foreground" title="user-реплики в последнем теле сессии · запросов">
+                    {s.exch} · {s.turns}
                   </span>
+                  <div className="flex justify-end">
+                    <button
+                      className="rounded border border-primary/40 bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary hover:bg-primary/20"
+                      title="ИИ-оценка этой сессии (вручную)"
+                      onClick={() => onEvaluate({ sid: s.sid, u, display: s.t0 })}
+                    >
+                      Оценить сессию
+                    </button>
+                  </div>
                 </div>
-                {s.first && <div className="mt-0.5 truncate text-xs text-muted-foreground" title={s.first}>{s.first}</div>}
+                {s.first && (
+                  <div className="mt-0.5 line-clamp-2 break-words text-[11px] leading-snug text-muted-foreground">{cleanTxt(s.first)}</div>
+                )}
               </div>
             ))}
             {data && !data.sessions.length && <div className="py-4 text-center text-xs text-muted-foreground">нет сессий за период</div>}
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-col rounded border border-input bg-card p-3">
+        <div className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded border border-input bg-card p-3">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-medium">Анализ ИИ (оценки периодов)</span>
+            <span className="text-sm font-medium">Анализ ИИ (оценки этого участника)</span>
             <span className="text-[10px] text-muted-foreground">летопись · запуск вручную</span>
           </div>
           <div className="min-h-0 flex-1 overflow-y-auto">
-            {evaluations.length === 0 && (
-              <div className="py-4 text-center text-xs text-muted-foreground">
-                Оценок пока нет. Нажмите «Оценить период» — модель прочитает дайджест и напишет отчёт (~1 мин).
-              </div>
-            )}
-            {evaluations.map((ev) => (
-              <button
-                key={ev.id}
-                className="mb-1 block w-full rounded border border-input/50 p-2 text-left text-[11px] hover:bg-muted/50"
-                onClick={() => toggleEval(ev)}
-              >
-                <div className="flex justify-between">
-                  <span className="font-medium">
-                    {ev.created} · {ev.periodDays} сут
-                  </span>
-                  <span className="text-muted-foreground">{ev.model}</span>
-                </div>
-                {openEval?.id !== ev.id ? (
-                  <div className="mt-0.5 line-clamp-2 text-muted-foreground">{ev.error ? `⚠ ${ev.error}` : ev.preview}</div>
-                ) : (
-                  <div className="prose prose-xs mt-1 max-w-none text-[11px] [&_p]:text-[11px] [&_li]:text-[11px]">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{fullReport || "…"}</ReactMarkdown>
-                  </div>
-                )}
-              </button>
-            ))}
-            {openEval && openEval.rlen > 200 && (
-              <div className="mt-1 text-[10px] text-muted-foreground">отчёт загружен целиком из летописи оценок.</div>
-            )}
+            <EvalList
+              accessToken={accessToken}
+              items={evaluations.filter((ev) => ev.targetU === u)}
+              empty="Для этого участника оценок пока нет. Нажмите «Оценить период» или «Оценить сессию» — модель прочитает дайджест и напишет отчёт (~1 мин)."
+            />
           </div>
         </div>
       </div>
