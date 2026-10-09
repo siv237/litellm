@@ -1071,7 +1071,7 @@ export default function ComplianceUI({
                           }}
                           className="text-[10px] font-medium text-info px-1.5 py-0.5 rounded-sm hover:bg-info/10 shrink-0"
                         >
-                          {fwSelectedCount === fwPromptCount ? "Clear" : "All"}
+                          {fwSelectedCount === fwPromptCount ? "Сбросить" : "Все"}
                         </button>
                       </button>
 
@@ -1197,7 +1197,7 @@ export default function ComplianceUI({
                   onClick={() => setRightTab("batch-results")}
                   className={`relative flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium transition-colors ${rightTab === "batch-results" ? "text-info" : "text-muted-foreground hover:text-foreground"}`}
                 >
-                  <ListChecks className="w-3.5 h-3.5" /> Batch Results
+                  <ListChecks className="w-3.5 h-3.5" /> Результаты пакета
                   {testResults.length > 0 && (
                     <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full">
                       {testResults.length}
@@ -1385,7 +1385,7 @@ export default function ComplianceUI({
                             onClick={() => setResultFilter(filter)}
                             className={`text-[11px] font-medium px-2.5 py-1 rounded-md transition-colors capitalize ${resultFilter === filter ? "bg-gray-900 text-white" : "text-muted-foreground hover:bg-accent"}`}
                           >
-                            {filter} ({count})
+                            {{ all: "Все", matches: "Совпало", mismatches: "Расхождения", pending: "В очереди" }[filter]} ({count})
                           </button>
                         );
                       })}
@@ -1412,22 +1412,22 @@ export default function ComplianceUI({
                           <div className="flex items-center gap-3 text-sm flex-1">
                             <span>
                               <span className="font-semibold text-foreground">{testResults.length}</span>{" "}
-                              <span className="text-muted-foreground">total</span>
+                              <span className="text-muted-foreground">всего</span>
                             </span>
                             <div className="w-px h-4 bg-border" />
                             <span>
                               <span className="font-semibold text-success">{matchCount}</span>{" "}
-                              <span className="text-muted-foreground">correct</span>
+                              <span className="text-muted-foreground">верно</span>
                             </span>
                             <div className="w-px h-4 bg-border" />
                             <span title="Разрешённый контент, который следовало заблокировать">
                               <span className="font-semibold text-warning">{falseNegativeCount}</span>{" "}
-                              <span className="text-muted-foreground">false negative</span>
+                              <span className="text-muted-foreground">ложноотрицательных</span>
                             </span>
                             <div className="w-px h-4 bg-border" />
                             <span title="Заблокированный контент, который следовало разрешить">
                               <span className="font-semibold text-destructive">{falsePositiveCount}</span>{" "}
-                              <span className="text-muted-foreground">false positive</span>
+                              <span className="text-muted-foreground">ложноположительных</span>
                             </span>
                           </div>
                           <div
@@ -1473,13 +1473,13 @@ export default function ComplianceUI({
                                     <span
                                       className={`text-[9px] font-semibold px-1 py-0.5 rounded-sm ${result.expectedResult === "fail" ? "bg-destructive/10 text-destructive" : "bg-success/10 text-success"}`}
                                     >
-                                      {result.expectedResult === "fail" ? "Expect Block" : "Expect Allow"}
+                                      {result.expectedResult === "fail" ? "Ожидается блок" : "Ожидается пропуск"}
                                     </span>
                                     {result.status === "complete" && (
                                       <span
                                         className={`text-[9px] font-bold px-1 py-0.5 rounded-sm ${result.isMatch ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}`}
                                       >
-                                        {result.isMatch ? "✓ Match" : "✗ Gap"}
+                                        {result.isMatch ? "✓ Совпало" : "✗ Расхождение"}
                                       </span>
                                     )}
                                   </div>
@@ -1520,10 +1520,10 @@ export default function ComplianceUI({
                                     <span className="text-muted-foreground">Вердикт:</span>{" "}
                                     <span className={result.isMatch ? "text-success" : "text-destructive"}>
                                       {result.isMatch
-                                        ? "Correctly handled"
+                                        ? "Обработано верно"
                                         : result.expectedResult === "fail"
-                                          ? "Gap — should have been blocked"
-                                          : "False positive — incorrectly blocked"}
+                                          ? "Расхождение — следовало заблокировать"
+                                          : "Ложноположительный — ошибочно заблокировано"}
                                     </span>
                                   </div>
                                   {result.returnedText != null && result.returnedText !== "" && (
